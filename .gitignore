@@ -1,7 +1,7 @@
 nbproject
 vendor/*
-cache/*
-logs/*
+app/cache/*
+app/logs/*
 bin/phpunit
 bin/behat
 bin/doctrine.php
