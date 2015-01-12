@@ -1,3 +1,4 @@
+composer.phar
 nbproject
 vendor/*
 app/cache/*
@@ -6,3 +7,4 @@ bin/phpunit
 bin/behat
 bin/doctrine.php
 bin/doctrine
+.vagrant
