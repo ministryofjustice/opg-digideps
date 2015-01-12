@@ -92,19 +92,19 @@ server {
 
     server_name digideps2.local;
 
-    index app.php;
+    index app_dev.php;
 
     root /var/www/digideps2/web;
 
     location / {
-        # try to serve file directly, fallback to app.php
-        try_files $uri/ /app.php;
+        # try to serve file directly, fallback to app_dev.php
+        try_files $uri/ /app_dev.php;
     }
     
     location ~ \.php$ {
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass unix:/var/run/php5-fpm.sock;
-        fastcgi_index app.php;
+        fastcgi_index app_dev.php;
         include fastcgi_params;
 
         fastcgi_buffer_size 128k;
