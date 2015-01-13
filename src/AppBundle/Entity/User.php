@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
  * Users
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="dd_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User
+class User implements AdvancedUserInterface
 {
     /**
      * @var integer
@@ -57,16 +58,16 @@ class User
     /**
      * @var boolean
      *
-     * @ORM\Column(name="active", type="boolean", nullable=true)
+     * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
     private $active;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password_salt", type="string", length=100, nullable=true)
+     * @ORM\Column(name="salt", type="string", length=100, nullable=true)
      */
-    private $passwordSalt;
+    private $salt;
 
     /**
      * @var \DateTime
@@ -106,8 +107,8 @@ class User
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="users")
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
+     * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
      */
     private $role;
     
@@ -119,6 +120,7 @@ class User
      */
     private $gaTrackingId;
     
+    
     /**
      * Constructor
      */
@@ -127,7 +129,7 @@ class User
         $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    
+
     /**
      * Get id
      *
@@ -175,16 +177,6 @@ class User
     }
 
     /**
-     * Get password
-     *
-     * @return string 
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
      * Set email
      *
      * @param string $email
@@ -192,7 +184,7 @@ class User
      */
     public function setEmail($email)
     {
-        $this->email = strtolower($email);
+        $this->email = $email;
 
         return $this;
     }
@@ -231,26 +223,16 @@ class User
     }
 
     /**
-     * Set passwordSalt
+     * Set salt
      *
-     * @param string $passwordSalt
+     * @param string $salt
      * @return User
      */
-    public function setPasswordSalt($passwordSalt)
+    public function setSalt($salt)
     {
-        $this->passwordSalt = $passwordSalt;
+        $this->salt = $salt;
 
         return $this;
-    }
-
-    /**
-     * Get passwordSalt
-     *
-     * @return string 
-     */
-    public function getPasswordSalt()
-    {
-        return $this->passwordSalt;
     }
 
     /**
@@ -402,30 +384,30 @@ class User
     }
 
     /**
-     * Add cases
+     * Add clients
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param \AppBundle\Entity\Client $clients
      * @return User
      */
-    public function addClient(\AppBundle\Entity\Client $client)
+    public function addClient(\AppBundle\Entity\Client $clients)
     {
-        $this->clients[] = $client;
+        $this->clients[] = $clients;
 
         return $this;
     }
 
     /**
-     * Remove cases
+     * Remove clients
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param \AppBundle\Entity\Client $clients
      */
-    public function removeClient(\AppBundle\Entity\Client $client)
+    public function removeClient(\AppBundle\Entity\Client $clients)
     {
-        $this->clients->removeElement($client);
+        $this->clients->removeElement($clients);
     }
 
     /**
-     * Get cases
+     * Get clients
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
@@ -456,7 +438,54 @@ class User
     {
         return $this->role;
     }
-
+    
+    public function getUsername() 
+    {
+        return $this->email;
+    }
+    
+    public function getSalt() 
+    {
+        //return $this->salt;
+        return null;
+    }
+    
+    public function getPassword() 
+    {
+        return $this->password;
+    }
+    
+    public function getRoles() 
+    {
+        $roles = [ $this->role->getRole()];
+        
+        return $roles;
+    }
+    
+    public function eraseCredentials() 
+    {
+    }
+    
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+    
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+    
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+    
+    public function isEnabled()
+    {
+        return $this->active;
+    }
+    
     /**
      * Get gaTrackingId
      * 

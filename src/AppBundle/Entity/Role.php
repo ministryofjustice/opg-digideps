@@ -1,8 +1,8 @@
 <?php
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
  * Roles
@@ -10,23 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="role")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
  */
-class Role
-{
-    const OPG_ADMINISTRATOR = 1; // OPG Administrator
-    const LAY_DEPUTY = 2; // Lay Deputy
-    const PROFESSIONAL_DEPUTY = 3; //Professional Deputy
-    const LOCAL_AUTHORITY_DEPUTY = 4; //Local Authority Deputy
-    const VISITOR = 5; //Visitor
-    const GUEST = 6; // (doesn't need a db record, only used in ACL)
-    
-    public static $roles = array(
-        self::OPG_ADMINISTRATOR => 'OPG Administrator',
-        self::LAY_DEPUTY => 'Lay Deputy',
-        self::PROFESSIONAL_DEPUTY => 'Professional Deputy',
-        self::LOCAL_AUTHORITY_DEPUTY => 'Local Authority Deputy',
-        self::VISITOR => 'Visitor'
-    );
-    
+class Role implements RoleInterface
+{ 
     /**
      * @var integer
      *
@@ -36,26 +21,28 @@ class Role
      * @ORM\SequenceGenerator(sequenceName="role_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=60, nullable=true)
-     */
-    private $name;
     
     /**
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="roles", cascade={"persist"})
+     * @ORM\Column(name="name", type="string", length=60 )
      */
-    private $users;
+    private $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="role" )
+     */
+    private $user;
+    
+    /**
+     * @ORM\Column( name="role", type="string", length=50, nullable=true)
+     */
+    private $role;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->users = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -90,37 +77,55 @@ class Role
     {
         return $this->name;
     }
-
+    
+    public function getRole()
+    {
+        return $this->role;
+    }
+ 
     /**
-     * Add users
+     * Set role
      *
-     * @param \AppBundle\Entity\User $users
+     * @param string $role
      * @return Role
      */
-    public function addUser(\AppBundle\Entity\User $users)
+    public function setRole($role)
     {
-        $this->users[] = $users;
+        $this->role = $role;
 
         return $this;
     }
 
     /**
-     * Remove users
+     * Add user
      *
-     * @param \AppBundle\Entity\User $users
+     * @param \AppBundle\Entity\User $user
+     * @return Role
      */
-    public function removeUser(\AppBundle\Entity\User $users)
+    public function addUser(\AppBundle\Entity\User $user)
     {
-        $this->users->removeElement($users);
+        $this->user[] = $user;
+
+        return $this;
     }
 
     /**
-     * Get users
+     * Remove user
+     *
+     * @param \AppBundle\Entity\User $user
+     */
+    public function removeUser(\AppBundle\Entity\User $user)
+    {
+        $this->user->removeElement($user);
+    }
+
+    /**
+     * Get user
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getUsers()
+    public function getUser()
     {
-        return $this->users;
+        return $this->user;
     }
 }

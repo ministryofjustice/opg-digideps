@@ -131,4 +131,14 @@ class CourtOrderType
     {
         return $this->clients;
     }
+
+    /**
+     * Remove clients
+     *
+     * @param \AppBundle\Entity\Client $clients
+     */
+    public function removeClient(\AppBundle\Entity\Client $clients)
+    {
+        $this->clients->removeElement($clients);
+    }
 }

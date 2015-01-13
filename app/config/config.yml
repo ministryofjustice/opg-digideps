@@ -59,6 +59,9 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        
+doctrine_migrations:
+    table_name: migrations
 
 # Swiftmailer Configuration
 swiftmailer:

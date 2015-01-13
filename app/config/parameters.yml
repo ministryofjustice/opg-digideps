@@ -3,9 +3,9 @@ parameters:
     database_driver: pdo_pgsql
     database_host: 127.0.0.1
     database_port: 5432
-    database_name: digideps
-    database_user: digideps
-    database_password: digideps
+    database_name: demo
+    database_user: postgres
+    database_password: 
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: null
