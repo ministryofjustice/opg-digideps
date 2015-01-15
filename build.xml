@@ -44,8 +44,12 @@
         <exec command="./composer.phar install --optimize-autoloader" checkreturn="true" passthru="true"/>
     </target>
 
+    <target name="phpunit">
+        <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
+    </target>
+
     
-    <target name="build" depends="composer-install,cache-clear,phplint">
+    <target name="build" depends="composer-install,cache-clear,phplint,phpunit">
     </target>
 
 </project>
