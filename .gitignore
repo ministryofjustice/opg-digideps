@@ -8,3 +8,4 @@ bin/phpunit
 bin/behat
 bin/doctrine.php
 bin/doctrine
+.vagrant

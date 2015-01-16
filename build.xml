@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="main" default="help">
+
+    <fileset dir="." id="source">
+        <include name="app/index.php" />
+        <include name="src/**/*.php"/>
+        <include name="web/*.php"/>
+    </fileset>
+    
+    
+    <target name="help" description="">
+        <echo msg="select a task e.g. 'phing test' or 'phing build'. Use 'phing -l' to list them"></echo>
+        <exec command="phing -l"></exec>
+    </target>
+    
+    
+    <target name="cache-clear" description="">
+        <echo msg="clearing data/cache/* ..."></echo>
+        <exec command="rm -rf app/cache/*"/>
+         
+        <echo msg="clear apc cache"></echo>
+        <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
+    </target>
+
+        
+    <target name="phplint" description="Scan source for PHP syntax errors">
+        <phplint haltonfailure="true" cachefile="/tmp/dd2tPhingLintCacheFile" level="error">
+            <fileset refid="source" />
+        </phplint>
+    </target>
+    
+
+    <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
+        <if>
+            <available file="composer.phar" />
+            <then>
+                <exec command="./composer.phar self-update" checkreturn="true" passthru="true"/>
+            </then>
+            <else>
+                <exec command="wget http://getcomposer.org/composer.phar"/>
+                <chmod file="composer.phar" mode="0755" />
+            </else>
+        </if>
+        <exec command="./composer.phar install --optimize-autoloader" checkreturn="true" passthru="true"/>
+    </target>
+
+    <target name="phpunit">
+        <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
+    </target>
+
+    
+    <target name="build" depends="composer-install,cache-clear,phplint,phpunit">
+    </target>
+
+</project>
