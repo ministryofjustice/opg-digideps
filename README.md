@@ -10,6 +10,7 @@
     vagrant up
 
  * Build application (only first time)
+
     vagrant ssh
     cd /var/www/opg-digi-deps-client/
     php phing.phar build
