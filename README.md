@@ -1,17 +1,27 @@
-cd /var/www
-git clone git@github.com:ministryofjustice/opg-digi-deps-client.git
+#INSTALL
 
-vi /etc/hosts
-127.0.0.1       digideps-client.local
+ * Host machine
+    cd /var/www
+    git clone git@github.com:ministryofjustice/opg-digi-deps-client.git
 
-
-cd /var/www/opg-digi-deps-client
-vagrant up
-
-
-browse at digideps-client.local:8080
+    vi /etc/hosts
+    127.0.0.1       digideps-client.local
 
 
-vagrant ssh
-cd /var/www/opg-digi-deps-client/
-php phing.phar build
+    cd /var/www/opg-digi-deps-client
+    vagrant up
+
+
+    browse at digideps-client.local:8080
+
+ * Build application (only first time)
+    vagrant ssh
+    cd /var/www/opg-digi-deps-client/
+    php phing.phar build
+
+
+ * Templates
+
+/app/Resources/views
+
+
