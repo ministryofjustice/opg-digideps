@@ -7,12 +7,10 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
-  config.vm.network :forwarded_port, host: 8080, guest: 80
-  config.vm.network :forwarded_port, host: 2020, guest: 22
-  config.vm.network :forwarded_port, host: 6432, guest: 5432  
+  config.vm.network :forwarded_port, host: 8081, guest: 80
  
 
-  config.vm.synced_folder ".", "/var/www/digideps2", id: "vagrant-root",
+  config.vm.synced_folder ".", "/var/www/opg-digi-deps-api", id: "vagrant-root",
     owner: "vagrant",
     group: "www-data",
     mount_options: ["dmode=777,fmode=777"]

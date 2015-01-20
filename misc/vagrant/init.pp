@@ -79,8 +79,8 @@ file {"/etc/nginx/sites-enabled/default":
   ensure => absent
 }
 
-# nginx: "digideps2.local" virtualhost
-file {"/etc/nginx/sites-enabled/digideps2.local":
+# nginx: "digideps-api.local" virtualhost
+file {"/etc/nginx/sites-enabled/digideps-api.local":
   ensure => file,  
   notify => Service["nginx"],
   require => Package['nginx'],
@@ -90,11 +90,11 @@ server {
 
     charset utf-8;
 
-    server_name digideps2.local;
+    server_name digideps-api.local;
 
     index app_dev.php;
 
-    root /var/www/digideps2/web;
+    root /var/www/opg-digi-deps-api/web;
 
     location / {
         # try to serve file directly, fallback to app_dev.php
@@ -148,8 +148,8 @@ xdebug.max_nesting_level = 200",
 }
 
 
-# add #127.0.0.1 digideps2.local" to /etc/hosts
-host { 'digideps2.local':
+# add #127.0.0.1 digideps-api.local" to /etc/hosts
+host { 'digideps-api.local':
    ip => '127.0.0.1',
 }
 
