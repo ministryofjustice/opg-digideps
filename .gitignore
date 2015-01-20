@@ -1,3 +1,4 @@
+.vagrant
 nbproject
 app/cache/*
 app/logs/*
