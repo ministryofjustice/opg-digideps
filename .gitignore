@@ -1,0 +1,4 @@
+nbproject
+app/cache/*
+app/logs/*
+app/vendor/*
