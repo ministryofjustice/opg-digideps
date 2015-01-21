@@ -41,7 +41,8 @@ assetic:
 
 services:
     restclient:
-        class:  GuzzleHttp\Client
+        class:  AppBundle\Service\RestClient
+        arguments: ["%api%"]
 # Doctrine Configuration
 #doctrine:
 #    dbal:

@@ -18,3 +18,8 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    api:
+        base_url: '{{pillar['api-base']}}'
+        endpoints:
+             find_user_by_email: find-by-user-email
