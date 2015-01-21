@@ -21,49 +21,44 @@ class UserController extends FOSRestController
     public function listAction()
     {
         $data = array('elvis','paul'); // get data, in this case list of users.
-        $view = $this->view($data, 200)
-                ->setData($data)
-            ->setTemplate("user/list.html.twig")
-            ->setTemplateVar('users')
-        ;
-
-        return $this->handleView($view);
+        
+        return $data;
     }
     
     /**
      * @Route("/{id}")
      * @Method({"GET"})
      */
-//    public function listOneAction($id)
-//    {
-//        return new JsonResponse(array('method'=>__METHOD__, 'id'=>$id));
-//    }
+    public function listOneAction($id)
+    {
+        return 'elvis';
+    }
     
     /**
      * @Route("/")
      * @Method({"POST"})
      * @ParamConverter("post", class="SensioBlogBundle:Post")
      */
-//    public function addAction()
-//    {
-//        return new JsonResponse(array('method'=>__METHOD__));
-//    }
+    public function addAction()
+    {
+        throw new \Excepion("to implement");
+    }
     
     /**
      * @Route("/{id}")
      * @Method({"PUT"})
      */
-//    public function editAction()
-//    {
-//        return new JsonResponse(array('method'=>__METHOD__));
-//    }
-//    
+    public function editAction()
+    {
+        throw new \Excepion("to implement");
+    }
+ 
     /**
      * @Route("/{id}")
      * @Method({"DELETE"})
      */
-//    public function deleteAction()
-//    {
-//        return new JsonResponse(array('method'=>__METHOD__));
-//    }
+    public function deleteAction()
+    {
+        throw new \Excepion("to implement");
+    }
 }
