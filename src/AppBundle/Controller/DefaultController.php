@@ -12,6 +12,9 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
+        $client = $this->get('restclient');
+        $response = $client->get('http://symfony.com');
+        print_r($response->getStatusCode()); die;
         return $this->render('default/index.html.twig');
     }
 }
