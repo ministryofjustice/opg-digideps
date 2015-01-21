@@ -8,11 +8,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\Annotations\Post;
+use Symfony\Component\HttpFoundation\Request;
+
+//TODO
+//http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
 
 /**
  * @Route("/user")
  */
-class UserController extends FOSRestController
+class UserController extends Controller
 {
     /**
      * @Route("/")
@@ -35,6 +40,8 @@ class UserController extends FOSRestController
      */
     public function listOneAction($id)
     {
+        // find user by ID, return it
+        
         switch ($id) {
             case 1:
                 return 'elvis';
@@ -46,28 +53,38 @@ class UserController extends FOSRestController
     /**
      * @Route("/")
      * @Method({"POST"})
-     * @ParamConverter("post", class="SensioBlogBundle:Post")
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
-        throw new \Exception("to implement");
+        $post = json_decode($request->getContent(), true);
+        
+        //CREATE user
+        
+        return array('id'=>999, 'debug'=>$post);
     }
     
     /**
      * @Route("/{id}")
      * @Method({"PUT"})
      */
-    public function editAction()
+    public function editAction(Request $request, $id)
     {
-        throw new \Excepion("to implement");
+        $post = json_decode($request->getContent(), true);
+        
+        //find by id, update properties, flush
+        
+        return array('id'=>$id);
     }
  
     /**
      * @Route("/{id}")
      * @Method({"DELETE"})
      */
-    public function deleteAction()
+    public function deleteAction($id)
     {
-        throw new \Excepion("to implement");
+        //find by $id
+        //delete
+        
+        return array('id'=>$id);
     }
 }
