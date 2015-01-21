@@ -5,6 +5,11 @@ use GuzzleHttp\Client as GuzzleClient;
 
 class RestClient extends GuzzleClient
 {
+    /**
+     * endpoints map
+     * 
+     * @var array
+     */
     private $endpoints;
     
     /**
@@ -20,19 +25,21 @@ class RestClient extends GuzzleClient
         //endpoints array
         $this->endpoints = $api['endpoints'];
     }
+   
     
     /**
-     * Get Url
+     * Search through our route map and if this route exists then use that
      * 
-     * @param string $name
-     * @return boolean
+     * @param string $method
+     * @param string $url
+     * @param array $options
+     * @return type
      */
-    public function getUrl($name)
+    public function createRequest($method, $url = null, array $options = array()) 
     {
-        //check if this url already exist in our array map
-        if(!array_key_exists($name, $this->endpoints)){
-            return false;
+        if(!empty($url) && array_key_exists($url, $this->endpoints)){
+            $url = $this->endpoints[$url];
         }
-        return $this->endpoints[$name];
+        return parent::createRequest($method, $url, $options);
     }
 }
