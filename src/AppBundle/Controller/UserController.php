@@ -20,6 +20,10 @@ class UserController extends FOSRestController
      */
     public function listAction()
     {
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $users = $em->getRepository('AppBundle\Entity\User')->findAll();
+        
         $data = array('elvis','paul'); // get data, in this case list of users.
         
         return $data;
@@ -31,7 +35,12 @@ class UserController extends FOSRestController
      */
     public function listOneAction($id)
     {
-        return 'elvis';
+        switch ($id) {
+            case 1:
+                return 'elvis';
+        }
+        
+        throw new \AppBundle\Exception\NotFound('Only implemented with /user/1');
     }
     
     /**
@@ -41,7 +50,7 @@ class UserController extends FOSRestController
      */
     public function addAction()
     {
-        throw new \Excepion("to implement");
+        throw new \Exception("to implement");
     }
     
     /**

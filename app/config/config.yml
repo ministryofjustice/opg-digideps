@@ -21,24 +21,6 @@ framework:
     fragments:       ~
     http_method_override: true
 
-# Twig Configuration
-twig:
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
-
-# Assetic Configuration
-assetic:
-    debug:          "%kernel.debug%"
-    use_controller: false
-    bundles:        [ ]
-    #java: /usr/bin/java
-    filters:
-        cssrewrite: ~
-        #closure:
-        #    jar: "%kernel.root_dir%/Resources/java/compiler.jar"
-        #yui_css:
-        #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
-
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -71,6 +53,9 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
     
+twig:
+    exception_controller: 'AppBundle\Controller\ExceptionController::handleException'
+    
 fos_rest:
     view:
-        view_response_listener: force    
+        view_response_listener: force 
