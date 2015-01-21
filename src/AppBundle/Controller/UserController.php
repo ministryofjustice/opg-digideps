@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -23,68 +24,56 @@ class UserController extends Controller
      * @Route("/")
      * @Method({"GET"})
      */
-    public function listAction()
+    public function getAll()
     {
-//        $em = $this->getDoctrine()->getManager();
-//
-//        $users = $em->getRepository('AppBundle\Entity\User')->findAll();
+        $em = $this->getDoctrine()->getManager();
         
-        $data = array('elvis','paul'); // get data, in this case list of users.
+        $serializer = $this->container->get('serializer');
         
-        return $data;
+        $users = $em->getRepository('AppBundle\Entity\User')->findAll();
+        
+        //TODO do not hardcode JSON encoding, move to controller 
+        return new Response($serializer->serialize($users, 'json'));
     }
     
     /**
      * @Route("/{id}")
      * @Method({"GET"})
      */
-    public function listOneAction($id)
+    public function get($id)
     {
-        // find user by ID, return it
-        
-        switch ($id) {
-            case 1:
-                return 'elvis';
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('AppBundle\Entity\User')->find($id);
+        if (!$user) {
+            throw new \Exception('not found');
         }
         
-        throw new \AppBundle\Exception\NotFound('Only implemented with /user/1');
+        $serializer = $this->container->get('serializer');
+        
+        //TODO do not hardcode JSON encoding, move to controller 
+        return new Response($serializer->serialize($user, 'json'));
     }
     
     /**
      * @Route("/")
      * @Method({"POST"})
      */
-    public function addAction(Request $request)
+    public function add(Request $request)
     {
         $post = json_decode($request->getContent(), true);
+        
+        $em = $this->getDoctrine()->getManager();
+        
+        $user = new \AppBundle\Entity\User();
+        $user->setFirstname($post['first_name']);
+        $user->setLastname($post['last_name']);
+        $user->setEmail($post['email']);
+        $user->setPassword('');
+        $em->persist($user);
+        $em->flush($user);
         
         //CREATE user
         
-        return array('id'=>999, 'debug'=>$post);
-    }
-    
-    /**
-     * @Route("/{id}")
-     * @Method({"PUT"})
-     */
-    public function editAction(Request $request, $id)
-    {
-        $post = json_decode($request->getContent(), true);
-        
-        //find by id, update properties, flush
-        
-        return array('id'=>$id);
-    }
- 
-    /**
-     * @Route("/{id}")
-     * @Method({"DELETE"})
-     */
-    public function deleteAction($id)
-    {
-        //find by $id
-        //delete
-        
-        return array('id'=>$id);
+        return array('id'=>$user->getId());
     }
 }

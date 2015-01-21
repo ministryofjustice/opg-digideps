@@ -60,7 +60,13 @@
         <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" checkreturn="true" />
     </target>
     
-    <target name="build" depends="composer-install,cache-clear,phplint,phpunit">
+    
+    <target name="db">
+        <exec command="php app/console doctrine:schema:drop --force"></exec>
+        <exec command="php app/console doctrine:schema:create"></exec>
+    </target>
+    
+    <target name="build" depends="composer-install,db,cache-clear,phplint,phpunit">
     </target>
 
 </project>
