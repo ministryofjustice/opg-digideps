@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use JMS\Serializer\Serializer;
 
@@ -57,6 +58,14 @@ class RestInputOuputFormatter
         $response = $this->createFormattedResponse(false, '', $event->getException()->getMessage(), $event->getRequest()->getContentType());
         
         $event->setResponse($response);
+    }
+    
+    public function requestBodyToArray(Request $request)
+    {
+        $format = $request->getContentType();
+        
+        return $this->serializer
+                ->deserialize($request->getContent(), 'array', $format);
     }
     
 }
