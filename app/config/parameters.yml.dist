@@ -20,6 +20,6 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     api:
-        base_url: '{{pillar['api-base']}}'
+        base_url: http://digideps.api/
         endpoints:
              find_user_by_email: find-by-user-email
