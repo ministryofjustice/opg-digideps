@@ -12,60 +12,62 @@ use JMS\Serializer\Serializer;
 
 class RestInputOuputFormatter
 {
+
     /**
      * @var Serializer
      */
     private $serializer;
-    
+
     /**
      * @var array
      */
     private $supportedFormats;
-    
+
+
     public function __construct(Serializer $serializer, array $supportedFormats)
     {
         $this->serializer = $serializer;
         $this->supportedFormats = $supportedFormats;
     }
-        
-    
-    private function createFormattedResponse($success, $data, $message, $format)
-    {
-        $dataToReturn = array('success' => $success, 'data' => $data, 'message'=>$message);
-        
-        if (!in_array($format, $this->supportedFormats)) {
-            throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
-            
-            //TOOD add header
-        }
-        
-        $serializedData = $this->serializer->serialize($dataToReturn, $format);
-        $response = new Response($serializedData);
-        $response->headers->set('content_type', 'application/' . $format);
-        
-        return $response;
-    }
-    
-    public function handleResponse(GetResponseForControllerResultEvent $event)
-    {
-        $response = $this->createFormattedResponse(true, $event->getControllerResult(), '', $event->getRequest()->getContentType());
-        
-        $event->setResponse($response);
-    }
-    
-    public function handleException(GetResponseForExceptionEvent $event)
-    {
-        $response = $this->createFormattedResponse(false, '', $event->getException()->getMessage(), $event->getRequest()->getContentType());
-        
-        $event->setResponse($response);
-    }
-    
+
     public function requestBodyToArray(Request $request)
     {
         $format = $request->getContentType();
-        
+
         return $this->serializer
-                ->deserialize($request->getContent(), 'array', $format);
+                        ->deserialize($request->getContent(), 'array', $format);
+    }
+
+    public function handleResponse(GetResponseForControllerResultEvent $event)
+    {
+        $dataToReturn = array('success' => true, 'data' => $event->getControllerResult(), 'message' => '');
+        $format = $event->getRequest()->getContentType();
+
+        if (!in_array($format, $this->supportedFormats)) {
+            throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
+        }
+
+        $serializedData = $this->serializer->serialize($dataToReturn, $format);
+        $response = new Response($serializedData);
+        $response->headers->set('content_type', 'application/' . $format);
+
+        $event->setResponse($response);
+    }
+
+    public function handleException(GetResponseForExceptionEvent $event)
+    {
+        $dataToReturn = array('success' => false, 'data' => '', 'message' => $event->getException()->getMessage());
+        $format = $event->getRequest()->getContentType();
+
+        if (!in_array($event->getRequest()->getContentType(), $this->supportedFormats)) {
+            throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
+        }
+
+        $serializedData = $this->serializer->serialize($dataToReturn, $format);
+        $response = new Response($serializedData);
+        $response->headers->set('content_type', 'application/' . $format);
+
+        $event->setResponse($response);
     }
     
 }
