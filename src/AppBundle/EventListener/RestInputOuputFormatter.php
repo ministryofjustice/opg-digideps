@@ -30,7 +30,7 @@ class RestInputOuputFormatter
     
     private function createFormattedResponse($success, $data, $message, $format)
     {
-        $data = array('success' => $success, 'data' => $data, 'message'=>$message);
+        $dataToReturn = array('success' => $success, 'data' => $data, 'message'=>$message);
         
         if (!in_array($format, $this->supportedFormats)) {
             throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
@@ -38,7 +38,7 @@ class RestInputOuputFormatter
             //TOOD add header
         }
         
-        $serializedData = $this->serializer->serialize($data, $format);
+        $serializedData = $this->serializer->serialize($dataToReturn, $format);
         $response = new Response($serializedData);
         $response->headers->set('content_type', 'application/' . $format);
         
