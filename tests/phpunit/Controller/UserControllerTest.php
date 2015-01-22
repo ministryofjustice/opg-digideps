@@ -33,12 +33,12 @@ class UserControllerTest extends WebTestCase
             ))
         );
         $response =  $this->client->getResponse();
-        $this->assertTrue($response->headers->contains('Content-Type','application/json'));
+        $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type');
 //        echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
 //        print_r($return);die;
         $this->assertNotEmpty($return, 'Response not json');
-        $this->assertTrue($return['success']);
+        $this->assertTrue($return['success'], $return['message']);
         $this->assertArrayHasKey('message', $return);
         $this->assertTrue($return['data']['id'] > 0);
         
@@ -51,14 +51,14 @@ class UserControllerTest extends WebTestCase
      */
     public function getOneJson($id)
     {
-        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/json'));
+        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/json'), 'wrong content type');
         $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
 //        echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
 //        print_r($return); die;
         $this->assertNotEmpty($return, 'Response not json');
-        $this->assertTrue($return['success']);
+        $this->assertTrue($return['success'], $return['message']);
         $this->assertEquals('Elvis', $return['data']['firstname']);
     }
     
@@ -67,7 +67,7 @@ class UserControllerTest extends WebTestCase
      */
     public function getOneJsonException()
     {
-        $this->client->request('GET', '/user/' . 0, array(), array(), array('CONTENT_TYPE' => 'application/json'));
+        $this->client->request('GET', '/user/' . 0, array(), array(), array('CONTENT_TYPE' => 'application/json'), 'wrong content type');
         $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
         $return = json_decode($response->getContent(), true);
@@ -84,7 +84,7 @@ class UserControllerTest extends WebTestCase
      */
     public function getOneXml($id)
     {
-        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/xml') );
+        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/xml'), 'wrong content type' );
         $response =  $this->client->getResponse();
         $xml = simplexml_load_string($response->getContent());
         $this->assertTrue(count($xml->children()) > 1);
