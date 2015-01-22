@@ -19,7 +19,10 @@ class RestClient extends GuzzleClient
      */
     public function __construct($api)
     {
-        $config = [ 'base_url' =>  $api['base_url']  ];
+        $config = [ 'base_url' =>  $api['base_url'],
+                    'defaults' => ['headers' => [ 'Content-Type' => 'application/json' ] ],
+                  ];
+        
         parent::__construct($config);
        
         //endpoints array

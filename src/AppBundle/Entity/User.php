@@ -5,6 +5,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
+ * @codeCoverageIgnore
  * @JMS\XmlRoot("user")
  * @JMS\AccessType("public_method")
  */
@@ -54,7 +55,7 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("string")
-     * @JMS\Accessor(setter="addRole")
+     * @JMS\Accessor(getter="getRole", setter="addRole")
      * @var array $roles
      */
     private $roles;
@@ -242,6 +243,11 @@ class User implements AdvancedUserInterface
     public function addRole($role)
     {
         $this->roles[] = $role; 
+    }
+    
+    public function getRole()
+    {
+        return $this->roles[0];
     }
     
     /**
