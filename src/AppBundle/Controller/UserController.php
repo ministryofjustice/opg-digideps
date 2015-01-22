@@ -26,7 +26,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->getBodyContentAsArray();
+        $data = $this->deserializeBodyContent();
         
         $em = $this->getDoctrine()->getManager();
         

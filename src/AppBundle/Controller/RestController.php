@@ -7,16 +7,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 abstract class RestController extends Controller
 {
-   
-    
     /**
      * @return array
      */
-    protected function getBodyContentAsArray()
+    protected function deserializeBodyContent()
     {
-        return $this->container->get('kernel.listener.responseConverter')->requestBodyToArray($this->getRequest());
+        if ($this->container->has('kernel.listener.responseConverter')) {
+            return $this->container->get('kernel.listener.responseConverter')->requestContentToArray($this->getRequest());
+        }
         
-        
-        
+        return $this->getRequest()->getContent();
     }
 }

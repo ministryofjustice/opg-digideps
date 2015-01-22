@@ -30,42 +30,55 @@ class RestInputOuputFormatter
         $this->supportedFormats = $supportedFormats;
     }
 
-    public function requestBodyToArray(Request $request)
+    /**
+     * @param Request $request
+     * 
+     * @return array
+     */
+    public function requestContentToArray(Request $request)
     {
         $format = $request->getContentType();
 
-        return $this->serializer
-                        ->deserialize($request->getContent(), 'array', $format);
+        return $this->serializer->deserialize($request->getContent(), 'array', $format);
     }
-
-    public function handleResponse(GetResponseForControllerResultEvent $event)
+    
+    
+    /**
+     * @param array $data
+     * @param Request $request
+     * @return Response
+     */
+    private function arrayToResponse($data, Request $request)
     {
-        $dataToReturn = array('success' => true, 'data' => $event->getControllerResult(), 'message' => '');
-        $format = $event->getRequest()->getContentType();
+        $format = $request->getContentType();
 
         if (!in_array($format, $this->supportedFormats)) {
             throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
         }
 
-        $serializedData = $this->serializer->serialize($dataToReturn, $format);
+        $serializedData = $this->serializer->serialize($data, $format);
         $response = new Response($serializedData);
         $response->headers->set('content_type', 'application/' . $format);
+        
+        return $response;
+    }
 
+    
+    public function onKernelView(GetResponseForControllerResultEvent $event)
+    {
+        $data = array('success' => true, 'data' => $event->getControllerResult(), 'message' => '');
+        
+        $response = $this->arrayToResponse($data, $event->getRequest());
+        
         $event->setResponse($response);
     }
 
-    public function handleException(GetResponseForExceptionEvent $event)
+    
+    public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $dataToReturn = array('success' => false, 'data' => '', 'message' => $event->getException()->getMessage());
-        $format = $event->getRequest()->getContentType();
-
-        if (!in_array($event->getRequest()->getContentType(), $this->supportedFormats)) {
-            throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
-        }
-
-        $serializedData = $this->serializer->serialize($dataToReturn, $format);
-        $response = new Response($serializedData);
-        $response->headers->set('content_type', 'application/' . $format);
+        $data = array('success' => false, 'data' => '', 'message' => $event->getException()->getMessage());
+        
+        $response = $this->arrayToResponse($data, $event->getRequest());
 
         $event->setResponse($response);
     }
