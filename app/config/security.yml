@@ -1,17 +1,17 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        AppBundle\Entity\User: plaintext
 
     role_hierarchy:
-        ROLE_ADMIN:       ROLE_USER
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_LAY_DEPUTY: []
+        ROLE_PROFESSIONAL_DEPUTY: []
+        ROLE_LOCAL_AUTHORITY_DEPUTY: []
+        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_GUEST, ROLE_LAY_DEPUTY, ROLE_PROFESSIONAL_DEPUTY, ROLE_LOCAL_AUTHORITY_DEPUTY, ROLE_VISITOR ]
 
     providers:
-        in_memory:
-            memory:
-                users:
-                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
-                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+        deputy:
+           id: deputyprovider
 
     firewalls:
         dev:
@@ -19,21 +19,23 @@ security:
             security: false
 
         login:
-            pattern:  ^/demo/secured/login$
+            pattern:  ^/login$
             security: false
 
         secured_area:
-            pattern:    ^/demo/secured/
             form_login:
-                check_path: _security_check
-                login_path: _demo_login
+                check_path: /login_check
+                login_path: /login
+                username_parameter: email
+                password_parameter: password
             logout:
-                path:   _demo_logout
-                target: _demo
+                path:   /logout
+                target: /
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
 
     access_control:
         #- { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
