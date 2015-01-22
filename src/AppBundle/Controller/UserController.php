@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 //use Symfony\Component\HttpFoundation\JsonResponse;
 //use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-//use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\FOSRestController;
 //use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,40 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class UserController extends Controller
 {
-    /**
-     * @Route("/")
-     * @Method({"GET"})
-     */
-    public function getAll()
-    {
-        $em = $this->getDoctrine()->getManager();
-        
-        $serializer = $this->container->get('serializer');
-        
-        $users = $em->getRepository('AppBundle\Entity\User')->findAll();
-        
-        //TODO do not hardcode JSON encoding, move to controller 
-        return new Response($serializer->serialize($users, 'json'));
-    }
-    
-    /**
-     * @Route("/{id}")
-     * @Method({"GET"})
-     */
-    public function get($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle\Entity\User')->find($id);
-        if (!$user) {
-            throw new \Exception('not found');
-        }
-        
-        $serializer = $this->container->get('serializer');
-        
-        //TODO do not hardcode JSON encoding, move to controller 
-        return new Response($serializer->serialize($user, 'json'));
-    }
-    
     /**
      * @Route("/")
      * @Method({"POST"})
@@ -76,4 +42,37 @@ class UserController extends Controller
         
         return array('id'=>$user->getId());
     }
+    
+    /**
+     * @Route("/{id}")
+     * @Method({"GET"})
+     */
+    public function get($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('AppBundle\Entity\User')->find($id);
+        if (!$user) {
+            throw new \Exception('not found');
+        }
+        
+        return $user;
+    }
+    
+    /**
+     * @Route("/")
+     * @Method({"GET"})
+     */
+    public function getAll()
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        $serializer = $this->container->get('serializer');
+        
+        $users = $em->getRepository('AppBundle\Entity\User')->findAll();
+        
+        return $users;
+    }
+    
+    
+  
 }

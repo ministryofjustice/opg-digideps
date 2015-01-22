@@ -1,5 +1,4 @@
 app:
     resource: @AppBundle/Controller/
     type:     annotation
-    defaults: {_format: json}
     prefix:   /

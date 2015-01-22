@@ -6,11 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class UserControllerTest extends WebTestCase
 {
-    private static $client;
+    /**
+     * @var Symfony\Bundle\FrameworkBundle\Client 
+     */
+    private $client;
     
     public function setUp()
     {
-        self::$client = static::createClient();
+        $this->client = static::createClient();
     }
 
     /**
@@ -19,7 +22,7 @@ class UserControllerTest extends WebTestCase
     public function add()
     {
         // create user
-         self::$client->request(
+         $this->client->request(
             'POST', '/user/', 
             array(), array(), 
             array('CONTENT_TYPE' => 'application/json'), 
@@ -29,27 +32,61 @@ class UserControllerTest extends WebTestCase
                 'email' => 'elvis.ciotti@digital.justice.gov.uk',
             ))
         );
-        $response =  self::$client->getResponse();
+        $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
+        //echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
+        //print_r($return);die;
         $this->assertNotEmpty($return, 'Response not json');
-        $this->assertArrayHasKey('id', $return);
+        $this->assertTrue($return['success']);
+        $this->assertArrayHasKey('message', $return);
+        $this->assertTrue($return['data']['id'] > 0);
         
-        return $return;
+        return $return['data']['id'];
     }
     
     /**
      * @test
      * @depends add
      */
-    public function getOne($return)
+    public function getOneJson($id)
     {
-        self::$client->request('GET', '/user/' . $return['id']);
-        $response =  self::$client->getResponse();
+        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/json'));
+        $response =  $this->client->getResponse();
+        $this->assertTrue($response->headers->contains('Content-Type','application/json'));
+        //echo $response->getContent();die;
+        $return = json_decode($response->getContent(), true);
+        $this->assertNotEmpty($return, 'Response not json');
+        $this->assertTrue($return['success']);
+        $this->assertEquals('Elvis', $return['data']['firstname']);
+        
+    }
+    
+    /**
+     * @test
+     */
+    public function getOneJsonException()
+    {
+        $this->client->request('GET', '/user/' . 0, array(), array(), array('CONTENT_TYPE' => 'application/json'));
+        $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
-        $this->assertEquals('Elvis', $return['firstname']);
+        $this->assertFalse($return['success']);
+        $this->assertEmpty($return['data']);
+        $this->assertContains('not found', $return['message']);
         
+    }
+    
+    /**
+     * @test
+     * @depends add
+     */
+    public function getOneXml($id)
+    {
+        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/xml') );
+        $response =  $this->client->getResponse();
+        $xml = simplexml_load_string($response->getContent());
+        $this->assertTrue(count($xml->children()) > 1);
     }
 }
