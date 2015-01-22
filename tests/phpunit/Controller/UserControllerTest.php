@@ -19,7 +19,7 @@ class UserControllerTest extends WebTestCase
     /**
      * @test
      */
-    public function add()
+    public function addJson()
     {
         // create user
          $this->client->request(
@@ -34,9 +34,9 @@ class UserControllerTest extends WebTestCase
         );
         $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
-        //echo $response->getContent();die;
+//        echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
-        //print_r($return);die;
+//        print_r($return);die;
         $this->assertNotEmpty($return, 'Response not json');
         $this->assertTrue($return['success']);
         $this->assertArrayHasKey('message', $return);
@@ -47,19 +47,19 @@ class UserControllerTest extends WebTestCase
     
     /**
      * @test
-     * @depends add
+     * @depends addJson
      */
     public function getOneJson($id)
     {
         $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/json'));
         $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
-        //echo $response->getContent();die;
+//        echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
+        print_r($return); die;
         $this->assertNotEmpty($return, 'Response not json');
         $this->assertTrue($return['success']);
         $this->assertEquals('Elvis', $return['data']['firstname']);
-        
     }
     
     /**
@@ -80,7 +80,7 @@ class UserControllerTest extends WebTestCase
     
     /**
      * @test
-     * @depends add
+     * @depends addJson
      */
     public function getOneXml($id)
     {

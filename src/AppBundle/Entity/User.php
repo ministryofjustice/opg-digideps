@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use JMS\Serializer\Annotation\Exclude;
 
 /**
  * Users
@@ -43,7 +44,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @var string
-     *
+     * @Exclude
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
      */
     private $password;
