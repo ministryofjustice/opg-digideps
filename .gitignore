@@ -1,4 +1,5 @@
 .vagrant
+.DS_Store
 nbproject
 app/cache/*
 app/logs/*
