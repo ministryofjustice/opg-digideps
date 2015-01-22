@@ -59,8 +59,4 @@ class RestInputOuputFormatter
         $event->setResponse($response);
     }
     
-    public function handleController(FilterControllerEvent $event)
-    {
-    }
-    
 }

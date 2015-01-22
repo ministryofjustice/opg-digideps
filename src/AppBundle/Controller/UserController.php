@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * @Route("/user")
  */
-class UserController extends Controller
+class UserController extends RestController
 {
     /**
      * @Route("/")
@@ -26,19 +26,17 @@ class UserController extends Controller
      */
     public function add(Request $request)
     {
-        $post = json_decode($request->getContent(), true);
+        $data = $this->getBodyContentAsArray();
         
         $em = $this->getDoctrine()->getManager();
         
         $user = new \AppBundle\Entity\User();
-        $user->setFirstname($post['first_name']);
-        $user->setLastname($post['last_name']);
-        $user->setEmail($post['email']);
+        $user->setFirstname($data['first_name']);
+        $user->setLastname($data['last_name']);
+        $user->setEmail($data['email']);
         $user->setPassword('');
         $em->persist($user);
         $em->flush($user);
-        
-        //CREATE user
         
         return array('id'=>$user->getId());
     }
@@ -65,8 +63,6 @@ class UserController extends Controller
     public function getAll()
     {
         $em = $this->getDoctrine()->getManager();
-        
-        $serializer = $this->container->get('serializer');
         
         $users = $em->getRepository('AppBundle\Entity\User')->findAll();
         
