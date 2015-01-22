@@ -49,8 +49,18 @@
         export PS1="vagrant$ "
 
   * Test
+        
+        php phing.phar phpunit
+  
+  * Rest
 
-        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"first_name":"Elvis","last_name":"Ciotti","email":"elvis.ciotti@digital.justice.gov.uk"}'  http://digideps-api.local/user/
-        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"first_name":"Paul","last_name":"Oforduru","email":"paul@digital.justice.gov.uk"}'  http://digideps-api.local/user/
-        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  http://digideps-api.local/user/
-        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  http://digideps-api.local/user/2
+        See RestInputOuputFormatter class and config from config.yml
+        
+        Useful links
+
+          * Serialized entities annotations here http://jmsyst.com/libs/serializer/master/reference/annotations
+          * http://symfony.com/doc/current/cookbook/service_container/event_listener.html
+          * http://symfony.com/doc/current/components/http_kernel/introduction.html
+
+
+

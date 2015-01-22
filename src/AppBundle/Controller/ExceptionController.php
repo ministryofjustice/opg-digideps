@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use FOS\RestBundle\Controller\FOSRestController;
 
-class ExceptionController extends FOSRestController
+class ExceptionController extends RestController
 {
     public function handleException($exception)
     {

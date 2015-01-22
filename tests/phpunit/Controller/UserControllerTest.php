@@ -56,7 +56,7 @@ class UserControllerTest extends WebTestCase
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
 //        echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
-        print_r($return); die;
+//        print_r($return); die;
         $this->assertNotEmpty($return, 'Response not json');
         $this->assertTrue($return['success']);
         $this->assertEquals('Elvis', $return['data']['firstname']);
