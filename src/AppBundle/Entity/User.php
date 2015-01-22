@@ -53,7 +53,8 @@ class User implements AdvancedUserInterface
     private $active;
     
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("string")
+     * @JMS\Accessor(setter="addRole")
      * @var array $roles
      */
     private $roles;
@@ -65,7 +66,7 @@ class User implements AdvancedUserInterface
     private $emailConfirmed;
     
     /**
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @var \DateTime $registrationDate
      */
     private $registrationDate;
@@ -77,7 +78,7 @@ class User implements AdvancedUserInterface
     private $registrationToken;
     
     /**
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @var \DateTime $tokenDate
      */
     private $tokenDate;
@@ -94,6 +95,17 @@ class User implements AdvancedUserInterface
     public function getId()
     {
         return $this->id;
+    }
+    
+    /**
+     * 
+     * @param integer $id
+     * @return \AppBundle\Entity\User
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
     
     /**
@@ -186,6 +198,12 @@ class User implements AdvancedUserInterface
     public function getSalt()
     {
         return null;
+    }
+    
+    public function setSalt($salt)
+    {
+       $this->salt = $salt;
+       return $this;
     }
     
     /**
@@ -311,6 +329,17 @@ class User implements AdvancedUserInterface
     public function getGaTrackingId()
     {
         return $this->gaTrackingId;
+    }
+    
+    /**
+     * 
+     * @param string $gaTrackingId
+     * @return \AppBundle\Entity\User
+     */
+    public function setGaTrackingId($gaTrackingId)
+    {
+        $this->gaTrackingId = $gaTrackingId;
+        return $this;
     }
     
     
