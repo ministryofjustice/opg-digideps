@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <phpunit 
-    bootstrap="vendor/autoload.php" 
-    colors="true" 
     stopOnFailure="true"
+    backupGlobals="false"
+    colors="true"
+    bootstrap="app/bootstrap.php.cache"
 >
     <testsuites>
         <testsuite name="application">
             <directory>./tests/phpunit</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <server name="KERNEL_DIR" value="app" />
+    </php>
 </phpunit>

@@ -39,11 +39,14 @@
 
   * Useful aliases for the vagrant shell (add to `~/.bashrc`)
 
-        alias phpunit="/var/www/digideps/vendor/phpunit/phpunit/phpunit"
-        alias behat="/var/www/digideps/vendor/behat/behat/bin/behat"
-        alias phing="/usr/bin/php /var/www/digideps/phing.phar"
+        alias gs="git status"
+        alias gdc="git diff --cached"
+        alias phpunit="/var/www/opg-digi-deps-api/vendor/phpunit/phpunit/phpunit"
+        alias behat="/var/www/opg-digi-deps-api/vendor/behat/behat/bin/behat"
+        alias phing="/usr/bin/php /var/www/opg-digi-deps-api/phing.phar"
         alias db="sudo -u postgres psql dd"
         cd /var/www/opg-digi-deps-api
+        export PS1="vagrant$ "
 
   * Test
 
