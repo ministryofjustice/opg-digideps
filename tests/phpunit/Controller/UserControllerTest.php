@@ -3,8 +3,6 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class UserControllerTest extends WebTestCase
 {
@@ -21,11 +19,16 @@ class UserControllerTest extends WebTestCase
     public function add()
     {
         // create user
-         self::$client->request('POST', '/user/', array(), array(), array(), json_encode(array(
-            'first_name' => 'Elvis',
-            'last_name' => 'Ciotti',
-            'email' => 'elvis.ciotti@digital.justice.gov.uk',
-        )));
+         self::$client->request(
+            'POST', '/user/', 
+            array(), array(), 
+            array('CONTENT_TYPE' => 'application/json'), 
+            json_encode(array(
+                'first_name' => 'Elvis',
+                'last_name' => 'Ciotti',
+                'email' => 'elvis.ciotti@digital.justice.gov.uk',
+            ))
+        );
         $response =  self::$client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
         $return = json_decode($response->getContent(), true);
