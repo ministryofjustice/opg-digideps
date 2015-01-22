@@ -8,27 +8,41 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class UserControllerTest extends WebTestCase
 {
+    private static $client;
     
-    
-    public function testAddGet()
+    public function setUp()
     {
-        $client = static::createClient();
+        self::$client = static::createClient();
+    }
 
+    /**
+     * @test
+     */
+    public function add()
+    {
         // create user
-        $client->request('POST', '/user/', array(), array(), array(), json_encode(array(
+         self::$client->request('POST', '/user/', array(), array(), array(), json_encode(array(
             'first_name' => 'Elvis',
             'last_name' => 'Ciotti',
             'email' => 'elvis.ciotti@digital.justice.gov.uk',
         )));
-        $response =  $client->getResponse();
+        $response =  self::$client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
         $this->assertArrayHasKey('id', $return);
         
-        // create user
-        $client->request('GET', '/user/' . $return['id']);
-        $response =  $client->getResponse();
+        return $return;
+    }
+    
+    /**
+     * @test
+     * @depends add
+     */
+    public function getOne($return)
+    {
+        self::$client->request('GET', '/user/' . $return['id']);
+        $response =  self::$client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'));
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
