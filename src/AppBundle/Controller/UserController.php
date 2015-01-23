@@ -69,6 +69,16 @@ class UserController extends RestController
         return $users;
     }
     
-    
-  
+    /**
+     * @Route("/get-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getByEmail($email)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        
+        $user = $em->getRepository('AppBundle\Entity\User')->findOneByEmail($email);
+        
+        return $user;
+    }
 }

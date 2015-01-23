@@ -44,7 +44,6 @@ class User implements AdvancedUserInterface
 
     /**
      * @var string
-     * @Exclude
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
      */
     private $password;
