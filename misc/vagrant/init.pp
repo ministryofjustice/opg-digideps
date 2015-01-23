@@ -22,6 +22,7 @@ package { [
     "php5-intl", 
     "php-apc",
     "php5-xdebug",
+    "php5-json",
     "curl", 
     "git",
     "nginx",
