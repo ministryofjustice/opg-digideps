@@ -15,11 +15,14 @@
     
     
     <target name="cache-clear" description="">
-        <echo msg="clearing data/cache/* ..."></echo>
+        <exec command="sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
+        <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
         <exec command="rm -rf app/cache/*"/>
-         
-        <echo msg="clear apc cache"></echo>
+        <exec command="rm -rf app/logs/*"/>
+        <echo msg="Permission on cache and logs set"></echo>
+        
         <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
+        <echo msg="APC cache cleared"></echo>
     </target>
 
         

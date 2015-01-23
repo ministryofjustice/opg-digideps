@@ -48,9 +48,17 @@
         cd /var/www/opg-digi-deps-api
         export PS1="vagrant$ "
 
-  * Test
+  * PHPUnit
         
         php phing.phar phpunit
+
+
+  * Manual tests
+
+        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"first_name":"Elvis","last_name":"Ciotti","email":"elvis.ciotti@digital.justice.gov.uk"}'  http://digideps-api.local/user/
+        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"first_name":"Paul","last_name":"Oforduru","email":"paul@digital.justice.gov.uk"}'  http://digideps-api.local/user/
+        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  http://digideps-api.local/user/
+        curl -v -H "Accept: application/json" -H "Content-type: application/json" -X GET  http://digideps-api.local/user/2
   
   * Rest
 
