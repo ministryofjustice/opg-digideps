@@ -42,6 +42,13 @@ class RestClient extends GuzzleClient
     {
         if(!empty($url) && array_key_exists($url, $this->endpoints)){
             $url = $this->endpoints[$url];
+            
+            if(array_key_exists('query', $options)){
+                foreach($options['query'] as $param){
+                    $url = $url.'/'.$param;
+                }
+                unset($options['query']);
+            }
         }
         return parent::createRequest($method, $url, $options);
     }
