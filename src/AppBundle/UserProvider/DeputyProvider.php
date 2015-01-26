@@ -51,9 +51,9 @@ class DeputyProvider implements UserProviderInterface
         if(!$arrayBody['success']){
            throw new UsernameNotFoundException($arrayBody['message']); 
         }
-        
+
         $user = $this->jmsSerializer->deserialize(json_encode($arrayBody['data']),'AppBundle\Entity\User','json');
-        
+
         return $user;
     }
     

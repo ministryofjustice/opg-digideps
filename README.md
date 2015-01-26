@@ -3,7 +3,7 @@
   * Add hosts file line
     
         sudo su
-        echo "127.0.0.1       digideps-client.local" >> /etc/hosts
+        echo "192.168.50.3       digideps-client.local" >> /etc/hosts
 
   * Clone repo
  
@@ -19,7 +19,7 @@
         cd /var/www/opg-digi-deps-client/
         php phing.phar build
 
-  *  browse at http://digideps-client.local:8080
+  *  browse at http://digideps-client.local
 
   * Templates are in 
 

@@ -126,8 +126,11 @@ xdebug.max_nesting_level = 200",
 }
 
 
-# add #127.0.0.1 digideps-client.local" to /etc/hosts
 host { 'digideps-client.local':
    ip => '127.0.0.1',
+}
+
+host { 'digideps-api.local':
+   ip => '192.168.50.2',
 }
 
