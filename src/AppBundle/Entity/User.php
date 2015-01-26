@@ -233,6 +233,8 @@ class User implements AdvancedUserInterface
      */
     public function getRoles()
     {
+        return [ 'ROLE_AUTHENTICATED_FULLY' ];
+        
         return $this->roles;
     }
     
