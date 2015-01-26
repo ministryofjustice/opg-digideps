@@ -118,8 +118,8 @@ server {
         deny all;
     }
 
-    error_log  /var/log/nginx/digideps2-errors.log;
-    access_log /var/log/nginx/digideps2-access.log;
+    error_log  /var/log/nginx/digideps-api-errors.log;
+    access_log /var/log/nginx/digideps-api-access.log;
 }'
 }
 
