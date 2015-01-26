@@ -3,7 +3,7 @@
   * Add hosts file line
     
         sudo su
-        echo "127.0.0.1       digideps-api.local" >> /etc/hosts
+        echo "192.168.50.2       digideps-api.local" >> /etc/hosts
 
   * Clone repo
  

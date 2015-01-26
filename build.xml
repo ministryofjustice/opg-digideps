@@ -65,7 +65,8 @@
     
     
     <target name="db-recreate" description="schema drop and recreate">
-        <exec command="php app/console doctrine:query:sql 'DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;' "  checkreturn="true"></exec>
+        <exec command="php app/console doctrine:query:sql &quot;DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;&quot; "  checkreturn="true"></exec>
+        <phingcall target="db"></phingcall>
     </target>
     
     
