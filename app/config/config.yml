@@ -45,7 +45,7 @@ services:
         arguments: ["%api%"]
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
-        arguments: [ { rest_client: "@restclient", jms_serializer: "@jms_serializer"}]
+        arguments: [ @restclient, @jms_serializer ]
 # Doctrine Configuration
 #doctrine:
 #    dbal:

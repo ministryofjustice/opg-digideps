@@ -5,27 +5,27 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use AppBundle\Service\RestClient;
+use JMS\Serializer\SerializerInterface;
 
 class DeputyProvider implements UserProviderInterface
 {
     /**
-     * @var \AppBundle\Service\RestClient $restClient
+     * @var RestClient $restClient
      */
     private $restClient;
     
     /**
-     * @var \JMS\Serializer\SerializerBuilder
+     * @var SerializerInterface
      */
     private $jmsSerializer;
     
-    /**
-     * @param type $services
-     */
-    public function __construct($services)
+    public function __construct(RestClient $restClient, SerializerInterface $jmsSerializer)
     {
-        $this->restClient = $services['rest_client'];
-        $this->jmsSerializer = $services['jms_serializer'];
+        $this->restClient = $restClient;
+        $this->jmsSerializer = $jmsSerializer;
     }
+
     
     /**
      * Finds user by email
