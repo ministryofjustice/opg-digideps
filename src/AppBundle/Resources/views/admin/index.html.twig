@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    
+    {% include 'AppBundle:Admin:add.html.twig' %}
+    {% include 'AppBundle:Admin:list.html.twig' with {users: users} %}
+
+{% endblock %}

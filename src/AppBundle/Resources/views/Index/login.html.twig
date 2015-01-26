@@ -1,19 +1,24 @@
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData) }}</div>
-{% endif %}
+{% extends 'base.html.twig' %}
 
-<form action="{{ path('login_check') }}" method="post">
-    <label for="email">Email:</label>
-    <input type="text" id="email" name="email" value="{{ last_email }}" size=50 />
+{% block body %}
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData) }}</div>
+    {% endif %}
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" />
+    <form action="{{ path('login_check') }}" method="post">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" value="{{ last_email }}" size=50 />
 
-    {#
-        If you want to control the URL the user
-        is redirected to on success (more details below)
-        <input type="hidden" name="_target_path" value="/account" />
-    #}
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" />
 
-    <button type="submit">login</button>
-</form>
+        {#
+            If you want to control the URL the user
+            is redirected to on success (more details below)
+            <input type="hidden" name="_target_path" value="/account" />
+        #}
+
+        <button type="submit">login</button>
+    </form>
+
+{% endblock %}

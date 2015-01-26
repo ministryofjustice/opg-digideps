@@ -1,0 +1,5 @@
+<h2>List users</h2>
+
+{% for user in users %}
+    {{ user.firstname }} ~ {{ user.lastname }}  ~ {{ user.email }} <br/>
+{% endfor %}
