@@ -4,7 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Users
@@ -16,7 +16,8 @@ class User implements AdvancedUserInterface
 {
     /**
      * @var integer
-     *
+     * @JMS\Type("integer")
+     * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -57,7 +58,8 @@ class User implements AdvancedUserInterface
 
     /**
      * @var boolean
-     *
+     * @JMS\Type("boolean")
+     * 
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
     private $active;
@@ -71,6 +73,7 @@ class User implements AdvancedUserInterface
 
     /**
      * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
@@ -99,14 +102,15 @@ class User implements AdvancedUserInterface
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * 
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
     private $tokenDate;
 
     /**
      * @var integer
-     *
+     * 
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
      * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
      */
