@@ -27,7 +27,7 @@ class RestInputOuputFormatter
     public function __construct(Serializer $serializer, array $supportedFormats)
     {
         $this->serializer = $serializer;
-        $this->supportedFormats = $supportedFormats;
+        $this->supportedFormats = array_values($supportedFormats);
     }
 
     /**
