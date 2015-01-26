@@ -44,7 +44,7 @@
         alias phpunit="/var/www/opg-digi-deps-api/vendor/phpunit/phpunit/phpunit"
         alias behat="/var/www/opg-digi-deps-api/vendor/behat/behat/bin/behat"
         alias phing="/usr/bin/php /var/www/opg-digi-deps-api/phing.phar"
-        alias db="sudo -u postgres psql dd"
+        alias db="sudo -u postgres psql dd_api"
         cd /var/www/opg-digi-deps-api
         export PS1="vagrant$ "
 
@@ -52,6 +52,10 @@
         
         php phing.phar phpunit
 
+  * Recreate db
+    
+        echo "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;" | sudo -u postgres psql dd_api
+        phing db
 
   * Manual tests
 

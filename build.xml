@@ -24,8 +24,8 @@
         <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
         <echo msg="APC cache cleared"></echo>
     </target>
-
-        
+    
+                
     <target name="phplint" description="Scan source for PHP syntax errors">
         <phplint haltonfailure="true" cachefile="/tmp/dd2tPhingLintCacheFile" level="error">
             <fileset refid="source" />
@@ -64,9 +64,14 @@
     </target>
     
     
+    <target name="db-recreate" description="schema drop and recreate">
+        <exec command="php app/console doctrine:query:sql 'DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;' "  checkreturn="true"></exec>
+    </target>
+    
+    
     <target name="db">
-        <exec command="php app/console doctrine:schema:drop --force"></exec>
-        <exec command="php app/console doctrine:schema:create"></exec>
+        <exec command="php app/console doctrine:schema:drop --force" checkreturn="true" passthru="true"></exec>
+        <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="true"></exec>
     </target>
     
     <target name="build" depends="composer-install,db,cache-clear,phplint,phpunit">
