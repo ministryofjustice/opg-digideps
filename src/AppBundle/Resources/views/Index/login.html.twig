@@ -5,6 +5,7 @@
         <div>{{ error.messageKey|trans(error.messageData) }}</div>
     {% endif %}
 
+    <h1 class="behat-region-page-title">Login</h1>
     <form action="{{ path('login_check') }}" method="post">
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" value="{{ last_email }}" size=50 />
@@ -18,7 +19,7 @@
             <input type="hidden" name="_target_path" value="/account" />
         #}
 
-        <button type="submit">login</button>
+        <button type="submit" class="behat-link-login">login</button>
     </form>
 
 {% endblock %}
