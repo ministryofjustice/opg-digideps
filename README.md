@@ -1,23 +1,7 @@
 #INSTALL
 
-  * Add hosts file line
-    
-        sudo su
-        echo "192.168.50.3       digideps-client.local" >> /etc/hosts
-
-  * Clone repo
- 
-        cd /var/www
-        git clone git@github.com:ministryofjustice/opg-digi-deps-client.git
-    
-        cd /var/www/opg-digi-deps-client
-        vagrant up
-
-  * Build application (only first time)
-
-        vagrant ssh
-        cd /var/www/opg-digi-deps-client/
-        php phing.phar build
+  moved here 
+    https://github.com/ministryofjustice/opg-digi-deps-provisioning
 
   *  browse at http://digideps-client.local
 
