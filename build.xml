@@ -52,18 +52,6 @@
         <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
     </target>
 
-
-   <target name="behat-init" description="Set up test db">
-        <exec command="rm -f misc/tmp/behat-snapshot-*"></exec>
-        <exec command="rm -f misc/tmp/tmp/behat-response*.html"></exec>
-    </target>
-
-    <target name="behat" description="Run all the behat journeys" depends="behat-init">
-        <exec command="rm misc/build/behat.log*"></exec>
-        <exec passthru="true" command="vendor/behat/behat/bin/behat | tee misc/build/behat.log" checkreturn="true" />
-        <!-- convert xTerm-coloured behat.log into HTML format -->
-        <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" checkreturn="true" />
-    </target>
     
     <target name="db">
         <exec command="php app/console doctrine:query:sql &quot;DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;&quot; "  checkreturn="true"></exec>
