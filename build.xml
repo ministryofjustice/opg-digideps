@@ -15,8 +15,8 @@
     
     
     <target name="cache-clear" description="">
-        <exec command="sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
-        <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
+<!--        <exec command="sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
+        <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
         <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
         <echo msg="Permission on cache and logs set"></echo>
@@ -44,12 +44,14 @@
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
-        <exec command="./composer.phar install --optimize-autoloader" checkreturn="true" passthru="true"/>
+        <exec command="./composer.phar install" checkreturn="true" passthru="true"/>
     </target>
+
 
     <target name="phpunit">
         <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
     </target>
+
 
    <target name="behat-init" description="Set up test db">
         <exec command="rm -f misc/tmp/behat-snapshot-*"></exec>
@@ -75,7 +77,7 @@
         <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="true"></exec>
     </target>
     
-    <target name="build" depends="composer-install,db,cache-clear,phplint,phpunit">
+    <target name="build" depends="cache-clear,composer-install,db,phplint,phpunit">
     </target>
 
 </project>

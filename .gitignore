@@ -9,3 +9,5 @@ bin/behat
 bin/doctrine.php
 bin/doctrine
 .vagrant
+app/bootstrap.php.cache
+.DS_Store

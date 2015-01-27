@@ -4,7 +4,7 @@
     stopOnFailure="true"
     backupGlobals="false"
     colors="true"
-    bootstrap="app/bootstrap.php.cache"
+    bootstrap="tests/phpunit/bootstrap.php"
 >
     <testsuites>
         <testsuite name="application">
