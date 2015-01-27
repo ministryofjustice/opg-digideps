@@ -65,14 +65,8 @@
         <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" checkreturn="true" />
     </target>
     
-    
-    <target name="db-recreate" description="schema drop and recreate">
-        <exec command="php app/console doctrine:query:sql &quot;DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;&quot; "  checkreturn="true"></exec>
-        <phingcall target="db"></phingcall>
-    </target>
-    
-    
     <target name="db">
+        <exec command="php app/console doctrine:query:sql &quot;DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;&quot; "  checkreturn="true"></exec>
         <exec command="php app/console doctrine:schema:drop --force" checkreturn="true" passthru="true"></exec>
         <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="true"></exec>
     </target>
