@@ -4,3 +4,5 @@ nbproject
 app/cache/*
 app/logs/*
 vendor/*
+.idea/*
+*.iml
