@@ -5,27 +5,20 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use AppBundle\Service\RestClient;
-use JMS\Serializer\SerializerInterface;
+use AppBundle\Service\ApiClient;
 
 class DeputyProvider implements UserProviderInterface
 {
     /**
-     * @var RestClient $restClient
+     * @var ApiClient
      */
-    private $restClient;
+    private $apiClient;
     
-    /**
-     * @var SerializerInterface
-     */
-    private $jmsSerializer;
     
-    public function __construct(RestClient $restClient, SerializerInterface $jmsSerializer)
+    public function __construct(ApiClient $apiClient)
     {
-        $this->restClient = $restClient;
-        $this->jmsSerializer = $jmsSerializer;
+        $this->apiClient = $apiClient;
     }
-
     
     /**
      * Finds user by email
@@ -36,25 +29,12 @@ class DeputyProvider implements UserProviderInterface
      */
     public function loadUserByUsername($email) 
     {
-        $options = [ 'query' => [ 'email' => $email ] ];
-        $response = $this->restClient->get('find_user_by_email', $options);
-        
-        //if service is down
-        if($response->getStatusCode() != 200){
-            throw new UsernameNotFoundException("We can't log you in at this time");
+        try {
+            return $this->apiClient->getEntity('user/get-by-email/' . $email, 'User');
+        } catch (\Exception $e) {
+            throw new UsernameNotFoundException("We can't log you in at this time. Technical error: " . $e);
         }
         
-        $body = $response->getBody();
-        $arrayBody = $this->jmsSerializer->deserialize($body,'array','json');
-        
-        //if request was not successful
-        if(!$arrayBody['success']){
-           throw new UsernameNotFoundException($arrayBody['message']); 
-        }
-
-        $user = $this->jmsSerializer->deserialize(json_encode($arrayBody['data']),'AppBundle\Entity\User','json');
-
-        return $user;
     }
     
     /**
