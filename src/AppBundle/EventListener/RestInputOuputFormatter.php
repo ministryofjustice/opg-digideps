@@ -63,6 +63,15 @@ class RestInputOuputFormatter
         return $response;
     }
 
+    /**
+     * Attach the following with
+     * services:
+            kernel.listener.responseConverter:
+                class: AppBundle\EventListener\RestInputOuputFormatter
+                arguments: [ @serializer, ["json", "xml"] ]
+                tags:
+                    - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
+     */
     
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
@@ -73,7 +82,15 @@ class RestInputOuputFormatter
         $event->setResponse($response);
     }
 
-    
+    /**
+     * Attach the following with
+       services:
+            kernel.listener.responseConverter:
+                class: AppBundle\EventListener\RestInputOuputFormatter
+                arguments: [ @serializer, ["json", "xml"] ]
+                tags:
+                    - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+     */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $data = array('success' => false, 'data' => '', 'message' => $event->getException()->getMessage());
