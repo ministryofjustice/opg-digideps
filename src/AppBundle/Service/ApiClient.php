@@ -1,55 +1,79 @@
 <?php
 namespace AppBundle\Service;
 
-use GuzzleHttp\Client as GuzzleClient;
+use JMS\Serializer\SerializerInterface;
 
-class RestClient extends GuzzleClient
+class ApiClient
 {
     /**
-     * endpoints map
-     * 
-     * @var array
+     * @var RestClient
      */
-    private $endpoints;
+    private $restClient;
     
     /**
-     * Initialize guzzle and set base url
-     * 
-     * @param array $api
+     * @var SerializerInterface
      */
-    public function __construct($api)
+    private $jsonSerializer;
+    
+     /**
+     * @var string
+     */
+    private $format;
+    
+    
+    public function __construct(RestClient $erstClient, SerializerInterface $jsonSerializer, $format)
     {
-        $config = [ 'base_url' =>  $api['base_url'],
-                    'defaults' => ['headers' => [ 'Content-Type' => 'application/json' ] ],
-                  ];
-        
-        parent::__construct($config);
-       
-        //endpoints array
-        $this->endpoints = $api['endpoints'];
+        $this->restClient = $erstClient;
+        $this->jsonSerializer = $jsonSerializer;
+        $this->format = $format;
     }
-   
     
-    /**
-     * Search through our route map and if this route exists then use that
-     * 
-     * @param string $method
-     * @param string $url
-     * @param array $options
-     * @return type
-     */
-    public function createRequest($method, $url = null, array $options = array()) 
+    private function checkResponseArray($responseArray)
     {
-        if(!empty($url) && array_key_exists($url, $this->endpoints)){
-            $url = $this->endpoints[$url];
-            
-            if(array_key_exists('query', $options)){
-                foreach($options['query'] as $param){
-                    $url = $url.'/'.$param;
-                }
-                unset($options['query']);
-            }
+         if (empty($responseArray)) {
+            throw new \RuntimeException("No json response from the client. Response: ");
         }
-        return parent::createRequest($method, $url, $options);
+        if (empty($responseArray['success'])) {
+            throw new \Exception("The API returned an error" . $responseArray['message']);
+        }
     }
+    
+    
+    public function getEntity($endpoint, $class)
+    {
+        $body = $this->restClient->get($endpoint)->getBody();
+        $responseArray = $this->jsonSerializer->deserialize($body, 'array', $this->format);
+        $this->checkResponseArray($responseArray);
+        
+        $ret = $this->jsonSerializer->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, 'json');
+        
+        return $ret;
+    }
+    
+    
+    public function getEntities($endpoint, $class)
+    {
+        $body = $this->restClient->get($endpoint)->getBody();
+        $responseArray = $this->jsonSerializer->deserialize($body,'array',$this->format);
+        $this->checkResponseArray($responseArray);
+        
+        $ret = array();
+        foreach ($responseArray['data'] as $row) { 
+            $ret[] = $this->jsonSerializer->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+        }
+        
+        return $ret;
+    }
+    
+    
+    public function post($endpoint, array $data)
+    {
+        $body = json_encode($data);
+        
+        $response = $this->restClient->post($endpoint, ['body'=>$body]);
+        
+        return $response->getBody();
+    }
+
+   
 }

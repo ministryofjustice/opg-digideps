@@ -17,17 +17,7 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
-        $restClient = $this->container->get('restclient');
-        $serializer = $this->container->get('jms_serializer');
-        
-        $body = $restClient->get('list_users')->getBody();
-        
-        $arrayBody = $serializer->deserialize($body,'array','json')['data'];
-       
-        $users = array();
-        foreach ($arrayBody as $userArray) { 
-            $users[] = $serializer->deserialize(json_encode($userArray),'AppBundle\Entity\User','json');
-        }
+        $users = $this->get('apiClient')->getEntities('user', 'User');
         
         return $this->render('AppBundle:Admin:index.html.twig', array('users'=>$users));
     }
@@ -38,16 +28,11 @@ class AdminController extends Controller
      */
     public function addUserAction(Request $request)
     {
-        $restClient = $this->container->get('restclient');
-        $serializer = $this->container->get('jms_serializer');
-        
-        $body = json_encode(array(
+        $this->get('apiClient')->post('add_user', array(
             'first_name' => $request->get('first_name'),
             'last_name' => $request->get('last_name'),
             'email' => $request->get('email'),
         ));
-        
-        $restClient->post('add_user', ['body'=>$body]);
         
         return $this->redirect('/admin');
     }
