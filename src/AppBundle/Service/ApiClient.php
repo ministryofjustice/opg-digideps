@@ -39,9 +39,9 @@ class ApiClient
     }
     
     
-    public function getEntity($endpoint, $class)
+    public function getEntity($class, $endpoint, $options = [])
     {
-        $body = $this->restClient->get($endpoint)->getBody();
+        $body = $this->restClient->get($endpoint, $options)->getBody();
         $responseArray = $this->jsonSerializer->deserialize($body, 'array', $this->format);
         $this->checkResponseArray($responseArray);
         
@@ -51,9 +51,9 @@ class ApiClient
     }
     
     
-    public function getEntities($endpoint, $class)
+    public function getEntities($class, $endpoint, $options = [])
     {
-        $body = $this->restClient->get($endpoint)->getBody();
+        $body = $this->restClient->get($endpoint, $options)->getBody();
         $responseArray = $this->jsonSerializer->deserialize($body,'array',$this->format);
         $this->checkResponseArray($responseArray);
         

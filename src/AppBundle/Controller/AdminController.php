@@ -17,7 +17,7 @@ class AdminController extends Controller
      */
     public function indexAction()
     {
-        $users = $this->get('apiclient')->getEntities('user', 'User');
+        $users = $this->get('apiclient')->getEntities('User', 'list_users');
         
         return $this->render('AppBundle:Admin:index.html.twig', array('users'=>$users));
     }
