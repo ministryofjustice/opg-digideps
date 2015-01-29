@@ -14,22 +14,19 @@ class DebugCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
         $this
             ->setName('digideps:passwordEncode')
             ->setDescription('Generate password hash given plain text password')
-            ->addArgument(
-                'password',
-                InputArgument::REQUIRED,
-                'Plaintext password'
-            )
+            ->addOption('password', null, InputOption::VALUE_REQUIRED, 'Plaintext password')
+            ->addOption('user', null, InputOption::VALUE_REQUIRED, 'User ID')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $name = $input->getArgument('password');
+        $passwordPlain = $input->getOption('password');
+        $userId = $input->getOption('user');
         
-        $user = $this->getContainer()->get('apiclient')->getEntity('User', 'user/1');
-        
+        $user = $this->getContainer()->get('apiclient')->getEntity('User', 'user/' . $userId);
         $encoder = $this->getContainer()->get('security.encoder_factory')->getEncoder($user);
-        $out = $encoder->encodePassword($name, '');
+        $out = $encoder->encodePassword($passwordPlain, $user->getSalt());
         
         $output->writeln($out);
     }

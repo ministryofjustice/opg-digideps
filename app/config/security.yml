@@ -1,9 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
-        AppBundle\Entity\User: 
-            algorithm: bcrypt
-            cost: 12
+        AppBundle\Entity\User: sha512
 
     role_hierarchy:
         ROLE_LAY_DEPUTY: []
