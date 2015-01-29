@@ -10,7 +10,7 @@ Feature: admin
         Then I should be on "/"
         # admin
         When I go to "/admin"
-        Then the page title should be "Add user"
+        Then the page title should be "Admin area"
         And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         When I fill in "email" with "behat-user@publicguardian.gsi.gov.uk"
         And I fill in "first_name" with "John"

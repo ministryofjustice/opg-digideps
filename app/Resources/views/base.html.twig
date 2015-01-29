@@ -2,15 +2,25 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>Digideps beta - {% block title %}{% endblock %}</title>
         {% block stylesheets %}{% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+       <link type="text/css" rel="stylesheet" href="{{ asset('style.css') }}" media="all">
     </head>
     <body>
+        <header>
+            <h1 class="behat-region-page-title">DigiDeps (beta)</h1>
+            {% if error is defined %}
+                <div style="color: #ddd;background-color: #ff0000;">{{ error.messageKey|trans(error.messageData) }}</div>
+            {% endif %}
+        </header>
         <nav>
-            <a href="/admin">admin</a>
+            [ <a href="/">homePage</a> | <a href="/admin">Admin area</a> ]
         </nav>
-        {% block body %}{% endblock %}
+        <div id="wrapper">
+            <h3>{% block h1Title %}{% endblock %}</h3>
+            {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

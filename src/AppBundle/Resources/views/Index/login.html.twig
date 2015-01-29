@@ -1,11 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData) }}</div>
-    {% endif %}
+{% block title %} Login {% endblock %}
+{% block h1Title %} Login {% endblock %}
 
-    <h1 class="behat-region-page-title">Login</h1>
+{% block body %}
+    
+
     <form action="{{ path('login_check') }}" method="post">
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" value="{{ last_email }}" size=50 />

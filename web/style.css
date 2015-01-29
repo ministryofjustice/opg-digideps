@@ -1,0 +1,25 @@
+.errors {
+    color: #ddd;background-color: #ff0000;
+}
+
+body {
+    font-family: Verdana;
+}
+
+header {
+    background-color: #ddd;
+    padding: 10px;
+}
+
+nav {
+    background-color: #bbb;
+    padding: 10px;
+}
+
+#wrapper {
+    padding-left: 20px;
+}
+
+ul {
+    list-style-type: none;
+}

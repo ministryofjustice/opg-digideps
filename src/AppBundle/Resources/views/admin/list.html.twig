@@ -1,7 +1,9 @@
-<h2>List users</h2>
-
 <div class="behat-region-users">
+    <ul>
     {% for user in users %}
-        {{ user.firstname }} ~ {{ user.lastname }}  ~ {{ user.email }} <br/>
+        <li>
+            {{ user.firstname }} | {{ user.lastname }}  | {{ user.email }} <br/>
+        </li>
     {% endfor %}
+    </ul>
 </div>
