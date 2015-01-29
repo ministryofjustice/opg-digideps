@@ -12,13 +12,6 @@ class IndexController extends Controller
      */
     public function loginAction()
     {
-//         $user = new \AppBundle\Entity\User;
-//        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
-//        echo $encoder->encodePassword('test', '');
-//        die;
-        
-        
-        
         $request = $this->getRequest();
         $session = $request->getSession();
 
