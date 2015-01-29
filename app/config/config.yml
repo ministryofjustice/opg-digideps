@@ -40,7 +40,7 @@ assetic:
         #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
 
 services:
-    apiClient:
+    apiclient:
         class:  AppBundle\Service\ApiClient
         arguments: [ @restclient, @jms_serializer, 'json' ]
     restclient:
@@ -48,7 +48,7 @@ services:
         arguments: ["%api%"]
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
-        arguments: [ @apiClient, @jms_serializer ]
+        arguments: [ @apiclient, @jms_serializer ]
 # Doctrine Configuration
 #doctrine:
 #    dbal:

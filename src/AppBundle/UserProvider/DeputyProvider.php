@@ -12,12 +12,12 @@ class DeputyProvider implements UserProviderInterface
     /**
      * @var ApiClient
      */
-    private $apiClient;
+    private $apiclient;
     
     
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ApiClient $apiclient)
     {
-        $this->apiClient = $apiClient;
+        $this->apiclient = $apiclient;
     }
     
     /**
@@ -30,7 +30,7 @@ class DeputyProvider implements UserProviderInterface
     public function loadUserByUsername($email) 
     {
         try {
-            return $this->apiClient->getEntity('user/get-by-email/' . $email, 'User');
+            return $this->apiclient->getEntity('user/get-by-email/' . $email, 'User');
         } catch (\Exception $e) {
             throw new UsernameNotFoundException("We can't log you in at this time. Technical error: " . $e);
         }
