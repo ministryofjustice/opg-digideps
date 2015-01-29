@@ -11,7 +11,7 @@ Feature: admin
         # admin
         When I go to "/admin"
         Then the page title should be "Add user"
-        And I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
+        And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         When I fill in "email" with "behat-user@publicguardian.gsi.gov.uk"
         And I fill in "first_name" with "John"
         And I fill in "last_name" with "doe"
