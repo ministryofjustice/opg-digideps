@@ -61,7 +61,7 @@ class Version001SchemaAndData extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_C42F778419EB6921 ON report (client_id)');
         $this->addSql('CREATE TABLE role (id SERIAL NOT NULL, name VARCHAR(60) NOT NULL, role VARCHAR(50) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE title (id SERIAL NOT NULL, title VARCHAR(20) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE dd_user (id SERIAL NOT NULL, role_id INT DEFAULT NULL, firstname VARCHAR(100) NOT NULL, password VARCHAR(100) NOT NULL, email VARCHAR(60) NOT NULL, active BOOLEAN DEFAULT \'false\', salt VARCHAR(100) DEFAULT NULL, registration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, registration_token VARCHAR(100) DEFAULT NULL, email_confirmed BOOLEAN DEFAULT NULL, lastname VARCHAR(100) DEFAULT NULL, token_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE dd_user (id SERIAL NOT NULL, role_id INT DEFAULT NULL, firstname VARCHAR(100) NOT NULL, password VARCHAR(300) NOT NULL, email VARCHAR(60) NOT NULL, active BOOLEAN DEFAULT \'false\', salt VARCHAR(100) DEFAULT NULL, registration_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, registration_token VARCHAR(100) DEFAULT NULL, email_confirmed BOOLEAN DEFAULT NULL, lastname VARCHAR(100) DEFAULT NULL, token_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_6764AB8BD60322AC ON dd_user (role_id)');
         $this->addSql('ALTER TABLE account ADD CONSTRAINT FK_7D3656A44BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE asset ADD CONSTRAINT FK_2AF5A5C4BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
@@ -98,7 +98,7 @@ class Version001SchemaAndData extends AbstractMigration
         
         
         // user
-        $this->addSql("INSERT INTO dd_user (firstname, role_id, password, email, active, salt, registration_date, registration_token, email_confirmed, lastname) VALUES ('test',6, 'test','deputyshipservice@publicguardian.gsi.gov.uk',TRUE,'bGGQ485SDsdfsaf6790','2014-06-09','testtoken',TRUE,'Test')");
+        $this->addSql("INSERT INTO dd_user (firstname, role_id, password, email, active, salt, registration_date, registration_token, email_confirmed, lastname) VALUES ('test',6, '$2y$12\$ZC0AZu7VGksg2hzGHCVW9uQwKytJs1nTutzZfHGyTFHjzHK80GOZO','deputyshipservice@publicguardian.gsi.gov.uk',TRUE,'bGGQ485SDsdfsaf6790','2014-06-09','testtoken',TRUE,'Test')");
 
         //insert benefit_type
         $this->addSql("INSERT INTO benefit_type (id, name, form_name, payment_description_required) VALUES (1, 'Disability Living Allowance', 'disability_living_allowance', false)");
