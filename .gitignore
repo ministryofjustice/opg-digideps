@@ -7,3 +7,4 @@ vendor/*
 misc/tmp/*
 .idea/*
 *.iml
+composer.phar
