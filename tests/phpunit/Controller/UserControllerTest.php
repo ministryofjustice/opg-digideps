@@ -27,8 +27,8 @@ class UserControllerTest extends WebTestCase
             array(), array(), 
             array('CONTENT_TYPE' => 'application/json'), 
             json_encode(array(
-                'first_name' => 'Elvis',
-                'last_name' => 'Ciotti',
+                'firstname' => 'Elvis',
+                'lastname' => 'Ciotti',
                 'email' => 'elvis.ciotti@digital.justice.gov.uk',
             ))
         );
