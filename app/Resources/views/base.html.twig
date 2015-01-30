@@ -10,7 +10,7 @@
     <body>
         <header>
             <h1 class="behat-region-page-title">DigiDeps (beta)</h1>
-            {% if error is defined %}
+            {% if error.messageKey is defined %}
                 <div style="color: #ddd;background-color: #ff0000;">{{ error.messageKey|trans(error.messageData) }}</div>
             {% endif %}
         </header>
