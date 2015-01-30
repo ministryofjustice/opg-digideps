@@ -31,8 +31,8 @@ class UserController extends RestController
         $em = $this->getDoctrine()->getManager();
         
         $user = new \AppBundle\Entity\User();
-        $user->setFirstname($data['first_name']);
-        $user->setLastname($data['last_name']);
+        $user->setFirstname($data['firstname']);
+        $user->setLastname($data['lastname']);
         $user->setEmail($data['email']);
         $user->setPassword('');
         $em->persist($user);
