@@ -11,6 +11,6 @@
         {% include 'AppBundle:Admin:add.html.twig' %}
 
         <h4>List users</h4>
-        {% include 'AppBundle:Admin:list.html.twig' with {users: users} %}
+        {% include 'AppBundle:Admin:list.html.twig' with {users: users, form: form} %}
     </div>
 {% endblock %}

@@ -23,3 +23,7 @@ nav {
 ul {
     list-style-type: none;
 }
+
+label {
+    margin-right: 10px;
+}

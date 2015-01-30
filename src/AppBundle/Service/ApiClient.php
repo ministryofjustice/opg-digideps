@@ -65,11 +65,14 @@ class ApiClient
         return $ret;
     }
     
-    
-    public function post($endpoint, array $data)
+    /**
+     * @param string $endpoint
+     * @param string $body json_encoded
+     * 
+     * @return string response body
+     */
+    public function post($endpoint, $body)
     {
-        $body = json_encode($data);
-        
         $response = $this->restClient->post($endpoint, ['body'=>$body]);
         
         return $response->getBody();

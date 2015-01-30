@@ -9,16 +9,16 @@
     </head>
     <body>
         <header>
-            <h1 class="behat-region-page-title">DigiDeps (beta)</h1>
+            <h1>DigiDeps (beta)</h1>
             {% if error.messageKey is defined %}
                 <div style="color: #ddd;background-color: #ff0000;">{{ error.messageKey|trans(error.messageData) }}</div>
             {% endif %}
         </header>
         <nav>
-            [ <a href="/">homePage</a> | <a href="/admin">Admin area</a> ]
+            [ <a href="/">homePage</a> | <a href="/admin">Admin area</a>  | <a href="/logout">Logout</a> ]
         </nav>
         <div id="wrapper">
-            <h3>{% block h1Title %}{% endblock %}</h3>
+            <h3 class="behat-region-page-title">{% block h1Title %}{% endblock %}</h3>
             {% block body %}{% endblock %}
         </div>
         {% block javascripts %}{% endblock %}
