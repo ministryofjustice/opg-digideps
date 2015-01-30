@@ -15,16 +15,24 @@ use Symfony\Component\Form\Form;
 class AdminController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/", name="admin_homepage")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $users = $this->get('apiclient')->getEntities('User', 'list_users');
-        
         $form = $this->getAddForm();
         
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $this->get('apiclient')->post('add_user', $form->getData());
+
+                return $this->redirect($this->generateUrl('admin_homepage'));
+            }
+        }
+        
         return $this->render('AppBundle:Admin:index.html.twig', array(
-            'users'=>$users, 'form'=>$form->createView()
+            'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
+            'form'=>$form->createView()
         ));
     }
     
@@ -33,27 +41,14 @@ class AdminController extends Controller
      */
     private function getAddForm()
     {
+        // validation is in the User class (annotacion format)
+        // to put int a class, validate form the builder directly http://symfony.com/doc/current/book/forms.html#adding-validation
         return $this->createFormBuilder(new User)
             ->add('email', 'text')
-            ->add('first_name', 'text')
-            ->add('last_name', 'text')
+            ->add('firstname', 'text')
+            ->add('lastname', 'text')
             ->add('save', 'submit', array('label' => 'Add User'))
-            ->setAction('/admin/user_add')
             ->getForm();
     }
     
-    /**
-     * @Route("/user_add")
-     * @Method({"POST"})
-     */
-    public function addUserAction(Request $request)
-    {
-        $form = $this->getAddForm();
-        
-        $form->bind($request);
-        
-        $this->get('apiclient')->post('add_user', $form->getData());
-        
-        return $this->redirect('/admin');
-    }
 }

@@ -13,8 +13,8 @@ Feature: admin
         Then the page title should be "Admin area"
         And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         When I fill in "form_email" with "behat-user@publicguardian.gsi.gov.uk"
-        And I fill in "form_first_name" with "John"
-        And I fill in "form_last_name" with "doe"
+        And I fill in "form_firstname" with "John"
+        And I fill in "form_lastname" with "doe"
         And I press "form_save"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         

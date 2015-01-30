@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
@@ -18,18 +19,41 @@ class User implements AdvancedUserInterface
     private $id;
     
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 100,
+     *      minMessage = "Your first name must be at least {{ limit }} characters long",
+     *      maxMessage = "Your first name cannot be longer than {{ limit }} characters long"
+     * )
+     * 
      * @JMS\Type("string")
      * @var string $firstname
      */
     private $firstname;
     
     /**
+     * @Assert\NotBlank()
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 100,
+     *      minMessage = "Your last name must be at least {{ limit }} characters long",
+     *      maxMessage = "Your last name cannot be longer than {{ limit }} characters long"
+     * )
+     * 
      * @JMS\Type("string")
      * @var string $lastname
      */
     private $lastname;
     
     /**
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true,
+     *     checkHost = true
+     * )
+     *  
      * @JMS\Type("string")
      * @var string $email
      */

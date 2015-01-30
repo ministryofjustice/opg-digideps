@@ -2,6 +2,11 @@
     color: #ddd;background-color: #ff0000;
 }
 
+.errors ul, .errors ul li {
+    display: inline;
+}
+
+
 body {
     font-family: Verdana;
 }
