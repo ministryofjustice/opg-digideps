@@ -8,10 +8,10 @@
 
     <form action="{{ path('login_check') }}" method="post">
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email" value="{{ last_email }}" size=50 />
+        <input type="text" id="email" name="email" value="{{ last_email }}" size=50 required="required" />
 
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" />
+        <input type="password" id="password" name="password"  required="required" />
 
         {#
             If you want to control the URL the user
