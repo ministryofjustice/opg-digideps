@@ -15,7 +15,13 @@
             {% endif %}
         </header>
         <nav>
-            [ <a href="/">homePage</a> | <a href="/admin">Admin area</a> {% if app.user %} | <a href="/logout">Logout</a> {% endif %} ]
+            {% if app.user %}
+                [ Welcome {{ app.user.firstname }} |
+                    <a href="/">homePage</a> | 
+                    <a href="/admin">Admin area</a> | 
+                    <a href="/logout">Logout</a> 
+            ]
+            {% endif %}
         </nav>
         <div id="wrapper">
             <h3 class="behat-region-page-title">{% block h1Title %}{% endblock %}</h3>
