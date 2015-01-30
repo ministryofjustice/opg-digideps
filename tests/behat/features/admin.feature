@@ -16,7 +16,6 @@ Feature: admin
             | password  |  test |
         And I click on "login"
         Then I should be on "/"
-        
         # admin
         When I go to "/admin"
         Then the page title should be "Admin area"
@@ -38,7 +37,4 @@ Feature: admin
             | form_lastname | Doe | 
         And I press "form_save"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
-        
-        
-            
         
