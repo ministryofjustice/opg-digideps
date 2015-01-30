@@ -65,18 +65,22 @@ class ApiClient
         return $ret;
     }
     
+    
     /**
      * @param string $endpoint
-     * @param string $body json_encoded
+     * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
      * 
      * @return string response body
      */
-    public function post($endpoint, $body)
+    public function post($endpoint, $bodyorEntity)
     {
-        $response = $this->restClient->post($endpoint, ['body'=>$body]);
+        if (is_object($bodyorEntity)) {
+            $bodyorEntity = $this->jsonSerializer->serialize($bodyorEntity, 'json');
+        }
+        $response = $this->restClient->post($endpoint, ['body'=>$bodyorEntity]);
         
         return $response->getBody();
     }
-
+    
    
 }

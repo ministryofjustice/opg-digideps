@@ -51,9 +51,8 @@ class AdminController extends Controller
         $form = $this->getAddForm();
         
         $form->bind($request);
-        $data = $this->get('jms_serializer')->serialize($form->getData(), 'json');
         
-        $this->get('apiclient')->post('add_user', $data);
+        $this->get('apiclient')->post('add_user', $form->getData());
         
         return $this->redirect('/admin');
     }

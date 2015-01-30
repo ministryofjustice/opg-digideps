@@ -32,6 +32,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     public function __construct($session)
     {
+        ini_set('xdebug.max_nesting_level', 200);
     }
 
         /**
