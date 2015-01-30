@@ -4,10 +4,19 @@ Feature: admin
         Given I am on "/"
         Then the page title should be "Login"
         Then the response status code should be 200
-        When I fill in "email" with "deputyshipservice@publicguardian.gsi.gov.uk"
-        And I fill in "password" with "test"
+        # test wrong credentials
+        When I fill in the following: 
+            | email     | deputyshipservice@publicguardian.gsi.gov.uk |
+            | password  |  WRONG PASSWORD !! |
+        And I click on "login"
+        Then I should see "invalid credentials" in the "header errors" region
+        # test right credentials
+        When I fill in the following:
+            | email     | deputyshipservice@publicguardian.gsi.gov.uk |
+            | password  |  test |
         And I click on "login"
         Then I should be on "/"
+        
         # admin
         When I go to "/admin"
         Then the page title should be "Admin area"
