@@ -1,3 +1,4 @@
+{% trans_default_domain "layout" %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,10 +17,10 @@
         </header>
         <nav>
             {% if app.user %}
-              {% trans with {'%name%': app.user.firstname } from 'navigation' %}welcomeMessage{% endtrans %} 
+              {% trans with {'%name%': app.user.firstname } %}welcomeMessage{% endtrans %} 
              [
-              <a href="/admin">{% trans from 'navigation' %}adminArea{% endtrans %}</a> | 
-              <a href="/logout">{% trans from 'navigation' %}logout{% endtrans %}</a> 
+              <a href="/admin">{% trans %}adminArea{% endtrans %}</a> | 
+              <a href="/logout">{% trans %}logout{% endtrans %}</a> 
              ]
             {% endif %}
         </nav>
