@@ -1,20 +1,9 @@
 {{ form_start(form) }}
-    <div>
-        {{ form_label(form.email) }}
-        {{ form_widget(form.email) }}
-        <div class="errors">{{ form_errors(form.email) }}</div>
-    </div>
     
-    <div>
-        {{ form_label(form.firstname) }}
-        {{ form_widget(form.firstname) }}
-        <div class="errors">{{ form_errors(form.firstname) }}</div>
-    </div>
+    {% include 'AppBundle:Partials:element.html.twig' with {element: form.email} %}
 
-    <div>
-        {{ form_label(form.lastname) }}
-        {{ form_widget(form.lastname) }}
-        <div class="errors">{{ form_errors(form.lastname) }}</div>
-    </div>
+    {% include 'AppBundle:Partials:element.html.twig' with {element: form.firstname} %}
+
+    {% include 'AppBundle:Partials:element.html.twig' with {element: form.lastname} %}
 
 {{ form_end(form) }}

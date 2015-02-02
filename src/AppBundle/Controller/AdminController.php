@@ -47,7 +47,7 @@ class AdminController extends Controller
             ->add('email', 'text')
             ->add('firstname', 'text')
             ->add('lastname', 'text')
-            ->add('save', 'submit', array('label' => 'Add User'))
+            ->add('save', 'submit')
             ->getForm();
     }
     

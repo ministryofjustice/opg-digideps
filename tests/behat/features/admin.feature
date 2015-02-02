@@ -15,8 +15,6 @@ Feature: admin
             | email     | deputyshipservice@publicguardian.gsi.gov.uk |
             | password  |  test |
         And I click on "login"
-        Then I should be on "/"
-        # admin
         When I go to "/admin"
         Then the page title should be "Admin area"
         And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
