@@ -1,25 +1,37 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Login {% endblock %}
-{% block h1Title %} Login {% endblock %}
+{% trans_default_domain "login" %}
+
+{% block title %} {% trans %} title {% endtrans %} {% endblock %}
+{% block h1Title %} {% trans %} title {% endtrans %} {% endblock %}
 
 {% block body %}
     
 
     <form action="{{ path('login_check') }}" method="post">
-        <label for="email">Email:</label>
+        
+      <div>
+        <label for="email">{% trans %}email.label{% endtrans %}</label>
+        <p class="description">{% trans %}email.description{% endtrans %}</p>
         <input type="text" id="email" name="email" value="{{ last_email }}" size=50 required="required" />
-
-        <label for="password">Password:</label>
+      </div>
+      
+      <div>
+        <label for="password">{% trans %}password.label{% endtrans %}</label>
         <input type="password" id="password" name="password"  required="required" />
+      </div>
 
+      
         {#
             If you want to control the URL the user
             is redirected to on success (more details below)
             <input type="hidden" name="_target_path" value="/account" />
         #}
 
-        <button type="submit" class="behat-link-login">login</button>
+      <div>
+        <button type="submit" class="behat-link-login">{% trans %}submit.label{% endtrans %}</button>
+      </div>
+
     </form>
 
 {% endblock %}

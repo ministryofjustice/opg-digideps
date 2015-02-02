@@ -1,0 +1,9 @@
+title: Sign in
+email:
+    label: Email address
+    description: We sent you registration link to this email address
+password:
+    label: Password
+submit:
+    label: sign in
+forgotPassword: Forgotten your password?    

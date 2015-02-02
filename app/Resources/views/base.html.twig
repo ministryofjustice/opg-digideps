@@ -15,12 +15,12 @@
             {% endif %}
         </header>
         <nav>
-            {% trans with {'%link%': '/' } %}example{% endtrans %}
             {% if app.user %}
-                [  {% trans with {'%name%': app.user.firstname } from 'navigation' %}welcomeMessage{% endtrans %} |
-                    <a href="/admin">{% trans from 'navigation' %}adminArea{% endtrans %}</a> | 
-                    <a href="/logout">{% trans from 'navigation' %}logout{% endtrans %}</a> 
-            ]
+              {% trans with {'%name%': app.user.firstname } from 'navigation' %}welcomeMessage{% endtrans %} 
+             [
+              <a href="/admin">{% trans from 'navigation' %}adminArea{% endtrans %}</a> | 
+              <a href="/logout">{% trans from 'navigation' %}logout{% endtrans %}</a> 
+             ]
             {% endif %}
         </nav>
         <div id="wrapper">
