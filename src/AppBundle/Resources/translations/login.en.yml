@@ -1,11 +1,11 @@
-title: Sign in
+pageTitle: Sign in
 email:
     label: Email address
     description: We sent you registration link to this email address
 password:
     label: Password
 submit:
-    label: sign in
+    label: Sign in
 forgotPassword: Forgotten your password?    
 
 #_security:
