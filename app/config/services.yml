@@ -2,7 +2,7 @@ services:
     mailer.service:
             class: AppBundle\Mailer\MailerService
 #            arguments: [@swiftmailer.transport.sendmail, @templating]
-            arguments: [@mailer.transport.fileWriter, @templating]
+            arguments: [@mailer.transport.fileWriter]
             
     mailer.transport.fileWriter:
                 class: AppBundle\Mailer\Transport\FileWriter
@@ -11,5 +11,5 @@ services:
                 class: AppBundle\Mailer\Transport\Sendgrid
     mailer.factory:
             class: AppBundle\Mailer\MailerFactory
-            arguments: [ @mailer.service, @router]
+            arguments: [ @mailer.service, @translator, @router]
                 

@@ -3,6 +3,7 @@ namespace AppBundle\Mailer;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use AppBundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class MailerFactory
 {
@@ -16,25 +17,30 @@ class MailerFactory
      */
     protected $mailerService;
 
+    /**
+     */
+    protected $translator;
     
-    public function __construct(MailerService $mailerService, UrlGeneratorInterface $router)
+    
+    public function __construct(MailerService $mailerService, Translator $translator)
     {
-        $this->router = $router;
+        $this->translator = $translator;
         $this->mailerService = $mailerService;
     }
     
     public function sendActivationEmail(User $user)
     {
-//        $link = $this->router->generate('verification_verify', [
-//            'token' => $user->generateToken()->getToken()
-//        ], true);
-
         $message = $this->mailerService->createMessage();
         $message->setTo($user->getEmail());
 
-//        $this->view->setTemplate('view/user/registration/account-verify.txt.twig');
-//        $this->view->setHtmlTemplate('view/user/registration/account-verify.html.twig');
-
-        $this->mailerService->sendMimeMessage($message, 'subject', 'body');
+        $params = [
+            '%mail%' => $user->getEmail(),
+            '%name%' => $user->getFirstname() . ' ' . $user->getLastname(),
+            '%link%' => 'http://link.com/activate/' . $user->getRegistrationToken()
+        ];
+        $subject = $this->translator->trans('activation.subject', $params, 'email');
+        $body = $this->translator->trans('activation.body', $params, 'email');
+        
+        $this->mailerService->sendMimeMessage($message, $subject, $body);
     }
 }

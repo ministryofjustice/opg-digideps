@@ -1,0 +1,3 @@
+activation:
+    subject: "Digideps - activation email"
+    body: "Hello %name%, click here %link% to activate your account"
