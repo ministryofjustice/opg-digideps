@@ -1,5 +1,6 @@
 imports:
     - { resource: parameters.yml }
+    - { resource: services.yml }
 #    - { resource: security.yml }
 
 framework:
@@ -45,14 +46,6 @@ doctrine:
 doctrine_migrations:
     table_name: migrations
 
-# Swiftmailer Configuration
-swiftmailer:
-    transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
-    
 #fos_rest:
 #    view:
 #        force_redirects:
@@ -77,4 +70,6 @@ services:
         arguments: [ @serializer, ["json", "xml"] ]
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }            
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
+    em:
+        alias: doctrine.orm.entity_manager
