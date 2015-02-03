@@ -37,19 +37,23 @@
         <if>
             <available file="composer.phar" />
             <then>
-                <exec command="./composer.phar self-update" checkreturn="true" passthru="true"/>
+                <exec command="php composer.phar self-update" checkreturn="true" passthru="true"/>
             </then>
             <else>
                 <exec command="wget http://getcomposer.org/composer.phar"/>
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
-        <exec command="./composer.phar install" checkreturn="true" passthru="true"/>
+        <exec command="php composer.phar install" checkreturn="true" passthru="true"/>
     </target>
 
 
     <target name="phpunit">
         <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
+    </target>
+
+    <target name="optimise">
+        <exec passthru="true" command="php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
     </target>
 
     
