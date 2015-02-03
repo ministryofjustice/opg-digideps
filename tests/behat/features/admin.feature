@@ -2,7 +2,6 @@ Feature: admin
 
     Scenario: login and add user
         Given I am on "/"
-        Then the page title should be "Login"
         Then the response status code should be 200
         # test wrong credentials
         When I fill in the following: 

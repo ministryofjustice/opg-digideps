@@ -1,0 +1,23 @@
+AppBundle\Entity\User:
+    properties:
+        email:
+            - Email:
+                message: "user.email.invalid"
+                checkMX: true
+                checkHost: true
+        firstname:
+            - NotBlank:  
+                message: "user.firstname.notBlank"
+            - Length:
+                min: 2
+                max: 50
+                minMessage: "user.firstname.minLength"
+                maxMessage: "user.firstname.maxength"
+        lastname:
+            - NotBlank:  
+                message: "user.lastname.notBlank"
+            - Length:
+                min: 2
+                max: 50
+                minMessage: "user.lastname.minLength"
+                maxMessage: "user.lastname.maxength"
