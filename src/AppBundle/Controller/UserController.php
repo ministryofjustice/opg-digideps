@@ -78,6 +78,10 @@ class UserController extends RestController
         $em = $this->getDoctrine()->getEntityManager();
         
         $user = $em->getRepository('AppBundle\Entity\User')->findOneByEmail($email);
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+        
         
         return $user;
     }
