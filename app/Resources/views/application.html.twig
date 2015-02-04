@@ -1,5 +1,6 @@
 {% extends 'moj_template.html.twig' %}
 
+{% trans_default_domain "layout" %}
 
 {% block topOfPage %}{% endblock %}
 
@@ -26,7 +27,16 @@
 
 {% block insideHeader %}{% endblock %}
 
-{% block proposition_title %}{% endblock %}
+{% block proposition_content %}
+<a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+<nav id="proposition-menu">
+    <a href="/" id="proposition-name">{% block proposition_title %}Digital Deputyships{% endblock %}</a>
+    <ul id="proposition-links">
+        <li><a href="/admin">{% trans %}adminArea{% endtrans %}</a></li>
+        <li><a href="/logout">{% trans %}logout{% endtrans %}</a></li>
+    </ul>
+</nav>
+{% endblock %}
 
 {% block afterHeader %}{% endblock %}
 

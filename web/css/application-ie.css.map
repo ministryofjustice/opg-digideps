@@ -1,7 +1,7 @@
 {
 "version": 3,
-"mappings": "AAEA,IAAI;EACF,gBAAgB,EAAE,KAAK",
-"sources": ["../../src/front-end/scss/application-ie.scss"],
+"mappings": "",
+"sources": [],
 "names": [],
 "file": "application-ie.css"
 }

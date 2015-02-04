@@ -51,5 +51,7 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
+body {
+  background-color: white; }
 
 /*# sourceMappingURL=application.css.map */
