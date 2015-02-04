@@ -49,7 +49,7 @@
         <exec command="rm misc/build/behat.log*"></exec>
         <exec passthru="true" command="vendor/behat/behat/bin/behat | tee misc/build/behat.log" checkreturn="true" />
         <!-- convert xTerm-coloured behat.log into HTML format -->
-        <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" checkreturn="true" />
+        <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
     </target>
 
         
