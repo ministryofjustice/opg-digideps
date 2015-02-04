@@ -25,6 +25,6 @@ class DebugCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
         $user = $this->getContainer()->get('em')->getRepository('AppBundle\Entity\User')->find(1);
         $mailerFactory->sendActivationEmail($user);
         
-        echo file_get_contents("/tmp/dd_mail_mock");
+//        echo file_get_contents("/tmp/dd_mail_mock");
     }
 }

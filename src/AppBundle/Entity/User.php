@@ -504,4 +504,12 @@ class User implements AdvancedUserInterface
        
         return $this->gaTrackingId;
     }
+    
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
 }

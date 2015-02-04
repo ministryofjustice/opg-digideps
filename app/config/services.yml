@@ -2,14 +2,22 @@ services:
     mailer.service:
             class: AppBundle\Mailer\MailerService
 #            arguments: [@swiftmailer.transport.sendmail, @templating]
-            arguments: [@mailer.transport.fileWriter]
+            arguments: [@mailer.transport.sendgrid]
             
     mailer.transport.fileWriter:
                 class: AppBundle\Mailer\Transport\FileWriter
                 arguments: [ "/tmp/dd_mail_mock" ]
+                
+    sendgrid:
+        class: SendGrid
+        arguments: [ "mojdsd-digideps-staging", "DobEjSuej", {host: "api.sendgrid.com"} ]
+        
     mailer.transport.sendgrid:
-                class: AppBundle\Mailer\Transport\Sendgrid
+                class: AppBundle\Mailer\Transport\SendGridTransport
+                arguments: [ @sendgrid ]
     mailer.factory:
             class: AppBundle\Mailer\MailerFactory
-            arguments: [ @mailer.service, @translator, @router]
+            arguments: [ @mailer.service, @translator ]
+            calls:
+                - [setFrom, ["admin@digideps.service.dsd.io ", "Digital deputyship service"]]
                 

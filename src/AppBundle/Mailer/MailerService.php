@@ -54,13 +54,13 @@ class MailerService extends Mailer
      *
      * @return boolean
      */
-    public function sendMimeMessage(Message $message, $subject, $body)
+    public function sendMimeMessage(Message $message, $bodyText, $bodyHTML)
     {
-        $message->setBody($body);
-        $message->addPart($body, 'text/html');
+        $message->setBody($bodyText);
+        $message->addPart($bodyHTML, 'text/html');
 
 //        $message->setFrom(reset($this->from), end($this->from));
-        $message->setSubject($subject);
+//        $message->setSubject($subject);
 
 //        foreach ($this->filters as $filter) {
 //            $filter->filter($message);

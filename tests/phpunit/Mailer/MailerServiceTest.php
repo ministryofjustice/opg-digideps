@@ -63,7 +63,7 @@ class MailerServiceTest extends \PHPUnit_Framework_TestCase
 //        $this->view->shouldReceive('renderHtml')->once()->with(array(1=>2, 3=>4));
 //        $this->view->shouldReceive('getSubject');
                  
-        $this->mailerService->sendMimeMessage($message, 's', 'o');
+        $this->mailerService->sendMimeMessage($message, 's', 'body', 'bodyHtml');
     }
 //
 //    public function testSendText()
