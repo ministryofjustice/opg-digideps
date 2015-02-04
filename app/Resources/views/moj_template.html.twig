@@ -32,10 +32,10 @@
       })()
     </script>
     <![endif]-->
+
     <!--[if gte IE 9]><!-->
       <link href="{{ asset('stylesheets/fonts.css') }}" media="all" rel="stylesheet" type="text/css" />
     <!--<![endif]-->
-
 
     <!--[if lt IE 9]>
       <script src="{{ asset('javascripts/ie.js') }}" type="text/javascript"></script>
@@ -78,17 +78,17 @@
     <div id="global-cookie-message">
       <div class="outer-block">
         <div class="inner-block">
-          
+
 
         {% block cookieMessage %}{% endblock %}
 
-          
+
         </div>
       </div>
     </div>
     <!--end global-cookie-message-->
 
-    
+
     <header role="banner" id="global-header" class="with-proposition {% block headerClass %}{% endblock %}
 ">
       <div class="header-wrapper">
@@ -101,18 +101,18 @@
             {% block insideHeader %}{% endblock %}
 
         </div>
-        
+
         <div class="header-proposition">
           <div class="content">
            {% block proposition_content %}{% endblock %}
           </div>
         </div>
-      
+
 
       </div>
     </header>
     <!--end header-->
-    
+
 
     <!--[if lte IE 6]><script>document.body.className = document.body.className.replace('js-enabled','');</script><![endif]-->
     {% block afterHeader %}{% endblock %}
@@ -125,7 +125,7 @@
     </div>
     <!--end global-header-bar-->
 
-    
+
     {% block beforeContent %}{% endblock %}
 
     <div id="wrapper" class="group">
@@ -133,8 +133,6 @@
        {% block content %}{% endblock %}
       </section>
     </div>
-    
-
 
     <footer class="group js-footer" id="footer" role="contentinfo">
 
@@ -146,7 +144,7 @@
             <h2 class="visuallyhidden">Support links</h2>
             <ul>
               {% block footerSupportLinks %}{% endblock %}
-            
+
               <li>
                 Built by
                 <a href="https://mojdigital.blog.gov.uk/"><abbr title="Ministry of Justice">MOJ</abbr> Digital Services</a>
