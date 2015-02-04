@@ -1,0 +1,9 @@
+@import "_import-moj";
+
+
+body {
+  background-color: red;
+  @include ie-lte(6) {
+    background-color: green;
+  }
+}

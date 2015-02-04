@@ -2,14 +2,6 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-@-ms-viewport {
-  width: device-width; }
-@-o-viewport {
-  width: device-width; }
-@-ms-viewport {
-  width: device-width; }
-@-o-viewport {
-  width: device-width; }
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
@@ -28,6 +20,21 @@
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+@font-face {
+  font-family: GDS-Logo;
+  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
 @-ms-viewport {
   width: device-width; }
 @-o-viewport {
@@ -45,9 +52,9 @@
 @-o-viewport {
   width: device-width; }
 body {
-  background-color: blue; }
+  background-color: red; }
 
-.lte-ie8 body {
-  background-color: green; }
+body {
+  background-color: black; }
 
-/*# sourceMappingURL=test.css.map */
+/*# sourceMappingURL=application-ie7.css.map */

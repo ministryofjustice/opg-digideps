@@ -45,9 +45,10 @@
 @-o-viewport {
   width: device-width; }
 body {
-  background-color: blue; }
+  background-color: red; }
 
-.lte-ie8 body {
-  background-color: green; }
+IE Global specific hacjks
+body {
+  background-color: black; }
 
-/*# sourceMappingURL=test.css.map */
+/*# sourceMappingURL=application-ie9.css.map */

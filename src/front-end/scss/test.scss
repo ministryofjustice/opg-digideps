@@ -8,5 +8,13 @@
 
 
 body{
-  background-color: $civil-service;
+  background-color: blue;
+}
+
+.lte-ie8{
+
+  & body{
+    background-color: green;
+  }
+
 }
