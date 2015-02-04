@@ -55,12 +55,24 @@ class SendGridTransport implements Swift_Transport
     }
     
     /**
-     * @param Swift_Mime_Message $message
+     * @param Swift_Mime_Message $swiftMessage
      * @param array &$failedRecipients
      *
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function send(Swift_Mime_Message $message, &$failedRecipients = null)
+    public function send(Swift_Mime_Message $swiftMessage, &$failedRecipients = null)
+    {
+        $email = $this->createSendGridMessageFromSwiftMessage($swiftMessage);
+        
+        $this->sendGrid->send($email);
+    }
+    
+    /**
+     * @param Swift_Mime_Message $message
+     * 
+     * @return Email
+     */
+    protected function createSendGridMessageFromSwiftMessage(Swift_Mime_Message $message)
     {
         $email = new Email();
         
@@ -68,7 +80,6 @@ class SendGridTransport implements Swift_Transport
         reset($to);
         $email
             ->addTo(key($to), reset($to));
-                 
                  
         $from = $message->getFrom();
         reset($from);
@@ -83,7 +94,7 @@ class SendGridTransport implements Swift_Transport
             $email->setHtml($html);
         }
         
-        $this->sendGrid->send($email);
+        return $email;
     }
 
     /**
