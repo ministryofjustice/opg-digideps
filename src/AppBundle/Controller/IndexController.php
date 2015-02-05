@@ -46,6 +46,8 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
-         return new Response('true');
+        return $this->render(
+            'AppBundle:Index:login.html.twig'
+        );
     }
 }
