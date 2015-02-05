@@ -7,6 +7,11 @@
 
 module.exports = function (grunt) {
 
+    var scssPath = 'src/AppBundle/Resources/assets/scss';
+
+    console.log("Grunt Starting up" + scssPath);
+
+
     // Load NPM Tasks
     require('load-grunt-tasks')(grunt);
 
@@ -19,12 +24,19 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
-                        cwd: 'src/front-end/scss',
+                        cwd: scssPath,
                         src: ['*.scss'],
                         dest: 'web/css',
                         ext: '.css'
                     }
-                ]
+                ],
+                options: {
+                    loadPath: [
+                        'bower_downloads/govuk_frontend_toolkit/stylesheets',
+                        'bower_downloads/govuk_elements/public/sass/elements'
+                    ]
+                }
+
             }
         },
 
@@ -32,39 +44,42 @@ module.exports = function (grunt) {
             options: {
                 nospawn: true
             },
-            css: {
-                files: ['src/front-end/scss/{,*/}*.scss'],
+            scss: {
+                files: [scssPath + '{,*/}*.scss'],
                 tasks: ['sass']
             }
+        },
+
+        copy: {
+            copyImages: {
+                cwd: 'bower_downloads/govuk_frontend_toolkit/images',
+                src: ['**/*'],
+                dest: 'web/images',
+                expand: true
+            },
+            copyJS: {
+                cwd: 'bower_downloads/govuk_frontend_toolkit/javascripts',
+                src: ['**/*'],
+                dest: 'web/javascripts',
+                expand: true
+            },
+            copyJquery: {
+                cwd: 'bower_downloads/jquery/dist',
+                src: ['**/*'],
+                dest: 'web/javascripts/vendor/jquery',
+                expand: true
+            },
+            copyHTML5shiv: {
+                cwd: 'bower_downloads/html5shiv/dist',
+                src: ['**/*'],
+                dest: 'web/javascripts/vendor/html5shiv',
+                expand: true
+            }
         }
-
-        /*
-         copy: {
-         main: {
-         src: 'src/front-end/libs*//*',
-         dest: '',
-         options: {
-         *//*process: function (content, srcpath) {
-         return content.replace(/[sad ]/g, "_");
-         }*//*
-         }
-         },
-         assets: {
-         cwd: 'src/front-end/libs/govuk_template_mustache/assets/',
-         src: ['**'],
-         dest: 'web/assets',
-         expand: true,
-         options: {
-
-         }
-         }
-         },
-         */
-
 
     });
 
     // Register Grunt Tasks
-    grunt.registerTask('default', ['sass', 'watch']);
+    grunt.registerTask('default', ['copy', 'sass', 'watch']);
 
 };

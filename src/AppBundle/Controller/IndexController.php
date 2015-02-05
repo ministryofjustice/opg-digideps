@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class IndexController extends Controller
 {
@@ -45,5 +46,13 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
+        return $this->render(
+            'AppBundle:Index:login.html.twig',
+            array(
+                // last email entered by the user
+                'last_email' => '',
+                'error'         => '',
+            )
+        );
     }
 }
