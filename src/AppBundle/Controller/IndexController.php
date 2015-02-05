@@ -31,7 +31,7 @@ class IndexController extends Controller
         $lastEmail = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
 
         return $this->render(
-            'AppBundle:Index:login.html.twig',
+            'AppBundle:index:login.html.twig',
             array(
                 // last email entered by the user
                 'last_email' => $lastEmail,
