@@ -1,11 +1,14 @@
-{% extends 'base.html.twig' %}
+{% extends 'application.html.twig' %}
+
+
+{% block pageTitle %}Admin Add User{% endblock %}
 
 {% block title %} Admin area {% endblock %}
 {% block h1Title %} Admin area {% endblock %}
 
 
-{% block body %}
-    
+{% block content %}
+    <h3 class="behat-region-page-title">Admin area</h3>
     <div style="">
         <h4>Add user</h4>
         {% include 'AppBundle:Admin:add.html.twig' %}

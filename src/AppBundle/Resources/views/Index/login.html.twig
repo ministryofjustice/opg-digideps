@@ -1,24 +1,25 @@
-{% extends 'base.html.twig' %}
+{% extends 'page.html.twig' %}
 
 {% trans_default_domain "login" %}
 
-{% block title %} {% trans %}pageTitle{% endtrans %} {% endblock %}
-{% block h1Title %} {% trans %}pageTitle{% endtrans %} {% endblock %}
+{% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
 
-{% block body %}
-    
+
+
+{% block content %}
+
 
     <form action="{{ path('login_check') }}" method="post">
         
       <div>
         <label for="email">{% trans %}email.label{% endtrans %}</label>
         <p class="description">{% trans %}email.description{% endtrans %}</p>
-        <input type="text" id="email" name="email" value="{{ last_email }}" size=50 required="required" />
+        <input type="text" id="email" name="email" value="{{ last_email }}" size=50 />
       </div>
       
       <div>
         <label for="password">{% trans %}password.label{% endtrans %}</label>
-        <input type="password" id="password" name="password"  required="required" />
+        <input type="password" id="password" name="password" />
       </div>
 
       

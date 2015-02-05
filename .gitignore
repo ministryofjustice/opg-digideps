@@ -8,3 +8,6 @@ misc/tmp/*
 .idea/*
 *.iml
 composer.phar
+.sass-cache/*
+node_modules/*
+app/config/parameters.yml

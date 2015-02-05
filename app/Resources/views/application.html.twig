@@ -1,0 +1,66 @@
+{% extends 'moj_template.html.twig' %}
+
+{% trans_default_domain "layout" %}
+
+{% block topOfPage %}{% endblock %}
+
+{% block stylesheets %}
+<!--[if gt IE 8]><!--><link href="/css/application.css" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
+<!--[if IE 6]><link href="/css/application-ie6.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+<!--[if IE 7]><link href="/css/application-ie7.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+<!--[if IE 8]><link href="/css/application-ie8.css" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+{% endblock %}
+
+{% block head %}{% endblock %}
+
+{% block pageTitle %}Digideps Title{% endblock %}
+
+
+
+{% block bodyClasses %}{% endblock %}
+
+{% block cookieMessage %}{% endblock %}
+
+
+
+{% block headerClass %}{% endblock %}
+
+{% block insideHeader %}{% endblock %}
+
+{% block proposition_content %}
+<a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+<nav id="proposition-menu">
+    <a href="/" id="proposition-name">{% block proposition_title %}Digital Deputyships{% endblock %}</a>
+    <ul id="proposition-links">
+        <li><a href="/admin">{% trans %}adminArea{% endtrans %}</a></li>
+        <li><a href="/logout">{% trans %}logout{% endtrans %}</a></li>
+    </ul>
+</nav>
+{% endblock %}
+
+{% block afterHeader %}
+    {% if error.messageKey is defined %}
+        <div style="color: #ddd;background-color: #ff0000;" class="behat-region-header-errors">{{ error.messageKey|trans(error.messageData) }}</div>
+    {% endif %}
+{% endblock %}
+
+
+
+{% block beforeContent %}{% endblock %}
+
+{% block content %}{% endblock %}
+
+
+
+{% block footerTop %}{% endblock %}
+
+{% block footerSupportLinks %}{% endblock %}
+
+
+
+{% block javascripts %}
+<script type="text/javascript" src="/js/application.js"></script>
+{% endblock %}
+
+{% block bodyEnd %}{% endblock %}
+
