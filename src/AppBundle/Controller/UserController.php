@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends RestController
 {
     /**
-     * @Route("/")
+     * @Route("")
      * @Method({"POST"})
      */
     public function add(Request $request)
@@ -57,7 +57,7 @@ class UserController extends RestController
     }
     
     /**
-     * @Route("/")
+     * @Route("")
      * @Method({"GET"})
      */
     public function getAll()
