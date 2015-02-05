@@ -63,7 +63,7 @@
         <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="true"></exec>
     </target>
     
-    <target name="build" depends="cache-clear,composer-install,db,phplint,phpunit">
+    <target name="build" depends="cache-clear,composer-install,db,phplint">
     </target>
 
 </project>
