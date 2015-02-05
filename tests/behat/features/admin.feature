@@ -34,4 +34,5 @@ Feature: admin
             | form_lastname | Doe | 
         And I press "form_save"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
+        And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         

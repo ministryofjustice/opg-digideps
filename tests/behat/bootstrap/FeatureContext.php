@@ -27,9 +27,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     use LogTrait;
 
     use StatusSnapshotTrait;
-
+    
     private static $fixtures = null;
 
+    protected $mailFilePath = '/tmp/dd_mail_mock';
+    
     public function __construct($session)
     {
         ini_set('xdebug.max_nesting_level', 200);
@@ -176,17 +178,70 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     
     /**
+     * Array (
+            [to] => Array
+                (
+                    [deputyshipservice@publicguardian.gsi.gov.uk] => test Test
+                )
+
+            [from] => Array
+                (
+                    [admin@digideps.service.dsd.io ] => Digital deputyship service
+                )
+
+            [bcc] =>
+            [cc] =>
+            [replyTo] =>
+            [returnPath] =>
+            [subject] => Digideps - activation email
+            [body] => Hello test Test, click here http://link.com/activate/testtoken to activate your account
+            [sender] =>
+            [parts] => Array
+                (
+                    [0] => Array
+                        (
+                            [body] => Hello test Test<br/><br/>click here <a href="http://link.com/activate/testtoken">http://link.com/activate/testtoken</a> to activate your account
+                            [contentType] => text/html
+                        )
+
+                )
+
+        )
+     * 
+     * @retun array
+     */
+    protected function getLatestEmail()
+    {
+        $ret =  json_decode(file_get_contents($this->mailFilePath), 1);
+        if (empty($ret)) {
+            throw new \RuntimeException("Email has not been sent");
+        }
+    }
+    
+   
+    
+    /**
+     * @BeforeScenario @cleanMail
+     */
+    public function cleanMail(BeforeScenarioScope $scope)
+    {
+        file_put_contents($this->mailFilePath, '');
+    }
+    
+    /**
      * @Then an email with subject :subject should have been sent to :to
      */
     public function anEmailWithSubjectShouldHaveBeenSentTo($subject, $to)
     {
-        $mail = self::getApplicationBehatHelper()->getLatestEmail();
-
-        if ($mail->getSubject() != $subject) {
-            throw new \RuntimeException("Subject '" . $mail->getSubject() . "' does not match the expected '" . $subject . "'");
+        $mail = $this->getLatestEmail();
+        $mailTo = key($mail['to']);
+        
+        
+        if ($mail['subject'] != $subject) {
+            throw new \RuntimeException("Subject '" . $mail['subject'] . "' does not match the expected '" . $subject . "'");
         }
-        if ($to !== 'the specified email address' && $mail->getTo() != $to) {
-            throw new \RuntimeException("Addressee '" . $mail->getTo() . "' does not match the expected '" . $to . "'");
+        if ($mailTo !== 'the specified email address' && $mailTo != $to) {
+            throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
         }
     }
     
@@ -195,7 +250,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function anEmailContainingTheFollowingShouldHaveBeenSentTo2($to, TableNode $table)
     {
-        $mail = self::getApplicationBehatHelper()->getLatestEmail();
+        $mail = $this->getLatestEmail();
         
         if ($to !== 'the specified email address' && $mail->getTo() != $to) {
             throw new \RuntimeException("Addressee '" . $mail->getTo() . "' does not match the expected '" . $to . "'");
@@ -209,13 +264,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         
     }
 
-    /**
-     * @BeforeScenario @cleanMail
-     */
-    public function cleanMail(BeforeScenarioScope $scope)
-    {
-        self::getApplicationBehatHelper()->cleanLatestEmail();
-    }
 
     /**
      * @When I open the first link on the email
