@@ -38,7 +38,11 @@
 </nav>
 {% endblock %}
 
-{% block afterHeader %}{% endblock %}
+{% block afterHeader %}
+    {% if error.messageKey is defined %}
+        <div style="color: #ddd;background-color: #ff0000;" class="behat-region-header-errors">{{ error.messageKey|trans(error.messageData) }}</div>
+    {% endif %}
+{% endblock %}
 
 
 

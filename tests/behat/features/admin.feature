@@ -8,7 +8,7 @@ Feature: admin
             | email     | deputyshipservice@publicguardian.gsi.gov.uk |
             | password  |  WRONG PASSWORD !! |
         And I click on "login"
-        Then I should see "invalid credentials" in the "header errors" region
+        Then I should see the "header errors" region
         # test right credentials
         When I fill in the following:
             | email     | deputyshipservice@publicguardian.gsi.gov.uk |
