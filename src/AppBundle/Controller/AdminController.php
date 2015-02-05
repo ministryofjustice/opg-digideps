@@ -30,7 +30,7 @@ class AdminController extends Controller
             }
         }
         
-        return $this->render('AppBundle:admin:index.html.twig', array(
+        return $this->render('AppBundle:Admin:index.html.twig', array(
             'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
             'form'=>$form->createView()
         ));
