@@ -45,5 +45,6 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
+         return new Response('true');
     }
 }
