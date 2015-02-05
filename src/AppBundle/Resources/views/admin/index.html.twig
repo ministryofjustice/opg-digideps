@@ -1,6 +1,7 @@
 {% extends 'application.html.twig' %}
 
 
+
 {% block pageTitle %}Admin Add User{% endblock %}
 
 {% block title %} Admin area {% endblock %}
@@ -11,9 +12,9 @@
     
     <div style="">
         <h4>Add user</h4>
-        {% include 'AppBundle:Admin:add.html.twig' %}
+        {% include 'AppBundle:Admin:_add.html.twig' %}
 
         <h4>List users</h4>
-        {% include 'AppBundle:Admin:list.html.twig' with {users: users, form: form} %}
+        {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
     </div>
 {% endblock %}

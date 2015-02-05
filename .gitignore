@@ -10,3 +10,4 @@ misc/tmp/*
 composer.phar
 .sass-cache/*
 node_modules/*
+bower_downloads/*
