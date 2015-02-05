@@ -29,7 +29,14 @@ module.exports = function (grunt) {
                         dest: 'web/css',
                         ext: '.css'
                     }
-                ]
+                ],
+                options: {
+                    loadPath: [
+                        'bower_downloads/govuk_frontend_toolkit/stylesheets',
+                        'bower_downloads/govuk_elements/public/sass/elements'
+                    ]
+                }
+
             }
         },
 
@@ -44,12 +51,6 @@ module.exports = function (grunt) {
         },
 
         copy: {
-            copyStylesheets: {
-                cwd: 'bower_downloads/govuk_frontend_toolkit/stylesheets',
-                src: ['**/*'],
-                dest: 'src/AppBundle/Resources/assets/scss',
-                expand: true
-            },
             copyImages: {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/images',
                 src: ['**/*'],
@@ -60,12 +61,6 @@ module.exports = function (grunt) {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/javascripts',
                 src: ['**/*'],
                 dest: 'web/javascripts',
-                expand: true
-            },
-            copyGovElements: {
-                cwd: 'bower_downloads/govuk_elements/public/sass/elements',
-                src: ['**/*'],
-                dest: 'src/AppBundle/Resources/assets/scss/elements',
                 expand: true
             },
             copyJquery: {
