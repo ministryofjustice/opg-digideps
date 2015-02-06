@@ -9,23 +9,18 @@
 
 {% block content %}
     <h3 class="behat-region-page-title">Admin area</h3>
-    <div style="">
+
+    <div class="grid-row">
+      <div class="column-full">
         <h4>Add user</h4>
-
         {% include 'AppBundle:Admin:_add.html.twig' %}
-
-        <h4>List users</h4>
-        {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
+      </div>
     </div>
 
-
-
-
-
-
-
-
-
-
-
+    <div class="grid-row">
+      <div class="column-full">
+        <h4>List users</h4>
+        {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
+      </div>
+    </div>
 {% endblock %}
