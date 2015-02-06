@@ -1,8 +1,14 @@
-<div class="form-group {% if not element.vars.valid %}errors{% endif %}">
-    {{ form_label(element, labelText | default('') | trans, {'label_attr': {'class': '' ~ labelClass | default('')}}) }}
 
-    <p class="form-hint">{{ formHint | default('') }}</p>
-    {{ form_widget(element, { 'attr': {'class': element.vars.attr.class | default('') ~ '' ~ inputClass | default('') } }) }}
+<div class="form-group {% if not element.vars.valid %}field-with-errors{% endif %}">
+
+    {{ form_label(element, labelText | default('') | trans, {'label_attr': {'class': 'form-label ' ~ labelClass | default('')}}) }}
 
     {{ form_errors(element) }}
+
+    {% if formHint is defined and formHint is not null %}
+      <p class="form-hint">{{ formHint }}</p>
+    {% endif %}
+
+    {{ form_widget(element, { 'attr': {'class': element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') } }) }}
+
 </div>

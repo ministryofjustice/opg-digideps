@@ -1,6 +1,7 @@
 user:
     email:
-         invalid: "The email {{ value }} is not a valid email"
+         invalid: The email {{ value }} is not a valid email
+         notBlank: The email cannot be blank
     firstname:
         notBlank: The first name cannot be blank
         minLength: Your first name must be at least {{ limit }} characters long
