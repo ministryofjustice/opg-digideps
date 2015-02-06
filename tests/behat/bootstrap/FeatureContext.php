@@ -213,9 +213,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     protected function getLatestEmail()
     {
         $ret =  json_decode(file_get_contents($this->mailFilePath), 1);
-        if (empty($ret)) {
+        if (empty($ret['to'])) {
             throw new \RuntimeException("Email has not been sent");
         }
+        
+        return $ret;
     }
     
    
