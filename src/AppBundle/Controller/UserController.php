@@ -17,6 +17,8 @@ class UserController extends Controller
      */
     public function activateAction($token)
     {
-        return new Response("This page activates used with token $token");
+        return $this->render('AppBundle:User:activate.html.twig', [
+            'token'=>$token, 
+        ]);
     }
 }
