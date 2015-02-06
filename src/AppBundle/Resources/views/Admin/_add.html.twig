@@ -20,4 +20,9 @@
     formHint: 'user.lastname' | trans
   } %}
 
+<div class="form-group">
+  {{ form_widget(form.save, { 'label': 'user.submit' | trans,  'attr': {'class': 'button'} }) }}
+</div>
+
+
 {{ form_end(form) }}

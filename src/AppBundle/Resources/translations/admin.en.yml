@@ -1,4 +1,5 @@
 user:
-  email: 'Please enter the email for this user'
-  firstname: 'Please enter the firstname for this user'
-  lastname: 'Please enter the lastname for this user'
+  email: Please enter the email for this user
+  firstname: Please enter the firstname for this user
+  lastname: Please enter the lastname for this user
+  submit: Submit
