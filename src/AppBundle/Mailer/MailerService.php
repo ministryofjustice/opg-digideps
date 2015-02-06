@@ -11,61 +11,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class MailerService extends Mailer
 {
-//    /**
-//     * @var array
-//     */
-//    protected $filters = [];
-//
-//    /**
-//     * @var array
-//     */
-//    protected $from = ['noreply@example.com', 'Example'];
-//
-//    /**
-//     * Add a message filter
-//     *
-//     * @param FilterInterface $filter
-//     */
-//    public function addFilter(MessageFilterInterface $filter)
-//    {
-//        $this->filters[] = $filter;
-//    }
-
-//    /**
-//     * Set the sender details
-//     *
-//     * @param string $email
-//     * @param string $name
-//     */
-//    public function setFrom($email, $name)
-//    {
-//        $this->from = [(string) $email, (string) $name];
-//    }
-
     /**
-     * Send HTML message
-     *
-     * This method will also send the plain text message
-     * for text readers
-     *
-     * @param Message $message
-     * @param EmailView $view
-     * @param array $parameters
-     *
-     * @return boolean
+     * @param string $transport
+     * @param Swift_Transport[] $transports
      */
-    public function sendMimeMessage(Message $message, $bodyText, $bodyHTML)
+    public function __construct($transport, array $transports)
     {
-        $message->setBody($bodyText);
-        $message->addPart($bodyHTML, 'text/html');
-
-//        $message->setFrom(reset($this->from), end($this->from));
-//        $message->setSubject($subject);
-
-//        foreach ($this->filters as $filter) {
-//            $filter->filter($message);
-//        }
-
-        return (boolean) parent::send($message);
+        if (empty($transports[$transport])) {
+            throw new \Exception("Mail transport $transport not defined.Available transports: " . implode(', ', array_keys($transports)));
+        }
+        parent::__construct($transports[$transport]);
     }
+    
 }

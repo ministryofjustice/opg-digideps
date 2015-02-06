@@ -13,12 +13,11 @@ services:
     
     mailer.service:
         class: AppBundle\Mailer\MailerService
-#            arguments: [@swiftmailer.transport.sendmail, @templating]
-        arguments: [@mailer.transport.fileWriter]
+        arguments: ["%mailer_transport%", {sendgrid: @mailer.transport.sendgrid, file: @mailer.transport.fileWriter} ]
         
-    mailer.factory:
-        class: AppBundle\Mailer\MailerFactory
-        arguments: [ @mailer.service, @translator ]
-        calls:
-            - [setFrom, ["admin@digideps.service.dsd.io ", "Digital deputyship service"]]
+#    mailer.factory:
+#        class: AppBundle\Mailer\MailerFactory
+#        arguments: [ @mailer.service, @translator ]
+#        calls:
+#            - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
                 
