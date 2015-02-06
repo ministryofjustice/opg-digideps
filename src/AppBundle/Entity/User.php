@@ -132,6 +132,8 @@ class User implements AdvancedUserInterface
     {
         $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
+        
+        $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
     }
 
     /**
