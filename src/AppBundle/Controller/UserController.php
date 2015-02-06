@@ -38,6 +38,9 @@ class UserController extends RestController
         $em->persist($user);
         $em->flush($user);
         
+        $mailerFactory = $this->container->get('mailer.factory');
+        $mailerFactory->sendActivationEmail($user);
+        
         return array('id'=>$user->getId());
     }
     
