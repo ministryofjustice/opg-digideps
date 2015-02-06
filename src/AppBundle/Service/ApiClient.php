@@ -70,16 +70,20 @@ class ApiClient
      * @param string $endpoint
      * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
      * 
-     * @return string response body
+     * @return array response
      */
     public function post($endpoint, $bodyorEntity)
     {
         if (is_object($bodyorEntity)) {
             $bodyorEntity = $this->jsonSerializer->serialize($bodyorEntity, 'json');
         }
-        $response = $this->restClient->post($endpoint, ['body'=>$bodyorEntity]);
+        $responseBody = $this->restClient->post($endpoint, ['body'=>$bodyorEntity])->getBody();
         
-        return $response->getBody();
+        $responseArray = json_decode($responseBody, 1);
+        
+         $this->checkResponseArray($responseArray);
+        
+        return $responseArray['data'];
     }
     
    
