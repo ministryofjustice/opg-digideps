@@ -14,10 +14,4 @@ services:
     mailer.service:
         class: AppBundle\Mailer\MailerService
         arguments: ["%mailer_transport%", {sendgrid: @mailer.transport.sendgrid, file: @mailer.transport.fileWriter} ]
-        
-#    mailer.factory:
-#        class: AppBundle\Mailer\MailerFactory
-#        arguments: [ @mailer.service, @translator ]
-#        calls:
-#            - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
-                
+     

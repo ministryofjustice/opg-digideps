@@ -27,7 +27,7 @@ class EmailController extends RestController
      * 
       curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"toEmail":"elvisciotti@gmail.com", "toName":"Elvis", "fromEmail":"admin@digideps.service.dsd.io", "fromName":"Digital deputyship service", "subject": "subject!", "bodyText":"PLAIN BODY", "bodyHtml":"HTML <b>BODY</b>"}'  http://digideps-api.local/email/send
      */
-    public function sendEmail(Request $request)
+    public function sendEmail()
     {
         $data = $this->deserializeBodyContent();
         
