@@ -10,7 +10,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 
 # Tab indentation (no size specified)
-[*.{js,html,twig,php}]
+[*.{js,html,twig,php,yml}]
 indent_style = space
 indent_size = 2
 charset = utf-8
