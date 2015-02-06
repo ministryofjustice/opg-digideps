@@ -21,15 +21,15 @@ use Symfony\Component\HttpFoundation\Response;
 class UserController extends RestController
 {
     /**
-     * @Route("/")
+     * @Route("")
      * @Method({"POST"})
      */
     public function add(Request $request)
     {
         $data = $this->deserializeBodyContent();
-        
+
         $em = $this->getDoctrine()->getManager();
-        
+
         $user = new \AppBundle\Entity\User();
         $user->setFirstname($data['firstname']);
         $user->setLastname($data['lastname']);
@@ -37,10 +37,10 @@ class UserController extends RestController
         $user->setPassword('');
         $em->persist($user);
         $em->flush($user);
-        
+
         return array('id'=>$user->getId());
     }
-    
+
     /**
      * @Route("/{id}")
      * @Method({"GET"})
@@ -52,23 +52,23 @@ class UserController extends RestController
         if (!$user) {
             throw new \Exception('not found');
         }
-        
+
         return $user;
     }
-    
+
     /**
-     * @Route("/")
+     * @Route("")
      * @Method({"GET"})
      */
     public function getAll()
     {
         $em = $this->getDoctrine()->getManager();
-        
+
         $users = $em->getRepository('AppBundle\Entity\User')->findAll();
-        
+
         return $users;
     }
-    
+
     /**
      * @Route("/get-by-email/{email}")
      * @Method({"GET"})
@@ -76,13 +76,13 @@ class UserController extends RestController
     public function getByEmail($email)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        
+
         $user = $em->getRepository('AppBundle\Entity\User')->findOneByEmail($email);
         if (!$user) {
             throw new \Exception('User not found');
         }
-        
-        
+
+
         return $user;
     }
 }
