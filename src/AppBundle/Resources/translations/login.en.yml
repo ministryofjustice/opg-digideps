@@ -1,4 +1,6 @@
 pageTitle: Sign in
+header: Sign in to the admin area
+subtitle: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, aperiam!
 email:
     label: Email address
     description: We sent you registration link to this email address
@@ -6,8 +8,8 @@ password:
     label: Password
 submit:
     label: Sign in
-forgotPassword: Forgotten your password?    
+forgotPassword: Forgotten your password?
 
 #_security:
-#    403_error: 
+#    403_error:
 #    last_error: sec last error
