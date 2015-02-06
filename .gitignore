@@ -12,4 +12,4 @@ composer.phar
 node_modules/*
 app/config/parameters.yml
 bower_downloads/*
-web/bundles
+web/bundles/*

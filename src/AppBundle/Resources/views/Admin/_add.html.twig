@@ -1,9 +1,16 @@
+{% trans_default_domain "admin" %}
+
 {{ form_start(form) }}
     
-    {% include 'AppBundle:Partials:element.html.twig' with {element: form.email} %}
+    {% include 'AppBundle:Partials:_element.html.twig' with {
+    element: form.email,
+    inputClass: 'form-control',
+    labelClass: 'form-label-bold',
+    formHint: 'add.email' | trans
+    } %}
 
-    {% include 'AppBundle:Partials:element.html.twig' with {element: form.firstname} %}
+    {% include 'AppBundle:Partials:_element.html.twig' with {element: form.firstname} %}
 
-    {% include 'AppBundle:Partials:element.html.twig' with {element: form.lastname} %}
+    {% include 'AppBundle:Partials:_element.html.twig' with {element: form.lastname} %}
 
 {{ form_end(form) }}
