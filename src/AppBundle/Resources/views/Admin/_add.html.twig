@@ -1,9 +1,28 @@
-{{ form_start(form) }}
-    
-    {% include 'AppBundle:Partials:element.html.twig' with {element: form.email} %}
+{% trans_default_domain "admin" %}
 
-    {% include 'AppBundle:Partials:element.html.twig' with {element: form.firstname} %}
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {% include 'AppBundle:Partials:element.html.twig' with {element: form.lastname} %}
+  {% include 'AppBundle:Partials:_element.html.twig' with {
+    element: form.email,
+    labelClass: 'form-label-bold',
+    formHint: 'user.email' | trans
+  } %}
+
+  {% include 'AppBundle:Partials:_element.html.twig' with {
+    element: form.firstname,
+    labelClass: 'form-label-bold',
+    formHint: 'user.firstname' | trans
+  } %}
+
+  {% include 'AppBundle:Partials:_element.html.twig' with {
+    element: form.lastname,
+    labelClass: 'form-label-bold',
+    formHint: 'user.lastname' | trans
+  } %}
+
+<div class="form-group">
+  {{ form_widget(form.save, { 'label': 'user.submit' | trans,  'attr': {'class': 'button'} }) }}
+</div>
+
 
 {{ form_end(form) }}

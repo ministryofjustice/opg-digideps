@@ -45,7 +45,7 @@ module.exports = function (grunt) {
                 nospawn: true
             },
             scss: {
-                files: [scssPath + '{,*/}*.scss'],
+                files: [scssPath + '/**/*.scss'],
                 tasks: ['sass']
             }
         },

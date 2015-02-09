@@ -1383,6 +1383,17 @@ input[type=number] {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+.field-with-errors {
+  border-left: 3px solid #df3034;
+  padding: 15px 0 15px 15px; }
+
+.field-with-errors input,
+.field-with-errors select {
+  border: 2px solid #df3034; }
+
+.field-with-errors li {
+  color: #df3034; }
+
 body {
   background-color: black; }
 
