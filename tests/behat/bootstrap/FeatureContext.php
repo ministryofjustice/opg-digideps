@@ -29,12 +29,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     use StatusSnapshotTrait;
     
     private static $fixtures = null;
-
-    protected $mailFilePath = '/tmp/dd-mock-email';
     
-    public function __construct($session)
+    private $mailFilePath;
+
+    public function __construct(array $options)
     {
-        ini_set('xdebug.max_nesting_level', 200);
+        //$options['session']; // not used
+        $this->mailFilePath = $options['mailFilePath'];
+        ini_set('xdebug.max_nesting_level', $options['xdebugMaxNestingLevel'] ?: 200);
     }
 
     
@@ -172,7 +174,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     protected function getLatestEmail()
     {
-        $ret =  json_decode(file_get_contents($this->mailFilePath), 1);
+        $content = file_get_contents($this->mailFilePath);
+        $ret =  json_decode($content, 1);
         if (empty($ret['to'])) {
             throw new \RuntimeException("Email has not been sent");
         }
