@@ -22,9 +22,10 @@ class DebugCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $mailerFactory = $this->getContainer()->get('mailer.factory');
+        die;
         $user = $this->getContainer()->get('em')->getRepository('AppBundle\Entity\User')->find(1);
         $mailerFactory->sendActivationEmail($user);
         
-        echo file_get_contents("/tmp/dd_mail_mock");
+//        echo file_get_contents("/tmp/dd_mail_mock");
     }
 }

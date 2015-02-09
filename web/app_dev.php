@@ -3,7 +3,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
 
-ini_set('display_errors', 'on');
+ini_set('display_errors', 'off');
 
 // If you don't want to setup permissions the proper way, just uncomment the following PHP line
 // read http://symfony.com/doc/current/book/installation.html#configuration-and-setup for more information
@@ -20,7 +20,8 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 }
 
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
-Debug::enable();
+// debug not enabled, otherwise conflicting for REST error handler
+//Debug::enable(E_ALL, true);
 
 require_once __DIR__.'/../app/AppKernel.php';
 

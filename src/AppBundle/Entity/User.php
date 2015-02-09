@@ -132,6 +132,8 @@ class User implements AdvancedUserInterface
     {
         $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
+        
+        $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
     }
 
     /**
@@ -503,5 +505,13 @@ class User implements AdvancedUserInterface
         $this->gaTrackingId = md5($this->id);
        
         return $this->gaTrackingId;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
 }

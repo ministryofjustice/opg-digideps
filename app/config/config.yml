@@ -5,7 +5,7 @@ imports:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -32,12 +32,6 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        # if using pdo_sqlite as your database driver:
-        #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        #   2. Uncomment database_path in parameters.yml.dist
-        #   3. Uncomment next line:
-        #     path:     "%database_path%"
 
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
@@ -46,23 +40,6 @@ doctrine:
 doctrine_migrations:
     table_name: migrations
 
-#fos_rest:
-#    view:
-#        force_redirects:
-#            html: true
-#    body_converter:
-#        enabled: true
-#        view_response_listener: force 
-#        formats:
-#            json: true
-#            xml: true
-#        templating_formats:
-#            html: true
-#    # add a content negotiation rule, enabling support for json/xml for the entire website
-#    format_listener:
-#        rules:
-#            - { path: ^/, priorities: [ json, xml ], fallback_format: json, prefer_extension: false }
-            
             
 services:
     kernel.listener.responseConverter:
@@ -71,5 +48,6 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
     em:
         alias: doctrine.orm.entity_manager

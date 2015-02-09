@@ -37,7 +37,7 @@ class UserController extends RestController
         $user->setPassword('');
         $em->persist($user);
         $em->flush($user);
-
+        
         return array('id'=>$user->getId());
     }
 

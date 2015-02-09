@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use JMS\Serializer\Serializer;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class RestInputOuputFormatter
 {
@@ -98,6 +99,29 @@ class RestInputOuputFormatter
         $response = $this->arrayToResponse($data, $event->getRequest());
 
         $event->setResponse($response);
+    }
+    
+    
+    public static function onKernelRequest(GetResponseEvent $event)
+    {
+        function_exists('xdebug_disable') && xdebug_disable();
+
+        register_shutdown_function(function () use ($event) {
+            $errorGetLast = error_get_last();
+            $message = "{$errorGetLast['message']} {$errorGetLast['file']}:{$errorGetLast['line']} ";
+            $data = array('success' => false, 'data' => '', 'message' => $message);
+            
+//            $response = $this->arrayToResponse($data, $event->getRequest());
+//            echo get_class($response);die;
+//            $response->sendHeaders();
+//            $response->sendContent();
+//            die;
+            
+            echo json_encode($data);
+            die;
+            //TODO find a way to use kernely temrinate instead, usgin 
+        });
+
     }
     
 }
