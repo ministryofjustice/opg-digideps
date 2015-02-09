@@ -43,10 +43,21 @@
 {% endblock %}
 
 {% block afterHeader %}
+
+    {# To style #}
     {% if error.messageKey is defined %}
         <div style="color: #ddd;background-color: #ff0000;"
              class="behat-region-header-errors">{{ error.messageKey|trans(error.messageData) }}</div>
     {% endif %}
+
+    {# To style #}
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="flash-notice"  style="color: white;background-color: green;">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
 {% endblock %}
 
 
