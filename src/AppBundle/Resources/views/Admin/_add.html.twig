@@ -2,19 +2,19 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-  {% include 'AppBundle:Partials:_element.html.twig' with {
+  {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.email,
     labelClass: 'form-label-bold',
     formHint: 'user.email' | trans
   } %}
 
-  {% include 'AppBundle:Partials:_element.html.twig' with {
+  {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.firstname,
     labelClass: 'form-label-bold',
     formHint: 'user.firstname' | trans
   } %}
 
-  {% include 'AppBundle:Partials:_element.html.twig' with {
+  {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.lastname,
     labelClass: 'form-label-bold',
     formHint: 'user.lastname' | trans
