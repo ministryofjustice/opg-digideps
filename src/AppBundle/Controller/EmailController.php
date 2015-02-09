@@ -31,6 +31,12 @@ class EmailController extends RestController
     {
         $data = $this->deserializeBodyContent();
         
+        array_map(function($k) use ($data) {
+            if (!array_key_exists($k, $data)) {
+                throw new \InvalidArgumentException("Missing paramter $k");
+            }
+        }, ['toEmail', 'toName', 'fromEmail', 'fromName', 'subject', 'bodyText', 'bodyHtml']);
+        
         $mailerService = $this->container->get('mailer.service');
         
         $message = $mailerService->createMessage();
