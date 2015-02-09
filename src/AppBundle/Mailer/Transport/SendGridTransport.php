@@ -5,6 +5,8 @@ use Swift_Transport;
 use Swift_Events_EventListener;
 use Swift_Mime_Message;
 use SendGrid\Email;
+use AppBundle\Mailer\Utils\MessageUtils;
+use SendGrid;
 
 /**
  * Mailchimp transport layer
@@ -19,10 +21,16 @@ class SendGridTransport implements Swift_Transport
      */
     private $sendGrid;
     
+    /**
+     * @var array 
+     */
+    private $emailFileWriters = [];
     
-    public function __construct(\SendGrid $sendGrid)
+    
+    public function __construct(SendGrid $sendGrid)
     {
         $this->sendGrid = $sendGrid;
+        $this->emailFileWriters = [];
     }
 
     
@@ -62,9 +70,43 @@ class SendGridTransport implements Swift_Transport
      */
     public function send(Swift_Mime_Message $swiftMessage, &$failedRecipients = null)
     {
-        $email = $this->createSendGridMessageFromSwiftMessage($swiftMessage);
+        if ($path = $this->getPathFileWriterIfExists($swiftMessage)) {
+            $this->writeMessageIntoFile($swiftMessage, $path);
+            return;
+        } 
         
-        $this->sendGrid->send($email);
+        $sendGridMessage = $this->createSendGridMessageFromSwiftMessage($swiftMessage);
+        $this->sendGrid->send($sendGridMessage);
+    }
+    
+    /**
+     * @param Swift_Mime_Message $swiftMessage
+     * @return string|null
+     */
+    private function getPathFileWriterIfExists(Swift_Mime_Message $swiftMessage)
+    {
+        reset($swiftMessage->getTo());
+        $emailAddress = key($swiftMessage->getTo());
+        foreach ($this->emailFileWriters as $emailRegexpr => $path) {
+            if (preg_match($emailRegexpr, $emailAddress)) {
+                return $path;
+            }
+        }
+        
+        return null;
+    }
+    
+    
+    /**
+     * @param Swift_Mime_Message $swiftMessage
+     */
+    private function writeMessageIntoFile(Swift_Mime_Message $swiftMessage, $path)
+    {
+         $data = MessageUtils::messageToArray($swiftMessage);
+         $ret = file_put_contents($path, json_encode($data));
+         if (false === $ret) {
+             throw new \RuntimeException("Cannot write email into $path");
+         }
     }
     
     /**
@@ -108,4 +150,14 @@ class SendGridTransport implements Swift_Transport
     public function stop()
     {
     }
+
+    /**
+     * @param string $email
+     * @param string $path
+     */
+    public function addEmailFileWriter($email, $path)
+    {
+        $this->emailFileWriters[$email] = $path;
+    }
+
 }
