@@ -2,11 +2,16 @@
 <project name="main" default="help">
 
     <fileset dir="." id="source">
-        <include name="app/index.php" />
         <include name="src/**/*.php"/>
         <include name="web/*.php"/>
     </fileset>
     
+                 
+    <target name="phplint" description="Scan source for PHP syntax errors">
+        <phplint haltonfailure="true" cachefile="/tmp/ddClientPhingLintCacheFile" level="error">
+            <fileset refid="source" />
+        </phplint>
+    </target>
 
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
         <if>

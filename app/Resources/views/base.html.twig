@@ -19,8 +19,8 @@
             {% if app.user %}
               {% trans with {'%name%': app.user.firstname } %}welcomeMessage{% endtrans %} 
              [
-              <a href="/admin">{% trans %}adminArea{% endtrans %}</a> | 
-              <a href="/logout">{% trans %}logout{% endtrans %}</a> 
+              <a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a> | 
+              <a href="{{path('logout')}}">{% trans %}logout{% endtrans %}</a> 
              ]
             {% endif %}
         </nav>

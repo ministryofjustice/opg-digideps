@@ -31,7 +31,7 @@ class AdminController extends Controller
             if ($form->isValid()) {
                 
                 // add user
-                $response = $apiClient->post('add_user', $form->getData());
+                $response = $apiClient->postC('add_user', $form->getData());
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
                 // mail activation link

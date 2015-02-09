@@ -43,10 +43,7 @@ assetic:
 services:
     apiclient:
         class:  AppBundle\Service\ApiClient
-        arguments: [ @restclient, @jms_serializer, 'json' ]
-    restclient:
-        class:  AppBundle\Service\RestClient
-        arguments: ["%api%"]
+        arguments: [ @jms_serializer, 'json', "%api%" ]
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @apiclient, @jms_serializer ]

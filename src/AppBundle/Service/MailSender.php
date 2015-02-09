@@ -65,7 +65,7 @@ class MailSender
             'bodyHtml' => $bodyHtml
         ];
         
-        $ret = $this->apiClient->post('email/send', json_encode($data));
+        $ret = $this->apiClient->postC('email/send', json_encode($data));
        
         return $ret;
     }
