@@ -1,7 +1,7 @@
 services:
     sendgrid:
       class: SendGrid
-      arguments: [ "mojdsd-digideps-staging", "DobEjSuej", {host: "api.sendgrid.com",} ]
+      arguments: [ "%sendgrid_username%", "%sendgrid_password%", {host: "api.sendgrid.com",} ]
         
     # pass it into Swift_Mailer to always write email into disk rather than sending them
     mailer.transport.fileWriter:

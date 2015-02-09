@@ -8,3 +8,6 @@ parameters:
     database_password: 123abc
     locale: en
     secret: ffd7b176b3e3ab1cc8324c379c9e7572b539e739
+    sendgrid_username: "mojdsd-digideps-staging"
+    sendgrid_password: "DobEjSuej"
+
