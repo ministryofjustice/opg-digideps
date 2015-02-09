@@ -30,51 +30,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     private static $fixtures = null;
 
-    protected $mailFilePath = '/tmp/dd_mail_mock';
+    protected $mailFilePath = '/tmp/dd-mock-email';
     
     public function __construct($session)
     {
         ini_set('xdebug.max_nesting_level', 200);
-    }
-
-        /**
-     * This class is constructed at each scenario
-     * 
-     * @return ApplicationBehatHelper
-     */
-    public static function getApplicationBehatHelper()
-    {
-        if (null === self::$fixtures) {
-            $appConf = array(
-                'modules' => array(
-                    'Application',
-                    'DoctrineModule',
-                    'DoctrineORMModule',
-                ),
-                'module_listener_options' => array(
-                    'module_paths' => array(
-                        './module',
-                        './vendor'
-                    ),
-                    'config_glob_paths' => array(
-                        'config/autoload/{,*.}{global,behat}.php'
-                    )
-                )
-            );
-
-            $application = Zend\Mvc\Application::init($appConf);
-            $sm = $application->getServiceManager();
-
-            $migrationConf = $sm->get('doctrine.migrationsconfiguration.ormdefault');
-            $result = array_diff($migrationConf->getMigratedVersions(), $migrationConf->getAvailableVersions());
-            if (!empty($result)) {
-                throw new \RuntimeException('Database not updated ! run migrations first');
-            }
-
-            self::$fixtures = new ApplicationBehatHelper($sm);
-        }
-
-        return self::$fixtures;
     }
 
     
@@ -220,7 +180,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         return $ret;
     }
     
-   
     
     /**
      * @BeforeScenario @cleanMail
@@ -250,76 +209,76 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     /**
      * @When an email containing the following should have been sent to :to:
      */
-    public function anEmailContainingTheFollowingShouldHaveBeenSentTo2($to, TableNode $table)
-    {
-        $mail = $this->getLatestEmail();
-        
-        if ($to !== 'the specified email address' && $mail->getTo() != $to) {
-            throw new \RuntimeException("Addressee '" . $mail->getTo() . "' does not match the expected '" . $to . "'");
-        }
-        
-        foreach (array_keys($table->getRowsHash()) as $search) {
-            if (strpos($mail->getRaw(), $search) === false) {
-                throw new \RuntimeException("Email body does not contain the string '$search'");
-            }
-        }
-        
-    }
+//    public function anEmailContainingTheFollowingShouldHaveBeenSentTo2($to, TableNode $table)
+//    {
+//        $mail = $this->getLatestEmail();
+//        
+//        if ($to !== 'the specified email address' && $mail->getTo() != $to) {
+//            throw new \RuntimeException("Addressee '" . $mail->getTo() . "' does not match the expected '" . $to . "'");
+//        }
+//        
+//        foreach (array_keys($table->getRowsHash()) as $search) {
+//            if (strpos($mail->getRaw(), $search) === false) {
+//                throw new \RuntimeException("Email body does not contain the string '$search'");
+//            }
+//        }
+//        
+//    }
 
 
     /**
      * @When I open the first link on the email
      */
-    public function iOpenTheLinkOnTheEmail()
-    {
-        $mailContent = self::getApplicationBehatHelper()->getLatestEmail()->getRaw();
-        preg_match_all('#http://[^\s"<]+#', $mailContent, $matches);
-        if (empty($matches[0])) {
-            throw new \Exception("no link found in email. Body:\n $mailContent");
-        }
-        $emails = array_unique($matches[0]);
-        if (!count($emails)) {
-            throw new \Exception("No links found in the email. Body:\n $mailContent");
-        }
-        $link = array_shift($emails);
-
-        // visit the link
-        $this->visit($link);
-    }
+//    public function iOpenTheLinkOnTheEmail()
+//    {
+//        $mailContent = self::getApplicationBehatHelper()->getLatestEmail()->getRaw();
+//        preg_match_all('#http://[^\s"<]+#', $mailContent, $matches);
+//        if (empty($matches[0])) {
+//            throw new \Exception("no link found in email. Body:\n $mailContent");
+//        }
+//        $emails = array_unique($matches[0]);
+//        if (!count($emails)) {
+//            throw new \Exception("No links found in the email. Body:\n $mailContent");
+//        }
+//        $link = array_shift($emails);
+//
+//        // visit the link
+//        $this->visit($link);
+//    }
 
     /**
      * @Then the email sent has a size of at least :atLeastKb kilobytes
      */
-    public function theEmailSentHasASizeBiggerThan($atLeastKb) //7
-    {
-        $mailSize = ceil(strlen(self::getApplicationBehatHelper()->getLatestEmail()->getRaw()) / 1024); //73
-        if ($mailSize < $atLeastKb) {
-            throw new \Exception("mail size is $mailSize bytes, should be bigger than $atLeastKb kb");
-        }
-    }
+//    public function theEmailSentHasASizeBiggerThan($atLeastKb) //7
+//    {
+//        $mailSize = ceil(strlen(self::getApplicationBehatHelper()->getLatestEmail()->getRaw()) / 1024); //73
+//        if ($mailSize < $atLeastKb) {
+//            throw new \Exception("mail size is $mailSize bytes, should be bigger than $atLeastKb kb");
+//        }
+//    }
     
     /**
      * Delete users with an email starting with behat-
      * RElies on region "test-user" added in the admin view
      * @Given I delete the behat test users
      */
-    public function iDeleteTheBehatUsers()
-    {
-        $this->iGoToTheManageUsersPage();
-        
-        $regions = $this->getSession()->getPage()->findAll('css', self::behatRegionToCssSelector('test-user'));
-        foreach ($regions as $region) {
-            $editLinks = $region->findAll('css', self::behatLinkToCssSelector('edit'));
-            if (count($editLinks) !== 1) { //it only happened once, could not replicate
-                $this->debug();
-            }
-            $editLinks[0]->click();
-            $this->clickOnBehatLink('delete-user');
-            $this->clickOnBehatLink('delete-yes');
-        }
-        
-        $this->iShouldNotSeeTheRegion('test-user');
-    }
+//    public function iDeleteTheBehatUsers()
+//    {
+//        $this->iGoToTheManageUsersPage();
+//        
+//        $regions = $this->getSession()->getPage()->findAll('css', self::behatRegionToCssSelector('test-user'));
+//        foreach ($regions as $region) {
+//            $editLinks = $region->findAll('css', self::behatLinkToCssSelector('edit'));
+//            if (count($editLinks) !== 1) { //it only happened once, could not replicate
+//                $this->debug();
+//            }
+//            $editLinks[0]->click();
+//            $this->clickOnBehatLink('delete-user');
+//            $this->clickOnBehatLink('delete-yes');
+//        }
+//        
+//        $this->iShouldNotSeeTheRegion('test-user');
+//    }
 
 
 }
