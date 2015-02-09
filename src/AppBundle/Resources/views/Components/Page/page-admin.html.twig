@@ -1,0 +1,11 @@
+{% extends 'application.html.twig' %}
+
+{% block pageContent %}
+    {% block pageHeader %}
+        {% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Deputyship service',
+        title: 'Add Users'
+        } %}x
+    {% endblock %}
+    {% block pageBody %}{% endblock %}
+{% endblock %}

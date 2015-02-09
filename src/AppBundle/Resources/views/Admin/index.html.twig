@@ -1,26 +1,17 @@
-{% extends 'application.html.twig' %}
-
-
-{% trans_default_domain "admin2" %}
-
-
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% trans_default_domain "admin" %}
 {% block pageTitle %}Admin Add User{% endblock %}
 
 
-{% block content %}
+{% block pageBody %}
     <h3 class="behat-region-page-title">Admin area</h3>
-
-    <div class="grid-row">
-      <div class="column-full">
+    <div style="">
         <h4>Add user</h4>
-        {% include 'AppBundle:Admin:_add.html.twig' %}
-      </div>
-    </div>
 
-    <div class="grid-row">
-      <div class="column-full">
+        {% include 'AppBundle:Admin:_add.html.twig' %}
+
         <h4>List users</h4>
         {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
-      </div>
     </div>
+
 {% endblock %}
