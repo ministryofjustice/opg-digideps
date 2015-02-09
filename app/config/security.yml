@@ -21,6 +21,10 @@ security:
         login:
             pattern:  ^/login$
             security: false
+            
+        userActivate:
+            pattern:  ^/user/activate
+            security: false
 
         secured_area:
             form_login:
