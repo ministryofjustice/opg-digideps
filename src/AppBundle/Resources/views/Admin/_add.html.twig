@@ -2,6 +2,10 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
+    <h1 class="form-title heading-large">
+        Your details
+    </h1>
+
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.email,
     labelClass: 'form-label-bold',

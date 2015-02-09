@@ -1,11 +1,11 @@
 {% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
 {% trans_default_domain "admin" %}
-{% block pageTitle %}Admin Add User{% endblock %}
+{% block pageTitle %}Administration - Users{% endblock %}
+{% block pageAdminTitle %}Users{% endblock %}
 
 
 {% block pageBody %}
-    <h3 class="behat-region-page-title">Admin area</h3>
-    <div style="">
+    <div>
         <h4>Add user</h4>
 
         {% include 'AppBundle:Admin:_add.html.twig' %}
