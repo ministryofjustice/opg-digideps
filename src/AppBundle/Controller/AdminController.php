@@ -38,6 +38,11 @@ class AdminController extends Controller
                 $mailSender = $this->get('mailSender'); /* @var $mailSender MailSender */
                 $mailSender->sendUserActivationEmail($user);
 
+                $request->getSession()->getFlashBag()->add(
+                    'notice', 
+                    'An activation email has been sent to the user.'
+                );
+                
                 return $this->redirect($this->generateUrl('admin_homepage'));
             }
         }
