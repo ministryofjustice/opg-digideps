@@ -2,13 +2,16 @@
 namespace AppBundle\Service;
 
 use JMS\Serializer\SerializerInterface;
+use GuzzleHttp\Client as GuzzleClient;
 
-class ApiClient
+class ApiClient extends GuzzleClient
 {
     /**
-     * @var RestClient
+     * endpoints map
+     * 
+     * @var array
      */
-    private $restClient;
+    private $endpoints;
     
     /**
      * @var SerializerInterface
@@ -21,13 +24,21 @@ class ApiClient
     private $format;
     
     
-    public function __construct(RestClient $erstClient, SerializerInterface $jsonSerializer, $format)
+    public function __construct(SerializerInterface $jsonSerializer, $format, $api)
     {
-        $this->restClient = $erstClient;
+        $config = [ 'base_url' =>  $api['base_url'],
+                    'defaults' => ['headers' => [ 'Content-Type' => 'application/json' ] ],
+                  ];
+        
+        parent::__construct($config);
+         
         $this->jsonSerializer = $jsonSerializer;
         $this->format = $format;
+        
+        //endpoints array
+        $this->endpoints = $api['endpoints'];
     }
-    
+   
     private function checkResponseArray($responseArray)
     {
          if (empty($responseArray)) {
@@ -41,8 +52,16 @@ class ApiClient
     
     public function getEntity($class, $endpoint, $options = [])
     {
-        $body = $this->restClient->get($endpoint, $options)->getBody();
-        $responseArray = $this->jsonSerializer->deserialize($body, 'array', $this->format);
+        $request = $this->createRequest('GET', $endpoint, $options);
+        $response = $this->send($request);
+        $responseString = $response->json();
+        
+        if(!is_array($responseString)){
+            $responseArray = $this->jsonSerializer->deserialize($response->getBody(), 'array', $this->format);
+        }else{
+            $responseArray = $responseString;
+        }
+        
         $this->checkResponseArray($responseArray);
         
         $ret = $this->jsonSerializer->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, 'json');
@@ -53,8 +72,16 @@ class ApiClient
     
     public function getEntities($class, $endpoint, $options = [])
     {
-        $body = $this->restClient->get($endpoint, $options)->getBody();
-        $responseArray = $this->jsonSerializer->deserialize($body,'array',$this->format);
+        $request = $this->createRequest('GET', $endpoint, $options);
+        $response = $this->send($request);
+        $responseString = $response->json();
+        
+        if(!is_array($responseString)){
+            $responseArray = $this->jsonSerializer->deserialize($response->getBody(),'array',$this->format);
+        }else{
+            $responseArray = $responseString;
+        }
+        
         $this->checkResponseArray($responseArray);
         
         $ret = array();
@@ -72,15 +99,37 @@ class ApiClient
      * 
      * @return string response body
      */
-    public function post($endpoint, $bodyorEntity)
+    public function postC($endpoint, $bodyorEntity)
     {
         if (is_object($bodyorEntity)) {
             $bodyorEntity = $this->jsonSerializer->serialize($bodyorEntity, 'json');
         }
-        $response = $this->restClient->post($endpoint, ['body'=>$bodyorEntity]);
+        $response = $this->post($endpoint, ['body'=>$bodyorEntity]);
         
         return $response->getBody();
     }
     
+    /**
+     * Search through our route map and if this route exists then use that
+     * 
+     * @param string $method
+     * @param string $url
+     * @param array $options
+     * @return type
+     */
+    public function createRequest($method, $url = null, array $options = array()) 
+    {
+        if(!empty($url) && array_key_exists($url, $this->endpoints) && ($method == 'GET')){
+            $url = $this->endpoints[$url];
+            
+            if(array_key_exists('query', $options)){
+                foreach($options['query'] as $param){
+                    $url = $url.'/'.$param;
+                }
+                unset($options['query']);
+            }
+        }
+        return parent::createRequest($method, $url, $options);
+    }
    
 }

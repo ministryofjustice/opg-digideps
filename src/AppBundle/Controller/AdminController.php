@@ -24,7 +24,7 @@ class AdminController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $this->get('apiclient')->post('add_user', $form->getData());
+                $this->get('apiclient')->postC('add_user', $form->getData());
 
                 return $this->redirect($this->generateUrl('admin_homepage'));
             }
