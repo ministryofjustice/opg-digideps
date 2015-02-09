@@ -1,0 +1,4 @@
+activation:
+    subject: "Digideps - activation email"
+    body: "Hello %name%, click here %link% to activate your account"
+    bodyHtml: Hello %name%<br/><br/>click here <a href="%link%">%link%</a> to activate your account

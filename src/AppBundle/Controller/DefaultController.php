@@ -33,6 +33,6 @@ class DefaultController extends Controller
 //        $user = $this->get('jms_serializer')->deserialize($userJson,'AppBundle\Entity\User','json');
 //        $serializedUser = $this->get('jms_serializer')->serialize($user,'json');
 //        print_r($serializedUser); die;
-        return $this->render('AppBundle:Default:index.html.twig');
+        return $this->render('AppBundle:default:index.html.twig');
     }
 }
