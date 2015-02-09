@@ -49,6 +49,7 @@ class MailSender
         $params = [
             '%mail%' => $user->getEmail(),
             '%name%' => $user->getFullName(),
+            '%domain%' => $this->router->generate('homepage', [], true),
             '%link%' => $this->router->generate('user_activate', ['token'=> $user->getRegistrationToken()], true)
         ];
         $subject = $this->translator->trans('activation.subject', $params, 'email');
