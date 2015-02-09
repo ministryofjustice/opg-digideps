@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="main" default="help">
 
-    <fileset dir="." id="source">
-        <include name="app/index.php" />
+   <fileset dir="." id="source">
         <include name="src/**/*.php"/>
         <include name="web/*.php"/>
     </fileset>
@@ -27,7 +26,7 @@
     
                 
     <target name="phplint" description="Scan source for PHP syntax errors">
-        <phplint haltonfailure="true" cachefile="/tmp/dd2tPhingLintCacheFile" level="error">
+        <phplint haltonfailure="true" cachefile="/tmp/ddApitPhingLintCacheFile" level="error">
             <fileset refid="source" />
         </phplint>
     </target>
