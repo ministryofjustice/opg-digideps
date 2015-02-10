@@ -100,7 +100,7 @@ class Version001SchemaAndData extends AbstractMigration
         // user
         // create the password using client
         //  php client/app/console digideps:passwordEncode --user=1 --password=test
-        $this->addSql("INSERT INTO dd_user (firstname, role_id, password, email, active, salt, registration_date, registration_token, email_confirmed, lastname) VALUES ('test',6, 'stHGdg4MhYOm/OVTWjpMJievIvJqafsQQ3WpWlUNDT6WfHupVWjBQaxdppMQkdCmYSXl6QQQXVYLGL/MDZi5Zw==','deputyshipservice@publicguardian.gsi.gov.uk',TRUE,'bGGQ485SDsdfsaf6790','2014-06-09','testtoken',TRUE,'Test')");
+        $this->addSql("INSERT INTO dd_user (firstname, role_id, password, email, active, salt, registration_date, registration_token, token_date, email_confirmed, lastname) VALUES ('test',6, 'stHGdg4MhYOm/OVTWjpMJievIvJqafsQQ3WpWlUNDT6WfHupVWjBQaxdppMQkdCmYSXl6QQQXVYLGL/MDZi5Zw==','deputyshipservice@publicguardian.gsi.gov.uk',TRUE,'bGGQ485SDsdfsaf6790','2014-06-09','testtoken','".date('c')."', TRUE,'Test')");
 
         //insert benefit_type
         $this->addSql("INSERT INTO benefit_type (id, name, form_name, payment_description_required) VALUES (1, 'Disability Living Allowance', 'disability_living_allowance', false)");
