@@ -17,7 +17,7 @@ class IndexController extends Controller
         $request = $this->getRequest();
         $session = $request->getSession();
 
-        $form = $this->createForm(new LoginType());
+        $form = $this->createForm(new LoginType(), null, [ 'action' => $this->generateUrl('login_check')]);
         $form->handleRequest($request);
         
         // get the login error if there is one

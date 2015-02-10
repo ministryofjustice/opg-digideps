@@ -6,7 +6,7 @@ email:
     hint: We sent you registration link to this email address
 password:
     label: Password
-submit:
+login:
     label: Sign in
 forgotPassword: Forgotten your password?
 

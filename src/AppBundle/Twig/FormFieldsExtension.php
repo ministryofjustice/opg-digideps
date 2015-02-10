@@ -44,7 +44,7 @@ class FormFieldsExtension extends \Twig_Extension
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
        
         //sort out labelText translation
-        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label');
+        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
         
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
         
@@ -57,8 +57,23 @@ class FormFieldsExtension extends \Twig_Extension
         echo $html;
     }
     
-    public function renderFormSubmit()
+    public function renderFormSubmit($element, $elementName, array $vars = [], $transIndex = null )
     {
+        //lets get the translation for class and labelText
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        $domain = $element->parent->vars['translation_domain'];
+        
+        //sort out labelText translation
+        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label', [], $domain );
+        $buttonClass = isset($vars['buttonClass']) ? $vars['buttonClass']: null;
+        
+        //generate input field html using variables supplied
+        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig', [ 'labelText' => $labelText, 
+                                                                                            'element'  => $element,
+                                                                                            'buttonClass' => $buttonClass
+                                                                                         ]);
+        
+        echo $html;
     }
     
     public function getName()
