@@ -86,10 +86,9 @@ class ApiClient extends GuzzleClient
                 $body = (string)$e->getResponse()->getBody();
                 $debugData = "Url: $url, Response body: $body";
                 
-                $responseArray = json_decode($body, true);
                 if (empty($body)) {
                     throw new \RuntimeException("Empty response from API. $debugData");
-                } else if (empty($responseArray['success'])) {
+                } else if ($responseArray = json_decode($body, true) && empty($responseArray['success'])) {
                     throw new \RuntimeException("Error from API: {$responseArray['message']}. $debugData");
                 }
             }
