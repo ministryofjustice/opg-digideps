@@ -16,7 +16,6 @@ Feature: admin
             | password  |  test |
         And I click on "login"
         When I go to "/admin"
-        Then the page title should be "Admin area"
         And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         # assert form error
         When I fill in the following:

@@ -12,14 +12,20 @@
             <div class="hgroup">
                 <h1>
                     <span>{% block serviceName %}Admin Deputyship service{% endblock %}</span>
-                    {% block pageAdminTitle %}Admin{% endblock %}
                 </h1>
             </div>
         </header>
 
 
     {% endblock %}
-    <div class="tabs">
+
+    <div class="js-tabs nav-tabs">
+        <ul class="tabs-nav">
+            <li class="active"><a id="tab-users">Users</a></li>
+            <li><a id="tab-settings">Settings</a></li>
+        </ul>
+    </div>
+    <div class="page-body">
         {% block pageBody %}{% endblock %}
     </div>
 {% endblock %}

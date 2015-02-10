@@ -8,3 +8,4 @@ parameters:
              find_user_by_email: user/get-by-email
              add_user: user
              list_users: user
+             find_user_by_token: user/get-by-token
