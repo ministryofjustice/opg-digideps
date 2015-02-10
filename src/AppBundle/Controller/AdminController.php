@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use Symfony\Component\Form\Form;
+use AppBundle\Service\ApiClient;
+use AppBundle\Service\MailSender;
 
 /**
 * @Route("/admin")
@@ -19,13 +21,28 @@ class AdminController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        
+        
         $form = $this->getAddForm();
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $this->get('apiclient')->postC('add_user', $form->getData());
+                
+                // add user
+                $response = $apiClient->postC('add_user', $form->getData());
+                $user = $apiClient->getEntity('User', 'user/' . $response['id']);
+                
+                // mail activation link
+                $mailSender = $this->get('mailSender'); /* @var $mailSender MailSender */
+                $mailSender->sendUserActivationEmail($user);
 
+                $request->getSession()->getFlashBag()->add(
+                    'notice', 
+                    'An activation email has been sent to the user.'
+                );
+                
                 return $this->redirect($this->generateUrl('admin_homepage'));
             }
         }

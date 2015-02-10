@@ -2,11 +2,16 @@
 <project name="main" default="help">
 
     <fileset dir="." id="source">
-        <include name="app/index.php" />
         <include name="src/**/*.php"/>
         <include name="web/*.php"/>
     </fileset>
     
+                 
+    <target name="phplint" description="Scan source for PHP syntax errors">
+        <phplint haltonfailure="true" cachefile="/tmp/ddClientPhingLintCacheFile" level="error">
+            <fileset refid="source" />
+        </phplint>
+    </target>
 
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
         <if>
@@ -47,7 +52,9 @@
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
         <exec command="rm misc/build/behat.log*"></exec>
-        <exec passthru="true" command="vendor/behat/behat/bin/behat | tee misc/build/behat.log" checkreturn="true" />
+        <exec command="cat /dev/null &gt; /tmp/dd_mail_mock"></exec>
+        <exec command="sudo chmod 777 /tmp/dd_mail_mock"></exec>
+        <exec command="vendor/behat/behat/bin/behat | tee misc/build/behat.log" checkreturn="true" passthru="true"  />
         <!-- convert xTerm-coloured behat.log into HTML format -->
         <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
     </target>

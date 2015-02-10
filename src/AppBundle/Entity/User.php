@@ -374,4 +374,12 @@ class User implements AdvancedUserInterface
     {
         return $this->active;
     }
+    
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
 }

@@ -97,16 +97,20 @@ class ApiClient extends GuzzleClient
      * @param string $endpoint
      * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
      * 
-     * @return string response body
+     * @return array response
      */
     public function postC($endpoint, $bodyorEntity)
     {
         if (is_object($bodyorEntity)) {
             $bodyorEntity = $this->jsonSerializer->serialize($bodyorEntity, 'json');
         }
-        $response = $this->post($endpoint, ['body'=>$bodyorEntity]);
+        $responseBody = $this->post($endpoint, ['body'=>$bodyorEntity])->getBody();
         
-        return $response->getBody();
+        $responseArray = json_decode($responseBody, 1);
+        
+         $this->checkResponseArray($responseArray);
+        
+        return $responseArray['data'];
     }
     
     /**
@@ -119,16 +123,17 @@ class ApiClient extends GuzzleClient
      */
     public function createRequest($method, $url = null, array $options = array()) 
     {
-        if(!empty($url) && array_key_exists($url, $this->endpoints) && ($method == 'GET')){
+        if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             $url = $this->endpoints[$url];
             
-            if(array_key_exists('query', $options)){
+            if($method == 'GET' && array_key_exists('query', $options)){
                 foreach($options['query'] as $param){
                     $url = $url.'/'.$param;
                 }
                 unset($options['query']);
             }
         }
+        
         return parent::createRequest($method, $url, $options);
     }
    

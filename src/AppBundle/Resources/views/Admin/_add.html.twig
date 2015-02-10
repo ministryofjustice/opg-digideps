@@ -2,27 +2,39 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
+    <h1 class="form-title heading-large">
+        Your details
+    </h1>
+
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.email,
     labelClass: 'form-label-bold',
-    formHint: 'user.email' | trans
+    labelText: 'user.email.label' | trans,
+    hintText: 'user.email.hint' | trans
   } %}
 
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.firstname,
     labelClass: 'form-label-bold',
-    formHint: 'user.firstname' | trans
+    labelText: 'user.firstname.label' | trans,
+    hintText: 'user.firstname.hint' | trans
   } %}
 
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.lastname,
     labelClass: 'form-label-bold',
-    formHint: 'user.lastname' | trans
+    hintText: 'user.lastname.hint' | trans,
+    labelText: 'user.lastname.label' | trans
   } %}
 
-<div class="form-group">
-  {{ form_widget(form.save, { 'label': 'user.submit' | trans,  'attr': {'class': 'button'} }) }}
-</div>
+  {% include 'AppBundle:Components/Form:_button.html.twig' with {
+  element: form.save,
+  labelText: 'user.submit.label' | trans
+} %}
+
+
+{# KNOWN DATE #}
+{# {% include 'AppBundle:Components/Form:_known-date.html.twig' %} #}
 
 
 {{ form_end(form) }}

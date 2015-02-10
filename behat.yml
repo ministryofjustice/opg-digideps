@@ -9,7 +9,10 @@ default:
         paths:    [ %paths.base%/tests/behat/features ]
         contexts: 
             - DigidepsBehat\FeatureContext:
-                session:   '@session'
+                -
+                    session:   '@session'
+                    mailFilePath: "/tmp/dd_mail_mock"
+                    xdebugMaxNestingLevel: 200
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:

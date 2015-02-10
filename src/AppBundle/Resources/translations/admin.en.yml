@@ -1,5 +1,12 @@
 user:
-  email: Please enter the email for this user
-  firstname: Please enter the firstname for this user
-  lastname: Please enter the lastname for this user
-  submit: Submit
+  email:
+    label: Email
+    hint: Please enter the email for this user
+  firstname:
+    label: Firstname
+    hint: Please enter the firstname for this user
+  lastname:
+    label: Lastname
+    hint: Please enter the lastname for this user
+  submit:
+    label: Submit
