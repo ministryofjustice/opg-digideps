@@ -37,7 +37,6 @@
         <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
         <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
-        <exec command="rm -rf misc/tmp/*"/>
         <echo msg="Permission on cache and logs set"></echo>
         
         <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
@@ -46,8 +45,7 @@
     
 
    <target name="behat-init" description="Set up test db">
-        <exec command="rm -f misc/tmp/behat-snapshot-*"></exec>
-        <exec command="rm -f misc/tmp/tmp/behat-response*.html"></exec>
+        <exec command="rm -f misc/tmp/behat*"></exec>
     </target>
 
 
