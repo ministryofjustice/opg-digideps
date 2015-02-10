@@ -3,6 +3,7 @@ namespace AppBundle\Service;
 
 use JMS\Serializer\SerializerInterface;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;;
 
 class ApiClient extends GuzzleClient
 {
@@ -41,7 +42,7 @@ class ApiClient extends GuzzleClient
    
     private function checkResponseArray($responseArray)
     {
-         if (empty($responseArray)) {
+        if (empty($responseArray)) {
             throw new \RuntimeException("No json response from the client. Response: ");
         }
         if (empty($responseArray['success'])) {
@@ -49,8 +50,14 @@ class ApiClient extends GuzzleClient
         }
     }
     
-    
-    public function getEntity($class, $endpoint, $options = [])
+    /**
+     * @param string $class
+     * @param string $endpoint
+     * @param array $options
+     * 
+     * @return stdClass entity object
+     */
+    public function getEntity($class, $endpoint, array $options = [])
     {
         $request = $this->createRequest('GET', $endpoint, $options);
         $response = $this->send($request);
@@ -69,7 +76,36 @@ class ApiClient extends GuzzleClient
         return $ret;
     }
     
+    public function send(GuzzleRequestInterface $request)
+    {
+        try {
+            return parent::send($request);
+        } catch (\Exception $e) {
+            if ($e instanceof \GuzzleHttp\Exception\ServerException) {
+                $url = $e->getRequest()->getUrl();
+                $body = (string)$e->getResponse()->getBody();
+                $debugData = "Url: $url, Response body: $body";
+                
+                $responseArray = json_decode($body, true);
+                if (empty($body)) {
+                    throw new \RuntimeException("Empty response from API. $debugData");
+                } else if (empty($responseArray['success'])) {
+                    throw new \RuntimeException("Error from API: {$responseArray['message']}. $debugData");
+                }
+            }
+            throw new \RuntimeException("Generic error from API: " . $e->getMessage());
+        } 
+        
+    }
     
+    
+    /**
+     * @param string $class
+     * @param string $endpoint
+     * @param array $options
+     * 
+     * @return stdClass[] array of entity objects
+     */
     public function getEntities($class, $endpoint, $options = [])
     {
         $request = $this->createRequest('GET', $endpoint, $options);
@@ -84,7 +120,7 @@ class ApiClient extends GuzzleClient
         
         $this->checkResponseArray($responseArray);
         
-        $ret = array();
+        $ret = [];
         foreach ($responseArray['data'] as $row) { 
             $ret[] = $this->jsonSerializer->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
         }
