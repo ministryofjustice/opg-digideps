@@ -85,4 +85,25 @@ class UserController extends RestController
 
         return $user;
     }
+    
+     /**
+     * @Route("/get-by-token/{token}")
+     * @Method({"GET"})
+     */
+    public function getByToken($token)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+
+        $user = $em->getRepository('AppBundle\Entity\User')->findOneBy(['registrationToken' => $token]);
+        if (!$user) {
+            throw new \Exception('User not found');
+        }
+
+
+        return $user;
+    }
+    
+    
+    
+    
 }
