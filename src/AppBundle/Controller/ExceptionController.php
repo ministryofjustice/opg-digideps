@@ -6,58 +6,54 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 //use AppBundle\Form\LoginType;
+use Symfony\Component\HttpKernel\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
-class IndexController extends Controller
+class ExceptionController extends Controller
 {
     /**
-     * @Route("login", name="login")
+     * Converts an Exception to a Response.
+     *
+     * @param Request              $request   The request
+     * @param FlattenException     $exception A FlattenException instance
+     * @param DebugLoggerInterface $logger    A DebugLoggerInterface instance
+     *
+     * @return Response
      */
-    public function loginAction()
+    public function showExceptionAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
     {
-        $request = $this->getRequest();
-        $session = $request->getSession();
+        $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
-        //$form = $this->createForm(new LoginType());
-        //$form->handleRequest($request);
+        $code = $exception->getStatusCode();
         
-        // get the login error if there is one
-        if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(
-                SecurityContextInterface::AUTHENTICATION_ERROR
-            );
-        } elseif (null !== $session && $session->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
-        } else {
-            $error = null;
-        }
-        
-        // last email entered by the user
-        $lastEmail = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
-
         return $this->render(
-            'AppBundle:Index:login.html.twig',
-            array(
-                // last email entered by the user
-                'last_email' => $lastEmail,
-                'error'         => $error,
-                /*'form' => $form*/
-            )
-        );
+            'AppBundle:Exception:500.html.twig', [
+                'status_code' => $code,
+                'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
+                'exception' => $exception,
+                'logger' => $logger,
+                'currentContent' => $currentContent,
+        ]);
     }
     
     /**
-     * @Route("login_check", name="login_check")
+     * @param int $startObLevel
+     *
+     * @return string
      */
-    public function loginCheckAction()
+    protected function getAndCleanOutputBuffering($startObLevel)
     {
-        return $this->render(
-            'AppBundle:Index:login.html.twig',
-            array(
-                // last email entered by the user
-                'last_email' => '',
-                'error'         => '',
-            )
-        );
+        // ob_get_level() never returns 0 on some Windows configurations, so if
+        // the level is the same two times in a row, the loop should be stopped.
+        $previousObLevel = null;
+        $currentContent = '';
+
+        while (($obLevel = ob_get_level()) > $startObLevel && $obLevel !== $previousObLevel) {
+            $previousObLevel = $obLevel;
+            $currentContent .= ob_get_clean();
+        }
+
+        return $currentContent;
     }
 }
