@@ -1463,4 +1463,109 @@ input[type=number] {
 .field-with-errors li {
   color: #df3034; }
 
+ol.progress {
+  display: table;
+  width: 100%;
+  margin: 24px 0 16px;
+  padding: 0;
+  counter-reset: pos;
+  list-style-type: none;
+  border-top: 1px solid #bfc1c3;
+  border-bottom: 1px solid #bfc1c3;
+  background-color: #f8f8f8; }
+  .js-enabled ol.progress {
+    margin-top: 48px; }
+  @media (max-width: 640px) {
+    ol.progress {
+      margin: 16px 0 0; } }
+  ol.progress li {
+    display: table-cell;
+    height: 53px;
+    min-width: 40px;
+    margin: 0;
+    font-size: 1.5em;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle; }
+    ol.progress li .progress__step {
+      position: relative;
+      display: inline-block;
+      min-width: 1.334em; }
+      ol.progress li .progress__step:before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        display: inline-block;
+        width: 1.334em;
+        height: 1.334em;
+        margin-top: -0.666em;
+        margin-left: 7px;
+        counter-increment: pos;
+        content: counter(pos);
+        font-weight: bold;
+        line-height: 1.5;
+        text-align: center;
+        -webkit-border-radius: 100%;
+        -moz-border-radius: 100%;
+        border-radius: 100%;
+        background-color: #dee0e2; }
+        @media (max-width: 640px) {
+          ol.progress li .progress__step:before {
+            margin-left: 4px; } }
+      @media (max-width: 320px) {
+        ol.progress li .progress__step:not(.progress--active) {
+          max-width: 40px; } }
+    ol.progress li .progress__label {
+      display: inline-block;
+      margin-left: 2.474em;
+      font-size: 0.792em;
+      text-align: left; }
+      @media (max-width: 640px) {
+        ol.progress li .progress__label {
+          width: 0;
+          margin-left: 0;
+          text-indent: -9999px;
+          overflow: hidden; } }
+    ol.progress li a.progress__label {
+      text-decoration: underline; }
+      ol.progress li a.progress__label:hover {
+        text-decoration: none; }
+    ol.progress li span, ol.progress li a {
+      color: #6f777b; }
+    ol.progress li.progress--active {
+      background: #2b8cc4 url("/images/progress-chevron.png") right 50% no-repeat; }
+      ol.progress li.progress--active .progress__step,
+      ol.progress li.progress--active .progress__label {
+        margin-right: 14px; }
+      ol.progress li.progress--active .progress__step:before {
+        color: #2b8cc4;
+        background-color: #fff; }
+      ol.progress li.progress--active .progress__label {
+        display: inline-block;
+        width: auto;
+        margin-left: 2.105em;
+        color: #fff;
+        text-indent: 0; }
+        @media (min-width: 641px) {
+          ol.progress li.progress--active .progress__label {
+            margin-left: 2.474em; } }
+        @media (max-width: 320px) {
+          ol.progress li.progress--active .progress__label {
+            text-indent: -9999px;
+            overflow: hidden; } }
+    ol.progress li.progress--active:last-child {
+      background-image: none; }
+    ol.progress li.progress--completed span, ol.progress li.progress--completed a {
+      color: #28a197; }
+    ol.progress li.progress--completed .progress__step:before {
+      color: #fff;
+      text-indent: -9999px;
+      background: #28a197 url("/images/progress-tick.png") center 3px no-repeat; }
+    ol.progress li.progress--previous {
+      background: url("/images/progress-chevron-end.png") right 50% no-repeat; }
+      ol.progress li.progress--previous .progress__step {
+        margin-right: 14px; }
+    ol.progress li:last-child .progress__step {
+      margin-right: 14px; }
+
 /*# sourceMappingURL=application.css.map */

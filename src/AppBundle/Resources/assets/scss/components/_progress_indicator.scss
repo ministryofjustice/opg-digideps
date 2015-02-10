@@ -1,0 +1,154 @@
+$spacing_for_chevron: 14px;
+
+@mixin visuallyhide {
+  text-indent: -9999px;
+  overflow: hidden;
+}
+
+ol.progress {
+  display: table;
+  width: 100%;
+  margin: 24px 0 16px;
+  padding: 0;
+  counter-reset: pos;
+  list-style-type: none;
+  border: {
+    top: 1px solid $grey-2;
+    bottom: 1px solid $grey-2;
+  };
+  background-color: $grey-4;
+  .js-enabled & {
+    margin-top: 48px;
+  }
+  @include media(mobile) {
+    margin: 16px 0 0;
+  }
+
+  @include ie-lte(7) {
+    display: none;
+  }
+
+  li {
+    display: table-cell;
+    height: 53px;
+    min-width: 40px;
+    margin: 0;
+    font-size: 1.5em;
+    line-height: 1;
+    text-align: center;
+    vertical-align: middle;
+    .progress__step {// allows centering and pos:rel/table-cell support for Firefox
+      position: relative;
+      display: inline-block;
+      min-width: 1.334em;
+      &:before {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        display: inline-block;
+        width: 1.334em;
+        height: 1.334em;
+        margin: {
+          top: -0.666em;
+          left: 7px;
+        };
+        counter-increment: pos;
+        content: counter(pos);
+        font-weight: bold;
+        line-height: 1.5;
+        text-align: center;
+        @include border-radius(100%);
+        background-color: $grey-3;
+        @include media(mobile) {
+          margin-left: 4px;
+        }
+
+        @include ie(8) {
+          background: none;
+        }
+      }
+      @include media($max_width: 320px) {
+        &:not(.progress--active) {
+          max-width: 40px;
+        }
+      }
+    }
+    .progress__label {
+      display: inline-block;
+      margin: {
+        left: 2.474em;
+      };
+      font-size: 0.792em;
+      text-align: left;
+      @include media(mobile) {
+        width: 0;
+        margin-left: 0;
+        @include visuallyhide;
+      }
+
+      @include ie(8) {
+        display: inline-block;
+      }
+    }
+    a.progress__label {
+      text-decoration: underline;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+    span, a {
+      color: $grey-1;
+    }
+    &.progress--active {
+      background: $light-blue url("/images/progress-chevron.png") right 50% no-repeat;
+      .progress__step,
+      .progress__label {
+        margin-right: $spacing_for_chevron;
+      }
+      .progress__step:before {
+        color: $light-blue;
+        background-color: $white;
+        @include ie(8) {
+          color: $white;
+          background: none;
+        }
+      }
+      .progress__label {
+        display: inline-block;
+        width: auto;
+        margin-left: 2.105em;
+        color: $white;
+        text-indent: 0;
+        @include media(tablet) {
+          margin-left: 2.474em;
+        }
+
+        @include media($max_width: 320px) {
+          @include visuallyhide;
+        }
+      }
+    }
+    &.progress--active:last-child {
+      background-image: none;
+    }
+    &.progress--completed {
+      span, a {
+        color: $turquoise;
+      }
+      .progress__step:before {
+        color: $white;
+        text-indent: -9999px;
+        background: $turquoise url("/images/progress-tick.png") center 3px no-repeat;
+      }
+    }
+    &.progress--previous{ // allows left part of chevron to scale
+      background: url("/images/progress-chevron-end.png") right 50% no-repeat;
+      .progress__step {
+        margin-right: $spacing_for_chevron;
+      }
+    }
+    &:last-child .progress__step {
+      margin-right: $spacing_for_chevron;
+    }
+  }
+}
