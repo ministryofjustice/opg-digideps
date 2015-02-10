@@ -85,6 +85,9 @@ class ApiClient extends GuzzleClient
                 $url = $e->getRequest()->getUrl();
                 $body = (string)$e->getResponse()->getBody();
                 $debugData = "Url: $url, Response body: $body";
+                if ($e->getRequest()->getMethod()=='POST') {
+                    $debugData .= '.Request: ' . $e->getRequest()->getBody();
+                }
                 
                 if (empty($body)) {
                     throw new \RuntimeException("Empty response from API. $debugData");
