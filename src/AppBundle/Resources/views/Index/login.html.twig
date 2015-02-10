@@ -9,7 +9,7 @@
 
     <div class="form-group ">
       <label class="form-label form-label-bold required" for="email">{% trans %}email.label{% endtrans %}</label>
-      <p class="form-hint">{% trans %}email.description{% endtrans %}</p>
+      <p class="form-hint">{% trans %}email.hint{% endtrans %}</p>
       <input type="text" id="email" name="email" value="{{ last_email }}" class="form-control" size="50" />
     </div>
 
@@ -27,5 +27,13 @@
     <button type="submit" class="button behat-link-login">{% trans %}submit.label{% endtrans %}</button>
 
   </form>
+    
+    
+    <br/></br>
+    
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    {{ form_input(form.email,'email') }}
+    {{ form_input(form.password,'password') }}
+    {{ form_end(form) }}
 
 {% endblock %}
