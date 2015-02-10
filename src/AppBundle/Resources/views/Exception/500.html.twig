@@ -1,0 +1,20 @@
+{% extends 'application.html.twig' %}
+
+{% trans_default_domain "login" %}
+
+{% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
+
+{% block content %}
+    
+     {% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Application error',
+        title: status_text
+        } %}
+    <p>{{ exception.message }}</p>
+    <p>{{ currentContent}}</p>
+        Stacktrace
+        <pre>
+            {{ dump(exception) }}
+        </pre>
+   
+{% endblock %}
