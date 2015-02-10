@@ -1,9 +1,11 @@
-{% extends 'AppBundle:Components/Page:page.html.twig' %}
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+
 {% trans_default_domain "login" %}
+
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
 
 
-{% block content %}
+{% block pageBody %}
 
   <form action="{{ path('login_check') }}" method="post">
 
