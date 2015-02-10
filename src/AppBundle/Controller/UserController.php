@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
-
+use AppBundle\Service\ApiClient;
 
 /**
 * @Route("user")
@@ -23,14 +23,14 @@ class UserController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
 
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]);
-
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
 
         if (!$user->isTokenSentInTheLastHours(48)) {
             throw new \RuntimeException("token expired, require new link");
         }
         
         $form = $this->getSetPasswordForm();
+        $form->get('email')->setData($user->getEmail());
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -47,8 +47,8 @@ class UserController extends Controller
                 
                 return $this->redirect($this->generateUrl('homepage'));
             }
-        }
-        
+        } 
+
         
         return $this->render('AppBundle:User:activate.html.twig', [
             'token'=>$token, 

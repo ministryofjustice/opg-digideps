@@ -1,6 +1,6 @@
 {% trans_default_domain "user-activate" %}
 
-{% extends 'application.html.twig' %}
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
@@ -10,7 +10,9 @@
     {% include 'AppBundle:Partials:_service-header.html.twig' with {
         serviceName: 'Deputyship service',
         title: 'headerTitle' | trans
-        } %}x
+        } %}
+
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 1}%}
 
     <p>{{ 'headerInstructions' | trans }}</p>
 
