@@ -1,10 +1,41 @@
 {% set currentStep = currentStep|default('') %}
-<div style="background-color: lightblue; padding: 10px; font-size: 20px">
-    
-    {% if currentStep == 1 %}<span style="background-color: #005EA5">{% endif %}
-        [ {{ 'stepTitle' | trans({}, 'user-activate') }} ] ~
-    {% if currentStep == 1 %}</span>{% endif %}
-    [ Enter your details ] ~
-    [ Add client's details ] ~
-    [ Create a report ]
-</div>
+
+
+{% macro progressClass(step, currentStep) %}
+    {% set return = '' %}
+    {% set total = 4 %}
+    {% if step == currentStep %}
+        {% set return = 'progress--active ' %}
+    {% endif %}
+    {% if step < currentStep %}
+        {% set return = return ~ 'progress--completed ' %}
+    {% endif %}
+    {% if step == currentStep - 1 %}
+        {% set return = return ~ 'progress--previous' %}
+    {% endif %}
+    {{ return }}
+{% endmacro %}
+
+<ol class="progress">
+  <li class="{{ _self.progressClass(1, currentStep) }}">
+    <div class="progress__step">
+      <span class="progress__label">Prisoner details</span>
+    </div>
+  </li>
+  <li class="{{ _self.progressClass(2, currentStep) }}">
+    <div class="progress__step">
+      <span class="progress__label">Visitor details</span>
+    </div>
+  </li>
+  <li class="{{ _self.progressClass(3, currentStep) }}">
+    <div class="progress__step">
+      <span class="progress__label">Choose time</span>
+    </div>
+  </li>
+  <li class="{{ _self.progressClass(4, currentStep) }}">
+    <div class="progress__step">
+      <span class="visuallyhidden">Current step</span>
+      <span class="progress__label">Check request</span>
+    </div>
+  </li>
+</ol>
