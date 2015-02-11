@@ -21,8 +21,33 @@ class FormFieldsExtension extends \Twig_Extension
     {
         return [
                     'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
-                    'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit')
+                    'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
+                    'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
                ];
+    }
+    
+    /**
+     * Calculate classes needed for each step for user registration
+     * 
+     * @param integer $step
+     * @param integer $currentStep
+     * @param array $classes keys: active, completed, previous
+     * @return type
+     */
+    public function stepProgressClass($step, $currentStep, array $classes)
+    {
+        $return = [];
+        if ($step == $currentStep) {
+            $return[] = $classes['active'];
+        }
+        if ($step < $currentStep) {
+            $return[] = $classes['completed'];
+        }
+        if ($step == $currentStep - 1) {
+            $return[] = $classes['previous'];
+        }
+        
+        return implode(' ', $return);
     }
     
     /**

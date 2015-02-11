@@ -1,38 +1,28 @@
-{% set currentStep = currentStep|default('') %}
+{% set currentStep = currentStep %}
+{% set stepClasses = {
+    'active': 'progress--active', 
+    'completed': 'progress--completed', 
+    'previous': 'progress--previous' 
+} %}
 
-
-{% macro progressClass(step, currentStep) %}
-    {% set return = '' %}
-    {% set total = 4 %}
-    {% if step == currentStep %}
-        {% set return = 'progress--active ' %}
-    {% endif %}
-    {% if step < currentStep %}
-        {% set return = return ~ 'progress--completed ' %}
-    {% endif %}
-    {% if step == currentStep - 1 %}
-        {% set return = return ~ 'progress--previous' %}
-    {% endif %}
-    {{ return }}
-{% endmacro %}
 
 <ol class="progress">
-  <li class="{{ _self.progressClass(1, currentStep) }}">
+  <li class="{{ step_progress_class(1, currentStep, stepClasses) }}">
     <div class="progress__step">
       <span class="progress__label">{{ "stepTitle" | trans({}, "user-activate") }}</span>
     </div>
   </li>
-  <li class="{{ _self.progressClass(2, currentStep) }}">
+  <li class="{{ step_progress_class(2, currentStep, stepClasses) }}">
     <div class="progress__step">
       <span class="progress__label">Visitor details</span>
     </div>
   </li>
-  <li class="{{ _self.progressClass(3, currentStep) }}">
+  <li class="{{ step_progress_class(3, currentStep, stepClasses) }}">
     <div class="progress__step">
       <span class="progress__label">Choose time</span>
     </div>
   </li>
-  <li class="{{ _self.progressClass(4, currentStep) }}">
+  <li class="{{ step_progress_class(4, currentStep, stepClasses) }}">
     <div class="progress__step">
       <span class="visuallyhidden">Current step</span>
       <span class="progress__label">Check request</span>
