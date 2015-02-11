@@ -19,7 +19,7 @@
 <ol class="progress">
   <li class="{{ _self.progressClass(1, currentStep) }}">
     <div class="progress__step">
-      <span class="progress__label">Prisoner details</span>
+      <span class="progress__label">{{ "stepTitle" | trans({}, "user-activate") }}</span>
     </div>
   </li>
   <li class="{{ _self.progressClass(2, currentStep) }}">
