@@ -51,13 +51,5 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
-        return $this->render(
-            'AppBundle:Index:login.html.twig',
-            array(
-                // last email entered by the user
-                'last_email' => '',
-                'error'         => '',
-            )
-        );
     }
 }

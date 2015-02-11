@@ -52,8 +52,7 @@ class ApiClient extends GuzzleClient
     
     public function getEntity($class, $endpoint, $options = [])
     {
-        $request = $this->createRequest('GET', $endpoint, $options);
-        $response = $this->send($request);
+        $response = $this->get($endpoint, $options);
         $responseString = $response->json();
         
         if(!is_array($responseString)){
