@@ -1,12 +1,10 @@
-{% trans_default_domain "user-activate" %}
-
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
 
 {% block content %}
-    
+
     {% include 'AppBundle:Partials:_service-header.html.twig' with {
         serviceName: 'Deputyship service',
         title: 'headerTitle' | trans
@@ -18,39 +16,15 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-      {% include 'AppBundle:Components/Form:_input.html.twig' with {
-        element: form.email,
-        labelClass: 'form-label-bold',
-        labelText: 'email.label' | trans,
-        hintText: 'email.hint' | trans
-      } %}
-      
-      {% include 'AppBundle:Components/Form:_input.html.twig' with {
-        element: form.password.first,
-        labelClass: 'form-label-bold',
-        labelText: 'password.label' | trans,
-        hintText: 'password.hint' | trans
-      } %}
+      {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
 
-      {% include 'AppBundle:Components/Form:_input.html.twig' with {
-        element: form.password.second,
-        labelClass: 'form-label-bold',
-        labelText: 'password_confirm.label' | trans
-      } %}
+      {{ form_input(form.password.first,'password', { 'labelClass': 'form-label-bold required' } ) }}
 
-      {% include 'AppBundle:Components/Form:_button.html.twig' with {
-      element: form.save,
-      labelText: 'submit.label' | trans
-    } %}
+      {{ form_input(form.password.second,'password_confirm', { 'labelClass': 'form-label-bold required' } ) }}
 
-
-    {# KNOWN DATE #}
-    {# {% include 'AppBundle:Components/Form:_known-date.html.twig' %} #}
-
+      {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-login'})}}
 
     {{ form_end(form) }}
-
-
 
 {% endblock %}
 
