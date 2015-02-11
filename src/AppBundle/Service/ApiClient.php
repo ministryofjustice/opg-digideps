@@ -25,31 +25,28 @@ class ApiClient extends GuzzleClient
     private $format;
     
     
-    public function __construct(SerializerInterface $jsonSerializer, $format, $api)
+    public function __construct(SerializerInterface $jsonSerializer, array $options)
     {
-        $config = [ 'base_url' =>  $api['base_url'],
-                    'defaults' => ['headers' => [ 'Content-Type' => 'application/json' ] ],
-                  ];
+        // check arguments
+        array_map(function($k) use ($options) {
+            if (!array_key_exists($k, $options)) {
+                throw new \InvalidArgumentException(__METHOD__ . " missing value for $k");
+            }
+        }, ['base_url', 'endpoints', 'format', 'debug']);
         
-        parent::__construct($config);
-         
+        // set internal properties
         $this->jsonSerializer = $jsonSerializer;
-        $this->format = $format;
+        $this->format = $options['format'];
+        $this->endpoints = $options['endpoints'];
+        $this->debug = $options['debug'];
         
-        //endpoints array
-        $this->endpoints = $api['endpoints'];
+        // construct parent (GuzzleClient)
+        parent::__construct([ 
+            'base_url' =>  $options['base_url'],
+            'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ] ],
+         ]);
     }
    
-    private function checkResponseArray($responseArray)
-    {
-        if (empty($responseArray)) {
-            throw new \RuntimeException("No json response from the client. Response: ");
-        }
-        if (empty($responseArray['success'])) {
-            throw new \Exception("The API returned an error" . $responseArray['message']);
-        }
-    }
-    
     /**
      * @param string $class
      * @param string $endpoint
@@ -69,13 +66,18 @@ class ApiClient extends GuzzleClient
             $responseArray = $responseString;
         }
         
-        $this->checkResponseArray($responseArray);
-        
         $ret = $this->jsonSerializer->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, 'json');
         
         return $ret;
     }
     
+    /**
+     * Override Guzzleclient send() to re-throw exception using the encoded message from the API
+     * 
+     * @param GuzzleRequestInterface $request
+     * 
+     * @throws \RuntimeException
+     */
     public function send(GuzzleRequestInterface $request)
     {
         try {
@@ -84,9 +86,13 @@ class ApiClient extends GuzzleClient
             if ($e instanceof \GuzzleHttp\Exception\ServerException) {
                 $url = $e->getRequest()->getUrl();
                 $body = (string)$e->getResponse()->getBody();
-                $debugData = "Url: $url, Response body: $body";
-                if ($e->getRequest()->getMethod()=='POST') {
-                    $debugData .= '.Request: ' . $e->getRequest()->getBody();
+                
+                $debugData = '';
+                if ($this->debug) {
+                    $debugData = "Url: $url, Response body: $body";
+                    if ($e->getRequest()->getMethod()=='POST') {
+                        $debugData .= '.Request: ' . $e->getRequest()->getBody();
+                    }
                 }
                 
                 if (empty($body)) {
@@ -120,8 +126,6 @@ class ApiClient extends GuzzleClient
             $responseArray = $responseString;
         }
         
-        $this->checkResponseArray($responseArray);
-        
         $ret = [];
         foreach ($responseArray['data'] as $row) { 
             $ret[] = $this->jsonSerializer->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
@@ -145,8 +149,6 @@ class ApiClient extends GuzzleClient
         $responseBody = $this->post($endpoint, ['body'=>$bodyorEntity])->getBody();
         
         $responseArray = json_decode($responseBody, 1);
-        
-         $this->checkResponseArray($responseArray);
         
         return $responseArray['data'];
     }
