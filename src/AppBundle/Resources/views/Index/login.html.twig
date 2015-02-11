@@ -8,7 +8,7 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
-    {{ form_submit(form.login,'login')}}
+    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'})}}
     {{ form_end(form) }}
 {#
 {% block pageBody %}
