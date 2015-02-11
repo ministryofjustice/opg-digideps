@@ -24,16 +24,16 @@
         labelText: 'email.label' | trans,
         hintText: 'email.hint' | trans
       } %}
-
+      
       {% include 'AppBundle:Components/Form:_input.html.twig' with {
-        element: form.password,
+        element: form.password.first,
         labelClass: 'form-label-bold',
         labelText: 'password.label' | trans,
         hintText: 'password.hint' | trans
       } %}
 
       {% include 'AppBundle:Components/Form:_input.html.twig' with {
-        element: form.password_confirm,
+        element: form.password.second,
         labelClass: 'form-label-bold',
         labelText: 'password_confirm.label' | trans
       } %}

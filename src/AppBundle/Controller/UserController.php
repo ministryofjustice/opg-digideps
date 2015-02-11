@@ -34,18 +34,19 @@ class UserController extends Controller
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            if (false && $form->isValid()) {
-                
+            if ($form->isValid()) {
+                throw new \RuntimeException("Logic to set password not yet implemented");
                 // add user
-                $response = $apiClient->postC('user_set_password', $form->getData());
-                $user = $apiClient->getEntity('User', 'user/' . $response['id']);
-                
-                $request->getSession()->getFlashBag()->add(
-                    'notice', 
-                    'Password has been set. You can now login using the form below.'
-                );
-                
-                return $this->redirect($this->generateUrl('homepage'));
+////                developEndpoints();
+//                $response = $apiClient->postC('user_set_password', $form->getData());
+//                $user = $apiClient->getEntity('User', 'user/' . $response['id']);
+//                
+//                $request->getSession()->getFlashBag()->add(
+//                    'notice', 
+//                    'Password has been set. You can now login using the form below.'
+//                );
+//                
+//                return $this->redirect($this->generateUrl('homepage'));
             }
         } 
 
@@ -65,10 +66,23 @@ class UserController extends Controller
     {
         // validation is in the User class (annotacion format)
         // to put int a class, validate form the builder directly http://symfony.com/doc/current/book/forms.html#adding-validation
+        
+//        fail;
+//        #find a way to validate password twice, and they also have to match();
+//        #move form into a class ? look at dennis
+//         http://symfony.com/doc/current/book/validation.html
+//             http://symfony.com/doc/current/book/forms.html
+//             http://symfony.com/doc/current/reference/constraints.html
+               
+        
+        $translator = $this->get('translator');
+        
         return $this->createFormBuilder()
-            ->add('email', 'text')
-            ->add('password', 'text')
-            ->add('password_confirm', 'text')
+            ->add('email', 'text', ['attr'=>['readonly'=>'readonly']])
+            ->add('password', 'repeated',[
+                'type' => 'password',
+                'invalid_message' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate'),
+            ])
             ->add('save', 'submit')
             ->getForm();
     }
