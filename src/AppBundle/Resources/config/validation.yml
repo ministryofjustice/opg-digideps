@@ -24,6 +24,8 @@ AppBundle\Entity\User:
                 minMessage: "user.lastname.minLength"
                 maxMessage: "user.lastname.maxength"
         password:
+            - NotBlank:
+                message: "user.password.notBlank"
             - Length:
                 min: 8
                 max: 50
