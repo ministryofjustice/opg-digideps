@@ -382,4 +382,21 @@ class User implements AdvancedUserInterface
     {
         return $this->firstname . ' ' . $this->lastname;
     }
+    
+    /**
+     * @param integer $hoursExpires e.g 48 if the token expires after 48h
+     * 
+     * @return boolean
+     */
+    public function isTokenSentInTheLastHours($hoursExpires)
+    {
+        $expiresSeconds = $hoursExpires * 3600;
+        
+        $timeStampNow = (new \Datetime())->getTimestamp();
+        $timestampToken = $this->getTokenDate()->getTimestamp();
+        
+        $diffSeconds = $timeStampNow - $timestampToken;
+        
+        return  $diffSeconds < $expiresSeconds;
+    }
 }

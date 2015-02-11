@@ -10,6 +10,7 @@ use AppBundle\Entity\User;
 use Symfony\Component\Form\Form;
 use AppBundle\Service\ApiClient;
 use AppBundle\Service\MailSender;
+use AppBundle\Form\AddUserType;
 
 /**
 * @Route("/admin")
@@ -24,7 +25,8 @@ class AdminController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
         
-        $form = $this->getAddForm();
+        //$form = $this->getAddForm();
+        $form = $this->createForm(new AddUserType(), new User());
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

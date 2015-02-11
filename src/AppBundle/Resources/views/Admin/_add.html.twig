@@ -2,27 +2,27 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    <h1 class="form-title heading-large">
-        Your details
+    <h1 class="form-title heading-medium">
+        Add user
     </h1>
 
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.email,
-    labelClass: 'form-label-bold',
+    labelClass: '',
     labelText: 'user.email.label' | trans,
     hintText: 'user.email.hint' | trans
   } %}
 
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.firstname,
-    labelClass: 'form-label-bold',
+    labelClass: '',
     labelText: 'user.firstname.label' | trans,
     hintText: 'user.firstname.hint' | trans
   } %}
 
   {% include 'AppBundle:Components/Form:_input.html.twig' with {
     element: form.lastname,
-    labelClass: 'form-label-bold',
+    labelClass: '',
     hintText: 'user.lastname.hint' | trans,
     labelText: 'user.lastname.label' | trans
   } %}

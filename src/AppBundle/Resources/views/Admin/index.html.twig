@@ -1,19 +1,13 @@
 {% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
 {% trans_default_domain "admin" %}
 {% block pageTitle %}Administration - Users{% endblock %}
-{% block pageAdminTitle %}Users{% endblock %}
 
 
 {% block pageBody %}
-    <div>
-        <h4>Add user</h4>
 
-        {% include 'AppBundle:Admin:_add.html.twig' %}
+    {% include 'AppBundle:Admin:_add.html.twig' %}
 
-
-
-        <h4>List users</h4>
-        {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
-    </div>
+    <h4>List users</h4>
+    {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
 
 {% endblock %}

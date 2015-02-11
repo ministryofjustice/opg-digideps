@@ -1,0 +1,16 @@
+pageTitle: Set your password
+headerTitle: Step 1 - Set your password
+stepTitle: Set your password
+headerInstructions: Lorem ipsum dolor sit amet sdfsdf sdfio msdjfio mjsdifo mjsidof mjsodfmj isodmfj oisdmjf oismdjfio msjdiofmjio
+email:
+    label: Your email address
+    hint: We sent you the registration link to this email address
+password:
+    label: Password
+    hint: Must be at least 8 characters and should include uppercase, lowercase and at least one number
+password_confirm:
+    label: Confirm password
+agree:
+    label: I agree to the <a href="{link}">Terms and conditions policy</a>
+submit:
+    label: Submit

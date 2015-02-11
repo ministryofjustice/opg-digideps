@@ -1,12 +1,58 @@
-{% extends 'application.html.twig' %}
+{% trans_default_domain "user-activate" %}
 
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 
-{% block pageTitle %}Admin Add User{% endblock %}
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 
 
 {% block content %}
-    this page activates the user with token {{ token }}
+    
+    {% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Deputyship service',
+        title: 'headerTitle' | trans
+        } %}
+
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 1}%}
+
+    <p>{{ 'headerInstructions' | trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+      {% include 'AppBundle:Components/Form:_input.html.twig' with {
+        element: form.email,
+        labelClass: 'form-label-bold',
+        labelText: 'email.label' | trans,
+        hintText: 'email.hint' | trans
+      } %}
+
+      {% include 'AppBundle:Components/Form:_input.html.twig' with {
+        element: form.password,
+        labelClass: 'form-label-bold',
+        labelText: 'password.label' | trans,
+        hintText: 'password.hint' | trans
+      } %}
+
+      {% include 'AppBundle:Components/Form:_input.html.twig' with {
+        element: form.password_confirm,
+        labelClass: 'form-label-bold',
+        labelText: 'password_confirm.label' | trans
+      } %}
+
+      {% include 'AppBundle:Components/Form:_button.html.twig' with {
+      element: form.save,
+      labelText: 'submit.label' | trans
+    } %}
+
+
+    {# KNOWN DATE #}
+    {# {% include 'AppBundle:Components/Form:_known-date.html.twig' %} #}
+
+
+    {{ form_end(form) }}
 
 
 
 {% endblock %}
+
+
+

@@ -1,0 +1,10 @@
+{% set currentStep = currentStep|default('') %}
+<div style="background-color: lightblue; padding: 10px; font-size: 20px">
+    
+    {% if currentStep == 1 %}<span style="background-color: #005EA5">{% endif %}
+        [ {{ 'stepTitle' | trans({}, 'user-activate') }} ] ~
+    {% if currentStep == 1 %}</span>{% endif %}
+    [ Enter your details ] ~
+    [ Add client's details ] ~
+    [ Create a report ]
+</div>

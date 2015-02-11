@@ -2,9 +2,4 @@
 parameters:
     locale:   en
     secret:   9985254d31a23d3cc938eef09cccf6b26c538d9f
-    api:
-        base_url: http://digideps-api.local/
-        endpoints:
-             find_user_by_email: user/get-by-email
-             add_user: user
-             list_users: user
+    api_base_url: http://digideps-api.local/

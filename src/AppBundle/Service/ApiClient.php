@@ -3,6 +3,7 @@ namespace AppBundle\Service;
 
 use JMS\Serializer\SerializerInterface;
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;;
 
 class ApiClient extends GuzzleClient
 {
@@ -24,33 +25,36 @@ class ApiClient extends GuzzleClient
     private $format;
     
     
-    public function __construct(SerializerInterface $jsonSerializer, $format, $api)
+    public function __construct(SerializerInterface $jsonSerializer, array $options)
     {
-        $config = [ 'base_url' =>  $api['base_url'],
-                    'defaults' => ['headers' => [ 'Content-Type' => 'application/json' ] ],
-                  ];
+        // check arguments
+        array_map(function($k) use ($options) {
+            if (!array_key_exists($k, $options)) {
+                throw new \InvalidArgumentException(__METHOD__ . " missing value for $k");
+            }
+        }, ['base_url', 'endpoints', 'format', 'debug']);
         
-        parent::__construct($config);
-         
+        // set internal properties
         $this->jsonSerializer = $jsonSerializer;
-        $this->format = $format;
+        $this->format = $options['format'];
+        $this->endpoints = $options['endpoints'];
+        $this->debug = $options['debug'];
         
-        //endpoints array
-        $this->endpoints = $api['endpoints'];
+        // construct parent (GuzzleClient)
+        parent::__construct([ 
+            'base_url' =>  $options['base_url'],
+            'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ] ],
+         ]);
     }
    
-    private function checkResponseArray($responseArray)
-    {
-         if (empty($responseArray)) {
-            throw new \RuntimeException("No json response from the client. Response: ");
-        }
-        if (empty($responseArray['success'])) {
-            throw new \Exception("The API returned an error" . $responseArray['message']);
-        }
-    }
-    
-    
-    public function getEntity($class, $endpoint, $options = [])
+    /**
+     * @param string $class
+     * @param string $endpoint
+     * @param array $options
+     * 
+     * @return stdClass entity object
+     */
+    public function getEntity($class, $endpoint, array $options = [])
     {
         $response = $this->get($endpoint, $options);
         $responseString = $response->json();
@@ -61,14 +65,54 @@ class ApiClient extends GuzzleClient
             $responseArray = $responseString;
         }
         
-        $this->checkResponseArray($responseArray);
-        
         $ret = $this->jsonSerializer->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, 'json');
         
         return $ret;
     }
     
+    /**
+     * Override Guzzleclient send() to re-throw exception using the encoded message from the API
+     * 
+     * @param GuzzleRequestInterface $request
+     * 
+     * @throws \RuntimeException
+     */
+    public function send(GuzzleRequestInterface $request)
+    {
+        try {
+            return parent::send($request);
+        } catch (\Exception $e) {
+            if ($e instanceof \GuzzleHttp\Exception\ServerException) {
+                $url = $e->getRequest()->getUrl();
+                $body = (string)$e->getResponse()->getBody();
+                
+                $debugData = '';
+                if ($this->debug) {
+                    $debugData = "Url: $url, Response body: $body";
+                    if ($e->getRequest()->getMethod()=='POST') {
+                        $debugData .= '.Request: ' . $e->getRequest()->getBody();
+                    }
+                }
+                
+                if (empty($body)) {
+                    throw new \RuntimeException("Empty response from API. $debugData");
+                } else if ($responseArray = json_decode($body, true) && empty($responseArray['success'])) {
+                    throw new \RuntimeException("Error from API: {$responseArray['message']}. $debugData");
+                }
+            }
+            throw new \RuntimeException("Generic error from API: " . $e->getMessage());
+        } 
+        
+    }
     
+    
+    /**
+     * @param string $class
+     * @param string $endpoint
+     * @param array $options
+     * 
+     * @return stdClass[] array of entity objects
+     */
     public function getEntities($class, $endpoint, $options = [])
     {
         $request = $this->createRequest('GET', $endpoint, $options);
@@ -81,9 +125,7 @@ class ApiClient extends GuzzleClient
             $responseArray = $responseString;
         }
         
-        $this->checkResponseArray($responseArray);
-        
-        $ret = array();
+        $ret = [];
         foreach ($responseArray['data'] as $row) { 
             $ret[] = $this->jsonSerializer->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
         }
@@ -106,8 +148,6 @@ class ApiClient extends GuzzleClient
         $responseBody = $this->post($endpoint, ['body'=>$bodyorEntity])->getBody();
         
         $responseArray = json_decode($responseBody, 1);
-        
-         $this->checkResponseArray($responseArray);
         
         return $responseArray['data'];
     }
