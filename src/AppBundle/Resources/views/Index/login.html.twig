@@ -4,7 +4,13 @@
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
 
-
+{% block content %}  
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
+    {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
+    {{ form_submit(form.login,'login')}}
+    {{ form_end(form) }}
+{#
 {% block pageBody %}
 
   <form action="{{ path('login_check') }}" method="post">
@@ -26,8 +32,7 @@
           <input type="hidden" name="_target_path" value="/account" />
       #}
 
-    <button type="submit" class="button behat-link-login">{% trans %}submit.label{% endtrans %}</button>
+   {# <button type="submit" class="button behat-link-login">{% trans %}submit.label{% endtrans %}</button>
 
-  </form>
-
+  </form> #}
 {% endblock %}

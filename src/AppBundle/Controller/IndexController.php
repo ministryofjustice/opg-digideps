@@ -5,7 +5,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
-//use AppBundle\Form\LoginType;
+use AppBundle\Form\LoginType;
 
 class IndexController extends Controller
 {
@@ -17,8 +17,8 @@ class IndexController extends Controller
         $request = $this->getRequest();
         $session = $request->getSession();
 
-        //$form = $this->createForm(new LoginType());
-        //$form->handleRequest($request);
+        $form = $this->createForm(new LoginType(), null, [ 'action' => $this->generateUrl('login_check')]);
+        $form->handleRequest($request);
         
         // get the login error if there is one
         if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
@@ -41,7 +41,7 @@ class IndexController extends Controller
                 // last email entered by the user
                 'last_email' => $lastEmail,
                 'error'         => $error,
-                /*'form' => $form*/
+                'form' => $form->createView()
             )
         );
     }
@@ -51,13 +51,5 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
-        return $this->render(
-            'AppBundle:Index:login.html.twig',
-            array(
-                // last email entered by the user
-                'last_email' => '',
-                'error'         => '',
-            )
-        );
     }
 }
