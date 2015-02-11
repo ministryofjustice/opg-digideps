@@ -1,7 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: endpoints.yml }
+    - { resource: services.yml }
 
 framework:
     #esi:             ~
@@ -42,19 +42,7 @@ assetic:
         #yui_css:
         #    jar: "%kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar"
 
-services:
-    apiclient:
-        class:  AppBundle\Service\ApiClient
-        arguments: [ @jms_serializer, {format: "json", base_url: "%api_base_url%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
-    deputyprovider:
-        class:  AppBundle\UserProvider\DeputyProvider
-        arguments: [ @apiclient, @jms_serializer ]
-       
-    mailSender:
-        class: AppBundle\Service\MailSender
-        arguments: [ @apiclient, @translator, @router ]
-        calls:
-            - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
+
             
 #    orm:
 #        auto_generate_proxy_classes: "%kernel.debug%"
