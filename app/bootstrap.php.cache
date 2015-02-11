@@ -574,7 +574,7 @@ if (!$dup->get('_format') && $this->get('_format')) {
 $dup->attributes->set('_format', $this->get('_format'));
 }
 if (!$dup->getRequestFormat(null)) {
-$dup->setRequestFormat($format = $this->getRequestFormat(null));
+$dup->setRequestFormat($this->getRequestFormat(null));
 }
 return $dup;
 }
@@ -1117,7 +1117,7 @@ $requestUri = $this->getRequestUri();
 if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, $baseUrl)) {
 return $prefix;
 }
-if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, dirname($baseUrl))) {
+if ($baseUrl && false !== $prefix = $this->getUrlencodedPrefix($requestUri, dirname($baseUrl).'/')) {
 return rtrim($prefix,'/');
 }
 $truncatedRequestUri = $requestUri;
@@ -1275,7 +1275,7 @@ $this->headers = clone $this->headers;
 public function prepare(Request $request)
 {
 $headers = $this->headers;
-if ($this->isInformational() || in_array($this->statusCode, array(204, 304))) {
+if ($this->isInformational() || $this->isEmpty()) {
 $this->setContent(null);
 $headers->remove('Content-Type');
 $headers->remove('Content-Length');
@@ -2204,6 +2204,7 @@ use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\Config\EnvParametersResource;
 use Symfony\Component\HttpKernel\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\MergeExtensionConfigurationPass;
 use Symfony\Component\HttpKernel\DependencyInjection\AddClassesToCachePass;
@@ -2223,11 +2224,11 @@ protected $booted;
 protected $name;
 protected $startTime;
 protected $loadClassCache;
-const VERSION ='2.3.24';
-const VERSION_ID ='20324';
+const VERSION ='2.3.25';
+const VERSION_ID ='20325';
 const MAJOR_VERSION ='2';
 const MINOR_VERSION ='3';
-const RELEASE_VERSION ='24';
+const RELEASE_VERSION ='25';
 const EXTRA_VERSION ='';
 public function __construct($environment, $debug)
 {
@@ -2534,6 +2535,7 @@ if (null !== $cont = $this->registerContainerConfiguration($this->getContainerLo
 $container->merge($cont);
 }
 $container->addCompilerPass(new AddClassesToCachePass($this));
+$container->addResource(new EnvParametersResource('SYMFONY__'));
 return $container;
 }
 protected function prepareContainer(ContainerBuilder $container)
