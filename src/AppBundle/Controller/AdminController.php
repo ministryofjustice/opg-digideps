@@ -24,8 +24,6 @@ class AdminController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        
-        //$form = $this->getAddForm();
         $form = $this->createForm(new AddUserType(), new User());
         
         if ($request->isMethod('POST')) {
@@ -54,20 +52,4 @@ class AdminController extends Controller
             'form'=>$form->createView()
         ));
     }
-    
-    /**
-     * @return Form
-     */
-    private function getAddForm()
-    {
-        // validation is in the User class (annotacion format)
-        // to put int a class, validate form the builder directly http://symfony.com/doc/current/book/forms.html#adding-validation
-        return $this->createFormBuilder(new User)
-            ->add('email', 'text')
-            ->add('firstname', 'text')
-            ->add('lastname', 'text')
-            ->add('save', 'submit', array('label' => 'Add User'))
-            ->getForm();
-    }
-    
 }
