@@ -23,3 +23,18 @@ AppBundle\Entity\User:
                 max: 50
                 minMessage: "user.lastname.minLength"
                 maxMessage: "user.lastname.maxength"
+        password:
+            - Length:
+                min: 8
+                max: 50
+                minMessage: "user.password.minLength"
+                maxMessage: "user.password.maxLength"
+            - Regex:
+                pattern: /[a-z]/   
+                message: "user.password.noLowerCaseChars"
+            - Regex:
+                pattern: /[A-Z]/   
+                message: "user.password.noUpperCaseChars"
+            - Regex:
+                pattern: /[0-9]/   
+                message: "user.password.noNumber"

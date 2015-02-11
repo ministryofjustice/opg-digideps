@@ -9,6 +9,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
+use AppBundle\Form\SetPasswordType;
 
 /**
 * @Route("user")
@@ -21,7 +22,8 @@ class UserController extends Controller
     public function activateAction(Request $request, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-
+        $translator = $this->get('translator');
+        
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
 
@@ -29,13 +31,16 @@ class UserController extends Controller
             throw new \RuntimeException("token expired, require new link");
         }
         
-        $form = $this->getSetPasswordForm();
-        $form->get('email')->setData($user->getEmail());
+        $formType = new SetPasswordType([
+            'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+        ]);
+        $form = $this->createForm($formType, $user);
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 throw new \RuntimeException("Logic to set password not yet implemented");
+                $user;
                 // add user
 ////                developEndpoints();
 //                $response = $apiClient->postC('user_set_password', $form->getData());
@@ -55,35 +60,5 @@ class UserController extends Controller
             'token'=>$token, 
             'form' => $form->createView()
         ]);
-    }
-    
-    
-    
-    /**
-     * @return Form
-     */
-    private function getSetPasswordForm()
-    {
-        // validation is in the User class (annotacion format)
-        // to put int a class, validate form the builder directly http://symfony.com/doc/current/book/forms.html#adding-validation
-        
-//        fail;
-//        #find a way to validate password twice, and they also have to match();
-//        #move form into a class ? look at dennis
-//         http://symfony.com/doc/current/book/validation.html
-//             http://symfony.com/doc/current/book/forms.html
-//             http://symfony.com/doc/current/reference/constraints.html
-               
-        
-        $translator = $this->get('translator');
-        
-        return $this->createFormBuilder()
-            ->add('email', 'text', ['attr'=>['readonly'=>'readonly']])
-            ->add('password', 'repeated',[
-                'type' => 'password',
-                'invalid_message' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate'),
-            ])
-            ->add('save', 'submit')
-            ->getForm();
     }
 }
