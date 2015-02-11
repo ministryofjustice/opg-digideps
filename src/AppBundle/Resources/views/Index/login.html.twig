@@ -4,7 +4,13 @@
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
 
-{% block content %}  
+{% block pageContent %}
+
+    {% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Admin Deputyship service',
+        title: 'Login'
+        } %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
