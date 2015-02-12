@@ -63,10 +63,10 @@ module.exports = function (grunt) {
                 dest: 'web/javascripts',
                 expand: true
             },
-            copyJquery: {
-                cwd: 'bower_downloads/jquery/dist',
-                src: ['**/*'],
-                dest: 'web/javascripts/vendor/jquery',
+            copyPlugins: {
+                cwd: 'bower_downloads',
+                src: ['jquery/dist/**/*','jquery-validation/dist/**/*' ],
+                dest: 'web/javascripts/vendor',
                 expand: true
             },
             copyHTML5shiv: {

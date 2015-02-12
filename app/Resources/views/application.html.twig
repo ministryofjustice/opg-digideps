@@ -85,7 +85,8 @@
 
 
 {% block javascripts %}
-    <script type="text/javascript" src="/js/application.js"></script>
+    <script type="text/javascript" src="{{ asset('javascripts/vendor/jquery-validation/dist/jquery.validate.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/application.js') }}"></script>
 {% endblock %}
 
 {% block bodyEnd %}{% endblock %}
