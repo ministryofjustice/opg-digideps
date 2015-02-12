@@ -8,3 +8,4 @@ bin/behat
 bin/doctrine.php
 bin/doctrine
 .vagrant
+web/elb_healthcheck.html
