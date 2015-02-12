@@ -52,10 +52,10 @@ class UserController extends RestController
     
     
     /**
-     * @Route("/{id}/set-password")
+     * @Route("/{id}")
      * @Method({"PUT"})
      */
-    public function setPassword($id)
+    public function update($id)
     {
         $user = $this->findEntityById('User', $id, 'User not found'); /* @var $user User */
         
@@ -68,8 +68,12 @@ class UserController extends RestController
             }
         }, ['password']);
         
-        $user->setPassword($data['password']);
-        $user->setRegistrationToken('');
+        if (array_key_exists('password', $data)) {
+            $user->setPassword($data['password']);
+        }
+        if (array_key_exists('active', $data)) {
+            $user->setActive((bool)$data['active']);
+        }
         
         $this->getEntityManager()->flush($user);
         

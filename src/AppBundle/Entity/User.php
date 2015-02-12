@@ -180,7 +180,8 @@ class User implements AdvancedUserInterface
     public function setPassword($password)
     {
         $this->password = $password;
-
+        $this->setRegistrationToken('');
+        
         return $this;
     }
 
