@@ -85,8 +85,9 @@ class SendGridTransport implements Swift_Transport
      */
     private function getPathFileWriterIfExists(Swift_Mime_Message $swiftMessage)
     {
-        reset($swiftMessage->getTo());
-        $emailAddress = key($swiftMessage->getTo());
+        $to = $swiftMessage->getTo();
+        reset($to);
+        $emailAddress = key($to);
         foreach ($this->emailFileWriters as $emailRegexpr => $path) {
             if (preg_match($emailRegexpr, $emailAddress)) {
                 return $path;
