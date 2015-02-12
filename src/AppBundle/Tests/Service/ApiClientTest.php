@@ -1,9 +1,9 @@
 <?php
 namespace AppBundle\Tests\Service;
 
-use AppBundle\Service\RestClient;
+use AppBundle\Service\ApiClient;
 
-class RestClientTest extends \PHPUnit_Framework_TestCase
+class ApiClientTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreateRequest()
     {
@@ -14,7 +14,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         
         $expectedUrl = 'http://digideps.api/find-user-by-email';
         
-        $restClient = new RestClient($api);
+        $restClient = new ApiClient($api);
         $request = $restClient->createRequest('GET', 'find_user_by_email');
         
         $this->assertInstanceOf('GuzzleHttp\Message\Request', $request);

@@ -20,9 +20,9 @@ class FormFieldsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-                    'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
-                    'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
-                    'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
+                  'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
+                  'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
+                  'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
                ];
     }
     
@@ -82,6 +82,12 @@ class FormFieldsExtension extends \Twig_Extension
         echo $html;
     }
     
+    /**
+     * @param type $element
+     * @param type $elementName
+     * @param array $vars
+     * @param type $transIndex
+     */
     public function renderFormSubmit($element, $elementName, array $vars = [], $transIndex = null )
     {
         //lets get the translation for class and labelText
