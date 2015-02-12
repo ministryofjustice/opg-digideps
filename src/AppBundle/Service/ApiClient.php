@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 use JMS\Serializer\SerializerInterface;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;;
+use GuzzleHttp\Exception\ServerException;
 
 class ApiClient extends GuzzleClient
 {
@@ -71,6 +72,28 @@ class ApiClient extends GuzzleClient
     }
     
     /**
+     * @param ServerException $e
+     * @return string
+     */
+    private function getDebugDataFromGuzzleServerException(ServerException $e)
+    {
+        $ret = [];
+        
+        $url = $e->getRequest()->getUrl();
+        $body = (string)$e->getResponse()->getBody();
+        
+        $ret[] = "Url: $url";
+        $ret[] = "Response body: $body";
+        $ret[] = "Exception trace: " . $e->getTraceAsString();
+        if ($e->getRequest()->getMethod() == 'POST') {
+            $ret[] = 'Request: ' . $e->getRequest()->getBody();
+        }
+        
+        return implode('.', $ret);
+    }
+    
+    
+    /**
      * Override Guzzleclient send() to re-throw exception using the encoded message from the API
      * 
      * @param GuzzleRequestInterface $request
@@ -82,24 +105,24 @@ class ApiClient extends GuzzleClient
         try {
             return parent::send($request);
         } catch (\Exception $e) {
-            if ($e instanceof \GuzzleHttp\Exception\ServerException) {
+            if ($e instanceof ServerException) {
                 $url = $e->getRequest()->getUrl();
                 $body = (string)$e->getResponse()->getBody();
                 
-                $debugData = '';
+                $message = '';
+                if (empty($body)) {
+                    $message = "Empty response from API.";
+                } else if ($responseArray = json_decode($body, true) && empty($responseArray['success'])) {
+                    $message = 'Error from API: ' . $responseArray['message'];
+                } 
+                
                 if ($this->debug) {
-                    $debugData = "Url: $url, Response body: $body";
-                    if ($e->getRequest()->getMethod()=='POST') {
-                        $debugData .= '.Request: ' . $e->getRequest()->getBody();
-                    }
+                    $message .= $this->getDebugDataFromGuzzleServerException($e);
                 }
                 
-                if (empty($body)) {
-                    throw new \RuntimeException("Empty response from API. $debugData");
-                } else if ($responseArray = json_decode($body, true) && empty($responseArray['success'])) {
-                    throw new \RuntimeException("Error from API: {$responseArray['message']}. $debugData");
-                }
+                throw new \RuntimeException("Error from API: $message");
             }
+            
             throw new \RuntimeException("Generic error from API: " . $e->getMessage());
         } 
         
