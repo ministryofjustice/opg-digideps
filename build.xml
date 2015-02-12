@@ -18,7 +18,6 @@
         <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
         <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
-        <echo msg="Permission on cache and logs set"></echo>
         
         <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
         <echo msg="APC cache cleared"></echo>
@@ -39,7 +38,7 @@
                 <exec command="php composer.phar self-update" checkreturn="true" passthru="true"/>
             </then>
             <else>
-                <exec command="wget http://getcomposer.org/composer.phar"/>
+                <exec command="curl -O http://getcomposer.org/composer.phar"/>
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
@@ -56,13 +55,18 @@
     </target>
 
     
-    <target name="db">
+    <target name="db-reset">
         <exec command="php app/console doctrine:query:sql &quot;DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;&quot; "  checkreturn="true"></exec>
-        <exec command="php app/console doctrine:schema:drop --force" checkreturn="true" passthru="true"></exec>
+    </target>
+    
+    <target name="db-migrate">
         <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="true"></exec>
     </target>
     
-    <target name="build" depends="cache-clear,composer-install,db,phplint">
+    <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint">
+    </target>
+    
+    <target name="release" depends="cache-clear,composer-install,db-migrate,phplint">
     </target>
 
 </project>
