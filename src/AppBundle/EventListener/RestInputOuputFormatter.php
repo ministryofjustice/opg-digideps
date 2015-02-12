@@ -131,12 +131,6 @@ class RestInputOuputFormatter
             $message = "{$errorGetLast['message']} {$errorGetLast['file']}:{$errorGetLast['line']} ";
             $data = array('success' => false, 'data' => '', 'message' => $message);
             
-//            $response = $this->arrayToResponse($data, $event->getRequest());
-//            echo get_class($response);die;
-//            $response->sendHeaders();
-//            $response->sendContent();
-//            die;
-            
             echo json_encode($data);
             die;
             //TODO find a way to use kernely temrinate instead, usgin 
