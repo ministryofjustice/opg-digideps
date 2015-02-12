@@ -1,38 +1,18 @@
-{% trans_default_domain "admin" %}
-
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    <h1 class="form-title heading-medium">
-        Add user
+    <h1 class="form-title heading-medium-large ">
+        Add a user
     </h1>
 
-  {% include 'AppBundle:Components/Form:_input.html.twig' with {
-    element: form.email,
-    labelClass: '',
-    labelText: 'user.email.label' | trans,
-    hintText: 'user.email.hint' | trans
-  } %}
 
-  {% include 'AppBundle:Components/Form:_input.html.twig' with {
-    element: form.firstname,
-    labelClass: '',
-    labelText: 'user.firstname.label' | trans,
-    hintText: 'user.firstname.hint' | trans
-  } %}
+  {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
 
-  {% include 'AppBundle:Components/Form:_input.html.twig' with {
-    element: form.lastname,
-    labelClass: '',
-    hintText: 'user.lastname.hint' | trans,
-    labelText: 'user.lastname.label' | trans
-  } %}
+  {{ form_input(form.firstname,'firstname', { 'labelClass': 'form-label-bold required' }) }}
 
-  {% include 'AppBundle:Components/Form:_button.html.twig' with {
-  element: form.save,
-  labelText: 'user.submit.label' | trans,
-  buttonClass: ''
-} %}
+  {{ form_input(form.lastname,'lastname', { 'labelClass': 'form-label-bold required' }) }}
 
+
+  {{ form_submit(form.save,'submit')}}
 
 {# KNOWN DATE #}
 {# {% include 'AppBundle:Components/Form:_known-date.html.twig' %} #}

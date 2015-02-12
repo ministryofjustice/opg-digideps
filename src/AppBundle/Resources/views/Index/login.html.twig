@@ -1,28 +1,35 @@
-{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 
 {% trans_default_domain "login" %}
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
+{% block title %}Sign in{% endblock %}
 
-{% block content %}  
+{% block pageContent %}
+
+    {% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Admin Deputyship service',
+        title: 'Login'
+        } %}
+
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
-    {{ form_submit(form.login,'login')}}
+    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'})}}
     {{ form_end(form) }}
 {#
 {% block pageBody %}
 
-  <form action="{{ path('login_check') }}" method="post">
+  <form action="{{ path('login_check') }}" method="post" class="page-body">
 
     <div class="form-group ">
-      <label class="form-label form-label-bold required" for="email">{% trans %}email.label{% endtrans %}</label>
+      <label class="form-label required" for="email">{% trans %}email.label{% endtrans %}</label>
       <p class="form-hint">{% trans %}email.description{% endtrans %}</p>
       <input type="text" id="email" name="email" value="{{ last_email }}" class="form-control" size="50" />
     </div>
 
     <div class="form-group ">
-      <label class="form-label form-label-bold required" for="password">{% trans %}password.label{% endtrans %}</label>
+      <label class="form-label required" for="password">{% trans %}password.label{% endtrans %}</label>
       <input type="password" id="password" name="password" class="form-control" size="50" />
     </div>
 

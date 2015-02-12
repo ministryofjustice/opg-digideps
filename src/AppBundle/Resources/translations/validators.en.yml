@@ -10,3 +10,10 @@ user:
     notBlank: The last name cannot be blank
     minLength: Your last name must be at least {{ limit }} characters long
     maxLength: Your last name cannot be longer than {{ limit }} characters long
+  password:
+      notBlank: The password cannot be blank 
+      minLength: The password must be at least {{ limit }} characters long
+      maxLength: The password cannot be longer than {{ limit }} characters long
+      noLowerCaseChars: The password must contain at least one lowercase character
+      noUpperCaseChars: The password must contain at least one uppercase character    
+      noNumber: The password must contain at least one number

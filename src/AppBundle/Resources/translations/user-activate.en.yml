@@ -8,6 +8,8 @@ email:
 password:
     label: Password
     hint: Must be at least 8 characters and should include uppercase, lowercase and at least one number
+    validation:
+        passwordMismatch: The password fields must match.
 password_confirm:
     label: Confirm password
 agree:

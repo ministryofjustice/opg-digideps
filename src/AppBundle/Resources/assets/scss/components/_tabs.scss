@@ -120,12 +120,12 @@
 
 @media (max-width: 640px) {
   .tab-content {
-    margin:0 -1em
+    margin: 0;
   }
 }
 
 .tab-content .tab-pane {
-  padding: 1em 1em 0 1em;
+  padding: 0;
   border-top: solid 1px #bfc1c3;
   clear: both;
   width: auto
