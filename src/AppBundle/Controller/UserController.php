@@ -39,26 +39,38 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                throw new \RuntimeException("Logic to set password not yet implemented");
-                $user;
-                // add user
-////                developEndpoints();
-//                $response = $apiClient->postC('user_set_password', $form->getData());
-//                $user = $apiClient->getEntity('User', 'user/' . $response['id']);
-//                
-//                $request->getSession()->getFlashBag()->add(
-//                    'notice', 
-//                    'Password has been set. You can now login using the form below.'
-//                );
-//                
-//                return $this->redirect($this->generateUrl('homepage'));
+                
+                // calculated hashed password
+                $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
+                        ->encodePassword($user->getPassword(), $user->getSalt());
+                $apiClient->putC('user/'.$user->getId().'/set-password', json_encode([
+                    'id' => $user->getId(),
+                    'password' => $encodedPassword
+                ]));
+                
+                //TODO log user in ?
+                
+                // redirect to step 2
+                return $this->redirect($this->generateUrl('user_details'));
             }
         } 
-
         
         return $this->render('AppBundle:User:activate.html.twig', [
             'token'=>$token, 
             'form' => $form->createView()
+        ]);
+    }
+    
+    
+    /**
+     * @Route("/details", name="user_details")
+     */
+    public function detailsAction(Request $request)
+    {
+        $form = null;
+        
+        return $this->render('AppBundle:User:details.html.twig', [
+             'form' => $form
         ]);
     }
 }

@@ -4,3 +4,4 @@ parameters:
         add_user: user
         list_users: user
         find_user_by_token: user/get-by-token
+        #set_user_password: user/%s/set-password # cannot use this with current client
