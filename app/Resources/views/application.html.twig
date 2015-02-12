@@ -38,7 +38,7 @@
         <ul id="proposition-links">
             {% if app.user %}
                 <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
-                <li><a href="{{path('logout')}}">{% trans %}logout{% endtrans %}</a></li>
+                <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
             {% endif %}
         </ul>
     </nav>

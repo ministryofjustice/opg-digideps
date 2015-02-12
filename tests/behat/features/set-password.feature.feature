@@ -35,8 +35,9 @@ Feature: admin
             | set_password_password_second  | Abcd1234 |
         And I click on "save"
         Then the form should not contain an error
+        And I should see the "user-details" region
         # test login
-        When I go to "/logout"
+        When I click on "logout"
         And I go to "/login"
         And I fill in the following: 
             | login_email     | behat-user@publicguardian.gsi.gov.uk |

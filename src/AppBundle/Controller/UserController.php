@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
 * @Route("user")
@@ -49,7 +51,14 @@ class UserController extends Controller
                     'active' => true
                 ]));
                 
-                //TODO log user in ?
+                // log in user
+                $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+                $this->get("security.context")->setToken($token); //now the user is logged in
+                
+                 $this->get('session')->set('_security_secured_area', serialize($token));
+                 //$request = $this->get("request");
+                 //$event = new InteractiveLoginEvent($request, $token);
+                 //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
                 
                 // redirect to step 2
                 return $this->redirect($this->generateUrl('user_details'));
