@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 //use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\User;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -28,56 +29,83 @@ class UserController extends RestController
     {
         $data = $this->deserializeBodyContent();
 
-        $em = $this->getDoctrine()->getManager();
-
+        // validate input
+        array_map(function($k) use ($data) {
+            if (!array_key_exists($k, $data)) {
+                throw new \InvalidArgumentException("Missing parameter $k");
+            }
+        }, ['firstname', 'lastname', 'email']);
+        
+        
+        
         $user = new \AppBundle\Entity\User();
-        $user->setFirstname($data['firstname']);
-        $user->setLastname($data['lastname']);
-        $user->setEmail($data['email']);
-        $user->setPassword('');
-        $em->persist($user);
-        $em->flush($user);
+        $user->setFirstname($data['firstname'])
+                ->setLastname($data['lastname'])
+                ->setEmail($data['email']);
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush($user);
+        
+         //TODO return status code
         
         return array('id'=>$user->getId());
     }
-
+    
+    
     /**
-     * @Route("/{id}")
+     * @Route("/{id}/set-password")
+     * @Method({"PUT"})
+     */
+    public function setPassword($id)
+    {
+        $user = $this->findEntityById('User', $id, 'User not found'); /* @var $user User */
+        
+        $data = $this->deserializeBodyContent();
+        
+         // validate input
+        array_map(function($k) use ($data) {
+            if (!array_key_exists($k, $data)) {
+                throw new \InvalidArgumentException("Missing parameter $k");
+            }
+        }, ['password']);
+        
+        $user->setPassword($data['password']);
+        $user->setRegistrationToken('');
+        
+        $this->getEntityManager()->flush($user);
+        
+        //TODO return status code
+        
+        return ['id'=>$user->getId()];
+    }
+
+    
+    /**
+     * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
      */
     public function get($id)
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $em->getRepository('AppBundle\Entity\User')->find($id);
-        if (!$user) {
-            throw new \Exception('not found');
-        }
-
-        return $user;
+        return $this->findEntityById('User', $id, 'User not found');
     }
 
+    
     /**
      * @Route("")
      * @Method({"GET"})
      */
     public function getAll()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $users = $em->getRepository('AppBundle\Entity\User')->findAll();
-
-        return $users;
+        return $this->getRepository('User')->findAll();
     }
 
+    
     /**
      * @Route("/get-by-email/{email}")
      * @Method({"GET"})
      */
     public function getByEmail($email)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $user = $em->getRepository('AppBundle\Entity\User')->findOneByEmail($email);
+        $user = $this->getRepository('User')->findOneByEmail($email);
         if (!$user) {
             throw new \Exception('User not found');
         }
@@ -86,24 +114,20 @@ class UserController extends RestController
         return $user;
     }
     
-     /**
+    
+    /**
      * @Route("/get-by-token/{token}")
      * @Method({"GET"})
      */
     public function getByToken($token)
     {
-        $em = $this->getDoctrine()->getEntityManager();
-
-        $user = $em->getRepository('AppBundle\Entity\User')->findOneBy(['registrationToken' => $token]);
+        $user = $this->getRepository('User')->findOneBy(['registrationToken' => $token]);
         if (!$user) {
             throw new \Exception('User not found');
         }
 
-
         return $user;
     }
-    
-    
     
     
 }
