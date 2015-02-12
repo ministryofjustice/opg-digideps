@@ -1383,6 +1383,51 @@ input[type=number] {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+.phase-banner {
+  padding: 10px 0 8px 0;
+  border-bottom: 1px solid #bfc1c3; }
+  .phase-banner p {
+    margin: 0;
+    color: #000;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .phase-banner p {
+        font-size: 14px;
+        line-height: 1.14286; } }
+  .phase-banner .phase-tag {
+    display: -moz-inline-stack;
+    display: inline-block;
+    zoom: 1;
+    display: inline;
+    vertical-align: top;
+    margin: 0 8px 0 0;
+    padding: 2px 5px 0;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-decoration: none;
+    color: #fff;
+    background-color: #f47738; }
+    @media (max-width: 640px) {
+      .phase-banner .phase-tag {
+        font-size: 14px;
+        line-height: 1.14286; } }
+  .phase-banner span {
+    display: -moz-inline-stack;
+    display: inline-block;
+    zoom: 1;
+    display: inline;
+    width: 75%;
+    vertical-align: top; }
+
 .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 15px 0 15px 15px; }
@@ -1393,6 +1438,41 @@ input[type=number] {
 
 .field-with-errors li {
   color: #df3034; }
+
+@font-face {
+  font-family: GDS-Logo;
+  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+.heading-medium-large {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em; }
+  @media (max-width: 640px) {
+    .heading-medium-large {
+      font-size: 20px;
+      line-height: 1.11111; } }
+
+header.page-header h1 {
+  padding-bottom: 0; }
+  header.page-header h1 span {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    line-height: 1;
+    padding-bottom: 15px; }
+    @media (max-width: 640px) {
+      header.page-header h1 span {
+        font-size: 18px;
+        line-height: 1.2; } }
 
 ol.progress {
   display: table;
@@ -1571,9 +1651,9 @@ ol.progress {
     border-top: 1px solid #bfc1c3; } }
 @media (max-width: 640px) {
   .tab-content {
-    margin: 0 -1em; } }
+    margin: 0; } }
 .tab-content .tab-pane {
-  padding: 1em 1em 0 1em;
+  padding: 0;
   border-top: solid 1px #bfc1c3;
   clear: both;
   width: auto; }
@@ -1610,6 +1690,6 @@ ol.progress {
     display: block; }
 
 .page-body {
-  margin-top: 30px; }
+  margin-top: 50px; }
 
 /*# sourceMappingURL=application-ie6.css.map */
