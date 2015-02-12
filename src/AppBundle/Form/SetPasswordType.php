@@ -33,7 +33,8 @@ class SetPasswordType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-              'translation_domain' => 'user-activate'
+              'translation_domain' => 'user-activate',
+               'validation_groups' => ['user_set_password'],
         ]);
     }
     
