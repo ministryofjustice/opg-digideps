@@ -275,7 +275,8 @@ class User implements AdvancedUserInterface
     public function setRegistrationToken($registrationToken)
     {
         $this->registrationToken = $registrationToken;
-
+        $this->setTokenDate(new \DateTime);
+        
         return $this;
     }
 
