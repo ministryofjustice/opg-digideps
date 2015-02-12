@@ -3,7 +3,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
 
-ini_set('display_errors', 'off');
+ini_set('display_errors', 'on');
 
 // If you don't want to setup permissions the proper way, just uncomment the following PHP line
 // read http://symfony.com/doc/current/book/installation.html#configuration-and-setup for more information
