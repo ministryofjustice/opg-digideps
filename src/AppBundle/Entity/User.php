@@ -135,6 +135,7 @@ class User implements AdvancedUserInterface
         
         $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
         $this->tokenDate = new \DateTime();
+        $this->password = '';
     }
 
     /**
