@@ -153,6 +153,24 @@ class ApiClient extends GuzzleClient
     }
     
     /**
+     * @param string $endpoint
+     * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
+     * 
+     * @return array response
+     */
+    public function putC($endpoint, $bodyorEntity)
+    {
+        if (is_object($bodyorEntity)) {
+            $bodyorEntity = $this->jsonSerializer->serialize($bodyorEntity, 'json');
+        }
+        $responseBody = $this->put($endpoint, ['body'=>$bodyorEntity])->getBody();
+        
+        $responseArray = json_decode($responseBody, 1);
+        
+        return $responseArray['data'];
+    }
+    
+    /**
      * Search through our route map and if this route exists then use that
      * 
      * @param string $method
