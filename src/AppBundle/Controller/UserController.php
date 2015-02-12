@@ -43,9 +43,10 @@ class UserController extends Controller
                 // calculated hashed password
                 $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
                         ->encodePassword($user->getPassword(), $user->getSalt());
-                $apiClient->putC('user/'.$user->getId().'/set-password', json_encode([
+                $apiClient->putC('user/' . $user->getId(), json_encode([
                     'id' => $user->getId(),
-                    'password' => $encodedPassword
+                    'password' => $encodedPassword,
+                    'active' => true
                 ]));
                 
                 //TODO log user in ?
