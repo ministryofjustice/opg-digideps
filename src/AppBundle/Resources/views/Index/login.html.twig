@@ -17,29 +17,5 @@
     {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
     {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'})}}
     {{ form_end(form) }}
-{#
-{% block pageBody %}
 
-  <form action="{{ path('login_check') }}" method="post" class="page-body">
-
-    <div class="form-group ">
-      <label class="form-label required" for="email">{% trans %}email.label{% endtrans %}</label>
-      <p class="form-hint">{% trans %}email.description{% endtrans %}</p>
-      <input type="text" id="email" name="email" value="{{ last_email }}" class="form-control" size="50" />
-    </div>
-
-    <div class="form-group ">
-      <label class="form-label required" for="password">{% trans %}password.label{% endtrans %}</label>
-      <input type="password" id="password" name="password" class="form-control" size="50" />
-    </div>
-
-      {#
-          If you want to control the URL the user
-          is redirected to on success (more details below)
-          <input type="hidden" name="_target_path" value="/account" />
-      #}
-
-   {# <button type="submit" class="button behat-link-login">{% trans %}submit.label{% endtrans %}</button>
-
-  </form> #}
 {% endblock %}
