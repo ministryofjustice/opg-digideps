@@ -23,12 +23,18 @@ class RestInputOuputFormatter
      * @var array
      */
     private $supportedFormats;
+    
+    /**
+     * @var boolean
+     */
+    private $debug;
 
 
-    public function __construct(Serializer $serializer, array $supportedFormats)
+    public function __construct(Serializer $serializer, array $supportedFormats, $debug)
     {
         $this->serializer = $serializer;
         $this->supportedFormats = array_values($supportedFormats);
+        $this->debug = $debug;
     }
 
     /**
@@ -40,6 +46,11 @@ class RestInputOuputFormatter
     {
         $format = $request->getContentType();
 
+        $content = $request->getContent();
+        if (!$content) {
+            return [];
+        }
+        
         return $this->serializer->deserialize($request->getContent(), 'array', $format);
     }
     
@@ -94,7 +105,16 @@ class RestInputOuputFormatter
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $data = array('success' => false, 'data' => '', 'message' => $event->getException()->getMessage());
+        $data = array(
+            'success' => false, 
+            'data' => '', 
+            'message' => $event->getException()->getMessage(),
+            'stacktrace' => 'enable debug mode to see it'
+        );
+        
+        if ($this->debug) {
+            $data['stacktrace'] = $event->getException()->getTraceAsString();
+        }
         
         $response = $this->arrayToResponse($data, $event->getRequest());
 
