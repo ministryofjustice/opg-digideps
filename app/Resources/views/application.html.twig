@@ -35,10 +35,13 @@
     <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
     <nav id="proposition-menu">
         <a href="/" id="proposition-name">{% block proposition_title %}Digital Deputyships{% endblock %}</a>
-        <ul id="proposition-links">
-            <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
-            <li><a href="{{path('logout')}}">{% trans %}logout{% endtrans %}</a></li>
-        </ul>
+        
+        {# {% if is_granted('IS_AUTHENTICATED_FULLY') %} #}
+            <ul id="proposition-links">
+                <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
+                <li><a href="{{path('logout')}}">{% trans %}logout{% endtrans %}</a></li>
+            </ul>
+        {#{% endif %} #}
     </nav>
 {% endblock %}
 
