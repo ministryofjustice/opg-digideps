@@ -37,7 +37,6 @@ class UserController extends RestController
         }, ['firstname', 'lastname', 'email']);
         
         
-        
         $user = new \AppBundle\Entity\User();
         $user->setFirstname($data['firstname'])
                 ->setLastname($data['lastname'])
@@ -61,13 +60,6 @@ class UserController extends RestController
         
         $data = $this->deserializeBodyContent();
         
-         // validate input
-        array_map(function($k) use ($data) {
-            if (!array_key_exists($k, $data)) {
-                throw new \InvalidArgumentException("Missing parameter $k");
-            }
-        }, ['password']);
-        
         if (array_key_exists('password', $data)) {
             $user->setPassword($data['password']);
         }
@@ -89,7 +81,7 @@ class UserController extends RestController
      */
     public function get($id)
     {
-        return $this->findEntityById('User', $id, 'User not found');
+        return $this->findEntityBy('User', $id, 'User not found');
     }
 
     
@@ -109,13 +101,7 @@ class UserController extends RestController
      */
     public function getByEmail($email)
     {
-        $user = $this->getRepository('User')->findOneByEmail($email);
-        if (!$user) {
-            throw new \Exception('User not found');
-        }
-
-
-        return $user;
+        return $this->findEntityBy('User', ['email'=>$email], "User not found");
     }
     
     
@@ -125,13 +111,7 @@ class UserController extends RestController
      */
     public function getByToken($token)
     {
-        $user = $this->getRepository('User')->findOneBy(['registrationToken' => $token]);
-        if (!$user) {
-            throw new \Exception('User not found');
-        }
-
-        return $user;
+        return $this->findEntityBy('User', ['registrationToken'=>$token], "User not found");
     }
-    
     
 }
