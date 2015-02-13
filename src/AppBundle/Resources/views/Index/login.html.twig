@@ -1,21 +1,15 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-
 {% trans_default_domain "login" %}
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
-{% block title %}Sign in{% endblock %}
+{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
 
-{% block pageContent %}
+{% block pageBody %}
 
-    {% include 'AppBundle:Partials:_service-header.html.twig' with {
-        serviceName: 'Admin Deputyship service',
-        title: 'Login'
-        } %}
-
-    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
-    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'})}}
+    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
     {{ form_end(form) }}
 
 {% endblock %}

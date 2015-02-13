@@ -241,7 +241,7 @@ class User implements AdvancedUserInterface
      */
     public function getRoles()
     {
-        return [ $this->role ];
+        return [ $this->role['role'] ];
     }
     
     /**
@@ -250,11 +250,7 @@ class User implements AdvancedUserInterface
      */
     public function addRole($role)
     {
-        if(is_array($role)){
-            $this->role = $role['role'];
-        }else{
-            $this->role = $role;
-        }
+        $this->role = $role;
     }
     
     public function getRole()
