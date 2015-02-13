@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation as JMS;
  * @codeCoverageIgnore
  * @JMS\XmlRoot("user")
  * @JMS\AccessType("public_method")
+ * @JMS\ExclusionPolicy("none")
  */
 class User implements AdvancedUserInterface
 {   
@@ -54,9 +55,16 @@ class User implements AdvancedUserInterface
     private $active;
     
     /**
-     * @JMS\Type("string")
+     * @JMS\Type("array")
      * @JMS\Accessor(getter="getRole", setter="addRole")
-     * @var array $roles
+     * @var string $role
+     */
+    private $role;
+    
+    /**
+     * @JMS\Exclude
+     * @JMS\Accessor(getter="getRole", setter="addRole")
+     * @var type 
      */
     private $roles;
     
@@ -233,9 +241,7 @@ class User implements AdvancedUserInterface
      */
     public function getRoles()
     {
-        return [ 'ROLE_AUTHENTICATED_FULLY' ];
-        
-        return $this->roles;
+        return [ $this->role ];
     }
     
     /**
@@ -244,12 +250,16 @@ class User implements AdvancedUserInterface
      */
     public function addRole($role)
     {
-        $this->roles[] = $role; 
+        if(is_array($role)){
+            $this->role = $role['role'];
+        }else{
+            $this->role = $role;
+        }
     }
     
     public function getRole()
     {
-        return $this->roles[0];
+        return $this->role;
     }
     
     /**

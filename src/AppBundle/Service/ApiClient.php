@@ -67,7 +67,7 @@ class ApiClient extends GuzzleClient
         }
         
         $ret = $this->jsonSerializer->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, 'json');
-        
+       
         return $ret;
     }
     
@@ -138,8 +138,7 @@ class ApiClient extends GuzzleClient
      */
     public function getEntities($class, $endpoint, $options = [])
     {
-        $request = $this->createRequest('GET', $endpoint, $options);
-        $response = $this->send($request);
+        $response = $this->get($endpoint, $options);
         $responseString = $response->json();
         
         if(!is_array($responseString)){
@@ -168,6 +167,7 @@ class ApiClient extends GuzzleClient
         if (is_object($bodyorEntity)) {
             $bodyorEntity = $this->jsonSerializer->serialize($bodyorEntity, 'json');
         }
+        
         $responseBody = $this->post($endpoint, ['body'=>$bodyorEntity])->getBody();
         
         $responseArray = json_decode($responseBody, 1);
