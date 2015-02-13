@@ -5,6 +5,12 @@ Feature: admin
         When I open the first link on the email
         Then the response status code should be 200
         And the "set_password_email" field should contain "behat-user@publicguardian.gsi.gov.uk"
+         # empty
+        When I fill in the following: 
+            | set_password_password_first   |  |
+            | set_password_password_second  |  |
+        And I click on "save"
+        Then the form should contain an error
         #password mismatch
         When I fill in the following: 
             | set_password_password_first   | Abcd1234 |

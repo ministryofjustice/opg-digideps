@@ -28,7 +28,7 @@ class UserController extends Controller
         
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
-
+        
         if (!$user->isTokenSentInTheLastHours(48)) {
             throw new \RuntimeException("token expired, require new link");
         }
@@ -46,7 +46,6 @@ class UserController extends Controller
                 $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
                         ->encodePassword($user->getPassword(), $user->getSalt());
                 $apiClient->putC('user/' . $user->getId(), json_encode([
-                    'id' => $user->getId(),
                     'password' => $encodedPassword,
                     'active' => true
                 ]));
