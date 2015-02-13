@@ -251,7 +251,7 @@ class User implements AdvancedUserInterface
     public function addRole($role)
     {
         if(is_array($role)){
-            $this->role = $role['name'];
+            $this->role = $role['role'];
         }else{
             $this->role = $role;
         }
