@@ -2,13 +2,13 @@
 {% trans_default_domain "login" %}
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
-{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
 {% block pageBody %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
-    {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
-    {{ form_input(form.password,'password', { 'labelClass': 'form-label-bold required' } ) }}
+    {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
+    {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
     {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
     {{ form_end(form) }}
 

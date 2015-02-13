@@ -4,18 +4,12 @@
         Add a user
     </h1>
 
-
-  {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
-
-  {{ form_input(form.firstname,'firstname', { 'labelClass': 'form-label-bold required' }) }}
-
-  {{ form_input(form.lastname,'lastname', { 'labelClass': 'form-label-bold required' }) }}
-
-
+  {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
+  {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
+  {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
   {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
 
 {# KNOWN DATE #}
 {# {% include 'AppBundle:Components/Form:_known-date.html.twig' %} #}
-
 
 {{ form_end(form) }}
