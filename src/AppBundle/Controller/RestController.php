@@ -3,7 +3,7 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use AppBundle\Exception\NotFound;
 
 abstract class RestController extends Controller
 {
@@ -37,7 +37,27 @@ abstract class RestController extends Controller
         $entity = $this->getRepository($entityClass)->find((int)$id);
         
         if (!$entity) {
-            throw new \Exception($errorMessage ?: $entityClass . ' not found');
+            throw new NotFound($errorMessage ?: $entityClass . ' not found');
+        }
+        
+        return $entity;
+    }
+    
+    /**
+     * @param string $entityClass
+     * @param array|integer $criteriaOrId
+     * @param string $errorMessage
+     * 
+     * @throws NotFound
+     */
+    protected function findEntityBy($entityClass, $criteriaOrId, $errorMessage = null)
+    {
+        $repo = $this->getRepository($entityClass);
+        $entity = is_array($criteriaOrId) 
+                  ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
+        
+        if (!$entity) {
+            throw new NotFound($errorMessage ?: $entityClass . ' not found');
         }
         
         return $entity;

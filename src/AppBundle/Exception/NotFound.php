@@ -8,5 +8,5 @@ class NotFound extends \RuntimeException
     {
         parent::__construct('Record not found. Details:' . $message, 404);
     }
-
+    
 }
