@@ -82,7 +82,7 @@ class ApiClient extends GuzzleClient
      */
     private function getDebugREquestExceptionData(RequestException $e)
     {
-        if ($this->debug) {
+        if (!$this->debug) {
             return '';
         }
         
