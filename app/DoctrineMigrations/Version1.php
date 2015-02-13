@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version001SchemaAndData extends AbstractMigration
+class Version1 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
@@ -94,13 +94,13 @@ class Version001SchemaAndData extends AbstractMigration
         $this->addSql("INSERT INTO court_order_type (name) VALUES ('Health & Welfare'), ('Property and Affairs')");
         $this->addSql("INSERT INTO court_order_type VALUES (3,'Property and Affairs & Personal Welfare')");
         $this->addSql("INSERT INTO title (title) VALUES ('Mr'),('Mrs'),('Miss'),('Ms'),('Dr'),('Professor'),('Sir'),('Dame'),('Lord'),('Baroness')");
-        $this->addSql("INSERT INTO role (name) VALUES ('OPG Administrator'), ('Lay Deputy'),('Professional Deputy'),('Local Authority Deputy'),('Visitor'),('ROLE_AUTHENTICATED_FULLY'),('ROLE__AUTHENTICATED_ANONYMOUSLY')");
+        $this->addSql("INSERT INTO role (name, role) VALUES ('OPG Administrator', 'ROLE_ADMIN'), ('Lay Deputy', 'ROLE_LAY_DEPUTY'),('Professional Deputy', 'ROLE_PROFESSIONAL_DEPUTY'),('Local Authority Deputy', 'ROLE_LOCAL_AUTHORITY_DEPUTY' )");
         
         
         // user
         // create the password using client
         //  php client/app/console digideps:passwordEncode --user=1 --password=test
-        $this->addSql("INSERT INTO dd_user (firstname, role_id, password, email, active, salt, registration_date, registration_token, token_date, email_confirmed, lastname) VALUES ('test',6, 'stHGdg4MhYOm/OVTWjpMJievIvJqafsQQ3WpWlUNDT6WfHupVWjBQaxdppMQkdCmYSXl6QQQXVYLGL/MDZi5Zw==','deputyshipservice@publicguardian.gsi.gov.uk',TRUE,'bGGQ485SDsdfsaf6790','2014-06-09','testtoken','".date('c')."', TRUE,'Test')");
+        $this->addSql("INSERT INTO dd_user (firstname, role_id, password, email, active, salt, registration_date, registration_token, token_date, email_confirmed, lastname) VALUES ('test',1, 'stHGdg4MhYOm/OVTWjpMJievIvJqafsQQ3WpWlUNDT6WfHupVWjBQaxdppMQkdCmYSXl6QQQXVYLGL/MDZi5Zw==','deputyshipservice@publicguardian.gsi.gov.uk',TRUE,'bGGQ485SDsdfsaf6790','2014-06-09','testtoken','".date('c')."', TRUE,'Test')");
 
         //insert benefit_type
         $this->addSql("INSERT INTO benefit_type (id, name, form_name, payment_description_required) VALUES (1, 'Disability Living Allowance', 'disability_living_allowance', false)");
