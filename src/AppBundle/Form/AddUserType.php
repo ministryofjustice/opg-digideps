@@ -20,7 +20,8 @@ class AddUserType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-              'translation_domain' => 'admin'
+              'translation_domain' => 'admin',
+              'validation_groups' => ['admin_add_user'],
         ]);
     }
     

@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 /**
 * @Route("user")
@@ -39,26 +41,46 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                throw new \RuntimeException("Logic to set password not yet implemented");
-                $user;
-                // add user
-////                developEndpoints();
-//                $response = $apiClient->postC('user_set_password', $form->getData());
-//                $user = $apiClient->getEntity('User', 'user/' . $response['id']);
-//                
-//                $request->getSession()->getFlashBag()->add(
-//                    'notice', 
-//                    'Password has been set. You can now login using the form below.'
-//                );
-//                
-//                return $this->redirect($this->generateUrl('homepage'));
+                
+                // calculated hashed password
+                $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
+                        ->encodePassword($user->getPassword(), $user->getSalt());
+                $apiClient->putC('user/' . $user->getId(), json_encode([
+                    'id' => $user->getId(),
+                    'password' => $encodedPassword,
+                    'active' => true
+                ]));
+                
+                // log in user
+                $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+                $this->get("security.context")->setToken($token); //now the user is logged in
+                
+                 $this->get('session')->set('_security_secured_area', serialize($token));
+                 //$request = $this->get("request");
+                 //$event = new InteractiveLoginEvent($request, $token);
+                 //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+                
+                // redirect to step 2
+                return $this->redirect($this->generateUrl('user_details'));
             }
         } 
-
         
         return $this->render('AppBundle:User:activate.html.twig', [
             'token'=>$token, 
             'form' => $form->createView()
+        ]);
+    }
+    
+    
+    /**
+     * @Route("/details", name="user_details")
+     */
+    public function detailsAction(Request $request)
+    {
+        $form = null;
+        
+        return $this->render('AppBundle:User:details.html.twig', [
+             'form' => $form
         ]);
     }
 }

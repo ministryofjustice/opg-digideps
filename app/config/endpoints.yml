@@ -4,3 +4,4 @@ parameters:
         add_user: user
         list_users: user
         find_user_by_token: user/get-by-token
+#        update_user: user

@@ -232,22 +232,23 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     /**
      * @When I open the first link on the email
      */
-//    public function iOpenTheLinkOnTheEmail()
-//    {
-//        $mailContent = self::getApplicationBehatHelper()->getLatestEmail()->getRaw();
-//        preg_match_all('#http://[^\s"<]+#', $mailContent, $matches);
-//        if (empty($matches[0])) {
-//            throw new \Exception("no link found in email. Body:\n $mailContent");
-//        }
-//        $emails = array_unique($matches[0]);
-//        if (!count($emails)) {
-//            throw new \Exception("No links found in the email. Body:\n $mailContent");
-//        }
-//        $link = array_shift($emails);
-//
-//        // visit the link
-//        $this->visit($link);
-//    }
+    public function iOpenTheLinkOnTheEmail()
+    {
+        $mailContent = $this->getLatestEmail()['parts'][0]['body'];
+        
+        preg_match_all('#http://[^\s"<]+#', $mailContent, $matches);
+        if (empty($matches[0])) {
+            throw new \Exception("no link found in email. Body:\n $mailContent");
+        }
+        $emails = array_unique($matches[0]);
+        if (!count($emails)) {
+            throw new \Exception("No links found in the email. Body:\n $mailContent");
+        }
+        $link = array_shift($emails);
+
+        // visit the link
+        $this->visit($link);
+    }
 
     /**
      * @Then the email sent has a size of at least :atLeastKb kilobytes
@@ -283,5 +284,21 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 //        $this->iShouldNotSeeTheRegion('test-user');
 //    }
 
+      
+    /**
+     * @Then the form should contain an error
+     */
+    public function theFormShouldContainAnError()
+    {
+        $this->iShouldSeeTheRegion('form-errors');
+    }
+    
+    /**
+     * @Then the form should not contain an error
+     */
+    public function theFormShouldNotContainAnError()
+    {
+        $this->iShouldNotSeeTheRegion('form-errors');
+    }
 
 }

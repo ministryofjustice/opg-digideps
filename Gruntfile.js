@@ -8,6 +8,7 @@
 module.exports = function (grunt) {
 
     var scssPath = 'src/AppBundle/Resources/assets/scss';
+    var jsPath = 'src/AppBundle/Resources/assets/js';
 
     console.log("Grunt Starting up" + scssPath);
 
@@ -47,26 +48,36 @@ module.exports = function (grunt) {
             scss: {
                 files: [scssPath + '/**/*.scss'],
                 tasks: ['sass']
+            },
+            js: {
+              files: [jsPath + '/**/*.js'],
+              task: ['copyJS']
             }
         },
 
         copy: {
-            copyImages: {
+            copyGDSImages: {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/images',
                 src: ['**/*'],
                 dest: 'web/images',
                 expand: true
             },
-            copyJS: {
+            copyGDSJS: {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/javascripts',
                 src: ['**/*'],
                 dest: 'web/javascripts',
                 expand: true
             },
-            copyJquery: {
-                cwd: 'bower_downloads/jquery/dist',
-                src: ['**/*'],
-                dest: 'web/javascripts/vendor/jquery',
+            copyPlugins: {
+                cwd: 'bower_downloads',
+                src: ['jquery/dist/**/*','jquery-validation/dist/**/*' ],
+                dest: 'web/javascripts/vendor',
+                expand: true
+            },
+            copyJS:{
+                cwd: 'src/AppBundle/Resources/assets/js',
+                src: ['**/*' ],
+                dest: 'web/js',
                 expand: true
             },
             copyHTML5shiv: {

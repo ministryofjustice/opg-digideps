@@ -35,13 +35,12 @@
     <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
     <nav id="proposition-menu">
         <a href="/" id="proposition-name">{% block proposition_title %}Digital Deputyships{% endblock %}</a>
-        
-        {# {% if is_granted('IS_AUTHENTICATED_FULLY') %} #}
-            <ul id="proposition-links">
+        <ul id="proposition-links">
+            {% if app.user %}
                 <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
-                <li><a href="{{path('logout')}}">{% trans %}logout{% endtrans %}</a></li>
-            </ul>
-        {#{% endif %} #}
+                <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+            {% endif %}
+        </ul>
     </nav>
 {% endblock %}
 
@@ -88,7 +87,8 @@
 
 
 {% block javascripts %}
-    <script type="text/javascript" src="/js/application.js"></script>
+    <script type="text/javascript" src="{{ asset('javascripts/vendor/jquery-validation/dist/jquery.validate.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/application.js') }}"></script>
 {% endblock %}
 
 {% block bodyEnd %}{% endblock %}
