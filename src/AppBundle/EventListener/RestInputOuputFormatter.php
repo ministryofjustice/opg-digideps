@@ -87,7 +87,11 @@ class RestInputOuputFormatter
     
     public function onKernelView(GetResponseForControllerResultEvent $event)
     {
-        $data = array('success' => true, 'data' => $event->getControllerResult(), 'message' => '');
+        $data = array(
+            'success' => true, 
+            'data' => $event->getControllerResult(), 
+            'message' => ''
+        );
         
         $response = $this->arrayToResponse($data, $event->getRequest());
         
@@ -109,7 +113,8 @@ class RestInputOuputFormatter
             'success' => false, 
             'data' => '', 
             'message' => $event->getException()->getMessage(),
-            'stacktrace' => 'enable debug mode to see it'
+            'stacktrace' => 'enable debug mode to see it',
+            'code' => $event->getException()->getCode()
         );
         
         if ($this->debug) {
@@ -127,11 +132,12 @@ class RestInputOuputFormatter
         function_exists('xdebug_disable') && xdebug_disable();
 
         register_shutdown_function(function () use ($event) {
-            $errorGetLast = error_get_last();
-            $message = "{$errorGetLast['message']} {$errorGetLast['file']}:{$errorGetLast['line']} ";
-            $data = array('success' => false, 'data' => '', 'message' => $message);
-            
-            echo json_encode($data);
+            $lastError = error_get_last();
+            echo json_encode(array(
+                'success' => false, 
+                'data' => '', 
+                'message' => "{$lastError['message']} {$lastError['file']}:{$lastError['line']} "
+            ));
             die;
             //TODO find a way to use kernely temrinate instead, usgin 
         });
