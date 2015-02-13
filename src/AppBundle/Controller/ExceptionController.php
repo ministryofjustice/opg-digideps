@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\FlattenException;
 use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Exception\DisplayableException;
 
 class ExceptionController extends Controller
 {
@@ -27,14 +28,16 @@ class ExceptionController extends Controller
 
         $code = $exception->getStatusCode();
         
-        return $this->render(
-            'AppBundle:Exception:500.html.twig', [
+        $vars = [
                 'status_code' => $code,
                 'status_text' => isset(Response::$statusTexts[$code]) ? Response::$statusTexts[$code] : '',
                 'exception' => $exception,
                 'logger' => $logger,
                 'currentContent' => $currentContent,
-        ]);
+                'displayable' => $exception->getClass() == 'AppBundle\Exception\DisplayableException'
+        ];
+        
+        return $this->render('AppBundle:Exception:default.html.twig', $vars);
     }
     
     /**
