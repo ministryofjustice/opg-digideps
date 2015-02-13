@@ -29,18 +29,24 @@ class UserController extends RestController
     {
         $data = $this->deserializeBodyContent();
 
+        //tmp
+        $data['role'] = 'ROLE_ADMIN';
+        
         // validate input
         array_map(function($k) use ($data) {
             if (!array_key_exists($k, $data)) {
                 throw new \InvalidArgumentException("Missing parameter $k");
             }
-        }, ['firstname', 'lastname', 'email']);
+        }, ['firstname', 'lastname', 'email', 'role']);
         
+        $role = $this->findEntityBy('Role', ['role'=>$data['role']], 'Role not found');
         
         $user = new \AppBundle\Entity\User();
         $user->setFirstname($data['firstname'])
                 ->setLastname($data['lastname'])
-                ->setEmail($data['email']);
+                ->setEmail($data['email'])
+                ->setRole($role);
+        
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush($user);
         
