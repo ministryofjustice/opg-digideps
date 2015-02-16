@@ -29,13 +29,15 @@ class UserController extends RestController
     {
         $data = $this->deserializeBodyContent();
 
-        
         // validate input
-        array_map(function($k) use ($data) {
-            if (!array_key_exists($k, $data)) {
+        foreach (['firstname', 'lastname', 'email'] as $k) {
+            if (empty($data[$k])) {
                 throw new \InvalidArgumentException("Missing parameter $k");
             }
-        }, ['firstname', 'lastname', 'email', 'role']);
+        }
+        if (empty($data['role']['role'])) {
+            throw new \InvalidArgumentException("Missing role");
+        }
         
         $role = $this->findEntityBy('Role', ['role'=>$data['role']['role']], 'Role not found');
         
