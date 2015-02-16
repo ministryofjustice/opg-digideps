@@ -29,8 +29,6 @@ class UserController extends RestController
     {
         $data = $this->deserializeBodyContent();
 
-        //tmp
-        $data['role'] = 'ROLE_ADMIN';
         
         // validate input
         array_map(function($k) use ($data) {
@@ -39,7 +37,7 @@ class UserController extends RestController
             }
         }, ['firstname', 'lastname', 'email', 'role']);
         
-        $role = $this->findEntityBy('Role', ['role'=>$data['role']], 'Role not found');
+        $role = $this->findEntityBy('Role', ['role'=>$data['role']['role']], 'Role not found');
         
         $user = new \AppBundle\Entity\User();
         $user->setFirstname($data['firstname'])
