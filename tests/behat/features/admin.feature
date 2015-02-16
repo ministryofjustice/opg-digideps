@@ -22,6 +22,7 @@ Feature: admin
             | admin_email | invalidEmail | 
             | admin_firstname | 1 | 
             | admin_lastname | 2 | 
+            | admin_role | ROLE_LAY_DEPUTY |
         And I press "admin_save"
         Then I should see "is not a valid email"
         And I should see "Your first name must be at least 2 characters long"
@@ -32,7 +33,9 @@ Feature: admin
             | admin_email | behat-user@publicguardian.gsi.gov.uk | 
             | admin_firstname | John | 
             | admin_lastname | Doe | 
+            | admin_role | ROLE_LAY_DEPUTY |
         And I click on "save"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
+        Then I should see "Lay Deputy" in the "users" region
         And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         
