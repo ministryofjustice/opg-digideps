@@ -27,24 +27,6 @@ abstract class RestController extends Controller
     
     /**
      * @param string $entityClass
-     * @param integer $id
-     * @param string $errorMessage
-     * 
-     * @throws \Exception
-     */
-    protected function findEntityById($entityClass, $id, $errorMessage = null)
-    {
-        $entity = $this->getRepository($entityClass)->find((int)$id);
-        
-        if (!$entity) {
-            throw new NotFound($errorMessage ?: $entityClass . ' not found');
-        }
-        
-        return $entity;
-    }
-    
-    /**
-     * @param string $entityClass
      * @param array|integer $criteriaOrId
      * @param string $errorMessage
      * 

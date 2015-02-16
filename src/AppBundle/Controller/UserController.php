@@ -62,7 +62,7 @@ class UserController extends RestController
      */
     public function update($id)
     {
-        $user = $this->findEntityById('User', $id, 'User not found'); /* @var $user User */
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
         
         $data = $this->deserializeBodyContent();
         
