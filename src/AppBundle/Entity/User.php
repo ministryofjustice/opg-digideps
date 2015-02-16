@@ -398,4 +398,13 @@ class User implements AdvancedUserInterface
         
         return  $diffSeconds < $expiresSeconds;
     }
+    
+    public function roleStringtoArray()
+    {
+        $this->setRole([
+            'role'=>$this->getRole()
+        ]);
+        
+        return $this;
+    }
 }

@@ -32,9 +32,7 @@ class AdminController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $user = $form->getData();
-                $user->setRole(['role'=>$user->getRole()]);
-                $response = $apiClient->postC('add_user', $user);
+                $response = $apiClient->postC('add_user', $form->getData()->roleStringtoArray());
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
                 // mail activation link
