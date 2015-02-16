@@ -56,17 +56,10 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("array")
-     * @JMS\Accessor(getter="getRole", setter="addRole")
-     * @var string $role
+     * @JMS\Accessor(getter="getRole", setter="setRole")
+     * @var Role $role
      */
     private $role;
-    
-    /**
-     * @JMS\Exclude
-     * @JMS\Accessor(getter="getRole", setter="addRole")
-     * @var type 
-     */
-    private $roles;
     
     /**
      * @JMS\Type("boolean")
@@ -248,7 +241,7 @@ class User implements AdvancedUserInterface
      * 
      * @param string $role
      */
-    public function addRole($role)
+    public function setRole($role)
     {
         $this->role = $role;
     }
