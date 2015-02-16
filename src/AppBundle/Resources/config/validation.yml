@@ -51,3 +51,7 @@ AppBundle\Entity\User:
                 pattern: /[0-9]/   
                 message: "user.password.noNumber"
                 groups: [ "user_set_password" ]
+        role:
+            - NotBlank:
+                message: "user.role.notBlank"
+                groups: [ "admin_add_user" ]
