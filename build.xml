@@ -47,6 +47,7 @@
 
    <target name="behat-init" description="Set up test db">
         <exec command="rm -f misc/tmp/behat*"></exec>
+        <exec command="chmod +x misc/scripts/aha/aha"></exec>
     </target>
 
 
