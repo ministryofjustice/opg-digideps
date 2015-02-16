@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Role\RoleInterface;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Roles
@@ -28,6 +29,7 @@ class Role implements RoleInterface
     private $name;
 
     /**
+     * @JMS\Exclude
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="role" )
      */
     private $user;
