@@ -4,6 +4,7 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
+
 {% block pageBody %}
 
     {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 2}%}
@@ -12,6 +13,3 @@
    
 
 {% endblock %}
-
-
-

@@ -30,3 +30,8 @@ header.page-header {
   }
 }
 
+#content {
+  p {
+    @include core-19;
+  }
+}

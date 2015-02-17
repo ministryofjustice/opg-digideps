@@ -1553,10 +1553,21 @@ header.page-header h1 {
         font-size: 18px;
         line-height: 1.2; } }
 
+#content p {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    #content p {
+      font-size: 16px;
+      line-height: 1.25; } }
+
 ol.progress {
   display: table;
   width: 100%;
-  margin: 24px 0 16px;
+  margin: 24px 0 0;
   padding: 0;
   counter-reset: pos;
   list-style-type: none;
