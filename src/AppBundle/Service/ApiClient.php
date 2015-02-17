@@ -152,7 +152,7 @@ class ApiClient extends GuzzleClient
      * @param string $endpoint
      * @param array $options
      * 
-     * @return stdClass[] array of entity objects
+     * @return stdClass[] array of entity objects, indexed by PK
      */
     public function getEntities($class, $endpoint, $options = [])
     {
@@ -160,7 +160,8 @@ class ApiClient extends GuzzleClient
         
         $ret = [];
         foreach ($responseArray['data'] as $row) { 
-            $ret[] = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+            $entity = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+            $ret[$entity->getId()] = $entity;
         }
         
         return $ret;
