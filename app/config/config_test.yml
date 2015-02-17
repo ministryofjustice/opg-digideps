@@ -8,9 +8,9 @@ framework:
     profiler:
         collect: false
 
-web_profiler:
-    toolbar: false
-    intercept_redirects: false
-
 swiftmailer:
     disable_delivery: true
+
+doctrine:
+    dbal:
+        dbname:   dd_api_unit_test

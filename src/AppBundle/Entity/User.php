@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Users
@@ -10,11 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="dd_user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User
+class User implements AdvancedUserInterface
 {
     /**
      * @var integer
-     *
+     * @JMS\Type("integer")
+     * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -42,7 +45,6 @@ class User
 
     /**
      * @var string
-     *
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
      */
     private $password;
@@ -56,20 +58,22 @@ class User
 
     /**
      * @var boolean
-     *
-     * @ORM\Column(name="active", type="boolean", nullable=true)
+     * @JMS\Type("boolean")
+     * 
+     * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
     private $active;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password_salt", type="string", length=100, nullable=true)
+     * @ORM\Column(name="salt", type="string", length=100, nullable=true)
      */
-    private $passwordSalt;
+    private $salt;
 
     /**
      * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
@@ -98,16 +102,17 @@ class User
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * 
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
     private $tokenDate;
 
     /**
      * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="users")
-     * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
+     * 
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
+     * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
      */
     private $role;
     
@@ -119,6 +124,7 @@ class User
      */
     private $gaTrackingId;
     
+    
     /**
      * Constructor
      */
@@ -126,8 +132,12 @@ class User
     {
         $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
+        
+        $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
+        $this->tokenDate = new \DateTime();
+        $this->password = '';
     }
-    
+
     /**
      * Get id
      *
@@ -170,18 +180,9 @@ class User
     public function setPassword($password)
     {
         $this->password = $password;
-
+        $this->setRegistrationToken('');
+        
         return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string 
-     */
-    public function getPassword()
-    {
-        return $this->password;
     }
 
     /**
@@ -192,7 +193,7 @@ class User
      */
     public function setEmail($email)
     {
-        $this->email = strtolower($email);
+        $this->email = $email;
 
         return $this;
     }
@@ -231,26 +232,16 @@ class User
     }
 
     /**
-     * Set passwordSalt
+     * Set salt
      *
-     * @param string $passwordSalt
+     * @param string $salt
      * @return User
      */
-    public function setPasswordSalt($passwordSalt)
+    public function setSalt($salt)
     {
-        $this->passwordSalt = $passwordSalt;
+        $this->salt = $salt;
 
         return $this;
-    }
-
-    /**
-     * Get passwordSalt
-     *
-     * @return string 
-     */
-    public function getPasswordSalt()
-    {
-        return $this->passwordSalt;
     }
 
     /**
@@ -285,7 +276,8 @@ class User
     public function setRegistrationToken($registrationToken)
     {
         $this->registrationToken = $registrationToken;
-
+        $this->setTokenDate(new \DateTime);
+        
         return $this;
     }
 
@@ -402,30 +394,30 @@ class User
     }
 
     /**
-     * Add cases
+     * Add clients
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param \AppBundle\Entity\Client $clients
      * @return User
      */
-    public function addClient(\AppBundle\Entity\Client $client)
+    public function addClient(\AppBundle\Entity\Client $clients)
     {
-        $this->clients[] = $client;
+        $this->clients[] = $clients;
 
         return $this;
     }
 
     /**
-     * Remove cases
+     * Remove clients
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param \AppBundle\Entity\Client $clients
      */
-    public function removeClient(\AppBundle\Entity\Client $client)
+    public function removeClient(\AppBundle\Entity\Client $clients)
     {
-        $this->clients->removeElement($client);
+        $this->clients->removeElement($clients);
     }
 
     /**
-     * Get cases
+     * Get clients
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
@@ -456,7 +448,54 @@ class User
     {
         return $this->role;
     }
-
+    
+    public function getUsername() 
+    {
+        return $this->email;
+    }
+    
+    public function getSalt() 
+    {
+        //return $this->salt;
+        return null;
+    }
+    
+    public function getPassword() 
+    {
+        return $this->password;
+    }
+    
+    public function getRoles() 
+    {
+        $roles = [ $this->role->getRole()];
+        
+        return $roles;
+    }
+    
+    public function eraseCredentials() 
+    {
+    }
+    
+    public function isAccountNonExpired()
+    {
+        return true;
+    }
+    
+    public function isAccountNonLocked()
+    {
+        return true;
+    }
+    
+    public function isCredentialsNonExpired()
+    {
+        return true;
+    }
+    
+    public function isEnabled()
+    {
+        return $this->active;
+    }
+    
     /**
      * Get gaTrackingId
      * 
@@ -470,5 +509,13 @@ class User
         $this->gaTrackingId = md5($this->id);
        
         return $this->gaTrackingId;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
     }
 }

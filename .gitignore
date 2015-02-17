@@ -1,4 +1,5 @@
 composer.phar
+.vagrant
 nbproject
 vendor/*
 app/cache/*
@@ -8,4 +9,7 @@ bin/behat
 bin/doctrine.php
 bin/doctrine
 .vagrant
+app/bootstrap.php.cache
+.DS_Store
+app/config/parameters.yml
 web/elb_healthcheck.html

@@ -1,20 +1,13 @@
 # This file is a "template" of what your parameters.yml file should look like
 parameters:
-    database_driver:   pdo_pgsql
-    database_host:     127.0.0.1
-    database_port:     5432
-    database_name:     digideps
-    database_user:     digideps
-    database_password: digideps
-    # You should uncomment this if you want use pdo_sqlite
-    # database_path: "%kernel.root_dir%/data.db3"
+    database_driver: pdo_pgsql
+    database_host: 127.0.0.1
+    database_port: 5432
+    database_name: dd_api
+    database_user: postgres
+    database_password: 123abc
+    locale: en
+    secret: ffd7b176b3e3ab1cc8324c379c9e7572b539e739
+    sendgrid_username: ojdsd-digideps-staging
+    sendgrid_password: DobEjSuej
 
-    mailer_transport:  smtp
-    mailer_host:       127.0.0.1
-    mailer_user:       ~
-    mailer_password:   ~
-
-    locale:            en
-
-    # A secret key that's used to generate certain security-related tokens
-    secret:            ThisTokenIsNotSoSecretChangeIt

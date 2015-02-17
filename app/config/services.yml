@@ -1,0 +1,19 @@
+services:
+    sendgrid:
+      class: SendGrid
+      arguments: [ "%sendgrid_username%", "%sendgrid_password%", {host: "api.sendgrid.com",} ]
+        
+    # pass it into Swift_Mailer to always write email into disk rather than sending them
+    mailer.transport.fileWriter:
+        class: AppBundle\Mailer\Transport\FileWriter
+        arguments: [ "/tmp/dd_mail_mock" ]
+        
+    mailer.transport.sendgrid:
+        class: AppBundle\Mailer\Transport\SendGridTransport
+        arguments: [ @sendgrid]
+        calls:
+            - [addEmailFileWriter, ["/^behat-/i", "/tmp/dd_mail_mock"]]
+    
+    mailer.service:
+        class: Swift_Mailer
+        arguments: [@mailer.transport.sendgrid]
