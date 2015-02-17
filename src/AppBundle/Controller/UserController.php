@@ -12,6 +12,7 @@ use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
 * @Route("user")
@@ -60,7 +61,15 @@ class UserController extends Controller
                  //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
                 
                 // redirect to step 2
-                return $this->redirect($this->generateUrl('user_details'));
+                 if($this->get('security.context')->isGranted('ROLE_ADMIN')){
+                    return $this->redirect($this->generateUrl('admin_homepage'));
+                //if a lay deputy    
+                }elseif($this->get('security.context')->isGranted('ROLE_LAY_DEPUTY')){
+                    return $this->redirect($this->generateUrl('user_details'));
+                //if no role throw exception    
+                }else{
+                    throw new AccessDeniedException();  
+                }
             }
         } 
         
