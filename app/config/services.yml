@@ -14,9 +14,13 @@ services:
         arguments: [ @translator ]
         tags:
             - { name: twig.extension }
-       
     mailSender:
         class: AppBundle\Service\MailSender
         arguments: [ @apiclient, @translator, @router ]
         calls:
             - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
+    kernel.listener.login_listener:
+        class: AppBundle\EventListener\LoginEventListener
+        arguments: [ @router, @security.context, @event_dispatcher ]
+        tags:
+            - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
