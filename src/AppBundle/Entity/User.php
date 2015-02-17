@@ -62,6 +62,12 @@ class User implements AdvancedUserInterface
     private $role;
     
     /**
+     * @JMS\Type("integer")
+     * @var integer
+     */
+    private $roleId;
+    
+    /**
      * @JMS\Type("boolean")
      * @var boolean $emailConfirmed
      */
@@ -399,12 +405,14 @@ class User implements AdvancedUserInterface
         return  $diffSeconds < $expiresSeconds;
     }
     
-    public function roleStringtoArray()
+    public function getRoleId()
     {
-        $this->setRole([
-            'role'=>$this->getRole()
-        ]);
-        
-        return $this;
+        return $this->roleId;
     }
+
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
+    }
+    
 }

@@ -20,7 +20,7 @@ class AddUserType extends AbstractType
     {
         $this->roleChoices[null] = '';
         foreach ($roles as $role) {
-            $this->roleChoices[$role->getRole()] = $role->getName();
+            $this->roleChoices[$role->getId()] = $role->getName();
         }
     }
 
@@ -29,7 +29,7 @@ class AddUserType extends AbstractType
         $builder ->add('email', 'text')
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
-                 ->add('role', 'choice', array(
+                 ->add('roleId', 'choice', array(
                     'choices' => $this->roleChoices
                   ))
                  ->add('save', 'submit');
