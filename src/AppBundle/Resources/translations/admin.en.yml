@@ -7,7 +7,7 @@ firstname:
 lastname:
   label: Last name
   hint: Please enter the lastname for this user
-role:
+role_id:
   label: Role
   hint: Please enter the role for this user  
 submit:

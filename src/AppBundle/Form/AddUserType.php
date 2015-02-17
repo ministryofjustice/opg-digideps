@@ -29,7 +29,7 @@ class AddUserType extends AbstractType
         $builder ->add('email', 'text')
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
-                 ->add('roleId', 'choice', array(
+                 ->add('role_id', 'choice', array(
                     'choices' => $this->roleChoices
                   ))
                  ->add('save', 'submit');
