@@ -8,6 +8,7 @@ use JMS\Serializer\Annotation as JMS;
  * @codeCoverageIgnore
  * @JMS\XmlRoot("user")
  * @JMS\AccessType("public_method")
+ * @JMS\ExclusionPolicy("none")
  */
 class User implements AdvancedUserInterface
 {   
@@ -54,9 +55,16 @@ class User implements AdvancedUserInterface
     private $active;
     
     /**
-     * @JMS\Type("string")
+     * @JMS\Type("array")
      * @JMS\Accessor(getter="getRole", setter="addRole")
-     * @var array $roles
+     * @var string $role
+     */
+    private $role;
+    
+    /**
+     * @JMS\Exclude
+     * @JMS\Accessor(getter="getRole", setter="addRole")
+     * @var type 
      */
     private $roles;
     
@@ -233,7 +241,7 @@ class User implements AdvancedUserInterface
      */
     public function getRoles()
     {
-        return $this->roles;
+        return [ $this->role['role'] ];
     }
     
     /**
@@ -242,12 +250,12 @@ class User implements AdvancedUserInterface
      */
     public function addRole($role)
     {
-        $this->roles[] = $role; 
+        $this->role = $role;
     }
     
     public function getRole()
     {
-        return $this->roles[0];
+        return $this->role;
     }
     
     /**
@@ -371,5 +379,30 @@ class User implements AdvancedUserInterface
     public function isEnabled()
     {
         return $this->active;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstname . ' ' . $this->lastname;
+    }
+    
+    /**
+     * @param integer $hoursExpires e.g 48 if the token expires after 48h
+     * 
+     * @return boolean
+     */
+    public function isTokenSentInTheLastHours($hoursExpires)
+    {
+        $expiresSeconds = $hoursExpires * 3600;
+        
+        $timeStampNow = (new \Datetime())->getTimestamp();
+        $timestampToken = $this->getTokenDate()->getTimestamp();
+        
+        $diffSeconds = $timeStampNow - $timestampToken;
+        
+        return  $diffSeconds < $expiresSeconds;
     }
 }

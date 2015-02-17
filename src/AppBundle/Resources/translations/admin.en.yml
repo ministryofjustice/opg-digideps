@@ -1,0 +1,11 @@
+email:
+  label: Email
+  hint: Please enter the email for this user
+firstname:
+  label: First name
+  hint: Please enter the firstname for this user
+lastname:
+  label: Last name
+  hint: Please enter the lastname for this user
+submit:
+  label: Submit

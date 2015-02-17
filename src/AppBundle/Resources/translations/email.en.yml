@@ -1,0 +1,60 @@
+activation:
+    subject: "Digideps - activation email"
+    body: |
+        Dear %name%,
+
+        Thank you very much for helping us to test the new OPG digital deputyship service.
+
+        We have set up a deputyship account for you. Please activate your account now by clicking the link below.
+
+        This is a test phase and you should not use real information about yourself or your client(s) to complete the report
+
+        (This link will expire in 24 hours and can only be used once.)
+        %link%
+
+
+        If you can't activate your account, email us at deputyshipservice@PublicGuardian.gsi.gov.uk
+
+        When you wish to return to your account after it is activated go to %domain%
+
+        Thank you,
+        Office of the Public Guardian, Digital Deputyship Service
+
+
+        Office of the Public Guardian
+
+        PO Box 16185, Birmingham B2 2WH
+
+        This email was automatically generated. Please don’t reply to this email address. 
+    bodyHtml: |
+        <br><br>
+        <p>Dear <strong>%name%</strong>,</p> 
+
+        <p>Thank you very much for helping us to test the new OPG digital deputyship service.</p>
+
+        <p>We have set up a deputyship account for you. Please activate your account now by clicking the link below. </p>
+
+        <p style="border-left: 6px solid #D53880; padding-left: 15px; max-width: 30em; margin: 22px 0px;">
+          This is a test phase and you should not use real information about yourself or your client(s) to complete the report
+        </p>
+
+        <p><strong>(This link will expire in 24 hours and can only be used once.)</strong></p>
+
+        <div style='background:#eee; padding:10px 15px; margin:0 0 10px 0; border-radius:5px; display: block;'> 
+            <a href="%link%">%link%</a>
+        </div>
+
+        <br/><br/>
+
+        <p>If you can't activate your account, email us at <a href="mailto:deputyshipservice@PublicGuardian.gsi.gov.uk">deputyshipservice@PublicGuardian.gsi.gov.uk</a></p>
+
+        <p>When you wish to return to your account after it is activated go to <a href="%domain%">%domain%</a></p> 
+
+        <p>Thank you, <br/>Office of the Public Guardian, Digital Deputyship Service </p>
+
+        <br/><br/>
+
+        <p><strong style="font-size:1.2em">Office of the Public Guardian</strong></p>
+        <p>PO Box 16185, Birmingham B2 2WH</p>
+
+        <p>This email was automatically generated. Please don’t reply to this email address. </p>

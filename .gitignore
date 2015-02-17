@@ -4,3 +4,13 @@ nbproject
 app/cache/*
 app/logs/*
 vendor/*
+misc/tmp/*
+.idea/*
+*.iml
+composer.phar
+.sass-cache/*
+node_modules/*
+app/config/parameters.yml
+bower_downloads/*
+web/bundles/*
+web/elb_healthcheck.html

@@ -1,25 +1,15 @@
-{% extends 'base.html.twig' %}
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "login" %}
 
-{% block body %}
+{% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
+{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData) }}</div>
-    {% endif %}
+{% block pageBody %}
 
-    <form action="{{ path('login_check') }}" method="post">
-        <label for="email">Email:</label>
-        <input type="text" id="email" name="email" value="{{ last_email }}" />
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" />
-
-        {#
-            If you want to control the URL the user
-            is redirected to on success (more details below)
-            <input type="hidden" name="_target_path" value="/account" />
-        #}
-
-        <button type="submit">login</button>
-    </form>
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
+    {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
+    {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
+    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
+    {{ form_end(form) }}
 
 {% endblock %}

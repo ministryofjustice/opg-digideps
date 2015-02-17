@@ -1,0 +1,15 @@
+.field-with-errors {
+    border-left: 3px solid $error-colour;
+    padding: 15px 0 15px 15px;
+}
+
+.field-with-errors input,
+.field-with-errors select {
+    border: 2px solid $error-colour
+}
+
+.field-with-errors {
+	li {
+		color: $error-colour
+	}
+}

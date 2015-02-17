@@ -1,0 +1,4 @@
+{% set buttonClass = buttonClass | default('') %}
+<div class="form-group">
+  {{ form_widget(element, { 'label': labelText ,  'attr': {'class': 'button ' ~ buttonClass } }) }}
+</div>

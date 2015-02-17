@@ -1,0 +1,28 @@
+# behat.yml
+default:
+    #http://docs.behat.org/en/latest/guides/6.profiles.html#custom-autoloading
+    autoload:
+        '': %paths.base%/tests/behat/bootstrap
+    suites:
+      mainJourney:
+        description: End to end journey
+        paths:    [ %paths.base%/tests/behat/features ]
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    mailFilePath: "/tmp/dd_mail_mock"
+                    xdebugMaxNestingLevel: 200
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            sessions:
+              default:
+                symfony2: ~   
+#            base_url: http://digideps-api.local/
+        #Behat\MinkExtension\Extension:
+        #Behat\MinkExtension\ServiceContainer\MinkExtension:
+        #    goutte:
+        #        guzzle_parameters: ~
+        #    selenium2: ~
+        #    base_url: http://digideps.behat.local/

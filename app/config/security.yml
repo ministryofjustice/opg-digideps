@@ -1,7 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
-        AppBundle\Entity\User: plaintext
+        AppBundle\Entity\User: sha512
 
     role_hierarchy:
         ROLE_LAY_DEPUTY: []
@@ -21,17 +21,21 @@ security:
         login:
             pattern:  ^/login$
             security: false
+            
+        userActivate:
+            pattern:  ^/user/activate
+            security: false
 
         secured_area:
             form_login:
                 check_path: /login_check
                 login_path: /login
-                username_parameter: email
-                password_parameter: password
+                username_parameter: login[email]
+                password_parameter: login[password]
             logout:
                 path:   /logout
                 target: /
-            #anonymous: ~
+            anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
 

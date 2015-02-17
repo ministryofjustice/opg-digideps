@@ -1,0 +1,24 @@
+{% extends 'application.html.twig' %}
+
+{% block pageContent %}
+    {% block pageHeader %}
+        {#% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Admin Deputyship service',
+        title: 'Add Users'
+        } %#}
+
+        <header class="page-header group">
+            <div class="hgroup">
+                <h1>
+                    <span>{% block serviceName %}Admin Deputyship service{% endblock %}</span>
+                    {% block title %}test{% endblock %}
+                </h1>
+            </div>
+        </header>
+
+
+    {% endblock %}
+    <div class="tabs">
+        {% block pageBody %}{% endblock %}
+    </div>
+{% endblock %}

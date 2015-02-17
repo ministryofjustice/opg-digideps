@@ -2,7 +2,6 @@
 <project name="main" default="help">
 
     <fileset dir="." id="source">
-        <include name="app/index.php" />
         <include name="src/**/*.php"/>
         <include name="web/*.php"/>
     </fileset>
@@ -16,23 +15,62 @@
         
         <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
         <echo msg="APC cache cleared"></echo>
+                 
+    <target name="phplint" description="Scan source for PHP syntax errors">
+        <phplint haltonfailure="true" cachefile="/tmp/ddClientPhingLintCacheFile" level="error">
+            <fileset refid="source" />
+        </phplint>
     </target>
 
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
         <if>
             <available file="composer.phar" />
             <then>
-                <exec command="./composer.phar self-update" checkreturn="true" passthru="true"/>
+                <exec command="php composer.phar self-update" checkreturn="true" passthru="true"/>
             </then>
             <else>
-                <exec command="wget http://getcomposer.org/composer.phar"/>
+                <exec command="curl -O http://getcomposer.org/composer.phar"/>
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
-        <exec command="./composer.phar install --optimize-autoloader" checkreturn="true" passthru="true"/>
+        <exec command="php composer.phar install" checkreturn="true" passthru="true"/>
+    </target>
+    
+    
+    <target name="optimise">
+        <exec passthru="true" command="php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
+    </target>
+    
+    
+    <target name="cache-clear" description="">
+<!--        <exec command="sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
+        <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
+        <exec command="rm -rf app/cache/*"/>
+        <exec command="rm -rf app/logs/*"/>
+        <echo msg="Permission on cache and logs set"></echo>
+        
+        <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
+        <echo msg="APC cache cleared"></echo>
+    </target>
+    
+
+    <target name="behat-init" description="Set up test db">
+        <exec command="rm -f misc/tmp/behat*"></exec>
+        <exec command="chmod +x misc/scripts/aha/aha"></exec>
     </target>
 
-    <target name="build" depends="composer-install,cache-clear">
+
+    <target name="behat" description="Run all the behat journeys" depends="behat-init">
+        <exec command="rm misc/build/behat.log*"></exec>
+        <exec command="cat /dev/null &gt; /tmp/dd_mail_mock"></exec>
+        <exec command="sudo chmod 777 /tmp/dd_mail_mock"></exec>
+        <exec command="vendor/behat/behat/bin/behat | tee misc/build/behat.log" checkreturn="true" passthru="true"  />
+        <!-- convert xTerm-coloured behat.log into HTML format -->
+        <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
     </target>
+
+    <target name="build" depends="cache-clear,composer-install">
+    
+    <target name="release" depends="cache-clear,composer-install">
 
 </project>

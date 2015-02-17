@@ -1,0 +1,31 @@
+{% set currentStep = currentStep %}
+{% set stepClasses = {
+    'active': 'progress--active', 
+    'completed': 'progress--completed', 
+    'previous': 'progress--previous' 
+} %}
+
+
+<ol class="progress">
+  <li class="{{ step_progress_class(1, currentStep, stepClasses) }}">
+    <div class="progress__step">
+      <span class="progress__label">{{ "stepTitle" | trans({}, "user-activate") }}</span>
+    </div>
+  </li>
+  <li class="{{ step_progress_class(2, currentStep, stepClasses) }}">
+    <div class="progress__step">
+      <span class="progress__label">Enter your details</span>
+    </div>
+  </li>
+  <li class="{{ step_progress_class(3, currentStep, stepClasses) }}">
+    <div class="progress__step">
+      <span class="progress__label">Add your client's details</span>
+    </div>
+  </li>
+  <li class="{{ step_progress_class(4, currentStep, stepClasses) }}">
+    <div class="progress__step">
+      <span class="visuallyhidden">Create a report</span>
+      <span class="progress__label">Create a report</span>
+    </div>
+  </li>
+</ol>

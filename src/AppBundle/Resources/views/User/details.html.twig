@@ -1,0 +1,17 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "user-details" %}
+
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+
+{% block pageBody %}
+
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 2}%}
+
+    <p class="behat-region-user-details">User details</p>
+   
+
+{% endblock %}
+
+
+

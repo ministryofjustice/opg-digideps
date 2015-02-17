@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+
+{% trans_default_domain "user-activate" %}
+
+{% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
+
+
+{% block content %}
+
+    {% include 'AppBundle:Partials:_service-header.html.twig' with {
+        serviceName: 'Deputyship service',
+        title: 'headerTitle' | trans
+        } %}
+
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 1}%}
+
+    <p>{{ 'headerInstructions' | trans }}</p>
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+      {{ form_input(form.email,'email', { 'labelClass': 'form-label-bold required' }) }}
+
+      {{ form_input(form.password.first,'password', { 'labelClass': 'form-label-bold required' } ) }}
+
+      {{ form_input(form.password.second,'password_confirm', { 'labelClass': 'form-label-bold required' } ) }}
+
+      {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'})}}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+
+

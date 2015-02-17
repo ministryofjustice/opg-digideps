@@ -4,7 +4,8 @@
     "type": "project",
     "description": "The \"Symfony Standard Edition\" distribution",
     "autoload": {
-        "psr-0": { "": "src/" }
+        "psr-0": { "": "src/" },
+        "psr-4": {"DigidepsBehat\\": "tests/behat/bootstrap" }
     },
     "require": {
         "php": ">=5.3.3",
@@ -18,7 +19,16 @@
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "guzzlehttp/guzzle": "~5.0",
-        "jms/serializer-bundle": "0.13.*"
+        "jms/serializer-bundle": "0.13.*",
+        "behat/behat": "3.*",
+        "behat/common-contexts": "*",
+        "behat/mink": "1.6.*",
+        "behat/mink-goutte-driver": "*",
+        "behat/mink-extension": "*",
+        "behat/mink-browserkit-driver": "*",
+        "behat/mink-selenium2-driver": "*",
+        "behat/symfony2-extension": "2.0",
+        "mockery/mockery": "0.9.*"
     },
     "scripts": {
         "post-install-cmd": [
