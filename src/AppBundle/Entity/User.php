@@ -56,17 +56,16 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("array")
-     * @JMS\Accessor(getter="getRole", setter="addRole")
-     * @var string $role
+     * @JMS\Accessor(getter="getRole", setter="setRole")
+     * @var Role $role
      */
     private $role;
     
     /**
-     * @JMS\Exclude
-     * @JMS\Accessor(getter="getRole", setter="addRole")
-     * @var type 
+     * @JMS\Type("integer")
+     * @var integer
      */
-    private $roles;
+    private $roleId;
     
     /**
      * @JMS\Type("boolean")
@@ -248,7 +247,7 @@ class User implements AdvancedUserInterface
      * 
      * @param string $role
      */
-    public function addRole($role)
+    public function setRole($role)
     {
         $this->role = $role;
     }
@@ -405,4 +404,15 @@ class User implements AdvancedUserInterface
         
         return  $diffSeconds < $expiresSeconds;
     }
+    
+    public function getRoleId()
+    {
+        return $this->roleId;
+    }
+
+    public function setRoleId($roleId)
+    {
+        $this->roleId = $roleId;
+    }
+    
 }

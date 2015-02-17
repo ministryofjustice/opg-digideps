@@ -80,7 +80,7 @@ class ApiClient extends GuzzleClient
      * @param RequestException $e
      * @return string
      */
-    private function getDebugREquestExceptionData(RequestException $e)
+    private function getDebugRequestExceptionData(RequestException $e)
     {
         if (!$this->debug) {
             return '';
@@ -116,7 +116,7 @@ class ApiClient extends GuzzleClient
         } catch (\Exception $e) {
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
-                $debugData = $this->getDebugREquestExceptionData($e);
+                $debugData = $this->getDebugRequestExceptionData($e);
                 
                 // try to unserialize response
                 try {
@@ -128,7 +128,7 @@ class ApiClient extends GuzzleClient
                 // regognise specific error codes and launche specific exception classes
                 switch ($responseArray['code']) {
                     case 404:
-                        throw new DisplayableException('Record not found.');
+                        throw new DisplayableException('Record not found.' . $debugData);
                     default:
                         throw new RuntimeException($responseArray['message'] . ' ' . $debugData);
                 }
@@ -152,7 +152,7 @@ class ApiClient extends GuzzleClient
      * @param string $endpoint
      * @param array $options
      * 
-     * @return stdClass[] array of entity objects
+     * @return stdClass[] array of entity objects, indexed by PK
      */
     public function getEntities($class, $endpoint, $options = [])
     {
@@ -160,7 +160,8 @@ class ApiClient extends GuzzleClient
         
         $ret = [];
         foreach ($responseArray['data'] as $row) { 
-            $ret[] = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+            $entity = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+            $ret[$entity->getId()] = $entity;
         }
         
         return $ret;

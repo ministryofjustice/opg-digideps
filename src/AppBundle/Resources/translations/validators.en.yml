@@ -17,3 +17,5 @@ user:
       noLowerCaseChars: The password must contain at least one lowercase character
       noUpperCaseChars: The password must contain at least one uppercase character    
       noNumber: The password must contain at least one number
+  role:
+      notBlank: You must specify a role for the user

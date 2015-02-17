@@ -24,12 +24,13 @@ class AdminController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        $form = $this->createForm(new AddUserType(), new User());
+        $roles = $this->get('apiclient')->getEntities('Role', 'list_roles');
+
+        $form = $this->createForm(new AddUserType($roles), new User());
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                
                 // add user
                 $response = $apiClient->postC('add_user', $form->getData());
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
@@ -44,11 +45,12 @@ class AdminController extends Controller
                 );
                 
                 return $this->redirect($this->generateUrl('admin_homepage'));
-            }
+            } 
         }
         
         return $this->render('AppBundle:Admin:index.html.twig', array(
             'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
+            'roles'=>$roles, 
             'form'=>$form->createView()
         ));
     }
