@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form\LoginType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class IndexController extends Controller
 {
@@ -51,5 +52,13 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
+    }
+    
+    /**
+     * @Route("/access-denied", name="access_denied")
+     */
+    public function accessDeniedAction()
+    {
+        throw new AccessDeniedException();
     }
 }

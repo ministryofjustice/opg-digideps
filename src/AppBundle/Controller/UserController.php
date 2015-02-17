@@ -12,6 +12,7 @@ use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
 * @Route("user")

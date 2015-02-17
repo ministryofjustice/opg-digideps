@@ -23,7 +23,7 @@ class ExceptionController extends Controller
      * @return Response
      */
     public function showExceptionAction(Request $request, FlattenException $exception, DebugLoggerInterface $logger = null)
-    {
+    {  
         $currentContent = $this->getAndCleanOutputBuffering($request->headers->get('X-Php-Ob-Level', -1));
 
         $code = $exception->getStatusCode();
@@ -36,7 +36,7 @@ class ExceptionController extends Controller
                 'currentContent' => $currentContent,
                 'displayable' => $exception->getClass() == 'AppBundle\Exception\DisplayableException'
         ];
-        
+       
         return $this->render('AppBundle:Exception:default.html.twig', $vars);
     }
     
