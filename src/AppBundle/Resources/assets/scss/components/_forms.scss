@@ -4,3 +4,14 @@
 .form-group_button-bar {
   padding-top: $gutter * 2;
 }
+
+.form-control__select-container {
+  border: 1px solid #bfc1c3;
+  width: 50%;
+}
+
+.form-control__select {
+  border: 0;
+  width: 100%;
+  -webkit-appearance: menulist;
+}

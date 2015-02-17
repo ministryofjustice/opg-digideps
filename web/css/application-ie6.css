@@ -1376,6 +1376,75 @@ input[type=number] {
       font-size: 14px;
       line-height: 1.14286; } }
 
+@font-face {
+  font-family: GDS-Logo;
+  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+.heading-medium-large {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 1.25em;
+  margin-bottom: 0.5em; }
+  @media (max-width: 640px) {
+    .heading-medium-large {
+      font-size: 20px;
+      line-height: 1.11111; } }
+
+header.page-header h1 {
+  padding-bottom: 0; }
+  header.page-header h1 span {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    line-height: 1;
+    padding-bottom: 15px; }
+    @media (max-width: 640px) {
+      header.page-header h1 span {
+        font-size: 18px;
+        line-height: 1.2; } }
+
+#content p {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    #content p {
+      font-size: 16px;
+      line-height: 1.25; } }
+
+.field-with-errors {
+  border-left: 3px solid #df3034;
+  padding: 15px 0 15px 15px; }
+
+.field-with-errors input,
+.field-with-errors select {
+  border: 2px solid #df3034; }
+
+.field-with-errors li {
+  color: #df3034; }
+
+.form-group_button-bar {
+  padding-top: 60px; }
+
+.form-control__select-container {
+  border: 1px solid #bfc1c3;
+  width: 50%; }
+
+.form-control__select {
+  border: 0;
+  width: 100%;
+  -webkit-appearance: menulist; }
+
 .column-full {
   width: 960px;
   padding: 0 15px;
@@ -1428,62 +1497,8 @@ input[type=number] {
     width: 75%;
     vertical-align: top; }
 
-.field-with-errors {
-  border-left: 3px solid #df3034;
-  padding: 15px 0 15px 15px; }
-
-.field-with-errors input,
-.field-with-errors select {
-  border: 2px solid #df3034; }
-
-.field-with-errors li {
-  color: #df3034; }
-
-@font-face {
-  font-family: GDS-Logo;
-  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
-@-ms-viewport {
-  width: device-width; }
-@-o-viewport {
-  width: device-width; }
-.heading-medium-large {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 27px;
-  line-height: 1.11111;
-  font-weight: 700;
-  text-transform: none;
-  margin-top: 1.25em;
-  margin-bottom: 0.5em; }
-  @media (max-width: 640px) {
-    .heading-medium-large {
-      font-size: 20px;
-      line-height: 1.11111; } }
-
-header.page-header h1 {
-  padding-bottom: 0; }
-  header.page-header h1 span {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    line-height: 1;
-    padding-bottom: 15px; }
-    @media (max-width: 640px) {
-      header.page-header h1 span {
-        font-size: 18px;
-        line-height: 1.2; } }
-
-#content p {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 19px;
-  line-height: 1.31579;
-  font-weight: 400;
-  text-transform: none; }
-  @media (max-width: 640px) {
-    #content p {
-      font-size: 16px;
-      line-height: 1.25; } }
+.page-body {
+  margin-top: 50px; }
 
 ol.progress {
   display: table;
@@ -1699,8 +1714,5 @@ ol.progress {
   display: none; }
   .tabs-panel.tabs-panel-selected {
     display: block; }
-
-.page-body {
-  margin-top: 50px; }
 
 /*# sourceMappingURL=application-ie6.css.map */
