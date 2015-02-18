@@ -20,11 +20,11 @@ class FormFieldsExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-                  'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
+            'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
             'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
-            'form_dropDown' => new \Twig_Function_Method($this, 'renderFormDropDown'),
-                  'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
-               ];
+            'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
+            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
+        ];
     }
     
     /**
@@ -75,7 +75,8 @@ class FormFieldsExtension extends \Twig_Extension
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
 
         //generate input field html using variables supplied
-        $html = $this->environment->render('AppBundle:Components/Form:_input.html.twig', [ 'labelText' => $labelText,
+        $html = $this->environment->render('AppBundle:Components/Form:_input.html.twig', [ 
+            'labelText' => $labelText,
             'hintText' => $hintText,
             'element'  => $element,
             'labelClass' => $labelClass
@@ -107,7 +108,8 @@ class FormFieldsExtension extends \Twig_Extension
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
 
         //generate select field html using variables supplied
-        $html = $this->environment->render('AppBundle:Components/Form:_select.html.twig', [ 'labelText' => $labelText,
+        $html = $this->environment->render('AppBundle:Components/Form:_select.html.twig', [ 
+            'labelText' => $labelText,
             'hintText' => $hintText,
             'element'  => $element,
             'labelClass' => $labelClass
