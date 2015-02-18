@@ -10,26 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CourtOrderTypeRepository")
  */
 class CourtOrderType
-{
-    // Don't change the numbers, or behat tests will fail
-    
-    const PERSONAL_WELFARE = 1;//Personal Welfare
-    const PROPERTY_AND_AFFAIRS = 2; //Property and Affairs
-    const PROPERTY_AND_AFFAIRS_AND_PERSONAL_WELFARE = 3;
-    
-   /**
-    * @return array
-    */
-   public static function getCourtOrderTypesArray()
-    {
-        return array(
-            self::PROPERTY_AND_AFFAIRS => 'Property and Affairs',
-            self::PERSONAL_WELFARE => 'Personal Welfare',
-            self::PROPERTY_AND_AFFAIRS_AND_PERSONAL_WELFARE => 'Property and Affairs & Personal Welfare'
-        );
-    }
-    
-    
+{ 
     /**
      * @var integer
      *
@@ -48,22 +29,17 @@ class CourtOrderType
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Client", mappedBy="courtOrderType")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="courtOrderType")
      */
-    private $clients;
+    private $reports;
     
-    
+   
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
+        $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
     }
         
     /**
@@ -98,19 +74,6 @@ class CourtOrderType
     {
         return $this->name;
     }
-    
-    /**
-     * Add cases
-     *
-     * @param \AppBundle\Entity\Client $client
-     * @return CourtOrderType
-     */
-    public function addClient(\AppBundle\Entity\Client $client)
-    {
-        $this->clients[] = $client;
-
-        return $this;
-    }
 
     /**
      * Remove cases
@@ -121,24 +84,37 @@ class CourtOrderType
     {
         $this->clients->removeElement($client);
     }
-
+    
     /**
-     * Get clients
+     * Add reports
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param \AppBundle\Entity\Report $reports
+     * @return CourtOrderType
      */
-    public function getClients()
+    public function addReport(\AppBundle\Entity\Report $reports)
     {
-        return $this->clients;
+        $this->reports[] = $reports;
+
+        return $this;
     }
 
     /**
-     * Remove clients
+     * Remove reports
      *
-     * @param \AppBundle\Entity\Client $clients
+     * @param \AppBundle\Entity\Report $reports
      */
-    public function removeClient(\AppBundle\Entity\Client $clients)
+    public function removeReport(\AppBundle\Entity\Report $reports)
     {
-        $this->clients->removeElement($clients);
+        $this->reports->removeElement($reports);
+    }
+
+    /**
+     * Get reports
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getReports()
+    {
+        return $this->reports;
     }
 }

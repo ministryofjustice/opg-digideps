@@ -60,6 +60,12 @@ class Report
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\PdfToken", mappedBy="report", cascade={"persist"})
      */
     private $pdfTokens;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
+     * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
+     */
+    private $courtOrderType;
 
     /**
      * @var string
@@ -131,7 +137,8 @@ class Report
      */
     private $submitted;
     
-    /**
+
+     /**
      * Constructor
      */
     public function __construct()
@@ -143,7 +150,7 @@ class Report
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
         $this->pdfTokens = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
     /**
      * Get id
      *
@@ -648,5 +655,28 @@ class Report
             }
         }
         return false;
+    }
+
+    /**
+     * Set courtOrderType
+     *
+     * @param \AppBundle\Entity\CourtOrderType $courtOrderType
+     * @return Report
+     */
+    public function setCourtOrderType(\AppBundle\Entity\CourtOrderType $courtOrderType = null)
+    {
+        $this->courtOrderType = $courtOrderType;
+
+        return $this;
+    }
+
+    /**
+     * Get courtOrderType
+     *
+     * @return \AppBundle\Entity\CourtOrderType 
+     */
+    public function getCourtOrderType()
+    {
+        return $this->courtOrderType;
     }
 }
