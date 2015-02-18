@@ -1,0 +1,33 @@
+<?php
+namespace AppBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Form\ClientType;
+
+
+/**
+ * @Route("/client")
+ */
+class ClientController extends Controller
+{
+    /**
+     * @Route("/add", name="client_add")
+     * @Template()
+     */
+    public function addAction()
+    {
+        $request = $this->getRequest();
+        
+        $form = $this->createForm(new ClientType(), null);
+        $form->handleRequest($request);
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                die('valid');
+            }
+        }
+        return [ 'form' => $form->createView() ];
+    }
+}

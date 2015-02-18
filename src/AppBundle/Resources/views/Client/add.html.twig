@@ -1,0 +1,17 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{#{% trans_default_domain "user-details" %}#}
+
+{% block pageTitle %} {% endblock %}
+{% block title %}{% trans %}sdfsdf{% endtrans %}{% endblock %}
+
+
+{% block pageBody %}
+
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 3}%}
+    
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
+    {{form_input(form.firstname, 'firstname')}}
+    {{form_input(form.lastname, 'lastname')}}
+    {{form_input(form.caseNumber, 'caseNumber')}}
+    {{ form_end(form) }}
+{% endblock %}
