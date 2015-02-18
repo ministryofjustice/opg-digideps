@@ -29,18 +29,6 @@ class Title
      */
     private $title;
     
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Profile", mappedBy="title", cascade={"persist"})
-     */
-    private $profiles;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Get id
@@ -75,36 +63,4 @@ class Title
         return $this->title;
     }
 
-    /**
-     * Add profiles
-     *
-     * @param \AppBundle\Entity\Profile $profiles
-     * @return Title
-     */
-    public function addProfile(\AppBundle\Entity\Profile $profiles)
-    {
-        $this->profiles[] = $profiles;
-
-        return $this;
-    }
-
-    /**
-     * Remove profiles
-     *
-     * @param \AppBundle\Entity\Profile $profiles
-     */
-    public function removeProfile(\AppBundle\Entity\Profile $profiles)
-    {
-        $this->profiles->removeElement($profiles);
-    }
-
-    /**
-     * Get profiles
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getProfiles()
-    {
-        return $this->profiles;
-    }
 }

@@ -25,11 +25,6 @@ class User implements AdvancedUserInterface
      */
     private $id;
     
-    /**
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Profile", mappedBy="user", cascade={"persist"})
-     */
-    private $profiles;
    
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
@@ -189,7 +184,6 @@ class User implements AdvancedUserInterface
      */
     public function __construct()
     {
-        $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
         
         $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
@@ -417,39 +411,6 @@ class User implements AdvancedUserInterface
     public function getTokenDate()
     {
         return $this->tokenDate;
-    }
-
-    /**
-     * Add profiles
-     *
-     * @param \AppBundle\Entity\Profile $profiles
-     * @return User
-     */
-    public function addProfile(\AppBundle\Entity\Profile $profiles)
-    {
-        $this->profiles[] = $profiles;
-
-        return $this;
-    }
-
-    /**
-     * Remove profiles
-     *
-     * @param \AppBundle\Entity\Profile $profiles
-     */
-    public function removeProfile(\AppBundle\Entity\Profile $profiles)
-    {
-        $this->profiles->removeElement($profiles);
-    }
-
-    /**
-     * Get profiles
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getProfiles()
-    {
-        return $this->profiles;
     }
 
     /**
