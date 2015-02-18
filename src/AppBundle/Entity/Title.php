@@ -12,17 +12,6 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Title
 {
-    const MR = 1;
-    const MRS = 2;
-    const MISS = 3;
-    const MS = 4;
-    const DR = 5;
-    const PROFESSOR = 6;
-    const SIR = 7;
-    const DAME = 8;
-    const LORD = 9;
-    const BARONESS = 10;
-    
     /**
      * @var integer
      *

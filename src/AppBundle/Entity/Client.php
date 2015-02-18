@@ -63,6 +63,20 @@ class Client
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private $address;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
+     */
+    private $address2;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="county", type="string", length=75, nullable=true)
+     */
+    private $county;
 
     /**
      * @var string
@@ -70,14 +84,13 @@ class Client
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     private $postcode;
-
+    
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Title", inversedBy="cases")
-     * @ORM\JoinColumn(name="title_id", referencedColumnName="id")
+     * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
-    private $title;
+    private $country;
 
     /**
      * @var string
@@ -92,14 +105,13 @@ class Client
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     private $lastname;
-
+    
     /**
-     * @var CourtOrderType
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="clients")
-     * @ORM\JoinColumn(name="court_order_type_id", referencedColumnName="id")
+     * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
+     * 
+     * @var array $allowedCourtOrderTypes
      */
-    private $courtOrderType;
+    private $allowedCourtOrderTypes;
 
     /**
      * @var \Date
@@ -114,6 +126,7 @@ class Client
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastedit;
+    
     /**
      * Constructor
      */
@@ -407,84 +420,103 @@ class Client
     }
 
     /**
-     * Set title
+     * Set allowedCourtOrderTypes
      *
-     * @param \AppBundle\Entity\Title $title
+     * @param array $allowedCourtOrderTypes
      * @return Client
      */
-    public function setTitle(\AppBundle\Entity\Title $title = null)
+    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
     {
-        $this->title = $title;
+        $this->allowedCourtOrderTypes = $allowedCourtOrderTypes;
 
         return $this;
     }
 
     /**
-     * Get title
+     * Get allowedCourtOrderTypes
      *
-     * @return \AppBundle\Entity\Title 
+     * @return array 
      */
-    public function getTitle()
+    public function getAllowedCourtOrderTypes()
     {
-        return $this->title;
-    }
-    
-    /**
-     * @return CourtOrderType
-     */
-    public function getCourtOrderType()
-    {
-        return $this->courtOrderType;
-    }
-
-    public function setCourtOrderType(CourtOrderType $courtOrderType)
-    {
-        $this->courtOrderType = $courtOrderType;
+        return $this->allowedCourtOrderTypes;
     }
 
     /**
      * Return full name, e.g. Mr John Smith
      */
     public function getFullName($space =  "&nbsp;")
-    {
-        $hasValidTitle = $this->getTitle() && $this->getTitle()->getTitle();
-        
-        return ($hasValidTitle ?  $this->getTitle()->getTitle() . $space : '')
-                . $this->getFirstname() . $space
-                . $this->getLastname();
+    {   
+        return $this->getFirstname() . $space. $this->getLastname();
     }
     
+
     /**
-     * @return boolean
+     * Set address2
+     *
+     * @param string $address2
+     * @return Client
      */
-    public function isPersonalWelfare()
+    public function setAddress2($address2)
     {
-        return $this->getCourtOrderType()->getId() == CourtOrderType::PERSONAL_WELFARE;
+        $this->address2 = $address2;
+
+        return $this;
     }
-    
+
     /**
-     * @return boolean
+     * Get address2
+     *
+     * @return string 
      */
-    public function isPropertyAndAffairs()
+    public function getAddress2()
     {
-        $courtOrderTypes = [ CourtOrderType::PROPERTY_AND_AFFAIRS, CourtOrderType::PROPERTY_AND_AFFAIRS_AND_PERSONAL_WELFARE];
-        return in_array($this->getCourtOrderType()->getId(), $courtOrderTypes);
+        return $this->address2;
     }
-    
+
     /**
-     * @return boolean
+     * Set county
+     *
+     * @param string $county
+     * @return Client
      */
-    public function hasAccounts()
+    public function setCounty($county)
     {
-        return $this->isPropertyAndAffairs();
+        $this->county = $county;
+
+        return $this;
     }
-    
+
     /**
-     * @return boolean
+     * Get county
+     *
+     * @return string 
      */
-    public function hasAssets()
+    public function getCounty()
     {
-        return $this->isPropertyAndAffairs();
+        return $this->county;
     }
-    
+
+    /**
+     * Set country
+     *
+     * @param string $country
+     * @return Client
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return string 
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
 }
