@@ -20,12 +20,14 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string $firstname
      */
     private $firstname;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string $lastname
      */
     private $lastname;
@@ -100,48 +102,56 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $address1;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $address2;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $address3;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $addressPostcode;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $addressCountry;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $phoneHome;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $phoneWork;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
      * @var string
      */
     private $phoneMobile;
