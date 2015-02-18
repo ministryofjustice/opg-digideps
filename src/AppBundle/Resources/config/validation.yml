@@ -1,3 +1,4 @@
+# validation rule for each entity
 AppBundle\Entity\User:
     properties:
         email:
@@ -13,22 +14,26 @@ AppBundle\Entity\User:
             - NotBlank:
                 message: "user.firstname.notBlank"
                 groups: [ "admin_add_user" ]
+                groups: [ "user_details" ]
             - Length:
                 min: 2
                 max: 50
                 minMessage: "user.firstname.minLength"
                 maxMessage: "user.firstname.maxength"
                 groups: [ "admin_add_user" ]
+                groups: [ "user_details" ]
         lastname:
             - NotBlank:
                 message: "user.lastname.notBlank"
                 groups: [ "admin_add_user" ]
+                groups: [ "user_details" ]
             - Length:
                 min: 2
                 max: 50
                 minMessage: "user.lastname.minLength"
                 maxMessage: "user.lastname.maxength"
                 groups: [ "admin_add_user" ]
+                groups: [ "user_details" ]
         password:
             - NotBlank:
                 message: "user.password.notBlank"
@@ -55,3 +60,36 @@ AppBundle\Entity\User:
             - NotBlank:
                 message: "user.role.notBlank"
                 groups: [ "admin_add_user" ]
+        address1:
+            - NotBlank:
+                message: "user.address1.notBlank"
+                groups: [ "user_details" ]
+        address2:
+            - NotBlank:
+                message: "user.address2.notBlank"
+                groups: [ "user_details" ]
+        address3:
+            - NotBlank:
+                message: "user.address3.notBlank"
+                groups: [ "user_details" ]
+        addressPostcode:
+            - NotBlank:
+                message: "user.addressPostcode.notBlank"
+                groups: [ "user_details" ]
+        addressCountry:
+            - NotBlank:
+                message: "user.addressCountry.notBlank"  
+                groups: [ "user_details" ]     
+        phoneHome:
+            - NotBlank:
+                message: "user.phoneHome.notBlank" 
+                groups: [ "user_details" ]
+        phoneWork:
+            - NotBlank:
+                message: "user.phoneWork.notBlank" 
+                groups: [ "user_details" ]
+        phoneMobile:
+            - NotBlank:
+                message: "user.phoneMobile.notBlank" 
+                groups: [ "user_details" ]
+                
