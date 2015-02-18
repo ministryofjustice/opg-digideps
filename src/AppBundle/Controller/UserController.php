@@ -30,16 +30,13 @@ class UserController extends RestController
         $data = $this->deserializeBodyContent();
 
         // validate input
-        foreach (['firstname', 'lastname', 'email'] as $k) {
+        foreach (['firstname', 'lastname', 'email', 'role_id'] as $k) {
             if (empty($data[$k])) {
                 throw new \InvalidArgumentException("Missing parameter $k");
             }
         }
-        if (empty($data['role']['role'])) {
-            throw new \InvalidArgumentException("Missing role");
-        }
         
-        $role = $this->findEntityBy('Role', ['role'=>$data['role']['role']], 'Role not found');
+        $role = $this->findEntityBy('Role', $data['role_id'], 'Role not found');
         
         $user = new \AppBundle\Entity\User();
         $user->setFirstname($data['firstname'])
