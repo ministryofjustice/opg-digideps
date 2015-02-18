@@ -60,14 +60,49 @@ class UserController extends RestController
     public function update($id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
-        
+
         $data = $this->deserializeBodyContent();
+        
+        // Cannot easily(*) use JSM deserialising with already constructed objects. 
+        // Also. It'd be possible to differentiate when a NULL value is intentional or not
+        // (*) see options here https://github.com/schmittjoh/serializer/issues/79
+        // http://jmsyst.com/libs/serializer/master/event_system
         
         if (array_key_exists('password', $data)) {
             $user->setPassword($data['password']);
         }
         if (array_key_exists('active', $data)) {
             $user->setActive((bool)$data['active']);
+        }
+        if (array_key_exists('firstname', $data)) {
+            $user->setFirstname($data['firstname']);
+        }
+        if (array_key_exists('lastname', $data)) {
+            $user->setLastname($data['lastname']);
+        }
+        if (array_key_exists('address1', $data)) {
+            $user->setAddress1($data['address1']);
+        }
+        if (array_key_exists('address2', $data)) {
+            $user->setAddress2($data['address2']);
+        }
+        if (array_key_exists('address3', $data)) {
+            $user->setAddress3($data['address3']);
+        }
+        if (array_key_exists('address_postcode', $data)) {
+            $user->setAddressPostcode($data['address_postcode']);
+        }
+        if (array_key_exists('address_country', $data)) {
+            $user->setAddressCountry($data['address_country']);
+        }
+        if (array_key_exists('phone_home', $data)) {
+            $user->setPhoneHome($data['phone_home']);
+        }
+        if (array_key_exists('phone_work', $data)) {
+            $user->setPhoneWork($data['phone_work']);
+        }
+        if (array_key_exists('phone_mobile', $data)) {
+            $user->setPhoneMobile($data['phone_mobile']);
         }
         
         $this->getEntityManager()->flush($user);
