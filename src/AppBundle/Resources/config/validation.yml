@@ -81,11 +81,11 @@ AppBundle\Entity\User:
                 message: "user.phoneHome.notBlank" 
                 groups: [ "user_details" ]
         phoneWork:
-            - NotBlank:
-                message: "user.phoneWork.notBlank" 
-                groups: [ "user_details" ]
+#            - NotBlank:
+#                message: "user.phoneWork.notBlank" 
+#                groups: [ "user_details" ]
         phoneMobile:
-            - NotBlank:
-                message: "user.phoneMobile.notBlank" 
-                groups: [ "user_details" ]
+#            - NotBlank:
+#                message: "user.phoneMobile.notBlank" 
+#                groups: [ "user_details" ]
                 
