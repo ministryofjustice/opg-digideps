@@ -18,7 +18,7 @@ class AddUserType extends AbstractType
      */
     public function __construct(array $roles)
     {
-        $this->roleChoices[null] = '';
+        $this->roleChoices[null] = 'Please select ...';
         foreach ($roles as $role) {
             $this->roleChoices[$role->getId()] = $role->getName();
         }
