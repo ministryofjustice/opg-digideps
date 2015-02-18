@@ -13,27 +13,23 @@ AppBundle\Entity\User:
         firstname:
             - NotBlank:
                 message: "user.firstname.notBlank"
-                groups: [ "admin_add_user" ]
-                groups: [ "user_details" ]
+                groups: [ "admin_add_user", "user_details" ]
             - Length:
                 min: 2
                 max: 50
                 minMessage: "user.firstname.minLength"
                 maxMessage: "user.firstname.maxength"
-                groups: [ "admin_add_user" ]
-                groups: [ "user_details" ]
+                groups: [ "admin_add_user", "user_details" ]
         lastname:
             - NotBlank:
                 message: "user.lastname.notBlank"
-                groups: [ "admin_add_user" ]
-                groups: [ "user_details" ]
+                groups: [ "admin_add_user", "user_details" ]
             - Length:
                 min: 2
                 max: 50
                 minMessage: "user.lastname.minLength"
                 maxMessage: "user.lastname.maxength"
-                groups: [ "admin_add_user" ]
-                groups: [ "user_details" ]
+                groups: [ "admin_add_user", "user_details" ]
         password:
             - NotBlank:
                 message: "user.password.notBlank"
