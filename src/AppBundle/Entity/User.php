@@ -97,6 +97,55 @@ class User implements AdvancedUserInterface
      */
     private $gaTrackingId;
     
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $address1;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $address2;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $address3;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $addressPostcode;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $addressCountry;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $phoneHome;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $phoneWork;
+    
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $phoneMobile;
+    
     /**
      * @return integer $id
      */
@@ -414,5 +463,86 @@ class User implements AdvancedUserInterface
     {
         $this->roleId = $roleId;
     }
+    
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    public function getAddressPostcode()
+    {
+        return $this->addressPostcode;
+    }
+
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    public function getPhoneHome()
+    {
+        return $this->phoneHome;
+    }
+
+    public function getPhoneWork()
+    {
+        return $this->phoneWork;
+    }
+
+    public function getPhoneMobile()
+    {
+        return $this->phoneMobile;
+    }
+
+    public function setAddress1($address1)
+    {
+        $this->address1 = $address1;
+    }
+
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+    }
+
+    public function setAddress3($address3)
+    {
+        $this->address3 = $address3;
+    }
+
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
+    }
+
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = $addressCountry;
+    }
+
+    public function setPhoneHome($phoneHome)
+    {
+        $this->phoneHome = $phoneHome;
+    }
+
+    public function setPhoneWork($phoneWork)
+    {
+        $this->phoneWork = $phoneWork;
+    }
+
+    public function setPhoneMobile($phoneMobile)
+    {
+        $this->phoneMobile = $phoneMobile;
+    }
+
     
 }
