@@ -86,6 +86,7 @@ class UserController extends Controller
      */
     public function detailsAction(Request $request)
     {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $user = $this->get('security.context')->getToken()->getUser();
 
         $formType = new UserDetailsType();
@@ -95,6 +96,8 @@ class UserController extends Controller
             $form->handleRequest($request);
 
             if ($form->isValid()) {
+                $apiClient->putC('user/' . $user->getId(), $form->getData());
+                
                 return $this->redirect($this->generateUrl('client_details'));
             }
         } 
