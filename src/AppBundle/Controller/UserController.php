@@ -96,7 +96,10 @@ class UserController extends Controller
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $apiClient->putC('user/' . $user->getId(), $form->getData());
+                
+                $apiClient->putC('user/' . $user->getId(), $form->getData(), [
+                    'deserialise_group' => 'user_details'] //only serialise the properties modified by this form)
+                );
                 
                 return $this->redirect($this->generateUrl('client_details'));
             }
