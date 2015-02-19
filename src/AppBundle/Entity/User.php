@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
@@ -20,20 +21,21 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details"})
+     * @JMS\Groups({"user_details", "admin_add_user"})
      * @var string $firstname
      */
     private $firstname;
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"user_details"})
+     * @JMS\Groups({"user_details", "admin_add_user"})
      * @var string $lastname
      */
     private $lastname;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"admin_add_user"})
      * @var string $email
      */
     private $email;
@@ -65,6 +67,7 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"admin_add_user"})
      * @var integer
      */
     private $roleId;
