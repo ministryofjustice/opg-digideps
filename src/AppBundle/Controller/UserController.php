@@ -68,42 +68,20 @@ class UserController extends RestController
         // (*) see options here https://github.com/schmittjoh/serializer/issues/79
         // http://jmsyst.com/libs/serializer/master/event_system
         
-        if (array_key_exists('password', $data)) {
-            $user->setPassword($data['password']);
-        }
-        if (array_key_exists('active', $data)) {
-            $user->setActive((bool)$data['active']);
-        }
-        if (array_key_exists('firstname', $data)) {
-            $user->setFirstname($data['firstname']);
-        }
-        if (array_key_exists('lastname', $data)) {
-            $user->setLastname($data['lastname']);
-        }
-        if (array_key_exists('address1', $data)) {
-            $user->setAddress1($data['address1']);
-        }
-        if (array_key_exists('address2', $data)) {
-            $user->setAddress2($data['address2']);
-        }
-        if (array_key_exists('address3', $data)) {
-            $user->setAddress3($data['address3']);
-        }
-        if (array_key_exists('address_postcode', $data)) {
-            $user->setAddressPostcode($data['address_postcode']);
-        }
-        if (array_key_exists('address_country', $data)) {
-            $user->setAddressCountry($data['address_country']);
-        }
-        if (array_key_exists('phone_home', $data)) {
-            $user->setPhoneHome($data['phone_home']);
-        }
-        if (array_key_exists('phone_work', $data)) {
-            $user->setPhoneWork($data['phone_work']);
-        }
-        if (array_key_exists('phone_mobile', $data)) {
-            $user->setPhoneMobile($data['phone_mobile']);
-        }
+        $this->hydrateEntityWithArrayData($user, $data, [
+            'password' => 'setPassword', 
+            'active' => 'setActive', 
+            'firstname' => 'setFirstname', 
+            'lastname' => 'setLastname', 
+            'address1' => 'setAddress1', 
+            'address2' => 'setAddress2', 
+            'address3' => 'setAddress3', 
+            'address_postcode' => 'setAddressPostcode', 
+            'address_country' => 'setAddressCountry', 
+            'phone_home' => 'setPhoneHome', 
+            'phone_work' => 'setPhoneWork', 
+            'phone_mobile' => 'setPhoneMobile'
+        ]);
         
         $this->getEntityManager()->flush($user);
         
