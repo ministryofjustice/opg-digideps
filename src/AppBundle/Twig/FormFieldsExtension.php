@@ -23,7 +23,8 @@ class FormFieldsExtension extends \Twig_Extension
             'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
             'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
-            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
+            'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
+            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass')
         ];
     }
     
@@ -84,6 +85,28 @@ class FormFieldsExtension extends \Twig_Extension
             'AppBundle:Components/Form:_select.html.twig', 
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
+    }
+    
+    public function renderFormKnownDate($element, $elementName,array $vars = [], $transIndex = null)
+    {
+        //lets get the translation for class and labelText
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        $domain = $element->parent->vars['translation_domain'];
+        
+        //sort hint text translation
+        $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
+        $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+        
+        //get legendText translation
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        
+        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        
+        $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
+                                                                                                'hintText' => $hintText,
+                                                                                                'element' => $element
+                                                                                              ]);
+        echo $html;
     }
     
     

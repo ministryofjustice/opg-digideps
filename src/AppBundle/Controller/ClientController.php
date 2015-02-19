@@ -3,20 +3,33 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Form\ClientType;
+use AppBundle\Entity\Client;
+
 
 /**
-* @Route("client")
-*/
+ * @Route("/client")
+ */
 class ClientController extends Controller
 {
-    
     /**
-     * @Route("/details", name="client_details")
+     * @Route("/add", name="client_add")
+     * @Template()
      */
-    public function detailsAction(Request $request)
+    public function addAction()
     {
-        return new Response('client details page. TODO');
+        $request = $this->getRequest();
+        
+        $form = $this->createForm(new ClientType(), new Client());
+        $form->handleRequest($request);
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                //print_r($form->getData()); die;
+                die('valid');
+            }
+        }
+        return [ 'form' => $form->createView() ];
     }
 }

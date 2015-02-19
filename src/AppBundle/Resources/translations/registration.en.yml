@@ -1,0 +1,26 @@
+addClient:
+    pageTitle: Add your client's details
+courtDate:
+    legend: Court order date
+firstname:
+    label: First name
+lastname:
+    label: Last name
+caseNumber:
+    label: Case number
+address:
+    label: Address
+address2:
+    label: ' '
+county:
+    label: ' '
+postcode:
+    label: Postcode
+country:
+    label: ' '
+phone:
+    label: Home Phone
+save:
+    label: Save
+
+    

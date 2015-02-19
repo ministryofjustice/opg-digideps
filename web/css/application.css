@@ -1508,12 +1508,15 @@ header.page-header h1 {
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
-  width: 50%; }
+  width: 50%;
+  background-color: #dee0e2;
+  border: 1px solid #0b0c0c; }
 
 .form-control__select {
   border: 0;
   width: 100%;
-  -webkit-appearance: menulist; }
+  -webkit-appearance: menulist;
+  opacity: 0.6; }
 
 .column-full {
   padding: 0 15px;

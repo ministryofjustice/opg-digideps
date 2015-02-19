@@ -36,3 +36,7 @@ user:
     notBlank: The work phone cannot be blank
   phoneMobile:
     notBlank:  The mobile phone cannot be blank
+registration:
+    firstname:
+        notBlank: Please enter your firstname
+        minMessage: Firstname must be at least {{ limit }} characters
