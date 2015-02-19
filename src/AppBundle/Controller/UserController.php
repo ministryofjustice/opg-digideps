@@ -87,8 +87,9 @@ class UserController extends Controller
     public function detailsAction(Request $request)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $user = $this->get('security.context')->getToken()->getUser();
-
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
+        
         $formType = new UserDetailsType();
         $form = $this->createForm($formType, $user);
         
@@ -103,7 +104,9 @@ class UserController extends Controller
                 
                 return $this->redirect($this->generateUrl('client_details'));
             }
-        } 
+        } else {
+            $form->setData($user);
+        }
         
         return $this->render('AppBundle:User:details.html.twig', [
              'form' => $form->createView()
