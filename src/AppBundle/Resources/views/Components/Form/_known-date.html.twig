@@ -1,24 +1,28 @@
-<div class="form-group field-with-errors">
+<div class="form-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
   <fieldset>
-    <legend class="form-label-bold">Date of birth</legend>
-    <ul><li>The last name cannot be blank</li></ul>
+    <legend class="form-label-bold">{{ legendText }}</legend>
+    (DD/MM/YYYY)
+    {% if not element.vars.valid %}
+        <ul><li>{{ form_errors(element) }}</li></ul>
+    {% endif %}
     <div class="form-date">
 
-      <p class="form-hint">For example, 31 3 1980</p>
+      <p class="form-hint">{{ hintText }}</p>
 
       <div class="form-group form-group-day">
-        <label for="dob-day">Day</label>
-        <input class="form-control" id="dob-day" type="number" pattern="[0-9]*" min="0" max="31">
+        {{ form_label(element.day,'Day', {'label_attr': {'for': 'dob-day'}}) }}
+        {{ form_widget(element.day, { 'attr': {'class': 'form-control', 'id': 'dob-day', 'pattern': '[0-9]'} }) }}
       </div>
-
+      
       <div class="form-group form-group-month">
-        <label for="dob-month">Month</label>
-        <input class="form-control" id="dob-month" type="number" pattern="[0-9]*" min="0" max="12">
+        {{ form_label(element.month,'Month', {'label_attr': {'for': 'dob-month'}}) }}
+        {{ form_widget(element.month, { 'attr': {'class': 'form-control', 'id': 'dob-month', 'pattern': '[0-9]'} }) }}
       </div>
-
+     
       <div class="form-group form-group-year">
-        <label for="dob-year">Year</label>
-        <input class="form-control" id="dob-year" type="number" pattern="[0-9]*" min="0" max="2014">
+        {{ form_label(element.year,'Year', {'label_attr': {'for': 'dob-year'}}) }}
+        {{ form_widget(element.year, { 'attr': {'class': 'form-control', 'id': 'dob-year', 'pattern': '[0-9]'} }) }}
+         
       </div>
     </div>
 

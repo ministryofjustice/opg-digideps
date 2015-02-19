@@ -60,8 +60,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $this->visitPath('/logout');
         $this->visitPath('/login');
-        $this->fillField('email',$email);
-        $this->fillField('password', $password);
+        $this->fillField('login_email',$email);
+        $this->fillField('login_password', $password);
         $this->iSubmitTheForm();
         $this->assertResponseStatus(200);
     }
@@ -114,21 +114,31 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function iSubmitTheForm()
     {
-        $this->getSession()->getPage()->pressButton('submitbutton');
+        $linkSelector = 'button[type=submit]';
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Found more than a $linkSelector element in the page. Interrupted");
+        }
+        if (count($linksElementsFound) === 0) {
+            throw new \RuntimeException("Element $linkSelector not found. Interrupted");
+        }
+        
+        // click on the found link
+        $linksElementsFound[0]->click();
     }
     
     /**
      * @When I change the client court order type to :value
      */
-    public function fillClientCourtOrderType($value)
-    {
-        $courtOrderTypeNameToId = array_flip(Application\Entity\CourtOrderType::getCourtOrderTypesArray());
-        if (empty($courtOrderTypeNameToId[$value])) {
-            throw new \Exception("Cannot find Court order type $value in the dropdown. Check 'CourtOrderType::getCourtOrderTypesArray()'");
-        }
-        
-        $this->getSession()->getPage()->fillField('court_order_type_id', $courtOrderTypeNameToId[$value]);
-    }
+//    public function fillClientCourtOrderType($value)
+//    {
+//        $courtOrderTypeNameToId = array_flip(Application\Entity\CourtOrderType::getCourtOrderTypesArray());
+//        if (empty($courtOrderTypeNameToId[$value])) {
+//            throw new \Exception("Cannot find Court order type $value in the dropdown. Check 'CourtOrderType::getCourtOrderTypesArray()'");
+//        }
+//        
+//        $this->getSession()->getPage()->fillField('court_order_type_id', $courtOrderTypeNameToId[$value]);
+//    }
     
     /**
      * @Then the page title should be :text
@@ -299,6 +309,19 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function theFormShouldNotContainAnError()
     {
         $this->iShouldNotSeeTheRegion('form-errors');
+    }
+    
+    
+     /**
+     * Fills in form fields with provided table.
+     *
+     * @Then /^the following fields should have the corresponding values:$/
+     */
+    public function fillFields(TableNode $fields)
+    {
+        foreach ($fields->getRowsHash() as $field => $value) {
+            $this->assertFieldContains($field, $value);
+        }
     }
 
 }

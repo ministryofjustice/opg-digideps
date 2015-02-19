@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use AppBundle\Form\UserDetailsType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -85,10 +86,30 @@ class UserController extends Controller
      */
     public function detailsAction(Request $request)
     {
-        $form = null;
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
+        
+        $formType = new UserDetailsType();
+        $form = $this->createForm($formType, $user);
+        
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                
+                $apiClient->putC('user/' . $user->getId(), $form->getData(), [
+                    'deserialise_group' => 'user_details'] //only serialise the properties modified by this form)
+                );
+                
+                return $this->redirect($this->generateUrl('client_add'));
+            }
+        } else {
+            $form->setData($user);
+        }
         
         return $this->render('AppBundle:User:details.html.twig', [
-             'form' => $form
+             'form' => $form->createView()
         ]);
     }
 }
