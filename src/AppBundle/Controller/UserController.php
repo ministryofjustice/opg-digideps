@@ -102,7 +102,7 @@ class UserController extends Controller
                     'deserialise_group' => 'user_details'] //only serialise the properties modified by this form)
                 );
                 
-                return $this->redirect($this->generateUrl('client_details'));
+                return $this->redirect($this->generateUrl('client_add'));
             }
         } else {
             $form->setData($user);
