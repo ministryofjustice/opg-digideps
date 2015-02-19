@@ -53,5 +53,20 @@ abstract class RestController extends Controller
     {
         return $this->getDoctrine()->getManager();
     }
+    
+    
+    /**
+     * @param mixed $object
+     * @param array $data
+     * @param array $keySetters
+     */
+    protected function hydrateEntityWithArrayData($object, array $data, array $keySetters)
+    {
+        foreach ($keySetters as $k=>$setter) {
+            if (array_key_exists($k, $data)) {
+                $object->$setter($data[$k]);
+            }
+        }
+    }
    
 }

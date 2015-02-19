@@ -25,11 +25,6 @@ class User implements AdvancedUserInterface
      */
     private $id;
     
-    /**
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Profile", mappedBy="user", cascade={"persist"})
-     */
-    private $profiles;
    
     /**
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
@@ -38,11 +33,20 @@ class User implements AdvancedUserInterface
 
     /**
      * @var string
-     *
+     * @JMS\Type("string")
+     * 
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
     private $firstname;
-
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
+     * @JMS\Type("string")
+     */
+    private $lastname;
+    
     /**
      * @var string
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
@@ -52,7 +56,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=60, nullable=false)
+     * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
      */
     private $email;
 
@@ -93,12 +97,6 @@ class User implements AdvancedUserInterface
      */
     private $emailConfirmed;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
-     */
-    private $lastname;
 
     /**
      * @var \DateTime
@@ -126,11 +124,66 @@ class User implements AdvancedUserInterface
     
     
     /**
+     * @var string
+     *
+     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
+     */
+    private $address1;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
+     */
+    private $address2;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
+     */
+    private $address3;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
+     */
+    private $addressPostcode;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
+     */
+    private $addressCountry;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone_work", type="string", length=20, nullable=true)
+     */
+    private $phoneWork;
+    
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="phone_home", type="string", length=20, nullable=true)
+     */
+    private $phoneHome;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phone_mobile", type="string", length=20, nullable=true)
+     */
+    private $phoneMobile;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->profiles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
         
         $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
@@ -216,7 +269,7 @@ class User implements AdvancedUserInterface
      */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->active = (bool)$active;
 
         return $this;
     }
@@ -361,39 +414,6 @@ class User implements AdvancedUserInterface
     }
 
     /**
-     * Add profiles
-     *
-     * @param \AppBundle\Entity\Profile $profiles
-     * @return User
-     */
-    public function addProfile(\AppBundle\Entity\Profile $profiles)
-    {
-        $this->profiles[] = $profiles;
-
-        return $this;
-    }
-
-    /**
-     * Remove profiles
-     *
-     * @param \AppBundle\Entity\Profile $profiles
-     */
-    public function removeProfile(\AppBundle\Entity\Profile $profiles)
-    {
-        $this->profiles->removeElement($profiles);
-    }
-
-    /**
-     * Get profiles
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getProfiles()
-    {
-        return $this->profiles;
-    }
-
-    /**
      * Add clients
      *
      * @param \AppBundle\Entity\Client $clients
@@ -518,4 +538,133 @@ class User implements AdvancedUserInterface
     {
         return $this->firstname . ' ' . $this->lastname;
     }
+    
+    /**
+     * @return string
+     */
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddressPostcode()
+    {
+        return $this->addressPostcode;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneWork()
+    {
+        return $this->phoneWork;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneHome()
+    {
+        return $this->phoneHome;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneMobile()
+    {
+        return $this->phoneMobile;
+    }
+
+    /**
+     * @return string
+     */
+    public function setAddress1($address1)
+    {
+        $this->address1 = $address1;
+    }
+
+    /**
+     * @return string
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+    }
+
+    /**
+     * @return string
+     */
+    public function setAddress3($address3)
+    {
+        $this->address3 = $address3;
+    }
+
+    /**
+     * @return string
+     */
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
+    }
+    
+    /**
+     * @return string
+     */
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = $addressCountry;
+    }
+
+    /**
+     * @return string
+     */
+    public function setPhoneWork($phoneWork)
+    {
+        $this->phoneWork = $phoneWork;
+    }
+
+    /**
+     * @return string
+     */
+    public function setPhoneHome($phoneHome)
+    {
+        $this->phoneHome = $phoneHome;
+    }
+
+    /**
+     * @return string
+     */
+    public function setPhoneMobile($phoneMobile)
+    {
+        $this->phoneMobile = $phoneMobile;
+    }
+
 }
