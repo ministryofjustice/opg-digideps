@@ -269,7 +269,7 @@ class User implements AdvancedUserInterface
      */
     public function setActive($active)
     {
-        $this->active = $active;
+        $this->active = (bool)$active;
 
         return $this;
     }
