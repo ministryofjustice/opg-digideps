@@ -1,4 +1,4 @@
-Feature: admin
+Feature: set password
     
     Scenario: login and add user
         Given I am on "/logout"
