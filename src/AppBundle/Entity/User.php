@@ -22,6 +22,9 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details", "admin_add_user"})
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "user_details"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "user_details"} )
+     * 
      * @var string $firstname
      */
     private $firstname;
@@ -29,6 +32,9 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details", "admin_add_user"})
+     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "user_details"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "user_details"} )
+     * 
      * @var string $lastname
      */
     private $lastname;
@@ -36,12 +42,20 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user"}, checkMX=true, checkHost=true )
      * @var string $email
      */
     private $email;
     
     /**
      * @JMS\Type("string")
+     *  @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password"} )
+     *  @Assert\Length( min=8, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password"} )
+     *  @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password"} )
+     *  @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password"} )
+     *  @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password"} )
+     * 
      * @var string $password
      */
     private $password;
@@ -68,6 +82,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"admin_add_user"})
+     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user"} )
+     * 
      * @var integer
      */
     private $roleId;
@@ -106,6 +122,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details"} )
+     * 
      * @var string
      */
     private $address1;
@@ -113,6 +131,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.address2.notBlank", groups={"user_details"} )
+     * 
      * @var string
      */
     private $address2;
@@ -120,6 +140,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.address3.notBlank", groups={"user_details"})
+     * 
      * @var string
      */
     private $address3;
@@ -127,6 +149,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details"} )   
+     * 
      * @var string
      */
     private $addressPostcode;
@@ -134,6 +158,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details"} )   
+     * 
      * @var string
      */
     private $addressCountry;
@@ -141,6 +167,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.phoneHome.notBlank", groups={"user_details"} )
+     * 
      * @var string
      */
     private $phoneHome;
