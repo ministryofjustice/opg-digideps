@@ -16,7 +16,6 @@ Feature: add details
             | user_details_phoneMobile | 079 123 456 78  |
         And I submit the form
         When I go to "user/details"
-        Then debug
         Then the following fields should have the corresponding values:
             | user_details_firstname | John |
             | user_details_lastname | Doe |
