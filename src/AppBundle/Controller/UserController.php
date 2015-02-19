@@ -33,6 +33,10 @@ class UserController extends RestController
         
         $this->populateUser($user, $data);
         
+        if ($user->getEmail() && $this->getRepository('User')->findOneBy(['email'=>$user->getEmail()])) {
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
+        }
+        
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush($user);
         
