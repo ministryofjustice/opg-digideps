@@ -55,3 +55,4 @@ AppBundle\Entity\User:
             - NotBlank:
                 message: "user.role.notBlank"
                 groups: [ "admin_add_user" ]
+                

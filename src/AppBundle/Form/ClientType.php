@@ -25,18 +25,20 @@ class ClientType extends AbstractType
                 ->add('postcode', 'text')
                 ->add('county', 'text')
                 ->add('country', 'country', [ 'preferred_choices' => ['GB']])
-                ->add('phone', 'text');
+                ->add('phone', 'text')
+                ->add('save', 'submit');
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
+            'translation_domain' => 'registration',
         ]);
     }
     
     protected function getAllowedCourtOrderTypes()
     {
-        return [ ];
+        return [ 'test', 'test2' ];
     }
     
     public function getName()

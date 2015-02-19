@@ -19,3 +19,8 @@ user:
       noNumber: The password must contain at least one number
   role:
       notBlank: You must specify a role for the user
+      
+registration:
+    firstname:
+        notBlank: Please enter your firstname
+        minMessage: Firstname must be at least {{ limit }} characters
