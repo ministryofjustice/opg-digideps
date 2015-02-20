@@ -91,8 +91,11 @@ class UserController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
-        
+        $basicForm = $this->get('security.context')->isGranted('ROLE_ADMIN');
+                
+                
         $formType = new UserDetailsType([
+            'basicForm' => $basicForm,
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
             'countryPreferredOptions' => $this->container->hasParameter('form_country_preferred_options')
                                          ? $this->container->getParameter('form_country_preferred_options') : []
@@ -105,17 +108,18 @@ class UserController extends Controller
             if ($form->isValid()) {
                 
                 $apiClient->putC('user/' . $user->getId(), $form->getData(), [
-                    'deserialise_group' => 'user_details'] //only serialise the properties modified by this form)
-                );
+                    'deserialise_group' => $basicForm ? 'user_details_basic' : 'user_details'
+                ]);
                 
-                return $this->redirect($this->generateUrl('client_add'));
+                return $this->redirect($this->generateUrl($basicForm ? 'admin_homepage' : 'client_add'));
             }
         } else {
             $form->setData($user);
         }
         
         return $this->render('AppBundle:User:details.html.twig', [
-             'form' => $form->createView()
+             'form' => $form->createView(),
+             'basicForm' => $basicForm
         ]);
     }
 }

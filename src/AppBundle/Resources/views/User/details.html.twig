@@ -20,22 +20,26 @@
       
       {{ form_input(form.lastname,'lastname', { 'labelClass': 'form-label-bold required' }) }}
       
-      {{ form_input(form.address1,'address1', { 'labelClass': 'form-label-bold required' }) }}
+      {% if not basicForm %}
       
-      {{ form_input(form.address2,'address2') }}
-      
-      {{ form_input(form.address3,'address3') }}
-      
-      {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {{ form_input(form.addressCountry,'addressCountry', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {{ form_input(form.phoneHome,'phoneHome', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {{ form_input(form.phoneWork,'phoneWork', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {{ form_input(form.phoneMobile,'phoneMobile', { 'labelClass': 'form-label-bold required' }) }}
+        {{ form_input(form.address1,'address1', { 'labelClass': 'form-label-bold required' }) }}
 
+        {{ form_input(form.address2,'address2') }}
+
+        {{ form_input(form.address3,'address3') }}
+
+        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'form-label-bold required' }) }}
+
+        {{ form_input(form.addressCountry,'addressCountry', { 'labelClass': 'form-label-bold required' }) }}
+
+        {{ form_input(form.phoneHome,'phoneHome', { 'labelClass': 'form-label-bold required' }) }}
+
+        {{ form_input(form.phoneWork,'phoneWork', { 'labelClass': 'form-label-bold required' }) }}
+
+        {{ form_input(form.phoneMobile,'phoneMobile', { 'labelClass': 'form-label-bold required' }) }}
+      
+      {% endif %}
+      
       {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'})}}
 
     {{ form_end(form) }}
