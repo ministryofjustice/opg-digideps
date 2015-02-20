@@ -28,7 +28,7 @@ class AdminController extends Controller
 
         $form = $this->createForm(new AddUserType([
             'roles' => $roles,
-            'roleIdEmptyValue' => $this->get('translator')->trans('role_id.defaultOption', [], 'admin')
+            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), new User());
         
         if ($request->isMethod('POST')) {
