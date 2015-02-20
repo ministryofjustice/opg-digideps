@@ -10,5 +10,6 @@ lastname:
 role_id:
   label: Role
   hint: Please enter the role for this user  
+  defaultOption: Please select ...
 submit:
   label: Submit

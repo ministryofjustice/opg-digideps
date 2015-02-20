@@ -14,14 +14,19 @@ class AddUserType extends AbstractType
     private $roleChoices = [];
     
     /**
+     * @var string 
+     */
+    private $roleIdEmptyValue;
+    
+    /**
      * @param Role[] $roles
      */
-    public function __construct(array $roles)
+    public function __construct(array $options)
     {
-        $this->roleChoices[null] = 'Please select ...';
-        foreach ($roles as $role) {
+        foreach ($options['roles'] as $role) {
             $this->roleChoices[$role->getId()] = $role->getName();
         }
+        $this->roleIdEmptyValue = $options['roleIdEmptyValue'];
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -30,7 +35,8 @@ class AddUserType extends AbstractType
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
                  ->add('role_id', 'choice', array(
-                    'choices' => $this->roleChoices
+                    'choices' => $this->roleChoices,
+                    'empty_value' => $this->roleIdEmptyValue
                   ))
                  ->add('save', 'submit');
     }

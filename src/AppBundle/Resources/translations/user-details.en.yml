@@ -1,3 +1,28 @@
 pageTitle: Enter your details
 headerTitle: Step 2 - Enter your details
 stepTitle: Enter your details
+headerInstructions: ""
+firstname:
+    label: First name
+lastname:
+    label: Last name
+address1:
+    label: Address 
+address2:
+    label: " "
+address3:
+    label: " "
+addressPostcode:
+    label: Postcode
+addressCountry:
+    label: " "
+    defaultOption: Please select ...
+phoneHome:
+    label: Home phone
+phoneWork:
+    label: Work phone
+phoneMobile:
+    label: Mobile phone
+submit:
+    label: Save
+cancelText: Cancel

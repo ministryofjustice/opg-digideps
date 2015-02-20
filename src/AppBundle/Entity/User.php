@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @codeCoverageIgnore
@@ -20,24 +21,41 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details", "admin_add_user"})
+     * @Assert\NotBlank( message="user.firstname.notBlank", groups={"admin_add_user", "user_details"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength", groups={"admin_add_user", "user_details"} )
+     * 
      * @var string $firstname
      */
     private $firstname;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"user_details", "admin_add_user"})
+     * @Assert\NotBlank(message="user.lastname.notBlank", groups={"admin_add_user", "user_details"} )
+     * @Assert\Length(min=2, max=50, minMessage="user.lastname.minLength", maxMessage="user.lastname.maxLength", groups={"admin_add_user", "user_details"} )
+     * 
      * @var string $lastname
      */
     private $lastname;
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"admin_add_user"})
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user"}, checkMX=true, checkHost=true )
      * @var string $email
      */
     private $email;
     
     /**
      * @JMS\Type("string")
+     *  @Assert\NotBlank( message="user.password.notBlank", groups={"user_set_password"} )
+     *  @Assert\Length( min=8, max=50, minMessage="user.password.minLength", maxMessage="user.password.maxLength", groups={"user_set_password"} )
+     *  @Assert\Regex( pattern="/[a-z]/" , message="user.password.noLowerCaseChars", groups={"user_set_password"} )
+     *  @Assert\Regex( pattern="/[A-Z]/" , message="user.password.noUpperCaseChars", groups={"user_set_password"} )
+     *  @Assert\Regex( pattern="/[0-9]/", message="user.password.noNumber", groups={"user_set_password"} )
+     * 
      * @var string $password
      */
     private $password;
@@ -63,6 +81,9 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"admin_add_user"})
+     * @Assert\NotBlank( message="user.role.notBlank", groups={"admin_add_user"} )
+     * 
      * @var integer
      */
     private $roleId;
@@ -96,6 +117,79 @@ class User implements AdvancedUserInterface
      * @var string $gaTrackingId
      */
     private $gaTrackingId;
+    
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details"} )
+     * 
+     * @var string
+     */
+    private $address1;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * 
+     * @var string
+     */
+    private $address2;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * 
+     * @var string
+     */
+    private $address3;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details"} )   
+     * @Assert\Length(min=2, max=50, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details"} )
+     * 
+     * @var string
+     */
+    private $addressPostcode;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.addressCountry.notBlank", groups={"user_details"} )   
+     * 
+     * @var string
+     */
+    private $addressCountry;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * @Assert\NotBlank( message="user.phoneHome.notBlank", groups={"user_details"} )
+     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details"} )
+     * 
+     * @var string
+     */
+    private $phoneHome;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details"} )
+     * 
+     * @var string
+     */
+    private $phoneWork;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"user_details"})
+     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details"} )
+     * 
+     * @var string
+     */
+    private $phoneMobile;
     
     /**
      * @return integer $id
@@ -414,5 +508,86 @@ class User implements AdvancedUserInterface
     {
         $this->roleId = $roleId;
     }
+    
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    public function getAddressPostcode()
+    {
+        return $this->addressPostcode;
+    }
+
+    public function getAddressCountry()
+    {
+        return $this->addressCountry;
+    }
+
+    public function getPhoneHome()
+    {
+        return $this->phoneHome;
+    }
+
+    public function getPhoneWork()
+    {
+        return $this->phoneWork;
+    }
+
+    public function getPhoneMobile()
+    {
+        return $this->phoneMobile;
+    }
+
+    public function setAddress1($address1)
+    {
+        $this->address1 = $address1;
+    }
+
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+    }
+
+    public function setAddress3($address3)
+    {
+        $this->address3 = $address3;
+    }
+
+    public function setAddressPostcode($addressPostcode)
+    {
+        $this->addressPostcode = $addressPostcode;
+    }
+
+    public function setAddressCountry($addressCountry)
+    {
+        $this->addressCountry = $addressCountry;
+    }
+
+    public function setPhoneHome($phoneHome)
+    {
+        $this->phoneHome = $phoneHome;
+    }
+
+    public function setPhoneWork($phoneWork)
+    {
+        $this->phoneWork = $phoneWork;
+    }
+
+    public function setPhoneMobile($phoneMobile)
+    {
+        $this->phoneMobile = $phoneMobile;
+    }
+
     
 }

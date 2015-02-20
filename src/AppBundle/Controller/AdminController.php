@@ -26,13 +26,18 @@ class AdminController extends Controller
         
         $roles = $this->get('apiclient')->getEntities('Role', 'list_roles');
 
-        $form = $this->createForm(new AddUserType($roles), new User());
+        $form = $this->createForm(new AddUserType([
+            'roles' => $roles,
+            'roleIdEmptyValue' => $this->get('translator')->trans('role_id.defaultOption', [], 'admin')
+        ]), new User());
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $apiClient->postC('add_user', $form->getData());
+                $response = $apiClient->postC('add_user', $form->getData(), [
+                    'deserialise_group' => 'admin_add_user'] //only serialise the properties modified by this form)
+                );
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
                 // mail activation link
