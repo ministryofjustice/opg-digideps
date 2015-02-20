@@ -19,7 +19,7 @@ class AddUserType extends AbstractType
     private $roleIdEmptyValue;
     
     /**
-     * @param Role[] $roles
+     * @param array $options keys: array roles, roleIdEmptyValue
      */
     public function __construct(array $options)
     {
