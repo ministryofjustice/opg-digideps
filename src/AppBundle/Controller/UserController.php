@@ -91,7 +91,9 @@ class UserController extends Controller
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         
         $formType = new UserDetailsType([
-            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate')
+            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
+            'countryPreferredOptions' => $this->container->hasParameter('form_country_preferred_options')
+                                         ? $this->container->getParameter('form_country_preferred_options') : []
         ]);
         $form = $this->createForm($formType, $user);
         
