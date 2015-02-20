@@ -31,7 +31,9 @@ class UserController extends Controller
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
         
-        if (!$user->isTokenSentInTheLastHours(48)) {
+        $hoursExpires = $this->container->hasParameter('token_expires_hours')
+                        ? $this->container->getParameter('token_expires_hours') : 48;
+        if (!$user->isTokenSentInTheLastHours($hoursExpires)) {
             throw new \RuntimeException("token expired, require new link");
         }
         
