@@ -28,6 +28,8 @@ user:
     notBlank: The address cannot be blank
   addressPostcode:
     notBlank: The postcode cannot be blank
+    minLength: The postcode must be at least {{ limit }} characters long
+    maxLength: The postcode cannot be longer than {{ limit }} characters long
   addressCountry:
     notBlank: The country cannot be blank
   phoneHome:

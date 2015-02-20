@@ -150,6 +150,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
      * @Assert\NotBlank( message="user.addressPostcode.notBlank", groups={"user_details"} )   
+     * @Assert\Length(min=2, max=50, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details"} )
      * 
      * @var string
      */
