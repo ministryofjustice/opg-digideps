@@ -2,10 +2,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Client
- *
+ * 
+ * @JMS\XmlRoot("client")
+ * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="client")
  * @ORM\Entity
  */
@@ -13,7 +16,7 @@ class Client
 {
     /**
      * @var integer
-     *
+     * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -22,7 +25,8 @@ class Client
     private $id;
     
     /**
-     *
+     * @JMS\Exclude
+     * @JMS\Type("ArrayCollection<Doctrine\Common\Collections\ArrayCollection>")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -32,11 +36,13 @@ class Client
     private $users;
     
     /**
+     * @JMS\Type("ArrayCollection<Doctrine\Common\Collections\ArrayCollection>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
@@ -44,6 +50,7 @@ class Client
     private $caseNumber;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=true)
@@ -51,6 +58,7 @@ class Client
     private $email;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
@@ -58,6 +66,7 @@ class Client
     private $phone;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
@@ -65,6 +74,7 @@ class Client
     private $address;
     
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
@@ -72,6 +82,7 @@ class Client
     private $address2;
     
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="county", type="string", length=75, nullable=true)
@@ -79,6 +90,7 @@ class Client
     private $county;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
@@ -86,6 +98,7 @@ class Client
     private $postcode;
     
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=10, nullable=true)
@@ -93,6 +106,7 @@ class Client
     private $country;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
@@ -100,6 +114,7 @@ class Client
     private $firstname;
 
     /**
+     * @JMS\Type("string")
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
@@ -107,6 +122,7 @@ class Client
     private $lastname;
     
     /**
+     * @JMS\Type("array")
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
      * 
      * @var array $allowedCourtOrderTypes
@@ -114,6 +130,7 @@ class Client
     private $allowedCourtOrderTypes;
 
     /**
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @var \Date
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
@@ -121,6 +138,7 @@ class Client
     private $courtDate;
 
     /**
+     * @JMS\Exclude
      * @var \DateTime
      *
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
