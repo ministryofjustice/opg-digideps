@@ -41,7 +41,7 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
                 {% endif %}
-                
+                 <li><a href="{{ path('user_details') }}">{% trans %}userDetails{% endtrans %}</a></li>
                 <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
             {% endif %}
         </ul>
