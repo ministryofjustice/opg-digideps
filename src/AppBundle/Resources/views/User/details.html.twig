@@ -20,7 +20,7 @@
       
       {{ form_input(form.lastname,'lastname', { 'labelClass': 'form-label-bold required' }) }}
       
-      {% if not basicForm %}
+      {% if not is_granted('ROLE_ADMIN') %}
       
         {{ form_input(form.address1,'address1', { 'labelClass': 'form-label-bold required' }) }}
 
