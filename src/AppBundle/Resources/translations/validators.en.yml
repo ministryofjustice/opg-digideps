@@ -20,7 +20,18 @@ user:
   role:
       notBlank: You must specify a role for the user
       
-registration:
+client:
     firstname:
         notBlank: Please enter your firstname
         minMessage: Firstname must be at least {{ limit }} characters
+    lastname:
+        notBlank: Please enter your lastname
+        minMessage: Lastname must be at least {{ limit }} characters
+    courtDate:
+        message: Please enter a valid court order date
+        notBlank: Please enter a court order date
+    address:
+        notBlank: Please enter your address
+    allowedCourtOrderTypes:
+        notBlank: Please select at least one court order type
+    

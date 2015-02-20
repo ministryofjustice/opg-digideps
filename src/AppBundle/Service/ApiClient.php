@@ -179,7 +179,6 @@ class ApiClient extends GuzzleClient
         if (is_object($bodyorEntity)) {
             $bodyorEntity = $this->serialiser->serialize($bodyorEntity, 'json');
         }
-        
         $responseArray = $this->deserialiseResponse($this->post($endpoint, ['body'=>$bodyorEntity]));
         
         return $responseArray['data'];

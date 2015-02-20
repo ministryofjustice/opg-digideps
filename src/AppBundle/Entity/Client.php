@@ -2,79 +2,99 @@
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as JMS;
 
+/**
+ * @JMS\XmlRoot("client")
+ */
 class Client
 {
     /**
-     * @Assert\NotBlank( message="registration.firstname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "registration.firstname.minMessage")
+     * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.firstname.notBlank" )
+     * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage")
      * @var string $firstname
      */
     private $firstname;
     
     /**
      *
+     * @JMS\Type("integer")
+     * @var array $user
+     */
+    private $user;
+    
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.lastname.notBlank" )
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage")
      * @var string $lastname
      */
     private $lastname;
     
     /**
-     *
+     * @JMS\Type("string")
      * @var string $caseNumber
      */
     private $caseNumber;
     
     /**
-     *
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @Assert\NotBlank( message="client.courtDate.notBlank")
+     * @Assert\Date( message="client.courtDate.message")
      * @var array $courtDate
      */
     private $courtDate;
     
     /**
-     *
+     * @JMS\Type("array")
+     * @Assert\notBlank( message = "client.allowedCourtOrderTypes.notBlank")
      * @var array allowedCourtOrderTypes
      */
     private $allowedCourtOrderTypes;
     
     /**
-     *
+     * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.address.notBlank")
      * @var string $address
      */
     private $address;
     
     /**
-     *
+     * @JMS\Type("string")
      * @var string $address2
      */
     private $address2;
     
     /**
-     *
+     * @JMS\Type("string")
      * @var string $county
      */
     private $county;
     
     /**
-     *
+     * @JMS\Type("string")
      * @var string $postcode
      */
     private $postcode;
     
     /**
-     *
+     * @JMS\Type("string")
      * @var string $country
      */
     private $country;
     
     /**
-     *
+     * @JMS\Type("string")
      * @var string $phone
      */
     private $phone;
+   
     
     public function __construct()
     {
         $this->allowedCourtOrderTypes = [];
+        //$this->users = [];
     }
     
     /**
@@ -93,6 +113,19 @@ class Client
     public function setFirstname($firstname)
     {
         $this->firstname = $firstname;
+    }
+    
+    
+    public function getUser()
+    {
+        return $this->user;
+    }
+    
+    
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
     }
     
     /**
@@ -165,6 +198,21 @@ class Client
     public function addAllowedCourtOrderType($allowedCourtOrderType)
     {
         $this->allowedCourtOrderTypes[] = $allowedCourtOrderType;
+    }
+    
+    /**
+     * @param array $allowedCourtOrderType
+     * @return boolean
+     */
+    public function removeAllowedCourtOrderType($allowedCourtOrderType)
+    {
+        $key = array_search($allowedCourtOrderType, $this->allowedCourtOrderTypes);
+        
+        if($key){
+            unset($this->allowedCourtOrderTypes[$key]);
+            return true;
+        }
+        return false;
     }
     
     /**

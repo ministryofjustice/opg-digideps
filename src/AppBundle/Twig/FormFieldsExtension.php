@@ -24,6 +24,7 @@ class FormFieldsExtension extends \Twig_Extension
             'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
+            'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass')
         ];
     }
@@ -135,12 +136,24 @@ class FormFieldsExtension extends \Twig_Extension
         echo $html;
     }
     
-    public function getName()
+    /**
+     * @param array $vars
+     * @throws type
+     */
+    public function renderFormCancelLink(array $vars = [])
     {
-        return 'form_input_extension';
+        $linkClass = isset($vars['linkClass'])? $vars['linkClass'] : null;
+        
+        if(!isset($vars['href'])){
+            throw new \Exception("You must specify 'href' for cancel link");
+        }
+        
+        $html = $this->environment->render('AppBundle:Components/Form:_cancel.html.twig', [ 'linkClass' => $linkClass,
+                                                                                            'href' => $vars['href']
+                                                                                          ]);
+        
+        echo $html;
     }
-    
-    
     
     /**
      * @param \Symfony\Component\Form\FormView $element
@@ -171,5 +184,10 @@ class FormFieldsExtension extends \Twig_Extension
             'element'  => $element,
             'labelClass' => $labelClass
         ];
+    }
+    
+    public function getName()
+    {
+        return 'form_input_extension';
     }
 }

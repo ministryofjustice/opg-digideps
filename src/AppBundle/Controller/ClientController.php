@@ -20,14 +20,18 @@ class ClientController extends Controller
     public function addAction()
     {
         $request = $this->getRequest();
+        $apiClient = $this->get('apiclient');
         
-        $form = $this->createForm(new ClientType(), new Client());
+        $client = new Client();
+        $client->setUser($this->getUser()->getId());
+        
+        $form = $this->createForm(new ClientType($apiClient), $client);
         $form->handleRequest($request);
         
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                //print_r($form->getData()); die;
-                die('valid');
+                $apiClient->postC('add_client', $form->getData());
+                return $this->redirect($this->generateUrl('report_create'));
             }
         }
         return [ 'form' => $form->createView() ];
