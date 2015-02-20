@@ -1,0 +1,22 @@
+    {{form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
+
+        <h1 class="form-title heading-medium-large ">
+             Client details
+         </h1>
+   
+    {{form_input(form.firstname, 'firstname')}}
+    {{form_input(form.lastname, 'lastname')}}
+    {{form_input(form.caseNumber, 'caseNumber')}}
+    {{form_known_date(form.courtDate, 'courtDate')}}
+    {{form_errors(form.allowedCourtOrderTypes)}}
+    {{form_label(form.allowedCourtOrderTypes)}}
+    {{form_widget(form.allowedCourtOrderTypes)}} <br/>
+    {{form_input(form.address, 'address')}}
+    {{form_input(form.address2, 'address2')}}
+    {{form_input(form.county, 'county')}}
+    {{form_input(form.postcode, 'postcode')}}
+    {{form_select(form.country, 'country')}}
+    {{form_input(form.phone, 'phone')}}
+    {{form_submit(form.save,'save')}}
+    {{form_cancel({ 'href': '#' })}}
+    {{form_end(form) }}

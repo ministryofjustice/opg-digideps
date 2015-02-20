@@ -7,15 +7,22 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
+    private $apiClient;
+    
+    public function __construct($apiClient) 
+    {
+        $this->apiClient = $apiClient;
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
         $builder ->add('firstname', 'text')
                  ->add('lastname', 'text')
                  ->add('caseNumber', 'text')
                  ->add('courtDate', 'date', [ 'widget' => 'text',
-                                              'input' => 'string',
-                                              'format' => 'dd-MM-yyyy'
+                                              'input' => 'datetime',
+                                              'format' => 'yyyy-MM-dd',
+                                              'invalid_message' => 'client.courtDate.message'
                                             ])
                 ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->getAllowedCourtOrderTypes(), 
                                                             'multiple' => true,
@@ -23,9 +30,10 @@ class ClientType extends AbstractType
                 ->add('address', 'text')
                 ->add('address2', 'text')
                 ->add('postcode', 'text')
-                ->add('county', 'text')
+                ->add('county','text')
                 ->add('country', 'country', [ 'preferred_choices' => ['GB']])
                 ->add('phone', 'text')
+                ->add('user', 'hidden')
                 ->add('save', 'submit');
     }
     
@@ -38,7 +46,17 @@ class ClientType extends AbstractType
     
     protected function getAllowedCourtOrderTypes()
     {
-        return [ 'test', 'test2' ];
+        $choices = [];
+        $response = $this->apiClient->get('get_all_court_order_type');
+        
+        if($response->getStatusCode() == 200){
+            $arrayData = $response->json();
+        
+            foreach($arrayData['data']['court_order_types'] as $value){
+                $choices[$value['id']] = $value['name'];
+            }
+        }
+        return $choices;
     }
     
     public function getName()

@@ -28,10 +28,10 @@ security:
 
         secured_area:
             form_login:
-                check_path: /login_check
+                #check_path: /login_check
                 login_path: /login
-                username_parameter: login[email]
-                password_parameter: login[password]
+                #username_parameter: login[email]
+                #password_parameter: login[password]
             logout:
                 path:   /logout
                 target: /

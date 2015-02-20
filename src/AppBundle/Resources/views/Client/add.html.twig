@@ -9,19 +9,5 @@
 
     {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 3}%}
     
-    {{form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
-    {{form_input(form.firstname, 'firstname')}}
-    {{form_input(form.lastname, 'lastname')}}
-    {{form_input(form.caseNumber, 'caseNumber')}}
-    {{form_known_date(form.courtDate, 'courtDate')}}
-    {{form_label(form.allowedCourtOrderTypes)}}
-    {{form_widget(form.allowedCourtOrderTypes)}} <br/>
-    {{form_input(form.address, 'address')}}
-    {{form_input(form.address2, 'address2')}}
-    {{form_input(form.county, 'county')}}
-    {{form_input(form.postcode, 'postcode')}}
-    {{form_select(form.country, 'country')}}
-    {{form_input(form.phone, 'phone')}}
-    {{form_submit(form.save,'save')}}
-    {{form_end(form) }}
+    {% include 'AppBundle:Client:_add.html.twig' %}
 {% endblock %}

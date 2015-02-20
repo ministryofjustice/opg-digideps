@@ -60,20 +60,10 @@ class UserController extends Controller
                 $this->get("security.context")->setToken($token); //now the user is logged in
                 
                  $this->get('session')->set('_security_secured_area', serialize($token));
-                 //$request = $this->get("request");
-                 //$event = new InteractiveLoginEvent($request, $token);
-                 //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-                
-                // redirect to step 2
-                 if($this->get('security.context')->isGranted('ROLE_ADMIN')){
-                    return $this->redirect($this->generateUrl('admin_homepage'));
-                //if a lay deputy    
-                }elseif($this->get('security.context')->isGranted('ROLE_LAY_DEPUTY')){
-                    return $this->redirect($this->generateUrl('user_details'));
-                //if no role throw exception    
-                }else{
-                    throw new AccessDeniedException();  
-                }
+                 
+                 $request = $this->get("request");
+                 $event = new InteractiveLoginEvent($request, $token);
+                 $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
             }
         } 
         

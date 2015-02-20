@@ -8,6 +8,7 @@ lastname:
     label: Last name
 caseNumber:
     label: Case number
+    hint: The case number is on the first page of the court order (top right-hand corner ).
 address:
     label: Address
 address2:
@@ -22,5 +23,8 @@ phone:
     label: Home Phone
 save:
     label: Save
+
+createReport:
+    pageTitle: Create a report
 
     
