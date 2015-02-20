@@ -14,7 +14,7 @@ class AddUserType extends AbstractType
     private $roleChoices = [];
     
     /**
-     * @var string 
+     * @var string
      */
     private $roleIdEmptyValue;
     
@@ -34,7 +34,7 @@ class AddUserType extends AbstractType
         $builder ->add('email', 'text')
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
-                 ->add('role_id', 'choice', array(
+                 ->add('roleId', 'choice', array(
                     'choices' => $this->roleChoices,
                     'empty_value' => $this->roleIdEmptyValue
                   ))
