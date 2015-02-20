@@ -167,6 +167,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
      * @Assert\NotBlank( message="user.phoneHome.notBlank", groups={"user_details"} )
+     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details"} )
      * 
      * @var string
      */
@@ -175,6 +176,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details"} )
+     * 
      * @var string
      */
     private $phoneWork;
@@ -182,6 +185,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
+     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details"} )
+     * 
      * @var string
      */
     private $phoneMobile;

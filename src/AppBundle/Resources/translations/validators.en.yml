@@ -32,6 +32,9 @@ user:
     maxLength: The postcode cannot be longer than {{ limit }} characters long
   addressCountry:
     notBlank: The country cannot be blank
+  genericPhone:
+    minLength: The phone number must be at least {{ limit }} characters long
+    maxLength: The phone number cannot be longer than {{ limit }} characters long
   phoneHome:
     notBlank: The home phone cannot be blank
   phoneWork:
