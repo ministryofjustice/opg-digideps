@@ -16,6 +16,7 @@ addressPostcode:
     label: Postcode
 addressCountry:
     label: " "
+    defaultOption: Please select ...
 phoneHome:
     label: Home phone
 phoneWork:

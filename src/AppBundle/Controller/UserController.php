@@ -90,7 +90,9 @@ class UserController extends Controller
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         
-        $formType = new UserDetailsType();
+        $formType = new UserDetailsType([
+            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate')
+        ]);
         $form = $this->createForm($formType, $user);
         
         if ($request->isMethod('POST')) {

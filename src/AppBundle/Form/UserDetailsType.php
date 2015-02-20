@@ -8,21 +8,32 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UserDetailsType extends AbstractType
 {
+    /**
+     * @var string
+     */
+    private $addressCountryEmptyValue;
+    
+    /**
+     * @param array $options needed keys: addressCountryEmptyValue
+     */
+    public function __construct($options)
+    {
+        $this->addressCountryEmptyValue = empty($options['addressCountryEmptyValue']) 
+                                        ? null : $options['addressCountryEmptyValue'];
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        
         $builder->add('firstname', 'text')
                 ->add('lastname', 'text')
                 ->add('address1', 'text')
                 ->add('address2', 'text')
                 ->add('address3', 'text')
                 ->add('addressPostcode', 'text')
-                ->add('addressCountry', 'choice', array(
-                    'choices' => [
-                        null => 'Please select ...',
-                        'uk' => 'United Kingdom',
-                    ]
-                ))
+                ->add('addressCountry', 'country', [
+                    'preferred_choices' => array('GB', ''),
+                    'empty_value' => $this->addressCountryEmptyValue
+                ])
                 ->add('phoneHome', 'text')
                 ->add('phoneWork', 'text')
                 ->add('phoneMobile', 'text')
@@ -34,7 +45,7 @@ class UserDetailsType extends AbstractType
     {
         $resolver->setDefaults( [
               'translation_domain' => 'user-details',
-               'validation_groups' => ['user_details'],
+              'validation_groups' => ['user_details'],
         ]);
     }
     
