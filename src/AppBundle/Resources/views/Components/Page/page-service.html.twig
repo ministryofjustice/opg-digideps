@@ -15,6 +15,11 @@
         </header>
     {% endblock %}
 
+    {% block pageNavigation %}{% endblock %}
 
-    {% block pageBody %}{% endblock %}
+    {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+
+    <div class="page-body">
+        {% block pageBody %}{% endblock %}
+    </div>
 {% endblock %}

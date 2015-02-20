@@ -4,15 +4,13 @@
 
 {% block pageTitle %}Administration - Users{% endblock %}
 {% block contentClass %}{{ parent() }} admin-users{% endblock %}
+{% block title %}Admin{% endblock %}
 
 
 {% block pageBody %}
-    <div class="page-body">
+    {% include 'AppBundle:Admin:_add.html.twig' %}
 
-        {% include 'AppBundle:Admin:_add.html.twig' %}
+    <h4>List users</h4>
+    {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
 
-        <h4>List users</h4>
-        {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
-
-    </div>
 {% endblock %}
