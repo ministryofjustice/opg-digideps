@@ -29,20 +29,13 @@ class UserController extends RestController
     {
         $data = $this->deserializeBodyContent();
 
-        // validate input
-        foreach (['firstname', 'lastname', 'email', 'role_id'] as $k) {
-            if (empty($data[$k])) {
-                throw new \InvalidArgumentException("Missing parameter $k");
-            }
-        }
-        
-        $role = $this->findEntityBy('Role', $data['role_id'], 'Role not found');
-        
         $user = new \AppBundle\Entity\User();
-        $user->setFirstname($data['firstname'])
-                ->setLastname($data['lastname'])
-                ->setEmail($data['email'])
-                ->setRole($role);
+        
+        $this->populateUser($user, $data);
+        
+        if ($user->getEmail() && $this->getRepository('User')->findOneBy(['email'=>$user->getEmail()])) {
+            throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
+        }
         
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush($user);
@@ -53,6 +46,7 @@ class UserController extends RestController
     }
     
     
+    
     /**
      * @Route("/{id}")
      * @Method({"PUT"})
@@ -60,15 +54,10 @@ class UserController extends RestController
     public function update($id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
-        
+
         $data = $this->deserializeBodyContent();
         
-        if (array_key_exists('password', $data)) {
-            $user->setPassword($data['password']);
-        }
-        if (array_key_exists('active', $data)) {
-            $user->setActive((bool)$data['active']);
-        }
+        $this->populateUser($user, $data);
         
         $this->getEntityManager()->flush($user);
         
@@ -115,6 +104,41 @@ class UserController extends RestController
     public function getByToken($token)
     {
         return $this->findEntityBy('User', ['registrationToken'=>$token], "User not found");
+    }
+    
+    /**
+     * call setters on User when $data contains values
+     * 
+     * @param User $user
+     * @param array $data
+     */
+    private function populateUser(User $user, array $data)
+    {
+        // Cannot easily(*) use JSM deserialising with already constructed objects. 
+        // Also. It'd be possible to differentiate when a NULL value is intentional or not
+        // (*) see options here https://github.com/schmittjoh/serializer/issues/79
+        // http://jmsyst.com/libs/serializer/master/event_system
+        
+        $this->hydrateEntityWithArrayData($user, $data, [
+            'firstname' => 'setFirstname', 
+            'lastname' => 'setLastname', 
+            'email' => 'setEmail', 
+            'password' => 'setPassword', 
+            'active' => 'setActive', 
+            'address1' => 'setAddress1', 
+            'address2' => 'setAddress2', 
+            'address3' => 'setAddress3', 
+            'address_postcode' => 'setAddressPostcode', 
+            'address_country' => 'setAddressCountry', 
+            'phone_home' => 'setPhoneHome', 
+            'phone_work' => 'setPhoneWork', 
+            'phone_mobile' => 'setPhoneMobile'
+        ]);
+        
+        if (array_key_exists('role_id', $data)) {
+            $role = $this->findEntityBy('Role', $data['role_id'], 'Role not found');
+            $user->setRole($role);
+        }
     }
     
 }
