@@ -10,7 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
-use AppBundle\Form\UserDetailsType;
+use AppBundle\Form\UserDetailsBasicType;
+use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -88,14 +89,51 @@ class UserController extends Controller
      */
     public function detailsAction(Request $request)
     {
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            return $this->detailsBasic($request);
+        } else {
+            return $this->detailsFull($request);
+        }
+    }
+    
+    private function detailsBasic(Request $request)
+    {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
-        $basicForm = $this->get('security.context')->isGranted('ROLE_ADMIN');
                 
+        $formType = new \AppBundle\Form\UserDetailsBasicType();
+        $form = $this->createForm($formType, $user);
+        
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
                 
-        $formType = new UserDetailsType([
-            'basicForm' => $basicForm,
+                $apiClient->putC('user/' . $user->getId(), $form->getData(), [
+                    'deserialise_group' => 'user_details_basic'
+                ]);
+                
+                return $this->redirect($this->generateUrl('client_add'));
+            }
+        } else {
+            $form->setData($user);
+        }
+        
+        return $this->render('AppBundle:User:details.html.twig', [
+             'form' => $form->createView(),
+             'basicForm' => true
+        ]);
+        
+    }
+    
+    private function detailsFull(Request $request)
+    {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
+                
+        $formType = new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
             'countryPreferredOptions' => $this->container->hasParameter('form_country_preferred_options')
                                          ? $this->container->getParameter('form_country_preferred_options') : []
@@ -108,10 +146,10 @@ class UserController extends Controller
             if ($form->isValid()) {
                 
                 $apiClient->putC('user/' . $user->getId(), $form->getData(), [
-                    'deserialise_group' => $basicForm ? 'user_details_basic' : 'user_details'
+                    'deserialise_group' => 'user_details_full'
                 ]);
                 
-                return $this->redirect($this->generateUrl($basicForm ? 'admin_homepage' : 'client_add'));
+                return $this->redirect($this->generateUrl('admin_homepage'));
             }
         } else {
             $form->setData($user);
@@ -119,7 +157,10 @@ class UserController extends Controller
         
         return $this->render('AppBundle:User:details.html.twig', [
              'form' => $form->createView(),
-             'basicForm' => $basicForm
+             'basicForm' => false
         ]);
+        
     }
+    
+    
 }
