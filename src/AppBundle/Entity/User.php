@@ -131,7 +131,6 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
-     * @Assert\NotBlank( message="user.address2.notBlank", groups={"user_details"} )
      * 
      * @var string
      */
@@ -140,7 +139,6 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details"})
-     * @Assert\NotBlank( message="user.address3.notBlank", groups={"user_details"})
      * 
      * @var string
      */
