@@ -32,11 +32,17 @@ class IndexController extends Controller
                 
                 try{
                     $user = $deputyProvider->loadUserByUsername($data['email']);
+                    
+                    $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+                    
+                    if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
+                        throw new \Exception("Invalid email or password");
+                    }
                 }catch(\Exception $e){
                     return [ 'form' => $form->createView(), 'error' => $e ];
                 }
                 
-                $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+                $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
                 $this->get("security.context")->setToken($token);
                 
                 $this->get('session')->set('_security_secured_area', serialize($token));
