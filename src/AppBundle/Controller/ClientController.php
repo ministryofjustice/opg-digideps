@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 namespace AppBundle\Controller;
 

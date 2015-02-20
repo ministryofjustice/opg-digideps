@@ -40,8 +40,7 @@ user:
   phoneWork:
     notBlank: The work phone cannot be blank
   phoneMobile:
-    notBlank:  The mobile phone cannot be blank
-      
+    notBlank:  The mobile phone cannot be blank      
 client:
     firstname:
         notBlank: Please enter your firstname
@@ -56,3 +55,9 @@ client:
         notBlank: Please enter your address
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
+login:
+    email:
+        notBlank: Please enter your email
+        inValid:  Please enter a valid email
+    password:
+        notBlank: Please enter your password
