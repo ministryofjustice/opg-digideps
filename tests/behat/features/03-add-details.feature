@@ -118,11 +118,25 @@ Feature: add details
     Scenario: add user details (admin user)
         Given I am logged in as "deputyshipservice@publicguardian.gsi.gov.uk" with password "test"
         When I click on "user details"
+        # missing firstname
+        And I fill in the following:
+            | user_details_firstname |  |
+            | user_details_lastname | Doe admin |
+        And I submit the form
+        Then the form should contain an error
+        # missing lastname
+        And I fill in the following:
+            | user_details_firstname | John admin |
+            | user_details_lastname |  |
+        And I submit the form
+        Then the form should contain an error
+        # correct
         And I fill in the following:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
         And I submit the form
-        When i click on "user details"
+        Then the form should not contain an error
+        When I click on "user details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
