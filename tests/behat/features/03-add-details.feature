@@ -11,7 +11,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry |  |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
@@ -25,7 +25,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry |  |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
@@ -39,7 +39,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry | GB |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
@@ -53,7 +53,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode |  |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry | GB |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
@@ -81,7 +81,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry | GB |
             | user_details_phoneHome |   |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
@@ -95,7 +95,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry | GB |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
@@ -108,7 +108,7 @@ Feature: add details
             | user_details_address2 | MOJ |
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | uk |
+            | user_details_addressCountry | GB |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
