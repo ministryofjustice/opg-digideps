@@ -106,7 +106,8 @@ class UserController extends Controller
         }
         
         return $this->render('AppBundle:User:details.html.twig', [
-             'form' => $form->createView(),
+            'form' => $form->createView(),
+            'twoStepsOnly' => $basicFormOnly
         ]);
         
     }
