@@ -46,7 +46,7 @@ class LoginEventListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if($this->security->isGranted('ROLE_ADMIN')){
-            $event->getResponse()->headers->set('Location', $this->router->generate('admin_homepage'));
+            $event->getResponse()->headers->set('Location', $this->router->generate('user_details'));
         }elseif($this->security->isGranted('ROLE_LAY_DEPUTY')){
             $event->getResponse()->headers->set('Location', $this->router->generate('user_details'));
         }else{

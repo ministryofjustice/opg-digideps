@@ -43,7 +43,7 @@
         <exec command="rm -rf app/logs/*"/>
         <echo msg="Permission on cache and logs set"></echo>
         
-        <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
+        <exec passthru="true" command="php -r &quot;function_exists('apc_clear_cache') and apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
         <echo msg="APC cache cleared"></echo>
     </target>
     
@@ -61,9 +61,10 @@
         <exec command="rm misc/build/behat.log*"></exec>
         <exec command="cat /dev/null &gt; /tmp/dd_mail_mock"></exec>
         <exec command="sudo chmod 777 /tmp/dd_mail_mock"></exec>
-        <exec command="vendor/behat/behat/bin/behat | tee misc/build/behat.log" checkreturn="true" passthru="true"  />
+        <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
         <!-- convert xTerm-coloured behat.log into HTML format -->
-        <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
+        <!-- TODO save output into  tee misc/build/behat.log -->
+         <!--<exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />--> 
     </target>
 
         
