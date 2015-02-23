@@ -51,7 +51,7 @@
         <exec command="php app/console digideps:validation" checkreturn="true" passthru="true"></exec>
     </target>
 
-    <target name="behat-init" description="Set up test db">
+    <target name="behat-init" description="Set up test db" depends="cache-clear">
         <exec command="rm -f misc/tmp/behat*"></exec>
         <exec command="chmod +x misc/scripts/aha/aha"></exec>
     </target>
