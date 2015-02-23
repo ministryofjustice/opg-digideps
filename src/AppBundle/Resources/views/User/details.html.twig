@@ -3,7 +3,7 @@
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
-{# {% block title %}{{ 'stepTitle' | trans }}{% endblock %} #}
+{% block stepTitle %}{{ 'stepTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     {% if not is_granted('ROLE_ADMIN') %}
@@ -30,7 +30,7 @@
 
         {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required' }) }}
 
-        {{ form_input(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
+        {{ form_select(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
 
         {{ form_input(form.phoneHome,'phoneHome', { 'labelClass': 'required' }) }}
 

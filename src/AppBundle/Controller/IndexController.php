@@ -62,7 +62,7 @@ class IndexController extends Controller
     {
         die('2');
     }
-    
+
     /**
      * @Route("/access-denied", name="access_denied")
      */
@@ -70,4 +70,18 @@ class IndexController extends Controller
     {
         throw new AccessDeniedException();
     }
+
+    /**
+     * @Route("/nick-test")
+     */
+    public function nickTestAction()
+    {
+
+        $myArray = [];
+        $myArray[] = ['name'=>'nick', 'age'=>20];
+        $myArray[] = ['name'=>'elvis', 'age'=>19];
+
+        return $this->render('AppBundle:Index:nick-test.html.twig', array('data' => $myArray));
+    }
+
 }
