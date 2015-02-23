@@ -36,11 +36,10 @@ class IndexController extends Controller
                     $encoder = $this->get('security.encoder_factory')->getEncoder($user);
                     
                     if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
-                        throw new \Exception("Invalid email or password");
+                        throw new \Exception("login.login.invalidMessage");
                     }
-                    
                 }catch(\Exception $e){
-                    return [ 'form' => $form->createView(), 'error' => $e ];
+                    return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
                 }
                 
                 $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());

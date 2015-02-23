@@ -8,6 +8,7 @@ password:
     label: Password
 login:
     label: Sign in
+    invalidMessage: Invalid email or password
 forgotPassword: Forgotten your password?
 
 #_security:

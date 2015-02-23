@@ -5,7 +5,6 @@
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
 {% block pageBody %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}

@@ -49,11 +49,10 @@
 {% endblock %}
 
 {% block afterHeader %}
-
     {# To style #}
-    {% if error.messageKey is defined %}
+    {% if error is defined %}
         <div style="color: #ddd;background-color: #ff0000;"
-             class="behat-region-header-errors">{{ error.messageKey|trans(error.messageData) }}</div>
+             class="behat-region-header-errors">{{ error|trans }}</div>
     {% endif %}
 
     {# To style #}
