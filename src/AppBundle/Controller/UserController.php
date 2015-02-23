@@ -66,10 +66,11 @@ class UserController extends Controller
                  $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
             }
         } 
-        
+
         return $this->render('AppBundle:User:activate.html.twig', [
             'token'=>$token, 
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'twoStepsOnly' => $user->getRole()['role'] == 'ROLE_ADMIN'
         ]);
     }
     
