@@ -48,7 +48,7 @@ class Client
     
     /**
      * @JMS\Type("array")
-     * @Assert\notBlank( message = "client.allowedCourtOrderTypes.notBlank")
+     * @Assert\NotBlank( message = "client.allowedCourtOrderTypes.notBlank")
      * @var array allowedCourtOrderTypes
      */
     private $allowedCourtOrderTypes;

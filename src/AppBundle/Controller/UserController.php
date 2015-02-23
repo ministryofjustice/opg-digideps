@@ -99,7 +99,7 @@ class UserController extends Controller
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
                 
-                return $this->redirect($this->generateUrl($basicFormOnly ? 'admin_homepage' : 'user_details'));
+                return $this->redirect($this->generateUrl($basicFormOnly ? 'admin_homepage' : 'client_add'));
             }
         } else {
             $form->setData($user);

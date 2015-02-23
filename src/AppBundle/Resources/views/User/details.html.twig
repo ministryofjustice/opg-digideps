@@ -3,7 +3,7 @@
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
-{% block title %}{{ 'stepTitle' | trans }}{% endblock %}
+{# {% block title %}{{ 'stepTitle' | trans }}{% endblock %} #}
 
 {% block pageNavigation %}
     {% if not is_granted('ROLE_ADMIN') %}
