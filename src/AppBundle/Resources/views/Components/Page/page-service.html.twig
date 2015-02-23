@@ -9,12 +9,17 @@
             <div class="hgroup">
                 <h1>
                     <span>{% block serviceName %}Deputyship service{% endblock %}</span>
-                    {% block title %}test{% endblock %}
+                    {% block title %}undefined{% endblock %}
                 </h1>
             </div>
         </header>
     {% endblock %}
 
+    {% block pageNavigation %}{% endblock %}
 
-    {% block pageBody %}{% endblock %}
+    {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+
+    <div class="page-body">
+        {% block pageBody %}{% endblock %}
+    </div>
 {% endblock %}

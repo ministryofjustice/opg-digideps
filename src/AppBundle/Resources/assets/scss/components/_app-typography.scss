@@ -7,17 +7,19 @@
 .heading-medium-large {
   @include bold-27();
 
-  margin-top: em(25, 20);
+  margin-top: 0;
   margin-bottom: em(10, 20);
 
   @include media(tablet) {
-    margin-top: em(45, 24);
+    margin-top: 0;
     margin-bottom: em(20, 24);
   }
 
 }
 
 header.page-header {
+  margin-bottom: 50px;
+
   h1 {
     padding-bottom: 0;
 
@@ -30,3 +32,8 @@ header.page-header {
   }
 }
 
+#content {
+  p {
+    @include core-19;
+  }
+}

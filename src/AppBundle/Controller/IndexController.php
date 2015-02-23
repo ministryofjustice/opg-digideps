@@ -3,47 +3,56 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Form\LoginType;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Form\FormError;
 
 class IndexController extends Controller
 {
     /**
      * @Route("login", name="login")
+     * @Template()
      */
     public function loginAction()
     {
         $request = $this->getRequest();
-        $session = $request->getSession();
 
-        $form = $this->createForm(new LoginType(), null, [ 'action' => $this->generateUrl('login_check')]);
+        $form = $this->createForm(new LoginType());
         $form->handleRequest($request);
         
-        // get the login error if there is one
-        if ($request->attributes->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $request->attributes->get(
-                SecurityContextInterface::AUTHENTICATION_ERROR
-            );
-        } elseif (null !== $session && $session->has(SecurityContextInterface::AUTHENTICATION_ERROR)) {
-            $error = $session->get(SecurityContextInterface::AUTHENTICATION_ERROR);
-            $session->remove(SecurityContextInterface::AUTHENTICATION_ERROR);
-        } else {
-            $error = null;
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                $deputyProvider = $this->get('deputyprovider');
+                $data = $form->getData();
+                
+                try{
+                    $user = $deputyProvider->loadUserByUsername($data['email']);
+                    
+                    $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+                    
+                    if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
+                        throw new \Exception("login.login.invalidMessage");
+                    }
+                }catch(\Exception $e){
+                    return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
+                }
+                
+                $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
+                $this->get("security.context")->setToken($token);
+                
+                $this->get('session')->set('_security_secured_area', serialize($token));
+                
+                $request = $this->get("request");
+                $event = new InteractiveLoginEvent($request, $token);
+                $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+            }
         }
-        
-        // last email entered by the user
-        $lastEmail = (null === $session) ? '' : $session->get(SecurityContextInterface::LAST_USERNAME);
-
-        return $this->render(
-            'AppBundle:Index:login.html.twig',
-            array(
-                // last email entered by the user
-                'last_email' => $lastEmail,
-                'error'         => $error,
-                'form' => $form->createView()
-            )
-        );
+        return [ 'form' => $form->createView()];
     }
     
     /**
@@ -51,5 +60,28 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
+        die('2');
     }
+
+    /**
+     * @Route("/access-denied", name="access_denied")
+     */
+    public function accessDeniedAction()
+    {
+        throw new AccessDeniedException();
+    }
+
+    /**
+     * @Route("/nick-test")
+     */
+    public function nickTestAction()
+    {
+
+        $myArray = [];
+        $myArray[] = ['name'=>'nick', 'age'=>20];
+        $myArray[] = ['name'=>'elvis', 'age'=>19];
+
+        return $this->render('AppBundle:Index:nick-test.html.twig', array('data' => $myArray));
+    }
+
 }

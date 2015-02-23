@@ -14,7 +14,7 @@ class DefaultController extends Controller
     {
         // depending on user data, redirect to specific page
         
-        return $this->redirect($this->generateUrl('user_details'));
+        //return $this->redirect($this->generateUrl('user_details'));
 //        return $this->render('AppBundle:default:index.html.twig');
     }
 }

@@ -1,0 +1,15 @@
+<div class="form-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+
+    {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
+
+    {{ form_errors(element) }}
+
+    {% if hintText is defined %}
+        <p class="form-hint">{{ hintText }}</p>
+    {% endif %}
+
+    <div class="form-control__select-container">
+        {{ form_widget(element, { 'attr': {'class': element.vars.attr.class | default('') ~ ' form-control form-control__select ' ~ inputClass | default('') } }) }}
+    </div>
+
+</div>

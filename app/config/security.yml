@@ -4,10 +4,10 @@ security:
         AppBundle\Entity\User: sha512
 
     role_hierarchy:
-        ROLE_LAY_DEPUTY: []
-        ROLE_PROFESSIONAL_DEPUTY: []
-        ROLE_LOCAL_AUTHORITY_DEPUTY: []
-        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_GUEST, ROLE_LAY_DEPUTY, ROLE_PROFESSIONAL_DEPUTY, ROLE_LOCAL_AUTHORITY_DEPUTY, ROLE_VISITOR ]
+        ROLE_LAY_DEPUTY: [ ROLE_DEPUTY ]
+        ROLE_PROFESSIONAL_DEPUTY: [ ROLE_DEPUTY ]
+        ROLE_LOCAL_AUTHORITY_DEPUTY: [ ROLE_DEPUTY ]
+        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_DEPUTY ]
 
     providers:
         deputy:
@@ -28,18 +28,20 @@ security:
 
         secured_area:
             form_login:
-                check_path: /login_check
+                #check_path: /login_check
                 login_path: /login
-                username_parameter: login[email]
-                password_parameter: login[password]
+                #username_parameter: login[email]
+                #password_parameter: login[password]
             logout:
                 path:   /logout
                 target: /
             anonymous: ~
+            switch_user: true
             #http_basic:
             #    realm: "Secured Demo Area"
 
     access_control:
         #- { path: ^/demo/secured/hello/admin/, roles: ROLE_ADMIN }
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }

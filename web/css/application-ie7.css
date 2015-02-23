@@ -1419,6 +1419,82 @@ input[type=number] {
       font-size: 14px;
       line-height: 1.14286; } }
 
+@font-face {
+  font-family: GDS-Logo;
+  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+.heading-medium-large {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 0;
+  margin-bottom: 0.5em;
+  margin-top: 0;
+  margin-bottom: 0.83333em; }
+  @media (max-width: 640px) {
+    .heading-medium-large {
+      font-size: 20px;
+      line-height: 1.11111; } }
+
+header.page-header {
+  margin-bottom: 50px; }
+  header.page-header h1 {
+    padding-bottom: 0; }
+    header.page-header h1 span {
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 400;
+      text-transform: none;
+      line-height: 1;
+      padding-bottom: 15px; }
+      @media (max-width: 640px) {
+        header.page-header h1 span {
+          font-size: 18px;
+          line-height: 1.2; } }
+
+#content p {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    #content p {
+      font-size: 16px;
+      line-height: 1.25; } }
+
+.field-with-errors {
+  border-left: 3px solid #df3034;
+  padding: 15px 0 15px 15px; }
+
+.field-with-errors input,
+.field-with-errors select {
+  border: 2px solid #df3034; }
+
+.field-with-errors li {
+  color: #df3034; }
+
+.form-group_button-bar {
+  padding-top: 60px; }
+
+.form-control__select-container {
+  border: 1px solid #bfc1c3;
+  width: 50%;
+  background-color: #dee0e2;
+  border: 1px solid #0b0c0c; }
+
+.form-control__select {
+  border: 0;
+  width: 100%;
+  -webkit-appearance: menulist;
+  opacity: 0.6; }
+
 .column-full {
   float: left;
   width: 100%;
@@ -1477,58 +1553,14 @@ input[type=number] {
     width: auto;
     vertical-align: baseline; }
 
-.field-with-errors {
-  border-left: 3px solid #df3034;
-  padding: 15px 0 15px 15px; }
-
-.field-with-errors input,
-.field-with-errors select {
-  border: 2px solid #df3034; }
-
-.field-with-errors li {
-  color: #df3034; }
-
-@font-face {
-  font-family: GDS-Logo;
-  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
-@-ms-viewport {
-  width: device-width; }
-@-o-viewport {
-  width: device-width; }
-.heading-medium-large {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 27px;
-  line-height: 1.11111;
-  font-weight: 700;
-  text-transform: none;
-  margin-top: 1.25em;
-  margin-bottom: 0.5em;
-  margin-top: 1.875em;
-  margin-bottom: 0.83333em; }
-  @media (max-width: 640px) {
-    .heading-medium-large {
-      font-size: 20px;
-      line-height: 1.11111; } }
-
-header.page-header h1 {
-  padding-bottom: 0; }
-  header.page-header h1 span {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    line-height: 1;
-    padding-bottom: 15px; }
-    @media (max-width: 640px) {
-      header.page-header h1 span {
-        font-size: 18px;
-        line-height: 1.2; } }
+.page-body {
+  margin-top: 50px;
+  overflow: hidden; }
 
 ol.progress {
   display: table;
   width: 100%;
-  margin: 24px 0 16px;
+  margin: 24px 0 0;
   padding: 0;
   counter-reset: pos;
   list-style-type: none;
@@ -1745,7 +1777,39 @@ ol.progress {
   .tabs-panel.tabs-panel-selected {
     display: block; }
 
-.page-body {
-  margin-top: 50px; }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+@font-face {
+  font-family: GDS-Logo;
+  src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
+@-ms-viewport {
+  width: device-width; }
+@-o-viewport {
+  width: device-width; }
+.validation-summary-container {
+  width: 50%;
+  padding: 0;
+  margin: 0;
+  display: none; }
+
+.validation-summary {
+  border-width: 0 0 0 3px;
+  margin: 60px 0 0 0;
+  background-color: #fdebf2; }
+  .validation-summary ul {
+    list-style: disc;
+    margin-left: 20px; }
+  .validation-summary li {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .validation-summary li {
+        font-size: 16px;
+        line-height: 1.25; } }
 
 /*# sourceMappingURL=application-ie7.css.map */

@@ -1,12 +1,13 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    <h1 class="form-title heading-medium-large ">
+    <h1 class="form-title heading-medium-large">
         Add a user
     </h1>
 
   {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
   {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
   {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
+  {{ form_select(form.roleId,'roleId', { 'labelClass': 'required' }) }}
   {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
 
 {# KNOWN DATE #}

@@ -21,6 +21,9 @@
             <fileset refid="source" />
         </phplint>
     </target>
+    
+    
+   
 
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
         <if>
@@ -53,6 +56,9 @@
         <echo msg="APC cache cleared"></echo>
     </target>
     
+    <target name="check-validation" description="Scan source for PHP syntax errors">
+        <exec command="php app/console digideps:validation" checkreturn="true" passthru="true"></exec>
+    </target>
 
     <target name="behat-init" description="Set up test db">
         <exec command="rm -f misc/tmp/behat*"></exec>
@@ -68,9 +74,11 @@
         <!-- convert xTerm-coloured behat.log into HTML format -->
         <exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
     </target>
-
-    <target name="build" depends="cache-clear,composer-install">
+        
+    <target name="build" depends="cache-clear,composer-install,check-validation,phplint">
+    </target>
     
-    <target name="release" depends="cache-clear,composer-install">
+    <target name="release" depends="build">
+    </target>
 
 </project>

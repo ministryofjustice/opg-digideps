@@ -80,7 +80,7 @@ class ApiClient extends GuzzleClient
      * @param RequestException $e
      * @return string
      */
-    private function getDebugREquestExceptionData(RequestException $e)
+    private function getDebugRequestExceptionData(RequestException $e)
     {
         if (!$this->debug) {
             return '';
@@ -116,7 +116,7 @@ class ApiClient extends GuzzleClient
         } catch (\Exception $e) {
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
-                $debugData = $this->getDebugREquestExceptionData($e);
+                $debugData = $this->getDebugRequestExceptionData($e);
                 
                 // try to unserialize response
                 try {
@@ -128,7 +128,7 @@ class ApiClient extends GuzzleClient
                 // regognise specific error codes and launche specific exception classes
                 switch ($responseArray['code']) {
                     case 404:
-                        throw new DisplayableException('Record not found.');
+                        throw new DisplayableException('Record not found.' . $debugData);
                     default:
                         throw new RuntimeException($responseArray['message'] . ' ' . $debugData);
                 }
@@ -139,7 +139,11 @@ class ApiClient extends GuzzleClient
         
     }
     
-    
+    /**
+     * @param Response $response
+     * 
+     * @return object result of deserialisation
+     */
     private function deserialiseResponse($response)
     {
         $ret = $this->serialiser->deserialize($response->getBody(), 'array', $this->format);
@@ -152,7 +156,7 @@ class ApiClient extends GuzzleClient
      * @param string $endpoint
      * @param array $options
      * 
-     * @return stdClass[] array of entity objects
+     * @return stdClass[] array of entity objects, indexed by PK
      */
     public function getEntities($class, $endpoint, $options = [])
     {
@@ -160,7 +164,8 @@ class ApiClient extends GuzzleClient
         
         $ret = [];
         foreach ($responseArray['data'] as $row) { 
-            $ret[] = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+            $entity = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
+            $ret[$entity->getId()] = $entity;
         }
         
         return $ret;
@@ -170,17 +175,14 @@ class ApiClient extends GuzzleClient
     /**
      * @param string $endpoint
      * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
+     * @param string $options serialise group (indicated by @Groups annotation in the client entity)
      * 
      * @return array response
      */
-    public function postC($endpoint, $bodyorEntity)
+    public function postC($endpoint, $bodyorEntity, array $options = [])
     {
-        if (is_object($bodyorEntity)) {
-            $bodyorEntity = $this->serialiser->serialize($bodyorEntity, 'json');
-        }
-        
-        $responseArray = $this->deserialiseResponse($this->post($endpoint, ['body'=>$bodyorEntity]));
-        
+        $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
+        $responseArray = $this->deserialiseResponse($this->post($endpoint, ['body'=>$body]));
         return $responseArray['data'];
     }
     
@@ -190,15 +192,36 @@ class ApiClient extends GuzzleClient
      * 
      * @return array response
      */
-    public function putC($endpoint, $bodyorEntity)
+    public function putC($endpoint, $bodyorEntity, array $options = [])
     {
-        if (is_object($bodyorEntity)) {
-            $bodyorEntity = $this->serialiser->serialize($bodyorEntity, 'json');
-        }
+        $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
         
-        $responseArray = $this->deserialiseResponse($this->put($endpoint, ['body'=>$bodyorEntity]));
+        $responseArray = $this->deserialiseResponse($this->put($endpoint, ['body'=>$body]));
         
         return $responseArray['data'];
+    }
+    
+    /**
+     * 
+     * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
+     * @param array $options
+     * @return type
+     */
+    private function serialiseBodyOrEntity($bodyorEntity, array $options)
+    {
+        if (is_object($bodyorEntity)) {
+            
+            $context = \JMS\Serializer\SerializationContext::create()
+                    ->setSerializeNull(true);
+            
+            if (!empty($options['deserialise_group'])) {
+                $context->setGroups([$options['deserialise_group']]);
+            }
+            
+            return $this->serialiser->serialize($bodyorEntity, 'json', $context);
+        }
+        
+        return $bodyorEntity;
     }
     
     /**

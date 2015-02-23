@@ -1,0 +1,11 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "registration" %}
+
+{% block pageTitle %}{{ 'createReport.pageTitle' | trans }} {% endblock %}
+{% block title %}{% trans %}createReport.pageTitle{% endtrans %}{% endblock %}
+
+
+{% block pageBody %}
+
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 4}%}
+{% endblock %}

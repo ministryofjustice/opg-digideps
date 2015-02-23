@@ -1,3 +1,4 @@
+# translations for validation messages. Rules in validation
 user:
   email:
     invalid: The email {{ value }} is not a valid email
@@ -17,3 +18,46 @@ user:
       noLowerCaseChars: The password must contain at least one lowercase character
       noUpperCaseChars: The password must contain at least one uppercase character    
       noNumber: The password must contain at least one number
+  role:
+      notBlank: You must specify a role for the user
+  address1: 
+    notBlank: The address cannot be blank
+  address2:
+    notBlank: The address cannot be blank
+  address3:
+    notBlank: The address cannot be blank
+  addressPostcode:
+    notBlank: The postcode cannot be blank
+    minLength: The postcode must be at least {{ limit }} characters long
+    maxLength: The postcode cannot be longer than {{ limit }} characters long
+  addressCountry:
+    notBlank: The country cannot be blank
+  genericPhone:
+    minLength: The phone number must be at least {{ limit }} characters long
+    maxLength: The phone number cannot be longer than {{ limit }} characters long
+  phoneHome:
+    notBlank: The home phone cannot be blank
+  phoneWork:
+    notBlank: The work phone cannot be blank
+  phoneMobile:
+    notBlank:  The mobile phone cannot be blank      
+client:
+    firstname:
+        notBlank: Please enter your firstname
+        minMessage: Firstname must be at least {{ limit }} characters
+    lastname:
+        notBlank: Please enter your lastname
+        minMessage: Lastname must be at least {{ limit }} characters
+    courtDate:
+        message: Please enter a valid court order date
+        notBlank: Please enter a court order date
+    address:
+        notBlank: Please enter your address
+    allowedCourtOrderTypes:
+        notBlank: Please select at least one court order type
+login:
+    email:
+        notBlank: Please enter your email
+        inValid:  Please enter a valid email
+    password:
+        notBlank: Please enter your password

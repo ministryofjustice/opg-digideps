@@ -10,8 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use AppBundle\Form\UserDetailsBasicType;
+use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
 * @Route("user")
@@ -29,7 +32,9 @@ class UserController extends Controller
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
         
-        if (!$user->isTokenSentInTheLastHours(48)) {
+        $hoursExpires = $this->container->hasParameter('token_expires_hours')
+                        ? $this->container->getParameter('token_expires_hours') : 48;
+        if (!$user->isTokenSentInTheLastHours($hoursExpires)) {
             throw new \RuntimeException("token expired, require new link");
         }
         
@@ -55,12 +60,10 @@ class UserController extends Controller
                 $this->get("security.context")->setToken($token); //now the user is logged in
                 
                  $this->get('session')->set('_security_secured_area', serialize($token));
-                 //$request = $this->get("request");
-                 //$event = new InteractiveLoginEvent($request, $token);
-                 //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-                
-                // redirect to step 2
-                return $this->redirect($this->generateUrl('user_details'));
+                 
+                 $request = $this->get("request");
+                 $event = new InteractiveLoginEvent($request, $token);
+                 $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
             }
         } 
         
@@ -76,10 +79,38 @@ class UserController extends Controller
      */
     public function detailsAction(Request $request)
     {
-        $form = null;
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        
+        $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
+            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
+            'countryPreferredOptions' => $this->container->hasParameter('form_country_preferred_options') ? $this->container->getParameter('form_country_preferred_options') : []
+        ]);
+        $form = $this->createForm($formType, $user);
+        
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                
+                $apiClient->putC('user/' . $user->getId(), $form->getData(), [
+                    'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
+                ]);
+                
+                return $this->redirect($this->generateUrl($basicFormOnly ? 'admin_homepage' : 'client_add'));
+            }
+        } else {
+            $form->setData($user);
+        }
         
         return $this->render('AppBundle:User:details.html.twig', [
-             'form' => $form
+            'form' => $form->createView(),
+            'twoStepsOnly' => $basicFormOnly
         ]);
+        
     }
+    
+    
 }

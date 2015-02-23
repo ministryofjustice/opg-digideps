@@ -37,7 +37,11 @@
         <a href="/" id="proposition-name">{% block proposition_title %}Digital Deputyships{% endblock %}</a>
         <ul id="proposition-links">
             {% if app.user %}
-                <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
+                
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
+                {% endif %}
+                 <li><a href="{{ path('user_details') }}" class="behat-link-user-details">{% trans %}userDetails{% endtrans %}</a></li>
                 <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
             {% endif %}
         </ul>
@@ -46,10 +50,15 @@
 
 {% block afterHeader %}
 
+{#
+    {% if error is defined %}
+    {{ dump(error) }}
+    {% endif %}
+#}
     {# To style #}
-    {% if error.messageKey is defined %}
+    {% if error is defined %}
         <div style="color: #ddd;background-color: #ff0000;"
-             class="behat-region-header-errors">{{ error.messageKey|trans(error.messageData) }}</div>
+             class="behat-region-header-errors">{{ error|trans }}</div>
     {% endif %}
 
     {# To style #}

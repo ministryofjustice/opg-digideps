@@ -7,5 +7,9 @@ firstname:
 lastname:
   label: Last name
   hint: Please enter the lastname for this user
+roleId:
+  label: Role
+  hint: Please enter the role for this user  
+  defaultOption: Please select ...
 submit:
   label: Submit

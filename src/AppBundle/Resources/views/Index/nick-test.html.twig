@@ -1,0 +1,23 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "login" %}
+
+{% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
+{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+
+{% block pageNavigation %}{% endblock %}
+
+{% block pageBody %}
+
+    {% set collection = [{name:1, age:30},{ name: 2, age: 31}] %}
+
+    {% for item in collection %}
+        {{ item.name }} - {{ item.age }}<br />
+    {% endfor %}
+
+    <hr />
+
+    {% for item in data %}
+        {{ item.name }} - {{ item.age }}<br />
+    {% endfor %}
+
+{% endblock %}
