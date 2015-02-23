@@ -61,10 +61,10 @@
         <exec command="rm misc/build/behat.log*"></exec>
         <exec command="cat /dev/null &gt; /tmp/dd_mail_mock"></exec>
         <exec command="sudo chmod 777 /tmp/dd_mail_mock"></exec>
-        <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" >
+        <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
         <!-- convert xTerm-coloured behat.log into HTML format -->
         <!-- TODO save output into  tee misc/build/behat.log -->
-        <!--<exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />-->
+         <!--<exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />--> 
     </target>
 
         
