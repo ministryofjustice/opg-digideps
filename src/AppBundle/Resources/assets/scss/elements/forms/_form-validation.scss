@@ -1,0 +1,27 @@
+// Validation summary box
+@import "colours";
+@import "measurements";
+@import "conditionals";
+@import "typography";
+
+.validation-summary-container {
+  width: 50%;
+  padding: 0;
+  margin: 0;
+  display: none;
+}
+
+.validation-summary {
+  border-width: 0 0 0 3px;
+  margin: 60px 0 0 0;
+  background-color: $baby-pink-25;
+
+  ul {
+    list-style: disc;
+    margin-left: 20px;
+  }
+
+  li {
+    @include core-19;
+  }
+}

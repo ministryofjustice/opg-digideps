@@ -1,13 +1,20 @@
 <div class="form-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
 
-    {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('')}}) }}
+    {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
 
     {{ form_errors(element) }}
 
     {% if hintText is defined %}
-      <p class="form-hint">{{ hintText }}</p>
+        <p class="form-hint">{{ hintText }}</p>
     {% endif %}
 
-    {{ form_widget(element, { 'attr': {'class': element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') } }) }}
+    {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
+
+
+    {% if element.vars.valid %}
+        {{ form_widget(element, { 'attr': {'class': class } }) }}
+    {% else %}
+        {{ form_widget(element, { 'attr': {'class': class, 'aria-invalid':'true' } }) }}
+    {% endif %}
 
 </div>

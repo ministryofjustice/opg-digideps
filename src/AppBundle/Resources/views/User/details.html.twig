@@ -1,46 +1,46 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-
 {% trans_default_domain "user-details" %}
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
-
+{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 {% block title %}{{ 'stepTitle' | trans }}{% endblock %}
+
+{% block pageNavigation %}
+    {% if not is_granted('ROLE_ADMIN') %}
+        {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 2} %}
+    {% endif %}
+{% endblock %}
 
 {% block pageBody %}
 
-    {% if not is_granted('ROLE_ADMIN') %}
-        {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 2}%}
-    {% endif %}
-
     <p class="behat-region-user-details">{{ 'headerInstructions' | trans }}</p>
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-      {{ form_input(form.firstname,'firstname', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {{ form_input(form.lastname,'lastname', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {% if not is_granted('ROLE_ADMIN') %}
-      
-        {{ form_input(form.address1,'address1', { 'labelClass': 'form-label-bold required' }) }}
+    {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
+
+    {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
+
+    {% if not is_granted('ROLE_ADMIN') %}
+        {{ form_input(form.address1,'address1', { 'labelClass': 'required' }) }}
 
         {{ form_input(form.address2,'address2') }}
 
         {{ form_input(form.address3,'address3') }}
 
-        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'form-label-bold required' }) }}
+        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required' }) }}
 
-        {{ form_input(form.addressCountry,'addressCountry', { 'labelClass': 'form-label-bold required' }) }}
+        {{ form_input(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
 
-        {{ form_input(form.phoneHome,'phoneHome', { 'labelClass': 'form-label-bold required' }) }}
+        {{ form_input(form.phoneHome,'phoneHome', { 'labelClass': 'required' }) }}
 
-        {{ form_input(form.phoneWork,'phoneWork', { 'labelClass': 'form-label-bold required' }) }}
+        {{ form_input(form.phoneWork,'phoneWork', { 'labelClass': 'required' }) }}
 
-        {{ form_input(form.phoneMobile,'phoneMobile', { 'labelClass': 'form-label-bold required' }) }}
-      
-      {% endif %}
-      
-      {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'})}}
+        {{ form_input(form.phoneMobile,'phoneMobile', { 'labelClass': 'required' }) }}
+
+    {% endif %}
+
+    {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
 
     {{ form_end(form) }}
 

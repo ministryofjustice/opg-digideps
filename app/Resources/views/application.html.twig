@@ -49,6 +49,12 @@
 {% endblock %}
 
 {% block afterHeader %}
+
+{#
+    {% if error is defined %}
+    {{ dump(error) }}
+    {% endif %}
+#}
     {# To style #}
     {% if error is defined %}
         <div style="color: #ddd;background-color: #ff0000;"
