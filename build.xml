@@ -43,7 +43,7 @@
         <exec command="rm -rf app/logs/*"/>
         <echo msg="Permission on cache and logs set"></echo>
         
-        <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
+        <exec passthru="true" command="php -r &quot;function_exists('apc_clear_cache') and apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
         <echo msg="APC cache cleared"></echo>
     </target>
     
