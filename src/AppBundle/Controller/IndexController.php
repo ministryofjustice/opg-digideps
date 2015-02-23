@@ -38,6 +38,7 @@ class IndexController extends Controller
                     if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
                         throw new \Exception("Invalid email or password");
                     }
+                    
                 }catch(\Exception $e){
                     return [ 'form' => $form->createView(), 'error' => $e ];
                 }
