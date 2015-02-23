@@ -18,9 +18,7 @@
         <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
         <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
-        
-        <exec passthru="true" command="php -r &quot;apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
-        <echo msg="APC cache cleared"></echo>
+        <exec passthru="true" command="php -r &quot;function_exists('apc_clear_cache') and apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
     </target>
     
                 
@@ -60,7 +58,7 @@
     </target>
     
     <target name="db-migrate">
-        <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="true"></exec>
+        <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="false"></exec>
     </target>
     
     <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint">
