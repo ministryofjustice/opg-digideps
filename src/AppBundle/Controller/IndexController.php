@@ -36,7 +36,8 @@ class IndexController extends Controller
                     $encoder = $this->get('security.encoder_factory')->getEncoder($user);
                     
                     if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
-                        throw new \Exception("login.login.invalidMessage");
+                        $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
+                        throw new \Exception($message);
                     }
                 }catch(\Exception $e){
                     return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
