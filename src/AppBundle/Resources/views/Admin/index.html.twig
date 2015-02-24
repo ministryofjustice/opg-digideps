@@ -6,6 +6,10 @@
 {% block contentClass %}{{ parent() }} admin-users{% endblock %}
 {% block title %}Admin{% endblock %}
 
+{% block preBody %}
+    {{ form_errors_list(form) }}
+{% endblock %}
+
 
 {% block pageBody %}
     {% include 'AppBundle:Admin:_add.html.twig' %}
