@@ -50,17 +50,6 @@
 
 {% block afterHeader %}
 
-{#
-    {% if error is defined %}
-    {{ dump(error) }}
-    {% endif %}
-#}
-    {# To style #}
-    {% if error is defined %}
-        <div style="color: #ddd;background-color: #ff0000;"
-             class="behat-region-header-errors">{{ error|trans }}</div>
-    {% endif %}
-
     {# To style #}
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="flash-notice"  style="color: white;background-color: green;">
@@ -77,7 +66,6 @@
 {% block content %}
     <div class="phase-banner">
         <p>
-            <strong class="phase-tag">BETA</strong>
             <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
         </p>
     </div>

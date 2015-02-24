@@ -157,7 +157,7 @@ class FormFieldsExtension extends \Twig_Extension
         }
         
 
-        $html = $this->environment->render('AppBundle:Components/Alerts:_error-summary.html.twig', [
+        $html = $this->environment->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
             'formErrorMessages' => $formErrorMessages
         ]);
         
