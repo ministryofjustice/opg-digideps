@@ -122,7 +122,6 @@ Feature: add client
             | client_phone | 0123456789  |
         And I submit the form
         Then the form should not contain an error
-        Then debug
         When I go to "client/add"
         Then the following fields should have the corresponding values:
             | client_firstname | Peter |
@@ -139,3 +138,10 @@ Feature: add client
             | client_postcode | NG1 2HT  |
             | client_country | GB |
             | client_phone | 0123456789  |
+        # check saving from filled in form works
+        When I fill in the following:
+            | client_lastname | Green |
+        When I submit the form
+        And I go to "client/add"
+        Then the following fields should have the corresponding values:
+            | client_lastname | Green |
