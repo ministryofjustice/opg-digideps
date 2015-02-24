@@ -17,8 +17,8 @@
 
     {% block pageNavigation %}{% endblock %}
 
-    {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
-
+    {% block preBody %} {% endblock %}    
+    
     <div class="page-body">
         {% block pageBody %}{% endblock %}
     </div>

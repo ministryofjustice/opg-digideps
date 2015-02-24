@@ -72,7 +72,7 @@ class UserController extends Controller
         return $this->render('AppBundle:User:activate.html.twig', [
             'token'=>$token, 
             'form' => $form->createView(),
-            'twoStepsOnly' => $user->getRole()['role'] == 'ROLE_ADMIN'
+            'showAllSteps' => $user->getRole()['role'] !== 'ROLE_ADMIN'
         ]);
     }
     
@@ -110,7 +110,7 @@ class UserController extends Controller
         
         return $this->render('AppBundle:User:details.html.twig', [
             'form' => $form->createView(),
-            'twoStepsOnly' => $basicFormOnly
+            'showAllSteps' => !$basicFormOnly
         ]);
         
     }

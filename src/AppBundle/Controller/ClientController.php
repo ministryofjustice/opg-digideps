@@ -21,19 +21,25 @@ class ClientController extends Controller
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
         
-        $client = new Client();
-        $client->setUser($this->getUser()->getId());
+        try {
+           $client = $apiClient->getEntity('Client', 'client/get-by-user-id/' . $userId); /* @var $user User*/
+        } catch (\Exception $e) {
+            $client = new Client();
+        }
+        $client->setUser($this->getUser()->getId()); 
         
         $form = $this->createForm(new ClientType($apiClient), $client);
         $form->handleRequest($request);
         
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
+        if($request->getMethod() == 'POST') {
+            if($form->isValid()) {
                 $apiClient->postC('add_client', $form->getData());
                 return $this->redirect($this->generateUrl('report_create'));
             }
         }
+        
         return [ 'form' => $form->createView() ];
     }
 }

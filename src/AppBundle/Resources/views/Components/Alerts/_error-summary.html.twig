@@ -1,12 +1,13 @@
-<div class="validation-summary-container">
+{% if (formErrorMessages | length) > 0 %}
+ <div class="validation-summary-containerCHANGEDTOBEVISIBLE">
     <div aria-labelledby="error-heading" class="validation-summary group" id="error-summary" role="alert" tabindex="-1">
-        <h2 id="error-heading" class="visuallyhidden">You need to fix the errors on this page before continuing.</h2>
-
-        <p class="visuallyhidden">See highlighted errors below.</p>
-
+        <h2 id="error-heading" class="visuallyhiddenCHANGEDTOBEVISIBLE">You need to fix the errors on this page before continuing.</h2>
+        <p class="visuallyhiddenCHANGEDTOBEVISIBLE">See highlighted errors below.</p>
         <ul>
-            <li>First error</li>
-            <li>Second error</li>
+            {% for formErrorMessage in formErrorMessages %}
+                <li>{{ formErrorMessage }}</li>
+            {% endfor %}
         </ul>
     </div>
-</div>
+  </div>
+{% endif %}        

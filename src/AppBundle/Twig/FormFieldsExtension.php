@@ -1,5 +1,7 @@
 <?php
 namespace AppBundle\Twig;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormError;
 
 class FormFieldsExtension extends \Twig_Extension
 {
@@ -22,6 +24,7 @@ class FormFieldsExtension extends \Twig_Extension
         return [
             'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
             'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
+            'form_errors_list' => new \Twig_Function_Method($this, 'renderFormErrorsList'),
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
@@ -135,6 +138,33 @@ class FormFieldsExtension extends \Twig_Extension
         
         echo $html;
     }
+    
+    
+    /**
+     * get form errors lits and render them inside Components/Alerts:error_summary.html.twig
+     * Usage: {{ form_errors_list(form) }}
+     * 
+     * @param FormView $form
+     */
+    public function renderFormErrorsList(FormView $form)
+    {
+        $formErrorMessages = [];
+        foreach ($form as $elementFormView) { /*@var $elementFormView FormView */
+            $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
+            foreach ($elementFormErrors as $formError) { /* @var $error FormError */ 
+                $formErrorMessages[] = $formError->getMessage();
+            }
+        }
+        
+
+        $html = $this->environment->render('AppBundle:Components/Alerts:_error-summary.html.twig', [
+            'formErrorMessages' => $formErrorMessages
+        ]);
+        
+        echo $html;
+    }
+    
+    
     
     /**
      * @param array $vars

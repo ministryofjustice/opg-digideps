@@ -10,6 +10,12 @@ use JMS\Serializer\Annotation as JMS;
 class Client
 {
     /**
+     * @JMS\Type("integer")
+     * @var integer
+     */
+    private $id;
+    
+    /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.firstname.notBlank" )
      * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage")
@@ -322,4 +328,15 @@ class Client
     {
         $this->phone = $phone;
     }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 }
