@@ -55,6 +55,21 @@ client:
         notBlank: Please enter your address
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
+    casenumber:
+        notBlank: Please enter case number
+    postcode:
+        notBlank: Please enter postcode
+report:
+    startDate:
+        notBlank: Please enter report start date
+        invalidMessage: Invalid start date
+    endDate:
+        notBlank: Please enter report end date
+        invalidMessage: Invalid end date
+        beforeStart: End date can't be before start date
+        greaterThan12Months: Report period can't cover more than 12 months
+    courtOrderType:
+        notBlank: Please select a court order type
 login:
     email:
         notBlank: Please enter your email

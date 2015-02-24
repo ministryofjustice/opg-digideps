@@ -4,7 +4,7 @@ parameters:
         add_user: user
         list_users: user
         find_user_by_token: user/get-by-token
-#        update_user: user
         list_roles: role
         get_all_court_order_type: court-order-type/all
         add_client: client/add
+        find_client_by_id: client/find-by-id

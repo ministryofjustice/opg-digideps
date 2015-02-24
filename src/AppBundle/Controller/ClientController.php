@@ -31,8 +31,9 @@ class ClientController extends Controller
         
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                $apiClient->postC('add_client', $form->getData());
-                return $this->redirect($this->generateUrl('report_create'));
+                $response = $apiClient->postC('add_client', $form->getData());
+       
+                return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['client']['id'] ]));
             }
         }
         return [ 'form' => $form->createView() ];

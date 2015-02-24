@@ -18,11 +18,11 @@ class Client
     private $firstname;
     
     /**
-     *
-     * @JMS\Type("integer")
+     * @JMS\Accessor(setter="addUser")
+     * @JMS\Type("array")
      * @var array $user
      */
-    private $user;
+    private $users;
     
     /**
      * @JMS\Type("string")
@@ -34,6 +34,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.casenumber.notBlank")
      * @var string $caseNumber
      */
     private $caseNumber;
@@ -43,7 +44,7 @@ class Client
      * @Assert\NotBlank( message="client.courtDate.notBlank")
      * @Assert\Date( message="client.courtDate.message")
      * @var array $courtDate
-     */
+     */ 
     private $courtDate;
     
     /**
@@ -74,6 +75,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.postcode.notBlank")
      * @var string $postcode
      */
     private $postcode;
@@ -94,7 +96,7 @@ class Client
     public function __construct()
     {
         $this->allowedCourtOrderTypes = [];
-        //$this->users = [];
+        $this->users = [];
     }
     
     /**
@@ -116,15 +118,15 @@ class Client
     }
     
     
-    public function getUser()
+    public function getUsers()
     {
-        return $this->user;
+        return $this->users;
     }
     
     
-    public function setUser($user)
+    public function addUser($user)
     {
-        $this->user = $user;
+        $this->users[] = $user;
         return $this;
     }
     
