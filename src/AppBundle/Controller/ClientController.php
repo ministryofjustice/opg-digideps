@@ -43,4 +43,21 @@ class ClientController extends RestController
         
         return ['client' => $client ];
     }
+    
+    /**
+     * @Route("/find-by-id/{id}", name="client_find_by_id")
+     * @Method({"GET"})
+     * 
+     * @param integer $id
+     */
+    public function findByIdAction($id)
+    {
+        $client = $this->getDoctrine()->getRepository('AppBundle:Client')->find($id);
+        
+        //if client does not exist
+        if(empty($client)){
+            throw new \Exception("Client with id: $id does not exist");
+        }
+        return $client;
+    }
 }
