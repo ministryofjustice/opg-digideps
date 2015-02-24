@@ -331,7 +331,7 @@ class Client
      * @param \DateTime $courtDate
      * @return Client
      */
-    public function setCourtDate($courtDate)
+    public function setCourtDate(\DateTime $courtDate = null)
     {
         $this->courtDate = $courtDate;
 

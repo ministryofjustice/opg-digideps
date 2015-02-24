@@ -13,42 +13,44 @@ use AppBundle\Exception\NotFound;
 class ClientController extends RestController
 {
     /**
+     * Add client
+     * 
      * @Route("/add")
      * @Method({"POST"})
      */
     public function addAction()
     {
-        $clientData = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent();
         
-        $user = $this->getRepository('User')->find($clientData['user']);
-        if(empty($user)){
-            throw new \Exception("User with id: $user does not exist");
-        }
+        // read user
+        $user = $this->findEntityBy('User', $data['user'], "User with id: {$data['user']}  does not exist");
         
-        if (count($user->getClients()) === 0) {
+        // create client if the ID it nos specified, otherwise create one and add the user
+        if (empty($data['id'])) {
             $client = new Client();
             $client->addUser($user);
         } else {
-            // update
-            $client = $user->getClients()->first();
+            $client = $this->findEntityBy('Client', $data['id'], 'Client not found');
         }
         
-        $client->setFirstname($clientData['firstname']);
-        $client->setLastname($clientData['lastname']);
-        $client->setCaseNumber($clientData['case_number']);
-        $client->setCourtDate(new \DateTime($clientData['court_date']));
-        $client->setAllowedCourtOrderTypes($clientData['allowed_court_order_types']);
-        $client->setAddress($clientData['address']);
-        $client->setAddress2($clientData['address2']);
-        $client->setPostcode($clientData['postcode']);
-        $client->setCountry($clientData['country']);
-        $client->setCounty($clientData['county']);
-        $client->setPhone($clientData['phone']);
+        $this->hydrateEntityWithArrayData($client, $data, [
+            'firstname' => 'setFirstname', 
+            'lastname' => 'setLastname', 
+            'case_number' => 'setCaseNumber', 
+            'allowed_court_order_types' => 'setAllowedCourtOrderTypes', 
+            'address' => 'setAddress', 
+            'address2' => 'setAddress2', 
+            'postcode' => 'setPostcode', 
+            'country' => 'setCountry', 
+            'county' => 'setCounty', 
+            'phone' => 'setPhone', 
+        ]);
+        $client->setCourtDate(new \DateTime($data['court_date']));
         
         $this->getEntityManager()->persist($client);
         $this->getEntityManager()->flush();
         
-        return ['client' => $client ];
+        return ['id' => $client->getId() ];
     }
     
      /**
