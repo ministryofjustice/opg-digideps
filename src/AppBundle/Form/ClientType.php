@@ -34,6 +34,7 @@ class ClientType extends AbstractType
                 ->add('country', 'country', [ 'preferred_choices' => ['GB'], 'empty_value' => 'Please select ...' ])
                 ->add('phone', 'text')
                 ->add('user', 'hidden')
+                ->add('id', 'hidden')
                 ->add('save', 'submit');
     }
     

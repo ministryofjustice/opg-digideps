@@ -51,7 +51,7 @@
         <exec command="php app/console digideps:validation" checkreturn="true" passthru="true"></exec>
     </target>
 
-    <target name="behat-init" description="Set up test db">
+    <target name="behat-init" description="Set up test db" depends="cache-clear">
         <exec command="rm -f misc/tmp/behat*"></exec>
         <exec command="chmod +x misc/scripts/aha/aha"></exec>
     </target>
@@ -59,8 +59,6 @@
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
         <exec command="rm misc/build/behat.log*"></exec>
-        <exec command="cat /dev/null &gt; /tmp/dd_mail_mock"></exec>
-        <exec command="sudo chmod 777 /tmp/dd_mail_mock"></exec>
         <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
         <!-- convert xTerm-coloured behat.log into HTML format -->
         <!-- TODO save output into  tee misc/build/behat.log -->
