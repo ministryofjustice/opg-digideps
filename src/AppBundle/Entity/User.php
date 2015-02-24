@@ -588,6 +588,25 @@ class User implements AdvancedUserInterface
     {
         $this->phoneMobile = $phoneMobile;
     }
+    
+    /**
+     * @return boolean
+     */
+    public function hasDetails()
+    {
+        return $this->getAddress1() || $this->getAddress2() || $this->getAddress3()
+               || $this->getAddressCountry() || $this->getAddressPostcode()
+               || $this->getPhoneHome() || $this->getPhoneMobile() || $this->getPhoneWork();
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function hasClient()
+    {
+        //TODO
+        return false;
+    }
 
     
 }
