@@ -160,5 +160,13 @@ class SendGridTransport implements Swift_Transport
     {
         $this->emailFileWriters[$email] = $path;
     }
+    
+    /**
+     * @return array
+     */
+    public function getEmailFileWriters()
+    {
+        return $this->emailFileWriters;
+    }
 
 }
