@@ -52,11 +52,11 @@ trait DebugTrait
     }
 
     /**
-     * @Then die
+     * @Then die :code
      */
-    public function interrupt()
+    public function interrupt($code)
     {
-        die(1);
+        die($code);
     }
     
      /**

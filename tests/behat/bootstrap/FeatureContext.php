@@ -30,12 +30,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     private static $fixtures = null;
     
-    private $mailFilePath;
-
     public function __construct(array $options)
     {
         //$options['session']; // not used
-        $this->mailFilePath = $options['mailFilePath'];
         ini_set('xdebug.max_nesting_level', $options['xdebugMaxNestingLevel'] ?: 200);
     }
 
@@ -128,19 +125,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @When I change the client court order type to :value
-     */
-//    public function fillClientCourtOrderType($value)
-//    {
-//        $courtOrderTypeNameToId = array_flip(Application\Entity\CourtOrderType::getCourtOrderTypesArray());
-//        if (empty($courtOrderTypeNameToId[$value])) {
-//            throw new \Exception("Cannot find Court order type $value in the dropdown. Check 'CourtOrderType::getCourtOrderTypesArray()'");
-//        }
-//        
-//        $this->getSession()->getPage()->fillField('court_order_type_id', $courtOrderTypeNameToId[$value]);
-//    }
-    
-    /**
      * @Then the page title should be :text
      */
     public function thePageTitleShouldBe($text)
@@ -184,13 +168,16 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     protected function getLatestEmail()
     {
-        $content = file_get_contents($this->mailFilePath);
-        $ret =  json_decode($content, 1);
-        if (empty($ret['to'])) {
+        $this->visit('behat/email-get-last');
+        
+        $content =  $this->getSession()->getPage()->getContent();
+        $contentJson = json_decode($content, true);
+        
+        if (empty($contentJson['to'])) {
             throw new \RuntimeException("Email has not been sent");
         }
         
-        return $ret;
+        return $contentJson;
     }
     
     
@@ -199,7 +186,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function cleanMail(BeforeScenarioScope $scope)
     {
-        file_put_contents($this->mailFilePath, '');
+        $this->visit('behat/reset');
     }
     
     /**
