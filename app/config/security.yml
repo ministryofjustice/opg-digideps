@@ -25,6 +25,10 @@ security:
         userActivate:
             pattern:  ^/user/activate
             security: false
+        
+        behatControllers:
+            pattern:  ^/behat/*
+            security: false
 
         secured_area:
             form_login:
