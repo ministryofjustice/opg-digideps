@@ -1,0 +1,7 @@
+{{form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
+
+{{form_known_date(form.startDate, 'startDate')}}
+{{form_known_date(form.endDate, 'endDate')}}
+{{form_select(form.courtOrderType, 'courtOrderType')}}
+{{form_submit(form.save,'save')}}
+{{form_end(form) }}

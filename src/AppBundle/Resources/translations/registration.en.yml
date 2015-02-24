@@ -23,8 +23,9 @@ phone:
     label: Home Phone
 save:
     label: Save
-
 createReport:
-    pageTitle: Create a report
+    pageTitle: Step 4 - Create a report
+courtOrderType:
+    label: Court Order Type
 
     

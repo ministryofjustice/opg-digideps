@@ -7,11 +7,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
-    private $apiClient;
+    private $util;
     
-    public function __construct($apiClient) 
+    public function __construct($util) 
     {
-        $this->apiClient = $apiClient;
+        $this->util = $util;
     }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -24,7 +24,7 @@ class ClientType extends AbstractType
                                               'format' => 'yyyy-MM-dd',
                                               'invalid_message' => 'client.courtDate.message'
                                             ])
-                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->getAllowedCourtOrderTypes(), 
+                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->util->getAllowedCourtOrderTypeChoiceOptions(), 
                                                             'multiple' => true,
                                                             'expanded' => true ])
                 ->add('address', 'text')
@@ -43,22 +43,7 @@ class ClientType extends AbstractType
             'translation_domain' => 'registration',
         ]);
     }
-    
-    protected function getAllowedCourtOrderTypes()
-    {
-        $choices = [];
-        $response = $this->apiClient->get('get_all_court_order_type');
-        
-        if($response->getStatusCode() == 200){
-            $arrayData = $response->json();
-        
-            foreach($arrayData['data']['court_order_types'] as $value){
-                $choices[$value['id']] = $value['name'];
-            }
-        }
-        return $choices;
-    }
-    
+     
     public function getName()
     {
         return 'client';
