@@ -78,11 +78,51 @@ class IndexController extends Controller
     public function nickTestAction()
     {
 
-        $myArray = [];
-        $myArray[] = ['name'=>'nick', 'age'=>20];
-        $myArray[] = ['name'=>'elvis', 'age'=>19];
+        $progressIndicator_arr = [];
+        $progressIndicator_arr[] = ['label' => 'pi.step.one'];
+        $progressIndicator_arr[] = ['label' => 'Add your details'];
+        $progressIndicator_arr[] = ['label' => 'Add your client\'s details'];
+        $progressIndicator_arr[] = ['label' => 'Create a report'];
 
-        return $this->render('AppBundle:Index:nick-test.html.twig', array('data' => $myArray));
+        $currentStep = 2;
+
+        return $this->render('AppBundle:Index:nick-test.html.twig', array(
+            //'progressSteps' => $this->get('progressbar')->get('registration')->setCurrentStep(1)->getSteps()
+            'progressSteps' => $this->initProgressIndicator($progressIndicator_arr, $currentStep)
+        ));
+    }
+
+    private function initProgressIndicator($array, $currentStep)
+    {
+        $currentStep = $currentStep - 1;
+        $progressSteps_arr = array();
+        if (is_array($array)) {
+            $soa = count($array);
+
+            for ($i = 0; $i < $soa; $i++) {
+                $item = $array[$i];
+                $classes = [];
+                if ($i == $currentStep) {
+                    $classes[] = 'progress--active';
+                }
+                if ($i < $currentStep) {
+                    $classes[] = 'progress--completed';
+                }
+                if ($i == ($currentStep - 1)) {
+                    $classes[] = 'progress--previous';
+                }
+                $item['class'] = implode(' ', $classes);
+
+                $progressSteps_arr[] = $item;
+            }
+
+        }
+
+        return $progressSteps_arr;
     }
 
 }
+
+
+$cssClass = '';
+$label = '';

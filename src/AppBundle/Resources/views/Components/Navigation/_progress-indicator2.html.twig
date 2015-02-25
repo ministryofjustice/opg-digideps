@@ -1,0 +1,11 @@
+{% if progressSteps is defined %}
+    <ol class="progress">
+        {% for step in progressSteps %}
+            <li class="{{ step.class }}">
+                <div class="progress__step">
+                    <span class="progress__label">{{ step.label | trans }}</span>
+                </div>
+            </li>
+        {% endfor %}
+    </ol>
+{% endif %}

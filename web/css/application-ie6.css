@@ -1735,8 +1735,7 @@ ol.progress {
 .validation-summary-container {
   width: 50%;
   padding: 0;
-  margin: 0;
-  display: none; }
+  margin: 0; }
 
 .validation-summary {
   border-width: 0 0 0 3px;

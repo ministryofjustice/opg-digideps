@@ -45,13 +45,23 @@ class LoginEventListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if($this->security->isGranted('ROLE_ADMIN')){
-            $event->getResponse()->headers->set('Location', $this->router->generate('user_details'));
-        }elseif($this->security->isGranted('ROLE_LAY_DEPUTY')){
-            $event->getResponse()->headers->set('Location', $this->router->generate('user_details'));
-        }else{
-            //we don't know who you are or your privilegdes
-            $event->getResponse()->headers->set('Location', $this->router->generate('access_denied'));
+        $user = $this->security->getToken()->getUser();
+        
+        $route = 'access_denied';
+        if ($this->security->isGranted('ROLE_ADMIN')) {
+            $route = 'admin_homepage';
+        } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
+            if (!$user->hasDetails()) {
+                $route = 'user_details';
+            } else if (!$user->hasClient()) { 
+                $route = 'client_add';
+            } /*else if (!$user->getClient()->hasReport()) {
+                $route = 'report_create';
+            } */else {
+                $route = 'homepage'; // TODO use dashboard when implemented
+            }
         }
+
+        $event->getResponse()->headers->set('Location', $this->router->generate($route));
     }
 }
