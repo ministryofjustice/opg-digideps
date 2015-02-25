@@ -28,8 +28,8 @@ class ClientController extends Controller
            $client = $apiClient->getEntity('Client', 'client/get-by-user-id/' . $userId); /* @var $user User*/
         } catch (\Exception $e) {
             $client = new Client();
+            $client->addUser($this->getUser()->getId());
         }
-        $client->setUser($this->getUser()->getId()); 
         
         $form = $this->createForm(new ClientType($util), $client);
         $form->handleRequest($request);
@@ -38,7 +38,6 @@ class ClientController extends Controller
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
                 $response = $apiClient->postC('add_client', $form->getData());
-       
                 return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['client']['id'] ]));
             }
         }

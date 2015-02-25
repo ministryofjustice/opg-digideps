@@ -44,6 +44,7 @@ class ReportType extends AbstractType
                 ->add('courtOrderType', 'choice',   [ 'choices' => $choices, 
                                                       'empty_data' => null ,
                                                       'empty_value' => 'Please select ..'] )
+                ->add('client', 'hidden')
                 ->add('save', 'submit');
     }
     

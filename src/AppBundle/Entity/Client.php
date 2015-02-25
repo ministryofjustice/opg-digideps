@@ -24,11 +24,18 @@ class Client
     private $firstname;
     
     /**
-     * @JMS\Accessor(setter="addUser")
+     * @JMS\Accessor(setter="addUsers", getter="getUsers")
      * @JMS\Type("array")
-     * @var array $user
+     * @var array $users
      */
     private $users;
+    
+    /**
+     * @JMS\Accessor(setter="addReports")
+     * @JMS\Type("array")
+     * @var array $reports
+     */
+    private $reports;
     
     /**
      * @JMS\Type("string")
@@ -46,6 +53,7 @@ class Client
     private $caseNumber;
     
     /**
+     * @JMS\Accessor(setter="setCourtDateWithoutTime")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank( message="client.courtDate.notBlank")
      * @Assert\Date( message="client.courtDate.message")
@@ -130,9 +138,43 @@ class Client
     }
     
     
+    public function addUsers($users)
+    {
+        $this->users = $users;
+        return $this;
+    }
+    
     public function addUser($user)
     {
         $this->users[] = $user;
+        return $this;
+    }
+    
+    /**
+     * @return array $reports
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+    
+    /**
+     * @param  $report
+     * @return \AppBundle\Entity\Client
+     */
+    public function addReport($report)
+    {
+        $this->reports[] = $report;
+        return $this;
+    }
+    
+    /**
+     * @param type $reports
+     * @return \AppBundle\Entity\Client
+     */
+    public function addReports($reports)
+    {
+        $this->reports = $reports;
         return $this;
     }
     
@@ -188,6 +230,11 @@ class Client
     public function setCourtDate($courtDate)
     {
         $this->courtDate = $courtDate;
+    }
+    
+    public function setCourtDateWithoutTime($courtDate)
+    {
+        $this->courtDate = new \DateTime($courtDate->format('Y-m-d'));
     }
     
     /**

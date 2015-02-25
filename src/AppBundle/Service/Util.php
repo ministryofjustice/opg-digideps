@@ -2,6 +2,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Service\ApiClient;
+use AppBundle\Entity\Client;
 
 class Util
 {
@@ -43,5 +44,9 @@ class Util
             }
         }
         return $choices;
+    }
+    
+    public function checkReportPeriodNotOverlapping(Client $client)
+    {
     }
 }
