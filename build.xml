@@ -62,6 +62,9 @@
         <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="false"></exec>
     </target>
     
+    <target name="behat" depends="db-reset,db-migrate">
+    </target>
+    
     <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint">
     </target>
     
