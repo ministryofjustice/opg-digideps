@@ -9,6 +9,9 @@ lastname:
 caseNumber:
     label: Case number
     hint: The case number is on the first page of the court order (top right-hand corner ).
+allowedCourtOrderTypes:
+    legend: Allowed court order types
+    hint: Select all that apply
 address:
     label: Address
 address2:

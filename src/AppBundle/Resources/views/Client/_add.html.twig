@@ -8,13 +8,16 @@
     {{form_input(form.lastname, 'lastname')}}
     {{form_input(form.caseNumber, 'caseNumber')}}
     {{form_known_date(form.courtDate, 'courtDate')}}
-  
-    {# @nick form_input works for this field. just need the translation in place. I'll just wrap with html for now #}
-    <div class="form-group {% if not form.allowedCourtOrderTypes.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
-    {{form_errors(form.allowedCourtOrderTypes)}}
-    {{form_label(form.allowedCourtOrderTypes)}}
-    {{form_widget(form.allowedCourtOrderTypes)}} <br/>
-    </div>
+    
+    {{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
+       'fieldSetClass' : 'fieldSetClass',
+       'legendClass' : 'legendClass',
+       'items': [
+           {'labelClass': 'labelClass1', 'elementClass': 'elementClass1' },
+           {'labelClass': 'labelClass2', 'elementClass': 'elementClass2' }
+        ]
+       })
+    }}
     
     {{form_input(form.allowedCourtOrderTypes, 'address')}}
     {{form_input(form.address, 'address')}}

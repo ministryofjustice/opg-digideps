@@ -1,0 +1,18 @@
+<div class="form-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+<fieldset class="{{fieldSetClass}}">
+   <legend class="{{legendClass}}">{{ legendText }}</legend>
+   <p class="form-hint">{{ hintText }}</p>
+    
+    {% for key,choiceElement in element %}
+        
+        {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
+        {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
+        
+        <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
+            {{ form_widget(choiceElement, {'attr': {'class': elementClass }}) }}
+            {{ choiceElement.vars.label }}
+        </label>
+    {% endfor %}
+   
+</fieldset>
+</div>
