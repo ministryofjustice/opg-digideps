@@ -20,7 +20,7 @@ class ClientController extends RestController
     {
         $clientData = $this->deserializeBodyContent();
         
-        $user = $this->getRepository('User')->find($clientData['user']);
+        $user = $this->getRepository('User')->find($clientData['users'][0]);
         if(empty($user)){
             throw new \Exception("User with id: $user does not exist");
         }
