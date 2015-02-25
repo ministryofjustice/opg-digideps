@@ -33,7 +33,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function __construct(array $options)
     {
         //$options['session']; // not used
-        ini_set('xdebug.max_nesting_level', $options['xdebugMaxNestingLevel'] ?: 200);
+        ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
+        ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
+//        if (!empty($options['set_time_limit'])) {
+//            set_time_limit($options['set_time_limit']);
+//        }
     }
 
     
