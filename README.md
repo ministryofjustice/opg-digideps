@@ -1,4 +1,4 @@
-#INSTALL + build 2
+#INSTALL + Test build
 
   moved here 
     https://github.com/ministryofjustice/opg-digi-deps-provisioning
