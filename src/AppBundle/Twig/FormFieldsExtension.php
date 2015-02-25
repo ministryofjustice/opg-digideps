@@ -139,6 +139,27 @@ class FormFieldsExtension extends \Twig_Extension
         echo $html;
     }
     
+    /**
+     * @param FormView $elementsFormView
+     * 
+     * @return array
+     */
+    private function getErrorsFromFormViewRecursive(FormView $elementsFormView)
+    {
+        $ret = [];
+        foreach ($elementsFormView as $elementFormView) {
+            $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
+            foreach ($elementFormErrors as $formError) { /* @var $error FormError */ 
+                $ret[] = $formError->getMessage();
+            }
+            $ret = array_merge(
+                $ret, 
+                $this->getErrorsFromFormViewRecursive($elementFormView)
+            );
+        }
+
+        return $ret;
+    }
     
     /**
      * get form errors lits and render them inside Components/Alerts:error_summary.html.twig
@@ -148,15 +169,8 @@ class FormFieldsExtension extends \Twig_Extension
      */
     public function renderFormErrorsList(FormView $form)
     {
-        $formErrorMessages = [];
-        foreach ($form as $elementFormView) { /*@var $elementFormView FormView */
-            $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
-            foreach ($elementFormErrors as $formError) { /* @var $error FormError */ 
-                $formErrorMessages[] = $formError->getMessage();
-            }
-        }
+        $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
         
-
         $html = $this->environment->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
             'formErrorMessages' => $formErrorMessages
         ]);
