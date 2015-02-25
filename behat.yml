@@ -11,7 +11,7 @@ default:
             - DigidepsBehat\FeatureContext:
                 -
                     session:   '@session'
-                    xdebugMaxNestingLevel: 200
+                    maxNestingLevel: 200
 #                    scriptTimeout: 10
     extensions:
         Behat\Symfony2Extension: ~
