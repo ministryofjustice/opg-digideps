@@ -259,12 +259,14 @@ class FormFieldsExtension extends \Twig_Extension
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
 
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
+        $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         
         return [ 
             'labelText' => $labelText,
             'hintText' => $hintText,
             'element'  => $element,
-            'labelClass' => $labelClass
+            'labelClass' => $labelClass,
+            'inputClass' => $inputClass
         ];
     }
     

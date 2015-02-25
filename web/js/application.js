@@ -28,4 +28,7 @@ var output = mojDateString(dateNow);
 
 console.log(output);
 
+if ($('.registration-client-add')) {
+    new GOVUK.SelectionButtons(":checkbox");
+}
 

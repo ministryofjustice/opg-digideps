@@ -4,10 +4,10 @@ stepTitle: Set your password
 headerInstructions: ""
 email:
     label: Your email address
-    hint: We sent you the registration link to this email address
+    hint: We sent you the registration link to this email address.
 password:
     label: Password
-    hint: Must be at least 8 characters and should include uppercase, lowercase and at least one number
+    hint: Your password needs to be at least 8 characters. Include at least one uppercase and lowercase letter and one number.
     validation:
         passwordMismatch: The password fields must match.
 password_confirm:

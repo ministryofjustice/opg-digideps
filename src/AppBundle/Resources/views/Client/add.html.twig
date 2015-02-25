@@ -2,12 +2,21 @@
 {% trans_default_domain "registration" %}
 
 {% block pageTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
+{% block contentClass %}{{ parent() }} registration-client-add{% endblock %}
 {% block title %}{% trans %}addClient.pageTitle{% endtrans %}{% endblock %}
+
+{% block pageNavigation %}
+    {% if not is_granted('ROLE_ADMIN') %}
+        {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 3} %}
+    {% endif %}
+{% endblock %}
+
+{% block validationSummary %}
+    {{ form_errors_list(form) }}
+{% endblock %}
 
 
 {% block pageBody %}
-
-    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 3}%}
     
     {% include 'AppBundle:Client:_add.html.twig' %}
 {% endblock %}

@@ -11,8 +11,8 @@
     {% endif %}
 {% endblock %}
 
-{% block errorSummary %}
-    {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' with {form: form} %}
+{% block validationSummary %}
+    {{ form_errors_list(form) }}
 {% endblock %}
 
 {% block pageBody %}
@@ -32,7 +32,7 @@
 
         {{ form_input(form.address3,'address3') }}
 
-        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required' }) }}
+        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
 
         {{ form_select(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
 
@@ -44,7 +44,9 @@
 
     {% endif %}
 
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 
