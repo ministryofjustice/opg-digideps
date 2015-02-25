@@ -1446,6 +1446,9 @@ form {
 .form-group_button-bar {
   padding-top: 60px; }
 
+.form-group__checkbox-group {
+  margin-left: 3px; }
+
 .form-control__select-container {
   border: 1px solid #bfc1c3;
   width: 50%;
