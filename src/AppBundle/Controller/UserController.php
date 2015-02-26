@@ -89,7 +89,6 @@ class UserController extends Controller
         
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
-            'countryPreferredOptions' => $this->container->hasParameter('form_country_preferred_options') ? $this->container->getParameter('form_country_preferred_options') : []
         ]);
         $form = $this->createForm($formType, $user);
         
