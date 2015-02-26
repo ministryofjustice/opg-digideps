@@ -9,7 +9,7 @@ lastname:
     label: Last name
 caseNumber:
     label: Case number
-    hint: The case number is on the first page of the court order (top right-hand corner ).
+    hint: The case number is on the first page of the court order (top right-hand corner).
 allowedCourtOrderTypes:
     legend: Court order type
     hint: Select all that apply
