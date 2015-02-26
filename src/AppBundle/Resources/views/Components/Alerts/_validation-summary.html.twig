@@ -7,7 +7,7 @@
             <p class="visuallyhidden">See highlighted errors below.</p>
             <ul class="visuallyhidden">
                 {% for formErrorMessage in formErrorMessages %}
-                    <li>{{ formErrorMessage }}</li>
+                    <li><a href="#{{ formErrorMessage.elementId }}-group">{{ formErrorMessage.message }}</a></li>
                 {% endfor %}
             </ul>
         </div>

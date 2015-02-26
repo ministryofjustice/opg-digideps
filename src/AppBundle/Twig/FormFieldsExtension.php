@@ -188,7 +188,7 @@ class FormFieldsExtension extends \Twig_Extension
         foreach ($elementsFormView as $elementFormView) {
             $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
             foreach ($elementFormErrors as $formError) { /* @var $error FormError */ 
-                $ret[] = $formError->getMessage();
+                $ret[] = ['elementId'=>$elementFormView->vars['id'], 'message'=>$formError->getMessage()];
             }
             $ret = array_merge(
                 $ret, 
