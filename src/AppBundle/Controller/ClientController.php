@@ -21,10 +21,10 @@ class ClientController extends RestController
     public function addAction()
     {
         $data = $this->deserializeBodyContent();
-        
+      
         // read user
-        $user = $this->findEntityBy('User', $data['user'], "User with id: {$data['user']}  does not exist");
-        
+        $user = $this->findEntityBy('User', $data['users'][0], "User with id: {$data['users'][0]}  does not exist");
+
         // create client if the ID it nos specified, otherwise create one and add the user
         if (empty($data['id'])) {
             $client = new Client();
@@ -51,6 +51,24 @@ class ClientController extends RestController
         $this->getEntityManager()->flush();
         
         return ['id' => $client->getId() ];
+    }
+    
+
+    /**
+     * @Route("/find-by-id/{id}", name="client_find_by_id")
+     * @Method({"GET"})
+     * 
+     * @param integer $id
+     */
+    public function findByIdAction($id)
+    {
+        $client = $this->getDoctrine()->getRepository('AppBundle:Client')->find($id);
+        
+        //if client does not exist
+        if(empty($client)){
+            throw new \Exception("Client with id: $id does not exist");
+        }
+        return $client;
     }
     
      /**

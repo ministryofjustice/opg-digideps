@@ -17,6 +17,7 @@ class Client
     /**
      * @var integer
      * 
+     * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -25,8 +26,8 @@ class Client
     private $id;
     
     /**
-     * @JMS\Exclude
-     * @JMS\Type("ArrayCollection<Doctrine\Common\Collections\ArrayCollection>")
+     * @JMS\Accessor(getter="getUserIds")
+     * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -36,7 +37,8 @@ class Client
     private $users;
     
     /**
-     * @JMS\Type("ArrayCollection<Doctrine\Common\Collections\ArrayCollection>")
+     * @JMS\Accessor(getter="getReportIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
@@ -403,6 +405,22 @@ class Client
     {
         return $this->users;
     }
+    
+    /**
+     * 
+     * @return array $userIds
+     */
+    public function getUserIds()
+    {
+        $userIds = [];
+        
+        if(!empty($this->users)){
+            foreach($this->users as $user){
+                $userIds[] = $user->getId();
+            }
+        }
+        return $userIds;
+    }
 
     /**
      * Add reports
@@ -435,6 +453,21 @@ class Client
     public function getReports()
     {
         return $this->reports;
+    }
+    
+    /**
+     * @return array $reportIds
+     */
+    public function getReportIds()
+    {
+        $reportIds = [];
+        
+        if(!empty($this->reports)){
+            foreach($this->reports as $report){
+                $reportIds[] = $report->getId();
+            }
+        }
+        return $reportIds;
     }
 
     /**

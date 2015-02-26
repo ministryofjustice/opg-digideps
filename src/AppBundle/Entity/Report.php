@@ -3,12 +3,13 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Reports
- *
+ * @JMS\XmlRoot("report")
+ * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
- * @ORM\Entity
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ReportRepository")
  */
 class Report
@@ -16,6 +17,7 @@ class Report
     /**
      * @var integer
      *
+     * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -25,43 +27,59 @@ class Report
 
     /**
      * @var integer
-     *
+     * 
+     * @JMS\Accessor(getter="getClientId")
+     * @JMS\Type("array")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
     
     /**
+     * @JMS\Accessor(getter="getContactIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
     
     /**
+     * @JMS\Accessor(getter="getAccountIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report")
      */
     private $accounts;
     
     /**
+     * @JMS\Accessor(getter="getDecisionInvolvementIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\DecisionInvolvement", mappedBy="report", cascade={"persist"})
      */
     private $decisionInvolvements;
     
     /**
+     * @JMS\Accessor(getter="getDecisionIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
     private $decisions;
     
     /**
+     * @JMS\Accessor(getter="getAssetIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
      */
     private $assets;
     
     /**
+     * @JMS\Accessor(getter="getPdfTokenIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\PdfToken", mappedBy="report", cascade={"persist"})
      */
     private $pdfTokens;
     
     /**
+     * @JMS\Accessor(getter="getCourtOrderTypeId")
+     * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
      */
@@ -70,6 +88,7 @@ class Report
     /**
      * @var string
      *
+     * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
     private $title;
@@ -77,27 +96,33 @@ class Report
     /**
      * @var \Date
      *
+     * @JMS\Accessor(getter="setStartDate")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
     private $startDate;
 
     /**
      * @var \Date
-     *
+     * 
+     * @JMS\Accessor(getter="setEndDate")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
      */
     private $endDate;
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Accessor(getter="setSubmitDate")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
     private $submitDate;
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Accessor(getter="setLastedit")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */	 
     private $lastedit;
@@ -105,13 +130,14 @@ class Report
     /**
      * @var string
      *
+     * @JMS\Type("string")
      * @ORM\Column(name="further_information", type="text", nullable=true)
      */
     private $furtherInformation;
     
     /**
      * @var boolean
-     *
+     * @JMS\Type("boolean")
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false})
      */
     private $noAssetToAdd;
@@ -119,6 +145,7 @@ class Report
     /**
      * @var boolean
      *
+     * @JMS\Type("boolean")
      * @ORM\Column(name="no_contact_to_add", type="boolean", options={ "default": false})
      */
     private $noContactToAdd;
@@ -126,6 +153,7 @@ class Report
     /**
      * @var boolean
      *
+     * @JMS\Type("boolean")
      * @ORM\Column(name="no_decision_to_add", type="boolean", options={ "default": false})
      */
     private $noDecisionToAdd;
@@ -133,6 +161,7 @@ class Report
     /**
      * @var boolean
      *
+     * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
     private $submitted;
@@ -192,9 +221,8 @@ class Report
      */
     public function setStartDate($startDate)
     {
-        //$startDate->setTime(0, 0, 0);
-        $this->startDate = $startDate;
-
+        $this->startDate = new \DateTime($startDate->format('Y-m-d'));
+        
         return $this;
     }
 
@@ -204,7 +232,7 @@ class Report
      * @return \DateTime 
      */
     public function getStartDate()
-    {
+    {   
         return $this->startDate;
     }
 
@@ -216,8 +244,7 @@ class Report
      */
     public function setEndDate($endDate)
     {
-        //$endDate->setTime(23, 59, 59);
-        $this->endDate = $endDate;
+        $this->endDate = new \DateTime($endDate->format('Y-m-d'));
 
         return $this;
     }
@@ -228,7 +255,7 @@ class Report
      * @return \DateTime 
      */
     public function getEndDate()
-    {
+    {   
         return $this->endDate;
     }
 
@@ -240,7 +267,7 @@ class Report
      */
     public function setSubmitDate($submitDate)
     {
-        $this->submitDate = $submitDate;
+        $this->submitDate = new \DateTime($submitDate->format('Y-m-d'));
 
         return $this;
     }
@@ -263,7 +290,7 @@ class Report
      */
     public function setLastedit($lastedit)
     {
-        $this->lastedit = $lastedit;
+        $this->lastedit = new \DateTime($lastedit->format('Y-m-d'));
 
         return $this;
     }
@@ -346,6 +373,11 @@ class Report
     {
         return $this->client;
     }
+    
+    public function getClientId()
+    {
+        return $this->client->getId();
+    }
 
     /**
      * Add contacts
@@ -359,7 +391,7 @@ class Report
 
         return $this;
     }
-
+    
     /**
      * Remove contacts
      *
@@ -378,6 +410,17 @@ class Report
     public function getContacts()
     {
         return $this->contacts;
+    }
+    
+    public function getContactIds()
+    {   
+        $contacts = [];
+        if(!empty($this->contacts)){
+            foreach($this->contacts as $contact){
+                $contacts[] = $contact->getId();
+            }
+        }
+        return $contacts;
     }
 
     /**
@@ -412,6 +455,17 @@ class Report
     {
         return $this->accounts;
     }
+    
+    public function getAccountIds()
+    {
+        $accounts = [];
+        if(!empty($this->accounts)){
+            foreach($this->accounts as $account){
+                $accounts[] = $account->getId();
+            }
+        }
+        return $accounts;
+    }
 
     /**
      * Add decisionInvolvements
@@ -444,6 +498,17 @@ class Report
     public function getDecisionInvolvements()
     {
         return $this->decisionInvolvements;
+    }
+    
+    public function getDecisionInvolvemntIds()
+    {
+        $decisionInvolvements = [];
+        if(!empty($this->decisionInvolvements)){
+            foreach($this->decisionInvolvements as $decisionInvolvement){
+                $decisionInvolvements[] = $decisionInvolvement->getId();
+            }
+        }
+        return $decisionInvolvements;
     }
 
     /**
@@ -479,6 +544,18 @@ class Report
         return $this->decisions;
     }
 
+    
+    public function getDecisionIds()
+    {
+        $decisions = [];
+        if(!empty($this->decisions)){
+            foreach($this->decisions as $decision){
+                $decisions[] = $decision->getId();
+            }
+        }
+        return $decisions;
+    }
+    
     /**
      * Add assets
      *
@@ -512,6 +589,16 @@ class Report
         return $this->assets;
     }
 
+    public function getAssetIds()
+    {
+        $assets = [];
+        if(!empty($this->assets)){
+            foreach($this->assets as $asset){
+                $assets[] = $asset->getId();
+            }
+        }
+        return $assets;
+    }
     /**
      * Add pdfTokens
      *
@@ -544,7 +631,18 @@ class Report
     {
         return $this->pdfTokens;
     }
-
+ 
+    public function getPdfTokenIds()
+    {
+        $pdfTokens = [];
+        if(!empty($this->pdfTokens)){
+            foreach($this->pdfTokens as $pdfToken){
+                $pdfTokens[] = $pdfToken->getId();
+            }
+        }
+        return $pdfTokens;
+    }
+    
     /**
      * Set noAssetToAdd
      *
@@ -678,5 +776,10 @@ class Report
     public function getCourtOrderType()
     {
         return $this->courtOrderType;
+    }
+    
+    public function getCourtOrderTypeId()
+    {
+        return $this->courtOrderType->getId();
     }
 }
