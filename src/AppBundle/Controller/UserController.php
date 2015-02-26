@@ -65,6 +65,7 @@ class UserController extends Controller
                  $event = new InteractiveLoginEvent($request, $token);
                  $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
                  
+                 // the following should not be triggered
                  return $this->redirect($this->generateUrl('user_details'));
             }
         } 
