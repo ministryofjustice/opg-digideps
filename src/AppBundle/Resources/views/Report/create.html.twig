@@ -4,10 +4,17 @@
 {% block pageTitle %}{{ 'createReport.pageTitle' | trans }} {% endblock %}
 {% block title %}{% trans %}createReport.pageTitle{% endtrans %}{% endblock %}
 
+{% block pageNavigation %}
+    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 4} %}
+{% endblock %}
+
+{% block validationSummary %}
+    {{ form_errors_list(form) }}
+{% endblock %}
+
 
 {% block pageBody %}
 
-    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 4}%}
-    
-     {% include 'AppBundle:Report:_report_form.html.twig' %}
+    {% include 'AppBundle:Report:_report_form.html.twig' %}
+
 {% endblock %}

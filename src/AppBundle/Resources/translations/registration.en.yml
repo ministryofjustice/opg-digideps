@@ -30,6 +30,12 @@ save:
     label: Save
 createReport:
     pageTitle: Step 4 - Create a report
+startDate:
+    legend: Start date
+    hint: (DD/MM/YYYY)
+endDate:
+    legend: End date
+    hint: (DD/MM/YYYY)
 courtOrderType:
     label: Report Type
 

@@ -1472,9 +1472,11 @@ input[type=number] {
       margin-bottom: 0.83333em; } }
 
 header.page-header {
-  margin-bottom: 50px; }
+  margin-top: 40px;
+  margin-bottom: 0; }
   header.page-header h1 {
-    padding-bottom: 0; }
+    padding-bottom: 0;
+    padding-top: 0; }
     header.page-header h1 span {
       font-family: "nta", Arial, sans-serif;
       font-size: 24px;
@@ -1499,6 +1501,22 @@ header.page-header {
       font-size: 16px;
       line-height: 1.25; } }
 
+.page-section-title {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 700;
+  text-transform: none;
+  margin-bottom: 30px; }
+  @media (max-width: 640px) {
+    .page-section-title {
+      font-size: 20px;
+      line-height: 1.11111; } }
+
+.page-section-description {
+  width: 50%;
+  margin-bottom: 40px; }
+
 .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 15px 0 15px 15px; }
@@ -1517,7 +1535,7 @@ form {
   padding-top: 60px; }
 
 .form-group__checkbox-group {
-  margin-left: 3px; }
+  margin-left: 2px; }
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
@@ -1719,7 +1737,8 @@ ol.progress {
   zoom: 1;
   background: #fff;
   padding: 0;
-  position: relative; }
+  position: relative;
+  margin-top: 50px; }
 
 .nav-tabs:after {
   content: ".";

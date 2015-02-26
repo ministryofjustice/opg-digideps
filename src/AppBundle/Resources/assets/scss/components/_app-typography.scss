@@ -18,10 +18,12 @@
 }
 
 header.page-header {
-  margin-bottom: 50px;
+  margin-top: 40px;
+  margin-bottom: 0;
 
   h1 {
     padding-bottom: 0;
+    padding-top: 0;
 
     span {
       @include core-24;
@@ -36,4 +38,14 @@ header.page-header {
   p {
     @include core-19;
   }
+}
+
+.page-section-title{
+  @include bold-27();
+  margin-bottom: 30px;
+}
+
+.page-section-description{
+  width: 50%;
+  margin-bottom: 40px;
 }

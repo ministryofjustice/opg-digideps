@@ -1,7 +1,19 @@
-{{form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-{{form_known_date(form.startDate, 'startDate')}}
-{{form_known_date(form.endDate, 'endDate')}}
-{{form_select(form.courtOrderType, 'courtOrderType')}}
-{{form_submit(form.save,'save')}}
-{{form_end(form) }}
+    <h2 class="page-section-title">Add the reporting period</h2>
+
+    <p class="page-section-description">In the first year, your reporting period starts on the date your court order is issued. For all subsequent reports use the anniversary of that date.</p>
+
+    {{ form_known_date(form.startDate, 'startDate') }}
+
+
+    <p class="page-section-description">The reporting period is usually for a 12-month period. Set the end date now for a 12-month period. If OPG need you to send a report before this, we will let you know.</p>
+
+    {{ form_known_date(form.endDate, 'endDate') }}
+    {{ form_select(form.courtOrderType, 'courtOrderType') }}
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{{ form_end(form) }}
