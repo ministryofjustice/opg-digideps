@@ -20,28 +20,24 @@ class ClientController extends Controller
     public function addAction()
     {
         $request = $this->getRequest();
+        $util = $this->get('util');
         $apiClient = $this->get('apiclient');
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
         
-        try {
-           $client = $apiClient->getEntity('Client', 'client/get-by-user-id/' . $userId); /* @var $user User*/
-        } catch (\Exception $e) {
-            $client = new Client();
-        }
-        $client->setUser($this->getUser()->getId()); 
+        $client = new Client();
+        $client->addUser($this->getUser()->getId());
+  
+        $form = $this->createForm(new ClientType($util), $client);
         
-        $form = $this->createForm(new ClientType($apiClient, [
-            'addressCountryEmptyValue' => $this->get('translator')->trans('country.defaultOption', [], 'registration'),
-        ]), $client);
         $form->handleRequest($request);
         
-        if($request->getMethod() == 'POST') {
-            if($form->isValid()) {
-                $apiClient->postC('add_client', $form->getData());
-                return $this->redirect($this->generateUrl('report_create'));
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                $response = $apiClient->postC('add_client', $form->getData());
+               
+                return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id'] ]));
             }
         }
-        
         return [ 'form' => $form->createView() ];
     }
 }

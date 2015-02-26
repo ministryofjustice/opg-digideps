@@ -28,6 +28,8 @@ phone:
     label: Main telephone number
 save:
     label: Save
-
 createReport:
-    pageTitle: Create a report
+    pageTitle: Step 4 - Create a report
+courtOrderType:
+    label: Report Type
+

@@ -8,6 +8,9 @@ services:
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @apiclient, @jms_serializer ]
+    util:
+        class: AppBundle\Service\Util
+        arguments: [@apiclient]
     formFieldsExtension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
