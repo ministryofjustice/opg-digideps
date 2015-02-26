@@ -7,8 +7,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @JMS\XmlRoot("report")
- * @Assert\GroupSequence({"Report", "Date"})
- * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"}, groups={"Date"})
+ * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  */
 class Report
 {
