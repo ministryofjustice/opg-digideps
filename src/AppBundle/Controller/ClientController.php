@@ -30,7 +30,9 @@ class ClientController extends Controller
         }
         $client->setUser($this->getUser()->getId()); 
         
-        $form = $this->createForm(new ClientType($apiClient), $client);
+        $form = $this->createForm(new ClientType($apiClient, [
+            'addressCountryEmptyValue' => $this->get('translator')->trans('country.defaultOption', [], 'registration'),
+        ]), $client);
         $form->handleRequest($request);
         
         if($request->getMethod() == 'POST') {

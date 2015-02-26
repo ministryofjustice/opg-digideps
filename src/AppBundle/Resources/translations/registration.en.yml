@@ -23,6 +23,7 @@ postcode:
     label: Postcode
 country:
     label: Country
+    defaultOption: Please select
 phone:
     label: Main telephone number
 save:

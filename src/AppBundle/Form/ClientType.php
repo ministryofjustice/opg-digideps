@@ -7,12 +7,24 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
+    /**
+     * @var \AppBundle\Service\ApiClient 
+     */
     private $apiClient;
     
-    public function __construct($apiClient) 
+     /**
+     * @var string
+     */
+    private $addressCountryEmptyValue;
+    
+    
+    public function __construct($apiClient, $options) 
     {
         $this->apiClient = $apiClient;
+        $this->addressCountryEmptyValue = empty($options['addressCountryEmptyValue']) 
+                                        ? null : $options['addressCountryEmptyValue'];
     }
+    
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -31,7 +43,10 @@ class ClientType extends AbstractType
                 ->add('address2', 'text')
                 ->add('postcode', 'text')
                 ->add('county','text')
-                ->add('country', 'country', [ 'preferred_choices' => ['GB'], 'empty_value' => 'Please select ...' ])
+                ->add('country', 'country', [ 
+                    'preferred_choices' => ['GB'], 
+                    'empty_value' => $this->addressCountryEmptyValue
+                ])
                 ->add('phone', 'text')
                 ->add('user', 'hidden')
                 ->add('id', 'hidden')
