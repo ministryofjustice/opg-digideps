@@ -46,27 +46,27 @@ class LoginEventListener
     public function onKernelResponse(FilterResponseEvent $event)
     {
         $user = $this->security->getToken()->getUser();
+        $clients = $user->getClients();
         
         $route = 'access_denied';
+        $options = [];
+        
         if ($this->security->isGranted('ROLE_ADMIN')) {
             $route = 'admin_homepage';
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
             if (!$user->hasDetails()) {
                 $route = 'user_details';
-            }  else {
+            }  else if(!$user->hasClients()) {
                 $route = 'client_add';
-            }
-            
-            /*else if (!$user->hasClient()) { 
-                $route = 'client_add';
-            } else if (!$user->getClient()->hasReport()) {
+            }else if(!$user->hasReports()){
                 $route = 'report_create';
-            }else {
-                $route = 'homepage'; // TODO use dashboard when implemented
-            }*/
-            
+                $options = [ 'clientId' => $clients[0]['id']];
+            }else{
+                $route = "report_overview";
+                $options = [ 'id' => $clients[0]['reports'][0] ];
+            }
         }
 
-        $event->getResponse()->headers->set('Location', $this->router->generate($route));
+        $event->getResponse()->headers->set('Location', $this->router->generate($route, $options));
     }
 }

@@ -89,6 +89,12 @@ class User implements AdvancedUserInterface
     private $roleId;
     
     /**
+     * @JMS\Type("array")
+     * @var array
+     */
+    private $clients;
+    
+    /**
      * @JMS\Type("boolean")
      * @var boolean $emailConfirmed
      */
@@ -351,6 +357,16 @@ class User implements AdvancedUserInterface
         return $this->role;
     }
     
+    public function setClients(array $clients)
+    {
+        $this->clients = $clients;
+    }
+    
+    public function getClients()
+    {
+        return $this->clients;
+    }
+    
     /**
      * 
      * @return boolean
@@ -602,9 +618,19 @@ class User implements AdvancedUserInterface
     /**
      * @return boolean
      */
-    public function hasClient()
+    public function hasClients()
     {
-        //TODO
+        if(!empty($this->clients)){
+            return true;
+        }
+        return false;
+    }
+    
+    public function hasReports()
+    {
+        if(!empty($this->clients[0]['reports'])){
+            return true;
+        }
         return false;
     }
 

@@ -70,9 +70,9 @@ class ApiClient extends GuzzleClient
     public function getEntity($class, $endpoint, array $options = [])
     {
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
-       
-        $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
         
+        $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
+       
         return $ret;
     }
     

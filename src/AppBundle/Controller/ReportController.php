@@ -52,7 +52,7 @@ class ReportController extends Controller
      * @Route("/overview/{id}", name="report_overview")
      * @Template()
      */
-    public function overviewAction()
+    public function overviewAction($id)
     {
         return [];
     }
