@@ -2,7 +2,7 @@ Feature: add client and report
     
     Scenario: add client
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on "client/add"
+        Then I should be on "client/add"
         # missing client_firstname
         When I fill in the following:
             | client_firstname |  |
@@ -128,7 +128,7 @@ Feature: add client and report
 
      Scenario: create report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on "report/create/1"
+        Then I should be on "report/create/1"
         Then the following fields should have the corresponding values:
             | report_startDate_day | 1 |
             | report_startDate_month | 1 |
@@ -199,3 +199,7 @@ Feature: add client and report
         Then the form should not contain an error
         # assert you are on dashboard
         And I should be on "/report/overview/1"
+
+     Scenario: report overview
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should be on "/report/overview/1"
