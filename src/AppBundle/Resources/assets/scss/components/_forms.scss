@@ -1,9 +1,18 @@
 // Forms - Application specific version
 // ==========================================================================
 
+form {
+  overflow: hidden;
+}
+
 .form-group_button-bar {
   padding-top: $gutter * 2;
 }
+
+.form-group__checkbox-group {
+  margin-left: 3px;
+}
+
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
@@ -17,4 +26,17 @@
   width: 100%;
   -webkit-appearance: menulist;
   opacity: 0.6;
+}
+
+.form-control__postcode {
+  width: 25%;
+}
+
+.form-label {
+  margin-bottom: 0;
+}
+
+.form-hint {
+  margin-top: 0;
+  width: 50%;
 }

@@ -14,21 +14,12 @@ class UserDetailsFullType extends UserDetailsBasicType
     private $addressCountryEmptyValue;
     
     /**
-     * @var array
-     */
-    private $countryPreferredOptions;
-    
-    /**
-     * @param array $options needed keys: addressCountryEmptyValue,countryPreferredOptions, countryPreferredOptions
+     * @param array $options needed keys: addressCountryEmptyValue, countryPreferredOptions
      */
     public function __construct($options)
     {
         $this->addressCountryEmptyValue = empty($options['addressCountryEmptyValue']) 
                                         ? null : $options['addressCountryEmptyValue'];
-        
-        $this->countryPreferredOptions = empty($options['countryPreferredOptions']) 
-                                       ? null : $options['countryPreferredOptions'];
-        
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -40,7 +31,7 @@ class UserDetailsFullType extends UserDetailsBasicType
         ->add('address3', 'text')
         ->add('addressPostcode', 'text')
         ->add('addressCountry', 'country', [
-            'preferred_choices' => $this->countryPreferredOptions,
+            'preferred_choices' => ['', 'GB'],
             'empty_value' => $this->addressCountryEmptyValue
         ])
         ->add('phoneHome', 'text')

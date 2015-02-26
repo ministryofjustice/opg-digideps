@@ -15,10 +15,10 @@ address3:
 addressPostcode:
     label: Postcode
 addressCountry:
-    label: " "
+    label: Country
     defaultOption: Please select ...
 phoneHome:
-    label: Home phone
+    label: Main telephone number
 phoneWork:
     label: Work phone
 phoneMobile:

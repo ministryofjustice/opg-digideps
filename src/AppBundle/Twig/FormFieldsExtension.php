@@ -28,7 +28,8 @@ class FormFieldsExtension extends \Twig_Extension
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
-            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass')
+            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
+            'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
         ];
     }
     
@@ -73,7 +74,44 @@ class FormFieldsExtension extends \Twig_Extension
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
+    
+     
+    /**
+     * form_checkbox_group(element, 'allowedCourtOrderTypes', {
+       'legendClass' : 'form-label-bold',
+       'fieldSetClass' : 'inline',
+       'items': [
+           {'labelClass': 'block-label', 'elementClass': 'checkbox' },
+           {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
+        ]
+       })
+     */
+    public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
+    {
+        //lets get the translation for hintText, labelClass and labelText
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        $domain = $element->parent->vars['translation_domain'];
 
+        //sort hint text translation
+        $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
+        $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+
+        //get legendText translation
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        
+        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        
+         //generate input field html using variables supplied
+        echo $this->environment->render( 'AppBundle:Components/Form:_checkbox.html.twig', [
+            'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
+            'legendText' => $legendText,
+            'legendClass' => isset($vars['legendClass']) ? $vars['legendClass']: null,
+            'hintText' => $hintText,
+            'element'  => $element,
+            'items' => empty($vars['items']) ? [] : $vars['items'],
+        ]);
+    }
+    
     /**
      * Renders form select element
      *
@@ -221,12 +259,14 @@ class FormFieldsExtension extends \Twig_Extension
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
 
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
+        $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         
         return [ 
             'labelText' => $labelText,
             'hintText' => $hintText,
             'element'  => $element,
-            'labelClass' => $labelClass
+            'labelClass' => $labelClass,
+            'inputClass' => $inputClass
         ];
     }
     
