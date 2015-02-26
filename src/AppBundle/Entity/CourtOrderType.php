@@ -2,10 +2,12 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * CourtOrderType
  *
+ * @JMS\XmlRoot("court_order_type")
  * @ORM\Table(name="court_order_type")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CourtOrderTypeRepository")
  */
@@ -13,7 +15,7 @@ class CourtOrderType
 { 
     /**
      * @var integer
-     *
+     * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -23,12 +25,14 @@ class CourtOrderType
 
     /**
      * @var string
-     *
+     * @JMS\Type("string")
      * @ORM\Column(name="name", type="string", length=100, nullable=true)
      */
     private $name;
 
     /**
+     * @JMS\Accessor(getter="getReportIds")
+     * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="courtOrderType")
      */
     private $reports;
@@ -76,16 +80,6 @@ class CourtOrderType
     }
 
     /**
-     * Remove cases
-     *
-     * @param \AppBundle\Entity\Client $client
-     */
-    public function removeCase(\AppBundle\Entity\Client $client)
-    {
-        $this->clients->removeElement($client);
-    }
-    
-    /**
      * Add reports
      *
      * @param \AppBundle\Entity\Report $reports
@@ -106,6 +100,18 @@ class CourtOrderType
     public function removeReport(\AppBundle\Entity\Report $reports)
     {
         $this->reports->removeElement($reports);
+    }
+    
+    public function getReportIds()
+    {
+        $reports = [];
+        
+        if(!empty($this->reports)){
+            foreach($this->reports as $report){
+                $reports[] = $report->getId();
+            }
+        }
+        return $reports;
     }
 
     /**

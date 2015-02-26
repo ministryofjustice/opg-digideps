@@ -13,7 +13,7 @@ class IndexController extends Controller
      */
     public function getAllCourtOrderTypeAction()
     {
-        $courtOrderTypes = $this->getDoctrine()->getEntityManager()->getRepository('AppBundle:CourtOrderType')->findAll();
+        $courtOrderTypes = $this->getDoctrine()->getManager()->getRepository('AppBundle:CourtOrderType')->findAll();
         
         return [ 'court_order_types' => $courtOrderTypes ];
     }

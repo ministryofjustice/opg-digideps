@@ -17,6 +17,7 @@ class Client
     /**
      * @var integer
      * 
+     * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -332,7 +333,7 @@ class Client
      * @param \DateTime $courtDate
      * @return Client
      */
-    public function setCourtDate($courtDate)
+    public function setCourtDate(\DateTime $courtDate = null)
     {
         $this->courtDate = $courtDate;
 
