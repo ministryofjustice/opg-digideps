@@ -48,6 +48,8 @@ client:
     lastname:
         notBlank: Please enter your lastname
         minMessage: Lastname must be at least {{ limit }} characters
+    caseNumber:
+        notBlank: Please enter the case number
     courtDate:
         message: Please enter a valid court order date
         notBlank: Please enter a court order date
