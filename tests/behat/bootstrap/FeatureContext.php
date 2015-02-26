@@ -210,7 +210,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $mailContent = $this->getLatestEmailMockFromApi()['parts'][0]['body'];
         
-        preg_match_all('#http://[^\s"<]+#', $mailContent, $matches);
+        preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
         if (empty($matches[0])) {
             throw new \Exception("no link found in email. Body:\n $mailContent");
         }
