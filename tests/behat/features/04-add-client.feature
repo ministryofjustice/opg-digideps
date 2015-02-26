@@ -122,26 +122,26 @@ Feature: add client
             | client_phone | 0123456789  |
         And I submit the form
         Then the form should not contain an error
-        When I go to "client/add"
-        Then the following fields should have the corresponding values:
-            | client_firstname | Peter |
-            | client_lastname | White |
-            | client_caseNumber | 123456ABC |
-            | client_courtDate_day | 1 |
-            | client_courtDate_month | 1 |
-            | client_courtDate_year | 2015 |
-            | client_allowedCourtOrderTypes_0 | 1 |
-            | client_allowedCourtOrderTypes_1 | 2  |
-            | client_address |  1 South Parade |
-            | client_address2 | First Floor  |
-            | client_county | Nottingham  |
-            | client_postcode | NG1 2HT  |
-            | client_country | GB |
-            | client_phone | 0123456789  |
-        # check saving from filled in form works
-        When I fill in the following:
-            | client_lastname | Green |
-        When I submit the form
-        And I go to "client/add"
-        Then the following fields should have the corresponding values:
-            | client_lastname | Green |
+#        When I go to "client/add"
+#        Then the following fields should have the corresponding values:
+#            | client_firstname | Peter |
+#            | client_lastname | White |
+#            | client_caseNumber | 123456ABC |
+#            | client_courtDate_day | 1 |
+#            | client_courtDate_month | 1 |
+#            | client_courtDate_year | 2015 |
+#            | client_allowedCourtOrderTypes_0 | 1 |
+#            | client_allowedCourtOrderTypes_1 | 2  |
+#            | client_address |  1 South Parade |
+#            | client_address2 | First Floor  |
+#            | client_county | Nottingham  |
+#            | client_postcode | NG1 2HT  |
+#            | client_country | GB |
+#            | client_phone | 0123456789  |
+#        # check saving from filled in form works
+#        When I fill in the following:
+#            | client_lastname | Green |
+#        When I submit the form
+#        And I go to "client/add"
+#        Then the following fields should have the corresponding values:
+#            | client_lastname | Green |
