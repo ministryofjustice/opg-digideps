@@ -14,6 +14,7 @@ class ClientType extends AbstractType
         $this->util = $util;
     }
     
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder ->add('firstname', 'text')
@@ -31,7 +32,10 @@ class ClientType extends AbstractType
                 ->add('address2', 'text')
                 ->add('postcode', 'text')
                 ->add('county','text')
-                ->add('country', 'country', [ 'preferred_choices' => ['GB'], 'empty_value' => 'Please select ...' ])
+                ->add('country', 'country', [ 
+                    'preferred_choices' => ['GB'], 
+                    'empty_value' => 'country.defaultOption'
+                ])
                 ->add('phone', 'text')
                 ->add('users', 'collection', [ 'type' => 'integer', 
                                                'options' => [ 'required' => false, 

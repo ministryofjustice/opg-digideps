@@ -1376,6 +1376,11 @@ input[type=number] {
       font-size: 14px;
       line-height: 1.14286; } }
 
+/*
+***************************************************************
+    Do need import application specific code into this file.
+***************************************************************
+*/
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
@@ -1435,8 +1440,14 @@ header.page-header {
 .field-with-errors li {
   color: #df3034; }
 
+form {
+  overflow: hidden; }
+
 .form-group_button-bar {
   padding-top: 60px; }
+
+.form-group__checkbox-group {
+  margin-left: 3px; }
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
@@ -1449,6 +1460,16 @@ header.page-header {
   width: 100%;
   -webkit-appearance: menulist;
   opacity: 0.6; }
+
+.form-control__postcode {
+  width: 25%; }
+
+.form-label {
+  margin-bottom: 0; }
+
+.form-hint {
+  margin-top: 0;
+  width: 50%; }
 
 .column-full {
   width: 960px;
@@ -1503,8 +1524,12 @@ header.page-header {
     vertical-align: top; }
 
 .page-body {
-  margin-top: 50px;
+  margin-top: 0;
   overflow: hidden; }
+  .page-service-content .page-body {
+    margin-top: 40px; }
+  .page-admin-content .page-body {
+    margin-top: 60px; }
 
 ol.progress {
   display: table;
@@ -1721,6 +1746,9 @@ ol.progress {
   .tabs-panel.tabs-panel-selected {
     display: block; }
 
+.user-list {
+  margin-top: 60px; }
+
 @-ms-viewport {
   width: device-width; }
 @-o-viewport {
@@ -1735,11 +1763,12 @@ ol.progress {
 .validation-summary-container {
   width: 50%;
   padding: 0;
-  margin: 0; }
+  margin: 40px 0 0 0; }
 
 .validation-summary {
   border-width: 0 0 0 3px;
-  margin: 60px 0 0 0;
+  margin: 0;
+  padding: 15px 0 15px 15px;
   background-color: #fdebf2; }
   .validation-summary ul {
     list-style: disc;

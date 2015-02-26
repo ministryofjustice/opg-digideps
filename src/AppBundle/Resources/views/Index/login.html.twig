@@ -4,17 +4,21 @@
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
-{% block pageNavigation %}{% endblock %}
+{% block pageNavigation %}
+{% endblock %}
 
 {% block validationSummary %}
     {{ form_errors_list(form) }}
 {% endblock %}
 
+
 {% block pageBody %}
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
     {{ form_end(form) }}
 
 {% endblock %}

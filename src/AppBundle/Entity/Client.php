@@ -47,7 +47,7 @@ class Client
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="client.casenumber.notBlank")
+     * @Assert\NotBlank( message="client.caseNumber.notBlank")
      * @var string $caseNumber
      */
     private $caseNumber;

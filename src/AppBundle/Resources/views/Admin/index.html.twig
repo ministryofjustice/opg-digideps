@@ -14,7 +14,6 @@
 {% block pageBody %}
     {% include 'AppBundle:Admin:_add.html.twig' %}
 
-    <h4>List users</h4>
     {% include 'AppBundle:Admin:_list.html.twig' with {users: users, form: form} %}
 
 {% endblock %}
