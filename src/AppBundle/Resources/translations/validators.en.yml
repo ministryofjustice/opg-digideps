@@ -36,7 +36,7 @@ user:
     minLength: The phone number must be at least {{ limit }} characters long
     maxLength: The phone number cannot be longer than {{ limit }} characters long
   phoneHome:
-    notBlank: The home phone cannot be blank
+    notBlank: The main telephone number cannot be blank
   phoneWork:
     notBlank: The work phone cannot be blank
   phoneMobile:

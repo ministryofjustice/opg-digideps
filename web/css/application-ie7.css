@@ -1492,6 +1492,9 @@ header.page-header {
   width: 50%;
   margin-bottom: 40px; }
 
+.button-bar {
+  margin-top: 10px; }
+
 .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 15px 0 15px 15px; }
