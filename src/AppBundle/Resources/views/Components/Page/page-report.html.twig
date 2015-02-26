@@ -1,24 +1,49 @@
 {% extends 'application.html.twig' %}
+{% block pageTitle %}Deputyship Report{% endblock %}
+{% block contentClass %}page-report-content{% endblock %}
+
+{% set reportStartYear = 2014 %}
+{% set reportEndYear = 2015 %}
+
+{% if reportStartYear == reportEndYear %}
+    {% set reportRange = reportStartYear %}
+{% else %}
+    {% set reportRange = reportStartYear ~ ' - ' ~ reportEndYear %}
+{% endif %}
+
+{% set reportStartDate = '01 June 2014' %}
+{% set reportEndDate = '31 May 2015' %}
+{% set reportDueDate = '26 July 2015' %}
+{% set clientName = 'James Smith' %}
+
 
 {% block pageContent %}
     {% block pageHeader %}
-        {#% include 'AppBundle:Partials:_service-header.html.twig' with {
-        serviceName: 'Admin Deputyship service',
-        title: 'Add Users'
-        } %#}
 
         <header class="page-header group">
-            <div class="hgroup">
-                <h1>
-                    <span>{% block serviceName %}Admin Deputyship service{% endblock %}</span>
-                    {% block title %}test{% endblock %}
+
+            <div class="column-half page-header-titles">
+                <h1 class="heading-large report-title">{{ reportRange }} report
+                    <div class="heading-large client-name">{{ clientName }}</div>
                 </h1>
             </div>
-        </header>
+            <div class="column-half page-header-meta-data">
+                <div class="report-meta-data">
+                    <span class="report-meta__label">Reporting period:</span>
+                    <span class="report-meta report-meta__data">{{ reportStartDate }} - {{ reportEndDate }}</span>
+                </div>
+                <div class="report-meta-data">
+                    <span class="report-meta report-meta__label">Due date:</span>
+                    <span class="report-meta report-meta__data">{{ reportDueDate }}</span>
+                </div>
+            </div>
 
+        </header>
 
     {% endblock %}
     <div class="tabs">
-        {% block pageBody %}{% endblock %}
+        <div class="page-body">
+            {% block pageBody %}{% endblock %}
+        </div>
     </div>
 {% endblock %}

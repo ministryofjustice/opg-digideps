@@ -1599,6 +1599,8 @@ form {
     margin-top: 40px; }
   .page-admin-content .page-body {
     margin-top: 60px; }
+  .page-report-content .page-body {
+    margin-top: 60px; }
 
 ol.progress {
   display: table;
