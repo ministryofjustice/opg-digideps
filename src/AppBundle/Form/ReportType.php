@@ -24,12 +24,13 @@ class ReportType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+         
         if(!empty($this->filter)){
             $choices = $this->util->getAllowedCourtOrderTypeChoiceOptions($this->filter);
         }else{
             $choices = $this->util->getAllowedCourtOrderTypeChoiceOptions();
         }
-        
+       
         $builder->add('startDate', 'date', [ 'widget' => 'text',
                                               'input' => 'datetime',
                                               'format' => 'yyyy-MM-dd',
@@ -41,9 +42,9 @@ class ReportType extends AbstractType
                                             'invalid_message' => 'report.endDate.invalidMessage'
                                           ])
                 
-                ->add('courtOrderType', 'choice',   [ 'choices' => $choices, 
-                                                      'empty_data' => null ,
-                                                      'empty_value' => 'Please select ..'] )
+                ->add('courtOrderType', 'choice',[ 'choices' => $choices, 
+                                                 'empty_data' => null ,
+                                                 'empty_value' => 'Please select ..'] )
                 ->add('client', 'hidden')
                 ->add('save', 'submit');
     }

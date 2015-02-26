@@ -20,7 +20,7 @@ class ReportController extends Controller
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
-        
+       
         $client = $apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
         
         //lets check if this  user already has another report, if not start date should be court order date
@@ -37,21 +37,23 @@ class ReportController extends Controller
                                   [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
         
         $form->handleRequest($request);
-        
+       
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
                 $response = $apiClient->postC('add_report', $form->getData());
                 return $this->redirect($this->generateUrl('report_overview', [ 'id' => $response['report'] ]));
             }
         }
+        
         return [ 'form' => $form->createView() ];
     }
     
     /**
-     * @Route("/overview/{id}")
+     * @Route("/overview/{id}", name="report_overview")
      * @Template()
      */
     public function overviewAction()
-    { 
+    {
+        return [];
     }
 }

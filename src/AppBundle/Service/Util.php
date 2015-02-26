@@ -25,9 +25,8 @@ class Util
      */
     public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [])
     {
-        $choices = [];
         $response = $this->apiClient->get('get_all_court_order_type');
-        
+       
         if($response->getStatusCode() == 200){
             $arrayData = $response->json();
             

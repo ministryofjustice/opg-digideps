@@ -26,6 +26,6 @@ save:
 createReport:
     pageTitle: Step 4 - Create a report
 courtOrderType:
-    label: Court Order Type
+    label: Report Type
 
     

@@ -42,7 +42,6 @@ class Report
     /**
      * @JMS\Type("integer")
      * @Assert\NotBlank( message="report.courtOrderType.notBlank" )
-     * @Assert\Type( type="integer", message="report.courtOrderType.invalidMessage" )
      * @var integer $courtOrderType
      */
     private $courtOrderType;

@@ -1,1 +1,10 @@
-{# empty Twig template #}
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% trans_default_domain "report-overview" %}
+
+{% block pageTitle %}{{ 'overview.pageTitle' | trans }} {% endblock %}
+{% block title %}{% trans %}overview.pageTitle{% endtrans %}{% endblock %}
+
+
+{% block pageBody %}
+    <h1>Overview Page</h1>
+{% endblock %}

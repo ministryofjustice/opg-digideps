@@ -70,6 +70,7 @@ class ApiClient extends GuzzleClient
     public function getEntity($class, $endpoint, array $options = [])
     {
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
+       
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
         
         return $ret;
@@ -121,6 +122,7 @@ class ApiClient extends GuzzleClient
                 try {
                     $responseArray = $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', $this->format);
                 } catch (\Exception $e) {
+                    
                     throw new RuntimeException("Error from API: malformed message. " . $debugData);
                 }
                 
@@ -181,6 +183,7 @@ class ApiClient extends GuzzleClient
     public function postC($endpoint, $bodyorEntity, array $options = [])
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
+        
         $responseArray = $this->deserialiseResponse($this->post($endpoint, ['body'=>$body]));
         return $responseArray['data'];
     }

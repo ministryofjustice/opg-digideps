@@ -62,6 +62,7 @@ class Client
     private $courtDate;
     
     /**
+     * @JMS\Accessor(setter="setAllowedCourtOrderTypes")
      * @JMS\Type("array")
      * @Assert\NotBlank( message = "client.allowedCourtOrderTypes.notBlank")
      * @var array allowedCourtOrderTypes
@@ -178,6 +179,26 @@ class Client
         return $this;
     }
     
+    public function removeReport($report)
+    {
+        if(!empty($this->reports)){
+            foreach($this->reports as $key => $reportObj){
+                if($reportObj->getId() == $report->getId()){
+                    unset($this->reports[$key]);
+                    return $this;
+                }
+            }
+        }
+        return $this;
+    }
+    
+    public function hasReport()
+    {
+        if(!empty($this->reports)){
+            return true;
+        }
+        return false;
+    }
     /**
      * 
      * @return string $lastname
@@ -270,6 +291,10 @@ class Client
         return false;
     }
     
+    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
+    {
+       $this->allowedCourtOrderTypes = $allowedCourtOrderTypes; 
+    }
     /**
      * 
      * @return string $address

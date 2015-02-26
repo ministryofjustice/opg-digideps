@@ -51,15 +51,16 @@ class LoginEventListener
         if ($this->security->isGranted('ROLE_ADMIN')) {
             $route = 'admin_homepage';
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
-            if (!$user->hasDetails()) {
+            /*if (!$user->hasDetails()) {
                 $route = 'user_details';
             } else if (!$user->hasClient()) { 
                 $route = 'client_add';
-            } /*else if (!$user->getClient()->hasReport()) {
+            } else if (!$user->getClient()->hasReport()) {
                 $route = 'report_create';
-            } */else {
+            }else {
                 $route = 'homepage'; // TODO use dashboard when implemented
-            }
+            }*/
+            $route = 'client_add';
         }
 
         $event->getResponse()->headers->set('Location', $this->router->generate($route));

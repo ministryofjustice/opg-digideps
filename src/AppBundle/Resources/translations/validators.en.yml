@@ -69,7 +69,7 @@ report:
         beforeStart: End date can't be before start date
         greaterThan12Months: Report period can't cover more than 12 months
     courtOrderType:
-        notBlank: Please select a court order type
+        notBlank: Please select a report type
 login:
     email:
         notBlank: Please enter your email
