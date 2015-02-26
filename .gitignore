@@ -4,7 +4,6 @@ nbproject
 app/cache/*
 app/logs/*
 vendor/*
-misc/tmp/*
 .idea/*
 *.iml
 composer.phar
