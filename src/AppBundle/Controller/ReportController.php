@@ -23,6 +23,8 @@ class ReportController extends Controller
        
         $client = $apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
         
+        $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
+        
         //lets check if this  user already has another report, if not start date should be court order date
         $report = new Report();
         $report->setClient($client->getId());
@@ -33,9 +35,16 @@ class ReportController extends Controller
             $report->setStartDate($client->getCourtDate());
         }
         
-        $form = $this->createForm(new ReportType($this->get('util'), $client->getAllowedCourtOrderTypes()), $report,
-                                  [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
+        //if client has property & affairs and health & welfare then give them property & affairs
+        //else give them health and welfare
+        if(count($allowedCourtOrderTypes) > 1){
+            $report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
+        }else{
+            $report->setCourtOrderType($allowedCourtOrderTypes[0]);
+        }
         
+        $form = $this->createForm(new ReportType(), $report,
+                                  [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
         $form->handleRequest($request);
        
         if($request->getMethod() == 'POST'){

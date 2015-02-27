@@ -10,7 +10,6 @@
     <p class="page-section-description">The reporting period is usually for a 12-month period. Set the end date now for a 12-month period. If OPG need you to send a report before this, we will let you know.</p>
 
     {{ form_known_date(form.endDate, 'endDate') }}
-    {{ form_select(form.courtOrderType, 'courtOrderType') }}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.save,'save') }}

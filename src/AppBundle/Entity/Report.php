@@ -11,6 +11,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
+    const PROPERTY_AND_AFFAIRS = 2;
     /**
      * @JMS\Type("integer")
      * @var integer
