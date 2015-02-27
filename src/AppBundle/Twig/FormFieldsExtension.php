@@ -7,11 +7,13 @@ class FormFieldsExtension extends \Twig_Extension
 {
     private $translator;
     private $environment;
+    private $params;
     
     
-    public function __construct($translator)
+    public function __construct($translator, $params)
     {
         $this->translator = $translator;
+        $this->params = $params;
     }
     
     public function initRuntime(\Twig_Environment $environment) {
@@ -65,25 +67,20 @@ class FormFieldsExtension extends \Twig_Extension
      */
     public function progressBar($barName, $activeStepNumber)
     {
-        //TODO move to YML config somewhere
-        $bars = [
-            'registration'       => [1, 2, 3, 4],
-            'registration_admin' => [1, 2],
-        ];
-        
         // set classes and labels from translation
-        $progressSteps = [];
-        foreach ($bars[$barName] as $stepNumber) {
-            $progressSteps[] = [
+        $steps = [];
+        $bar = empty($this->params['progress_bars'][$barName]) ? [] : $this->params['progress_bars'][$barName];
+        foreach ($bar as $stepNumber) {
+            $steps[] = [
                 'label' => $this->translator->trans($barName . '.' . $stepNumber . '.label', [], 'progress-bar'),
-                'class' => ($stepNumber == $activeStepNumber ? ' progress--active ' : '')
-                    . ($stepNumber < $activeStepNumber ? ' progress--completed ' : '')
-                    . ($stepNumber == $activeStepNumber - 1 ? ' progress--previous ' : '')
+                'class' => (($stepNumber == $activeStepNumber)     ? ' progress--active '    : '')
+                         . (($stepNumber < $activeStepNumber)      ? ' progress--completed ' : '')
+                         . (($stepNumber == $activeStepNumber - 1) ? ' progress--previous '  : '')
             ];
         }
         
         echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
-            'progressSteps' => $progressSteps
+            'progressSteps' => $steps
         ]);
     }
 

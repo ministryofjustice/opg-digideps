@@ -1,5 +1,6 @@
 imports:
     - { resource: endpoints.yml }
+    - { resource: twig_form_fields_extension.yml }
     
 services:
     apiclient:
@@ -14,7 +15,7 @@ services:
     formFieldsExtension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
-        arguments: [ @translator ]
+        arguments: [ @translator, "%twig_form_fields_extension%" ]
         tags:
             - { name: twig.extension }
     mailSender:
