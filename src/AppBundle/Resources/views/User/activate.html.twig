@@ -5,7 +5,11 @@
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 1} %}
+    {% if showAllSteps %}
+        {{ progress_bar('registration', 1) }}
+    {% else %}
+        {{ progress_bar('registration_admin', 1) }}
+    {% endif %}
 {% endblock %}
 
 {% block validationSummary %}

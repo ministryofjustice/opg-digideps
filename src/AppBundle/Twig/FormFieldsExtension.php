@@ -29,6 +29,7 @@ class FormFieldsExtension extends \Twig_Extension
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
+            'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
         ];
     }
@@ -55,6 +56,35 @@ class FormFieldsExtension extends \Twig_Extension
         }
         
         return implode(' ', $return);
+    }
+    
+    /**
+     * 
+     * @param string $barName
+     * @param integer $activeStepNumber
+     */
+    public function progressBar($barName, $activeStepNumber)
+    {
+        //TODO move to YML config somewhere
+        $bars = [
+            'registration'       => [1, 2, 3, 4],
+            'registration_admin' => [1, 2],
+        ];
+        
+        // set classes and labels from translation
+        $progressSteps = [];
+        foreach ($bars[$barName] as $stepNumber) {
+            $progressSteps[] = [
+                'label' => $this->translator->trans($barName . '.' . $stepNumber . '.label', [], 'progress-bar'),
+                'class' => ($stepNumber == $activeStepNumber ? 'progress--active' : '')
+                    . ($stepNumber < $activeStepNumber ? 'progress--completed' : '')
+                    . ($stepNumber == $activeStepNumber - 1 ? 'progress--previous' : '')
+            ];
+        }
+        
+        echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
+            'progressSteps' => $progressSteps
+        ]);
     }
 
     
