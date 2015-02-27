@@ -23,5 +23,5 @@ phoneWork:
 phoneMobile:
     label: Mobile phone
 submit:
-    label: Save
+    label: Save and continue
 cancelText: Cancel

@@ -28,6 +28,8 @@ phone:
     label: Main telephone number
 save:
     label: Save
+saveAndContinue:
+    label: Save and continue
 createReport:
     pageTitle: Step 4 - Create a report
 startDate:
