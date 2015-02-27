@@ -46,35 +46,11 @@ class FormFieldsExtension extends \Twig_Extension
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
-            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
             'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
         ];
     }
     
-    /**
-     * Calculate classes needed for each step for user registration
-     * 
-     * @param integer $step
-     * @param integer $currentStep
-     * @param array $classes keys: active, completed, previous
-     * @return type
-     */
-    public function stepProgressClass($step, $currentStep, array $classes)
-    {
-        $return = [];
-        if ($step == $currentStep) {
-            $return[] = $classes['active'];
-        }
-        if ($step < $currentStep) {
-            $return[] = $classes['completed'];
-        }
-        if ($step == $currentStep - 1) {
-            $return[] = $classes['previous'];
-        }
-        
-        return implode(' ', $return);
-    }
     
     /**
      * 
