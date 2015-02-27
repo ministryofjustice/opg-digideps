@@ -138,7 +138,6 @@ Feature: add client and report
             | report_endDate_day |  |
             | report_endDate_month | 12 |
             | report_endDate_year | 2015 |
-            | report_courtOrderType | 1 |
         And I submit the form
         Then the form should contain an error
         # missing month
@@ -146,7 +145,6 @@ Feature: add client and report
             | report_endDate_day | 31 |
             | report_endDate_month |  |
             | report_endDate_year | 2015 |
-            | report_courtOrderType | 1 |
         And I submit the form
         Then the form should contain an error
         # missing year
@@ -154,7 +152,6 @@ Feature: add client and report
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year |  |
-            | report_courtOrderType | 1 |
         And I submit the form
         Then the form should contain an error
         # invalid date
@@ -162,7 +159,6 @@ Feature: add client and report
             | report_endDate_day | 99 |
             | report_endDate_month | 99 |
             | report_endDate_year | 2015 |
-            | report_courtOrderType | 1 |
         And I submit the form
         Then the form should contain an error
         # date before report
@@ -170,7 +166,6 @@ Feature: add client and report
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2010 |
-            | report_courtOrderType | 1 |
         And I submit the form
         Then the form should contain an error
         # date range too high
@@ -178,15 +173,6 @@ Feature: add client and report
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2016 |
-            | report_courtOrderType | 1 |
-        And I submit the form
-        Then the form should contain an error
-         # missing court order type
-        When I fill in the following:
-            | report_endDate_day | 31 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |
-            | report_courtOrderType |  |
         And I submit the form
         Then the form should contain an error
         # valid form
@@ -194,7 +180,6 @@ Feature: add client and report
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2015 |
-            | report_courtOrderType | 1 |
         And I submit the form
         Then the form should not contain an error
         # assert you are on dashboard
