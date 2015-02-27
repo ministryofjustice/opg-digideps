@@ -43,7 +43,7 @@ Feature: set password
         Then the form should not contain an error
         And I should see the "user-details" region
         # test login
-        When I click on "logout"
+        When I go to "logout"
         And I go to "/login"
         And I fill in the following: 
             | login_email     | behat-user@publicguardian.gsi.gov.uk |
