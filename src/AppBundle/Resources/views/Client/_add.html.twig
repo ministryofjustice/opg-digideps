@@ -1,7 +1,7 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
 {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
-    formTitle: 'Client details'
+    formTitle: "Client's details"
 } %}
 
 {{ form_input(form.firstname, 'firstname') }}
@@ -27,7 +27,7 @@
 
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'save') }}
+    {{ form_submit(form.save,'save', { labelText: 'Save and continue' }) }}
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 {{ form_end(form) }}
 
