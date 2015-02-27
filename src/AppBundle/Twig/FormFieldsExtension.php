@@ -76,9 +76,9 @@ class FormFieldsExtension extends \Twig_Extension
         foreach ($bars[$barName] as $stepNumber) {
             $progressSteps[] = [
                 'label' => $this->translator->trans($barName . '.' . $stepNumber . '.label', [], 'progress-bar'),
-                'class' => ($stepNumber == $activeStepNumber ? 'progress--active' : '')
-                    . ($stepNumber < $activeStepNumber ? 'progress--completed' : '')
-                    . ($stepNumber == $activeStepNumber - 1 ? 'progress--previous' : '')
+                'class' => ($stepNumber == $activeStepNumber ? ' progress--active ' : '')
+                    . ($stepNumber < $activeStepNumber ? ' progress--completed ' : '')
+                    . ($stepNumber == $activeStepNumber - 1 ? ' progress--previous ' : '')
             ];
         }
         

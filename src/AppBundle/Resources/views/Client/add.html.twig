@@ -6,7 +6,7 @@
 {% block title %}{% trans %}addClient.pageTitle{% endtrans %}{% endblock %}
 
 {% block pageNavigation %}
-    {% if not is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_ADMIN') %}
         {{ progress_bar('registration_admin', 3) }}
     {% else %}
         {{ progress_bar('registration', 3) }}
