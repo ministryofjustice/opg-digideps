@@ -41,8 +41,11 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
                 {% endif %}
-                 <li><a href="{{ path('user_details') }}" class="behat-link-user-details">{% trans %}userDetails{% endtrans %}</a></li>
-                <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+                
+                {% if is_granted('ROLE_ADMIN') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
+                    <li><a href="{{ path('user_details') }}" class="behat-link-user-details">{% trans %}userDetails{% endtrans %}</a></li>
+                    <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
+                {% endif %}
             {% endif %}
         </ul>
     </nav>
