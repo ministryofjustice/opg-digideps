@@ -2,19 +2,37 @@
 namespace AppBundle\Twig;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FormFieldsExtension extends \Twig_Extension
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+    
+    /**
+     * @var \Twig_Environment
+     */
     private $environment;
     
+    /**
+     * @var array
+     */
+    private $params;
     
-    public function __construct($translator)
+    /**
+     * @param type $translator
+     * @param type $params
+     */
+    public function __construct(TranslatorInterface $translator, $params)
     {
         $this->translator = $translator;
+        $this->params = $params;
     }
     
-    public function initRuntime(\Twig_Environment $environment) {
+    public function initRuntime(\Twig_Environment $environment)
+    {
         parent::initRuntime($environment);
         $this->environment = $environment;
     }
@@ -28,35 +46,11 @@ class FormFieldsExtension extends \Twig_Extension
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
-            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass'),
             'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
         ];
     }
     
-    /**
-     * Calculate classes needed for each step for user registration
-     * 
-     * @param integer $step
-     * @param integer $currentStep
-     * @param array $classes keys: active, completed, previous
-     * @return type
-     */
-    public function stepProgressClass($step, $currentStep, array $classes)
-    {
-        $return = [];
-        if ($step == $currentStep) {
-            $return[] = $classes['active'];
-        }
-        if ($step < $currentStep) {
-            $return[] = $classes['completed'];
-        }
-        if ($step == $currentStep - 1) {
-            $return[] = $classes['previous'];
-        }
-        
-        return implode(' ', $return);
-    }
     
     /**
      * 
@@ -65,25 +59,23 @@ class FormFieldsExtension extends \Twig_Extension
      */
     public function progressBar($barName, $activeStepNumber)
     {
-        //TODO move to YML config somewhere
-        $bars = [
-            'registration'       => [1, 2, 3, 4],
-            'registration_admin' => [1, 2],
-        ];
+        if (empty($this->params['progress_bars'][$barName])) {
+            return "[ Progress bar $barName not found or empty, check your configuration files ]";
+        }
         
+        $steps = [];
         // set classes and labels from translation
-        $progressSteps = [];
-        foreach ($bars[$barName] as $stepNumber) {
-            $progressSteps[] = [
+        foreach ($this->params['progress_bars'][$barName] as $stepNumber) {
+            $steps[] = [
                 'label' => $this->translator->trans($barName . '.' . $stepNumber . '.label', [], 'progress-bar'),
-                'class' => ($stepNumber == $activeStepNumber ? ' progress--active ' : '')
-                    . ($stepNumber < $activeStepNumber ? ' progress--completed ' : '')
-                    . ($stepNumber == $activeStepNumber - 1 ? ' progress--previous ' : '')
+                'class' => (($stepNumber == $activeStepNumber)     ? ' progress--active '    : '')
+                         . (($stepNumber < $activeStepNumber)      ? ' progress--completed ' : '')
+                         . (($stepNumber == $activeStepNumber - 1) ? ' progress--previous '  : '')
             ];
         }
         
         echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
-            'progressSteps' => $progressSteps
+            'progressSteps' => $steps
         ]);
     }
 
