@@ -2,21 +2,37 @@
 namespace AppBundle\Twig;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FormFieldsExtension extends \Twig_Extension
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+    
+    /**
+     * @var \Twig_Environment
+     */
     private $environment;
+    
+    /**
+     * @var array
+     */
     private $params;
     
-    
-    public function __construct($translator, $params)
+    /**
+     * @param type $translator
+     * @param type $params
+     */
+    public function __construct(TranslatorInterface $translator, $params)
     {
         $this->translator = $translator;
         $this->params = $params;
     }
     
-    public function initRuntime(\Twig_Environment $environment) {
+    public function initRuntime(\Twig_Environment $environment)
+    {
         parent::initRuntime($environment);
         $this->environment = $environment;
     }
@@ -67,10 +83,13 @@ class FormFieldsExtension extends \Twig_Extension
      */
     public function progressBar($barName, $activeStepNumber)
     {
-        // set classes and labels from translation
+        if (empty($this->params['progress_bars'][$barName])) {
+            return "[ Progress bar $barName not found or empty, check your configuration files ]";
+        }
+        
         $steps = [];
-        $bar = empty($this->params['progress_bars'][$barName]) ? [] : $this->params['progress_bars'][$barName];
-        foreach ($bar as $stepNumber) {
+        // set classes and labels from translation
+        foreach ($this->params['progress_bars'][$barName] as $stepNumber) {
             $steps[] = [
                 'label' => $this->translator->trans($barName . '.' . $stepNumber . '.label', [], 'progress-bar'),
                 'class' => (($stepNumber == $activeStepNumber)     ? ' progress--active '    : '')

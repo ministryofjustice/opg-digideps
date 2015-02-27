@@ -1,6 +1,6 @@
 imports:
     - { resource: endpoints.yml }
-    - { resource: twig_form_fields_extension.yml }
+    - { resource: twig.yml }
     
 services:
     apiclient:
