@@ -52,7 +52,11 @@ class LoginEventListener
         $options = [];
         
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            $route = 'admin_homepage';
+            if (!$user->hasDetails()) {
+                $route = 'user_details';
+            } else {
+                $route = 'admin_homepage';
+            }
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
             if (!$user->hasDetails()) {
                 $route = 'user_details';

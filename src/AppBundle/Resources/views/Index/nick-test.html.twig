@@ -10,7 +10,7 @@
 
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Components/Navigation:_progress-indicator2.html.twig' with {progressSteps: progressSteps} %}
+    {{ progress_bar('registration', 3) }}
 {% endblock %}
 
 {% block pageBody %}

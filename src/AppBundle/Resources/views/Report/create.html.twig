@@ -5,7 +5,7 @@
 {% block title %}{% trans %}createReport.pageTitle{% endtrans %}{% endblock %}
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 4} %}
+    {{ progress_bar('registration', 4) }}
 {% endblock %}
 
 {% block validationSummary %}
