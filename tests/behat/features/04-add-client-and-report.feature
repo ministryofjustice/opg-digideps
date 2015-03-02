@@ -188,3 +188,9 @@ Feature: add client and report
      Scenario: report overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "/report/overview/1"
+        
+    Scenario: check homepage redirect
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should be on "/report/overview/1"
+        When I go to "/"
+        Then I should be on "/report/overview/1"
