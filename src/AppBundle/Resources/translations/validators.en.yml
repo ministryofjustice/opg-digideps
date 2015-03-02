@@ -54,7 +54,7 @@ client:
         message: Please enter a valid court order date
         notBlank: Please enter a court order date
     address:
-        notBlank: Please enter your address
+        notBlank: Please enter your client's address
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
     casenumber:
