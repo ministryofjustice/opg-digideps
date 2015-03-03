@@ -117,7 +117,7 @@ Feature: add details
 
     Scenario: add user details (admin user)
         Given I am logged in as "deputyshipservice@publicguardian.gsi.gov.uk" with password "test"
-        When I click on "user details"
+        When I go to "user/details"
         # missing firstname
         And I fill in the following:
             | user_details_firstname |  |
