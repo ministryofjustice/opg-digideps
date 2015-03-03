@@ -20,9 +20,7 @@ class DecisionController extends RestController
     {
         $data = $this->deserializeBodyContent();
       
-        // read user
         $report = $this->findEntityBy('Report', $data['report_id'], 'Report not found');
-
         $decision = new Decision();
         $decision->setReport($report);
         
