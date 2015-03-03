@@ -7,12 +7,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
-    private $apiClient;
+    private $util;
     
-    public function __construct($apiClient) 
+    public function __construct($util) 
     {
-        $this->apiClient = $apiClient;
+        $this->util = $util;
     }
+    
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -24,16 +25,27 @@ class ClientType extends AbstractType
                                               'format' => 'yyyy-MM-dd',
                                               'invalid_message' => 'client.courtDate.message'
                                             ])
-                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->getAllowedCourtOrderTypes(), 
+                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->util->getAllowedCourtOrderTypeChoiceOptions(), 
                                                             'multiple' => true,
                                                             'expanded' => true ])
                 ->add('address', 'text')
                 ->add('address2', 'text')
                 ->add('postcode', 'text')
                 ->add('county','text')
-                ->add('country', 'country', [ 'preferred_choices' => ['GB'], 'empty_value' => 'Please select ...' ])
+                ->add('country', 'country', [ 
+                    'preferred_choices' => ['GB'], 
+                    'empty_value' => 'country.defaultOption'
+                ])
                 ->add('phone', 'text')
-                ->add('user', 'hidden')
+                ->add('users', 'collection', [ 'type' => 'integer', 
+                                               'options' => [ 'required' => false, 
+                                                              'attr' => [ 'style' => 'display: none'], 
+                                                              'label' => false ], 'label' => false ])
+                ->add('reports', 'collection', [ 'type' => 'integer', 
+                                               'options' => [ 'required' => false, 
+                                                              'attr' => [ 'style' => 'display: none'], 
+                                                              'label' => false ], 'label' => false ])
+                ->add('id', 'hidden')
                 ->add('save', 'submit');
     }
     
@@ -43,22 +55,7 @@ class ClientType extends AbstractType
             'translation_domain' => 'registration',
         ]);
     }
-    
-    protected function getAllowedCourtOrderTypes()
-    {
-        $choices = [];
-        $response = $this->apiClient->get('get_all_court_order_type');
-        
-        if($response->getStatusCode() == 200){
-            $arrayData = $response->json();
-        
-            foreach($arrayData['data']['court_order_types'] as $value){
-                $choices[$value['id']] = $value['name'];
-            }
-        }
-        return $choices;
-    }
-    
+     
     public function getName()
     {
         return 'client';

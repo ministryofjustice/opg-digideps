@@ -1,5 +1,6 @@
 imports:
     - { resource: endpoints.yml }
+    - { resource: twig.yml }
     
 services:
     apiclient:
@@ -8,10 +9,13 @@ services:
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @apiclient, @jms_serializer ]
+    util:
+        class: AppBundle\Service\Util
+        arguments: [@apiclient]
     formFieldsExtension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
-        arguments: [ @translator ]
+        arguments: [ @translator, "%twig_form_fields_extension%" ]
         tags:
             - { name: twig.extension }
     mailSender:
@@ -19,8 +23,11 @@ services:
         arguments: [ @apiclient, @translator, @router ]
         calls:
             - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
+    redirectorService:
+        class: AppBundle\Service\Redirector
+        arguments: [ @security.context, @router ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
-        arguments: [ @router, @security.context, @event_dispatcher ]
+        arguments: [ @event_dispatcher, @redirectorService ]
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }

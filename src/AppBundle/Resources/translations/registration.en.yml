@@ -2,13 +2,17 @@ addClient:
     pageTitle: Add your client's details
 courtDate:
     legend: Court order date
+    hint: (DD/MM/YYYY)
 firstname:
     label: First name
 lastname:
     label: Last name
 caseNumber:
     label: Case number
-    hint: The case number is on the first page of the court order (top right-hand corner ).
+    hint: The case number is on the first page of the court order (top right-hand corner).
+allowedCourtOrderTypes:
+    legend: Court order type
+    hint: Select all that apply
 address:
     label: Address
 address2:
@@ -18,13 +22,22 @@ county:
 postcode:
     label: Postcode
 country:
-    label: ' '
+    label: Country
+    defaultOption: Please select
 phone:
-    label: Home Phone
+    label: Main telephone number
 save:
     label: Save
-
+saveAndContinue:
+    label: Save and continue
 createReport:
-    pageTitle: Create a report
+    pageTitle: Step 4 - Create a report
+startDate:
+    legend: Start date
+    hint: (DD/MM/YYYY)
+endDate:
+    legend: End date
+    hint: (DD/MM/YYYY)
+courtOrderType:
+    label: Report Type
 
-    

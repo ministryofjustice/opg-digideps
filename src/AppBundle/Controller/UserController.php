@@ -65,6 +65,7 @@ class UserController extends Controller
                  $event = new InteractiveLoginEvent($request, $token);
                  $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
                  
+                 // the following should not be triggered
                  return $this->redirect($this->generateUrl('user_details'));
             }
         } 
@@ -72,7 +73,7 @@ class UserController extends Controller
         return $this->render('AppBundle:User:activate.html.twig', [
             'token'=>$token, 
             'form' => $form->createView(),
-            'twoStepsOnly' => $user->getRole()['role'] == 'ROLE_ADMIN'
+            'showAllSteps' => $user->getRole()['role'] !== 'ROLE_ADMIN'
         ]);
     }
     
@@ -89,7 +90,6 @@ class UserController extends Controller
         
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
-            'countryPreferredOptions' => $this->container->hasParameter('form_country_preferred_options') ? $this->container->getParameter('form_country_preferred_options') : []
         ]);
         $form = $this->createForm($formType, $user);
         
@@ -110,7 +110,7 @@ class UserController extends Controller
         
         return $this->render('AppBundle:User:details.html.twig', [
             'form' => $form->createView(),
-            'twoStepsOnly' => $basicFormOnly
+            'showAllSteps' => !$basicFormOnly
         ]);
         
     }

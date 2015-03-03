@@ -11,17 +11,21 @@ default:
             - DigidepsBehat\FeatureContext:
                 -
                     session:   '@session'
-                    xdebugMaxNestingLevel: 200
+                    maxNestingLevel: 200
+#                    scriptTimeout: 10
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:
+            base_url: 'http://digideps-client.local/'
             sessions:
               default:
-                symfony2: ~   
-#            base_url: http://digideps-api.local/
-        #Behat\MinkExtension\Extension:
-        #Behat\MinkExtension\ServiceContainer\MinkExtension:
-        #    goutte:
-        #        guzzle_parameters: ~
-        #    selenium2: ~
-        #    base_url: http://digideps.behat.local/
+                goutte: ~
+                #   guzzle_parameters:
+                #      # http://guzzle3.readthedocs.org/http-client/client.html
+                #      ssl.certificate_authority: false
+                #      # curl.options: ~
+                #      command.request_options:
+                #        timeout: 5
+                #        connect_timeout: 5
+                # the following is faster but not behaving the same as the browser. Goutte better for now
+                #symfony2: ~  

@@ -89,6 +89,12 @@ class User implements AdvancedUserInterface
     private $roleId;
     
     /**
+     * @JMS\Type("array")
+     * @var array
+     */
+    private $clients;
+    
+    /**
      * @JMS\Type("boolean")
      * @var boolean $emailConfirmed
      */
@@ -351,6 +357,16 @@ class User implements AdvancedUserInterface
         return $this->role;
     }
     
+    public function setClients(array $clients)
+    {
+        $this->clients = $clients;
+    }
+    
+    public function getClients()
+    {
+        return $this->clients;
+    }
+    
     /**
      * 
      * @return boolean
@@ -587,6 +603,35 @@ class User implements AdvancedUserInterface
     public function setPhoneMobile($phoneMobile)
     {
         $this->phoneMobile = $phoneMobile;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function hasDetails()
+    {
+        return $this->getAddress1() || $this->getAddress2() || $this->getAddress3()
+               || $this->getAddressCountry() || $this->getAddressPostcode()
+               || $this->getPhoneHome() || $this->getPhoneMobile() || $this->getPhoneWork();
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function hasClients()
+    {
+        if(!empty($this->clients)){
+            return true;
+        }
+        return false;
+    }
+    
+    public function hasReports()
+    {
+        if(!empty($this->clients[0]['reports'])){
+            return true;
+        }
+        return false;
     }
 
     

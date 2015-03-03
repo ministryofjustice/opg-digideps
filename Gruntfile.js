@@ -51,7 +51,7 @@ module.exports = function (grunt) {
             },
             js: {
               files: [jsPath + '/**/*.js'],
-              task: ['copyJS']
+              task: ['copy']
             }
         },
 

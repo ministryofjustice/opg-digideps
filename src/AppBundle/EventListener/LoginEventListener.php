@@ -1,33 +1,37 @@
 <?php
 namespace AppBundle\EventListener;
 
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\SecurityContext;
+
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use AppBundle\Service\Redirector;
 
 /**
  * Login listener
  */
 class LoginEventListener
 {
-    protected $router;
-    protected $security;
-    protected $dispatcher;
+   
     
     /**
-     * 
-     * @param Router $router
-     * @param SecurityContext $security
-     * @param EventDispatcher $dispatcher
+     * @var EventDispatcher 
      */
-    public function __construct(Router $router, SecurityContext $security, EventDispatcher $dispatcher) 
+    protected $dispatcher;
+    /**
+     * @var Redirector 
+     */
+    protected $redirector;
+    
+    /**
+     * @param EventDispatcher $dispatcher
+     * @param Redirector $Redirector
+     */
+    public function __construct(EventDispatcher $dispatcher, Redirector $Redirector) 
     {
-        $this->router = $router;
-        $this->security = $security;
         $this->dispatcher = $dispatcher;
+        $this->redirector = $Redirector;
     }
     
     /**
@@ -45,13 +49,8 @@ class LoginEventListener
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if($this->security->isGranted('ROLE_ADMIN')){
-            $event->getResponse()->headers->set('Location', $this->router->generate('user_details'));
-        }elseif($this->security->isGranted('ROLE_LAY_DEPUTY')){
-            $event->getResponse()->headers->set('Location', $this->router->generate('user_details'));
-        }else{
-            //we don't know who you are or your privilegdes
-            $event->getResponse()->headers->set('Location', $this->router->generate('access_denied'));
-        }
+        $redirectUrl = $this->redirector->getUserFirstPage();
+        
+        $event->getResponse()->headers->set('Location', $redirectUrl);
     }
 }

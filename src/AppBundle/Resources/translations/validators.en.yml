@@ -36,7 +36,7 @@ user:
     minLength: The phone number must be at least {{ limit }} characters long
     maxLength: The phone number cannot be longer than {{ limit }} characters long
   phoneHome:
-    notBlank: The home phone cannot be blank
+    notBlank: The main telephone number cannot be blank
   phoneWork:
     notBlank: The work phone cannot be blank
   phoneMobile:
@@ -48,13 +48,30 @@ client:
     lastname:
         notBlank: Please enter your lastname
         minMessage: Lastname must be at least {{ limit }} characters
+    caseNumber:
+        notBlank: Please enter the case number
     courtDate:
         message: Please enter a valid court order date
         notBlank: Please enter a court order date
     address:
-        notBlank: Please enter your address
+        notBlank: Please enter your client's address
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
+    casenumber:
+        notBlank: Please enter case number
+    postcode:
+        notBlank: Please enter postcode
+report:
+    startDate:
+        notBlank: Please enter report start date
+        invalidMessage: Invalid start date
+    endDate:
+        notBlank: Please enter report end date
+        invalidMessage: Invalid end date
+        beforeStart: End date can't be before start date
+        greaterThan12Months: Report period can't cover more than 12 months
+    courtOrderType:
+        notBlank: Please select a report type
 login:
     email:
         notBlank: Please enter your email

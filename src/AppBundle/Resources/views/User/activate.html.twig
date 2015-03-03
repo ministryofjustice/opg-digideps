@@ -5,7 +5,15 @@
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 1} %}
+    {% if showAllSteps %}
+        {{ progress_bar('registration', 1) }}
+    {% else %}
+        {{ progress_bar('registration_admin', 1) }}
+    {% endif %}
+{% endblock %}
+
+{% block validationSummary %}
+    {{ form_errors_list(form) }}
 {% endblock %}
 
 
@@ -21,7 +29,9 @@
 
     {{ form_input(form.password.second,'password_confirm', { 'labelClass': 'required' } ) }}
 
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

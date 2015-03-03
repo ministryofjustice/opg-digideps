@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class DefaultController extends Controller
 {
@@ -12,9 +13,6 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        // depending on user data, redirect to specific page
-        
-        //return $this->redirect($this->generateUrl('user_details'));
-//        return $this->render('AppBundle:default:index.html.twig');
+        return new RedirectResponse($this->get('redirectorService')->getUserFirstPage());
     }
 }

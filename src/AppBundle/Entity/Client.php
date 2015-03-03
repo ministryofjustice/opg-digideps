@@ -10,6 +10,12 @@ use JMS\Serializer\Annotation as JMS;
 class Client
 {
     /**
+     * @JMS\Type("integer")
+     * @var integer
+     */
+    private $id;
+    
+    /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.firstname.notBlank" )
      * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage")
@@ -18,11 +24,18 @@ class Client
     private $firstname;
     
     /**
-     *
-     * @JMS\Type("integer")
-     * @var array $user
+     * @JMS\Accessor(setter="addUsers", getter="getUsers")
+     * @JMS\Type("array")
+     * @var array $users
      */
-    private $user;
+    private $users;
+    
+    /**
+     * @JMS\Accessor(setter="addReports")
+     * @JMS\Type("array")
+     * @var array $reports
+     */
+    private $reports;
     
     /**
      * @JMS\Type("string")
@@ -34,19 +47,22 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.caseNumber.notBlank")
      * @var string $caseNumber
      */
     private $caseNumber;
     
     /**
+     * @JMS\Accessor(setter="setCourtDateWithoutTime")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank( message="client.courtDate.notBlank")
      * @Assert\Date( message="client.courtDate.message")
      * @var array $courtDate
-     */
+     */ 
     private $courtDate;
     
     /**
+     * @JMS\Accessor(setter="setAllowedCourtOrderTypes")
      * @JMS\Type("array")
      * @Assert\NotBlank( message = "client.allowedCourtOrderTypes.notBlank")
      * @var array allowedCourtOrderTypes
@@ -74,6 +90,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="client.postcode.notBlank")
      * @var string $postcode
      */
     private $postcode;
@@ -94,7 +111,7 @@ class Client
     public function __construct()
     {
         $this->allowedCourtOrderTypes = [];
-        //$this->users = [];
+        $this->users = [];
     }
     
     /**
@@ -116,18 +133,72 @@ class Client
     }
     
     
-    public function getUser()
+    public function getUsers()
     {
-        return $this->user;
+        return $this->users;
     }
     
     
-    public function setUser($user)
+    public function addUsers($users)
     {
-        $this->user = $user;
+        $this->users = $users;
         return $this;
     }
     
+    public function addUser($user)
+    {
+        $this->users[] = $user;
+        return $this;
+    }
+    
+    /**
+     * @return array $reports
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+    
+    /**
+     * @param  $report
+     * @return \AppBundle\Entity\Client
+     */
+    public function addReport($report)
+    {
+        $this->reports[] = $report;
+        return $this;
+    }
+    
+    /**
+     * @param type $reports
+     * @return \AppBundle\Entity\Client
+     */
+    public function addReports($reports)
+    {
+        $this->reports = $reports;
+        return $this;
+    }
+    
+    public function removeReport($report)
+    {
+        if(!empty($this->reports)){
+            foreach($this->reports as $key => $reportObj){
+                if($reportObj->getId() == $report->getId()){
+                    unset($this->reports[$key]);
+                    return $this;
+                }
+            }
+        }
+        return $this;
+    }
+    
+    public function hasReport()
+    {
+        if(!empty($this->reports)){
+            return true;
+        }
+        return false;
+    }
     /**
      * 
      * @return string $lastname
@@ -182,6 +253,11 @@ class Client
         $this->courtDate = $courtDate;
     }
     
+    public function setCourtDateWithoutTime($courtDate)
+    {
+        $this->courtDate = new \DateTime($courtDate->format('Y-m-d'));
+    }
+    
     /**
      * 
      * @return array $allowdCourtOrderTypes
@@ -215,6 +291,10 @@ class Client
         return false;
     }
     
+    public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
+    {
+       $this->allowedCourtOrderTypes = $allowedCourtOrderTypes; 
+    }
     /**
      * 
      * @return string $address
@@ -322,4 +402,15 @@ class Client
     {
         $this->phone = $phone;
     }
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
 }

@@ -2,11 +2,22 @@
 {% trans_default_domain "registration" %}
 
 {% block pageTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
+{% block contentClass %}{{ parent() }} registration-client-add behat-region-client-add{% endblock %}
 {% block title %}{% trans %}addClient.pageTitle{% endtrans %}{% endblock %}
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Components/Navigation:_progress-indicator.html.twig' with {currentStep: 3}%}
+    {% if is_granted('ROLE_ADMIN') %}
+        {{ progress_bar('registration_admin', 3) }}
+    {% else %}
+        {{ progress_bar('registration', 3) }}
+    {% endif %}
+    
 {% endblock %}
+
+{% block validationSummary %}
+    {{ form_errors_list(form) }}
+{% endblock %}
+
 
 {% block pageBody %}
     {% include 'AppBundle:Client:_add.html.twig' %}

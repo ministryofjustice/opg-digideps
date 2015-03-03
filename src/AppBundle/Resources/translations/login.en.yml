@@ -3,7 +3,7 @@ header: Sign in to the admin area
 subtitle: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, aperiam!
 email:
     label: Email address
-    hint: We sent you registration link to this email address
+    hint: We sent your registration link to this email address.
 password:
     label: Password
 login:

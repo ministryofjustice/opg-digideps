@@ -1,22 +1,33 @@
-    {{form_start(form, {attr: {novalidate: 'novalidate', class: 'page-body' }}) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        <h1 class="form-title heading-medium-large ">
-             Client details
-         </h1>
-   
-    {{form_input(form.firstname, 'firstname')}}
-    {{form_input(form.lastname, 'lastname')}}
-    {{form_input(form.caseNumber, 'caseNumber')}}
-    {{form_known_date(form.courtDate, 'courtDate')}}
-    {{form_errors(form.allowedCourtOrderTypes)}}
-    {{form_label(form.allowedCourtOrderTypes)}}
-    {{form_widget(form.allowedCourtOrderTypes)}} <br/>
-    {{form_input(form.address, 'address')}}
-    {{form_input(form.address2, 'address2')}}
-    {{form_input(form.county, 'county')}}
-    {{form_input(form.postcode, 'postcode')}}
-    {{form_select(form.country, 'country')}}
-    {{form_input(form.phone, 'phone')}}
-    {{form_submit(form.save,'save')}}
-    {{form_cancel({ 'href': '#' })}}
-    {{form_end(form) }}
+{% include 'AppBundle:Components/Form:_form-title.html.twig' with {
+    formTitle: "Client's details"
+} %}
+
+{{ form_input(form.firstname, 'firstname') }}
+{{ form_input(form.lastname, 'lastname') }}
+{{ form_input(form.caseNumber, 'caseNumber') }}
+{{ form_known_date(form.courtDate, 'courtDate') }}
+
+{{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
+    'fieldSetClass' : 'inline',
+    'legendClass' : 'form-label',
+    'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+    ]
+}) }}
+
+{{ form_input(form.address, 'address') }}
+{{ form_input(form.address2, 'address2') }}
+{{ form_input(form.county, 'county') }}
+{{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+{{ form_select(form.country, 'country') }}
+{{ form_input(form.phone, 'phone') }}
+
+
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'saveAndContinue') }}
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{{ form_end(form) }}
+

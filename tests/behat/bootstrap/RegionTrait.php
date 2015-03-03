@@ -17,7 +17,12 @@ trait RegionTrait
      */
     public function iShouldNotSeeTheRegion($region)
     {
-        $this->assertSession()->elementNotExists('css', self::behatRegionToCssSelector($region));
+        $regionCss = self::behatRegionToCssSelector($region);
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
+        $count = count($linksElementsFound);
+        if ($count > 0) {
+            throw new \RuntimeException("$count  $regionCss element(s) found. None expected");
+        }
     }
     
     /**
@@ -25,7 +30,11 @@ trait RegionTrait
      */
     public function iShouldSeeTheRegion($region)
     {
-        $this->assertSession()->elementExists('css', self::behatRegionToCssSelector($region));
+        $regionCss = self::behatRegionToCssSelector($region);
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
+        if (count($linksElementsFound) === 0) {
+            throw new \RuntimeException("Element $regionCss not found");
+        }
     }
     
     /**

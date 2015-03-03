@@ -1,15 +1,15 @@
 email:
   label: Email
-  hint: Please enter the email for this user
+  hint: ''
 firstname:
   label: First name
-  hint: Please enter the firstname for this user
+  hint: ''
 lastname:
   label: Last name
-  hint: Please enter the lastname for this user
+  hint: ''
 roleId:
   label: Role
-  hint: Please enter the role for this user  
+  hint: ''
   defaultOption: Please select ...
 submit:
   label: Submit

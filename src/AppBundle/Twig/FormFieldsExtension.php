@@ -1,18 +1,38 @@
 <?php
 namespace AppBundle\Twig;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class FormFieldsExtension extends \Twig_Extension
 {
+    /**
+     * @var TranslatorInterface
+     */
     private $translator;
+    
+    /**
+     * @var \Twig_Environment
+     */
     private $environment;
     
+    /**
+     * @var array
+     */
+    private $params;
     
-    public function __construct($translator)
+    /**
+     * @param type $translator
+     * @param type $params
+     */
+    public function __construct(TranslatorInterface $translator, $params)
     {
         $this->translator = $translator;
+        $this->params = $params;
     }
     
-    public function initRuntime(\Twig_Environment $environment) {
+    public function initRuntime(\Twig_Environment $environment)
+    {
         parent::initRuntime($environment);
         $this->environment = $environment;
     }
@@ -22,35 +42,41 @@ class FormFieldsExtension extends \Twig_Extension
         return [
             'form_input' => new \Twig_Function_Method($this, 'renderFormInput'),
             'form_submit' => new \Twig_Function_Method($this, 'renderFormSubmit'),
+            'form_errors_list' => new \Twig_Function_Method($this, 'renderFormErrorsList'),
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
-            'step_progress_class' => new \Twig_Function_Method($this, 'stepProgressClass')
+            'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
+            'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
         ];
     }
     
+    
     /**
-     * Calculate classes needed for each step for user registration
      * 
-     * @param integer $step
-     * @param integer $currentStep
-     * @param array $classes keys: active, completed, previous
-     * @return type
+     * @param string $barName
+     * @param integer $activeStepNumber
      */
-    public function stepProgressClass($step, $currentStep, array $classes)
+    public function progressBar($barName, $activeStepNumber)
     {
-        $return = [];
-        if ($step == $currentStep) {
-            $return[] = $classes['active'];
-        }
-        if ($step < $currentStep) {
-            $return[] = $classes['completed'];
-        }
-        if ($step == $currentStep - 1) {
-            $return[] = $classes['previous'];
+        if (empty($this->params['progress_bars'][$barName])) {
+            return "[ Progress bar $barName not found or empty, check your configuration files ]";
         }
         
-        return implode(' ', $return);
+        $steps = [];
+        // set classes and labels from translation
+        foreach ($this->params['progress_bars'][$barName] as $stepNumber) {
+            $steps[] = [
+                'label' => $this->translator->trans($barName . '.' . $stepNumber . '.label', [], 'progress-bar'),
+                'class' => (($stepNumber == $activeStepNumber)     ? ' progress--active '    : '')
+                         . (($stepNumber < $activeStepNumber)      ? ' progress--completed ' : '')
+                         . (($stepNumber == $activeStepNumber - 1) ? ' progress--previous '  : '')
+            ];
+        }
+        
+        echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
+            'progressSteps' => $steps
+        ]);
     }
 
     
@@ -70,7 +96,44 @@ class FormFieldsExtension extends \Twig_Extension
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
+    
+     
+    /**
+     * form_checkbox_group(element, 'allowedCourtOrderTypes', {
+       'legendClass' : 'form-label-bold',
+       'fieldSetClass' : 'inline',
+       'items': [
+           {'labelClass': 'block-label', 'elementClass': 'checkbox' },
+           {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
+        ]
+       })
+     */
+    public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
+    {
+        //lets get the translation for hintText, labelClass and labelText
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        $domain = $element->parent->vars['translation_domain'];
 
+        //sort hint text translation
+        $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
+        $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+
+        //get legendText translation
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        
+        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        
+         //generate input field html using variables supplied
+        echo $this->environment->render( 'AppBundle:Components/Form:_checkbox.html.twig', [
+            'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
+            'legendText' => $legendText,
+            'legendClass' => isset($vars['legendClass']) ? $vars['legendClass']: null,
+            'hintText' => $hintText,
+            'element'  => $element,
+            'items' => empty($vars['items']) ? [] : $vars['items'],
+        ]);
+    }
+    
     /**
      * Renders form select element
      *
@@ -137,6 +200,47 @@ class FormFieldsExtension extends \Twig_Extension
     }
     
     /**
+     * @param FormView $elementsFormView
+     * 
+     * @return array
+     */
+    private function getErrorsFromFormViewRecursive(FormView $elementsFormView)
+    {
+        $ret = [];
+        foreach ($elementsFormView as $elementFormView) {
+            $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
+            foreach ($elementFormErrors as $formError) { /* @var $error FormError */ 
+                $ret[] = ['elementId'=>$elementFormView->vars['id'], 'message'=>$formError->getMessage()];
+            }
+            $ret = array_merge(
+                $ret, 
+                $this->getErrorsFromFormViewRecursive($elementFormView)
+            );
+        }
+
+        return $ret;
+    }
+    
+    /**
+     * get form errors lits and render them inside Components/Alerts:error_summary.html.twig
+     * Usage: {{ form_errors_list(form) }}
+     * 
+     * @param FormView $form
+     */
+    public function renderFormErrorsList(FormView $form)
+    {
+        $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
+        
+        $html = $this->environment->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
+            'formErrorMessages' => $formErrorMessages
+        ]);
+        
+        echo $html;
+    }
+    
+    
+    
+    /**
      * @param array $vars
      * @throws type
      */
@@ -177,12 +281,14 @@ class FormFieldsExtension extends \Twig_Extension
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
 
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
+        $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         
         return [ 
             'labelText' => $labelText,
             'hintText' => $hintText,
             'element'  => $element,
-            'labelClass' => $labelClass
+            'labelClass' => $labelClass,
+            'inputClass' => $inputClass
         ];
     }
     

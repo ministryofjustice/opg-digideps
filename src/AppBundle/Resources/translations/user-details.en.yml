@@ -1,6 +1,5 @@
 pageTitle: Enter your details
 headerTitle: Step 2 - Enter your details
-stepTitle: Enter your details
 headerInstructions: ""
 firstname:
     label: First name
@@ -15,14 +14,14 @@ address3:
 addressPostcode:
     label: Postcode
 addressCountry:
-    label: " "
+    label: Country
     defaultOption: Please select ...
 phoneHome:
-    label: Home phone
+    label: Main telephone number
 phoneWork:
     label: Work phone
 phoneMobile:
     label: Mobile phone
 submit:
-    label: Save
+    label: Save and continue
 cancelText: Cancel

@@ -28,12 +28,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     use StatusSnapshotTrait;
     
-    private static $fixtures = null;
-    
     public function __construct(array $options)
     {
         //$options['session']; // not used
-        ini_set('xdebug.max_nesting_level', $options['xdebugMaxNestingLevel'] ?: 200);
+        ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
+        ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
+//        if (!empty($options['set_time_limit'])) {
+//            set_time_limit($options['set_time_limit']);
+//        }
     }
 
     
@@ -124,6 +126,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $linksElementsFound[0]->click();
     }
     
+    
     /**
      * @Then the page title should be :text
      */
@@ -135,16 +138,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * Array (
-            [to] => Array
-                (
+            [to] => Array(
                     [deputyshipservice@publicguardian.gsi.gov.uk] => test Test
                 )
 
-            [from] => Array
-                (
+            [from] => Array(
                     [admin@digideps.service.dsd.io ] => Digital deputyship service
                 )
-
             [bcc] =>
             [cc] =>
             [replyTo] =>
@@ -152,21 +152,17 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             [subject] => Digideps - activation email
             [body] => Hello test Test, click here http://link.com/activate/testtoken to activate your account
             [sender] =>
-            [parts] => Array
-                (
-                    [0] => Array
-                        (
+            [parts] => Array(
+                    [0] => Array(
                             [body] => Hello test Test<br/><br/>click here <a href="http://link.com/activate/testtoken">http://link.com/activate/testtoken</a> to activate your account
                             [contentType] => text/html
                         )
-
                 )
-
         )
      * 
      * @retun array
      */
-    protected function getLatestEmail()
+    private function getLatestEmailMockFromApi()
     {
         $this->visit('behat/email-get-last');
         
@@ -184,7 +180,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     /**
      * @BeforeScenario @cleanMail
      */
-    public function cleanMail(BeforeScenarioScope $scope)
+    public function beforeScenarioCleanMail(BeforeScenarioScope $scope)
     {
         $this->visit('behat/reset');
     }
@@ -194,7 +190,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function anEmailWithSubjectShouldHaveBeenSentTo($subject, $to)
     {
-        $mail = $this->getLatestEmail();
+        $mail = $this->getLatestEmailMockFromApi();
         $mailTo = key($mail['to']);
         
         
@@ -206,34 +202,15 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
     }
     
-    /**
-     * @When an email containing the following should have been sent to :to:
-     */
-//    public function anEmailContainingTheFollowingShouldHaveBeenSentTo2($to, TableNode $table)
-//    {
-//        $mail = $this->getLatestEmail();
-//        
-//        if ($to !== 'the specified email address' && $mail->getTo() != $to) {
-//            throw new \RuntimeException("Addressee '" . $mail->getTo() . "' does not match the expected '" . $to . "'");
-//        }
-//        
-//        foreach (array_keys($table->getRowsHash()) as $search) {
-//            if (strpos($mail->getRaw(), $search) === false) {
-//                throw new \RuntimeException("Email body does not contain the string '$search'");
-//            }
-//        }
-//        
-//    }
-
 
     /**
      * @When I open the first link on the email
      */
-    public function iOpenTheLinkOnTheEmail()
+    public function iOpenTheFirstLinkOnTheEmail()
     {
-        $mailContent = $this->getLatestEmail()['parts'][0]['body'];
+        $mailContent = $this->getLatestEmailMockFromApi()['parts'][0]['body'];
         
-        preg_match_all('#http://[^\s"<]+#', $mailContent, $matches);
+        preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
         if (empty($matches[0])) {
             throw new \Exception("no link found in email. Body:\n $mailContent");
         }
@@ -247,41 +224,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visit($link);
     }
 
-    /**
-     * @Then the email sent has a size of at least :atLeastKb kilobytes
-     */
-//    public function theEmailSentHasASizeBiggerThan($atLeastKb) //7
-//    {
-//        $mailSize = ceil(strlen(self::getApplicationBehatHelper()->getLatestEmail()->getRaw()) / 1024); //73
-//        if ($mailSize < $atLeastKb) {
-//            throw new \Exception("mail size is $mailSize bytes, should be bigger than $atLeastKb kb");
-//        }
-//    }
-    
-    /**
-     * Delete users with an email starting with behat-
-     * RElies on region "test-user" added in the admin view
-     * @Given I delete the behat test users
-     */
-//    public function iDeleteTheBehatUsers()
-//    {
-//        $this->iGoToTheManageUsersPage();
-//        
-//        $regions = $this->getSession()->getPage()->findAll('css', self::behatRegionToCssSelector('test-user'));
-//        foreach ($regions as $region) {
-//            $editLinks = $region->findAll('css', self::behatLinkToCssSelector('edit'));
-//            if (count($editLinks) !== 1) { //it only happened once, could not replicate
-//                $this->debug();
-//            }
-//            $editLinks[0]->click();
-//            $this->clickOnBehatLink('delete-user');
-//            $this->clickOnBehatLink('delete-yes');
-//        }
-//        
-//        $this->iShouldNotSeeTheRegion('test-user');
-//    }
-
-      
     /**
      * @Then the form should contain an error
      */
@@ -300,11 +242,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     
      /**
-     * Fills in form fields with provided table.
-     *
      * @Then /^the following fields should have the corresponding values:$/
      */
-    public function fillFields(TableNode $fields)
+    public function followingFieldsShouldHaveTheCorrespondingValues(TableNode $fields)
     {
         foreach ($fields->getRowsHash() as $field => $value) {
             $this->assertFieldContains($field, $value);

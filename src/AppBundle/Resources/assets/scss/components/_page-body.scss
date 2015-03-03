@@ -1,4 +1,18 @@
 .page-body {
-  margin-top: 50px;
+  margin-top: 0;
   overflow: hidden;
+
+  .page-service-content & {
+    margin-top: 40px;
+  }
+
+  .page-admin-content & {
+    margin-top: 60px;
+  }
+
+  .page-report-content & {
+    margin-top: 60px;
+  }
+
 }
+

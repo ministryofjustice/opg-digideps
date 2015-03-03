@@ -2,7 +2,7 @@ Feature: add details
     
     Scenario: add user details
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on "user/details"
+        Then I should be on "user/details"
         # missing user_details_firstname
         When I fill in the following:
             | user_details_firstname |  |

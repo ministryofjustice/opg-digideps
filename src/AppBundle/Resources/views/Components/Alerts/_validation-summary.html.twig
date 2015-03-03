@@ -1,0 +1,15 @@
+{% if ((formErrorMessages | length) > 0) and (error is not defined) %}
+    <div class="validation-summary-container">
+        <div aria-labelledby="error-heading" class="validation-summary group" id="error-summary" role="alert"
+             tabindex="-1">
+            <h2 id="error-heading">You need to fix the errors on this page before continuing.</h2>
+
+            <p class="visuallyhidden">See highlighted errors below.</p>
+            <ul class="visuallyhidden">
+                {% for formErrorMessage in formErrorMessages %}
+                    <li><a href="#{{ formErrorMessage.elementId }}">{{ formErrorMessage.message }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}

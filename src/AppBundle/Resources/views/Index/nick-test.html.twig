@@ -4,20 +4,17 @@
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
-{% block pageNavigation %}{% endblock %}
+
+
+{% set collection = [{name:1, age:30},{ name: 2, age: 31}] %}
+
+
+{% block pageNavigation %}
+    {{ progress_bar('registration', 3) }}
+{% endblock %}
 
 {% block pageBody %}
 
-    {% set collection = [{name:1, age:30},{ name: 2, age: 31}] %}
-
-    {% for item in collection %}
-        {{ item.name }} - {{ item.age }}<br />
-    {% endfor %}
-
-    <hr />
-
-    {% for item in data %}
-        {{ item.name }} - {{ item.age }}<br />
-    {% endfor %}
+    pageBody
 
 {% endblock %}
