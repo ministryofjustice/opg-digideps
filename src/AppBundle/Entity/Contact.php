@@ -31,9 +31,23 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(name="address", type="string", length=200, nullable=true)
+     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
-    private $address;
+    private $address1;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
+     */
+    private $address2;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
+     */
+    private $address3;
 
     /**
      * @var string
@@ -41,6 +55,13 @@ class Contact
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     private $postcode;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="country", type="string", length=10, nullable=true)
+     */
+    private $country;
 
     /**
      * @var string
@@ -110,29 +131,6 @@ class Contact
     public function getContactName()
     {
         return $this->contactName;
-    }
-
-    /**
-     * Set address
-     *
-     * @param string $address
-     * @return Contact
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return string 
-     */
-    public function getAddress()
-    {
-        return $this->address;
     }
 
     /**
@@ -280,5 +278,97 @@ class Contact
     {
         $space = ' ';
         return $this->getFirstname().$space. $this->getLastname();
+    }
+
+    /**
+     * Set address1
+     *
+     * @param string $address1
+     * @return Contact
+     */
+    public function setAddress1($address1)
+    {
+        $this->address1 = $address1;
+
+        return $this;
+    }
+
+    /**
+     * Get address1
+     *
+     * @return string 
+     */
+    public function getAddress1()
+    {
+        return $this->address1;
+    }
+
+    /**
+     * Set address2
+     *
+     * @param string $address2
+     * @return Contact
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+
+        return $this;
+    }
+
+    /**
+     * Get address2
+     *
+     * @return string 
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * Set address3
+     *
+     * @param string $address3
+     * @return Contact
+     */
+    public function setAddress3($address3)
+    {
+        $this->address3 = $address3;
+
+        return $this;
+    }
+
+    /**
+     * Get address3
+     *
+     * @return string 
+     */
+    public function getAddress3()
+    {
+        return $this->address3;
+    }
+
+    /**
+     * Set country
+     *
+     * @param string $country
+     * @return Contact
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return string 
+     */
+    public function getCountry()
+    {
+        return $this->country;
     }
 }
