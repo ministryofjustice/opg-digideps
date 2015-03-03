@@ -35,6 +35,21 @@ trait DebugTrait
         echo "Open $filename to debug last response.\n";
     }
     
+    
+    
+    /**
+     * @Then I save the page as :name
+     */
+    public function iSaveThePageAs($name)
+    {
+        $filename = 'misc/tmp/behat-screenshot-' . $name . '.html';
+            
+        $data = $this->getSession()->getPage()->getContent();
+        if (!file_put_contents($filename, $data)) {
+            echo "Cannot write screenshot into $filename \n";
+        }
+    }
+    
     /**
      * Call debug() when an exception is thrown after as tep
      * @AfterStep

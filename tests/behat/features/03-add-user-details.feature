@@ -4,6 +4,7 @@ Feature: add details
     Scenario: add user details (deputy) 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "user/details"
+        And I save the page as "deputy-step2"
         # missing user_details_firstname
         When I fill in the following:
             | user_details_firstname |  |
@@ -88,6 +89,7 @@ Feature: add details
             | user_details_phoneMobile | 079 123 456 78  |
         And I submit the form
         Then the form should contain an error
+        And I save the page as "deputy-step2-error"
         # right values
         When I fill in the following:
             | user_details_firstname | John |
@@ -120,6 +122,7 @@ Feature: add details
     Scenario: add user details (admin user)
         Given I am logged in as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "user/details"
+        And I save the page as "admin-step2"
         # testing validation, as the validation group for the form is different for admin user
         # missing firstname
         And I fill in the following:
@@ -133,6 +136,7 @@ Feature: add details
             | user_details_lastname |  |
         And I submit the form
         Then the form should contain an error
+        And I save the page as "admin-step2-error"
         # correct
         And I fill in the following:
             | user_details_firstname | John admin |

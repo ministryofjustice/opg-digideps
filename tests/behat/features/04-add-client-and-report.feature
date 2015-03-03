@@ -4,6 +4,7 @@ Feature: add client and report
     Scenario: add client
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "client/add"
+        And I save the page as "deputy-step3"
         # missing client_firstname
         When I fill in the following:
             | client_firstname |  |
@@ -105,6 +106,7 @@ Feature: add client and report
             | client_phone | 0123456789  |
         And I submit the form
         Then the form should contain an error
+        And I save the page as "deputy-step3-error"
         # right values
         When I fill in the following:
             | client_firstname | Peter |
@@ -130,6 +132,7 @@ Feature: add client and report
     Scenario: create report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "report/create/1"
+        And I save the page as "deputy-step4"
         Then the following fields should have the corresponding values:
             | report_startDate_day | 1 |
             | report_startDate_month | 1 |
@@ -176,6 +179,7 @@ Feature: add client and report
             | report_endDate_year | 2016 |
         And I submit the form
         Then the form should contain an error
+        And I save the page as "deputy-step4-error"
         # valid form
         When I fill in the following:
             | report_endDate_day | 31 |
@@ -191,6 +195,7 @@ Feature: add client and report
     Scenario: report overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "/report/overview/1"
+        And I save the page as "deputy-report-overview"
     
     
     @deputy
