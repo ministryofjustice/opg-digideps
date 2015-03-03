@@ -9,3 +9,4 @@ parameters:
         add_client: client/add
         find_client_by_id: client/find-by-id
         add_report: report/add
+        add_report_contact: report/add-contact

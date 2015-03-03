@@ -67,12 +67,13 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/add-contact")
+     * @Route("/add-contact/{reportId}")
      * @Template()
      */
-    public function addContactAction()
+    public function addContactAction($reportId)
     {
         $request = $this->getRequest();
+        $apiClient = $this->get('apiclient');
         
         $contact = new EntityDir\Contact();
         
@@ -81,9 +82,22 @@ class ReportController extends Controller
         
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                print_r($form->getData()); die;
+                $contact = $form->getData();
+                $contact->setReport($reportId);
+                
+                $apiClient->postC('add_report_contact', $contact);
+                return $this->redirect($this->generateUrl('list_contacts', [ 'reportId' => $reportId ]));
             }
         }
         return [ 'form' => $form->createView() ];
+    }
+    
+    /**
+     * @Route("/list-contacts/{reportId}", name="list_contacts")
+     * @Template()
+     */
+    public function listContactAction($reportId)
+    {
+        return [ ];
     }
 }
