@@ -73,5 +73,27 @@ class ReportController extends Controller
             'report' => $report,
             'client' => $client,
         ];
+        return [];
+    }
+    
+    /**
+     * @Route("/add-contact")
+     * @Template()
+     */
+    public function addContactAction()
+    {
+        $request = $this->getRequest();
+        
+        $contact = new EntityDir\Contact();
+        
+        $form = $this->createForm(new FormDir\ContactType(), $contact);
+        $form->handleRequest($request);
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                print_r($form->getData()); die;
+            }
+        }
+        return [ 'form' => $form->createView() ];
     }
 }
