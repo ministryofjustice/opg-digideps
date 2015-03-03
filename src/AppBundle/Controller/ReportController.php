@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form\ReportType;
 use AppBundle\Entity\Report;
-use AppBundle\Service\ApiClient;
 
 /**
  * @Route("/report")
@@ -59,21 +58,20 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/overview/{id}", name="report_overview")
+     * @Route("/overview/{reportId}", name="report_overview")
      * @Template()
      */
-    public function overviewAction($id)
+    public function overviewAction($reportId)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $id ]]);
+        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
         $client = $apiClient->getEntity('Client', 'find_client_by_id', [ 'query' => [ 'id' => $report->getClient() ]]);
         
         return [
             'report' => $report,
             'client' => $client,
         ];
-        return [];
     }
     
     /**
