@@ -31,9 +31,9 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
+     * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
-    private $address1;
+    private $address;
     
     /**
      * @var string
@@ -281,26 +281,26 @@ class Contact
     }
 
     /**
-     * Set address1
+     * Set address
      *
-     * @param string $address1
+     * @param string $address
      * @return Contact
      */
-    public function setAddress1($address1)
+    public function setAddress($address)
     {
-        $this->address1 = $address1;
+        $this->address = $address;
 
         return $this;
     }
 
     /**
-     * Get address1
+     * Get address
      *
      * @return string 
      */
-    public function getAddress1()
+    public function getAddress()
     {
-        return $this->address1;
+        return $this->address;
     }
 
     /**
