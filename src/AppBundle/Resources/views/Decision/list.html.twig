@@ -15,12 +15,14 @@
     </div>
     
     <h2>Decisions<h1>
-    {% for decision in decisions %}
+    <div class="behat-region-decision">
+      {% for decision in decisions %}
         <b>{{ decision.id }} | {{ decision.title }} | {{ decision.decisionDate | date() }}</b><br/>
         {{ decision.description }}<br/>
         Client involved: {{ decision.clientInvolvedBoolean ? 'Yes' : 'No'}}<br/>
         {{ decision.clientInvolvedDetails | nl2br }}
         <hr/>
-    {% endfor %}
+      {% endfor %}
+    </div>
     
 {% endblock %}
