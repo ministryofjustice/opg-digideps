@@ -19,15 +19,15 @@ class Report
     private $id;
     
     /**
-     * @JMS\Type("DateTime")
      * @Assert\NotBlank( message="report.startDate.notBlank")
      * @Assert\Date( message="report.startDate.invalidMessage" )
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @var \DateTime $startDate
      */
     private $startDate;
     
     /**
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      * @var \DateTime $endDate
