@@ -7,7 +7,7 @@ if (strpos($_SERVER['SERVER_NAME'], '.local') === false) {
 
 switch ($_GET['frame']) {
     case 'page':
-        if (strpos($_GET['f'], 'behat-response') !== false) {
+        if (strpos($_GET['f'], 'behat-') !== false) {
             include  __DIR__ . '/../misc/tmp/' . $_GET['f'];
         } else {
             echo "click on a link at the top";
@@ -15,13 +15,14 @@ switch ($_GET['frame']) {
         die;
         
     case 'list':
-        $files = glob(__DIR__ . '/../misc/tmp/behat-response*.html');
+        $files = glob(__DIR__ . '/../misc/tmp/behat-*.html');
         usort($files, function($a, $b) {
             return filemtime($a) < filemtime($b);
         });
         foreach ($files as $file) {
             $file = basename($file);
-            ?><a href="?frame=page&f=<?php echo $file?>" target="page"><?php echo $file?></a><br/><?php
+            $fileCleaned = str_replace(['behat-', '.html'], '', $file);
+            ?><a href="?frame=page&f=<?php echo $file?>" target="page"><?php echo $fileCleaned ?></a><br/><?php
         }
         die;
         

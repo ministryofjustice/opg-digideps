@@ -37,7 +37,9 @@ Feature: admin
         And I click on "save"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
+        And I save the page as "admin-deputy-added"
         And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        
         
     @cleanMail @admin
     Scenario: login and add admin user
@@ -50,6 +52,8 @@ Feature: admin
             | admin_roleId | 1 |
         And I click on "save"
         Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
-        Then I should see "OPG Administrator" in the "users" region
+        Then the response status code should be 200
+        And I should see "OPG Administrator" in the "users" region
+        And I save the page as "admin-admin-added"
         And an email with subject "Digideps - activation email" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         
