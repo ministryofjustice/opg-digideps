@@ -45,9 +45,9 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
+     * @ORM\Column(name="county", type="string", length=200, nullable=true)
      */
-    private $address3;
+    private $county;
 
     /**
      * @var string
@@ -327,26 +327,26 @@ class Contact
     }
 
     /**
-     * Set address3
+     * Set county
      *
-     * @param string $address3
+     * @param string $county
      * @return Contact
      */
-    public function setAddress3($address3)
+    public function setCounty($county)
     {
-        $this->address3 = $address3;
+        $this->county = $county;
 
         return $this;
     }
 
     /**
-     * Get address3
+     * Get county
      *
      * @return string 
      */
-    public function getAddress3()
+    public function getCounty()
     {
-        return $this->address3;
+        return $this->county;
     }
 
     /**
