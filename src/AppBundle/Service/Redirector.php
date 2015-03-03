@@ -33,7 +33,7 @@ class Redirector
     {
         $user = $this->security->getToken()->getUser();
         $clients = $user->getClients();
-        
+
         $route = 'access_denied';
         $options = [];
         

@@ -1,0 +1,23 @@
+{% trans_default_domain "decision" %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+<h1 class="form-title heading-medium-large">
+    {{ 'addPage.headTitle' | trans }}
+</h1>
+
+  {{ form_input(form.title,'title', { 'labelClass': 'required' }) }}
+  {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+  {{ form_known_date(form.decisionDate, 'decisionDate') }} 
+  {{ form_select(form.clientInvolvedBoolean,'clientInvolvedBoolean', { 'labelClass': 'required' }) }}
+  {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+
+   
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+  {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{# KNOWN DATE #}
+{# {% include 'AppBundle:Components/Form:_known-date.html.twig' %} #}
+
+{{ form_end(form) }}
