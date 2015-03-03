@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Form\LoginType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -14,6 +15,14 @@ use Symfony\Component\Form\FormError;
 
 class IndexController extends Controller
 {
+    /**
+     * @Route("/", name="homepage")
+     */
+    public function indexAction()
+    {
+        return new RedirectResponse($this->get('redirectorService')->getUserFirstPage());
+    }
+    
     /**
      * @Route("login", name="login")
      * @Template()
@@ -122,7 +131,3 @@ class IndexController extends Controller
     }
 
 }
-
-
-$cssClass = '';
-$label = '';
