@@ -1,0 +1,10 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% trans_default_domain "report-contacts" %}
+
+{% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
+{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+
+
+{% block pageBody %}
+    {% include 'AppBundle:Report:_contact_form.html.twig' %}
+{% endblock %}

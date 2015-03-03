@@ -4,8 +4,8 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Form\ReportType;
-use AppBundle\Entity\Report;
+use AppBundle\Form as FormDir;
+use AppBundle\Entity as EntityDir;
 
 /**
  * @Route("/report")
@@ -26,7 +26,7 @@ class ReportController extends Controller
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
         //lets check if this  user already has another report, if not start date should be court order date
-        $report = new Report();
+        $report = new EntityDir\Report();
         $report->setClient($client->getId());
         
         $reports = $client->getReports();
@@ -43,7 +43,7 @@ class ReportController extends Controller
             $report->setCourtOrderType($allowedCourtOrderTypes[0]);
         }
         
-        $form = $this->createForm(new ReportType(), $report,
+        $form = $this->createForm(new FormDir\ReportType(), $report,
                                   [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
         $form->handleRequest($request);
        
@@ -64,5 +64,26 @@ class ReportController extends Controller
     public function overviewAction($id)
     {
         return [];
+    }
+    
+    /**
+     * @Route("/add-contact")
+     * @Template()
+     */
+    public function addContactAction()
+    {
+        $request = $this->getRequest();
+        
+        $contact = new EntityDir\Contact();
+        
+        $form = $this->createForm(new FormDir\ContactType(), $contact);
+        $form->handleRequest($request);
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                print_r($form->getData()); die;
+            }
+        }
+        return [ 'form' => $form->createView() ];
     }
 }

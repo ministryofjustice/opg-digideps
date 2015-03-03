@@ -61,7 +61,6 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
-        die('2');
     }
 
     /**

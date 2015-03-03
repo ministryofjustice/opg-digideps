@@ -1,0 +1,30 @@
+save:
+    label: Save
+contactName:
+    label: Contact name
+    hint: ''
+relationship:
+    label: Relationship to the client
+    hint: ''
+explanation:
+    label: Reason for contact
+    hint: ''
+address:
+    label: Address
+    hint: ''
+address2:
+    label: ' '
+    hint: ''
+county:
+    label: ' '
+    hint: ''
+postcode:
+    label: Postcode
+    hint: ''
+country:
+    label: Country
+    hint: ''
+    defaultOption: Please select ...
+contact_form:
+    intro: "Give the names and addresses of the significant people you contacted as deputy, such as GP,solicitor,accountant,family members,care workers.Example: John Smith,accountant,to prepare accounts for the deputy report."
+pageTitle: Add Contact

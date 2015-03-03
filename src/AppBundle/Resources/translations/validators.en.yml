@@ -78,3 +78,20 @@ login:
         inValid:  Please enter a valid email
     password:
         notBlank: Please enter your password
+contact:
+    name:
+        notBlank: Please enter contact's name
+        type: Contact name must be string
+        length: Contact name too short
+    address:
+        notBlank: Please enter contact's address
+    postcode:
+        notBlank: Please enter contact's postcode
+    relationship:
+        notBlank: Please enter contact's relationship to client
+        type: Relationship to contact must be a string
+        length: Relationship to contact too short
+    explanation:
+        notBlank: Please enter a reason for contact
+        type: Reason for contact must be a string
+        length: Reason for contact too short
