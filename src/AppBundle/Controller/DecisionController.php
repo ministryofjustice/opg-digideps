@@ -26,10 +26,12 @@ class DecisionController extends Controller
         
         // just needed for title etc,
         $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
-
+        $decision = new Decision;
+        $decision->setReportId($reportId);
+        
         $form = $this->createForm(new AddDecision([
             'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'decision')
-        ]), new Decision($reportId));
+        ]), $decision);
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
