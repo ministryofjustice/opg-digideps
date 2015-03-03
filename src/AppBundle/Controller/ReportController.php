@@ -58,14 +58,14 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/overview/{reportId}", name="report_overview")
+     * @Route("/overview/{id}", name="report_overview")
      * @Template()
      */
-    public function overviewAction($reportId)
+    public function overviewAction($id)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $id ]]);
         $client = $apiClient->getEntity('Client', 'find_client_by_id', [ 'query' => [ 'id' => $report->getClient() ]]);
         
         return [
