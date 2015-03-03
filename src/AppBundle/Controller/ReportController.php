@@ -43,7 +43,7 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/{id}")
+     * @Route("/find-by-id/{id}")
      * @Method({"GET"})
      */
     public function get($id)
