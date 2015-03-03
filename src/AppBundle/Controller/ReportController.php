@@ -40,4 +40,16 @@ class ReportController extends RestController
         
         return [ 'report' => $report->getId()] ;
     }
+    
+     
+   /**
+     * @Route("/{id}")
+     * @Method({"GET"})
+     */
+    public function get($id)
+    {
+        $ret = $this->findEntityBy('Report', $id, 'Report not found');
+
+        return $ret;
+    }
 }
