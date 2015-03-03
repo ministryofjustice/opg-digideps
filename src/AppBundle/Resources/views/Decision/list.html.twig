@@ -1,0 +1,26 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+
+{% trans_default_domain "decision" %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+
+{% block pageBody %}
+    <h1>{{ 'page.headTitle' | trans }}</h1>
+    <p>{{ 'page.subTItle' | trans }}</p>
+    
+    <div style="margin: 10px; border-left: #CCCCCC 5px solid; padding: 10px;">
+    {% include 'AppBundle:Decision:_add.html.twig' %}
+    </div>
+    
+    <h2>Decisions<h1>
+    {% for decision in decisions %}
+        <b>{{ decision.id }} | {{ decision.title }} | {{ decision.decisionDate | date() }}</b><br/>
+        {{ decision.description }}<br/>
+        Client involved: {{ decision.clientInvolvedBoolean ? 'Yes' : 'No'}}<br/>
+        {{ decision.clientInvolvedDetails | nl2br }}
+        <hr/>
+    {% endfor %}
+    
+{% endblock %}
