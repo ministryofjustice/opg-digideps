@@ -1,5 +1,6 @@
 Feature: add client and report
     
+    @deputy
     Scenario: add client
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "client/add"
@@ -125,8 +126,8 @@ Feature: add client and report
         # assert you are on create report page
         And I should be on "report/create/1"
 
-
-     Scenario: create report
+    @deputy    
+    Scenario: create report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "report/create/1"
         Then the following fields should have the corresponding values:
@@ -185,10 +186,14 @@ Feature: add client and report
         # assert you are on dashboard
         And I should be on "/report/overview/1"
 
-     Scenario: report overview
+
+    @deputy
+    Scenario: report overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "/report/overview/1"
-        
+    
+    
+    @deputy
     Scenario: check homepage redirect
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "/report/overview/1"

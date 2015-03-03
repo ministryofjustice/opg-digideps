@@ -4,15 +4,26 @@ default:
     autoload:
         '': %paths.base%/tests/behat/bootstrap
     suites:
-      mainJourney:
-        description: End to end journey
+      deputy:
+        description: End to end journey for Lay deputy user
         paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: @deputy
         contexts: 
             - DigidepsBehat\FeatureContext:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
-#                    scriptTimeout: 10
+      admin:
+        description: End to end journey for Admin user
+        paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: @admin
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:
