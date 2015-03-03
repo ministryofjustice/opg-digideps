@@ -10,11 +10,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Decision
 {
-    public function __construct($reportId)
-    {
-        $this->reportId = $reportId;
-    }
-
     /**
      * @JMS\Type("integer")
      * @var integer
@@ -61,6 +56,11 @@ class Decision
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setReportId($reportId)
+    {
+        $this->reportId = $reportId;
     }
 
     public function getReportId()
