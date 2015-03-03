@@ -24,16 +24,9 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
+     * @ORM\Column(name="contact_name", type="string", length=255, nullable=true)
      */
-    private $firstname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
-     */
-    private $lastname;
+    private $contactName;
 
     /**
      * @var string
@@ -97,49 +90,26 @@ class Contact
     }
 
     /**
-     * Set firstname
+     * Set contact_name
      *
-     * @param string $firstname
+     * @param string $contact_name
      * @return Contact
      */
-    public function setFirstname($firstname)
+    public function setContactName($contactName)
     {
-        $this->firstname = $firstname;
+        $this->contactName = $contactName;
 
         return $this;
     }
 
     /**
-     * Get firstname
+     * Get contactName
      *
      * @return string 
      */
-    public function getFirstname()
+    public function getContactName()
     {
-        return $this->firstname;
-    }
-
-    /**
-     * Set lastname
-     *
-     * @param string $lastname
-     * @return Contact
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    /**
-     * Get lastname
-     *
-     * @return string 
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
+        return $this->contactName;
     }
 
     /**
