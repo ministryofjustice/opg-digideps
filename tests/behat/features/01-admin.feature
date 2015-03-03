@@ -1,7 +1,7 @@
 Feature: admin
     
-    @cleanMail
-    Scenario: login and add user
+    @cleanMail @deputy
+    Scenario: login and add deputy user
         Given I am on "/"
         Then the response status code should be 200
         # test wrong credentials
@@ -38,4 +38,18 @@ Feature: admin
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
         And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        
+    @cleanMail @admin
+    Scenario: login and add admin user
+        Given I am logged in as "deputyshipservice@publicguardian.gsi.gov.uk" with password "test"
+        When I go to "/admin"
+        And I fill in the following:
+            | admin_email | behat-admin-user@publicguardian.gsi.gov.uk | 
+            | admin_firstname | John | 
+            | admin_lastname | Doe | 
+            | admin_roleId | 1 |
+        And I click on "save"
+        Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
+        Then I should see "OPG Administrator" in the "users" region
+        And an email with subject "Digideps - activation email" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         
