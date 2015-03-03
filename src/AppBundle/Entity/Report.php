@@ -29,7 +29,7 @@ class Report
      * @var integer
      * 
      * @JMS\Accessor(getter="getClientId")
-     * @JMS\Type("array")
+     * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
@@ -96,7 +96,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Accessor(getter="setStartDate")
+     * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
      */
@@ -105,7 +105,7 @@ class Report
     /**
      * @var \Date
      * 
-     * @JMS\Accessor(getter="setEndDate")
+     * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
      */
@@ -113,7 +113,7 @@ class Report
 
     /**
      * @var \DateTime
-     * @JMS\Accessor(getter="setSubmitDate")
+     * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
@@ -121,7 +121,7 @@ class Report
 
     /**
      * @var \DateTime
-     * @JMS\Accessor(getter="setLastedit")
+     * @JMS\Accessor(getter="getLastedit")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */	 
@@ -500,7 +500,7 @@ class Report
         return $this->decisionInvolvements;
     }
     
-    public function getDecisionInvolvemntIds()
+    public function getDecisionInvolvementIds()
     {
         $decisionInvolvements = [];
         if(!empty($this->decisionInvolvements)){
