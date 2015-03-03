@@ -1,6 +1,6 @@
 Feature: add details
     
-    Scenario: add user details
+    Scenario: add user details (deputy) 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "user/details"
         # missing user_details_firstname
