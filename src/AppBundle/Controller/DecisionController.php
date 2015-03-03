@@ -23,7 +23,8 @@ class DecisionController extends RestController
         // read user
         $report = $this->findEntityBy('Report', $data['report_id'], 'Report not found');
 
-        $decision = new Decision($report);
+        $decision = new Decision();
+        $decision->setReport($report);
         
         $this->hydrateEntityWithArrayData($decision, $data, [
             'title' => 'setTitle', 

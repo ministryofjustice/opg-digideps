@@ -66,14 +66,6 @@ class Decision
 
     
     /**
-     * @param Report $report
-     */
-    public function __construct(Report $report)
-    {
-        $this->report = $report;
-    }
-    
-    /**
      * @return integer 
      */
     public function getId()
@@ -176,7 +168,7 @@ class Decision
     }
 
     /**
-     * Get ddate
+     * Get decision date
      *
      * @return \DateTime 
      */
@@ -186,9 +178,17 @@ class Decision
     }
 
     /**
+     * @param Report $report
+     */
+    public function setReport(Report $report)
+    {
+        $this->report = $report;
+    }
+        
+    /**
      * Get report
      *
-     * @return \Report 
+     * @return Report 
      */
     public function getReport()
     {
