@@ -80,14 +80,6 @@ class Contact
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Title")
-     * @ORM\JoinColumn(name="title_id", referencedColumnName="id")
-     */
-    private $title;
-    
-    /**
-     * @var integer
-     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="contacts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
@@ -287,30 +279,7 @@ class Contact
     {
         return $this->lastedit;
     }
-
-    /**
-     * Set title
-     *
-     * @param \AppBundle\Entity\Title $title
-     * @return Contact
-     */
-    public function setTitle(\AppBundle\Entity\Title $title = null)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return \AppBundle\Entity\Title 
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
+    
     /**
      * Set report
      *
@@ -340,10 +309,6 @@ class Contact
     public function getFullName()
     {
         $space = ' ';
-        $hasValidTitle = $this->getTitle() && $this->getTitle()->getTitle();
-        
-        return ($hasValidTitle ?  $this->getTitle()->getTitle() . $space : '')
-                . $this->getFirstname() . $space
-                . $this->getLastname();
+        return $this->getFirstname().$space. $this->getLastname();
     }
 }
