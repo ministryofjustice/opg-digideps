@@ -7,4 +7,10 @@
 
 {% block pageBody %}
     <h1>Overview Page</h1>
+    
+    <a href="/report/decision/{{report.id}}">Add decision</a>
+    <hr/>
+    {{ dump(report) }}
+    <hr/>
+    {{ dump(client) }}
 {% endblock %}
