@@ -1,6 +1,7 @@
 Feature: add details
     
-    Scenario: add user details
+    @deputy
+    Scenario: add user details (deputy) 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I should be on "user/details"
         # missing user_details_firstname
@@ -115,9 +116,11 @@ Feature: add details
             | user_details_phoneMobile | 079 123 456 78  |
 
 
+    @admin
     Scenario: add user details (admin user)
-        Given I am logged in as "deputyshipservice@publicguardian.gsi.gov.uk" with password "test"
-        When I click on "user details"
+        Given I am logged in as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "user/details"
+        # testing validation, as the validation group for the form is different for admin user
         # missing firstname
         And I fill in the following:
             | user_details_firstname |  |

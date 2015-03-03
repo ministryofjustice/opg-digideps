@@ -5,10 +5,10 @@
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
 {% block pageNavigation %}
-    {% if showAllSteps %}
-        {{ progress_bar('registration', 1) }}
-    {% else %}
+    {% if isAdmin %}
         {{ progress_bar('registration_admin', 1) }}
+    {% else %}
+        {{ progress_bar('registration', 1) }}
     {% endif %}
 {% endblock %}
 
