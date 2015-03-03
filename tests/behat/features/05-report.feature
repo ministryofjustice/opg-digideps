@@ -1,6 +1,6 @@
-Feature: add client and report
+Feature: report
     
-    @deputy @temp
+    @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/report/overview/1"
