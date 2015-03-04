@@ -159,9 +159,14 @@ class ReportController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $report = $this->getReport($reportId);
+        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]);
+        
+        if (count($decisions) === 0) {
+            return $this->forward('AppBundle:Report:addDecision', ['reportId'=> $reportId]);
+        }
         
         return [
-            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
+            'decisions' => $decisions,
             'report' => $report,
             'showAddForm' => false,
             'client' => $this->getClient($report->getClient()), //to pass,
