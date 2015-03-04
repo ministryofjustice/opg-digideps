@@ -3,8 +3,8 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I go to "/report/overview/1"
-        When I go to "/report/decision/1"
+        And I go to "/report/1/overview"
+        When I go to "/report/1/decision"
         # right values
         When I fill in the following:
             | decision_title | Bought house in Sw18 |

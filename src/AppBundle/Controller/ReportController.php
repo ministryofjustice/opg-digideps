@@ -62,7 +62,7 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/overview/{id}", name="report_overview")
+     * @Route("/{id}/overview", name="report_overview")
      * @Template()
      */
     public function overviewAction($id)
@@ -79,7 +79,7 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/add-contact/{reportId}")
+     * @Route("/{reportId}/add-contact", name="add_contact")
      * @Template()
      */
     public function addContactAction($reportId)
@@ -114,7 +114,7 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/decision/{reportId}", name="add_decision")
+     * @Route("/{reportId}/decision", name="add_decision")
      * @Template("AppBundle:Decision:list.html.twig")
      */
     public function addDecisionAction($reportId)
