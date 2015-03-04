@@ -31,7 +31,7 @@ class ReportController extends Controller
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
         //lets check if this  user already has another report, if not start date should be court order date
-        $report = new Report();
+        $report = new EntityDir\Report();
         $report->setClient($client->getId());
         
         $reports = $client->getReports();
@@ -43,12 +43,12 @@ class ReportController extends Controller
         //if client has property & affairs and health & welfare then give them property & affairs
         //else give them health and welfare
         if(count($allowedCourtOrderTypes) > 1){
-            $report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
+            $report->setCourtOrderType(EntityDir\Report::PROPERTY_AND_AFFAIRS);
         }else{
             $report->setCourtOrderType($allowedCourtOrderTypes[0]);
         }
         
-        $form = $this->createForm(new ReportType(), $report,
+        $form = $this->createForm(new FormDir\ReportType(), $report,
                                   [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
         $form->handleRequest($request);
        
@@ -78,13 +78,15 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/{reportId}/add-contact", name="add_contact")
+     * @Route("/{reportId}/contacts/{action}", name="contacts", defaults={ "action" = "list"})
      * @Template()
      */
-    public function addContactAction($reportId)
+    public function contactsAction($reportId,$action)
     {
         $request = $this->getRequest();
+        
         $apiClient = $this->get('apiclient');
+        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'query' => ['id' => $reportId ]]);
         
         $contact = new EntityDir\Contact();
         
@@ -97,26 +99,13 @@ class ReportController extends Controller
                 $contact->setReport($reportId);
                 
                 $apiClient->postC('add_report_contact', $contact);
-                return $this->redirect($this->generateUrl('list_contacts', [ 'reportId' => $reportId ]));
+                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
             }
         }
-        return [ 'form' => $form->createView() ];
+        
+        return [ 'form' => $form->createView(), 'contacts' => $contacts, 'action' => $action];
     }
     
-    /**
-     * @Route("/{reportId}/contacts", name="list_contacts")
-     * @Template()
-     */
-    public function listContactAction($reportId)
-    {
-        $report = $this->getReport($reportId);
-        $client = $this->getClient($report->getClient());
-
-        return [
-            'report' => $report,
-            'client' => $client,
-        ];
-    }
     
     /**
      * @Route("/{reportId}/decisions/add", name="add_decision")
@@ -165,9 +154,14 @@ class ReportController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $report = $this->getReport($reportId);
+        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]);
+        
+        if (count($decisions) === 0) {
+            return $this->forward('AppBundle:Report:addDecision', ['reportId'=> $reportId]);
+        }
         
         return [
-            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
+            'decisions' => $decisions,
             'report' => $report,
             'showAddForm' => false,
             'client' => $this->getClient($report->getClient()), //to pass,
@@ -193,5 +187,4 @@ class ReportController extends Controller
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
     }
-    
 }

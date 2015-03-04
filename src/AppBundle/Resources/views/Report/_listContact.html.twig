@@ -1,0 +1,21 @@
+{% trans_default_domain "report-contacts" %}
+
+<ul>
+    {% for contact in contacts %}
+        <li style="padding-bottom: 20px; ">
+            <ul>
+                <li><b>{{ contact.contactName }}</b> <a href="#">{{ 'view_contact.edit'| trans}}</a></li>
+                <li><b>{{ 'view_contact.relationship' | trans }}</b> {{ contact.relationship }}</li>
+                <li><b>{{ 'view_contact.reason' | trans }}</b> <br/> {{ contact.explanation }}</li>
+                <li><b>{{ 'view_contact.address' | trans }}</b> 
+                       {{ contact.address }}
+                       {{ contact.address2 }}
+                       {{ contact.county }}
+                       {{ contact.postcode }}
+                       {{ contact.country }}
+                </li>
+                <li><b>{{ 'view_contact.phone' | trans }}</b> {{ contact.phone }}</li>
+            </ul>
+        </li>
+    {% endfor %}
+</ul>

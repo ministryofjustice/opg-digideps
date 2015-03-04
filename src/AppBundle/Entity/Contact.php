@@ -19,6 +19,7 @@ class Contact
      * @Assert\NotBlank( message="contact.name.notBlank" )
      * @Assert\Type( type="string", message="contact.name.type")
      * @Assert\Length( min=2, minMessage="contact.name.length")
+     * @JMS\SerializedName("contact_name")
      * @JMS\Type("string")
      * @var string $contactName
      */

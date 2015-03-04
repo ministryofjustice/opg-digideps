@@ -5,17 +5,13 @@
         <include name="src/**/*.php"/>
         <include name="web/*.php"/>
     </fileset>
-    
-                 
+
     <target name="phplint" description="Scan source for PHP syntax errors">
         <phplint haltonfailure="true" cachefile="/tmp/ddClientPhingLintCacheFile" level="error">
             <fileset refid="source" />
         </phplint>
     </target>
     
-    
-   
-
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
         <if>
             <available file="composer.phar" />
@@ -30,15 +26,11 @@
         <exec command="php composer.phar install" checkreturn="true" passthru="true"/>
     </target>
     
-    
     <target name="optimise">
         <exec passthru="true" command="php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
     </target>
     
-    
-    <target name="cache-clear" description="">
-<!--        <exec command="sudo setfacl -R -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>
-        <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
+        <target name="cache-clear" description="">
         <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
         <echo msg="Permission on cache and logs set"></echo>
@@ -56,7 +48,6 @@
         <exec command="chmod +x misc/scripts/aha/aha"></exec>
     </target>
 
-
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
         <exec command="rm misc/build/behat.log*"></exec>
         <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
@@ -65,7 +56,6 @@
          <!--<exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />--> 
     </target>
 
-        
     <target name="build" depends="cache-clear,composer-install,check-validation,phplint">
     </target>
     
