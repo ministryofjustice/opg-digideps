@@ -105,6 +105,7 @@ decision:
     decisionDate:
         notBlank: Please enter a date for the decision
         invalidMessage: Invalid decision date
+        notInReportRange: The decision date must be in the report date range ({{from}} to {{to}})
     clientInvolvedBoolean:
         notBlank: Please specify if the client was involved or not
     clientInvolvedDetails:

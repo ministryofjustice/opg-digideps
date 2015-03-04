@@ -230,7 +230,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function theFormShouldContainAnError()
     {
         $this->iShouldSeeTheRegion('form-errors');
-        $this->debug();
+//        $this->debug();
     }
     
     /**
@@ -239,7 +239,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function theFormShouldNotContainAnError()
     {
         $this->iShouldNotSeeTheRegion('form-errors');
-        $this->debug();
+//        $this->debug();
     }
     
     
