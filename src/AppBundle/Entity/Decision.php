@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Decisions
@@ -24,30 +25,36 @@ class Decision
     /**
      * @var string
      *
-     * @ORM\Column(name="decisions", type="text", nullable=true)
+     * @ORM\Column(name="title",type="string", length=500)
      */
-    private $decision;
-
+    private $title;
+    
     /**
      * @var string
      *
-     * @ORM\Column(name="explanation", type="text", nullable=true)
+     * @ORM\Column(type="text")
      */
-    private $explanation;
+    private $description;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="client_involved_boolean", type="boolean")
+     */
+    private $clientInvolvedBoolean;
+    
+     /**
+     * @ORM\Column(name="client_involved_details", type="text", nullable=true)
+     */
+    private $clientInvolvedDetails;
+    
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="last_edit", type="datetime", nullable=true)
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @ORM\Column(name="decision_date", type="date", nullable=true)
      */
-    private $lastedit;
-
-    /**
-     * @var \Date
-     *
-     * @ORM\Column(name="d_date", type="date", nullable=true)
-     */
-    private $ddate;
+    private $decisionDate;
 
     /**
      * @var integer
@@ -57,9 +64,8 @@ class Decision
      */
     private $report;
 
+    
     /**
-     * Get id
-     *
      * @return integer 
      */
     public function getId()
@@ -68,51 +74,73 @@ class Decision
     }
 
     /**
-     * Set decision
-     *
-     * @param string $decision
-     * @return Decision
+     * @return integer
      */
-    public function setDecision($decision)
+    public function setTitle($title)
     {
-        $this->decision = $decision;
-
-        return $this;
+        $this->title = $title;
     }
 
     /**
-     * Get decision
-     *
-     * @return string 
+     * @return integer
      */
-    public function getDecision()
+    public function getTitle()
     {
-        return $this->decision;
+        return $this->title;
     }
 
     /**
-     * Set explanation
-     *
-     * @param string $explanation
-     * @return Decision
+     * @return string
      */
-    public function setExplanation($explanation)
+    public function getDescription()
     {
-        $this->explanation = $explanation;
-
-        return $this;
+        return $this->description;
     }
 
     /**
-     * Get explanation
-     *
-     * @return string 
+     * @param string $description
      */
-    public function getExplanation()
+    public function setDescription($description)
     {
-        return $this->explanation;
+        $this->description = $description;
     }
 
+        
+    /**
+     * @param boolean
+     */
+    public function setClientInvolvedBoolean($clientInvolvedBoolean)
+    {
+        $this->clientInvolvedBoolean = (boolean)$clientInvolvedBoolean;
+    }
+    
+    /*
+     * @return boolean
+     */
+    public function getClientInvolvedBoolean()
+    {
+        return $this->clientInvolvedBoolean;
+    }
+
+    
+    /**
+     * @param $clientInvolvedDetails string
+     */
+    public function setClientInvolvedDetails($clientInvolvedDetails)
+    {
+        $this->clientInvolvedDetails = $clientInvolvedDetails;
+    }
+
+    
+    /**
+     * @return string
+     */
+    public function getClientInvolvedDetails()
+    {
+        return $this->clientInvolvedDetails;
+    }
+
+        
     /**
      * Set lastedit
      *
@@ -127,55 +155,40 @@ class Decision
     }
 
     /**
-     * Get lastedit
-     *
-     * @return \DateTime 
-     */
-    public function getLastedit()
-    {
-        return $this->lastedit;
-    }
-
-    /**
      * Set ddate
      *
      * @param \DateTime $ddate
      * @return Decision
      */
-    public function setDdate($ddate)
+    public function setDecisionDate($ddate)
     {
-        $this->ddate = $ddate;
+        $this->decisionDate = $ddate;
 
         return $this;
     }
 
     /**
-     * Get ddate
+     * Get decision date
      *
      * @return \DateTime 
      */
-    public function getDdate()
+    public function getDecisionDate()
     {
-        return $this->ddate;
+        return $this->decisionDate;
     }
 
     /**
-     * Set report
-     *
-     * @param \AppBundle\Entity\Report $report
-     * @return Decision
+     * @param Report $report
      */
-    public function setReport(\AppBundle\Entity\Report $report = null)
+    public function setReport(Report $report)
     {
         $this->report = $report;
-
-        return $this;
     }
-
+        
     /**
      * Get report
      *
-     * @return \AppBundle\Entity\Report 
+     * @return Report 
      */
     public function getReport()
     {
