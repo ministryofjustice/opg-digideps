@@ -125,6 +125,7 @@ class ReportController extends Controller
         $report = $this->getReport($reportId);
         $decision = new Decision;
         $decision->setReportId($reportId);
+        $decision->setReport($report);
         
         $form = $this->createForm(new FormDir\DecisionType([
             'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')

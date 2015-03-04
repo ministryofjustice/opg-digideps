@@ -8,9 +8,9 @@ Feature: report
         And I fill in the following:
             | decision_title |  |
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 31 |
+            | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2014 |
+            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I submit the form
@@ -19,9 +19,9 @@ Feature: report
         And I fill in the following:
             | decision_title | Bought house in Sw18 |
             | decision_description |  |
-            | decision_decisionDate_day | 31 |
+            | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2014 |
+            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I submit the form
@@ -41,20 +41,31 @@ Feature: report
         And I fill in the following:
             | decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 31 |
+            | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 02 |
             | decision_decisionDate_year | 9999 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I submit the form
         And the form should contain an error
-         # missing involvement details
+        # date not in report range
         And I fill in the following:
             | decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 31 |
+            | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2014 |
+            | decision_decisionDate_year | 2002 |
+            | decision_clientInvolvedBoolean_0 | 1 |
+            | decision_clientInvolvedDetails | the client was able to decide at 90% |
+        And I submit the form
+        And the form should contain an error
+        # missing involvement details
+        And I fill in the following:
+            | decision_title | Bought house in Sw18 |
+            | decision_description | 2 beds |
+            | decision_decisionDate_day | 30 |
+            | decision_decisionDate_month | 12 |
+            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails |  |
         And I submit the form
@@ -63,9 +74,9 @@ Feature: report
         And I fill in the following:
             | decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 31 |
+            | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2014 |
+            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I submit the form
