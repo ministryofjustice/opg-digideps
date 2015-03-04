@@ -109,7 +109,13 @@ class ReportController extends Controller
      */
     public function listContactAction($reportId)
     {
-        return [ ];
+        $report = $this->getReport($reportId);
+        $client = $this->getClient($report->getClient());
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+        ];
     }
     
     /**
