@@ -21,12 +21,12 @@
 
 {   tabId: 'tab-accounts',
     label: 'Accounts',
-    href : '/report/' ~ report.id ~ '/accounts',
+    href : path('list_accounts', {'reportId' : report.id}),
     class: ''},
 
 {   tabId: 'tab-assets',
     label: 'Assets',
-    href : '/report/' ~ report.id ~ '/accounts',
+    href : path('list_assets', {'reportId' : report.id}),
     class: ''}
 ] %}
 
