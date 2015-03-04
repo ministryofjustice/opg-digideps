@@ -95,7 +95,8 @@ class ReportController extends RestController
         $contacts = $this->getRepository('Contact')->findByReport($report);
         
         if(count($contacts) == 0){
-            throw new \Exception("No contacts found for report id: $id");
+            //throw new \Exception("No contacts found for report id: $id");
+            return [];
         }
         return $contacts;
     }
