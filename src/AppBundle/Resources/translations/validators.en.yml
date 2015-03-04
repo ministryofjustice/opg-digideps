@@ -95,3 +95,19 @@ contact:
         notBlank: Please enter a reason for contact
         type: Reason for contact must be a string
         length: Reason for contact too short
+decision:
+    title:
+        notBlank: Please enter a title for the decision
+        length: The title must be at least {{ limit }} characters
+    description:
+        notBlank: Please enter a description for the decision
+        length: The description must be at least {{ limit }} characters   
+    decisionDate:
+        notBlank: Please enter a date for the decision
+        invalidMessage: Invalid decision date
+        notInReportRange: The decision date must be in the report date range ({{from}} to {{to}})
+    clientInvolvedBoolean:
+        notBlank: Please specify if the client was involved or not
+    clientInvolvedDetails:
+        notBlank: Please write how much the client was involved in this decision
+        length: The text must be at least {{ limit }} characters

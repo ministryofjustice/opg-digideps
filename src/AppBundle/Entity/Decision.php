@@ -7,6 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @JMS\XmlRoot("decision")
+ * @Assert\Callback(methods={"isValidDateRange"})
  */
 class Decision
 {
@@ -23,6 +24,15 @@ class Decision
     private $reportId;
     
     /**
+     * Only used to hold the Report object, needed by the validators for date range reasons
+     * @JMS\Exclude
+     * @var Report
+     */
+    private $report;
+    
+    /**
+     * @Assert\NotBlank( message="decision.title.notBlank" )
+     * @Assert\Length( min=2, minMessage="decision.title.length")
      * @JMS\Type("string")
      * @var string
      */
@@ -30,23 +40,30 @@ class Decision
 
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="decision.description.notBlank" )
+     * @Assert\Length( min=2, minMessage="decision.description.length")
      * @var string
      */
     private $description;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @Assert\NotBlank( message="decision.decisionDate.notBlank")
+     * @Assert\Date( message="decision.decisionDate.invalidMessage" )
      * @var \DateTime
      */
     private $decisionDate;
 
     /**
+     * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank")
      * @JMS\Type("boolean")
      * @var boolean
      */
     private $clientInvolvedBoolean;
 
     /**
+     * @Assert\NotBlank( message="decision.clientInvolvedDetails.notBlank")
+     * @Assert\Length( min=2, minMessage="decision.clientInvolvedDetails.length")
      * @JMS\Type("string")
      * @var boolean
      */
@@ -113,7 +130,7 @@ class Decision
         $this->description = $description;
     }
 
-    public function setDecisionDate(\DateTime $date)
+    public function setDecisionDate(\DateTime $date = null)
     {
         $this->decisionDate = $date;
     }
@@ -121,6 +138,45 @@ class Decision
     public function getDecisionDate()
     {
         return $this->decisionDate;
+    }
+    
+    /**
+     * @return Report
+     */
+    public function getReport()
+    {
+        return $this->report;
+    }
+
+    /**
+     * @param Report $report
+     */
+    public function setReport(Report $report)
+    {
+        $this->report = $report;
+    }
+    
+    /**
+     * @param ExecutionContextInterface $context
+     * @return boolean
+     */
+    public function isValidDateRange(ExecutionContextInterface $context)
+    {
+        if (empty($this->decisionDate)) {
+            return; // the notEmpty validator will take care of that
+        }
+        
+        $reportStartDate = $this->report->getStartDate();
+        $reportEndDate = $this->report->getEndDate();
+        
+        if ($this->decisionDate->getTimestamp() > $reportEndDate->getTimestamp() ||
+            $this->decisionDate->getTimestamp() < $reportStartDate->getTimestamp()
+        ) {
+            $context->addViolationAt('decisionDate','decision.decisionDate.notInReportRange', [
+                '{{from}}' => $reportStartDate->format('d/m/Y'),
+                '{{to}}' => $reportEndDate->format('d/m/Y'),
+            ]);
+        }
     }
 
 }
