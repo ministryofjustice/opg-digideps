@@ -15,7 +15,7 @@ class DecisionType extends AbstractType
                 ->add('decisionDate', 'date', [ 'widget' => 'text',
                                               'input' => 'datetime',
                                               'format' => 'yyyy-MM-dd',
-                                              'invalid_message' => 'TODO'
+                                              'invalid_message' => 'decision.decisionDate.invalidMessage'
                                             ])
                  ->add('clientInvolvedBoolean', 'choice', array(
                     'choices' => [1=>'Yes', 0=>'No'],
