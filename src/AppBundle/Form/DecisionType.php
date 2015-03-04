@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Entity\Role;
 
-class AddDecision extends AbstractType
+class DecisionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
