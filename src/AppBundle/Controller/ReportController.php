@@ -83,4 +83,20 @@ class ReportController extends RestController
         
         return [ 'id' => $contact->getId() ];
     }
+    
+    /**
+     * @Route("/get-contacts/{id}")
+     * @Method({"GET"})
+     */
+    public function getContactsAction($id)
+    {
+        $report = $this->findEntityBy('Report', $id);
+        
+        $contacts = $this->getRepository('Contact')->findByReport($report);
+        
+        if(count($contacts) == 0){
+            throw new \Exception("No contacts found for report id: $id");
+        }
+        return $contacts;
+    }
 }
