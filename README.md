@@ -1,13 +1,5 @@
-#INSTALL + build 2
+#Digideps Client
 
-  moved here 
-    https://github.com/ministryofjustice/opg-digi-deps-provisioning
-
-  *  browse at http://digideps-client.local
-
-  * Templates are in 
-
-/app/Resources/views
-
+build with `php -d extension=phar.so phing.phar build`
 
 
