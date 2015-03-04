@@ -24,16 +24,9 @@ class Contact
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
+     * @ORM\Column(name="contact_name", type="string", length=255, nullable=true)
      */
-    private $firstname;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
-     */
-    private $lastname;
+    private $contactName;
 
     /**
      * @var string
@@ -41,6 +34,20 @@ class Contact
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private $address;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
+     */
+    private $address2;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="county", type="string", length=200, nullable=true)
+     */
+    private $county;
 
     /**
      * @var string
@@ -48,6 +55,13 @@ class Contact
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     private $postcode;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="country", type="string", length=10, nullable=true)
+     */
+    private $country;
 
     /**
      * @var string
@@ -97,72 +111,26 @@ class Contact
     }
 
     /**
-     * Set firstname
+     * Set contact_name
      *
-     * @param string $firstname
+     * @param string $contact_name
      * @return Contact
      */
-    public function setFirstname($firstname)
+    public function setContactName($contactName)
     {
-        $this->firstname = $firstname;
+        $this->contactName = $contactName;
 
         return $this;
     }
 
     /**
-     * Get firstname
+     * Get contactName
      *
      * @return string 
      */
-    public function getFirstname()
+    public function getContactName()
     {
-        return $this->firstname;
-    }
-
-    /**
-     * Set lastname
-     *
-     * @param string $lastname
-     * @return Contact
-     */
-    public function setLastname($lastname)
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    /**
-     * Get lastname
-     *
-     * @return string 
-     */
-    public function getLastname()
-    {
-        return $this->lastname;
-    }
-
-    /**
-     * Set address
-     *
-     * @param string $address
-     * @return Contact
-     */
-    public function setAddress($address)
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    /**
-     * Get address
-     *
-     * @return string 
-     */
-    public function getAddress()
-    {
-        return $this->address;
+        return $this->contactName;
     }
 
     /**
@@ -310,5 +278,97 @@ class Contact
     {
         $space = ' ';
         return $this->getFirstname().$space. $this->getLastname();
+    }
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     * @return Contact
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     *
+     * @return string 
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set address2
+     *
+     * @param string $address2
+     * @return Contact
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+
+        return $this;
+    }
+
+    /**
+     * Get address2
+     *
+     * @return string 
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * Set county
+     *
+     * @param string $county
+     * @return Contact
+     */
+    public function setCounty($county)
+    {
+        $this->county = $county;
+
+        return $this;
+    }
+
+    /**
+     * Get county
+     *
+     * @return string 
+     */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+    /**
+     * Set country
+     *
+     * @param string $country
+     * @return Contact
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return string 
+     */
+    public function getCountry()
+    {
+        return $this->country;
     }
 }
