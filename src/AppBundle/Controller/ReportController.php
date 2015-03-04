@@ -83,6 +83,9 @@ class ReportController extends Controller
      */
     public function contactsAction($reportId,$action)
     {
+        $report = $this->getReport($reportId);
+        $client = $this->getClient($report->getClient());
+
         $request = $this->getRequest();
         
         $apiClient = $this->get('apiclient');
@@ -103,7 +106,12 @@ class ReportController extends Controller
             }
         }
         
-        return [ 'form' => $form->createView(), 'contacts' => $contacts, 'action' => $action];
+        return [
+            'form' => $form->createView(),
+            'contacts' => $contacts,
+            'action' => $action,
+            'report' => $report,
+            'client' => $client];
     }
     
     
@@ -132,7 +140,7 @@ class ReportController extends Controller
                 // add decision
                 $response = $apiClient->postC('add_decision', $form->getData());
                 
-                return $this->redirect($this->generateUrl('list_decisions', ['reportId'=>$reportId]));
+                return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             }
         }
 
@@ -147,7 +155,7 @@ class ReportController extends Controller
     
     
     /**
-     * @Route("/{reportId}/decisions", name="list_decisions")
+     * @Route("/{reportId}/decisions", name="decisions")
      * @Template()
      */
     public function listDecisionAction($reportId)
@@ -169,8 +177,64 @@ class ReportController extends Controller
     }
     
     /**
+     * @Route("/{reportId}/add-contact", name="add_contact")
+     * @Template()
+     */
+    public function addContactAction($reportId)
+    {
+        $request = $this->getRequest();
+        $apiClient = $this->get('apiclient');
+        
+        $contact = new EntityDir\Contact();
+        
+        $form = $this->createForm(new FormDir\ContactType(), $contact);
+        $form->handleRequest($request);
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                $contact = $form->getData();
+                $contact->setReport($reportId);
+                
+                $apiClient->postC('add_report_contact', $contact);
+                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+            }
+        }
+        return [ 'form' => $form->createView() ];
+    }
+
+    /**
+     * @Route("/{reportId}/accounts", name="accounts")
+     * @Template()
+     */
+    public function listAccountsAction($reportId)
+    {
+        $report = $this->getReport($reportId);
+        $client = $this->getClient($report->getClient());
+
+        return [
+            'report' => $report,
+            'client' => $client,
+        ];
+    }
+
+    /**
+     * @Route("/{reportId}/assets", name="assets")
+     * @Template()
+     */
+    public function listAssetsAction($reportId)
+    {
+        $report = $this->getReport($reportId);
+        $client = $this->getClient($report->getClient());
+
+        return [
+            'report' => $report,
+            'client' => $client,
+        ];
+    }
+
+    /**
      * @param integer $clientId
-     * 
+     *
      * @return Client
      */
     private function getClient($clientId)
