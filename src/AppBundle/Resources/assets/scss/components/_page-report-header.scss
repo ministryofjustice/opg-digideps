@@ -1,0 +1,31 @@
+.page-report-content {
+
+  .page-report-header {
+    margin-top: 40px;
+    margin-bottom: 0;
+
+    .page-header-titles {
+      float: left;
+      width: 55%;
+    }
+
+    .page-header-meta-data {
+      float: left;
+      width: 45%;
+    }
+
+    .report-title {
+      font-weight: normal;
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+
+    .client-name {
+      @include bold-48();
+      margin-top: 20px;
+      margin-bottom: 0px;
+    }
+
+  }
+
+}
