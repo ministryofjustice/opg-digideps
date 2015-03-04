@@ -2,48 +2,56 @@
 {% block pageTitle %}Deputyship Report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
-{% set reportStartYear = 2014 %}
-{% set reportEndYear = 2015 %}
+{# Define tabDataProvider #}
+{% set tabDataProvider = [
+{   tabId: 'tab-overview',
+    label: 'Overview',
+    href : path('report_overview', {'reportId' : report.id}),
+    class: 'active'},
 
-{% if reportStartYear == reportEndYear %}
-    {% set reportRange = reportStartYear %}
-{% else %}
-    {% set reportRange = reportStartYear ~ ' - ' ~ reportEndYear %}
-{% endif %}
+{   tabId: 'tab-contacts',
+    label: 'Contacts',
+    href : path('list_contacts', {'reportId' : report.id}),
+    class: ''},
 
-{% set reportStartDate = '01 June 2014' %}
-{% set reportEndDate = '31 May 2015' %}
-{% set reportDueDate = '26 July 2015' %}
-{% set clientName = 'James Smith' %}
+{   tabId: 'tab-decisions',
+    label: 'Decisions',
+    href : path('list_decisions', {'reportId' : report.id}),
+    class: ''},
+
+{   tabId: 'tab-accounts',
+    label: 'Accounts',
+    href : '/report/' ~ report.id ~ '/accounts',
+    class: ''},
+
+{   tabId: 'tab-assets',
+    label: 'Assets',
+    href : '/report/' ~ report.id ~ '/accounts',
+    class: ''}
+] %}
 
 
 {% block pageContent %}
     {% block pageHeader %}
-
-        <header class="page-header group">
-
-            <div class="column-half page-header-titles">
-                <h1 class="heading-large report-title">{{ reportRange }} report
-                    <div class="heading-large client-name">{{ clientName }}</div>
-                </h1>
-            </div>
-            <div class="column-half page-header-meta-data">
-                <div class="report-meta-data">
-                    <span class="report-meta__label">Reporting period:</span>
-                    <span class="report-meta report-meta__data">{{ reportStartDate }} - {{ reportEndDate }}</span>
-                </div>
-                <div class="report-meta-data">
-                    <span class="report-meta report-meta__label">Due date:</span>
-                    <span class="report-meta report-meta__data">{{ reportDueDate }}</span>
-                </div>
-            </div>
-
-        </header>
-
+        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
     {% endblock %}
-    <div class="tabs">
-        <div class="page-body">
-            {% block pageBody %}{% endblock %}
+
+    {% block pageNavigation %}
+        {% include 'AppBundle:Components/Navigation:_tab-bar.html.twig' with { tabDataProvider: tabDataProvider } %}
+    {% endblock %}
+
+    {% block validationSummary %}{% endblock %}
+    {% block errorSummary %}
+        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+    {% endblock %}
+
+    <div class="js-tab-content tab-content tabs-body">
+        <div class="js-tab-pane tab-pane tabs-panel tabs-panel-selected" role="tabpanel" aria-hidden="false"
+             aria-expanded="true" aria-labelledby="tab-overview-panel">
+            <div class="page-body">
+                {% block pageBody %}{% endblock %}
+            </div>
         </div>
     </div>
+
 {% endblock %}

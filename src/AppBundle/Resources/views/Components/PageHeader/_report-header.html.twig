@@ -1,0 +1,49 @@
+{# initial data #}
+{% set clientName = client.firstname ~ ' ' ~ client.lastname %}
+{% set reportStartDateTime = report.startDate %}
+{% set reportEndDateTime = report.endDate %}
+{% set reportDueDateTime = reportEndDateTime|date_modify("+8 weeks") %}
+{# -------------------------------------------------------------------------------- #}
+
+
+{# massage data for view usage #}
+{% set reportStartYear = reportStartDateTime|date("Y") %}
+{% set reportEndYear = reportEndDateTime|date("Y") %}
+
+{% if reportStartYear == reportEndYear %}
+    {% set reportRange = reportStartYear %}
+{% else %}
+    {% set reportRange = reportStartYear ~ ' - ' ~ reportEndYear %}
+{% endif %}
+
+{# Make sure the due date doesn't fall on a weekend. #}
+{% if reportDueDateTime|date("w") == 0 %}
+    {% set reportDueDateTime = reportDueDateTime|date_modify("+1 day") %}
+{% elseif reportDueDateTime|date("w") == 6 %}
+    {% set reportDueDateTime = reportDueDateTime|date_modify("+2 day") %}
+{% endif %}
+
+{% set reportStartDate = reportStartDateTime|date("d F Y") %}
+{% set reportEndDate = reportEndDateTime|date("d F Y") %}
+{% set reportDueDate = reportDueDateTime|date("d F Y") %}
+
+
+<header class="page-report-header page-header group">
+
+    <div class="page-header-titles">
+        <h1 class="heading-large report-title">{{ reportRange }} report
+            <div class="heading-large client-name">{{ clientName }}</div>
+        </h1>
+    </div>
+    <div class="page-header-meta-data">
+        <div class="report-meta-data">
+            <div class="report-meta__label">Reporting period:</div>
+            <span class="report-meta report-meta__data">{{ reportStartDate }} to {{ reportEndDate }}</span>
+        </div>
+        <div class="report-meta-data">
+            <span class="report-meta report-meta__label">Due date:</span>
+            <span class="report-meta report-meta__data">{{ reportDueDate }}</span>
+        </div>
+    </div>
+
+</header>
