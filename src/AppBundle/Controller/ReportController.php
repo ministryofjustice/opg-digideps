@@ -104,12 +104,18 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/list-contacts/{reportId}", name="list_contacts")
+     * @Route("/{reportId}/contacts", name="list_contacts")
      * @Template()
      */
     public function listContactAction($reportId)
     {
-        return [ ];
+        $report = $this->getReport($reportId);
+        $client = $this->getClient($report->getClient());
+
+        return [
+            'report' => $report,
+            'client' => $client,
+        ];
     }
     
     /**
