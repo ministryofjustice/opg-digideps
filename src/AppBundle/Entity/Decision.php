@@ -23,6 +23,8 @@ class Decision
     private $reportId;
     
     /**
+     * @Assert\NotBlank( message="decision.title.notBlank" )
+     * @Assert\Length( min=2, minMessage="decision.title.length")
      * @JMS\Type("string")
      * @var string
      */
@@ -30,23 +32,30 @@ class Decision
 
     /**
      * @JMS\Type("string")
+     * @Assert\NotBlank( message="decision.description.notBlank" )
+     * @Assert\Length( min=2, minMessage="decision.description.length")
      * @var string
      */
     private $description;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @Assert\NotBlank( message="decision.decisionDate.notBlank")
+     * @Assert\Date( message="decision.decisionDate.invalidMessage" )
      * @var \DateTime
      */
     private $decisionDate;
 
     /**
+     * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank")
      * @JMS\Type("boolean")
      * @var boolean
      */
     private $clientInvolvedBoolean;
 
     /**
+     * @Assert\NotBlank( message="decision.clientInvolvedDetails.notBlank")
+     * @Assert\Length( min=2, minMessage="decision.clientInvolvedDetails.length")
      * @JMS\Type("string")
      * @var boolean
      */
@@ -113,7 +122,7 @@ class Decision
         $this->description = $description;
     }
 
-    public function setDecisionDate(\DateTime $date)
+    public function setDecisionDate(\DateTime $date = null)
     {
         $this->decisionDate = $date;
     }
