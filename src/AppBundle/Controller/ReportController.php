@@ -5,6 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form\ReportType;
+use AppBundle\Entity\Client;
 use AppBundle\Entity\Report;
 use AppBundle\Entity\Decision;
 use AppBundle\Service\ApiClient;
@@ -25,7 +26,7 @@ class ReportController extends Controller
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
        
-        $client = $apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
+        $client = $this->getClient($clientId);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
@@ -54,7 +55,7 @@ class ReportController extends Controller
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
                 $response = $apiClient->postC('add_report', $form->getData());
-                return $this->redirect($this->generateUrl('report_overview', [ 'id' => $response['report'] ]));
+                return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
         
@@ -62,15 +63,13 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/{id}/overview", name="report_overview")
+     * @Route("/{reportId}/overview", name="report_overview")
      * @Template()
      */
-    public function overviewAction($id)
+    public function overviewAction($reportId)
     {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        
-        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $id ]]);
-        $client = $apiClient->getEntity('Client', 'find_client_by_id', [ 'query' => [ 'id' => $report->getClient() ]]);
+        $report = $this->getReport($reportId);
+        $client = $this->getClient($report->getClient());
         
         return [
             'report' => $report,
@@ -123,7 +122,7 @@ class ReportController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
         // just needed for title etc,
-        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        $report = $this->getReport($reportId);
         $decision = new Decision;
         $decision->setReportId($reportId);
         
@@ -145,7 +144,7 @@ class ReportController extends Controller
             'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
             'form' => $form->createView(),
             'report' => $report,
-            'client' => [], //to pass,
+            'client' => $this->getClient($report->getClient()), //to pass,
             'showAddForm' => true
         ];
     }
@@ -158,13 +157,34 @@ class ReportController extends Controller
     public function listDecisionAction($reportId)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        $report = $this->getReport($reportId);
         
         return [
             'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
             'report' => $report,
-            'showAddForm' => false
+            'showAddForm' => false,
+            'client' => $this->getClient($report->getClient()), //to pass,
         ];
+    }
+    
+    /**
+     * @param integer $clientId
+     * 
+     * @return Client
+     */
+    private function getClient($clientId)
+    {
+        return $this->get('apiclient')->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
+    }
+    
+    /**
+     * @param integer $reportId
+     * 
+     * @return Report
+     */
+    private function getReport($reportId)
+    {
+        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
     }
     
 }
