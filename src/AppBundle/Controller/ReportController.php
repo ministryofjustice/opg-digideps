@@ -115,7 +115,7 @@ class ReportController extends Controller
     
     /**
      * @Route("/{reportId}/decision", name="add_decision")
-     * @Template("AppBundle:Decision:list.html.twig")
+     * @Template()
      */
     public function addDecisionAction($reportId)
     {
@@ -128,7 +128,7 @@ class ReportController extends Controller
         $decision->setReportId($reportId);
         
         $form = $this->createForm(new FormDir\DecisionType([
-            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'decision')
+            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decision')
         ]), $decision);
 
         if ($request->isMethod('POST')) {

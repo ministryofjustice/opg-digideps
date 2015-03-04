@@ -11,9 +11,10 @@
     <p>{{ 'page.subTItle' | trans }}</p>
     
     <div style="margin: 10px; border-left: #CCCCCC 5px solid; padding: 10px;">
-    {% include 'AppBundle:Decision:_add.html.twig' %}
+        {% include 'AppBundle:Report:_decision_form.html.twig' %}
     </div>
     
+    {# list (move somewhere else #}
     <h2>Decisions<h1>
     <div class="behat-region-decision">
       {% for decision in decisions %}
