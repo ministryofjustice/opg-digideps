@@ -6,5 +6,22 @@
 
 
 {% block pageBody %}
-    {% include 'AppBundle:Report:_contact_form.html.twig' %}
+    {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
+    formTitle: "Contacts"} %}
+{{ 'contact_form.intro'| trans }}
+
+    <div {% if (contacts is not empty) and (action == 'list') %} style="display: none;" {% endif %}>
+            {% include 'AppBundle:Report:_contact_form.html.twig' %}
+    </div>
+    
+    {% if (contacts is not empty) and (action == 'list') %}
+         {% set  params = app.request.attributes.get('_route_params') %}
+        <div>
+             <a href="{{ path('contacts', {'reportId': params['reportId'], 'action': 'add' }) }}">Add Contact</a>
+        </div>
+    {% endif %}
+    
+    {% if contacts is not empty %}
+        {% include 'AppBundle:Report:_listContact.html.twig' %}
+    {% endif %}
 {% endblock %}
