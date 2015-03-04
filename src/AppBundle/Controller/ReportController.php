@@ -4,9 +4,6 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Form\ReportType;
-use AppBundle\Entity\Report;
-use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 
@@ -41,7 +38,7 @@ class ReportController extends Controller
         //if client has property & affairs and health & welfare then give them property & affairs
         //else give them health and welfare
         if(count($allowedCourtOrderTypes) > 1){
-            $report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
+            $report->setCourtOrderType(EntityDir\Report::PROPERTY_AND_AFFAIRS);
         }else{
             $report->setCourtOrderType($allowedCourtOrderTypes[0]);
         }
@@ -61,14 +58,14 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/overview/{id}", name="report_overview")
+     * @Route("/{reportId}/overview", name="report_overview")
      * @Template()
      */
-    public function overviewAction($id)
+    public function overviewAction($reportId)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $id ]]);
+        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
         $client = $apiClient->getEntity('Client', 'find_client_by_id', [ 'query' => [ 'id' => $report->getClient() ]]);
         
         return [
@@ -78,10 +75,10 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/add-contact/{reportId}")
+     * @Route("/{reportId}/contacts", name="contacts")
      * @Template()
      */
-    public function addContactAction($reportId)
+    public function contactsAction($reportId)
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
@@ -97,18 +94,10 @@ class ReportController extends Controller
                 $contact->setReport($reportId);
                 
                 $apiClient->postC('add_report_contact', $contact);
-                return $this->redirect($this->generateUrl('list_contacts', [ 'reportId' => $reportId ]));
+                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
             }
         }
         return [ 'form' => $form->createView() ];
     }
     
-    /**
-     * @Route("/list-contacts/{reportId}", name="list_contacts")
-     * @Template()
-     */
-    public function listContactAction($reportId)
-    {
-        return [ ];
-    }
 }
