@@ -2,6 +2,34 @@
 {% block pageTitle %}Deputyship Report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
+{# Define tabDataProvider #}
+{% set tabDataProvider = [
+{   tabId: 'tab-overview',
+    label: 'Overview',
+    href : path('report_overview', {'id' : report.id}),
+    class: 'active'},
+
+{   tabId: 'tab-contacts',
+    label: 'Contacts',
+    href : path('list_contacts', {'reportId' : report.id}),
+    class: ''},
+
+{   tabId: 'tab-decisions',
+    label: 'Decisions',
+    href : path('list_decisions', {'reportId' : report.id}),
+    class: ''},
+
+{   tabId: 'tab-accounts',
+    label: 'Accounts',
+    href : '/report' ~ report.id ~ '/accounts',
+    class: ''},
+
+{   tabId: 'tab-assets',
+    label: 'Assets',
+    href : '/report' ~ report.id ~ '/accounts',
+    class: ''}
+] %}
+
 
 {% block pageContent %}
     {% block pageHeader %}
@@ -9,7 +37,7 @@
     {% endblock %}
 
     {% block pageNavigation %}
-        {% include 'AppBundle:Components/Navigation:_tab-bar.html.twig' %}
+        {% include 'AppBundle:Components/Navigation:_tab-bar.html.twig' with { tabDataProvider: tabDataProvider } %}
     {% endblock %}
 
     {% block validationSummary %}{% endblock %}
