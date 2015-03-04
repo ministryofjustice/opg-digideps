@@ -7,11 +7,4 @@
 
 {% block pageBody %}
     <h1>Overview Page</h1>
-    
-    <a href="{{ path('list_decisions', {'reportId' : report.id}) }}">List decision</a><br/>
-    <a href="{{ path('add_contact', {'reportId' : report.id}) }}">Add contact</a>
-    <hr/>
-    {{ dump(report) }}
-    <hr/>
-    {{ dump(client) }}
 {% endblock %}

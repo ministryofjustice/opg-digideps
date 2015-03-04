@@ -6,7 +6,7 @@
 {% set tabDataProvider = [
 {   tabId: 'tab-overview',
     label: 'Overview',
-    href : path('report_overview', {'id' : report.id}),
+    href : path('report_overview', {'reportId' : report.id}),
     class: 'active'},
 
 {   tabId: 'tab-contacts',
@@ -21,12 +21,12 @@
 
 {   tabId: 'tab-accounts',
     label: 'Accounts',
-    href : '/report' ~ report.id ~ '/accounts',
+    href : '/report/' ~ report.id ~ '/accounts',
     class: ''},
 
 {   tabId: 'tab-assets',
     label: 'Assets',
-    href : '/report' ~ report.id ~ '/accounts',
+    href : '/report/' ~ report.id ~ '/accounts',
     class: ''}
 ] %}
 
