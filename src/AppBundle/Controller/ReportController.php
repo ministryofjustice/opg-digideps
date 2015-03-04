@@ -114,8 +114,8 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/{reportId}/decision", name="add_decision")
-     * @Template()
+     * @Route("/{reportId}/decisions/add", name="add_decision")
+     * @Template("AppBundle:Report:listDecision.html.twig")
      */
     public function addDecisionAction($reportId)
     {
@@ -128,7 +128,7 @@ class ReportController extends Controller
         $decision->setReportId($reportId);
         
         $form = $this->createForm(new FormDir\DecisionType([
-            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decision')
+            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
         ]), $decision);
 
         if ($request->isMethod('POST')) {
@@ -137,7 +137,7 @@ class ReportController extends Controller
                 // add decision
                 $response = $apiClient->postC('add_decision', $form->getData());
                 
-                return $this->redirect($this->generateUrl('add_decision', ['reportId'=>$reportId]));
+                return $this->redirect($this->generateUrl('list_decisions', ['reportId'=>$reportId]));
             }
         }
 
@@ -145,9 +145,26 @@ class ReportController extends Controller
             'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
             'form' => $form->createView(),
             'report' => $report,
-            'client' => [], //to pass
+            'client' => [], //to pass,
+            'showAddForm' => true
         ];
     }
-   
+    
+    
+    /**
+     * @Route("/{reportId}/decisions", name="list_decisions")
+     * @Template()
+     */
+    public function listDecisionAction($reportId)
+    {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        
+        return [
+            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
+            'report' => $report,
+            'showAddForm' => false
+        ];
+    }
     
 }

@@ -4,8 +4,10 @@ page:
     subTItle: >
         Add the significant decisions you made during the reporting period, 
         such as buying and selling property, making gifts or changing the client's care home.
-addPage:
-    headTitle: Add a decision        
+    addDecisionButton: Add a decision  
+    addDecisionFormTitle: Add a decision  
+
+# form
 title:
   label: Title
   hint: Add a title to help you identify the decision.

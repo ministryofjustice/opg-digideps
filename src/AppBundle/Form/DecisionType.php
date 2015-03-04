@@ -28,7 +28,7 @@ class DecisionType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-              'translation_domain' => 'report-decision'
+              'translation_domain' => 'report-decisions'
         ]);
     }
     
