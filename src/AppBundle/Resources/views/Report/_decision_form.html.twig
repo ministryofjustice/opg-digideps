@@ -1,9 +1,9 @@
-{% trans_default_domain "decision" %}
+{% trans_default_domain "report-decisions" %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
 <h1 class="form-title heading-medium-large">
-    {{ 'addPage.headTitle' | trans }}
+    {{ 'page.addDecisionFormTitle' | trans }}
 </h1>
 
   {{ form_input(form.title,'title', { 'labelClass': 'required' }) }}

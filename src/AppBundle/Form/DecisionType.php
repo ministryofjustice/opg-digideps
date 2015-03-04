@@ -6,7 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Entity\Role;
 
-class AddDecision extends AbstractType
+class DecisionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -28,8 +28,7 @@ class AddDecision extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-              'translation_domain' => 'decision',
-//              'validation_groups' => ['admin_add_user'],
+              'translation_domain' => 'report-decisions'
         ]);
     }
     

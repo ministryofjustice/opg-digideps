@@ -188,19 +188,19 @@ Feature: add client and report
         And I submit the form
         Then the form should not contain an error
         # assert you are on dashboard
-        And I should be on "/report/overview/1"
+        And I should be on "/report/1/overview"
 
 
     @deputy
     Scenario: report overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "/report/overview/1"
+        Then I should be on "/report/1/overview"
         And I save the page as "deputy-report-overview"
     
     
     @deputy
     Scenario: check homepage redirect
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "/report/overview/1"
+        Then I should be on "/report/1/overview"
         When I go to "/"
-        Then I should be on "/report/overview/1"
+        Then I should be on "/report/1/overview"

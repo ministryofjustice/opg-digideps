@@ -4,6 +4,9 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use AppBundle\Entity\Report;
+use AppBundle\Entity\Decision;
+use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 
@@ -81,8 +84,9 @@ class ReportController extends Controller
     public function contactsAction($reportId,$action)
     {
         $request = $this->getRequest();
+        
         $apiClient = $this->get('apiclient');
-        $contacts = [];
+        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'query' => ['id' => $reportId ]]);
         
         $contact = new EntityDir\Contact();
         
@@ -97,10 +101,63 @@ class ReportController extends Controller
                 $apiClient->postC('add_report_contact', $contact);
                 return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
             }
-        }else{
-            $contacts = [ 'test' ]; //get contacts
         }
+        
         return [ 'form' => $form->createView(), 'contacts' => $contacts, 'action' => $action];
     }
     
+    
+    /**
+     * @Route("/{reportId}/decisions/add", name="add_decision")
+     * @Template("AppBundle:Report:listDecision.html.twig")
+     */
+    public function addDecisionAction($reportId)
+    {
+        $request = $this->getRequest();
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        
+        // just needed for title etc,
+        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        $decision = new Decision;
+        $decision->setReportId($reportId);
+        
+        $form = $this->createForm(new FormDir\DecisionType([
+            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
+        ]), $decision);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                // add decision
+                $response = $apiClient->postC('add_decision', $form->getData());
+                
+                return $this->redirect($this->generateUrl('list_decisions', ['reportId'=>$reportId]));
+            }
+        }
+
+        return [
+            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
+            'form' => $form->createView(),
+            'report' => $report,
+            'client' => [], //to pass,
+            'showAddForm' => true
+        ];
+    }
+    
+    
+    /**
+     * @Route("/{reportId}/decisions", name="list_decisions")
+     * @Template()
+     */
+    public function listDecisionAction($reportId)
+    {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $report = $apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        
+        return [
+            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
+            'report' => $report,
+            'showAddForm' => false
+        ];
+    }
 }
