@@ -3,31 +3,32 @@
 {% block contentClass %}page-report-content{% endblock %}
 
 {# Define tabDataProvider #}
+{% set currentRoute = app.request.attributes.get('_route') %}
 {% set tabDataProvider = [
 {   tabId: 'tab-overview',
     label: 'Overview',
     href : path('report_overview', {'reportId' : report.id}),
-    class: 'active'},
+    class: currentRoute == 'report_overview' ? 'active' : ''},
 
 {   tabId: 'tab-contacts',
     label: 'Contacts',
     href : path('list_contacts', {'reportId' : report.id}),
-    class: ''},
+    class: currentRoute == 'list_contacts' ? 'active' : ''},
 
 {   tabId: 'tab-decisions',
     label: 'Decisions',
     href : path('list_decisions', {'reportId' : report.id}),
-    class: ''},
+    class: currentRoute == 'list_decisions' ? 'active' : ''},
 
 {   tabId: 'tab-accounts',
     label: 'Accounts',
     href : path('list_accounts', {'reportId' : report.id}),
-    class: ''},
+    class: currentRoute == 'list_accounts' ? 'active' : ''},
 
 {   tabId: 'tab-assets',
     label: 'Assets',
     href : path('list_assets', {'reportId' : report.id}),
-    class: ''}
+    class: currentRoute == 'assets' ? 'active' : ''}
 ] %}
 
 
