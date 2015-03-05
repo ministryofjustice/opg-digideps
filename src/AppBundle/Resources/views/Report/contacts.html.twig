@@ -4,6 +4,9 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
+ {% block pageNavigation %}
+   {{ tab('report', 'tab-contacts', {'reportId': report.id}) }}
+{% endblock %}
 
 {% block pageBody %}
     <div {% if (contacts is not empty) and (action == 'list') %} style="display: none;" {% endif %}>

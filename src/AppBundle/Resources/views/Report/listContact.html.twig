@@ -2,10 +2,10 @@
 {% trans_default_domain "report-contacts" %}
 
  {% block pageNavigation %}
-   {{ tab('report', 'tab-assets', {'reportId': report.id}) }}
+   {{ tab('report', 'tab-contacts', {'reportId': report.id}) }}
 {% endblock %}
 
 {% block pageBody %}
-    <h1>Assets</h1>
-    [...]
+    <h2>Here is the add contact form if there are no contacts in this select</h2>
+    <h2>Here is the list of contacts</h2>
 {% endblock %}

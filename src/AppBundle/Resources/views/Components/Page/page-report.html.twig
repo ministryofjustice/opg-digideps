@@ -9,38 +9,36 @@
 {   tabId: 'tab-overview',
     label: 'Overview',
     href : path('report_overview', {'reportId' : report.id}),
-    class: currentRoute == 'report_overview' ? 'active' : ''},
+    class: currentRoute in ['report_overview'] ? 'active' : ''},
 
 {   tabId: 'tab-contacts',
     label: 'Contacts',
     href : path('contacts', {'reportId' : report.id}),
-    class: currentRoute == 'contacts' ? 'active' : ''},
+    class: currentRoute in ['contacts'] ? 'active' : ''},
 
 {   tabId: 'tab-decisions',
     label: 'Decisions',
     href : path('decisions', {'reportId' : report.id}),
-    class: (currentRoute == 'decisions' or currentRoute == 'add_decision') ? 'active' : ''},
+    class: currentRoute in ['decisions', 'add_decision'] ? 'active' : ''},
 
 {   tabId: 'tab-accounts',
     label: 'Accounts',
     href : path('accounts', {'reportId' : report.id}),
-    class: currentRoute == 'accounts' ? 'active' : ''},
+    class: currentRoute in ['accounts'] ? 'active' : ''},
 
 {   tabId: 'tab-assets',
     label: 'Assets',
     href : path('assets', {'reportId' : report.id}),
-    class: currentRoute == 'assets' ? 'active' : ''}
+    class: currentRoute in ['assets'] ? 'active' : ''}
 ] %}
 
 
 {% block pageContent %}
-    {{ dump(currentRoute) }}
     {% block pageHeader %}
         {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
     {% endblock %}
 
     {% block pageNavigation %}
-        {% include 'AppBundle:Components/Navigation:_tab-bar.html.twig' with { tabDataProvider: tabDataProvider } %}
     {% endblock %}
 
     {% block validationSummary %}{% endblock %}

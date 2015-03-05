@@ -4,6 +4,10 @@
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
+ {% block pageNavigation %}
+   {{ tab('report', 'tab-decisions', {'reportId': report.id}) }}
+{% endblock %}
+
 {% block pageBody %}
     
     <h1 class="form-title heading-medium-large">{{ 'page.headTitle' | trans }}</h1>
