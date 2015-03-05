@@ -1489,12 +1489,25 @@ header.page-header h1 {
   width: 50%;
   margin-bottom: 40px; }
 
+.sub-section-title {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-transform: none;
+  margin-bottom: 30px; }
+  @media (max-width: 640px) {
+    .sub-section-title {
+      font-size: 18px;
+      line-height: 1.2; } }
+
 .button-bar {
-  margin-top: 10px; }
+  margin-top: 10px;
+  margin-bottom: 10px; }
 
 .field-with-errors {
   border-left: 3px solid #df3034;
-  padding: 15px 0 15px 15px; }
+  padding: 0 0 0 15px; }
 
 .field-with-errors input,
 .field-with-errors select {
@@ -1505,6 +1518,9 @@ header.page-header h1 {
 
 form {
   overflow: hidden; }
+  .page-report-content form {
+    border-left: 3px solid #bfc1c3;
+    padding-left: 10px; }
 
 .form-group_button-bar {
   padding-top: 60px; }
@@ -1907,6 +1923,8 @@ ol.progress {
   width: 50%;
   padding: 0;
   margin: 40px 0 0 0; }
+  .page-report-content .validation-summary-container {
+    margin-bottom: 20px; }
 
 .validation-summary {
   border-width: 0 0 0 3px;

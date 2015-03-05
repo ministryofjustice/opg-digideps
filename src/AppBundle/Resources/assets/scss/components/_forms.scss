@@ -3,6 +3,12 @@
 
 form {
   overflow: hidden;
+
+  .page-report-content & {
+    border-left: 3px solid $grey-2;
+    padding-left: 10px;
+  }
+
 }
 
 .form-group_button-bar {

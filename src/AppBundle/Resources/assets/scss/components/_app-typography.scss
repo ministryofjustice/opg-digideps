@@ -38,12 +38,17 @@ header.page-header {
   }
 }
 
-.page-section-title{
+.page-section-title {
   @include bold-27();
   margin-bottom: 30px;
 }
 
-.page-section-description{
+.page-section-description {
   width: 50%;
   margin-bottom: 40px;
+}
+
+.sub-section-title {
+  @include bold-24();
+  margin-bottom: 30px;
 }
