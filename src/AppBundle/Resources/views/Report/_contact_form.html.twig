@@ -1,12 +1,18 @@
-{% trans_default_domain "report-contacts" %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+
+{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'contact_form.pageSectionTitle'
+} %}
+
+{% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'contact_form.pageSectionDescription'
+} %}
+
 
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-{% include 'AppBundle:Components/Form:_form-title.html.twig' with {
-    formTitle: "Contacts"
-} %}
-{{ 'contact_form.intro'| trans }}
-
 
 {{ form_input(form.contactName, 'contactName') }}
 {{ form_input(form.relationship, 'relationship') }}

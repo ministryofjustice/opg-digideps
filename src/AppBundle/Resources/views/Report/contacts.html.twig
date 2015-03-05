@@ -2,7 +2,6 @@
 {% trans_default_domain "report-contacts" %}
 
 {% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
-{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
  {% block pageNavigation %}
    {{ tab('report', 'tab-contacts', {'reportId': report.id}) }}
@@ -10,16 +9,16 @@
 
 {% block pageBody %}
     <div {% if (contacts is not empty) and (action == 'list') %} style="display: none;" {% endif %}>
-            {% include 'AppBundle:Report:_contact_form.html.twig' %}
+        {% include 'AppBundle:Report:_contact_form.html.twig' %}
     </div>
-    
+
     {% if (contacts is not empty) and (action == 'list') %}
-         {% set  params = app.request.attributes.get('_route_params') %}
+        {% set  params = app.request.attributes.get('_route_params') %}
         <div>
-             <a href="{{ path('contacts', {'reportId': params['reportId'], 'action': 'add' }) }}">Add Contact</a>
+            <a href="{{ path('contacts', {'reportId': params['reportId'], 'action': 'add' }) }}">Add Contact</a>
         </div>
     {% endif %}
-    
+
     {% if contacts is not empty %}
         {% include 'AppBundle:Report:_listContact.html.twig' %}
     {% endif %}
