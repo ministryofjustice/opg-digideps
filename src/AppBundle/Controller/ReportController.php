@@ -143,7 +143,7 @@ class ReportController extends Controller
                 return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             }
         }
-
+        
         return [
             'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
             'form' => $form->createView(),
