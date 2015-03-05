@@ -143,7 +143,7 @@ class ReportController extends Controller
                 return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             }
         }
-
+        
         return [
             'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
             'form' => $form->createView(),
@@ -174,32 +174,6 @@ class ReportController extends Controller
             'showAddForm' => false,
             'client' => $this->getClient($report->getClient()), //to pass,
         ];
-    }
-    
-    /**
-     * @Route("/{reportId}/add-contact", name="add_contact")
-     * @Template()
-     */
-    public function addContactAction($reportId)
-    {
-        $request = $this->getRequest();
-        $apiClient = $this->get('apiclient');
-        
-        $contact = new EntityDir\Contact();
-        
-        $form = $this->createForm(new FormDir\ContactType(), $contact);
-        $form->handleRequest($request);
-        
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $contact = $form->getData();
-                $contact->setReport($reportId);
-                
-                $apiClient->postC('add_report_contact', $contact);
-                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
-            }
-        }
-        return [ 'form' => $form->createView() ];
     }
 
     /**

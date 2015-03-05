@@ -9,10 +9,6 @@
 {% endblock %}
 
 {% block pageBody %}
-    {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
-    formTitle: "Contacts"} %}
-{{ 'contact_form.intro'| trans }}
-
     <div {% if (contacts is not empty) and (action == 'list') %} style="display: none;" {% endif %}>
             {% include 'AppBundle:Report:_contact_form.html.twig' %}
     </div>

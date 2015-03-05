@@ -7,6 +7,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @JMS\XmlRoot("report")
+ * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  */
 class Report
@@ -46,6 +47,18 @@ class Report
      * @var integer $courtOrderType
      */
     private $courtOrderType;
+    
+    /**
+     * @JMS\Exclude
+     * @var string
+     */
+    private $period;
+    
+    /**
+     * @JMS\Exclude
+     * @var string $dueDate
+     */
+    private $dueDate;
     
     
     /**
@@ -94,6 +107,23 @@ class Report
     }
     
     /**
+     * @return string $dueDate
+     */
+    public function getDueDate()
+    {
+        if(!empty($this->dueDate)){
+            return $this->dueDate;
+        }
+        
+        $this->dueDate = $this->endDate->modify('+8 weeks');
+      
+        if($this->dueDate->format("N") > 5){
+            $this->dueDate->modify('next monday');
+        }
+        return $this->dueDate;
+    }
+    
+    /**
      * @param \DateTime $endDate
      * @return \AppBundle\Entity\Report
      */
@@ -101,6 +131,31 @@ class Report
     {
         $this->endDate = $endDate;
         return $this;
+    }
+    
+    /**
+     * @return string $period
+     */
+    public function getPeriod()
+    {
+        if(!empty($this->period)){
+            return $this->period;
+        }
+        
+        if(empty($this->startDate)){
+            return $this->period;
+        }
+        
+        $startDateStr = $this->startDate->format("Y");
+        $endDateStr = $this->endDate->format("Y");
+        
+        if($startDateStr != $endDateStr){
+            $this->period = $startDateStr.' - '.$endDateStr;
+            return $this->period;
+        }
+        $this->period = $startDateStr;
+        
+        return $this->period;
     }
     
     /**
