@@ -150,7 +150,7 @@ class Report
         $endDateStr = $this->endDate->format("Y");
         
         if($startDateStr != $endDateStr){
-            $this->period = $startDateStr.' - '.$endDateStr;
+            $this->period = $startDateStr.' to '.$endDateStr;
             return $this->period;
         }
         $this->period = $startDateStr;

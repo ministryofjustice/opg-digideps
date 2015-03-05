@@ -4,10 +4,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Form\ReportType;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Report;
-use AppBundle\Entity\Decision;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
@@ -114,19 +111,19 @@ class ReportController extends Controller
             'client' => $client];
     }
     
-    
+  
     /**
-     * @Route("/{reportId}/decisions/add", name="add_decision")
-     * @Template("AppBundle:Report:listDecision.html.twig")
+     * @Route("/{reportId}/decisions/{action}", name="decisions", defaults={ "action" = "list"})
+     * @Template()
      */
-    public function addDecisionAction($reportId)
+    public function decisionsAction($reportId,$action)
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
         // just needed for title etc,
         $report = $this->getReport($reportId);
-        $decision = new Decision;
+        $decision = new EntityDir\Decision;
         $decision->setReportId($reportId);
         $decision->setReport($report);
         
@@ -138,7 +135,7 @@ class ReportController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add decision
-                $response = $apiClient->postC('add_decision', $form->getData());
+                $apiClient->postC('add_decision', $form->getData());
                 
                 return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             }
@@ -148,33 +145,11 @@ class ReportController extends Controller
             'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $this->getClient($report->getClient()), //to pass,
-            'showAddForm' => true
+            'client' => $this->getClient($report->getClient()),
+            'action' => $action
         ];
     }
     
-    
-    /**
-     * @Route("/{reportId}/decisions", name="decisions")
-     * @Template()
-     */
-    public function listDecisionAction($reportId)
-    {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $report = $this->getReport($reportId);
-        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]);
-        
-        if (count($decisions) === 0) {
-            return $this->redirect($this->generateUrl('add_decision', ['reportId'=> $reportId]));
-        }
-        
-        return [
-            'decisions' => $decisions,
-            'report' => $report,
-            'showAddForm' => false,
-            'client' => $this->getClient($report->getClient()), //to pass,
-        ];
-    }
 
     /**
      * @Route("/{reportId}/accounts", name="accounts")

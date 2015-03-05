@@ -2,36 +2,6 @@
 {% block pageTitle %}Deputyship Report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
-{# Define tabDataProvider #}
-{% set currentRoute = app.request.attributes.get('_route') %}
-
-{% set tabDataProvider = [
-{   tabId: 'tab-overview',
-    label: 'Overview',
-    href : path('report_overview', {'reportId' : report.id}),
-    class: currentRoute in ['report_overview'] ? 'active' : ''},
-
-{   tabId: 'tab-contacts',
-    label: 'Contacts',
-    href : path('contacts', {'reportId' : report.id}),
-    class: currentRoute in ['contacts'] ? 'active' : ''},
-
-{   tabId: 'tab-decisions',
-    label: 'Decisions',
-    href : path('decisions', {'reportId' : report.id}),
-    class: currentRoute in ['decisions', 'add_decision'] ? 'active' : ''},
-
-{   tabId: 'tab-accounts',
-    label: 'Accounts',
-    href : path('accounts', {'reportId' : report.id}),
-    class: currentRoute in ['accounts'] ? 'active' : ''},
-
-{   tabId: 'tab-assets',
-    label: 'Assets',
-    href : path('assets', {'reportId' : report.id}),
-    class: currentRoute in ['assets'] ? 'active' : ''}
-] %}
-
 
 {% block pageContent %}
     {% block pageHeader %}
