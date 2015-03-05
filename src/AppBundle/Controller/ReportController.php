@@ -152,10 +152,10 @@ class ReportController extends Controller
     
 
     /**
-     * @Route("/{reportId}/accounts", name="accounts")
+     * @Route("/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"})
      * @Template()
      */
-    public function listAccountsAction($reportId)
+    public function accountsAction($reportId,$action)
     {
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
@@ -163,14 +163,15 @@ class ReportController extends Controller
         return [
             'report' => $report,
             'client' => $client,
+            'action' => $action
         ];
     }
 
     /**
-     * @Route("/{reportId}/assets", name="assets")
+     * @Route("/{reportId}/assets/{action}", name="assets", defaults={ "action" = "list"})
      * @Template()
      */
-    public function listAssetsAction($reportId)
+    public function assetsAction($reportId, $action)
     {
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
@@ -178,6 +179,7 @@ class ReportController extends Controller
         return [
             'report' => $report,
             'client' => $client,
+            'action' => $action
         ];
     }
 
