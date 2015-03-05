@@ -1,0 +1,28 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% trans_default_domain "report-decisions" %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+ {% block pageNavigation %}
+   {{ tab('report', 'tab-decisions', {'reportId': report.id}) }}
+{% endblock %}
+
+{% block pageBody %}
+    
+    <h1 class="form-title heading-medium-large">{{ 'page.headTitle' | trans }}</h1>
+    <p>{{ 'page.subTItle' | trans }}</p>
+    
+    <div {% if (decisions is not empty) and (action == 'list') %} style="display: none; margin: 20px; border-left: #CCCCCC 5px solid; padding: 10px;" {% endif %}>
+        {% include 'AppBundle:Report:_decision_form.html.twig' %}
+    </div>
+    
+    {% if(decisions is not empty) and (action == 'list') %}
+        <a href="{{ path('decisions', {'reportId': report.id, 'action': 'add'}) }}">{{ 'page.addDecisionButton' |trans }}</a>
+    {% endif %}
+    
+    {% if decisions is not empty %}
+        {% include 'AppBundle:Report:_listDecision.html.twig' %}
+    {% endif %}
+    
+{% endblock %}

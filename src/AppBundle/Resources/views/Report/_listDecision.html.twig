@@ -1,0 +1,13 @@
+<div class="behat-region-decision">
+      {% for decision in decisions %}
+         <hr/>
+        <h3 class="form-title heading-medium-large">{{ decision.title }} </h3>
+        Description: <br/>
+        {{ decision.description }}<br/><br/>
+        
+        Date: {{ decision.decisionDate | date() }}<br/>
+        Client involvement: {{ decision.clientInvolvedBoolean ? 'Yes' : 'No'}}<br/>
+        {{ decision.clientInvolvedDetails | nl2br }}
+       
+      {% endfor %}
+    </div>
