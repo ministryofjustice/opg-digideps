@@ -165,7 +165,7 @@ class ReportController extends Controller
         $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]);
         
         if (count($decisions) === 0) {
-            return $this->forward('AppBundle:Report:addDecision', ['reportId'=> $reportId]);
+            return $this->redirect($this->generateUrl('add_decision', ['reportId'=> $reportId]));
         }
         
         return [
