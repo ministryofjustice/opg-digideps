@@ -4,6 +4,9 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
 
+ {% block pageNavigation %}
+   {{ tab('report', 'tab-contacts', {'reportId': report.id}) }}
+{% endblock %}
 
 {% block pageBody %}
     {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
