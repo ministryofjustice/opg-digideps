@@ -1,6 +1,87 @@
 Feature: report
     
     @deputy
+    Scenario: add contact
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "/report/1/contacts/add"
+        # missing name
+        And I fill in the following:
+            | contact_contactName |  |
+            | contact_relationship | brother  |
+            | contact_explanation | no explanation |
+            | contact_address | 45 Noth Road |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I submit the form
+        And the form should contain an error
+        # missing relationship
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship |   |
+            | contact_explanation | no explanation |
+            | contact_address | 45 Noth Road |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I submit the form
+        And the form should contain an error
+        # missing explanation
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship | brother  |
+            | contact_explanation |  |
+            | contact_address | 45 Noth Road |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I submit the form
+        And the form should contain an error
+        # missing address
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship | brother  |
+            | contact_explanation | no explanation |
+            | contact_address |  |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I submit the form
+        And the form should contain an error
+        # missing postcode
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship | brother  |
+            | contact_explanation | no explanation |
+            | contact_address |  |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode |  |
+            | contact_country | GB |
+        And I submit the form
+        And the form should contain an error
+        # right values
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship | brother  |
+            | contact_explanation | no explanation |
+            | contact_address | 45 Noth Road |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I submit the form
+        Then the response status code should be 200
+        And the form should not contain an error
+        And I should be on "/report/1/contacts"
+        And I should see "Andy White" in the "list-contacts" region
+
+
+    @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "/report/1/decisions/add"
@@ -84,3 +165,5 @@ Feature: report
         And the form should not contain an error
         And I should be on "/report/1/decisions"
         And I should see "Bought house in Sw18" in the "decision" region
+
+    
