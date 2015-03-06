@@ -4,7 +4,7 @@
 form {
   overflow: hidden;
 
-  .page-report-content & {
+  &.report-form {
     border-left: 3px solid $grey-2;
     padding-left: 10px;
   }

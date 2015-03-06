@@ -23,17 +23,8 @@
     {% block validationSummary %}
         {{ form_errors_list(form) }}
     {% endblock %}
-    
-    <div {% if (contacts is not empty) and (action == 'list') %} style="display: none;" {% endif %}>
-        {% include 'AppBundle:Report:_contact_form.html.twig' %}
-    </div>
 
-    {% if (contacts is not empty) and (action == 'list') %}
-        {% set  params = app.request.attributes.get('_route_params') %}
-        <div class="">
-            <a href="{{ path('contacts', {'reportId': params['reportId'], 'action': 'add' }) }}">Add Contact</a>
-        </div>
-    {% endif %}
+    {% include 'AppBundle:Report:_contact_form.html.twig' %}
 
     {% if contacts is not empty %}
         {% include 'AppBundle:Report:_listContact.html.twig' %}
