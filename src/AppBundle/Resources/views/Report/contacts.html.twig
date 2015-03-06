@@ -14,7 +14,7 @@
 
     {% if (contacts is not empty) and (action == 'list') %}
         {% set  params = app.request.attributes.get('_route_params') %}
-        <div>
+        <div class="">
             <a href="{{ path('contacts', {'reportId': params['reportId'], 'action': 'add' }) }}">Add Contact</a>
         </div>
     {% endif %}
