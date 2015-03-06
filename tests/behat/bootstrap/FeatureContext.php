@@ -243,6 +243,38 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     
+    /**
+     * @Then the following fields should have an error:
+     */
+    public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
+    {
+        $fields = array_keys($table->getRowsHash());
+        $errorRegionCss = self::behatRegionToCssSelector('form-errors');
+        $errorRegions = $this->getSession()->getPage()->findAll('css', $errorRegionCss);
+        $foundIdsWithErrors = [];
+        foreach ($errorRegions as $errorRegion) {
+            $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
+            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
+                $foundIdsWithErrors[] = $elementWithError->getAttribute('id');
+            }
+        }
+        $untriggeredField = array_diff($fields, $foundIdsWithErrors);
+        $unexpectedFields = array_diff($foundIdsWithErrors, $fields);
+        
+        if ($untriggeredField || $unexpectedFields) {
+            $message = "The form raised errors different than expected: \n";
+            if ($untriggeredField) {
+                $message .= " - Fields not throwing error as expected: " . implode(', ', $untriggeredField) . "\n";
+            }
+            if ($unexpectedFields) {
+                 $message .= " - Fields unexpectedly throwing errors: " . implode(', ', $unexpectedFields) . "\n";
+            }
+            
+            throw new \RuntimeException($message);
+        }
+    }
+    
+    
      /**
      * @Then /^the following fields should have the corresponding values:$/
      */
