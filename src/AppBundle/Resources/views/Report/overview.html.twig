@@ -4,6 +4,9 @@
 {% block pageTitle %}{{ 'overview.pageTitle' | trans }} {% endblock %}
 {% block title %}{% trans %}overview.pageTitle{% endtrans %}{% endblock %}
 
+ {% block pageNavigation %}
+   {{ tab('report', 'tab-overview', {'reportId': report.id}) }}
+{% endblock %}
 
 {% block pageBody %}
     <h1>Overview Page</h1>

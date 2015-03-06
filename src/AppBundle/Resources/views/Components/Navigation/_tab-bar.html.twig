@@ -1,0 +1,10 @@
+{% if tabDataProvider is defined %}
+    <div class="js-tabs nav-tabs">
+        <ul class="tabs-nav">
+            {% for tab in tabDataProvider %}
+                <li class="{{ tab.class }}"><a id="{{ tab.tabId }}" href="{{ path(tab.href.path, tab.href.params) }}">{{ tab.label }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

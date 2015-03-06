@@ -1,0 +1,36 @@
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+transDomain: translationDomain,
+pageSectionTitle: 'contact_form.pageSectionTitle'
+} %}
+
+{% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+transDomain: translationDomain,
+pageSectionDescription: 'contact_form.pageSectionDescription'
+} %}
+
+{% block validationSummary %}
+    {{ form_errors_list(form) }}
+{% endblock %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+{% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+transDomain: translationDomain,
+subSectionTitle: 'contact_form.subSectionDescription'
+} %}
+
+{{ form_input(form.title,'title', { 'labelClass': 'required' }) }}
+{{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+{{ form_known_date(form.decisionDate, 'decisionDate') }}
+{{ form_input(form.clientInvolvedBoolean,'clientInvolvedBoolean', { 'labelClass': 'required' }) }}
+{{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+
+   
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+  {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{{ form_end(form) }}

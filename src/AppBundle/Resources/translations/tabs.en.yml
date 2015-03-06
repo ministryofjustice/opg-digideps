@@ -1,0 +1,11 @@
+report:
+    tab-overview:
+        label: Overview
+    tab-contacts:
+        label: Contacts
+    tab-decisions:
+        label: Decisions
+    tab-accounts:
+        label: Accounts
+    tab-assets:
+        label: Assets          

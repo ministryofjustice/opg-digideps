@@ -1,0 +1,24 @@
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+{% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+transDomain: translationDomain,
+subSectionTitle: 'contact_form.subSectionDescription'
+} %}
+
+{{ form_input(form.contactName, 'contactName') }}
+{{ form_input(form.relationship, 'relationship') }}
+{{ form_input(form.explanation, 'explanation') }}
+{{ form_input(form.address, 'address') }}
+{{ form_input(form.address2, 'address2') }}
+{{ form_input(form.county, 'county') }}
+{{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+{{ form_select(form.country, 'country') }}
+
+
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'save') }}
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{{ form_end(form) }}

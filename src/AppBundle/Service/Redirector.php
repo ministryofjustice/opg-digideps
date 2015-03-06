@@ -33,7 +33,7 @@ class Redirector
     {
         $user = $this->security->getToken()->getUser();
         $clients = $user->getClients();
-        
+
         $route = 'access_denied';
         $options = [];
         
@@ -49,7 +49,7 @@ class Redirector
                 $options = [ 'clientId' => $clients[0]['id']];
             }else{
                 $route = "report_overview";
-                $options = [ 'id' => $clients[0]['reports'][0] ];
+                $options = [ 'reportId' => $clients[0]['reports'][0] ];
             }
         }
         

@@ -33,8 +33,8 @@ class ClientType extends AbstractType
                 ->add('postcode', 'text')
                 ->add('county','text')
                 ->add('country', 'country', [ 
-                    'preferred_choices' => ['GB'], 
-                    'empty_value' => 'country.defaultOption'
+                      'preferred_choices' => ['GB'], 
+                      'empty_value' => 'country.defaultOption'
                 ])
                 ->add('phone', 'text')
                 ->add('users', 'collection', [ 'type' => 'integer', 

@@ -1,0 +1,10 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% trans_default_domain "report-contacts" %}
+
+ {% block pageNavigation %}
+   {{ tab('report', 'tab-accounts', {'reportId': report.id}) }}
+{% endblock %}
+
+{% block pageBody %}
+    <h1>Accounts</h1>
+{% endblock %}
