@@ -27,7 +27,7 @@ country:
     defaultOption: Please select ...
 contact_form:
     pageSectionTitle: Contacts
-    pageSectionDescription: "Give the names and addresses of the significant people you contacted as deputy, such as GP, solicitor, accountant, family members, care workers. Example: John Smith, accountant, to prepare accounts for the deputy report."
+    pageSectionDescription: Give the names and addresses of the significant people you contacted as deputy, such as GP, solicitor, accountant, family members, care workers.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
     subSectionDescription : Add a new contact
 pageTitle: contacts
 view_contact:

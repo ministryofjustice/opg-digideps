@@ -1446,7 +1446,10 @@ header.page-header h1 {
 
 .page-section-description {
   width: 50%;
-  margin-bottom: 40px; }
+  margin-bottom: 30px; }
+  .page-section-description span.page-section-example {
+    display: block;
+    margin-top: 5px; }
 
 .sub-section-title {
   font-family: "nta", Arial, sans-serif;
@@ -1603,7 +1606,8 @@ form {
 @media (max-width: 640px) {
   .nav-tabs li {
     font-size: 14px;
-    line-height: 1.14286; } }
+    line-height: 1.14286;
+    width: auto; } }
 @media (max-width: 640px) {
   .nav-tabs li {
     float: none; } }
@@ -1632,7 +1636,7 @@ form {
     margin-bottom: 0;
     border-bottom: 1px solid #bfc1c3; } }
 .nav-tabs li a:hover {
-  background-color: #bfc1c3; }
+  background-color: #fff; }
 
 .nav-tabs li.active a {
   background-color: #fff;
@@ -1641,7 +1645,8 @@ form {
   color: #0b0c0c;
   position: relative;
   text-decoration: none;
-  z-index: 5; }
+  z-index: 5;
+  padding-bottom: 1px; }
 
 @media (max-width: 640px) {
   .nav-tabs li.active a {
@@ -1712,10 +1717,10 @@ form {
   margin-bottom: 0; }
   .page-report-content .page-report-header .page-header-titles {
     float: left;
-    width: 55%; }
+    width: 56%; }
   .page-report-content .page-report-header .page-header-meta-data {
     float: left;
-    width: 45%; }
+    width: 44%; }
   .page-report-content .page-report-header .report-title {
     font-weight: normal;
     margin-top: 0px;

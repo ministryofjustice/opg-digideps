@@ -46,7 +46,8 @@
 @media (max-width: 640px) {
   .nav-tabs li {
     font-size:14px;
-    line-height: 1.14286
+    line-height: 1.14286;
+    width: auto;
   }
 }
 
@@ -85,7 +86,7 @@
 }
 
 .nav-tabs li a:hover {
-  background-color: #bfc1c3
+  background-color: #fff;
 }
 
 .nav-tabs li.active a {
@@ -95,7 +96,8 @@
   color: #0b0c0c;
   position: relative;
   text-decoration: none;
-  z-index: 5
+  z-index: 5;
+  padding-bottom: 1px;
 }
 
 @media (max-width: 640px) {
