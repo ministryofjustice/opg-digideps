@@ -52,6 +52,10 @@
     <target name="optimise">
         <exec passthru="true" command="php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
     </target>
+    
+    <target name="boostrap-build">
+        <exec passthru="true" command="php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php"></exec>
+    </target>
 
     
     <target name="db-reset">
@@ -59,7 +63,7 @@
     </target>
     
     <target name="db-migrate">
-        <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="true" passthru="false"></exec>
+        <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="false" passthru="false"></exec>
     </target>
     
     <target name="behat" depends="db-reset,db-migrate">
