@@ -1,0 +1,6 @@
+{% set class = '' %}
+{% if linkClass is defined %}
+    {% set class = '' ~ linkClass %}
+{% endif %}
+<a href="{{ linkHref|default('#link-button-href-not-defined') }}"
+   class="{{ class }}">{{ linkButtonLabel|default('Link Button Label')|trans({}, transDomain) }}</a>

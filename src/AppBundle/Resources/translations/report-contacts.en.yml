@@ -1,5 +1,7 @@
 save:
     label: Save
+cancel:
+    label: Cancel
 contactName:
     label: Contact name
     hint: ''
@@ -29,6 +31,8 @@ contact_form:
     pageSectionTitle: Contacts
     pageSectionDescription: Give the names and addresses of the significant people you contacted as deputy, such as GP, solicitor, accountant, family members, care workers.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
     subSectionDescription : Add a new contact
+    addContactButton:
+      label: Add Contact
 pageTitle: contacts
 view_contact:
     edit: Edit this contact

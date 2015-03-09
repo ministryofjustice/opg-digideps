@@ -4,7 +4,7 @@ parameters:
       registration: [1,2,3,4]
       registration_admin: [1,2]
     tabs:
-      report: 
+      report-paa: 
         tab-overview:
           path: "report_overview"
         tab-contacts:
@@ -15,4 +15,10 @@ parameters:
           path: "accounts"
         tab-assets:
           path: "assets"
-                   
+      report-pw:
+          tab-overview:
+              path: "report_overview"
+          tab-contacts:
+              path: "contacts"
+          tab-decisions:
+              path: "decisions"
