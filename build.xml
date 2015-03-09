@@ -3,7 +3,9 @@
 
    <fileset dir="." id="source">
         <include name="src/**/*.php"/>
+        <include name="tests/phpunit/**/*.php"/>
         <include name="web/*.php"/>
+        <include name="app/DoctrineMigrations/*.php"/>
     </fileset>
     
     
@@ -24,7 +26,7 @@
     
                 
     <target name="phplint" description="Scan source for PHP syntax errors">
-        <phplint haltonfailure="true" cachefile="/tmp/ddApitPhingLintCacheFile" level="error">
+        <phplint haltonfailure="true" level="info">
             <fileset refid="source" />
         </phplint>
     </target>
