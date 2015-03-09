@@ -13,3 +13,5 @@ app/bootstrap.php.cache
 .DS_Store
 app/config/parameters.yml
 web/elb_healthcheck.html
+.idea/*
+*.iml
