@@ -4,10 +4,11 @@
     <fileset dir="." id="source">
         <include name="src/**/*.php"/>
         <include name="web/*.php"/>
+        <include name="tests/**/*.php"/>
     </fileset>
 
-    <target name="phplint" description="Scan source for PHP syntax errors">
-        <phplint haltonfailure="true" cachefile="/tmp/ddClientPhingLintCacheFile" level="error">
+     <target name="phplint" description="Scan source for PHP syntax errors">
+        <phplint haltonfailure="true" level="info">
             <fileset refid="source" />
         </phplint>
     </target>
