@@ -5,7 +5,7 @@
 {% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
 
  {% block pageNavigation %}
-     {{ tab('report', 'tab-contacts', {'reportId': report.id}) }}
+     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-contacts'} %}
  {% endblock %}
 
 {% block pageBody %}

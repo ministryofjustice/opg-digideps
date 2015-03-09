@@ -5,8 +5,8 @@
 {% block title %}{% trans %}overview.pageTitle{% endtrans %}{% endblock %}
 
  {% block pageNavigation %}
-   {{ tab('report', 'tab-overview', {'reportId': report.id}) }}
-{% endblock %}
+    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-overview'}%}
+ {% endblock %}
 
 {% block pageBody %}
     <h1>Overview Page</h1>

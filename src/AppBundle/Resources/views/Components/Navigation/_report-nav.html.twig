@@ -1,0 +1,5 @@
+{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.id %}
+     {{ tab('report-paa', tab, {'reportId': report.id}) }}
+{% else %}
+     {{ tab('report-pw', tab, {'reportId': report.id}) }}
+{% endif %}

@@ -2,7 +2,7 @@
 {% trans_default_domain "report-contacts" %}
 
  {% block pageNavigation %}
-   {{ tab('report', 'tab-assets', {'reportId': report.id}) }}
+   {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-assets'} %}
 {% endblock %}
 
 {% block pageBody %}

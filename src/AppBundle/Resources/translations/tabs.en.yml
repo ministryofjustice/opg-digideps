@@ -1,4 +1,4 @@
-report:
+report-paa:
     tab-overview:
         label: Overview
     tab-contacts:
@@ -8,4 +8,11 @@ report:
     tab-accounts:
         label: Accounts
     tab-assets:
-        label: Assets          
+        label: Assets
+report-pw:
+    tab-overview:
+        label: Overview
+    tab-contacts:
+        label: Contacts
+    tab-decisions:
+        label: Decisions
