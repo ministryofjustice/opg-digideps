@@ -7,7 +7,7 @@
 {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {{ tab('report', 'tab-decisions', {'reportId': report.id}) }}
+    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-decisions'}%}
 {% endblock %}
 
 {% block pageBody %}
