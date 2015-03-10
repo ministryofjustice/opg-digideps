@@ -31,7 +31,6 @@ Feature: add client and report
             | client_courtDate_month | 1 |
             | client_courtDate_year | 2015 |
             | client_allowedCourtOrderTypes_0 | 1 |
-            | client_allowedCourtOrderTypes_1 | 2 |
             | client_address |  1 South Parade |
             | client_address2 | First Floor  |
             | client_county | Nottingham  |
