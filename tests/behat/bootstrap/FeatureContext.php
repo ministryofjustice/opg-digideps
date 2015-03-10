@@ -8,6 +8,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Symfony2Extension\Context\KernelDictionary;
 
 /**
  * Behat context class.
@@ -17,7 +18,6 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
-
     use RegionTrait;
 
     use DebugTrait;
@@ -28,6 +28,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     use StatusSnapshotTrait;
     
+    use KernelDictionary;
+    
     public function __construct(array $options)
     {
         //$options['session']; // not used
@@ -36,6 +38,17 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 //        if (!empty($options['set_time_limit'])) {
 //            set_time_limit($options['set_time_limit']);
 //        }
+    }
+    
+    
+    public function setKernel(\AppKernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+    
+    protected function getSymfonyParam($name)
+    {
+        $this->getContainer()->getParameter($name);
     }
 
     
