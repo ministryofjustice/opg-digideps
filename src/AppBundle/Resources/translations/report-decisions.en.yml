@@ -1,11 +1,9 @@
 page:
     htmlTitle: Report Decisions
-    headTitle: Decisions made over the reporting period
-    subTItle: >
-        Add the significant decisions you made during the reporting period, 
-        such as buying and selling property, making gifts or changing the client's care home.
+    pageSectionTitle: Decisions made over the reporting period
+    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying and selling property, making gifts or changing the client's care home.
     addDecisionButton: Add a decision  
-    addDecisionFormTitle: Add a decision  
+    subSectionTitle: Add a decision
 
 # form
 title:
@@ -18,12 +16,18 @@ decisionDate:
   legend: Date
   hint: (DD/MM/YYYY)
 clientInvolvedBoolean:
-  label: Client involvement
+  legend: Client involvement
   hint: Did you involve your client in this decision ?
   defaultOption: Please select...
 clientInvolvedDetails:
   label: " "
   hint: Tell us how you involved the client.
-submit:
+save:
   label: Save
-    
+cancel:
+  label: Cancel
+listing:
+  edit-link: Edit this decision
+  description: Description
+  date: Date
+  clientInvolvement: Client Involvement

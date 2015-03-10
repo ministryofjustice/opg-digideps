@@ -45,7 +45,6 @@
           @include core-19();
           color: $grey-1;
           float: left;
-          width: 210px;
 
           &--block {
             float: none;
@@ -56,7 +55,6 @@
         dd.report-list__item-fields-description {
           display: block;
           @include bold-19();
-          margin-left: 220px;
 
           &--block {
             position: relative;
@@ -72,4 +70,23 @@
 
   }
 
+}
+
+.report-list--contacts {
+  dt.report-list__item-fields-term {
+    width: 210px;
+  }
+
+  dd.report-list__item-fields-description {
+    margin-left: 220px;
+  }
+}
+
+.report-list--decisions {
+  dt.report-list__item-fields-term {
+  }
+
+  dd.report-list__item-fields-description {
+    margin-left: 50px;
+  }
 }

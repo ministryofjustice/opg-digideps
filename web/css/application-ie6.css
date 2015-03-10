@@ -1877,8 +1877,7 @@ ol.progress {
           font-weight: 400;
           text-transform: none;
           color: #6f777b;
-          float: left;
-          width: 210px; }
+          float: left; }
           @media (max-width: 640px) {
             .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term {
               font-size: 16px;
@@ -1891,8 +1890,7 @@ ol.progress {
           font-size: 19px;
           line-height: 1.31579;
           font-weight: 700;
-          text-transform: none;
-          margin-left: 220px; }
+          text-transform: none; }
           @media (max-width: 640px) {
             .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description {
               font-size: 16px;
@@ -1901,6 +1899,14 @@ ol.progress {
             position: relative;
             margin-left: auto;
             font-weight: 400; }
+
+.report-list--contacts dt.report-list__item-fields-term {
+  width: 210px; }
+.report-list--contacts dd.report-list__item-fields-description {
+  margin-left: 220px; }
+
+.report-list--decisions dd.report-list__item-fields-description {
+  margin-left: 50px; }
 
 .report-meta {
   line-height: 19px; }
