@@ -1,0 +1,30 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+<ul class="behat-region-decisionr report-list report-list--decisions">
+    {% for account in accounts %}
+        <li class="report-list__item">
+            <div class="report-list__item-header">
+                <h3>{{ account.bankSocietyName }}</h3>
+                {{ account.accountNumber }}
+            </div>
+
+            <dl class="report-list__item-fields">
+                <div class="report-list__item-fields-row">
+                    <dt class="report-list__item-fields-term">{{ 'listing.balance' | trans }}</dt>
+                    <dd class="report-list__item-fields-description">{{ decision.decisionDate | date("d F Y") }}</dd>
+                </div>
+            </dl>
+
+            <dl class="report-list__item-fields">
+                <div class="report-list__item-fields-row">
+                    <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.edited' | trans }}</dt>
+                    <dd class="report-list__item-fields-description report-list__item-fields-description--block">
+                        <p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
+                            : {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
+                </div>
+            </dl>
+
+        </li>
+    {% endfor %}
+</ul>
