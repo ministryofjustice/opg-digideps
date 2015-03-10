@@ -92,4 +92,14 @@ Feature: report
         And I should be on "/report/1/decisions"
         And I should see "Bought house in Sw18" in the "decision" region
 
+    @deputy
+    Scenario: test tabs
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I am on "/report/1/overview"
+        Then I should see a "#tab-contacts" element
+        And I should see a "#tab-decisions" element
+        But I should not see a "#tab-accounts" element
+        And I should not see a "#tab-assets" element
+
+
     
