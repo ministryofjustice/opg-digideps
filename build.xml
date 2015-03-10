@@ -8,6 +8,7 @@
         <include name="app/DoctrineMigrations/*.php"/>
     </fileset>
     
+    <property name="dbversion" value="latest"/>
     
     <target name="help" description="">
         <echo msg="select a task e.g. 'phing test' or 'phing build'. Use 'phing -l' to list them"></echo>
@@ -64,8 +65,10 @@
         <exec command="php app/console doctrine:query:sql &quot;DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;&quot; "  checkreturn="true"></exec>
     </target>
     
+   
     <target name="db-migrate">
-        <exec command="php app/console doctrine:migrations:migrate --no-interaction" checkreturn="false" passthru="false"></exec>
+        <echo msg="Migrating db to version ${dbversion}"></echo>
+        <exec command="php app/console doctrine:migrations:migrate ${dbversion} --no-interaction" checkreturn="false" passthru="true" level="info"></exec>
     </target>
     
     <target name="behat" depends="db-reset,db-migrate">
