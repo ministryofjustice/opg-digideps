@@ -1,5 +1,6 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% trans_default_domain "user-activate" %}
+{% set translationDomain = "user-activate" %}
+{% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
@@ -19,7 +20,10 @@
 
 {% block pageBody %}
 
-    <p>{{ 'headerInstructions' | trans }}</p>
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 

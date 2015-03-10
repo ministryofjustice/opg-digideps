@@ -21,7 +21,7 @@ clientInvolvedBoolean:
   defaultOption: Please select...
 clientInvolvedDetails:
   label: " "
-  hint: Tell us how you involved the client.
+  hint: If yes, tell us how you involved the client in the decision. If no, tell us why that has not been possible.
 save:
   label: Save
 cancel:

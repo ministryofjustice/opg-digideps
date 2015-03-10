@@ -1401,21 +1401,24 @@ input[type=number] {
       font-size: 20px;
       line-height: 1.11111; } }
 
-header.page-header h1 {
-  padding-bottom: 0;
-  padding-top: 0; }
-  header.page-header h1 span {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    line-height: 1;
-    padding-bottom: 15px; }
-    @media (max-width: 640px) {
-      header.page-header h1 span {
-        font-size: 18px;
-        line-height: 1.2; } }
+header.page-header {
+  margin-top: 40px;
+  margin-bottom: 0; }
+  header.page-header h1 {
+    padding-bottom: 0;
+    padding-top: 0; }
+    header.page-header h1 span {
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 400;
+      text-transform: none;
+      line-height: 1;
+      padding-bottom: 15px; }
+      @media (max-width: 640px) {
+        header.page-header h1 span {
+          font-size: 18px;
+          line-height: 1.2; } }
 
 #content p {
   font-family: "nta", Arial, sans-serif;
@@ -1441,7 +1444,7 @@ header.page-header h1 {
       line-height: 1.11111; } }
 
 .page-section-description {
-  width: 50%;
+  width: 65%;
   margin-bottom: 30px; }
   .page-section-description span.page-section-example {
     display: block;
@@ -1469,8 +1472,7 @@ header.page-header h1 {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
 
-.field-with-errors input,
-.field-with-errors select {
+.field-with-errors input, .field-with-errors select, .field-with-errors textarea {
   border: 2px solid #df3034; }
 
 .field-with-errors li {
@@ -1714,31 +1716,28 @@ form {
   .page-report-content .page-body {
     margin-top: 60px; }
 
-.page-report-content .page-report-header {
-  margin-top: 40px;
-  margin-bottom: 0; }
-  .page-report-content .page-report-header .page-header-titles {
-    float: left;
-    width: 56%; }
-  .page-report-content .page-report-header .page-header-meta-data {
-    float: left;
-    width: 44%; }
-  .page-report-content .page-report-header .report-title {
-    font-weight: normal;
-    margin-top: 0px;
-    margin-bottom: 0px; }
-  .page-report-content .page-report-header .client-name {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 48px;
-    line-height: 1.04167;
-    font-weight: 700;
-    text-transform: none;
-    margin-top: 10px;
-    margin-bottom: 0px; }
-    @media (max-width: 640px) {
-      .page-report-content .page-report-header .client-name {
-        font-size: 32px;
-        line-height: 1.09375; } }
+.page-report-content .page-report-header .page-header-titles {
+  float: left;
+  width: 56%; }
+.page-report-content .page-report-header .page-header-meta-data {
+  float: left;
+  width: 44%; }
+.page-report-content .page-report-header .report-title {
+  font-weight: normal;
+  margin-top: 0px;
+  margin-bottom: 0px; }
+.page-report-content .page-report-header .client-name {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 48px;
+  line-height: 1.04167;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 10px;
+  margin-bottom: 0px; }
+  @media (max-width: 640px) {
+    .page-report-content .page-report-header .client-name {
+      font-size: 32px;
+      line-height: 1.09375; } }
 
 ol.progress {
   display: table;

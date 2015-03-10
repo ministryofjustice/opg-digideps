@@ -26,8 +26,7 @@
             <dl class="report-list__item-fields">
                 <div class="report-list__item-fields-row">
                     <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.clientInvolvement' | trans }}</dt>
-                    <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
-                        <p>{{ decision.clientInvolvedDetails | nl2br }}</p></dd>
+                    <dd class="report-list__item-fields-description report-list__item-fields-description--block"><p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}: {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
                 </div>
             </dl>
 
