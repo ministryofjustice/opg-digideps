@@ -15,14 +15,17 @@ switch ($_GET['frame']) {
         die;
         
     case 'list':
-        $files = glob(__DIR__ . '/../misc/tmp/behat-*.html');
-        usort($files, function($a, $b) {
-            return filemtime($a) < filemtime($b);
-        });
-        foreach ($files as $file) {
-            $file = basename($file);
-            $fileCleaned = str_replace(['behat-', '.html'], '', $file);
-            ?><a href="?frame=page&f=<?php echo $file?>" target="page"><?php echo $fileCleaned ?></a><br/><?php
+        foreach(['responses'=>'behat-response*.html', 'screenshots'=>'behat-screenshot*.html'] as $groupName => $regexpr) {
+            ?><h2><?php echo $groupName ?></h2><?php
+            $files = glob(__DIR__ . '/../misc/tmp/' . $regexpr);
+            usort($files, function($a, $b) {
+                return filemtime($a) < filemtime($b);
+            });
+            foreach ($files as $file) {
+                $file = basename($file);
+                $fileCleaned = str_replace(['behat-', '.html'], '', $file);
+                ?><a href="?frame=page&f=<?php echo $file?>" target="page"><?php echo $fileCleaned ?></a><br/><?php
+            }
         }
         die;
         
