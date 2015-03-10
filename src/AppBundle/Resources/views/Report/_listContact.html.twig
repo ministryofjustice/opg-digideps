@@ -34,7 +34,7 @@
                             <div itemprop="postalCode">{{ contact.postcode }}</div>
                         {% endif %}
                         {% if contact.country is not empty %}
-                            <div itemprop="addressCountry">{{ contact.country }}</div>
+                            <div itemprop="addressCountry">{{ contact.country | country_name }}</div>
                         {% endif %}
                     </dd>
                 </div>
