@@ -90,7 +90,7 @@ Feature: report
         Then the response status code should be 200
         And the form should not contain an error
         And I should be on "/report/1/decisions"
-        And I should see "Bought house in Sw18" in the "decision" region
+        And I should see "Bought house in Sw18" in the "list-decisions" region
 
     @deputy
     Scenario: test tabs
