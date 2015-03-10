@@ -8,17 +8,14 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version11 extends AbstractMigration
+class Version012 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE contact ADD address2 VARCHAR(200) DEFAULT NULL');
-        $this->addSql('ALTER TABLE contact ADD address3 VARCHAR(200) DEFAULT NULL');
-        $this->addSql('ALTER TABLE contact ADD country VARCHAR(10) DEFAULT NULL');
-        $this->addSql('ALTER TABLE contact RENAME COLUMN address TO address1');
+        $this->addSql('ALTER TABLE contact RENAME COLUMN address3 TO county');
     }
 
     public function down(Schema $schema)
@@ -47,10 +44,6 @@ class Version11 extends AbstractMigration
         $this->addSql('CREATE SEQUENCE report_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE role_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE dd_user_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('ALTER TABLE contact ADD address VARCHAR(200) DEFAULT NULL');
-        $this->addSql('ALTER TABLE contact DROP address1');
-        $this->addSql('ALTER TABLE contact DROP address2');
-        $this->addSql('ALTER TABLE contact DROP address3');
-        $this->addSql('ALTER TABLE contact DROP country');
+        $this->addSql('ALTER TABLE contact RENAME COLUMN county TO address3');
     }
 }

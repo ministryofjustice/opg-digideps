@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * delete profile table
  */
-class Version5 extends AbstractMigration
+class Version005 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
