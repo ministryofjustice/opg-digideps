@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * new fields for user entity (taken from profile)
  */
-class Version6 extends AbstractMigration
+class Version006 extends AbstractMigration
 {
     public function up(Schema $schema)
     {
