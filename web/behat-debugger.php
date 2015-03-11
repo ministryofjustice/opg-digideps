@@ -23,8 +23,12 @@ switch ($_GET['frame']) {
             });
             foreach ($files as $file) {
                 $file = basename($file);
-                $fileCleaned = str_replace(['behat-', '.html'], '', $file);
-                ?><a href="?frame=page&f=<?php echo $file?>" target="page"><?php echo $fileCleaned ?></a><br/><?php
+                $fileCleaned = str_replace(['behat-response-', 'behat-screenshot-', '.html'], '', $file);
+                $group = explode('-', $fileCleaned, 2)[0];
+                $newGroup = isset($previousGroup) && $previousGroup != $group;
+                if ($newGroup) { echo "------<br>";}
+                ?><a href="?frame=page&f=<?php echo $file?>" target="page" ><?php echo $fileCleaned ?></a><br/><?php
+                $previousGroup = $group;
             }
         }
         die;
