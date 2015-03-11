@@ -166,8 +166,11 @@ class Decision
             return; // the notEmpty validator will take care of that
         }
         
-        $reportStartDate = $this->report->getStartDate();
-        $reportEndDate = $this->report->getEndDate();
+        $reportStartDate = clone $this->report->getStartDate();
+        $reportEndDate = clone $this->report->getEndDate();
+        
+        $reportStartDate->setTime(0,0,0);
+        $reportEndDate->setTime(23, 59, 59);
         
         if ($this->decisionDate->getTimestamp() > $reportEndDate->getTimestamp() ||
             $this->decisionDate->getTimestamp() < $reportStartDate->getTimestamp()

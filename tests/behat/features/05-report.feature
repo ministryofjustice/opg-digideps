@@ -82,12 +82,12 @@ Feature: report
             | decision_clientInvolvedDetails |  |
         And I submit the form
         And the form should contain an error
-        # right values
+        # add decision on 1/1/2015
         And I fill in the following:
             | decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 12 |
+            | decision_decisionDate_day | 1 |
+            | decision_decisionDate_month | 1 |
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
@@ -95,8 +95,20 @@ Feature: report
         And I save the page as "report-decision-list"
         Then the response status code should be 200
         And the form should not contain an error
-        And I should be on "/report/1/decisions"
+        # add another decision on 31/12/2015
+         And I fill in the following:
+            | decision_title | Sold house in Sw18 |
+            | decision_description | 2 beds |
+            | decision_decisionDate_day | 31 |
+            | decision_decisionDate_month | 12 |
+            | decision_decisionDate_year | 2015 |
+            | decision_clientInvolvedBoolean_0 | 1 |
+            | decision_clientInvolvedDetails | the client was able to decide at 85% |
+        And I submit the form
+        And the form should not contain an error
         And I should see "Bought house in Sw18" in the "list-decisions" region
+        And I should see "Sold house in Sw18" in the "list-decisions" region
+        
 
     @deputy
     Scenario: test tabs for "Health & Welfare" report
