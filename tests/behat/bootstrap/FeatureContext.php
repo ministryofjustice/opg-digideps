@@ -35,9 +35,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         //$options['session']; // not used
         ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
         ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
-//        if (!empty($options['set_time_limit'])) {
-//            set_time_limit($options['set_time_limit']);
-//        }
     }
     
     
@@ -86,41 +83,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitPath('/logout');
     }
 
-    /**
-     * @When I go to the report page
-     */
-    public function iGoToTheReportPage()
-    {
-        $this->visit('/');
-        $this->clickLinkInsideElement('open', 'reports');
-    }
-
-    /**
-     * @When I go to the account page
-     */
-    public function iGoToTheAccountPage()
-    {
-        $this->iGoToTheReportPage();
-        $this->clickLinkInsideElement('account-open', 'report-dashboard');
-    }
-    
-    /**
-     * @When I go to the account balance page
-     */
-    public function iGoToTheAccountBalancePage()
-    {
-        $this->iGoToTheAccountPage();
-        $this->clickLinkInsideElement("income-balance", "account-tabs");
-    }
-    
-     /**
-     * @When I go to the manage users page
-     */
-    public function iGoToTheManageUsersPage()
-    {
-        $this->visit('/admin/users');
-    }
-    
     /**
      * @Given I submit the form
      */
@@ -297,5 +259,5 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             $this->assertFieldContains($field, $value);
         }
     }
-
+    
 }
