@@ -11,7 +11,7 @@ class DecisionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder ->add('title', 'text')
-                 ->add('description', 'text')
+                 ->add('description', 'textarea')
                 ->add('decisionDate', 'date', [ 'widget' => 'text',
                                               'input' => 'datetime',
                                               'format' => 'yyyy-MM-dd',

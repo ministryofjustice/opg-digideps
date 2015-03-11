@@ -1,0 +1,73 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+
+{% if (accounts is not empty) and (action == 'list') %}
+    {% set hideForm = true %}
+    {% set formClass = '' %}
+{% else %}
+    {% set hideForm = false %}
+    {% set formClass = 'report-form' %}
+{% endif %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+{% if hideForm %}
+    {# Then we need to show the Add Button Link #}
+    {% set  params = app.request.attributes.get('_route_params') %}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+    buttonBarClass: 'add-bar js-add-account-button-bar'
+    } %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.listing.addButton.label',
+    linkClass: 'button-secondary',
+    linkHref: path('accounts', {'reportId': params['reportId'], 'action': 'add' })
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{% endif %}
+
+<div {% if hideForm %} class="visuallyhidden" {% endif %}>
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.accountDetails.subSectionTitle'
+    } %}
+
+    {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
+    {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
+    {{ form_input(form.sortCode, 'form.accountDetails.controls.sortCode') }}
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.openingBalance.subSectionTitle'
+    } %}
+
+    {#{% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.openingBalance.subSectionDescription'
+    } %}#}
+
+    {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate') }}
+    {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance') }}
+
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.openingBalance.controls.save') }}
+    {% if hideForm or (action == 'add') %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.openingBalance.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('accounts', {'reportId': report.id})
+        } %}
+
+    {% endif %}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+</div>
+
+{{ form_end(form) }}

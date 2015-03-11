@@ -19,7 +19,8 @@ class AccountType extends AbstractType
                                           ])
                   ->add('openingBalance','text')
                   ->add('sortCode',new SortCodeType())
-                  ->add('accountNumber', new AccountNumberType());
+                  ->add('accountNumber', new AccountNumberType())
+                  ->add('save', 'submit');
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)

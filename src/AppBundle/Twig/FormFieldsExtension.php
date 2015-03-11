@@ -52,6 +52,14 @@ class FormFieldsExtension extends \Twig_Extension
         ];
     }
     
+    public function getFilters()
+    {
+        return [
+            'country_name' => new \Twig_SimpleFilter('country_name', function($value) {
+                return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
+            }),
+        ];
+    }
     
     /**
      * 

@@ -3,16 +3,16 @@
 
 
 {% if (contacts is not empty) and (action == 'list') %}
-    {% set hideContactForm = true %}
+    {% set hideForm = true %}
     {% set formClass = '' %}
 {% else %}
-    {% set hideContactForm = false %}
+    {% set hideForm = false %}
     {% set formClass = 'report-form' %}
 {% endif %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
 
-{% if hideContactForm %}
+{% if hideForm %}
     {# Then we need to show the Add Button Link #}
     {% set  params = app.request.attributes.get('_route_params') %}
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
@@ -29,11 +29,11 @@
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 {% endif %}
 
-<div {% if hideContactForm %} class="visuallyhidden" {% endif %}>
+<div {% if hideForm %} class="visuallyhidden" {% endif %}>
 
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
-    subSectionTitle: 'contact_form.subSectionDescription'
+    subSectionTitle: 'contact_form.subSectionTitle'
     } %}
 
     {{ form_input(form.contactName, 'contactName') }}
@@ -47,12 +47,12 @@
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'save') }}
-    {% if hideContactForm or (action == 'add') %}
+    {% if hideForm or (action == 'add') %}
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'cancel.label',
-        linkClass: 'button-secondary',
+        linkClass: 'button-link',
         linkHref: path('contacts', {'reportId': report.id})
         } %}
 

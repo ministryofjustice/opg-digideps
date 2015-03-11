@@ -20,6 +20,7 @@ class AccountController extends Controller
          
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
+        $accounts = [];
         
         $form = $this->createForm(new FormDir\AccountType());
         $form->handleRequest($request);
@@ -28,7 +29,8 @@ class AccountController extends Controller
             'report' => $report,
             'client' => $client,
             'action' => $action,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'accounts' => $accounts
         ];
     }
 }

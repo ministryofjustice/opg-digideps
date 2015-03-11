@@ -1,13 +1,35 @@
-<div class="behat-region-decision">
-      {% for decision in decisions %}
-         <hr/>
-        <h3 class="form-title heading-medium-large">{{ decision.title }} </h3>
-        Description: <br/>
-        {{ decision.description }}<br/><br/>
-        
-        Date: {{ decision.decisionDate | date() }}<br/>
-        Client involvement: {{ decision.clientInvolvedBoolean ? 'Yes' : 'No'}}<br/>
-        {{ decision.clientInvolvedDetails | nl2br }}
-       
-      {% endfor %}
-    </div>
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+<ul class="behat-region-decisionr report-list report-list--decisions">
+    {% for decision in decisions %}
+        <li class="report-list__item">
+            <div class="report-list__item-header"><h3>{{ decision.title }}</h3>
+                <a href="#"
+                   class="js-report-list__item-edit-link report-list__item-edit-link">{{ 'listing.edit-link'| trans }}</a>
+            </div>
+
+            <dl class="report-list__item-fields">
+                <div class="report-list__item-fields-row">
+                    <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
+                    <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ decision.description }}</dd>
+                </div>
+            </dl>
+
+            <dl class="report-list__item-fields">
+                <div class="report-list__item-fields-row">
+                    <dt class="report-list__item-fields-term">{{ 'listing.date' | trans }}</dt>
+                    <dd class="report-list__item-fields-description">{{ decision.decisionDate | date("d F Y") }}</dd>
+                </div>
+            </dl>
+
+            <dl class="report-list__item-fields">
+                <div class="report-list__item-fields-row">
+                    <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.clientInvolvement' | trans }}</dt>
+                    <dd class="report-list__item-fields-description report-list__item-fields-description--block"><p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}: {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
+                </div>
+            </dl>
+
+        </li>
+    {% endfor %}
+</ul>

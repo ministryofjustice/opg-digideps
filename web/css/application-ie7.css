@@ -1446,21 +1446,24 @@ input[type=number] {
       font-size: 20px;
       line-height: 1.11111; } }
 
-header.page-header h1 {
-  padding-bottom: 0;
-  padding-top: 0; }
-  header.page-header h1 span {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    line-height: 1;
-    padding-bottom: 15px; }
-    @media (max-width: 640px) {
-      header.page-header h1 span {
-        font-size: 18px;
-        line-height: 1.2; } }
+header.page-header {
+  margin-top: 40px;
+  margin-bottom: 0; }
+  header.page-header h1 {
+    padding-bottom: 0;
+    padding-top: 0; }
+    header.page-header h1 span {
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 400;
+      text-transform: none;
+      line-height: 1;
+      padding-bottom: 15px; }
+      @media (max-width: 640px) {
+        header.page-header h1 span {
+          font-size: 18px;
+          line-height: 1.2; } }
 
 #content p {
   font-family: "nta", Arial, sans-serif;
@@ -1486,7 +1489,7 @@ header.page-header h1 {
       line-height: 1.11111; } }
 
 .page-section-description {
-  width: 50%;
+  width: 65%;
   margin-bottom: 30px; }
   .page-section-description span.page-section-example {
     display: block;
@@ -1514,12 +1517,16 @@ header.page-header h1 {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
 
-.field-with-errors input,
-.field-with-errors select {
+.field-with-errors input, .field-with-errors select, .field-with-errors textarea {
   border: 2px solid #df3034; }
 
 .field-with-errors li {
   color: #df3034; }
+
+.button-link {
+  margin-left: 15px;
+  top: 1px;
+  position: relative; }
 
 form {
   overflow: hidden; }
@@ -1760,31 +1767,28 @@ form {
   .page-report-content .page-body {
     margin-top: 60px; }
 
-.page-report-content .page-report-header {
-  margin-top: 40px;
-  margin-bottom: 0; }
-  .page-report-content .page-report-header .page-header-titles {
-    float: left;
-    width: 56%; }
-  .page-report-content .page-report-header .page-header-meta-data {
-    float: left;
-    width: 44%; }
-  .page-report-content .page-report-header .report-title {
-    font-weight: normal;
-    margin-top: 0px;
-    margin-bottom: 0px; }
-  .page-report-content .page-report-header .client-name {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 48px;
-    line-height: 1.04167;
-    font-weight: 700;
-    text-transform: none;
-    margin-top: 10px;
-    margin-bottom: 0px; }
-    @media (max-width: 640px) {
-      .page-report-content .page-report-header .client-name {
-        font-size: 32px;
-        line-height: 1.09375; } }
+.page-report-content .page-report-header .page-header-titles {
+  float: left;
+  width: 56%; }
+.page-report-content .page-report-header .page-header-meta-data {
+  float: left;
+  width: 44%; }
+.page-report-content .page-report-header .report-title {
+  font-weight: normal;
+  margin-top: 0px;
+  margin-bottom: 0px; }
+.page-report-content .page-report-header .client-name {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 48px;
+  line-height: 1.04167;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 10px;
+  margin-bottom: 0px; }
+  @media (max-width: 640px) {
+    .page-report-content .page-report-header .client-name {
+      font-size: 32px;
+      line-height: 1.09375; } }
 
 ol.progress {
   display: table;
@@ -1874,6 +1878,90 @@ ol.progress {
         margin-right: 14px; }
     ol.progress li:last-child .progress__step {
       margin-right: 14px; }
+
+.report-list {
+  border-top: 1px solid #dee0e2;
+  border-bottom: 1px solid #dee0e2;
+  margin-top: 30px;
+  padding-left: 15px;
+  width: 81%; }
+  .report-list .report-list__item {
+    overflow: hidden;
+    padding: 30px 0 10px 0;
+    border-bottom: 1px solid #dee0e2; }
+    .report-list .report-list__item:last-child {
+      border-bottom: 0; }
+    .report-list .report-list__item .report-list__item-header {
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 40px; }
+      .report-list .report-list__item .report-list__item-header h3 {
+        float: left;
+        font-family: "nta", Arial, sans-serif;
+        font-size: 24px;
+        line-height: 1.25;
+        font-weight: 700;
+        text-transform: none; }
+        @media (max-width: 640px) {
+          .report-list .report-list__item .report-list__item-header h3 {
+            font-size: 18px;
+            line-height: 1.2; } }
+      .report-list .report-list__item .report-list__item-header .report-list__item-edit-link {
+        font-family: "nta", Arial, sans-serif;
+        font-size: 19px;
+        line-height: 1.31579;
+        font-weight: 400;
+        text-transform: none;
+        position: absolute;
+        left: 526px; }
+        @media (max-width: 640px) {
+          .report-list .report-list__item .report-list__item-header .report-list__item-edit-link {
+            font-size: 16px;
+            line-height: 1.25; } }
+    .report-list .report-list__item .report-list__item-fields {
+      overflow: hidden;
+      position: relative; }
+      .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row {
+        margin-bottom: 30px;
+        overflow: hidden; }
+        .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term {
+          display: inline;
+          font-family: "nta", Arial, sans-serif;
+          font-size: 19px;
+          line-height: 1.31579;
+          font-weight: 400;
+          text-transform: none;
+          color: #6f777b;
+          float: left; }
+          @media (max-width: 640px) {
+            .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term {
+              font-size: 16px;
+              line-height: 1.25; } }
+          .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term--block {
+            float: none; }
+        .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description {
+          display: block;
+          font-family: "nta", Arial, sans-serif;
+          font-size: 19px;
+          line-height: 1.31579;
+          font-weight: 700;
+          text-transform: none; }
+          @media (max-width: 640px) {
+            .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description {
+              font-size: 16px;
+              line-height: 1.25; } }
+          .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description--block {
+            position: relative;
+            margin-left: auto;
+            font-weight: 400; }
+
+.report-list--contacts dt.report-list__item-fields-term {
+  width: 210px; }
+.report-list--contacts dd.report-list__item-fields-description {
+  margin-left: 220px; }
+
+.report-list--decisions dd.report-list__item-fields-description {
+  margin-left: 50px; }
 
 .report-meta {
   line-height: 19px; }

@@ -1,7 +1,9 @@
 {% extends 'AppBundle:Components/Page:page-report.html.twig' %}
-{% trans_default_domain "report-decisions" %}
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} js-report-decisions-input{% endblock %}
 {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
@@ -9,23 +11,25 @@
 {% endblock %}
 
 {% block pageBody %}
-    <h1>Decisions</h1>
-    <div class="visuallyhidden">
 
-        <h1 class="form-title heading-medium-large">{{ 'page.headTitle' | trans }}</h1>
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'page.pageSectionTitle'
+    } %}
 
-        <p>{{ 'page.subTItle' | trans }}</p>
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
 
-        <div {% if (decisions is not empty) and (action == 'list') %} style="display: none; margin: 20px; border-left: #CCCCCC 5px solid; padding: 10px;" {% endif %}>
-            {% include 'AppBundle:Report:_decision_form.html.twig' %}
-        </div>
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
 
-        {% if(decisions is not empty) and (action == 'list') %}
-            <a href="{{ path('decisions', {'reportId': report.id, 'action': 'add'}) }}">{{ 'page.addDecisionButton' |trans }}</a>
-        {% endif %}
+    {% include 'AppBundle:Report:_decision_form.html.twig' %}
 
-        {% if decisions is not empty %}
-            {% include 'AppBundle:Report:_listDecision.html.twig' %}
-        {% endif %}
-    </div>
+    {% if decisions is not empty %}
+        {% include 'AppBundle:Report:_listDecision.html.twig' %}
+    {% endif %}
+
 {% endblock %}
