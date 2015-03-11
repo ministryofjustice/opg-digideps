@@ -50,11 +50,13 @@
     </target>
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
-        <exec command="rm misc/build/behat.log*"></exec>
         <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
-        <!-- convert xTerm-coloured behat.log into HTML format -->
-        <!-- TODO save output into  tee misc/build/behat.log -->
-         <!--<exec command="cat misc/build/behat.log | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />--> 
+    </target>
+    
+    <target name="behat-log" description="Run all the behat journeys and create HTML output (note: no return code)" depends="behat-init">
+        <exec command="rm misc/build/behat.log*"></exec>
+        <exec command="vendor/behat/behat/bin/behat | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
+        <echo msg="Check behat reports inside misc/build/"></echo>
     </target>
 
     <target name="build" depends="cache-clear,composer-install,check-validation,phplint">
