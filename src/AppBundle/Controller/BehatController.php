@@ -33,4 +33,17 @@ class BehatController extends Controller
         
         return new Response($content);
     }
+    
+    /**
+     * @Route("/report/{reportId}/change-report-cot/{cot}")
+     * @Method({"GET"})
+     */
+    public function changeReportCot($reportId, $cot)
+    {
+        $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
+            'cotId' => $cot
+        ]));
+        
+        return new Response('done');
+    }
 }

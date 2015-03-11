@@ -93,7 +93,7 @@ Feature: report
         And I should see "Bought house in Sw18" in the "list-decisions" region
 
     @deputy
-    Scenario: test tabs
+    Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I am on "/report/1/overview"
         Then I should see a "#tab-contacts" element
@@ -101,5 +101,16 @@ Feature: report
         But I should not see a "#tab-accounts" element
         And I should not see a "#tab-assets" element
 
+    @deputy
+    Scenario: change report type to "Property and Affairs"
+        Given I change the report "1" court order type to "Property and Affairs"
 
-    
+    @deputy
+    Scenario: test tabs for "Property and Affairs" report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I change the report "1" court order type to "Property and Affairs"
+        When I am on "/report/1/overview"
+        Then I should see a "#tab-contacts" element
+        And I should see a "#tab-decisions" element
+        And I should see a "#tab-accounts" element
+        And I should see a "#tab-assets" element

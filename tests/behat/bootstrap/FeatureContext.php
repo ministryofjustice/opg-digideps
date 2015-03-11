@@ -260,4 +260,15 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
     }
     
+    
+    /**
+     * @Given I change the report :reportId court order type to :cotName
+     */
+    public function iChangeTheReportCourtOrderTypeTo($reportId, $cotName)
+    {
+        $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
+        
+        $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
+    }
+    
 }
