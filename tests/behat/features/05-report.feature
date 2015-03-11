@@ -4,8 +4,10 @@ Feature: report
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "/report/1/contacts/add"
+        And I save the page as "report-contact-empty"
         # wrong form
         And I submit the form
+        And I save the page as "report-contact-add-error"
         Then the following fields should have an error:
             | contact_contactName |
             | contact_relationship |
@@ -23,6 +25,7 @@ Feature: report
             | contact_postcode | N2 5JF |
             | contact_country | GB |
         And I submit the form
+        And I save the page as "report-contact-list"
         Then the response status code should be 200
         And the form should not contain an error
         And I should be on "/report/1/contacts"
@@ -33,8 +36,10 @@ Feature: report
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "/report/1/decisions/add"
+        And I save the page as "report-decision-empty"
         # form errors
         When I submit the form
+        And I save the page as "report-decision-add-error"
         Then the following fields should have an error:
             | decision_title |
             | decision_description |
@@ -87,6 +92,7 @@ Feature: report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I submit the form
+        And I save the page as "report-decision-list"
         Then the response status code should be 200
         And the form should not contain an error
         And I should be on "/report/1/decisions"
@@ -95,6 +101,7 @@ Feature: report
     @deputy
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I save the page as "report-health-welfare-homepage"
         When I am on "/report/1/overview"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
@@ -108,8 +115,8 @@ Feature: report
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I change the report "1" court order type to "Property and Affairs"
         When I am on "/report/1/overview"
+        And I save the page as "report-property-affairs-homepage"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
