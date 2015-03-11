@@ -100,4 +100,22 @@ class ReportController extends RestController
         }
         return $contacts;
     }
+    
+     /**
+     * @Route("/{id}")
+     * @Method({"PUT"})
+     */
+    public function update($id)
+    {
+        $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
+
+        $data = $this->deserializeBodyContent();
+        
+        $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
+        $report->setCourtOrderType($cot);
+        
+        $this->getEntityManager()->flush($report);
+        
+        return ['id'=>$report->getId()];
+    }
 }
