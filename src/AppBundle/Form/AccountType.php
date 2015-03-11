@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
+use Symfony\Component\Validator\Constraints as Constraints;
 
 class AccountType extends AbstractType
 {
@@ -18,7 +19,7 @@ class AccountType extends AbstractType
                                                  'invalid_message' => 'account.openingDate.invalidMessage'
                                           ])
                   ->add('openingBalance','text')
-                  ->add('sortCode',new SortCodeType())
+                  ->add('sortCode',new SortCodeType(), [ 'constraints' => new Constraints\NotBlank() ])
                   ->add('accountNumber', new AccountNumberType())
                   ->add('save', 'submit');
      }
@@ -26,7 +27,7 @@ class AccountType extends AbstractType
      public function setDefaultOptions(OptionsResolverInterface $resolver)
      {
          $resolver->setDefaults( [
-            'translation_domain' => 'report-accounts',
+            'translation_domain' => 'report-accounts'
         ]);
      }
      

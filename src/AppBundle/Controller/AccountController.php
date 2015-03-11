@@ -5,6 +5,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form as FormDir;
+use AppBundle\Entity as EntityDir;
+use Symfony\Component\Form\FormError;
 
 
 class AccountController extends Controller
@@ -20,10 +22,22 @@ class AccountController extends Controller
          
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
-        $accounts = [];
         
-        $form = $this->createForm(new FormDir\AccountType());
+        $apiClient = $this->get('apiclient');
+        $accounts = $apiClient->getEntities('Account','get_report_accounts', [ 'query' => ['id' => $reportId ]]);
+        //print_r($accounts); die;
+        $form = $this->createForm(new FormDir\AccountType(), new EntityDir\Account());
         $form->handleRequest($request);
+        
+        if($request->getMethod() == 'POST'){
+            if($form->isValid()){
+                $account = $form->getData();
+                $account->setReport($reportId);
+                
+                $apiClient->postC('add_report_account', $account);
+                return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $reportId ]));
+            }
+        }
         
         return [
             'report' => $report,

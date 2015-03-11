@@ -1,1 +1,12 @@
-
+<ul>
+    <li>
+        <ul>
+            {% for account in accounts %}
+                <li>{{ account.bank }}</li>
+                <li>{{ account.accountNumber }}</li>
+                <li>£ {{ account.openingBalance | number_format(2, '.', ',') }} </li>
+                <li>{{ account.lastEdit | date("d/m/Y") }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+</ul>
