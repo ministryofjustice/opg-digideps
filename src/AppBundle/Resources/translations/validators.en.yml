@@ -114,3 +114,21 @@ decision:
 account:
     openingDate:
         invalidMessage: Opening Date is not valid
+        notBlank: Please enter opening date
+    bank:
+        notBlank: Please enter Bank/Building Society name
+        type: Please enter a valid Bank/Building Society name
+    sortCode:
+        notBlank: Please enter sort code
+        type: Sort code must be  numeric
+        length: Sort code must be at least 6 characters long
+    accountNumber:
+        notBlank: Please enter last 4 digits of your account number
+        type: Account number must be numeric
+        length: Please enter last 4 digits of your account number
+    openingDate:
+        notBlank: Please enter opening balance date
+        date: Please enter a valid date
+    openingBalance:
+        notBlank: Please enter an opening balance
+        type: Please enter a valid opening balance

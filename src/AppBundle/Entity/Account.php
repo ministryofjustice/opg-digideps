@@ -14,8 +14,8 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank()
-     * @Assert\Type(type="string")
+     * @Assert\NotBlank(message="account.bank.notBlank")
+     * @Assert\Type(type="string", message="account.bank.type")
      * 
      * @var string $bank
      */
@@ -24,9 +24,9 @@ class Account
     /**
      *
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="Sort code cannot be blank")
-     * @Assert\Type(type="numeric")
-     * @Assert\Length(max=6,min=6)
+     * @Assert\NotBlank( message="account.sortCode.notBlank")
+     * @Assert\Type(type="numeric", message="account.sortCode.type")
+     * @Assert\Length(minMessage="account.sortCode.length",maxMessage="account.sortCode.length",max=6,min=6)
      * 
      * @var string $sortCode
      */
@@ -35,9 +35,9 @@ class Account
     /**
      *
      * @JMS\Type("string")
-     * @Assert\NotBlank()
-     * @Assert\Type(type="numeric")
-     * @Assert\Length(max=4,min=4)
+     * @Assert\NotBlank(message="account.accountNumber.notBlank")
+     * @Assert\Type(type="numeric", message="account.accountNumber.type")
+     * @Assert\Length(minMessage="account.accountNumber.length",maxMessage="account.accountNumber.length", max=4,min=4)
      * 
      * @var string $accountNumber
      */
@@ -45,16 +45,16 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank()
-     * @Assert\Date()
+     * @Assert\NotBlank(message="account.openingDate.notBlank")
+     * @Assert\Date(message="account.openingDate.date")
      * @var type 
      */
     private $openingDate;
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank()
-     * @Assert\Type(type="numeric")
+     * @Assert\NotBlank(message="account.openingBalance.notBlank")
+     * @Assert\Type(type="numeric", message="account.openingBalance.type")
      * 
      * @var decimal
      */
@@ -62,8 +62,6 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank()
-     * @Assert\Date()
      * @var type 
      */
     private $lastEdit;

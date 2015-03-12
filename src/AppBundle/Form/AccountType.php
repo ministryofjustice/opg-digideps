@@ -19,7 +19,7 @@ class AccountType extends AbstractType
                                                  'invalid_message' => 'account.openingDate.invalidMessage'
                                           ])
                   ->add('openingBalance','text')
-                  ->add('sortCode',new SortCodeType(), [ 'constraints' => new Constraints\NotBlank() ])
+                  ->add('sortCode',new SortCodeType())
                   ->add('accountNumber', new AccountNumberType())
                   ->add('save', 'submit');
      }
