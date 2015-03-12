@@ -92,7 +92,7 @@ class Report
      * @param \DateTime $startDate
      * @return \AppBundle\Entity\Report
      */
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate = null)
     {
         if ($startDate instanceof \DateTime) {
             $startDate->setTime(0,0,0);
@@ -130,7 +130,7 @@ class Report
      * @param \DateTime $endDate
      * @return \AppBundle\Entity\Report
      */
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate = null)
     {
         if ($endDate instanceof \DateTime) {
             $endDate->setTime(23, 59, 59);
