@@ -26,11 +26,10 @@ class Account
     private $bank;
     
     /**
-     *
      * @JMS\Type("string")
      * @Assert\NotBlank( message="account.sortCode.notBlank")
      * @Assert\Type(type="numeric", message="account.sortCode.type")
-     * @Assert\Length(minMessage="account.sortCode.length",maxMessage="account.sortCode.length",max=6,min=6)
+     * @Assert\Length(max = 6,min = 6, minMessage = "account.sortCode.length", maxMessage = "account.sortCode.length")
      * 
      * @var string $sortCode
      */
