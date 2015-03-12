@@ -24,7 +24,7 @@
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
-        <exec command="php composer.phar install" checkreturn="true" passthru="true"/>
+        <exec command="php composer.phar install --no-interaction" checkreturn="true" passthru="true"/>
     </target>
     
     <target name="optimise">
