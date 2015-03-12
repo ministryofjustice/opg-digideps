@@ -3,7 +3,11 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
+/**
+ * @Assert\Callback(methods={"isValidOpeningDate"})
+ */
 class Account
 {
     /**
@@ -70,6 +74,8 @@ class Account
      * @JMS\Type("integer")
      */
     private $report;
+    
+    private $reportObject;
     
     public function getId()
     {
@@ -158,4 +164,26 @@ class Account
         $this->report = $report;
         return $this;
     }
+    
+    public function setReportObject($reportObject)
+    {
+        $this->reportObject = $reportObject;
+        return $this;
+    }
+    
+    public function getReportObject()
+    {
+        return $this->reportObject;
+    }
+    
+    public function isValidOpeningDate(ExecutionContextInterface $context)
+    {
+        $reportStartDate = $this->reportObject->getStartDate();
+        $reportEndDate = $this->reportObject->getEndDate();
+        
+        if(($reportStartDate > $this->openingDate) || ($reportEndDate < $this->openingDate)){
+             $context->addViolationAt('openingDate','Opening balance date must be between '.$reportStartDate->format('d/m/Y').' and '.$reportEndDate->format('d/m/Y'));
+        }
+    }
+    
 }

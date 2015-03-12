@@ -25,8 +25,11 @@ class AccountController extends Controller
         
         $apiClient = $this->get('apiclient');
         $accounts = $apiClient->getEntities('Account','get_report_accounts', [ 'query' => ['id' => $reportId ]]);
-        //print_r($accounts); die;
-        $form = $this->createForm(new FormDir\AccountType(), new EntityDir\Account());
+       
+        $account = new EntityDir\Account();
+        $account->setReportObject($report);
+        
+        $form = $this->createForm(new FormDir\AccountType(), $account);
         $form->handleRequest($request);
         
         if($request->getMethod() == 'POST'){

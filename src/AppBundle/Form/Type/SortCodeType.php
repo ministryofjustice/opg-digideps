@@ -17,11 +17,10 @@ class SortCodeType extends AbstractType
                ->addModelTransformer(new ArrayToStringTransformer(['sort_code_part_1', 'sort_code_part_2', 'sort_code_part_3']));
     }
     
-    public function getParent()
+    public function getParent() 
     {
-       return 'form'; 
+        return 'form';
     }
-    
     public function getName()
     {
         return 'sort_code';
