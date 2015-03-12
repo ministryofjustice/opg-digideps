@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class BehatController extends Controller
 {
-    private function checkisBehatBrowser()
+    private function checkIsBehatBrowser()
     {
         $isBehat = $_SERVER['REMOTE_ADDR'] === '127.0.0.1' 
                    && $_SERVER['HTTP_USER_AGENT'] === 'Symfony2 BrowserKit';
@@ -27,7 +27,7 @@ class BehatController extends Controller
      */
     public function getLastAction()
     {
-        $this->checkisBehatBrowser();
+        $this->checkIsBehatBrowser();
         $content = $this->get('apiclient')->get('behat/email')->getBody();
         
         return new Response(json_decode($content, 1)['data']);
@@ -39,7 +39,7 @@ class BehatController extends Controller
      */
     public function resetAction()
     {
-        $this->checkisBehatBrowser();
+        $this->checkIsBehatBrowser();
         $content = $this->get('apiclient')->delete('behat/email')->getBody();
         
         return new Response($content);
@@ -51,7 +51,7 @@ class BehatController extends Controller
      */
     public function changeReportCot($reportId, $cot)
     {
-        $this->checkisBehatBrowser();
+        $this->checkIsBehatBrowser();
         $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
             'cotId' => $cot
         ]));
