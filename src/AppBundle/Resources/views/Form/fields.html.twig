@@ -1,15 +1,51 @@
 {% block sort_code_widget %}
-    <div class="sort_code_widget">
-            {#{{ form_errors(form) }}#}
-            {{form_widget(form.sort_code_part_1)}}-{{form_widget(form.sort_code_part_2)}}-{{form_widget(form.sort_code_part_3)}}
-    </div>
+    <fieldset>
+        <legend class="form-label visuallyhidden">Sort Code</legend>
+        <div class="form-sort-code">
+            <div class="form-group">
+                {{ form_label(form.sort_code_part_1,'Sort Code part 1', {'label_attr': {'for': 'account_sortCode_sort_code_part_1', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control'} }) }}
+            </div>
+            <div class="separator">-</div>
+            <div class="form-group">
+                {{ form_label(form.sort_code_part_2,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_2', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.sort_code_part_2, { 'attr': {'class': 'sort-code-part form-control'} }) }}
+            </div>
+            <div class="separator">-</div>
+            <div class="form-group">
+                {{ form_label(form.sort_code_part_3,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_3', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.sort_code_part_3, { 'attr': {'class': 'sort-code-part form-control'} }) }}
+            </div>
+        </div>
+    </fieldset>
 {% endblock %}
 
 {% block account_number_widget %}
-    <div class="account_number_widget">
-            {{form_widget(form.part_1)}}
-            {{form_widget(form.part_2)}}
-            {{form_widget(form.part_3)}}
-            {{form_widget(form.part_4)}}
-    </div>
+    <fieldset>
+        <legend class="form-label visuallyhidden">Last four digits of account number</legend>
+        <div class="form-last-four-digits">
+            <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+            </ul>
+            <div class="form-group">
+                {{ form_label(form.part_1,'Digit 1', {'label_attr': {'for': 'account_accountNumber_part_1', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.part_1, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.part_2,'Digit 2', {'label_attr': {'for': 'account_accountNumber_part_2', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.part_2, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.part_3,'Digit 3', {'label_attr': {'for': 'account_accountNumber_part_3', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.part_3, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+            <div class="form-group">
+                {{ form_label(form.part_4,'Digit 4', {'label_attr': {'for': 'account_accountNumber_part_4', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(form.part_4, { 'attr': {'class': 'form-control'} }) }}
+            </div>
+        </div>
+    </fieldset>
 {% endblock %}

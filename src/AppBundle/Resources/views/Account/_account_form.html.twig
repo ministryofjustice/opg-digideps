@@ -39,7 +39,7 @@
     {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
     {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
     {{ form_input(form.sortCode, 'form.accountDetails.controls.sortCode') }}
-
+   
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
     subSectionTitle: 'form.openingBalance.subSectionTitle'
@@ -52,6 +52,7 @@
 
     {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate') }}
     {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance') }}
+    {#{{ form_input(form.openBalanceMessage, 'form.openingBalance.controls.openBalanceMessage') }}#}
 
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}

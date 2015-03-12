@@ -64,15 +64,20 @@ header.page-header {
 }
 
 .sub-section-title {
-  margin-top: 0;
   margin-bottom: 30px;
 
   h3 {
     @include bold-24();
   }
+
+  .form-group + & {
+    margin-top: 10px;
+
+  }
+
 }
 
-.sub-section-description{
+.sub-section-description {
   width: 65%;
   margin-bottom: 40px;
 }

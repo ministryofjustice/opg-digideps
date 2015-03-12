@@ -1527,7 +1527,6 @@ header.page-header {
   margin-bottom: 30px; }
 
 .sub-section-title {
-  margin-top: 0;
   margin-bottom: 30px; }
   .sub-section-title h3 {
     font-family: "nta", Arial, sans-serif;
@@ -1539,6 +1538,8 @@ header.page-header {
       .sub-section-title h3 {
         font-size: 18px;
         line-height: 1.2; } }
+  .form-group + .sub-section-title {
+    margin-top: 10px; }
 
 .sub-section-description {
   width: 65%;
@@ -1593,7 +1594,8 @@ form {
   width: 25%; }
 
 .form-label {
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  width: 50%; }
 
 .form-hint {
   margin-top: 0;
@@ -2098,6 +2100,47 @@ ol.progress {
 
 .user-list {
   margin-top: 60px; }
+
+.form-last-four-digits ul {
+  list-style: disc;
+  margin: 0 0 0 7px;
+  padding: 0;
+  float: left; }
+  .form-last-four-digits ul li {
+    width: 0;
+    border: 0px solid black;
+    float: left;
+    margin: 6px 12px 0 13px;
+    padding: 0;
+    color: #bfc1c3; }
+.form-last-four-digits .form-group {
+  float: left;
+  width: 50px;
+  margin-bottom: 0;
+  clear: none; }
+  .form-last-four-digits .form-group input {
+    float: left;
+    width: 40px;
+    margin-right: 5px; }
+    .form-last-four-digits .form-group input::after {
+      content: "-";
+      display: inline; }
+
+.form-sort-code .separator {
+  float: left;
+  margin: 7px 13px; }
+.form-sort-code .form-group {
+  float: left;
+  width: 50px;
+  margin-bottom: 0;
+  clear: none; }
+  .form-sort-code .form-group input.sort-code-part {
+    float: left;
+    width: 50px;
+    margin-right: 5px; }
+    .form-sort-code .form-group input.sort-code-part::after {
+      content: "-";
+      display: inline; }
 
 @-ms-viewport {
   width: device-width; }

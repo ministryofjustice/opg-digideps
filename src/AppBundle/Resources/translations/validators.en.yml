@@ -121,7 +121,7 @@ account:
     sortCode:
         notBlank: Please enter sort code
         type: Sort code must be  numeric
-        length: Sort code must be at least 6 characters long
+        length: Sort code must be at least {{ limit }} characters long
     accountNumber:
         notBlank: Please enter last 4 digits of your account number
         type: Account number must be numeric

@@ -6,7 +6,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
-use Symfony\Component\Validator\Constraints as Constraints;
 
 class AccountType extends AbstractType
 {
@@ -19,8 +18,8 @@ class AccountType extends AbstractType
                                                  'invalid_message' => 'account.openingDate.invalidMessage'
                                           ])
                   ->add('openingBalance','text')
-                  ->add('sortCode',new SortCodeType())
-                  ->add('accountNumber', new AccountNumberType())
+                  ->add('sortCode',new SortCodeType(), [ 'error_bubbling' => false ])
+                  ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false ])
                   ->add('save', 'submit');
      }
      
