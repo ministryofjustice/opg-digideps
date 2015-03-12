@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User implements AdvancedUserInterface
 {   
+    const TOKEN_EXPIRE_HOURS = 48;
+    
     /**
      * @JMS\Type("integer")
      * @var integer $id
@@ -523,6 +525,8 @@ class User implements AdvancedUserInterface
     public function setRoleId($roleId)
     {
         $this->roleId = $roleId;
+        
+        return $this;
     }
     
     public function getAddress1()

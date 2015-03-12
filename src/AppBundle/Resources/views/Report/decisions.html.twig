@@ -1,0 +1,35 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} js-report-decisions-input{% endblock %}
+{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+{% block pageNavigation %}
+    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-decisions'}%}
+{% endblock %}
+
+{% block pageBody %}
+
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'page.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}</p>
+
+    {% include 'AppBundle:Report:_decision_form.html.twig' %}
+
+    {% if decisions is not empty %}
+        {% include 'AppBundle:Report:_listDecision.html.twig' %}
+    {% endif %}
+
+{% endblock %}

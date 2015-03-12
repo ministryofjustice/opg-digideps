@@ -1,13 +1,13 @@
-#INSTALL + Test build
+#Digital deputies (Beta) -  Client
 
-  moved here 
-    https://github.com/ministryofjustice/opg-digi-deps-provisioning
+## Local box
+Vagrant configuration for Api and Client with instructions and packaged needed:
+https://github.com/ministryofjustice/opg-digi-deps-provisioning
 
-  *  browse at http://digideps-client.local
+## Build
 
-  * Templates are in 
-
-/app/Resources/views
-
-
-
+    # build the application (cache clear, data fixtures, PHP syntax check, tests, behat)
+    php phing.phar build
+    # list other tasks
+    php phing.phar -l
+    

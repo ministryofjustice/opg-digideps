@@ -1,0 +1,33 @@
+page:
+    htmlTitle: Report Decisions
+    pageSectionTitle: Decisions made over the reporting period
+    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying and selling property, making gifts or changing the client's care home.
+    addDecisionButton: Add a decision  
+    subSectionTitle: Add a decision
+
+# form
+title:
+  label: Title
+  hint: Add a title to help you identify the decision.
+description:
+  label: Description
+  hint: Give details of the decision here.
+decisionDate:
+  legend: Date
+  hint: (DD/MM/YYYY)
+clientInvolvedBoolean:
+  legend: Client involvement
+  hint: Did you involve your client in this decision ?
+  defaultOption: Please select...
+clientInvolvedDetails:
+  label: " "
+  hint: If yes, tell us how you involved the client in the decision. If no, tell us why that has not been possible.
+save:
+  label: Save
+cancel:
+  label: Cancel
+listing:
+  edit-link: Edit this decision
+  description: Description
+  date: Date
+  clientInvolvement: Client Involvement

@@ -1,0 +1,70 @@
+{% set translationDomain = "report-decisions" %}
+{% trans_default_domain translationDomain %}
+
+
+{% if (decisions is not empty) and (action == 'list') %}
+    {% set hideForm = true %}
+    {% set formClass = '' %}
+{% else %}
+    {% set hideForm = false %}
+    {% set formClass = 'report-form' %}
+{% endif %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass }}) }}
+
+{% if hideForm %}
+    {# Then we need to show the Add Button Link #}
+    {% set  params = app.request.attributes.get('_route_params') %}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+    buttonBarClass: 'add-bar js-add-contact-button-bar'
+    } %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'page.addDecisionButton',
+    linkClass: 'button-secondary',
+    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' })
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{% endif %}
+
+<div {% if hideForm %} class="visuallyhidden" {% endif %}>
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'page.subSectionTitle'
+    } %}
+
+    {{ form_input(form.title,'title', { 'labelClass': 'required' }) }}
+    {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+    {{ form_known_date(form.decisionDate, 'decisionDate') }}
+
+    {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+
+    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'save') }}
+    {% if hideForm or (action == 'add') %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('decisions', {'reportId': report.id})
+        } %}
+
+    {% endif %}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+</div>
+
+{{ form_end(form) }}

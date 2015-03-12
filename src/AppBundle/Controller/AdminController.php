@@ -11,6 +11,7 @@ use Symfony\Component\Form\Form;
 use AppBundle\Service\ApiClient;
 use AppBundle\Service\MailSender;
 use AppBundle\Form\AddUserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
 * @Route("/admin")
@@ -19,15 +20,14 @@ class AdminController extends Controller
 {
     /**
      * @Route("/", name="admin_homepage")
+     * @Template
      */
     public function indexAction(Request $request)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        $roles = $this->get('apiclient')->getEntities('Role', 'list_roles');
-
         $form = $this->createForm(new AddUserType([
-            'roles' => $roles,
+            'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), new User());
         
@@ -36,13 +36,12 @@ class AdminController extends Controller
             if ($form->isValid()) {
                 // add user
                 $response = $apiClient->postC('add_user', $form->getData(), [
-                    'deserialise_group' => 'admin_add_user'] //only serialise the properties modified by this form)
-                );
+                    'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
+                ]);
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
-                // mail activation link
-                $mailSender = $this->get('mailSender'); /* @var $mailSender MailSender */
-                $mailSender->sendUserActivationEmail($user);
+                // send activation link
+                $this->get('mailSender')->sendUserActivationEmail($user);
 
                 $request->getSession()->getFlashBag()->add(
                     'notice', 
@@ -53,10 +52,9 @@ class AdminController extends Controller
             } 
         }
         
-        return $this->render('AppBundle:Admin:index.html.twig', array(
+        return [
             'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
-            'roles'=>$roles, 
             'form'=>$form->createView()
-        ));
+        ];
     }
 }

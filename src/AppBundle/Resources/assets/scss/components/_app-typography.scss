@@ -40,12 +40,23 @@ header.page-header {
   }
 }
 
-.page-section-title{
+.page-section-title {
   @include bold-27();
   margin-bottom: 30px;
 }
 
-.page-section-description{
-  width: 50%;
-  margin-bottom: 40px;
+.page-section-description {
+  width: 65%;
+  margin-bottom: 30px;
+
+  & span.page-section-example{
+    display: block;
+    margin-top: 5px;
+  }
+
+}
+
+.sub-section-title {
+  @include bold-24();
+  margin-bottom: 30px;
 }

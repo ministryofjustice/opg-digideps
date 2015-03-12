@@ -1,0 +1,33 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
+
+ {% block pageNavigation %}
+     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-contacts'} %}
+ {% endblock %}
+
+{% block pageBody %}
+
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'contact_form.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'contact_form.pageSectionDescription'
+    } %}
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    {% include 'AppBundle:Report:_contact_form.html.twig' %}
+
+    {% if contacts is not empty %}
+        {% include 'AppBundle:Report:_listContact.html.twig' %}
+    {% endif %}
+
+{% endblock %}

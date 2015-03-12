@@ -1,9 +1,11 @@
 Feature: set password
     
-    Scenario: login and add user
+    @deputy
+    Scenario: login and add user (deputy)
         Given I am on "/logout"
         When I open the first link on the email
         Then the response status code should be 200
+        And I save the page as "deputy-step1"
         And the "set_password_email" field should contain "behat-user@publicguardian.gsi.gov.uk"
          # empty
         When I fill in the following: 
@@ -35,6 +37,7 @@ Feature: set password
             | set_password_password_second  | Abcdefgh |
         And I submit the form
         Then the form should contain an error
+        And I save the page as "deputy-step1-error"
         # correct !!
         When I fill in the following: 
             | set_password_password_first   | Abcd1234 |
@@ -50,3 +53,19 @@ Feature: set password
             | login_password  | Abcd1234 |
         And I submit the form
         Then I should not see the "header errors" region
+
+   
+    @admin
+    Scenario: login and add user (admin)
+        Given I am on "/logout"
+        When I open the first link on the email
+        Then the response status code should be 200
+        And I save the page as "admin-step1"
+        And the "set_password_email" field should contain "behat-admin-user@publicguardian.gsi.gov.uk"
+        # only testing the correct case, as the form is the same for deputy
+        When I fill in the following: 
+            | set_password_password_first   | Abcd1234 |
+            | set_password_password_second  | Abcd1234 |
+        And I submit the form
+        Then I should not see the "header errors" region
+        And I should be on "/admin/"

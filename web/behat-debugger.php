@@ -7,7 +7,7 @@ if (strpos($_SERVER['SERVER_NAME'], '.local') === false) {
 
 switch ($_GET['frame']) {
     case 'page':
-        if (strpos($_GET['f'], 'behat-response') !== false) {
+        if (strpos($_GET['f'], 'behat-') !== false) {
             include  __DIR__ . '/../misc/tmp/' . $_GET['f'];
         } else {
             echo "click on a link at the top";
@@ -15,13 +15,21 @@ switch ($_GET['frame']) {
         die;
         
     case 'list':
-        $files = glob(__DIR__ . '/../misc/tmp/behat-response*.html');
-        usort($files, function($a, $b) {
-            return filemtime($a) < filemtime($b);
-        });
-        foreach ($files as $file) {
-            $file = basename($file);
-            ?><a href="?frame=page&f=<?php echo $file?>" target="page"><?php echo $file?></a><br/><?php
+        foreach(['responses'=>'behat-response*.html', 'screenshots'=>'behat-screenshot*.html'] as $groupName => $regexpr) {
+            ?><h2><?php echo $groupName ?></h2><?php
+            $files = glob(__DIR__ . '/../misc/tmp/' . $regexpr);
+            usort($files, function($a, $b) {
+                return filemtime($a) < filemtime($b);
+            });
+            foreach ($files as $file) {
+                $file = basename($file);
+                $fileCleaned = str_replace(['behat-response-', 'behat-screenshot-', '.html'], '', $file);
+                $group = explode('-', $fileCleaned, 2)[0];
+                $newGroup = isset($previousGroup) && $previousGroup != $group;
+                if ($newGroup) { echo "------<br>";}
+                ?><a href="?frame=page&f=<?php echo $file?>" target="page" ><?php echo $fileCleaned ?></a><br/><?php
+                $previousGroup = $group;
+            }
         }
         die;
         

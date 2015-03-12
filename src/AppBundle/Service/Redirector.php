@@ -3,13 +3,18 @@ namespace AppBundle\Service;
 
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 class Redirector
 {
+    /**
+     * @var RouterInterface
+     */
     protected $router;
     
     /**
-     * @var SecurityContext 
+     * @var SecurityContextInterface 
      */
     protected $security;
     
@@ -17,7 +22,7 @@ class Redirector
      * @param \AppBundle\Service\SecurityContext $security
      * @param type $router
      */
-    public function __construct(SecurityContext $security, $router)
+    public function __construct(SecurityContextInterface $security, RouterInterface $router)
     {
         $this->security = $security;
         $this->router = $router;
@@ -28,7 +33,7 @@ class Redirector
     {
         $user = $this->security->getToken()->getUser();
         $clients = $user->getClients();
-        
+
         $route = 'access_denied';
         $options = [];
         
@@ -44,7 +49,7 @@ class Redirector
                 $options = [ 'clientId' => $clients[0]['id']];
             }else{
                 $route = "report_overview";
-                $options = [ 'id' => $clients[0]['reports'][0] ];
+                $options = [ 'reportId' => $clients[0]['reports'][0] ];
             }
         }
         

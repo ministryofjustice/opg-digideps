@@ -7,6 +7,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @JMS\XmlRoot("report")
+ * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  */
 class Report
@@ -19,15 +20,15 @@ class Report
     private $id;
     
     /**
-     * @JMS\Type("DateTime")
      * @Assert\NotBlank( message="report.startDate.notBlank")
      * @Assert\Date( message="report.startDate.invalidMessage" )
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @var \DateTime $startDate
      */
     private $startDate;
     
     /**
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      * @var \DateTime $endDate
@@ -46,6 +47,18 @@ class Report
      * @var integer $courtOrderType
      */
     private $courtOrderType;
+    
+    /**
+     * @JMS\Exclude
+     * @var string
+     */
+    private $period;
+    
+    /**
+     * @JMS\Exclude
+     * @var string $dueDate
+     */
+    private $dueDate;
     
     
     /**
@@ -79,8 +92,11 @@ class Report
      * @param \DateTime $startDate
      * @return \AppBundle\Entity\Report
      */
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate = null)
     {
+        if ($startDate instanceof \DateTime) {
+            $startDate->setTime(0,0,0);
+        }
         $this->startDate = $startDate;
         return $this;
     }
@@ -94,13 +110,58 @@ class Report
     }
     
     /**
+     * @return string $dueDate
+     */
+    public function getDueDate()
+    {
+        if(!empty($this->dueDate)){
+            return $this->dueDate;
+        }
+        
+        $this->dueDate = $this->endDate->modify('+8 weeks');
+      
+        if($this->dueDate->format("N") > 5){
+            $this->dueDate->modify('next monday');
+        }
+        return $this->dueDate;
+    }
+    
+    /**
      * @param \DateTime $endDate
      * @return \AppBundle\Entity\Report
      */
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate = null)
     {
+        if ($endDate instanceof \DateTime) {
+            $endDate->setTime(23, 59, 59);
+        }
         $this->endDate = $endDate;
         return $this;
+    }
+    
+    /**
+     * @return string $period
+     */
+    public function getPeriod()
+    {
+        if(!empty($this->period)){
+            return $this->period;
+        }
+        
+        if(empty($this->startDate)){
+            return $this->period;
+        }
+        
+        $startDateStr = $this->startDate->format("Y");
+        $endDateStr = $this->endDate->format("Y");
+        
+        if($startDateStr != $endDateStr){
+            $this->period = $startDateStr.' to '.$endDateStr;
+            return $this->period;
+        }
+        $this->period = $startDateStr;
+        
+        return $this->period;
     }
     
     /**

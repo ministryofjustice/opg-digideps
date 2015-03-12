@@ -1,19 +1,19 @@
 Feature: admin
     
-    @cleanMail
-    Scenario: login and add user
+    @cleanMail @deputy
+    Scenario: login and add deputy user
         Given I am on "/"
         Then the response status code should be 200
         # test wrong credentials
         When I fill in the following: 
-            | login_email     | deputyshipservice@publicguardian.gsi.gov.uk |
+            | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  |  WRONG PASSWORD !! |
         And I click on "login"
         Then I should see the "header errors" region
         # test right credentials
         When I fill in the following:
-            | login_email     | deputyshipservice@publicguardian.gsi.gov.uk |
-            | login_password  |  test |
+            | login_email     | admin@publicguardian.gsi.gov.uk |
+            | login_password  | Abcd1234 |
         And I click on "login"
         When I go to "/admin"
         And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
@@ -37,5 +37,23 @@ Feature: admin
         And I click on "save"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
+        And I save the page as "admin-deputy-added"
         And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        
+        
+    @cleanMail @admin
+    Scenario: login and add admin user
+        Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "/admin"
+        And I fill in the following:
+            | admin_email | behat-admin-user@publicguardian.gsi.gov.uk | 
+            | admin_firstname | John | 
+            | admin_lastname | Doe | 
+            | admin_roleId | 1 |
+        And I click on "save"
+        Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
+        Then the response status code should be 200
+        And I should see "OPG Administrator" in the "users" region
+        And I save the page as "admin-admin-added"
+        And an email with subject "Digideps - activation email" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         

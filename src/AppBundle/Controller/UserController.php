@@ -2,6 +2,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,6 +24,7 @@ class UserController extends Controller
 {
     /**
      * @Route("/activate/{token}", name="user_activate")
+     * @Template()
      */
     public function activateAction(Request $request, $token)
     {
@@ -32,9 +34,7 @@ class UserController extends Controller
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
         
-        $hoursExpires = $this->container->hasParameter('token_expires_hours')
-                        ? $this->container->getParameter('token_expires_hours') : 48;
-        if (!$user->isTokenSentInTheLastHours($hoursExpires)) {
+        if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
             throw new \RuntimeException("token expired, require new link");
         }
         
@@ -70,16 +70,17 @@ class UserController extends Controller
             }
         } 
 
-        return $this->render('AppBundle:User:activate.html.twig', [
+        return [
             'token'=>$token, 
             'form' => $form->createView(),
-            'showAllSteps' => $user->getRole()['role'] !== 'ROLE_ADMIN'
-        ]);
+            'isAdmin' => $user->getRole()['role'] === 'ROLE_ADMIN'
+        ];
     }
     
     
     /**
      * @Route("/details", name="user_details")
+     * @Template()
      */
     public function detailsAction(Request $request)
     {
@@ -95,25 +96,24 @@ class UserController extends Controller
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-
             if ($form->isValid()) {
                 
                 $apiClient->putC('user/' . $user->getId(), $form->getData(), [
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
                 
+                // after details are added, admin users to go their homepage, deputies go to next step
                 return $this->redirect($this->generateUrl($basicFormOnly ? 'admin_homepage' : 'client_add'));
             }
         } else {
+            // fill the form in (edit mode)
             $form->setData($user);
         }
         
-        return $this->render('AppBundle:User:details.html.twig', [
+        return [
             'form' => $form->createView(),
-            'showAllSteps' => !$basicFormOnly
-        ]);
+        ];
         
     }
-    
     
 }

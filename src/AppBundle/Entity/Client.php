@@ -6,6 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 
 /**
  * @JMS\XmlRoot("client")
+ * @JMS\ExclusionPolicy("none")
  */
 class Client
 {
@@ -44,6 +45,12 @@ class Client
      * @var string $lastname
      */
     private $lastname;
+    
+    /**
+     * @JMS\Exclude()
+     * @var string
+     */
+    private $fullname;
     
     /**
      * @JMS\Type("string")
@@ -206,6 +213,11 @@ class Client
     public function getLastname()
     {
         return $this->lastname;
+    }
+    
+    public function getFullname()
+    {
+        return $this->firstname.' '.$this->lastname;
     }
     
     /**

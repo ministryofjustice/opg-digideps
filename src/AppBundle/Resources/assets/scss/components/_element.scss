@@ -1,15 +1,27 @@
 .field-with-errors {
     border-left: 3px solid $error-colour;
-    padding: 15px 0 15px 15px;
+    padding: 0 0 0 15px;
+}
+
+.field-with-errors{
+  & input, select, textarea{
+    border: 2px solid $error-colour;
+  }
 }
 
 .field-with-errors input,
 .field-with-errors select {
-    border: 2px solid $error-colour
+
 }
 
 .field-with-errors {
 	li {
 		color: $error-colour
 	}
+}
+
+.button-link{
+  margin-left: 15px;
+  top: 1px;
+  position: relative;
 }

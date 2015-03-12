@@ -48,9 +48,18 @@ class FormFieldsExtension extends \Twig_Extension
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
+            'tab' => new \Twig_Function_Method($this, 'renderTab'),
         ];
     }
     
+    public function getFilters()
+    {
+        return [
+            'country_name' => new \Twig_SimpleFilter('country_name', function($value) {
+                return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
+            }),
+        ];
+    }
     
     /**
      * 
@@ -79,6 +88,45 @@ class FormFieldsExtension extends \Twig_Extension
         ]);
     }
 
+    
+    /**
+     * Render tab component (used in report page)
+     * - Reads elements from twig.yml, tabs section
+     * - Translations taken from tabs.yml
+     * - Active tab has class "active"
+     * 
+     * @param string $tabGroup
+     * @param string $activeTab ID of the active tab (
+     * @param array $pathOptions contains the params for all the URL in the tab
+     * 
+     * @return string
+     */
+    public function renderTab($tabGroup, $activeTab, array $pathOptions = [])
+    {
+        $activeClass ='active';
+        
+        if (empty($this->params['tabs'][$tabGroup])) {
+            return "[ Tab $tabGroup not found or empty, check your configuration files ]";
+        }
+        
+        $tabDataProvider = [];
+        // set classes and labels from translation
+        foreach ($this->params['tabs'][$tabGroup] as $tabId => $tabData) {
+            $tabDataProvider[] = [
+                'label' => $this->translator->trans($tabGroup . '.' . $tabId . '.label', [], 'tabs'),
+                'class' => $activeTab == $tabId ? $activeClass : '',
+                'tabId' => $tabId,
+                'href' => [
+                    'path' => $tabData['path'],
+                    'params' => $pathOptions,
+                ]
+            ];
+        }
+        
+        echo $this->environment->render('AppBundle:Components/Navigation:_tab-bar.html.twig', [
+            'tabDataProvider' => $tabDataProvider
+        ]);
+    }
     
     /**
      * Renders form input field

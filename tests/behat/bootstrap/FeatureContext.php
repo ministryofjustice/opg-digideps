@@ -8,6 +8,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Symfony2Extension\Context\KernelDictionary;
 
 /**
  * Behat context class.
@@ -17,7 +18,6 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
-
     use RegionTrait;
 
     use DebugTrait;
@@ -28,14 +28,24 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     use StatusSnapshotTrait;
     
+    use KernelDictionary;
+    
     public function __construct(array $options)
     {
         //$options['session']; // not used
         ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
         ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
-//        if (!empty($options['set_time_limit'])) {
-//            set_time_limit($options['set_time_limit']);
-//        }
+    }
+    
+    
+    public function setKernel(\AppKernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+    
+    protected function getSymfonyParam($name)
+    {
+        $this->getContainer()->getParameter($name);
     }
 
     
@@ -73,41 +83,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitPath('/logout');
     }
 
-    /**
-     * @When I go to the report page
-     */
-    public function iGoToTheReportPage()
-    {
-        $this->visit('/');
-        $this->clickLinkInsideElement('open', 'reports');
-    }
-
-    /**
-     * @When I go to the account page
-     */
-    public function iGoToTheAccountPage()
-    {
-        $this->iGoToTheReportPage();
-        $this->clickLinkInsideElement('account-open', 'report-dashboard');
-    }
-    
-    /**
-     * @When I go to the account balance page
-     */
-    public function iGoToTheAccountBalancePage()
-    {
-        $this->iGoToTheAccountPage();
-        $this->clickLinkInsideElement("income-balance", "account-tabs");
-    }
-    
-     /**
-     * @When I go to the manage users page
-     */
-    public function iGoToTheManageUsersPage()
-    {
-        $this->visit('/admin/users');
-    }
-    
     /**
      * @Given I submit the form
      */
@@ -230,6 +205,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function theFormShouldContainAnError()
     {
         $this->iShouldSeeTheRegion('form-errors');
+//        $this->debug();
     }
     
     /**
@@ -238,6 +214,39 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function theFormShouldNotContainAnError()
     {
         $this->iShouldNotSeeTheRegion('form-errors');
+//        $this->debug();
+    }
+    
+    
+    /**
+     * @Then the following fields should have an error:
+     */
+    public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
+    {
+        $fields = array_keys($table->getRowsHash());
+        $errorRegionCss = self::behatRegionToCssSelector('form-errors');
+        $errorRegions = $this->getSession()->getPage()->findAll('css', $errorRegionCss);
+        $foundIdsWithErrors = [];
+        foreach ($errorRegions as $errorRegion) {
+            $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
+            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
+                $foundIdsWithErrors[] = $elementWithError->getAttribute('id');
+            }
+        }
+        $untriggeredField = array_diff($fields, $foundIdsWithErrors);
+        $unexpectedFields = array_diff($foundIdsWithErrors, $fields);
+        
+        if ($untriggeredField || $unexpectedFields) {
+            $message = "The form raised errors different than expected: \n";
+            if ($untriggeredField) {
+                $message .= " - Fields not throwing error as expected: " . implode(', ', $untriggeredField) . "\n";
+            }
+            if ($unexpectedFields) {
+                 $message .= " - Fields unexpectedly throwing errors: " . implode(', ', $unexpectedFields) . "\n";
+            }
+            
+            throw new \RuntimeException($message);
+        }
     }
     
     
@@ -250,5 +259,16 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             $this->assertFieldContains($field, $value);
         }
     }
-
+    
+    
+    /**
+     * @Given I change the report :reportId court order type to :cotName
+     */
+    public function iChangeTheReportCourtOrderTypeTo($reportId, $cotName)
+    {
+        $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
+        
+        $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
+    }
+    
 }
