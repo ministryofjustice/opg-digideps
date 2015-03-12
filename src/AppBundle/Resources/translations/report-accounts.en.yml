@@ -30,5 +30,7 @@ form:
       cancel:
         label: Cancel
 listing:
-  balance: "Balance:"
-  edited: "Edited:"
+  bank: "Bank/Building Society name"
+  accountNumber: "Last four digits of account number"
+  balance: "Opening balance:"
+  edited: "Last edited:"

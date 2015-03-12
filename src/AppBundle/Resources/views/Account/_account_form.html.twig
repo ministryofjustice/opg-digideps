@@ -45,10 +45,10 @@
     subSectionTitle: 'form.openingBalance.subSectionTitle'
     } %}
 
-    {#{% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
     transDomain: translationDomain,
-    subSectionTitle: 'form.openingBalance.subSectionDescription'
-    } %}#}
+    subSectionDescription: 'form.openingBalance.subSectionDescription'
+    } %}
 
     {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate') }}
     {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance') }}

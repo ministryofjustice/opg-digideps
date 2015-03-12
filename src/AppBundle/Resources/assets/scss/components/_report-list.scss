@@ -39,29 +39,32 @@
       .report-list__item-fields-row {
         margin-bottom: 30px;
         overflow: hidden;
+      }
 
-        dt.report-list__item-fields-term {
-          display: inline;
-          @include core-19();
-          color: $grey-1;
-          float: left;
+      dt.report-list__item-fields-term {
+        display: inline;
+        @include core-19();
+        color: $grey-1;
+        float: left;
 
-          &--block {
-            float: none;
-          }
-
+        &--block {
+          float: none;
         }
 
-        dd.report-list__item-fields-description {
-          display: block;
-          @include bold-19();
+      }
 
-          &--block {
-            position: relative;
-            margin-left: auto;
-            font-weight: 400;
-          }
+      dd.report-list__item-fields-description {
+        display: block;
+        @include bold-19();
 
+        &--block {
+          position: relative;
+          margin-left: auto;
+          font-weight: 400;
+        }
+
+        &--normal{
+          font-weight: 400;
         }
 
       }
@@ -89,4 +92,53 @@
   dd.report-list__item-fields-description {
     margin-left: 50px;
   }
+}
+
+.report-list--accounts {
+
+  &.report-list {
+    padding-left: 0;
+  }
+
+  dt.report-list__item-fields-term {
+    display: inline;
+  }
+
+  dd.report-list__item-fields-description {
+    display: inline;
+    font-weight: 400;
+
+    h3 {
+      display: inline;
+      @include bold-24();
+    }
+  }
+
+  .report-list__item-fields-row{
+    display: inline;
+  }
+
+  .report-list__item-fields-col {
+
+    &-bank {
+      display: block;
+      float: left;
+      width: 37%;
+    }
+
+    &-acc-num {
+      display: block;
+      float: left;
+      width: 31%;
+    }
+
+    &-info {
+      display: block;
+      float: left;
+      overflow: hidden;
+      margin-left: 8px;
+    }
+
+  }
+
 }

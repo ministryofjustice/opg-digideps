@@ -1454,23 +1454,35 @@ header.page-header {
     display: block;
     margin-top: 5px; }
 
-.sub-section-title {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 24px;
-  line-height: 1.25;
-  font-weight: 700;
-  text-transform: none;
+.page-section-warning {
+  border-left: 3px solid #bfc1c3;
+  padding-left: 10px;
+  width: 65%;
   margin-bottom: 30px; }
-  @media (max-width: 640px) {
-    .sub-section-title {
-      font-size: 18px;
-      line-height: 1.2; } }
+
+.sub-section-title {
+  margin-top: 0;
+  margin-bottom: 30px; }
+  .sub-section-title h3 {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .sub-section-title h3 {
+        font-size: 18px;
+        line-height: 1.2; } }
+
+.sub-section-description {
+  width: 65%;
+  margin-bottom: 40px; }
 
 .button-bar {
   margin-top: 10px;
   margin-bottom: 10px; }
   .button-bar.add-bar {
-    margin-left: 541px; }
+    margin-left: 56%; }
 
 .field-with-errors {
   border-left: 3px solid #df3034;
@@ -1881,36 +1893,38 @@ ol.progress {
       .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row {
         margin-bottom: 30px;
         overflow: hidden; }
-        .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term {
-          display: inline;
-          font-family: "nta", Arial, sans-serif;
-          font-size: 19px;
-          line-height: 1.31579;
-          font-weight: 400;
-          text-transform: none;
-          color: #6f777b;
-          float: left; }
-          @media (max-width: 640px) {
-            .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term {
-              font-size: 16px;
-              line-height: 1.25; } }
-          .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dt.report-list__item-fields-term--block {
-            float: none; }
-        .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description {
-          display: block;
-          font-family: "nta", Arial, sans-serif;
-          font-size: 19px;
-          line-height: 1.31579;
-          font-weight: 700;
-          text-transform: none; }
-          @media (max-width: 640px) {
-            .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description {
-              font-size: 16px;
-              line-height: 1.25; } }
-          .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row dd.report-list__item-fields-description--block {
-            position: relative;
-            margin-left: auto;
-            font-weight: 400; }
+      .report-list .report-list__item .report-list__item-fields dt.report-list__item-fields-term {
+        display: inline;
+        font-family: "nta", Arial, sans-serif;
+        font-size: 19px;
+        line-height: 1.31579;
+        font-weight: 400;
+        text-transform: none;
+        color: #6f777b;
+        float: left; }
+        @media (max-width: 640px) {
+          .report-list .report-list__item .report-list__item-fields dt.report-list__item-fields-term {
+            font-size: 16px;
+            line-height: 1.25; } }
+        .report-list .report-list__item .report-list__item-fields dt.report-list__item-fields-term--block {
+          float: none; }
+      .report-list .report-list__item .report-list__item-fields dd.report-list__item-fields-description {
+        display: block;
+        font-family: "nta", Arial, sans-serif;
+        font-size: 19px;
+        line-height: 1.31579;
+        font-weight: 700;
+        text-transform: none; }
+        @media (max-width: 640px) {
+          .report-list .report-list__item .report-list__item-fields dd.report-list__item-fields-description {
+            font-size: 16px;
+            line-height: 1.25; } }
+        .report-list .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
+          position: relative;
+          margin-left: auto;
+          font-weight: 400; }
+        .report-list .report-list__item .report-list__item-fields dd.report-list__item-fields-description--normal {
+          font-weight: 400; }
 
 .report-list--contacts dt.report-list__item-fields-term {
   width: 210px; }
@@ -1919,6 +1933,40 @@ ol.progress {
 
 .report-list--decisions dd.report-list__item-fields-description {
   margin-left: 50px; }
+
+.report-list--accounts.report-list {
+  padding-left: 0; }
+.report-list--accounts dt.report-list__item-fields-term {
+  display: inline; }
+.report-list--accounts dd.report-list__item-fields-description {
+  display: inline;
+  font-weight: 400; }
+  .report-list--accounts dd.report-list__item-fields-description h3 {
+    display: inline;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .report-list--accounts dd.report-list__item-fields-description h3 {
+        font-size: 18px;
+        line-height: 1.2; } }
+.report-list--accounts .report-list__item-fields-row {
+  display: inline; }
+.report-list--accounts .report-list__item-fields-col-bank {
+  display: block;
+  float: left;
+  width: 37%; }
+.report-list--accounts .report-list__item-fields-col-acc-num {
+  display: block;
+  float: left;
+  width: 31%; }
+.report-list--accounts .report-list__item-fields-col-info {
+  display: block;
+  float: left;
+  overflow: hidden;
+  margin-left: 8px; }
 
 .report-meta {
   line-height: 19px; }
