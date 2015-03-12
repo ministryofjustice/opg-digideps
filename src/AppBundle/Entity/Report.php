@@ -94,7 +94,9 @@ class Report
      */
     public function setStartDate($startDate)
     {
-        $startDate->setTime(0,0,0);
+        if ($startDate instanceof \DateTime) {
+            $startDate->setTime(0,0,0);
+        }
         $this->startDate = $startDate;
         return $this;
     }
@@ -130,7 +132,9 @@ class Report
      */
     public function setEndDate($endDate)
     {
-        $endDate->setTime(23, 59, 59);
+        if ($endDate instanceof \DateTime) {
+            $endDate->setTime(23, 59, 59);
+        }
         $this->endDate = $endDate;
         return $this;
     }
