@@ -1,0 +1,31 @@
+// Bank Sort Code - Application
+
+.form-sort-code {
+
+  .separator{
+    float: left;
+    margin: 7px 13px;
+  }
+
+  .form-group {
+    float: left;
+    width: 50px;
+    margin-bottom: 0;
+    clear: none;
+
+    input.sort-code-part {
+      float: left;
+      width: 50px;
+      margin-right: 5px;
+
+      &::after{
+        content: "-";
+        display: inline;
+      }
+
+
+    }
+
+  }
+
+}

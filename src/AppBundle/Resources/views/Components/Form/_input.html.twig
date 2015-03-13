@@ -11,6 +11,9 @@
     {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
 
 
+    {% if inputPrefix is defined and inputPrefix is not empty %}
+        <span class="input-group-prefix">{{ inputPrefix }}</span>
+    {% endif %}
     {% if element.vars.valid %}
         {{ form_widget(element, { 'attr': {'class': class } }) }}
     {% else %}

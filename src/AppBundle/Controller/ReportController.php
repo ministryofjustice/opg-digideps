@@ -9,13 +9,11 @@ use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 
-/**
- * @Route("/report")
- */
+
 class ReportController extends Controller
 {
     /**
-     * @Route("/create/{clientId}", name="report_create")
+     * @Route("/report/create/{clientId}", name="report_create")
      * @Template()
      */
     public function createAction($clientId)
@@ -60,7 +58,7 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/{reportId}/overview", name="report_overview")
+     * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template()
      */
     public function overviewAction($reportId)
@@ -75,7 +73,7 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/{reportId}/contacts/{action}", name="contacts", defaults={ "action" = "list"})
+     * @Route("/report/{reportId}/contacts/{action}", name="contacts", defaults={ "action" = "list"})
      * @Template()
      */
     public function contactsAction($reportId,$action)
@@ -113,7 +111,7 @@ class ReportController extends Controller
     
   
     /**
-     * @Route("/{reportId}/decisions/{action}", name="decisions", defaults={ "action" = "list"})
+     * @Route("/report/{reportId}/decisions/{action}", name="decisions", defaults={ "action" = "list"})
      * @Template()
      */
     public function decisionsAction($reportId,$action)
@@ -150,31 +148,16 @@ class ReportController extends Controller
         ];
     }
     
-
     /**
-     * @Route("/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"})
-     * @Template()
-     */
-    public function accountsAction($reportId,$action)
-    {
-        $report = $this->getReport($reportId);
-        $client = $this->getClient($report->getClient());
-
-        return [
-            'report' => $report,
-            'client' => $client,
-            'action' => $action
-        ];
-    }
-
-    /**
-     * @Route("/{reportId}/assets/{action}", name="assets", defaults={ "action" = "list"})
+     * @Route("/report/{reportId}/assets/{action}", name="assets", defaults={ "action" = "list"})
      * @Template()
      */
     public function assetsAction($reportId, $action)
     {
-        $report = $this->getReport($reportId);
-        $client = $this->getClient($report->getClient());
+        $util = $this->get('util');
+        
+        $report = $util->getReport($reportId);
+        $client = $util->getClient($report->getClient());
 
         return [
             'report' => $report,
@@ -188,7 +171,7 @@ class ReportController extends Controller
      *
      * @return Client
      */
-    private function getClient($clientId)
+    protected function getClient($clientId)
     {
         return $this->get('apiclient')->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
     }
@@ -198,7 +181,7 @@ class ReportController extends Controller
      * 
      * @return Report
      */
-    private function getReport($reportId)
+    protected function getReport($reportId)
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
     }
