@@ -3,4 +3,16 @@ parameters:
     locale:   en
     secret:   setme
     api_base_url: http://digideps-api.local/
-    token_expires_hours: 48
+    fixtures: 
+      admin@publicguardian.gsi.gov.uk:
+        firstname: "Admin"
+        lastname: "User"
+        password: Abcd1234
+        roleId: 1
+        activated: true
+      laydeputy@publicguardian.gsi.gov.uk:
+        firstname: "Lay Deputy"
+        lastname: "User"
+        password: Abcd1234
+        roleId: 2
+        activated: true

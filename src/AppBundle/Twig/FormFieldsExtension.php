@@ -52,6 +52,14 @@ class FormFieldsExtension extends \Twig_Extension
         ];
     }
     
+    public function getFilters()
+    {
+        return [
+            'country_name' => new \Twig_SimpleFilter('country_name', function($value) {
+                return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
+            }),
+        ];
+    }
     
     /**
      * 
@@ -320,6 +328,9 @@ class FormFieldsExtension extends \Twig_Extension
         //sort out labelText translation
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
 
+        //inputPrefix
+        $inputPrefix = isset($vars['inputPrefix'])? $this->translator->trans($vars['inputPrefix'],[],$domain): null;
+
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         
@@ -328,7 +339,8 @@ class FormFieldsExtension extends \Twig_Extension
             'hintText' => $hintText,
             'element'  => $element,
             'labelClass' => $labelClass,
-            'inputClass' => $inputClass
+            'inputClass' => $inputClass,
+            'inputPrefix' => $inputPrefix
         ];
     }
     

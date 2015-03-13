@@ -45,7 +45,13 @@ class Util
         return $choices;
     }
     
-    public function checkReportPeriodNotOverlapping(Client $client)
+    public function getClient($clientId)
     {
+        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
+    }
+    
+    public function getReport($reportId)
+    {
+        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
     }
 }

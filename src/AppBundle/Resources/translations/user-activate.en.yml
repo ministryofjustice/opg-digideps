@@ -1,6 +1,7 @@
+page:
+  pageSectionDescription: Welcome to the deputyship service. Use this service to complete and submit your report.
 pageTitle: Set your password
 headerTitle: Step 1 - Set your password
-headerInstructions: ""
 email:
     label: Your email address
     hint: We sent you the registration link to this email address.

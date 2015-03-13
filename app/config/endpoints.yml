@@ -14,3 +14,5 @@ parameters:
         find_decision_by_report_id: decision/find-by-report-id
         add_report_contact: report/add-contact
         get_report_contacts: report/get-contacts
+        add_report_account: report/add-account
+        get_report_accounts: report/get-accounts

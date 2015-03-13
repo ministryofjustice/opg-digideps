@@ -8,6 +8,7 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Behat\Gherkin\Node\TableNode;
 use Behat\MinkExtension\Context\MinkContext;
+use Behat\Symfony2Extension\Context\KernelDictionary;
 
 /**
  * Behat context class.
@@ -17,7 +18,6 @@ use Behat\MinkExtension\Context\MinkContext;
  */
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
-
     use RegionTrait;
 
     use DebugTrait;
@@ -28,14 +28,24 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
     use StatusSnapshotTrait;
     
+    use KernelDictionary;
+    
     public function __construct(array $options)
     {
         //$options['session']; // not used
         ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
         ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
-//        if (!empty($options['set_time_limit'])) {
-//            set_time_limit($options['set_time_limit']);
-//        }
+    }
+    
+    
+    public function setKernel(\AppKernel $kernel)
+    {
+        $this->kernel = $kernel;
+    }
+    
+    protected function getSymfonyParam($name)
+    {
+        $this->getContainer()->getParameter($name);
     }
 
     
@@ -73,41 +83,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitPath('/logout');
     }
 
-    /**
-     * @When I go to the report page
-     */
-    public function iGoToTheReportPage()
-    {
-        $this->visit('/');
-        $this->clickLinkInsideElement('open', 'reports');
-    }
-
-    /**
-     * @When I go to the account page
-     */
-    public function iGoToTheAccountPage()
-    {
-        $this->iGoToTheReportPage();
-        $this->clickLinkInsideElement('account-open', 'report-dashboard');
-    }
-    
-    /**
-     * @When I go to the account balance page
-     */
-    public function iGoToTheAccountBalancePage()
-    {
-        $this->iGoToTheAccountPage();
-        $this->clickLinkInsideElement("income-balance", "account-tabs");
-    }
-    
-     /**
-     * @When I go to the manage users page
-     */
-    public function iGoToTheManageUsersPage()
-    {
-        $this->visit('/admin/users');
-    }
-    
     /**
      * @Given I submit the form
      */
@@ -284,5 +259,16 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             $this->assertFieldContains($field, $value);
         }
     }
-
+    
+    
+    /**
+     * @Given I change the report :reportId court order type to :cotName
+     */
+    public function iChangeTheReportCourtOrderTypeTo($reportId, $cotName)
+    {
+        $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
+        
+        $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
+    }
+    
 }

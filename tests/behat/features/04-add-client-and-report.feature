@@ -31,7 +31,6 @@ Feature: add client and report
             | client_courtDate_month | 1 |
             | client_courtDate_year | 2015 |
             | client_allowedCourtOrderTypes_0 | 1 |
-            | client_allowedCourtOrderTypes_1 | 2 |
             | client_address |  1 South Parade |
             | client_address2 | First Floor  |
             | client_county | Nottingham  |
@@ -52,25 +51,16 @@ Feature: add client and report
             | report_startDate_day | 1 |
             | report_startDate_month | 1 |
             | report_startDate_year | 2015 |
-        # missing day
+        # missing D,M,Y
         When I fill in the following:
             | report_endDate_day |  |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |
-        And I submit the form
-        Then the form should contain an error
-        # missing month
-        When I fill in the following:
-            | report_endDate_day | 31 |
             | report_endDate_month |  |
-            | report_endDate_year | 2015 |
-        And I submit the form
-        Then the form should contain an error
-        # missing year
-        When I fill in the following:
-            | report_endDate_day | 31 |
-            | report_endDate_month | 12 |
             | report_endDate_year |  |
+        And I submit the form
+        Then the following fields should have an error:
+            | report_endDate_day |
+            | report_endDate_month |
+            | report_endDate_year |
         And I submit the form
         Then the form should contain an error
         # invalid date

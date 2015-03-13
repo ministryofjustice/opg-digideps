@@ -1,0 +1,33 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+<ul class="behat-region-decisionr report-list report-list--accounts">
+    {% for account in accounts %}
+        <li class="report-list__item">
+
+            <dl class="report-list__item-fields">
+                <div class="report-list__item-fields-col-bank">
+                    <dt class="visuallyhidden">{{ 'listing.bank' | trans }}</dt>
+                    <dd class="report-list__item-fields-description">
+                        <h3>{{ account.bank }}</h3></dd>
+                </div>
+                <div class="report-list__item-fields-col-acc-num">
+                    <dt class="visuallyhidden">{{ 'listing.accountNumber' | trans }}</dt>
+                    <dd class="report-list__item-fields-description report-list__item-fields-description--normal">&bull;&bull;&bull;&bull;{{ account.accountNumber }}</dd>
+                </div>
+                <div class="report-list__item-fields-col-info">
+                    <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.balance' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
+                            {{ 'listing.currencySymbol' | trans }}{{ account.openingBalance | number_format(2, '.', ',') }}</dd>
+                    </div>
+                    <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.edited' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.lastEdit | date("d/m/Y") }}</dd>
+                    </div>
+                </div>
+            </dl>
+
+        </li>
+    {% endfor %}
+</ul>
