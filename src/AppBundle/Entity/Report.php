@@ -85,7 +85,7 @@ class Report
      */
     public function getStartDate()
     {
-        return $this->startDate;
+        return new \DateTime($this->startDate->format('Y-m-d'));
     }
     
     /**
@@ -93,7 +93,7 @@ class Report
      * @return \AppBundle\Entity\Report
      */
     public function setStartDate($startDate)
-    {
+    {  
         $this->startDate = $startDate;
         return $this;
     }
@@ -103,7 +103,7 @@ class Report
      */
     public function getEndDate()
     {
-        return $this->endDate;
+        return new \DateTime($this->endDate->format('Y-m-d'));
     }
     
     /**
