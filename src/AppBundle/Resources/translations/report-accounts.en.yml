@@ -1,0 +1,43 @@
+page:
+  htmlTitle: Report Accounts
+  pageSectionTitle: "Bank or building society accounts"
+  pageSectionDescription: "Add details for the main current bank or building society account you manage for the client."
+  pageSectionWarning: "Do not include savings or investment accounts, such as ISAs - add these to the assets section."
+form:
+  listing:
+    addButton:
+      label: Add an account
+  accountDetails:
+    subSectionTitle: Add your account details
+    controls:
+      bank:
+        label: Enter the Bank/Building Society name
+      accountNumber:
+        label: Last four digits of the account number
+        hint: ""
+      sortCode:
+        label: Branch sort code
+        hint: ""
+  openingBalance:
+    subSectionTitle: Add the opening balance of the account
+    subSectionDescription: The opening balance is the sum of money in the account on the start date of your reporting period.
+    controls:
+      openingDate:
+        legend: Start date
+        hint: (DD/MM/YYYY)
+      openingBalance:
+        label: Opening balance
+      openingBalancePrefix:
+        label: £
+      openBalanceMessage:
+        label: If you cannot give an opening balance at the start date of the report or the balance is for a different date, tell us why. Tell us the actual dates you are using below.
+      save:
+        label: Continue
+      cancel:
+        label: Cancel
+listing:
+  bank: "Bank/Building Society name"
+  accountNumber: "Last four digits of account number"
+  balance: "Opening balance:"
+  edited: "Created:"
+  currencySymbol: "£"

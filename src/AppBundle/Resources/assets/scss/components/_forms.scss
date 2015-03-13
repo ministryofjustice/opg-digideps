@@ -11,6 +11,14 @@ form {
 
 }
 
+.form-group {
+  .input-group-prefix {
+    & + input {
+      padding-left: 2em;
+    }
+  }
+}
+
 .form-group_button-bar {
   padding-top: $gutter * 2;
 }
@@ -18,7 +26,6 @@ form {
 .form-group__checkbox-group {
   margin-left: 2px;
 }
-
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
@@ -38,11 +45,25 @@ form {
   width: 25%;
 }
 
+.form-control__number {
+  width: 25%;
+}
+
 .form-label {
   margin-bottom: 0;
+  width: 50%;
 }
 
 .form-hint {
   margin-top: 0;
   width: 50%;
+}
+
+.input-group-prefix {
+  box-sizing: border-box;
+  position: absolute;
+  background: $grey-3;
+  font-size: 19px;
+  padding: 4px 8px 2px;
+  border: 1px solid $grey-2;
 }

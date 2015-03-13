@@ -14,19 +14,17 @@
                     <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
                     <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ decision.description }}</dd>
                 </div>
-            </dl>
 
-            <dl class="report-list__item-fields">
                 <div class="report-list__item-fields-row">
                     <dt class="report-list__item-fields-term">{{ 'listing.date' | trans }}</dt>
                     <dd class="report-list__item-fields-description">{{ decision.decisionDate | date("d F Y") }}</dd>
                 </div>
-            </dl>
 
-            <dl class="report-list__item-fields">
                 <div class="report-list__item-fields-row">
                     <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.clientInvolvement' | trans }}</dt>
-                    <dd class="report-list__item-fields-description report-list__item-fields-description--block"><p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}: {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
+                    <dd class="report-list__item-fields-description report-list__item-fields-description--block">
+                        <p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
+                            : {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
                 </div>
             </dl>
 

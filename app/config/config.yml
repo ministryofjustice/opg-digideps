@@ -29,6 +29,10 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     exception_controller:  AppBundle:Exception:showException
+    form:
+        resources:
+            - 'AppBundle:Form:fields.html.twig'
+        
 
 # Assetic Configuration
 assetic:

@@ -85,7 +85,10 @@ class Report
      */
     public function getStartDate()
     {
-        return $this->startDate;
+        if(!is_object($this->startDate)){
+            return $this->startDate;
+        }
+        return new \DateTime($this->startDate->format('Y-m-d'));
     }
     
     /**
@@ -106,7 +109,10 @@ class Report
      */
     public function getEndDate()
     {
-        return $this->endDate;
+        if(!is_object($this->endDate)){
+            return $this->endDate;
+        }
+        return new \DateTime($this->endDate->format('Y-m-d'));
     }
     
     /**
