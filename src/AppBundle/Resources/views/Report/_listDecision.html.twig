@@ -1,7 +1,7 @@
 {% set translationDomain = "report-decisions" %}
 {% trans_default_domain translationDomain %}
 
-<ul class="behat-region-decisionr report-list report-list--decisions">
+<ul class="behat-region-list-decisions report-list report-list--decisions">
     {% for decision in decisions %}
         <li class="report-list__item">
             <div class="report-list__item-header"><h3>{{ decision.title }}</h3>

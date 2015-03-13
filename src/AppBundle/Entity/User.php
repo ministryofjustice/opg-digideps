@@ -525,6 +525,8 @@ class User implements AdvancedUserInterface
     public function setRoleId($roleId)
     {
         $this->roleId = $roleId;
+        
+        return $this;
     }
     
     public function getAddress1()

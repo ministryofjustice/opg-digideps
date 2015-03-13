@@ -6,14 +6,14 @@ Feature: admin
         Then the response status code should be 200
         # test wrong credentials
         When I fill in the following: 
-            | login_email     | deputyshipservice@publicguardian.gsi.gov.uk |
+            | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  |  WRONG PASSWORD !! |
         And I click on "login"
         Then I should see the "header errors" region
         # test right credentials
         When I fill in the following:
-            | login_email     | deputyshipservice@publicguardian.gsi.gov.uk |
-            | login_password  |  test |
+            | login_email     | admin@publicguardian.gsi.gov.uk |
+            | login_password  | Abcd1234 |
         And I click on "login"
         When I go to "/admin"
         And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
@@ -43,7 +43,7 @@ Feature: admin
         
     @cleanMail @admin
     Scenario: login and add admin user
-        Given I am logged in as "deputyshipservice@publicguardian.gsi.gov.uk" with password "test"
+        Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "/admin"
         And I fill in the following:
             | admin_email | behat-admin-user@publicguardian.gsi.gov.uk | 
