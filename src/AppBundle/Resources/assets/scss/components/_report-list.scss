@@ -3,7 +3,7 @@
   border-bottom: 1px solid $grey-3;
   margin-top: 30px;
   padding-left: 15px;
-  width: 81%;
+  width: 85%;
 
   .report-list__item {
     overflow: hidden;
@@ -63,7 +63,7 @@
           font-weight: 400;
         }
 
-        &--normal{
+        &--normal {
           font-weight: 400;
         }
 
@@ -98,23 +98,31 @@
 
   &.report-list {
     padding-left: 0;
-  }
 
-  dt.report-list__item-fields-term {
-    display: inline;
-  }
+    .report-list__item {
 
-  dd.report-list__item-fields-description {
-    display: inline;
-    font-weight: 400;
+      dt.report-list__item-fields-term {
+        display: inline;
+        margin-right: 5px;
+        color: inherit;
+      }
 
-    h3 {
-      display: inline;
-      @include bold-24();
+      dd.report-list__item-fields-description {
+        display: inline;
+        font-weight: 400;
+
+        h3 {
+          display: inline;
+          @include bold-24();
+          color: $link-colour;
+        }
+
+      }
+
     }
   }
 
-  .report-list__item-fields-row{
+  .report-list__item-fields-row {
     display: inline;
   }
 
@@ -123,13 +131,13 @@
     &-bank {
       display: block;
       float: left;
-      width: 37%;
+      width: 35%;
     }
 
     &-acc-num {
       display: block;
       float: left;
-      width: 31%;
+      width: 30%;
     }
 
     &-info {
@@ -137,6 +145,7 @@
       float: left;
       overflow: hidden;
       margin-left: 8px;
+      width: 30%;
     }
 
   }

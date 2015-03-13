@@ -27,6 +27,8 @@ form:
         hint: (DD/MM/YYYY)
       openingBalance:
         label: Opening balance
+      openingBalancePrefix:
+        label: £
       openBalanceMessage:
         label: If you cannot give an opening balance at the start date of the report or the balance is for a different date, tell us why. Tell us the actual dates you are using below.
       save:
@@ -37,4 +39,5 @@ listing:
   bank: "Bank/Building Society name"
   accountNumber: "Last four digits of account number"
   balance: "Opening balance:"
-  edited: "Last edited:"
+  edited: "Created:"
+  currencySymbol: "£"

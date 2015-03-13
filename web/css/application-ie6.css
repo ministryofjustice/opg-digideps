@@ -1469,10 +1469,10 @@ header.page-header {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 10px; }
+    margin-top: 20px; }
 
 .sub-section-description {
-  width: 65%;
+  width: 50%;
   margin-bottom: 40px; }
 
 .button-bar {
@@ -1502,6 +1502,9 @@ form {
     border-left: 3px solid #bfc1c3;
     padding-left: 10px; }
 
+.form-group .input-group-prefix + input {
+  padding-left: 2em; }
+
 .form-group_button-bar {
   padding-top: 60px; }
 
@@ -1523,6 +1526,9 @@ form {
 .form-control__postcode {
   width: 25%; }
 
+.form-control__number {
+  width: 25%; }
+
 .form-label {
   margin-bottom: 0;
   width: 50%; }
@@ -1530,6 +1536,14 @@ form {
 .form-hint {
   margin-top: 0;
   width: 50%; }
+
+.input-group-prefix {
+  box-sizing: border-box;
+  position: absolute;
+  background: #dee0e2;
+  font-size: 19px;
+  padding: 4px 8px 2px;
+  border: 1px solid #bfc1c3; }
 
 .column-full {
   width: 960px;
@@ -1842,7 +1856,7 @@ ol.progress {
   border-bottom: 1px solid #dee0e2;
   margin-top: 30px;
   padding-left: 15px;
-  width: 81%; }
+  width: 85%; }
   .report-list .report-list__item {
     overflow: hidden;
     padding: 30px 0 10px 0;
@@ -1925,37 +1939,41 @@ ol.progress {
 
 .report-list--accounts.report-list {
   padding-left: 0; }
-.report-list--accounts dt.report-list__item-fields-term {
-  display: inline; }
-.report-list--accounts dd.report-list__item-fields-description {
-  display: inline;
-  font-weight: 400; }
-  .report-list--accounts dd.report-list__item-fields-description h3 {
+  .report-list--accounts.report-list .report-list__item dt.report-list__item-fields-term {
     display: inline;
-    font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 700;
-    text-transform: none; }
-    @media (max-width: 640px) {
-      .report-list--accounts dd.report-list__item-fields-description h3 {
-        font-size: 18px;
-        line-height: 1.2; } }
+    margin-right: 5px;
+    color: inherit; }
+  .report-list--accounts.report-list .report-list__item dd.report-list__item-fields-description {
+    display: inline;
+    font-weight: 400; }
+    .report-list--accounts.report-list .report-list__item dd.report-list__item-fields-description h3 {
+      display: inline;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 700;
+      text-transform: none;
+      color: #005ea5; }
+      @media (max-width: 640px) {
+        .report-list--accounts.report-list .report-list__item dd.report-list__item-fields-description h3 {
+          font-size: 18px;
+          line-height: 1.2; } }
 .report-list--accounts .report-list__item-fields-row {
   display: inline; }
 .report-list--accounts .report-list__item-fields-col-bank {
   display: block;
   float: left;
-  width: 37%; }
+  width: 35%; }
 .report-list--accounts .report-list__item-fields-col-acc-num {
   display: block;
   float: left;
-  width: 31%; }
+  width: 30%; }
 .report-list--accounts .report-list__item-fields-col-info {
   display: block;
   float: left;
   overflow: hidden;
-  margin-left: 8px; }
+  margin-left: 8px;
+  width: 30%; }
 
 .report-meta {
   line-height: 19px; }
