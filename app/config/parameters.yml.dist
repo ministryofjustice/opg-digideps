@@ -1,0 +1,13 @@
+# This file is a "template" of what your parameters.yml file should look like
+parameters:
+    database_driver: pdo_pgsql
+    database_host: 127.0.0.1
+    database_port: 5432
+    database_name: dd_api
+    database_user: setme
+    database_password: setme
+    locale: en
+    secret: setme
+    sendgrid_username: setme
+    sendgrid_password: setme
+

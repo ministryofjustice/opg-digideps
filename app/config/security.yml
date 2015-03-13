@@ -1,0 +1,48 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512    
+        #Symfony\Component\Security\Core\User\User: plaintext
+        #AppBundle\Entity\User:
+        #    algorithm: md5
+        #    encode_as_base64: false
+        #    iterations: 0
+
+    role_hierarchy:
+        ROLE_LAY_DEPUTY: []
+        ROLE_PROFESSIONAL_DEPUTY: []
+        ROLE_LOCAL_AUTHORITY_DEPUTY: []
+        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_GUEST, ROLE_LAY_DEPUTY, ROLE_PROFESSIONAL_DEPUTY, ROLE_LOCAL_AUTHORITY_DEPUTY, ROLE_VISITOR ]
+
+    providers:
+        users:
+            entity:
+                class: AppBundle:User
+                property: email
+
+    firewalls:
+        dev:
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        #default:
+        #    anonymous: ~
+        #    http_basic: ~
+
+       # login:
+       #     pattern:  ^/demo/secured/login$
+       #     security: false
+
+       # secured_area:
+       #     pattern:    ^/demo/secured/
+       #     form_login:
+       #         check_path: _security_check
+       #         login_path: _demo_login
+       #     logout:
+       #         path:   _demo_logout
+       #         target: _demo
+            #anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    access_control:
+        #- { path: ^/ , roles: ROLE_ADMIN }
+        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
