@@ -29,7 +29,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank( message="account.sortCode.notBlank")
      * @Assert\Type(type="numeric", message="account.sortCode.type")
-     * @Assert\Length(max = 6,min = 6, minMessage = "account.sortCode.length", maxMessage = "account.sortCode.length")
+     * @Assert\Length(min=6, minMessage = "account.sortCode.length")
      * 
      * @var string $sortCode
      */
@@ -40,7 +40,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.accountNumber.notBlank")
      * @Assert\Type(type="numeric", message="account.accountNumber.type")
-     * @Assert\Length(minMessage="account.accountNumber.length",maxMessage="account.accountNumber.length", max=4,min=4)
+     * @Assert\Length(minMessage="account.accountNumber.length",min=4)
      * 
      * @var string $accountNumber
      */
