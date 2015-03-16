@@ -133,3 +133,47 @@ Feature: report
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
         And I should see a "#tab-assets" element
+
+
+    @deputy
+    Scenario: add account
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "/report/1/accounts/add"
+        And I save the page as "report-account-empty"
+        # wrong form
+        And I submit the form
+        And I save the page as "report-account-add-error"
+        Then the following fields should have an error:
+            | account_bank |
+            | account_accountNumber_part_1 |
+            | account_accountNumber_part_2 |
+            | account_accountNumber_part_3 |
+            | account_accountNumber_part_4 |
+            | account_sortCode_sort_code_part_1 |
+            | account_sortCode_sort_code_part_2 |
+            | account_sortCode_sort_code_part_3 |
+            | account_openingDate_day |
+            | account_openingDate_month |
+            | account_openingDate_year |
+            | account_openingBalance |
+        # right values
+        And I fill in the following:
+            | account_bank    | HSBC main account | 
+            | account_accountNumber_part_1 | 1 | 
+            | account_accountNumber_part_2 | 2 | 
+            | account_accountNumber_part_3 | 3 | 
+            | account_accountNumber_part_4 | 4 | 
+            | account_sortCode_sort_code_part_1 | 12 |
+            | account_sortCode_sort_code_part_2 | 34 |
+            | account_sortCode_sort_code_part_3 | 56 |
+            | account_openingDate_day   | 01 |
+            | account_openingDate_month | 01 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 50.00 |
+        And I submit the form
+        And I save the page as "report-account-list"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And I should be on "/report/1/accounts"
+        And I should see "HSBC main account" in the "list-accounts" region
+        And I should see "1234" in the "list-accounts" region
