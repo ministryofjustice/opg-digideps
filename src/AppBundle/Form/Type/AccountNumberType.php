@@ -11,10 +11,10 @@ class AccountNumberType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-       $builder->add('part_1', 'text')
-               ->add('part_2', 'text')
-               ->add('part_3', 'text')
-               ->add('part_4', 'text')
+       $builder->add('part_1', 'text', [ 'max_length' => 1 ] )
+               ->add('part_2', 'text', [ 'max_length' => 1 ] )
+               ->add('part_3', 'text', [ 'max_length' => 1 ] )
+               ->add('part_4', 'text', [ 'max_length' => 1 ] )
                ->addModelTransformer(new ArrayToStringTransformer(['part_1', 'part_2', 'part_3', 'part_4']));
     }
     
