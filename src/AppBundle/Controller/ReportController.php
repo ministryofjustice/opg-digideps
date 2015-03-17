@@ -158,11 +158,14 @@ class ReportController extends Controller
         
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
+        $config = null;
+        $form = $this->createForm(new FormDir\AssetType($config));
 
         return [
             'report' => $report,
             'client' => $client,
-            'action' => $action
+            'action' => $action,
+            'form'   => $form->createView()
         ];
     }
 
