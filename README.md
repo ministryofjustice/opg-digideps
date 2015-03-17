@@ -1,4 +1,4 @@
-#Digital deputies (Beta) -  Client Auto deploy test
+#Digital deputies (Beta)
 
 ## Local box
 Vagrant configuration for Api and Client with instructions and packaged needed:
