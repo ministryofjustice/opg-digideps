@@ -52,9 +52,9 @@ class Asset
     /**
      * @var \Date
      *
-     * @ORM\Column(name="purchase_date", type="date", nullable=true)
+     * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
-    private $purchaseDate;
+    private $valuationDate;
 
     /**
      * @var integer
@@ -168,26 +168,26 @@ class Asset
     }
 
     /**
-     * Set purchaseDate
+     * Set valuationDate
      *
-     * @param \DateTime $purchaseDate
+     * @param \DateTime $valuationDate
      * @return Asset
      */
-    public function setPurchaseDate($purchaseDate)
+    public function setValuationDate($valuationDate)
     {
-        $this->purchaseDate = $purchaseDate;
+        $this->valuationDate = $valuationDate;
 
         return $this;
     }
 
     /**
-     * Get purchaseDate
+     * Get valuationDate
      *
      * @return \DateTime 
      */
-    public function getPurchaseDate()
+    public function getValuationDate()
     {
-        return $this->purchaseDate;
+        return $this->valuationDate;
     }
 
     /**
