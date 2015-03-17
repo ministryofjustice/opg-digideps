@@ -39,7 +39,6 @@ class Asset
     
     /**
      *
-     * @Assert\NotBlank(message="asset.date.notBlank")
      * @Assert\Date(message="asset.date.date")
      * @JMS\Type("DateTime")
      */
