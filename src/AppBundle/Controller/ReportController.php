@@ -155,15 +155,33 @@ class ReportController extends Controller
     public function assetsAction($reportId, $action)
     {
         $util = $this->get('util');
+        $translator =  $this->get('translator');
+        $dropdownKeys = $this->container->getParameter('asset_dropdown');
+        
+        $titles = [];
+        
+        foreach($dropdownKeys as $key ){
+            $translation = $translator->trans($key,[],'report-assets');
+            $titles[$translation] = $translation;
+        }
+        $other = $titles['Other assets'];
+        unset($titles['Other assets']);
+        
+        asort($titles);
+        
+        $titles['Other assets'] = $other;
         
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
-        $config = null;
-        $form = $this->createForm(new FormDir\AssetType($config));
+
+        $assets = null;
+        
+        $form = $this->createForm(new FormDir\AssetType($titles));
 
         return [
             'report' => $report,
             'client' => $client,
+            'assets' => $assets,
             'action' => $action,
             'form'   => $form->createView()
         ];

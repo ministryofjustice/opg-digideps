@@ -2,6 +2,9 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
+
+{% set assets = {} %}
+
 {% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
 
  {% block pageNavigation %}
@@ -26,7 +29,7 @@
 
     {% include 'AppBundle:Report:_asset_form.html.twig' %}
 
-    {% if contacts is not empty %}
+    {% if assets is not empty %}
         {% include 'AppBundle:Report:_listAssets.html.twig' %}
     {% endif %}
 

@@ -39,17 +39,17 @@
     {{ form_select(form.title, 'form.newAsset.controls.title') }}
     {{ form_input(form.value, 'form.newAsset.controls.value') }}
     {{ form_input(form.description, 'form.newAsset.controls.description') }}
-    {{ form_input(form.valuation_date, 'form.newAsset.controls.valuation_date') }}
+    {{ form_known_date(form.valuation_date, 'form.newAsset.controls.valuation_date') }}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'save') }}
+    {{ form_submit(form.save,'form.newAsset.controls.save') }}
     {% if hideForm or (action == 'add') %}
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'cancel.label',
         linkClass: 'button-link',
-        linkHref: path('contacts', {'reportId': report.id})
+        linkHref: path('assets', {'reportId': report.id})
         } %}
 
     {% endif %}
