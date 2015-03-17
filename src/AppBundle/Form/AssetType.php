@@ -29,6 +29,13 @@ class AssetType extends AbstractType
                                               ])
             ->add('save', 'submit');
     }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults( [
+            'translation_domain' => 'report-assets',
+        ]);
+    }
     
     public function getName() 
     {
