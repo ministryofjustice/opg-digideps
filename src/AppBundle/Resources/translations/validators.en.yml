@@ -132,3 +132,16 @@ account:
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
+asset:
+    title:
+        notBlank: Please select an asset title
+    value:
+        notBlank: Please enter asset value
+        type: Please enter a valid asset
+    description:
+        notBlank: Please enter asset description
+        type: Please enter a valid asset description
+        length: Asset description is too short
+    date:
+        notBlank: Please enter asset valuation date
+        date: Please enter a valid asset valuation date
