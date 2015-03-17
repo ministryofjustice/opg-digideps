@@ -26,7 +26,8 @@ class AssetType extends AbstractType
                                                  'input' => 'datetime',
                                                  'format' => 'yyyy-MM-dd',
                                                  'invalid_message' => ''
-                                              ]);
+                                              ])
+            ->add('save', 'submit');
     }
     
     public function getName() 

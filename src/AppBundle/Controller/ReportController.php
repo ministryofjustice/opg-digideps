@@ -157,6 +157,7 @@ class ReportController extends Controller
         $util = $this->get('util');
         $translator =  $this->get('translator');
         $dropdownKeys = $this->container->getParameter('asset_dropdown');
+        $request = $this->getRequest();
         
         $titles = [];
         
@@ -173,8 +174,10 @@ class ReportController extends Controller
         
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
+        $asset = new EntityDir\Asset();
         
-        $form = $this->createForm(new FormDir\AssetType($titles));
+        $form = $this->createForm(new FormDir\AssetType($titles), $asset);
+        $form->handleRequest($request);
 
         return [
             'report' => $report,
