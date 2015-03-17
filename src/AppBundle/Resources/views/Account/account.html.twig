@@ -1,0 +1,62 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% set translationDomain = "report-account" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
+{% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
+{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+{% block pageNavigation %}
+    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
+{% endblock %}
+
+{% block pageBody %}
+    
+    <div style="background-color: #C9D0D0; margin: 20px">
+        {{ account.bank  }}<br/>
+        Opening balance {{ account.openingDate | date }} £{{ account.openingBalance }}<br/>
+        Account no. ****{{ account.accountNumber }}<br/>
+        Sort code {{ account.sortCode }}<br/>
+    </div>
+    
+    {#{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'page.pageSectionTitle'
+    } %}#}
+
+   {# {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}#}
+
+    {#{% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'page.pageSectionWarning'
+    } %}#}
+    
+    <div style="border-left: grey 3px solid; margin: 20px">
+        {{ 'page.description' | trans }}
+    </div>
+    
+    {% include 'AppBundle:Account:_money.html.twig' with {
+        'legend': 'moneyIn.legend' | trans,
+        'form': {}
+    }  %}
+    
+    {% include 'AppBundle:Account:_money.html.twig' with {
+        'legend': 'moneyOut.legend' | trans,
+        'form': {}
+    }  %}
+    
+    
+    {#{% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}#}
+
+{#    {% include 'AppBundle:Account:_account_form.html.twig' %}#}
+
+    {#{% if accounts is not empty %}
+        {% include 'AppBundle:Account:_listAccounts.html.twig' %}
+    {% endif %}#}
+
+{% endblock %}

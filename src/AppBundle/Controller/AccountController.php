@@ -7,12 +7,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 use Symfony\Component\Form\FormError;
+use AppBundle\Service\ApiClient;
 
 
 class AccountController extends Controller
 {
     /**
-     * @Route("/report/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"})
+     * @Route("/report/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"}, requirements={
+     *   "action" = "(add|list)"
+     * })
      * @Template()
      */
     public function accountsAction($reportId,$action)
@@ -48,6 +51,32 @@ class AccountController extends Controller
             'action' => $action,
             'form' => $form->createView(),
             'accounts' => $accounts
+        ];
+    }
+    
+    
+    /**
+     * @Route("/report/{reportId}/account/{accountId}", name="account", requirements={
+     *   "accountId" = "\d+"
+     * })
+     * @Template()
+     */
+    public function accountAction($reportId, $accountId, $action = 'list')
+    {
+        $util = $this->get('util');
+        $request = $this->getRequest();
+         
+        $report = $util->getReport($reportId);
+        $client = $util->getClient($report->getClient());
+        
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId ]]);
+        
+         return [
+            'report' => $report,
+            'client' => $client,
+//            'form' => $form->createView(),
+            'account' => $account
         ];
     }
 }

@@ -1,13 +1,16 @@
 parameters:
     api_endpoints:
+        # user
         find_user_by_email: user/get-by-email
         add_user: user
         list_users: user
         find_user_by_token: user/get-by-token
         list_roles: role
+        #client
         get_all_court_order_type: court-order-type/all
         add_client: client/add
         find_client_by_id: client/find-by-id
+        # report
         add_report: report/add
         find_report_by_id: report/find-by-id
         add_decision: decision/add
@@ -16,3 +19,4 @@ parameters:
         get_report_contacts: report/get-contacts
         add_report_account: report/add-account
         get_report_accounts: report/get-accounts
+        find_account_by_id: account/find-by-id
