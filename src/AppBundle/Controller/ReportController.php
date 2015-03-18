@@ -5,7 +5,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity as EntityDir;
 
-
 /**
  * @Route("/report")
  */
@@ -170,7 +169,7 @@ class ReportController extends RestController
         return [ 'id' => $account->getId() ];
     }
     
-     /**
+    /**
      * @Route("/{id}")
      * @Method({"PUT"})
      */
