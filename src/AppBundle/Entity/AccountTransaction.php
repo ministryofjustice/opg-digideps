@@ -21,11 +21,26 @@ class AccountTransaction
      */
     private $amount;
     
+     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"transactions"})
+     * @var string
+     */
+    private $hasMoreDetails;
     
-    public function __construct($id, $amount)
+     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions"})
+     * @var string
+     */
+    private $moreDetails;
+    
+    
+    public function __construct($id, $amount, $hasMoreDetails = false)
     {
         $this->id = $id;
         $this->amount = $amount;
+        $this->hasMoreDetails = $hasMoreDetails;
     }
 
     public function getId()
@@ -46,6 +61,26 @@ class AccountTransaction
     public function setAmount($amount)
     {
         $this->amount = $amount;
+    }
+    
+    public function getHasMoreDetails()
+    {
+      return $this->hasMoreDetails;
+    }
+
+    public function setHasMoreDetails($hasMoreDetails)
+    {
+      $this->hasMoreDetails = $hasMoreDetails;
+    }
+    
+    public function getMoreDetails()
+    {
+      return $this->moreDetails;
+    }
+
+    public function setMoreDetails($moreDetails)
+    {
+      $this->moreDetails = $moreDetails;
     }
 
 }

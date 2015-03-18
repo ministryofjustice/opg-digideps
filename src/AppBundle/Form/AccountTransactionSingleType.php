@@ -13,6 +13,8 @@ class AccountTransactionSingleType extends AbstractType
      {
          $builder 
                  ->add('id', 'hidden')
+                 ->add('hasMoreDetails', 'hidden')
+                 ->add('moreDetails', 'textarea')
                  ->add('amount', 'text');
      }
      

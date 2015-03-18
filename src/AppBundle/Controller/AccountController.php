@@ -129,9 +129,9 @@ class AccountController extends Controller
             new EntityDir\AccountTransaction('salary_or_wages', 100),
             new EntityDir\AccountTransaction('refunds', 1200),
             new EntityDir\AccountTransaction('bequests_eg_inheritance_gifts_received', 750),
-            new EntityDir\AccountTransaction('sale_of_investments_property_or_assets', 650),
-            new EntityDir\AccountTransaction('compensation_or_damages_awards', 250),
-            new EntityDir\AccountTransaction('transfers_in_from_client_s_other_accounts', 750),
+            new EntityDir\AccountTransaction('sale_of_investments_property_or_assets', 650, true),
+            new EntityDir\AccountTransaction('compensation_or_damages_awards', 250, true),
+            new EntityDir\AccountTransaction('transfers_in_from_client_s_other_accounts', 750, true),
             new EntityDir\AccountTransaction('any_other_money_paid_in_and_not_listed_above', 550),
         ]);
         $account->setMoneyOut([
