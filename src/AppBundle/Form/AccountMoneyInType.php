@@ -14,7 +14,7 @@ class AccountMoneyInType extends AbstractType
          $builder 
                  ->add('id', 'hidden')
                  ->add('moneyIn', 'collection', ['type' => new AccountTransactionType()])
-                 ->add('save_money_in', 'submit');
+                 ->add('save', 'submit');
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)

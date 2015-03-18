@@ -14,7 +14,7 @@ class AccountMoneyOutType extends AbstractType
          $builder 
                  ->add('id', 'hidden')
                  ->add('moneyOut', 'collection', ['type' => new AccountTransactionType()])
-                 ->add('save_money_out', 'submit');
+                 ->add('save', 'submit');
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)

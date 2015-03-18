@@ -124,13 +124,13 @@ class AccountController extends Controller
         $account->setId(1);
         $account->setReportObject($report);
         $account->setMoneyIn([
-            new EntityDir\AccountTransaction('in_dla', 'Disability Living Allowance', 2500),
-            new EntityDir\AccountTransaction('in_aa', 'Attentance Allowance', 450),
-            new EntityDir\AccountTransaction('in_es', 'Employment Support', 1250),
+            new EntityDir\AccountTransaction('disability_living_allowance_or_personal_independence_payment', 2500),
+            new EntityDir\AccountTransaction('attendance_allowance', 450),
+            new EntityDir\AccountTransaction('employment_support_allowance_or_incapacity_benefit', 1250),
         ]);
         $account->setMoneyOut([
-            new EntityDir\AccountTransaction('out_cf', 'Care fees', 455),
-            new EntityDir\AccountTransaction('out_ac', 'Accomodation costs', 255),
+            new EntityDir\AccountTransaction('care_fees_or_local_authority_charges_for_care', 455),
+            new EntityDir\AccountTransaction('accommodation_costs_eg_rent_mortgage_service_charges', 255),
         ]);
         
         return $account;

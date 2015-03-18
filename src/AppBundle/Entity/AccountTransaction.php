@@ -19,20 +19,12 @@ class AccountTransaction
      * @JMS\Groups({"money_in", "money_out"})
      * @var string
      */
-    private $name;
-    
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"money_in", "money_out"})
-     * @var string
-     */
     private $amount;
     
     
-    public function __construct($id, $name, $amount)
+    public function __construct($id, $amount)
     {
         $this->id = $id;
-        $this->name = $name;
         $this->amount = $amount;
     }
 
@@ -41,19 +33,9 @@ class AccountTransaction
         return $this->id;
     }
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
     }
     
     public function getAmount()

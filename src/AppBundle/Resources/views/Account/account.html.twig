@@ -40,12 +40,14 @@
     
     {% include 'AppBundle:Account:_money.html.twig' with {
         'legend': 'moneyIn.legend' | trans,
-        'form': formIn
+        'form': formIn,
+        'elements': formIn.moneyIn
     }  %}
     
     {% include 'AppBundle:Account:_money.html.twig' with {
         'legend': 'moneyOut.legend' | trans,
-        'form': formOut
+        'form': formOut,
+        'elements': formOut.moneyOut
     }  %}
     
     

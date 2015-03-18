@@ -13,7 +13,6 @@ class AccountTransactionType extends AbstractType
      {
          $builder 
                  ->add('id', 'hidden')
-                 ->add('name', 'text')
                  ->add('amount', 'text');
      }
      
