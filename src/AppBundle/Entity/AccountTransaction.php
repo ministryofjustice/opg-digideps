@@ -43,41 +43,65 @@ class AccountTransaction
         $this->hasMoreDetails = $hasMoreDetails;
     }
 
+    /**
+     * @return integer
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param integer $id
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
     
+    /**
+     * @return float
+     */
     public function getAmount()
     {
         return $this->amount;
     }
 
+    /**
+     * @param float $amount
+     */
     public function setAmount($amount)
     {
         $this->amount = $amount;
     }
     
+    /**
+     * @return boolean
+     */
     public function getHasMoreDetails()
     {
       return $this->hasMoreDetails;
     }
 
+    /**
+     * @param boolean $hasMoreDetails
+     */
     public function setHasMoreDetails($hasMoreDetails)
     {
       $this->hasMoreDetails = $hasMoreDetails;
     }
     
+    /**
+     * @return string
+     */
     public function getMoreDetails()
     {
       return $this->moreDetails;
     }
 
+    /**
+     * @param string $moreDetails
+     */
     public function setMoreDetails($moreDetails)
     {
       $this->moreDetails = $moreDetails;

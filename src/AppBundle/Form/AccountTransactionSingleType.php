@@ -6,6 +6,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use AppBundle\Entity\AccountTransaction;
 
 class AccountTransactionSingleType extends AbstractType
 {
@@ -17,12 +18,9 @@ class AccountTransactionSingleType extends AbstractType
                  ->add('amount', 'text');
          
          $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $accountTransaction = $event->getData();
+            $accountTransaction = $event->getData(); /* @var $accountTransaction AccountTransaction */
             $form = $event->getForm();
-
-            // check if the Product object is "new"
-            // If no data is passed to the form, the data is "null".
-            // This should be considered a new "Product"
+            
             if ($accountTransaction->getHasMoreDetails()) {
                 $form->add('moreDetails', 'textarea');
             }
