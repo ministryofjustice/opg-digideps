@@ -30,7 +30,7 @@ class AccountTransaction
     
      /**
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"detail"})
      * @var string
      */
     private $moreDetails;
@@ -105,6 +105,14 @@ class AccountTransaction
     public function setMoreDetails($moreDetails)
     {
       $this->moreDetails = $moreDetails;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getValidationGroups()
+    {
+      return $this->hasMoreDetails ? ['transactions', 'detail'] : ['transactions'];
     }
 
 }

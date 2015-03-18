@@ -31,6 +31,7 @@ class AccountTransactionSingleType extends AbstractType
      {
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\AccountTransaction',
+             'validation_groups' => ['AppBundle\Entity\AccountTransaction', 'getValidationGroups']
         ]);
      }
      
