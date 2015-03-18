@@ -181,12 +181,11 @@ class ReportController extends Controller
         $form = $this->createForm(new FormDir\AssetType($titles),$asset);
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'query' => ['id' => $reportId ]]);
-
+        
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
 
             if($form->isValid()){
-                var_dump($asset);
                 $asset = $form->getData();
                 $asset->setReport($reportId);
 
