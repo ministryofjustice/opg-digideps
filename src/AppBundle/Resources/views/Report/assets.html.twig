@@ -1,9 +1,36 @@
 {% extends 'AppBundle:Components/Page:page-report.html.twig' %}
-{% trans_default_domain "report-contacts" %}
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+
+{% set assets = {} %}
+
+{% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
 
  {% block pageNavigation %}
-   {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-assets'} %}
-{% endblock %}
+     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-assets'} %}
+ {% endblock %}
 
 {% block pageBody %}
+
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'page.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    {% include 'AppBundle:Report:_asset_form.html.twig' %}
+
+    {% if assets is not empty %}
+        {% include 'AppBundle:Report:_listAssets.html.twig' %}
+    {% endif %}
+
 {% endblock %}

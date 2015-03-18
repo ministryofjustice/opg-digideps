@@ -1,3 +1,37 @@
+page:
+  htmlTitle: "Report Assets"
+  pageSectionTitle: "Client's assets"
+  pageSectionDescription: "Add details of any property, savings or investments owned by your client."
+  pageSectionWarning: ""
+form:
+  listing:
+    addButton:
+      label: "Add an asset"
+  newAsset:
+    subSectionTitle: "Add a new asset"
+    controls:
+      title:
+        label: "Asset title"
+        hint: "Please select a title, such as 'Property'"
+      value:
+        label: "Value"
+        hint: ""
+      description:
+        label: "Description"
+        hint: ""
+      valuation_date:
+        legend: Valuation date (optional)
+        hint: "(DD/MM/YYYY)"
+      save:
+        label: Save
+      cancel:
+        label: Cancel
+listing:
+  bank: "Bank/Building Society name"
+  accountNumber: "Last four digits of account number"
+  balance: "Opening balance:"
+  edited: "Created:"
+  currencySymbol: "£"
 defaultDropDownOption:
     option: Please select ...  
 dropdown:
