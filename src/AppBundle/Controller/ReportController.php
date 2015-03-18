@@ -135,7 +135,11 @@ class ReportController extends RestController
         $asset->setValue($reportData['value']);
         $asset->setTitle($reportData['title']);
         
-        $valuationDate = new \DateTime($reportData['valuation_date']);
+        if(!empty($reportData['valuation_date'])){
+            $valuationDate = new \DateTime($reportData['valuation_date']);
+        }else{
+            $valuationDate = null;
+        }
         
         $asset->setValuationDate($valuationDate);
         $asset->setLastedit(new \DateTime());
