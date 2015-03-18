@@ -1,7 +1,6 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
-
 {% if (assets is not empty) and (action == 'list') %}
     {% set hideForm = true %}
     {% set formClass = '' %}
@@ -39,7 +38,7 @@
     {{ form_select(form.title, 'form.newAsset.controls.title') }}
     {{ form_input(form.value, 'form.newAsset.controls.value') }}
     {{ form_input(form.description, 'form.newAsset.controls.description') }}
-    {{ form_known_date(form.valuation_date, 'form.newAsset.controls.valuation_date') }}
+    {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.newAsset.controls.save') }}
@@ -47,7 +46,7 @@
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
-        linkButtonLabel: 'cancel.label',
+        linkButtonLabel: 'form.newAsset.controls.cancel.label',
         linkClass: 'button-link',
         linkHref: path('assets', {'reportId': report.id})
         } %}

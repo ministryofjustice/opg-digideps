@@ -166,7 +166,7 @@ class ReportController extends Controller
             $translation = $translator->trans($key,[],'report-assets');
             $titles[$translation] = $translation;
         }
-        
+
         $other = $titles['Other assets'];
         unset($titles['Other assets']);
         
@@ -175,25 +175,26 @@ class ReportController extends Controller
         
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
-        
+
         $asset = new EntityDir\Asset();
         
         $form = $this->createForm(new FormDir\AssetType($titles),$asset);
-        
+
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'query' => ['id' => $reportId ]]);
-        
+
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
-            
+
             if($form->isValid()){
+                var_dump($asset);
                 $asset = $form->getData();
                 $asset->setReport($reportId);
-                
+
                 $apiClient->postC('add_report_asset', $asset);
                 return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
             }
         }
-        
+
         return [
             'report' => $report,
             'client' => $client,

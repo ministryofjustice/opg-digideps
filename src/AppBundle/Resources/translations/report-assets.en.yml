@@ -8,18 +8,18 @@ form:
     addButton:
       label: "Add an asset"
   newAsset:
-    subSectionTitle: "Add a new asset"
+    subSectionTitle: "Add an asset"
     controls:
       title:
         label: "Asset title"
-        hint: "Please select a title, such as 'Property'"
+        hint: ""
       value:
         label: "Value"
-        hint: ""
+        hint: "Can be an estimated value"
       description:
-        label: "Description"
+        label: "Asset description"
         hint: ""
-      valuation_date:
+      valuationDate:
         legend: Valuation date (optional)
         hint: "(DD/MM/YYYY)"
       save:
@@ -27,11 +27,11 @@ form:
       cancel:
         label: Cancel
 listing:
-  bank: "Bank/Building Society name"
-  accountNumber: "Last four digits of account number"
-  balance: "Opening balance:"
-  edited: "Created:"
+  value: "Value"
+  description: "Asset description"
+  date: "Valuation date"
   currencySymbol: "£"
+  editLink: "Edit this asset"
 defaultDropDownOption:
     option: Please select ...  
 dropdown:
@@ -47,7 +47,6 @@ dropdown:
     artwork: Artwork
     antiques: Antiques
     jewellery: Jewellery
-    cash: Cash
     assets_held_outside_england_and_wales: Assets held outside England and Wales
     court_funds_office_accounts: Court Funds Office accounts
     other_assets: Other assets

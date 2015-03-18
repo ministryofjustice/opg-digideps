@@ -73,7 +73,6 @@ parameters:
         10: dropdown.artwork 
         11: dropdown.antiques 
         12: dropdown.jewellery
-        13: dropdown.cash 
         14: dropdown.assets_held_outside_england_and_wales
         15: dropdown.court_funds_office_accounts 
         16: dropdown.other_assets
