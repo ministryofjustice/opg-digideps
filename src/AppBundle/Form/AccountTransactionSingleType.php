@@ -7,27 +7,25 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
 
-class AccountMoneyInType extends AbstractType
+class AccountTransactionSingleType extends AbstractType
 {
      public function buildForm(FormBuilderInterface $builder, array $options)
      {
          $builder 
                  ->add('id', 'hidden')
-                 ->add('moneyIn', 'collection', ['type' => new AccountTransactionType()])
-                 ->add('save', 'submit');
+                 ->add('amount', 'text');
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)
      {
          $resolver->setDefaults( [
-             'data_class' => 'AppBundle\Entity\Account',
-             'validation_groups' => ['money_in_out'],
+             'data_class' => 'AppBundle\Entity\AccountTransaction',
         ]);
      }
      
      public function getName()
      {
-         return 'money_in';
+         return 'transaction_single';
      }
      
 }

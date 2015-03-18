@@ -70,35 +70,25 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
         
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $account = $this->getTempAccount($report); //$apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId ]]);
+        $account = $this->getMockccount($report); //$apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId ]]);
         
-        // forms
-        $formMoneyIn = $this->createForm(new FormDir\AccountMoneyInType(), $account);
-        $formMoneyOut = $this->createForm(new FormDir\AccountMoneyOutType(), $account);
+        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account);
         
-        
-        $formMoneyIn->handleRequest($request);
-        if($formMoneyIn->isSubmitted()){
-            $this->debugFormData($formMoneyIn, 'money_in');
-            
-        }
-        
-        $formMoneyOut->handleRequest($request);
-        if($formMoneyOut->isSubmitted()){
-            $this->debugFormData($formMoneyOut, 'money_out');
+        $form->handleRequest($request);
+        if($form->isSubmitted()){
+            $this->debugFormData($form);
             
         }
         
         return [
             'report' => $report,
             'client' => $client,
-            'formIn' => $formMoneyIn->createView(),
-            'formOut' => $formMoneyOut->createView(),
+            'form' => $form->createView(),
             'account' => $account
         ];
     }
     
-    private function debugFormData($form, $jmsGroup)
+    private function debugFormData($form)
     {
         echo "<pre>";
         if (!$form->isValid()) {
@@ -109,15 +99,15 @@ class AccountController extends Controller
 
         $context = \JMS\Serializer\SerializationContext::create()
                 ->setSerializeNull(true)
-                ->setGroups($jmsGroup);
-
+                ->setGroups('transactions');
+        
         $data = $this->get('jms_serializer')->serialize($account, 'json', $context);
-        // print_r($account);
+
         echo "data passed to API: " . print_r(json_decode($data, 1), 1);die;
     }
     
     // until API not reay
-    private function getTempAccount($report)
+    private function getMockccount($report)
     {
         // fake data until API is not ready
         $account = new EntityDir\Account;

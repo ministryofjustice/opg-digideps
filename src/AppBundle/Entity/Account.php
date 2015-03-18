@@ -12,8 +12,8 @@ class Account
 {
     /**
      * @JMS\Type("integer")
-     * @Assert\NotBlank(message="Missing account ID", groups={"money_in_out"})
-     * @JMS\Groups({"money_in", "money_out"})
+     * @Assert\NotBlank(message="Missing account ID", groups={"transactions"})
+     * @JMS\Groups({"transactions"})
      * @var integer $id
      */
     private $id;
@@ -80,13 +80,13 @@ class Account
     
     /**
      * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
-     * @JMS\Groups({"money_in"})
+     * @JMS\Groups({"transactions"})
      */
     private $moneyIn;
     
     /**
      * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
-     * @JMS\Groups({"money_out"}) 
+     * @JMS\Groups({"transactions"}) 
      */
     private $moneyOut;
     

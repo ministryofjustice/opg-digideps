@@ -1,0 +1,14 @@
+{% trans_default_domain "report-account" %}
+
+<div style="background-color: lightgrey; margin: 20px; padding: 20px; height: 1%; overflow: hidden;">
+    <h1 class="form-title heading-medium-large">
+        {{ legend }}
+    </h1> [collapse/expand logic here ...]
+    {% for t in elements %}
+      {{ form_row(t.id) }}
+      {{ form_input(t.amount,'firstname', { 
+        'labelText': ( keySection ~ '.elements.' ~ t.id.vars.value ~ '.label') | trans
+      }) }}
+    {% endfor %}
+
+</div>

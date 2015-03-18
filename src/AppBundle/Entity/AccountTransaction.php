@@ -8,15 +8,15 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class AccountTransaction
 {
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"money_in", "money_out"})
-     * @var integer $id
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions"})
+     * @var integer
      */
     private $id;
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"money_in", "money_out"})
+     * @JMS\Groups({"transactions"})
      * @var string
      */
     private $amount;

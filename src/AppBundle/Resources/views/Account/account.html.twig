@@ -1,6 +1,8 @@
-{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
 {% set translationDomain = "report-account" %}
 {% trans_default_domain translationDomain %}
+
+
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
 {% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
@@ -19,46 +21,36 @@
         Sort code {{ account.sortCode }}<br/>
     </div>
     
-    {#{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionTitle: 'page.pageSectionTitle'
-    } %}#}
-
-   {# {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}#}
-
-    {#{% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionWarning: 'page.pageSectionWarning'
-    } %}#}
     
     <div style="border-left: grey 3px solid; margin: 20px">
         {{ 'page.description' | trans }}
     </div>
-    
-    {% include 'AppBundle:Account:_money.html.twig' with {
-        'legend': 'moneyIn.legend' | trans,
-        'form': formIn,
-        'elements': formIn.moneyIn
-    }  %}
-    
-    {% include 'AppBundle:Account:_money.html.twig' with {
-        'legend': 'moneyOut.legend' | trans,
-        'form': formOut,
-        'elements': formOut.moneyOut
-    }  %}
-    
-    
-    {#{% block validationSummary %}
+   
+    {% block validationSummary %}
         {{ form_errors_list(form) }}
-    {% endblock %}#}
+    {% endblock %}
+    
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    
+      {{ form_row(form.id) }}
 
-{#    {% include 'AppBundle:Account:_account_form.html.twig' %}#}
+      {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
+          legend: 'moneyIn.legend' | trans,
+          elements: form.moneyIn,
+          keySection: 'moneyIn'
+      }  %}
+      
 
-    {#{% if accounts is not empty %}
-        {% include 'AppBundle:Account:_listAccounts.html.twig' %}
-    {% endif %}#}
+      {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
+          legend: 'moneyOut.legend' | trans,
+          elements: form.moneyOut,
+          keySection: 'moneyOut'
+      }  %}
 
+      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save, 'save', {'buttonClass': 'behat-link-save'}) }}
+      {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    
+    {{ form_end(form) }}
+    
 {% endblock %}
