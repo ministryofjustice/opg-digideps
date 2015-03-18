@@ -17,10 +17,12 @@
                     <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
                     <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ asset.description }}</dd>
                 </div>
+                {% if asset.valuationDate is not null %}
                 <div class="report-list__item-fields-row">
                     <dt class="report-list__item-fields-term">{{ 'listing.date' | trans }}</dt>
                     <dd class="report-list__item-fields-description">{{ asset.valuationDate | date("d F Y") }}</dd>
                 </div>
+                {% endif %}
             </dl>
         </li>
     {% endfor %}

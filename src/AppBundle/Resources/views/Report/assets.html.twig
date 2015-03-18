@@ -3,7 +3,8 @@
 {% trans_default_domain translationDomain %}
 
 
-{% block pageTitle %}{{ 'pageTitle' | trans }} {% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
 
  {% block pageNavigation %}
      {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-assets'} %}
