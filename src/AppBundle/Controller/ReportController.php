@@ -5,13 +5,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity as EntityDir;
 
-/**
- * @Route("/report")
- */
 class ReportController extends RestController
 {
     /**
-     * @Route("/add")
+     * @Route("/report/add")
      * @Method({"POST"})
      */
     public function addAction()
@@ -43,7 +40,7 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/find-by-id/{id}")
+     * @Route("/report/find-by-id/{id}")
      * @Method({"GET"})
      */
     public function get($id)
@@ -54,7 +51,7 @@ class ReportController extends RestController
     }
         
     /**
-     * @Route("/add-contact")
+     * @Route("/report/add-contact")
      * @Method({"POST"})
      */
     public function addContactAction()
@@ -85,7 +82,7 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/get-contacts/{id}")
+     * @Route("/report/get-contacts/{id}")
      * @Method({"GET"})
      */
     public function getContactsAction($id)
@@ -102,7 +99,7 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/get-accounts/{id}")
+     * @Route("/report/get-accounts/{id}")
      * @Method({"GET"})
      */
     public function getAccountsAction($id)
@@ -118,7 +115,7 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/add-account")
+     * @Route("/report/add-account")
      * @Method({"POST"})
      */
     public function addAccountAction()
@@ -170,7 +167,7 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/{id}")
+     * @Route("/report/{id}")
      * @Method({"PUT"})
      */
     public function update($id)

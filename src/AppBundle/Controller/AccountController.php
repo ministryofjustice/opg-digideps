@@ -6,13 +6,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity as EntityDir;
 
 
-/**
- * @Route("/account")
- */
 class AccountController extends RestController
 {
    /**
-     * @Route("/find-by-id/{id}")
+     * @Route("/report/find-account-by-id/{id}")
      * @Method({"GET"})
      */
     public function get($id)
