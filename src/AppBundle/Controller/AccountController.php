@@ -70,13 +70,69 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
         
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId ]]);
+        $account = $this->getTempAccount($report); //$apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId ]]);
         
-         return [
+        // forms
+        $formMoneyIn = $this->createForm(new FormDir\AccountMoneyInType(), $account);
+        $formMoneyOut = $this->createForm(new FormDir\AccountMoneyOutType(), $account);
+        
+        
+        $formMoneyIn->handleRequest($request);
+        if($formMoneyIn->isSubmitted()){
+            $this->debugFormData($formMoneyIn, 'money_in');
+            
+        }
+        
+        $formMoneyOut->handleRequest($request);
+        if($formMoneyOut->isSubmitted()){
+            $this->debugFormData($formMoneyOut, 'money_out');
+            
+        }
+        
+        return [
             'report' => $report,
             'client' => $client,
-//            'form' => $form->createView(),
+            'formIn' => $formMoneyIn->createView(),
+            'formOut' => $formMoneyOut->createView(),
             'account' => $account
         ];
+    }
+    
+    private function debugFormData($form, $jmsGroup)
+    {
+        echo "<pre>";
+        if (!$form->isValid()) {
+            echo $form->getErrorsAsString();
+            die;
+        }
+        $account = $form->getData();
+
+        $context = \JMS\Serializer\SerializationContext::create()
+                ->setSerializeNull(true)
+                ->setGroups($jmsGroup);
+
+        $data = $this->get('jms_serializer')->serialize($account, 'json', $context);
+        // print_r($account);
+        echo "data passed to API: " . print_r(json_decode($data, 1), 1);die;
+    }
+    
+    // until API not reay
+    private function getTempAccount($report)
+    {
+        // fake data until API is not ready
+        $account = new EntityDir\Account;
+        $account->setId(1);
+        $account->setReportObject($report);
+        $account->setMoneyIn([
+            new EntityDir\AccountTransaction('in_dla', 'Disability Living Allowance', 2500),
+            new EntityDir\AccountTransaction('in_aa', 'Attentance Allowance', 450),
+            new EntityDir\AccountTransaction('in_es', 'Employment Support', 1250),
+        ]);
+        $account->setMoneyOut([
+            new EntityDir\AccountTransaction('out_cf', 'Care fees', 455),
+            new EntityDir\AccountTransaction('out_ac', 'Accomodation costs', 255),
+        ]);
+        
+        return $account;
     }
 }

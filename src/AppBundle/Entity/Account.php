@@ -12,6 +12,8 @@ class Account
 {
     /**
      * @JMS\Type("integer")
+     * @Assert\NotBlank(message="Missing account ID", groups={"money_in_out"})
+     * @JMS\Groups({"money_in", "money_out"})
      * @var integer $id
      */
     private $id;
@@ -75,6 +77,19 @@ class Account
     private $report;
     
     private $reportObject;
+    
+    /**
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
+     * @JMS\Groups({"money_in"})
+     */
+    private $moneyIn;
+    
+    /**
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
+     * @JMS\Groups({"money_out"}) 
+     */
+    private $moneyOut;
+    
     
     public function getId()
     {
@@ -185,4 +200,24 @@ class Account
         }
     }
     
+    public function getMoneyIn()
+    {
+        return $this->moneyIn;
+    }
+
+    public function getMoneyOut()
+    {
+        return $this->moneyOut;
+    }
+
+    public function setMoneyIn(array $moneyIn)
+    {
+        $this->moneyIn = $moneyIn;
+    }
+
+    public function setMoneyOut(array $moneyOut)
+    {
+        $this->moneyOut = $moneyOut;
+    }
+
 }
