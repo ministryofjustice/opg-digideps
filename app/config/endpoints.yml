@@ -19,4 +19,4 @@ parameters:
         get_report_contacts: report/get-contacts
         add_report_account: report/add-account
         get_report_accounts: report/get-accounts
-        find_account_by_id: account/find-by-id
+        find_account_by_id: report/find-account-by-id
