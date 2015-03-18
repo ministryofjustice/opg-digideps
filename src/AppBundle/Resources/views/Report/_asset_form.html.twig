@@ -1,0 +1,59 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+{% if (assets is not empty) and (action == 'list') %}
+    {% set hideForm = true %}
+    {% set formClass = '' %}
+{% else %}
+    {% set hideForm = false %}
+    {% set formClass = 'report-form' %}
+{% endif %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+{% if hideForm %}
+    {# Then we need to show the Add Button Link #}
+    {% set  params = app.request.attributes.get('_route_params') %}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+    buttonBarClass: 'add-bar js-add-assets-button-bar'
+    } %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.listing.addButton.label',
+    linkClass: 'button-secondary',
+    linkHref: path('assets', {'reportId': params['reportId'], 'action': 'add' })
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{% endif %}
+
+<div {% if hideForm %} class="visuallyhidden" {% endif %}>
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.newAsset.subSectionTitle'
+    } %}
+
+    {{ form_select(form.title, 'form.newAsset.controls.title') }}
+    {{ form_input(form.value, 'form.newAsset.controls.value') }}
+    {{ form_input(form.description, 'form.newAsset.controls.description') }}
+    {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.newAsset.controls.save') }}
+    {% if hideForm or (action == 'add') %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.newAsset.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('assets', {'reportId': report.id})
+        } %}
+
+    {% endif %}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+</div>
+
+{{ form_end(form) }}
