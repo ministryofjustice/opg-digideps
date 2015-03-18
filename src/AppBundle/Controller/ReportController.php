@@ -5,13 +5,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity as EntityDir;
 
-/**
- * @Route("/report")
- */
+
 class ReportController extends RestController
 {
     /**
-     * @Route("/add")
+     * @Route("/report/add")
      * @Method({"POST"})
      */
     public function addAction()
@@ -43,7 +41,7 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/find-by-id/{id}")
+     * @Route("/report/find-by-id/{id}")
      * @Method({"GET"})
      */
     public function get($id)
@@ -54,7 +52,7 @@ class ReportController extends RestController
     }
         
     /**
-     * @Route("/add-contact")
+     * @Route("/report/add-contact")
      * @Method({"POST"})
      */
     public function addContactAction()
@@ -85,7 +83,7 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/get-contacts/{id}")
+     * @Route("/report/get-contacts/{id}")
      * @Method({"GET"})
      */
     public function getContactsAction($id)
@@ -102,75 +100,7 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/get-accounts/{id}")
-     * @Method({"GET"})
-     */
-    public function getAccountsAction($id)
-    {
-        $report = $this->findEntityBy('Report', $id);
-        
-        $accounts = $this->getRepository('Account')->findByReport($report);
-       
-        if(count($accounts) == 0){
-            return [];
-        }
-        return $accounts;
-    }
-    
-    /**
-     * @Route("/add-account")
-     * @Method({"POST"})
-     */
-    public function addAccountAction()
-    {
-        $accountData = $this->deserializeBodyContent();
-   
-        $report = $this->findEntityBy('Report', $accountData['report']);
-        
-        if(empty($report)){
-            throw new \Exception("Report id: ".$accountData['report']." does not exists");
-        }
-        
-        $account = new EntityDir\Account();
-        $account->setBank($accountData['bank']);
-        $account->setSortCode($accountData['sort_code']);
-        $account->setAccountNumber($accountData['account_number']);
-        $account->setOpeningDate(new \DateTime($accountData['opening_date']));
-        $account->setOpeningBalance($accountData['opening_balance']);
-        $account->setReport($report);
-        $account->setLastEdit(new \DateTime());
-        
-        $benefits = $this->getRepository('Benefit')->findAll();
-        
-        if(count($benefits) > 0){
-            foreach($benefits as $benefit){
-                $account->addBenefit($benefit);
-            }
-        }
-        
-        $incomes = $this->getRepository('Income')->findAll();
-        
-        if(count($incomes) > 0){
-            foreach($incomes as $income){
-                $account->addIncome($income);
-            }
-        }
-        
-        $expenditures = $this->getRepository('Expenditure')->findAll();
-        
-        if(count($expenditures) > 0){
-            foreach($expenditures as $expenditure){
-                $account->addExpenditure($expenditure);
-            }
-        }
-        $this->getEntityManager()->persist($account);
-        $this->getEntityManager()->flush();
-        
-        return [ 'id' => $account->getId() ];
-    }
-    
-    /**
-     * @Route("/{id}")
+     * @Route("/report/{id}")
      * @Method({"PUT"})
      */
     public function update($id)
