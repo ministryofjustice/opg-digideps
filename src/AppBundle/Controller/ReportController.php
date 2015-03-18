@@ -157,6 +157,7 @@ class ReportController extends Controller
         $util = $this->get('util');
         $translator =  $this->get('translator');
         $dropdownKeys = $this->container->getParameter('asset_dropdown');
+        $apiClient = $this->get('apiclient');
         $request = $this->getRequest();
         
         $titles = [];
@@ -165,25 +166,40 @@ class ReportController extends Controller
             $translation = $translator->trans($key,[],'report-assets');
             $titles[$translation] = $translation;
         }
+        
         $other = $titles['Other assets'];
         unset($titles['Other assets']);
         
         asort($titles);
-        
         $titles['Other assets'] = $other;
         
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
+        
         $asset = new EntityDir\Asset();
         
-        $form = $this->createForm(new FormDir\AssetType($titles), $asset);
-        $form->handleRequest($request);
-
+        $form = $this->createForm(new FormDir\AssetType($titles),$asset);
+        
+        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'query' => ['id' => $reportId ]]);
+        
+        if($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            
+            if($form->isValid()){
+                $asset = $form->getData();
+                $asset->setReport($reportId);
+                
+                $apiClient->postC('add_report_asset', $asset);
+                return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
+            }
+        }
+        
         return [
             'report' => $report,
             'client' => $client,
             'action' => $action,
-            'form'   => $form->createView()
+            'form'   => $form->createView(),
+            'assets' => $assets
         ];
     }
 

@@ -22,10 +22,10 @@ class AssetType extends AbstractType
         $builder->add('title', 'choice', [ 'choices' => $this->titles, 'empty_value' => 'Please select' ])
                 ->add('value', 'number', [ 'grouping' => true, 'precision' => 2 ])
                 ->add('description', 'textarea')
-                ->add('valuation_date', 'date',[ 'widget' => 'text',
+                ->add('valuationDate', 'date',[ 'widget' => 'text',
                                                  'input' => 'datetime',
-                                                 'format' => 'yyyy-MM-dd',
-                                                 'invalid_message' => ''
+                                                 'format' => 'dd-MM-yyyy',
+                                                 'invalid_message' => 'invalid date'
                                               ])
             ->add('save', 'submit');
     }

@@ -16,7 +16,7 @@ class Asset
      * 
      * @Assert\NotBlank(message="asset.description.notBlank")
      * @Assert\Type( type="string", message="asset.description.type")
-     * @Assert\Length(min=10, minMessage="asset.description.length")
+     * @Assert\Length(min=3, minMessage="asset.description.length")
      * 
      * @JMS\Type("string")
      */
@@ -38,7 +38,6 @@ class Asset
     private $title;
     
     /**
-     *
      * @Assert\Date(message="asset.date.date")
      * @JMS\Type("DateTime")
      */

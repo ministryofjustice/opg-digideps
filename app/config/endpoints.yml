@@ -16,3 +16,5 @@ parameters:
         get_report_contacts: report/get-contacts
         add_report_account: report/add-account
         get_report_accounts: report/get-accounts
+        get_report_assets: report/get-assets
+        add_report_asset: report/add-asset
