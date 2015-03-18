@@ -4,8 +4,8 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Form\Type\AccountNumberType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class AccountTransactionSingleType extends AbstractType
 {
@@ -13,9 +13,20 @@ class AccountTransactionSingleType extends AbstractType
      {
          $builder 
                  ->add('id', 'hidden')
-                 ->add('hasMoreDetails', 'hidden')
-                 ->add('moreDetails', 'textarea')
+//                 ->add('hasMoreDetails', 'hidden')
                  ->add('amount', 'text');
+         
+         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $accountTransaction = $event->getData();
+            $form = $event->getForm();
+
+            // check if the Product object is "new"
+            // If no data is passed to the form, the data is "null".
+            // This should be considered a new "Product"
+            if ($accountTransaction->getHasMoreDetails()) {
+                $form->add('moreDetails', 'textarea');
+            }
+        });
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)

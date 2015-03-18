@@ -10,22 +10,15 @@
       {% set elementId = t.id.vars.value %}
       
       {{ form_row(t.id) }}
-      {{ form_row(t.hasMoreDetails) }}
-      
       
       {{ form_input(t.amount,'firstname', { 
         'labelText': ( keySection ~ '.elements.' ~ elementId ~ '.label') | trans
       }) }}
       
-      {% if t.hasMoreDetails.vars.value == 1 %}
+      {% if t.moreDetails is defined %}
         {{ form_input(t.moreDetails, '', { 
           'labelText': ( keySection ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
         }) }}
-      {% else %}
-         <!-- {{ form_input(t.moreDetails, '', { 
-          'labelText': ( keySection ~ '.elements.' ~elementId~ '.further_guidance') | trans
-        }) }} -->
-        
       {% endif %}
      
     {% endfor %}
