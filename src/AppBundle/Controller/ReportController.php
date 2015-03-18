@@ -100,6 +100,52 @@ class ReportController extends RestController
     }
     
     /**
+     * 
+     * @Route("/report/get-assets/{id}")
+     * @Method({"GET"})
+     */
+    public function getAssetsAction($id)
+    {
+        $report = $this->findEntityBy('Report', $id);
+        $assets = $this->getRepository('Asset')->findByReport($report);
+        
+        if(count($assets) == 0){
+            return [];
+        }
+        return $assets;
+    }
+    
+    /**
+     * @Route("/report/add-asset")
+     * @Method({"POST"})
+     */
+    public function addAssetAction()
+    {
+        $reportData = $this->deserializeBodyContent();
+        
+        $report = $this->findEntityBy('Report', $reportData['report']);
+        
+        if(empty($report)){
+            throw new \Exception("Report id: ".$reportData['report']." does not exists");
+        }
+        
+        $asset = new EntityDir\Asset();
+        $asset->setReport($report);
+        $asset->setDescription($reportData['description']);
+        $asset->setValue($reportData['value']);
+        $asset->setTitle($reportData['title']);
+        
+        $valuationDate = new \DateTime($reportData['valuation_date']);
+        
+        $asset->setValuationDate($valuationDate);
+        $asset->setLastedit(new \DateTime());
+        $this->getEntityManager()->persist($asset);
+        $this->getEntityManager()->flush();
+        
+        return [ 'id' => $asset->getId() ];
+    }
+    
+    /**
      * @Route("/report/{id}")
      * @Method({"PUT"})
      */
