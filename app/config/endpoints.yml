@@ -20,3 +20,5 @@ parameters:
         add_report_account: report/add-account
         get_report_accounts: report/get-accounts
         find_account_by_id: report/find-account-by-id
+        get_report_assets: report/get-assets
+        add_report_asset: report/add-asset
