@@ -18,6 +18,8 @@ class AccountTransaction
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\SequenceGenerator(sequenceName="account_transaction_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
     
@@ -49,7 +51,7 @@ class AccountTransaction
      * @var string
      * @JMS\Groups({"transactions"})
      *
-     * @ORM\Column(type="text")
+     * @ORM\Column(name="more_details", type="text")
      */
     private $moreDetails;
     
