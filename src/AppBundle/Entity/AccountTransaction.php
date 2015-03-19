@@ -7,7 +7,7 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Account
  *
- * @ORM\Table(name="account_transaction")
+ * @ORM\Table(name="account_transaction", uniqueConstraints={@ORM\UniqueConstraint(name="unique_trans", columns={"account_id", "account_transaction_type_id"})})
  * @ORM\Entity
  */
 class AccountTransaction
@@ -33,6 +33,11 @@ class AccountTransaction
     
     /**
      * @var AccountTransactionType
+     * 
+     * @JMS\Groups({"transactions"})
+     * @JMS\Type("string") 
+     * @JMS\SerializedName("type")
+     * @JMS\Accessor(getter="getTransactionTypeId")
      * 
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AccountTransactionType")
      * @ORM\JoinColumn(name="account_transaction_type_id", referencedColumnName="id")
@@ -67,24 +72,44 @@ class AccountTransaction
         return $this->account;
     }
 
+    /**
+     * @return AccountTransactionType
+     */
     public function getTransactionType()
     {
         return $this->transactionType;
     }
+    
+    /**
+     * @return string
+     */
+    public function getTransactionTypeId()
+    {
+        return $this->getTransactionType()->getId();
+    }
 
+    /**
+     * @return float
+     */
     public function getAmount()
     {
         return $this->amount;
     }
 
+    /**
+     * @return string
+     */
     public function getMoreDetails()
     {
         return $this->moreDetails;
     }
 
+    /**
+     * @return boolean
+     */
     public function hasMoreDetails()
     {
-        
+        return $this->getTransactionType()->getHasMoreDetails();
     }
 
     public function setAccount(Account $account)

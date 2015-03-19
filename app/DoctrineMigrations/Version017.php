@@ -18,6 +18,7 @@ class Version017 extends AbstractMigration
         $this->addSql('CREATE TABLE account_transaction (id SERIAL NOT NULL, account_id INT DEFAULT NULL, account_transaction_type_id VARCHAR(255) DEFAULT NULL, amount NUMERIC(14, 2) NOT NULL, more_details TEXT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_A370F9D29B6B5FBA ON account_transaction (account_id)');
         $this->addSql('CREATE INDEX IDX_A370F9D2387F8B02 ON account_transaction (account_transaction_type_id)');
+        $this->addSql('CREATE UNIQUE INDEX unique_trans ON account_transaction (account_id, account_transaction_type_id)');
         $this->addSql('CREATE TABLE account_transaction_type (id VARCHAR(255) NOT NULL, has_more_details BOOLEAN NOT NULL, display_order INT DEFAULT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE account_transaction ADD CONSTRAINT FK_A370F9D29B6B5FBA FOREIGN KEY (account_id) REFERENCES account (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE account_transaction ADD CONSTRAINT FK_A370F9D2387F8B02 FOREIGN KEY (account_transaction_type_id) REFERENCES account_transaction_type (id) NOT DEFERRABLE INITIALLY IMMEDIATE');

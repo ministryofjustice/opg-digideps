@@ -26,7 +26,7 @@ class Account
     
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions"})
      * @ORM\Column(name="bank_name", type="string", length=100, nullable=true)
      */
     private $bank;
@@ -103,10 +103,24 @@ class Account
     private $balanceJustification;
 
     /**
-     * @JMS\Groups({"transactions"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account")
      */
     private $transactions;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyIn")
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
+     */
+    private $moneyIn;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOut")
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
+     */
+    private $moneyOut;
+    
     
     /**
      * Constructor
@@ -438,6 +452,24 @@ class Account
         $this->transactions = $transactions;
         return $this;
     }
+    
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyIn()
+    {
+        return $this->getTransactions()->filter(function(AccountTransaction $transaction) {
+            return $transaction->getTransactionType() instanceof AccountTransactionTypeIn;
+        });
+    }
 
-
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyOut()
+    {
+        return $this->getTransactions()->filter(function(AccountTransaction $transaction) {
+            return $transaction->getTransactionType() instanceof AccountTransactionTypeOut;
+        });
+    }
 }

@@ -37,4 +37,50 @@ abstract class AccountTransactionType
      */
     private $displayOrder;
     
+    
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getHasMoreDetails()
+    {
+        return $this->hasMoreDetails;
+    }
+
+    public function getDisplayOrder()
+    {
+        return $this->displayOrder;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+    public function setHasMoreDetails($hasMoreDetails)
+    {
+        $this->hasMoreDetails = $hasMoreDetails;
+        return $this;
+    }
+
+    public function setDisplayOrder($displayOrder)
+    {
+        $this->displayOrder = $displayOrder;
+        return $this;
+    }
+
+
 }
