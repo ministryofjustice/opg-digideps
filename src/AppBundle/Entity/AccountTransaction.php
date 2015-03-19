@@ -22,8 +22,13 @@ class AccountTransaction
     private $amount;
     
      /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $type;
+    
+     /**
      * @JMS\Type("boolean")
-     * @JMS\Groups({"transactions"})
      * @var string
      */
     private $hasMoreDetails;
@@ -60,6 +65,22 @@ class AccountTransaction
     }
     
     /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
      * @return float
      */
     public function getAmount()
@@ -78,7 +99,7 @@ class AccountTransaction
     /**
      * @return boolean
      */
-    public function getHasMoreDetails()
+    public function hasMoreDetails()
     {
       return $this->hasMoreDetails;
     }
@@ -112,7 +133,7 @@ class AccountTransaction
      */
     public function getValidationGroups()
     {
-      return $this->hasMoreDetails ? ['transactions', 'detail'] : ['transactions'];
+        return $this->hasMoreDetails ? ['transactions', 'detail'] : ['transactions'];
     }
 
 }

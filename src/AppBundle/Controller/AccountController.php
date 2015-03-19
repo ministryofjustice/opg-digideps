@@ -70,8 +70,8 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
         
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $account = $this->getMockccount($report); //$apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId ]]);
-        
+        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions' ]]);
+
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account);
         
         $form->handleRequest($request);
@@ -106,48 +106,4 @@ class AccountController extends Controller
         echo "data passed to API: " . print_r(json_decode($data, 1), 1);die;
     }
     
-    // until API not reay
-    private function getMockccount($report)
-    {
-        // fake data until API is not ready
-        $account = new EntityDir\Account;
-        $account->setId(1);
-        $account->setReportObject($report);
-        $account->setMoneyIn([
-            new EntityDir\AccountTransaction('disability_living_allowance_or_personal_independence_payment', 2500),
-            new EntityDir\AccountTransaction('attendance_allowance', 450),
-            new EntityDir\AccountTransaction('employment_support_allowance_or_incapacity_benefit', 1250),
-            new EntityDir\AccountTransaction('severe_disablement_allowance', 1250),
-            new EntityDir\AccountTransaction('income_support_or_pension_credit', 1250),
-            new EntityDir\AccountTransaction('housing_benefit', 1250),
-            new EntityDir\AccountTransaction('state_pension', 120),
-            new EntityDir\AccountTransaction('universal_credit', 150),
-            new EntityDir\AccountTransaction('other_benefits_eg_winter_fuel_or_cold_weather_payments', 1050),
-            new EntityDir\AccountTransaction('occupational_pensions', 120),
-            new EntityDir\AccountTransaction('account_interest', 150),
-            new EntityDir\AccountTransaction('income_from_investments_property_or_dividends', 850),
-            new EntityDir\AccountTransaction('salary_or_wages', 100),
-            new EntityDir\AccountTransaction('refunds', 1200),
-            new EntityDir\AccountTransaction('bequests_eg_inheritance_gifts_received', 750),
-            new EntityDir\AccountTransaction('sale_of_investments_property_or_assets', 650, true),
-            new EntityDir\AccountTransaction('compensation_or_damages_awards', 250, true),
-            new EntityDir\AccountTransaction('transfers_in_from_client_s_other_accounts', 750, true),
-            new EntityDir\AccountTransaction('any_other_money_paid_in_and_not_listed_above', 550),
-        ]);
-        $account->setMoneyOut([
-            new EntityDir\AccountTransaction('care_fees_or_local_authority_charges_for_care', 455),
-            new EntityDir\AccountTransaction('accommodation_costs_eg_rent_mortgage_service_charges', 255),
-            new EntityDir\AccountTransaction('household_bills_eg_water_gas_electricity_phone_council_tax', 255),
-            new EntityDir\AccountTransaction('day_to_day_living_costs_eg_food_toiletries_clothing_sundries', 255),
-            new EntityDir\AccountTransaction('debt_payments_eg_loans_cards_care_fee_arrears', 255),
-            new EntityDir\AccountTransaction('travel_costs_for_client_eg_bus_train_taxi_fares', 255),
-            new EntityDir\AccountTransaction('holidays_or_day_trips', 255),
-            new EntityDir\AccountTransaction('tax_payable_to_hmrc', 255),
-            new EntityDir\AccountTransaction('insurance_eg_life_home_and_contents', 255),
-            new EntityDir\AccountTransaction('office_of_the_public_guardian_fees', 255),
-            new EntityDir\AccountTransaction('any_other_money_paid_out_and_not_listed_above', 255),
-        ]);
-        
-        return $account;
-    }
 }
