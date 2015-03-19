@@ -60,6 +60,15 @@ class AccountTransaction
      */
     private $moreDetails;
     
+    /**
+     * @var string
+     * @JMS\Groups({"transactions"})
+     * @JMS\Type("boolean")
+     * @JMS\Accessor(getter="hasMoreDetails")
+     */
+    private $hasMoreDetails;
+    
+    
     public function __construct(Account $account, AccountTransactionType $transactionType, $amount)
     {
         $this->account = $account;
