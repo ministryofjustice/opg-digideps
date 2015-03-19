@@ -21,21 +21,7 @@ class Account
      */
     private $id;
     
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Expenditure", mappedBy="account", cascade={ "persist"})
-     */
-    private $expenditures;
     
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Income", mappedBy="account", cascade={ "persist"})
-     */
-    private $incomes;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Benefit", mappedBy="account", cascade={ "persist"})
-     */
-    private $benefits;
-
     /**
      * @var string
      *
@@ -119,9 +105,6 @@ class Account
      */
     public function __construct()
     {
-        $this->expenditures = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->incomes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->benefits = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -365,105 +348,6 @@ class Account
     }
 
     /**
-     * Add expenditures
-     *
-     * @param \AppBundle\Entity\Expenditure $expenditures
-     * @return Account
-     */
-    public function addExpenditure(\AppBundle\Entity\Expenditure $expenditures)
-    {
-        $this->expenditures[] = $expenditures;
-
-        return $this;
-    }
-
-    /**
-     * Remove expenditures
-     *
-     * @param \AppBundle\Entity\Expenditure $expenditures
-     */
-    public function removeExpenditure(\AppBundle\Entity\Expenditure $expenditures)
-    {
-        $this->expenditures->removeElement($expenditures);
-    }
-
-    /**
-     * Get expenditures
-     *
-     * @return Expenditure[]
-     */
-    public function getExpenditures()
-    {
-        return $this->expenditures;
-    }
-
-    /**
-     * Add incomes
-     *
-     * @param \AppBundle\Entity\Income $incomes
-     * @return Account
-     */
-    public function addIncome(\AppBundle\Entity\Income $incomes)
-    {
-        $this->incomes[] = $incomes;
-
-        return $this;
-    }
-
-    /**
-     * Remove incomes
-     *
-     * @param \AppBundle\Entity\Income $incomes
-     */
-    public function removeIncome(\AppBundle\Entity\Income $incomes)
-    {
-        $this->incomes->removeElement($incomes);
-    }
-
-    /**
-     * Get incomes
-     *
-     * @return Income[]
-     */
-    public function getIncomes()
-    {
-        return $this->incomes;
-    }
-
-    /**
-     * Add benefits
-     *
-     * @param \AppBundle\Entity\Benefit $benefits
-     * @return Account
-     */
-    public function addBenefit(\AppBundle\Entity\Benefit $benefits)
-    {
-        $this->benefits[] = $benefits;
-
-        return $this;
-    }
-
-    /**
-     * Remove benefits
-     *
-     * @param \AppBundle\Entity\Benefit $benefits
-     */
-    public function removeBenefit(\AppBundle\Entity\Benefit $benefits)
-    {
-        $this->benefits->removeElement($benefits);
-    }
-
-    /**
-     * Get benefits
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getBenefits()
-    {
-        return $this->benefits;
-    }
-
-    /**
      * Set report
      *
      * @param \AppBundle\Entity\Report $report
@@ -531,25 +415,7 @@ class Account
     {
         $balance = 0;
         
-        if(!empty($this->incomes)){
-            foreach($this->incomes as $income){
-                $balance += $income->getTotal();
-            }
-        }
         
-        if(!empty($this->benefits)){
-            foreach($this->benefits as $benefit){
-                $balance += $benefit->getTotal();
-            }
-        }
-        
-        $balance += $this->openingBalance;
-        
-        if(!empty($this->expenditures)){
-            foreach($this->expenditures as $expenditure){
-                $balance -= $expenditure->getTotal();
-            }
-        }
         return $balance;
     }
 }
