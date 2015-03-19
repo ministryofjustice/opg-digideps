@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Account
@@ -101,10 +102,16 @@ class Account
     private $balanceJustification;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account")
+     */
+    private $transactions;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
+        $this->transactions = new ArrayCollection();
     }
 
     /**
