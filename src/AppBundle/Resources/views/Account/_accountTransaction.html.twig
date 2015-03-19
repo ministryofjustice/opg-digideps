@@ -7,9 +7,10 @@
     
     {% for t in elements %}
      
-      {% set elementId = t.id.vars.value %}
+      {% set elementId = t.type.vars.value %}
       
       {{ form_row(t.id) }}
+      {{ form_row(t.type) }}
       
       {{ form_input(t.amount,'firstname', { 
         'labelText': ( keySection ~ '.elements.' ~ elementId ~ '.label') | trans
