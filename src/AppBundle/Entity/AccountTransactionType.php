@@ -30,4 +30,11 @@ abstract class AccountTransactionType
      */
     private $hasMoreDetails;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="display_order", type="integer", nullable=true)
+     */
+    private $displayOrder;
+    
 }
