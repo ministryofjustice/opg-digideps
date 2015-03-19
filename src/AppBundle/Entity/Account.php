@@ -103,7 +103,7 @@ class Account
     private $balanceJustification;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account", cascade={"persist"})
      */
     private $transactions;
     

@@ -48,6 +48,12 @@ class AccountController extends RestController
         $account->setReport($report);
         $account->setLastEdit(new \DateTime());
         
+        // add empty transactions. one of each type.
+        foreach ($this->getRepository('AccountTransactionType')->findAll() as $transactionType) {
+            $transaction = new EntityDir\AccountTransaction($account, $transactionType, 0.0);
+            $account->getTransactions()->add($transaction); 
+        }
+        
         $this->getEntityManager()->persist($account);
         $this->getEntityManager()->flush();
         

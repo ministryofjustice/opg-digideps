@@ -26,7 +26,7 @@ class AccountTransaction
     /**
      * @var Account
      * 
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="transactions")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account", inversedBy="transactions", cascade={"persist"})
      * @ORM\JoinColumn(name="account_id", referencedColumnName="id")
      */
     private $account;
@@ -56,7 +56,7 @@ class AccountTransaction
      * @var string
      * @JMS\Groups({"transactions"})
      *
-     * @ORM\Column(name="more_details", type="text")
+     * @ORM\Column(name="more_details", type="text", nullable=true)
      */
     private $moreDetails;
     
