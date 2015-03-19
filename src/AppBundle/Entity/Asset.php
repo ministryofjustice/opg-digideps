@@ -24,9 +24,9 @@ class Asset
     /**
      * @var string
      *
-     * @ORM\Column(name="explanation", type="text", nullable=true)
+     * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $explanation;
+    private $description;
 
     /**
      * @var string
@@ -52,9 +52,9 @@ class Asset
     /**
      * @var \Date
      *
-     * @ORM\Column(name="p_date", type="date", nullable=true)
+     * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
-    private $pdate;
+    private $valuationDate;
 
     /**
      * @var integer
@@ -76,26 +76,26 @@ class Asset
     }
 
     /**
-     * Set explanation
+     * Set description
      *
-     * @param string $explanation
+     * @param string $description
      * @return Asset
      */
-    public function setExplanation($explanation)
+    public function setDescription($description)
     {
-        $this->explanation = $explanation;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get explanation
+     * Get description
      *
      * @return string 
      */
-    public function getExplanation()
+    public function getDescription()
     {
-        return $this->explanation;
+        return $this->description;
     }
 
     /**
@@ -168,26 +168,26 @@ class Asset
     }
 
     /**
-     * Set pdate
+     * Set valuationDate
      *
-     * @param \DateTime $pdate
+     * @param \DateTime $valuationDate
      * @return Asset
      */
-    public function setPdate($pdate)
+    public function setValuationDate($valuationDate)
     {
-        $this->pdate = $pdate;
+        $this->valuationDate = $valuationDate;
 
         return $this;
     }
 
     /**
-     * Get pdate
+     * Get valuationDate
      *
      * @return \DateTime 
      */
-    public function getPdate()
+    public function getValuationDate()
     {
-        return $this->pdate;
+        return $this->valuationDate;
     }
 
     /**

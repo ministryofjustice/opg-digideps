@@ -99,71 +99,53 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/report/get-accounts/{id}")
+     * 
+     * @Route("/report/get-assets/{id}")
      * @Method({"GET"})
      */
-    public function getAccountsAction($id)
+    public function getAssetsAction($id)
     {
         $report = $this->findEntityBy('Report', $id);
+        $assets = $this->getRepository('Asset')->findByReport($report);
         
-        $accounts = $this->getRepository('Account')->findByReport($report);
-       
-        if(count($accounts) == 0){
+        if(count($assets) == 0){
             return [];
         }
-        return $accounts;
+        return $assets;
     }
     
     /**
-     * @Route("/report/add-account")
+     * @Route("/report/add-asset")
      * @Method({"POST"})
      */
-    public function addAccountAction()
+    public function addAssetAction()
     {
-        $accountData = $this->deserializeBodyContent();
-   
-        $report = $this->findEntityBy('Report', $accountData['report']);
+        $reportData = $this->deserializeBodyContent();
+        
+        $report = $this->findEntityBy('Report', $reportData['report']);
         
         if(empty($report)){
-            throw new \Exception("Report id: ".$accountData['report']." does not exists");
+            throw new \Exception("Report id: ".$reportData['report']." does not exists");
         }
         
-        $account = new EntityDir\Account();
-        $account->setBank($accountData['bank']);
-        $account->setSortCode($accountData['sort_code']);
-        $account->setAccountNumber($accountData['account_number']);
-        $account->setOpeningDate(new \DateTime($accountData['opening_date']));
-        $account->setOpeningBalance($accountData['opening_balance']);
-        $account->setReport($report);
-        $account->setLastEdit(new \DateTime());
+        $asset = new EntityDir\Asset();
+        $asset->setReport($report);
+        $asset->setDescription($reportData['description']);
+        $asset->setValue($reportData['value']);
+        $asset->setTitle($reportData['title']);
         
-        $benefits = $this->getRepository('Benefit')->findAll();
-        
-        if(count($benefits) > 0){
-            foreach($benefits as $benefit){
-                $account->addBenefit($benefit);
-            }
+        if(!empty($reportData['valuation_date'])){
+            $valuationDate = new \DateTime($reportData['valuation_date']);
+        }else{
+            $valuationDate = null;
         }
         
-        $incomes = $this->getRepository('Income')->findAll();
-        
-        if(count($incomes) > 0){
-            foreach($incomes as $income){
-                $account->addIncome($income);
-            }
-        }
-        
-        $expenditures = $this->getRepository('Expenditure')->findAll();
-        
-        if(count($expenditures) > 0){
-            foreach($expenditures as $expenditure){
-                $account->addExpenditure($expenditure);
-            }
-        }
-        $this->getEntityManager()->persist($account);
+        $asset->setValuationDate($valuationDate);
+        $asset->setLastedit(new \DateTime());
+        $this->getEntityManager()->persist($asset);
         $this->getEntityManager()->flush();
         
-        return [ 'id' => $account->getId() ];
+        return [ 'id' => $asset->getId() ];
     }
     
     /**
