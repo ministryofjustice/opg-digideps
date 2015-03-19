@@ -23,5 +23,11 @@ abstract class AccountTransactionType
     
     private $type;
     
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
+     */
     private $hasMoreDetails;
+    
 }

@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Account
@@ -14,7 +15,7 @@ class Account
 {
     /**
      * @var integer
-     *
+     * @JMS\Groups({"transactions"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -102,6 +103,7 @@ class Account
     private $balanceJustification;
 
     /**
+     * @JMS\Groups({"transactions"})
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account")
      */
     private $transactions;
@@ -425,4 +427,17 @@ class Account
         
         return $balance;
     }
+    
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    public function setTransactions($transactions)
+    {
+        $this->transactions = $transactions;
+        return $this;
+    }
+
+
 }

@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Exception\NotFound;
+use AppBundle\EventListener\RestInputOuputFormatter;
 
 abstract class RestController extends Controller
 {
@@ -67,6 +68,18 @@ abstract class RestController extends Controller
                 $object->$setter($data[$k]);
             }
         }
+    }
+    
+    
+    /**
+     * Set serialise group used by JMS serialiser to composer ouput response
+     * Attach setting to REquest as header, to be read by REstInputOuputFormatter kernel listener
+     * 
+     * @param string $group user 
+     */
+    protected function setJmsSerialiserGroup($group)
+    {
+        RestInputOuputFormatter::addJmsSerialiserGroupToRequest($this->getRequest(), $group);
     }
    
 }

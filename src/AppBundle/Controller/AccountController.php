@@ -48,29 +48,6 @@ class AccountController extends RestController
         $account->setReport($report);
         $account->setLastEdit(new \DateTime());
         
-        $benefits = $this->getRepository('Benefit')->findAll();
-        
-        if(count($benefits) > 0){
-            foreach($benefits as $benefit){
-                $account->addBenefit($benefit);
-            }
-        }
-        
-        $incomes = $this->getRepository('Income')->findAll();
-        
-        if(count($incomes) > 0){
-            foreach($incomes as $income){
-                $account->addIncome($income);
-            }
-        }
-        
-        $expenditures = $this->getRepository('Expenditure')->findAll();
-        
-        if(count($expenditures) > 0){
-            foreach($expenditures as $expenditure){
-                $account->addExpenditure($expenditure);
-            }
-        }
         $this->getEntityManager()->persist($account);
         $this->getEntityManager()->flush();
         
@@ -78,13 +55,16 @@ class AccountController extends RestController
     }
     
    /**
-     * @Route("/report/find-account-by-id/{id}")
+     * @Route("/report/find-account-by-id/{id}/{serialiseGroup}", defaults={"serialiseGroup": null})
      * @Method({"GET"})
      */
-    public function get($id)
+    public function get($id, $serialiseGroup = null)
     {
+        $this->setJmsSerialiserGroup($serialiseGroup);
+        
         $ret = $this->findEntityBy('Account', $id, 'Account not found');
 
         return $ret;
     }
+    
 }

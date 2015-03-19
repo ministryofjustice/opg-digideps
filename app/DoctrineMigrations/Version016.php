@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * Auto-generated Migration: Please modify to your needs!
+ * delete old transaction tables
  */
 class Version016 extends AbstractMigration
 {
@@ -21,15 +21,6 @@ class Version016 extends AbstractMigration
         $this->addSql('ALTER TABLE income_payment DROP CONSTRAINT fk_d56af274640ed2c0');
         $this->addSql('ALTER TABLE expenditure DROP CONSTRAINT fk_8d4a5feb5d9690ae');
         $this->addSql('ALTER TABLE expenditure_payment DROP CONSTRAINT fk_f5f2983068dc13e9');
-        $this->addSql('DROP SEQUENCE benefit_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE benefit_payment_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE benefit_type_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE expenditure_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE expenditure_payment_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE expenditure_type_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE income_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE income_payment_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE income_type_id_seq CASCADE');
         $this->addSql('DROP TABLE benefit_type');
         $this->addSql('DROP TABLE benefit');
         $this->addSql('DROP TABLE benefit_payment');
@@ -46,27 +37,6 @@ class Version016 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE SEQUENCE account_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE asset_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE benefit_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE benefit_payment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE benefit_type_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE client_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE config_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE contact_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE court_order_type_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE decision_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE decision_involvement_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE expenditure_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE expenditure_payment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE expenditure_type_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE income_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE income_payment_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE income_type_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE pdf_token_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE report_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE role_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        $this->addSql('CREATE SEQUENCE dd_user_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE benefit_type (id SERIAL NOT NULL, name VARCHAR(60) DEFAULT NULL, form_name VARCHAR(60) DEFAULT NULL, payment_description_required BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE benefit (id SERIAL NOT NULL, account_id INT DEFAULT NULL, benefit_type_id INT DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX idx_5c8b001f9d0b88b8 ON benefit (benefit_type_id)');

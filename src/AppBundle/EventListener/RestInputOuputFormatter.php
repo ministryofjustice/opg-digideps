@@ -9,11 +9,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 
 class RestInputOuputFormatter
 {
-
+    const HEADER_JMS_GROUP = 'JmsSerialiseGroup';
+    
     /**
      * @var Serializer
      */
@@ -56,7 +58,7 @@ class RestInputOuputFormatter
     
     
     /**
-     * @param array $data
+     * @param array $data for custom serialise groups, use serialise_groups
      * @param Request $request
      * @return Response
      */
@@ -68,11 +70,21 @@ class RestInputOuputFormatter
             throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
         }
 
-        $serializedData = $this->serializer->serialize($data, $format);
+        $context = SerializationContext::create(); //->setSerializeNull(true);
+        if ($serialiseGroup = $request->headers->get(self::HEADER_JMS_GROUP)) {
+            $context->setGroups([$serialiseGroup]);
+        }
+        
+        $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
         $response->headers->set('content_type', 'application/' . $format);
         
         return $response;
+    }
+    
+    public static function addJmsSerialiserGroupToRequest($request, $group)
+    {
+        $request->headers->set(self::HEADER_JMS_GROUP, $group);
     }
 
     /**

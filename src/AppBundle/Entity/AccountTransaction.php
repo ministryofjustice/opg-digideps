@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Account
@@ -12,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class AccountTransaction
 {
     /**
+     * @JMS\Groups({"transactions"})
      * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -37,14 +39,19 @@ class AccountTransaction
     
     /**
      * @var string
+     * @JMS\Groups({"transactions"})
      *
      * @ORM\Column(type="decimal", precision=14, scale=2, nullable=false)
      */
     private $amount;
     
+    /**
+     * @var string
+     * @JMS\Groups({"transactions"})
+     *
+     * @ORM\Column(type="text")
+     */
     private $moreDetails;
-    
-    private $hasMoreDetails;
     
     public function __construct(Account $account, AccountTransactionType $transactionType, $amount)
     {
@@ -73,9 +80,9 @@ class AccountTransaction
         return $this->moreDetails;
     }
 
-    public function getHasMoreDetails()
+    public function hasMoreDetails()
     {
-        return $this->hasMoreDetails;
+        
     }
 
     public function setAccount(Account $account)
@@ -101,14 +108,5 @@ class AccountTransaction
         $this->moreDetails = $moreDetails;
         return $this;
     }
-
-    public function setHasMoreDetails($hasMoreDetails)
-    {
-        $this->hasMoreDetails = $hasMoreDetails;
-        return $this;
-    }
-
-
-    
 
 }
