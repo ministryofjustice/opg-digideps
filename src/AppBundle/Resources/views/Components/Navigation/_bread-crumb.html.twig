@@ -1,0 +1,13 @@
+{% if breadCrumb is defined %}
+    <ul class="bread-crumb">
+        {% for step in breadCrumb %}
+            <li>
+                {% if step.href is defined %}
+                    <a href="{{ step.href }}">{{ step.label | trans }}</a>
+                {% else %}
+                    {{ step.label | trans }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
