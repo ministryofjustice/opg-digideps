@@ -34,19 +34,16 @@ class ValidationCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
     
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//        try {
-            $ret = [];
-            foreach (glob($this->getContainer()->get('kernel')->getRootDir() . '/../src/AppBundle/Entity/*.php') as $entity) {
-                if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
-                    $className = '\\AppBundle\\Entity\\' . $matches[1];
+        $ret = [];
+        foreach (glob($this->getContainer()->get('kernel')->getRootDir() . '/../src/AppBundle/Entity/*.php') as $entity) {
+            if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
+                $className = '\\AppBundle\\Entity\\' . $matches[1];
+                if (class_exists($className)) {
                     $ret[$className] = $this->getClassValidationRules(new $className);
                 }
             }
-//        } catch (\Exception $e) {
-//            echo $e->getMessage();
-//            die(1);
-//        }
-        
+        }
+
         if ($input->getOption('print')) {
             $output->writeln(print_r($ret, true));
         }
