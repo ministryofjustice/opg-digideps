@@ -35,7 +35,7 @@ class AccountTransaction
     
      /**
      * @JMS\Type("string")
-     * @JMS\Groups({"detail"})
+     * @JMS\Groups({"transactions"})
      * @var string
      */
     private $moreDetails;
