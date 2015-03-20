@@ -56,8 +56,9 @@ class ApiClient extends GuzzleClient
         // construct parent (GuzzleClient)
         parent::__construct([ 
             'base_url' =>  $options['base_url'],
-            'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ] ],
-         ]);
+            'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                           'verify' => false
+                          ]]);
     }
    
     /**
