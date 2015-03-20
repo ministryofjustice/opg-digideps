@@ -13,6 +13,17 @@
 {% endblock %}
 
 {% block pageBody %}
+
+    {{ dump(app.request.requestUri) }}
+
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
+
+    * Style account summary header
+    * Implement accordion
+    * Sort warning block
+    * Finish breadcrumb
+    * Use variables to switch accordion panel visible
+
     
     <div style="background-color: #C9D0D0; margin: 20px">
         {{ account.bank  }}<br/>
