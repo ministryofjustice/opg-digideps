@@ -68,9 +68,38 @@ class AccountController extends RestController
     {
         $this->setJmsSerialiserGroup($serialiseGroup);
         
-        $ret = $this->findEntityBy('Account', $id, 'Account not found');
+        $account = $this->findEntityBy('Account', $id, 'Account not found');
 
-        return $ret;
+        return $account;
+    }
+    
+    /**
+     * @Route("/account/{id}")
+     * @Method({"PUT"})
+     */
+    public function edit($id)
+    {
+        $account = $this->findEntityBy('Account', $id, 'Account not found');
+        
+        $data = $this->deserializeBodyContent();
+        
+        // edit transactions
+        if (isset($data['money_in']) && isset($data['money_out'])) {
+            $transactionRepo = $this->getRepository('AccountTransaction');
+            $transactionsRows = array_merge($data['money_in'], $data['money_out']);
+            foreach ($transactionsRows as $transactionRow) {
+                $transactionEntity = $transactionRepo->find($transactionRow['id']); /* @var $transactionEntity EntityDir\AccountTransaction */
+                $transactionEntity->setAmount($transactionRow['amount']);
+                if (array_key_exists('more_details', $transactionRow)) {
+                    $transactionEntity->setMoreDetails($transactionRow['more_details']);
+                }
+            }
+            $this->setJmsSerialiserGroup('transactions');
+        }
+        
+        $this->getEntityManager()->flush();
+        
+        return $account;
     }
     
 }
