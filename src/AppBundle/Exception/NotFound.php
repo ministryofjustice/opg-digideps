@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Exception;
 
 class NotFound extends \RuntimeException
