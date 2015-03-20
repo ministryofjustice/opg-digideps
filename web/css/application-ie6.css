@@ -1885,7 +1885,7 @@ ol.progress {
         font-weight: 400;
         text-transform: none;
         position: absolute;
-        left: 526px; }
+        left: 522px; }
         @media (max-width: 640px) {
           .report-list .report-list__item .report-list__item-header .report-list__item-edit-link {
             font-size: 16px;
@@ -1974,6 +1974,11 @@ ol.progress {
   overflow: hidden;
   margin-left: 8px;
   width: 30%; }
+
+.report-list--assets dt.report-list__item-fields-term {
+  width: 130px; }
+.report-list--assets dd.report-list__item-fields-description {
+  margin-left: 135px; }
 
 .report-meta {
   line-height: 19px; }

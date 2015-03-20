@@ -27,7 +27,7 @@
       .report-list__item-edit-link {
         @include core-19();
         position: absolute;
-        left: 526px;
+        left: 522px;
       }
 
     }
@@ -150,4 +150,14 @@
 
   }
 
+}
+
+.report-list--assets {
+  dt.report-list__item-fields-term {
+    width: 130px;
+  }
+
+  dd.report-list__item-fields-description {
+    margin-left: 135px;
+  }
 }

@@ -2,6 +2,7 @@
 {% trans_default_domain "report-overview" %}
 
 {% block pageTitle %}{{ 'overview.pageTitle' | trans }} {% endblock %}
+{% block contentClass %}{{ parent() }} js-report-overview{% endblock %}
 {% block title %}{% trans %}overview.pageTitle{% endtrans %}{% endblock %}
 
  {% block pageNavigation %}

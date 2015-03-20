@@ -17,7 +17,7 @@ class AccountType extends AbstractType
                                                  'format' => 'yyyy-MM-dd',
                                                  'invalid_message' => 'account.openingDate.invalidMessage'
                                           ])
-                  ->add('openingBalance','text')
+                  ->add('openingBalance','number', [ 'grouping' => true, 'precision' => 2 ])
                   ->add('sortCode',new SortCodeType(), [ 'error_bubbling' => false ])
                   ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false ])
                   ->add('save', 'submit');

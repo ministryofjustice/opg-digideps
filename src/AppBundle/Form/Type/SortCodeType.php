@@ -9,9 +9,9 @@ class SortCodeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-       $builder->add('sort_code_part_1', 'text')
-               ->add('sort_code_part_2', 'text')
-               ->add('sort_code_part_3', 'text')
+       $builder->add('sort_code_part_1', 'text', [ 'max_length' => 2 ])
+               ->add('sort_code_part_2', 'text', [ 'max_length' => 2 ])
+               ->add('sort_code_part_3', 'text', [ 'max_length' => 2 ])
                ->addModelTransformer(new ArrayToStringTransformer(['sort_code_part_1', 'sort_code_part_2', 'sort_code_part_3']));
     }
     

@@ -11,6 +11,8 @@
         <phplint haltonfailure="true" level="info">
             <fileset refid="source" />
         </phplint>
+        <exec command="php app/console twig:lint app/Resources/views" checkreturn="true" passthru="true"></exec>
+        <exec command="php app/console twig:lint src/AppBundle/Resources/views" checkreturn="true" passthru="true"></exec>
     </target>
     
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">

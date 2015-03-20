@@ -58,3 +58,21 @@ swiftmailer:
     username:  ~
     password:  ~
     spool:     { type: memory }
+    
+parameters:
+    asset_dropdown:
+        1: dropdown.property 
+        2: dropdown.savings_accounts
+        3: dropdown.investment_bonds 
+        4: dropdown.isa 
+        5: dropdown.unit_trusts 
+        6: dropdown.national_savings_certificates 
+        7: dropdown.stocks_shares
+        8: dropdown.premium_bonds
+        9: dropdown.vehicles 
+        10: dropdown.artwork 
+        11: dropdown.antiques 
+        12: dropdown.jewellery
+        14: dropdown.assets_held_outside_england_and_wales
+        15: dropdown.court_funds_office_accounts 
+        16: dropdown.other_assets
