@@ -14,14 +14,14 @@ class AccountTransactionSingleType extends AbstractType
      {
          $builder 
                  ->add('id', 'hidden')
-//                 ->add('hasMoreDetails', 'hidden')
+                 ->add('type', 'hidden')
                  ->add('amount', 'text');
          
          $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $accountTransaction = $event->getData(); /* @var $accountTransaction AccountTransaction */
             $form = $event->getForm();
             
-            if ($accountTransaction->getHasMoreDetails()) {
+            if ($accountTransaction->hasMoreDetails()) {
                 $form->add('moreDetails', 'textarea');
             }
         });
@@ -31,6 +31,10 @@ class AccountTransactionSingleType extends AbstractType
      {
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\AccountTransaction',
+             'validation_groups' => function($form) {
+                 $accountTransaction = $form->getData();
+                 return $accountTransaction->getValidationGroups();
+             }
         ]);
      }
      
