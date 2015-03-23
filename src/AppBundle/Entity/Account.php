@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
  * Account
  *
  * @ORM\Table(name="account")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
  */
 class Account
 {
@@ -33,49 +33,56 @@ class Account
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
     private $sortCode;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastEdit;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $closingBalance;
 
     /**
      * @var \Date
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="opening_date", type="date", nullable=true)
      */
     private $openingDate;
 
     /**
      * @var \Date
-     *
+     * @JMS\Groups({"transactions"})
+     * 
      * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
     private $closingDate;
