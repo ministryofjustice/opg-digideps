@@ -15,9 +15,7 @@ class AccountTransactionSingleType extends AbstractType
          $builder 
                  ->add('id', 'hidden')
                  ->add('type', 'hidden')
-                 ->add('amount', 'text', [
-                      'cascade_validation' => true,
-                 ]);
+                 ->add('amount', 'text');
          
          $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $accountTransaction = $event->getData(); /* @var $accountTransaction AccountTransaction */
@@ -33,7 +31,6 @@ class AccountTransactionSingleType extends AbstractType
      {
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\AccountTransaction',
-             'cascade_validation' => true,
              'validation_groups' => ['transactions'] /*function($form) {
                  $accountTransaction = $form->getData();
                  return $accountTransaction->getValidationGroups();
