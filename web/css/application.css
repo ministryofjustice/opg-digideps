@@ -1447,6 +1447,10 @@ input[type=number] {
     Do need import application specific code into this file.
 ***************************************************************
 */
+.account-header {
+  background-color: #888a85;
+  border: 1px solid black; }
+
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
@@ -1522,6 +1526,8 @@ header.page-header {
 
 .page-section-warning {
   border-left: 3px solid #bfc1c3;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding-left: 10px;
   width: 65%;
   margin-bottom: 30px; }

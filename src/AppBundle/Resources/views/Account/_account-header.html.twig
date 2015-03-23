@@ -1,0 +1,27 @@
+<div class="account-header">
+
+    <dl class="account-header__item-fields">
+        <div class="account-header__item-fields-row">
+            <dt class="account-header__item-fields-term">Bank or Building Society name</dt>
+            <dd class="account-header__item-fields-description"><h2>{{ account.bank }}</h2></dd>
+        </div>
+        <div class="account-header__item-fields-row">
+            <dt class="account-header__item-fields-term">Account no.</dt>
+            <dd class="account-header__item-fields-description">****{{ account.accountNumber }}</dd>
+        </div>
+        <div class="account-header__item-fields-row">
+            <dt class="account-header__item-fields-term">Opening balance date</dt>
+            <dd class="account-header__item-fields-description">{{ account.openingDate | date("d/m/Y") }}</dd>
+        </div>
+        <div class="account-header__item-fields-row">
+            <dt class="account-header__item-fields-term">Opening balance</dt>
+            <dd class="account-header__item-fields-description">
+                £{{ account.openingBalance | number_format(2, '.', ',') }}</dd>
+        </div>
+        <div class="account-header__item-fields-row">
+            <dt class="account-header__item-fields-term">Sort code</dt>
+            <dd class="account-header__item-fields-description">{{ account.sortCode }}</dd>
+        </div>
+    </dl>
+
+</div>

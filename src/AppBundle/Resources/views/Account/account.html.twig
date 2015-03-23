@@ -14,28 +14,19 @@
 
 {% block pageBody %}
 
-    {{ dump(app.request.requestUri) }}
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' %}
 
-    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
+    {% include 'AppBundle:Account:_account-header.html.twig' %}
 
     * Style account summary header
     * Implement accordion
-    * Sort warning block
     * Finish breadcrumb
     * Use variables to switch accordion panel visible
 
-    
-    <div style="background-color: #C9D0D0; margin: 20px">
-        {{ account.bank  }}<br/>
-        Opening balance {{ account.openingDate | date }} £{{ account.openingBalance }}<br/>
-        Account no. ****{{ account.accountNumber }}<br/>
-        Sort code {{ account.sortCode }}<br/>
-    </div>
-    
-    
-    <div style="border-left: grey 3px solid; margin: 20px">
-        {{ 'page.description' | trans }}
-    </div>
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'page.pageSectionWarning'
+    } %}
    
     {% block validationSummary %}
         {{ form_errors_list(form) }}
