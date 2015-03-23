@@ -192,6 +192,15 @@ Feature: report
             | transactions_moneyOut_11_amount      |  | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I save the page as "report-account-transactions-empty"
+        # wrong values
+        When I fill in the following:
+            | transactions_moneyIn_0_amount        | aaa | 
+            | transactions_moneyOut_11_amount      | bbb | 
+        And I submit the form
+        Then the following fields should have an error:
+            | transactions_moneyIn_0_amount  |
+            | transactions_moneyOut_11_amount |
+        And I save the page as "report-account-transactions-errors"    
         # right values
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 125 | 
@@ -202,6 +211,7 @@ Feature: report
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
         And I submit the form
         Then the form should not contain an error
+        # assert value saved
         And the following fields should have the corresponding values:
             | transactions_moneyIn_0_amount       | 125 | 
             | transactions_moneyIn_15_amount      | 200 | 
