@@ -50,7 +50,7 @@ class AccountController extends RestController
         
         // add empty transactions. one of each type.
         foreach ($this->getRepository('AccountTransactionType')->findAll() as $transactionType) {
-            $transaction = new EntityDir\AccountTransaction($account, $transactionType, 0.0);
+            $transaction = new EntityDir\AccountTransaction($account, $transactionType, null);
             $account->getTransactions()->add($transaction); 
         }
         
@@ -86,14 +86,11 @@ class AccountController extends RestController
         // edit transactions
         if (isset($data['money_in']) && isset($data['money_out'])) {
             $transactionRepo = $this->getRepository('AccountTransaction');
-            $transactionsRows = array_merge($data['money_in'], $data['money_out']);
-            foreach ($transactionsRows as $transactionRow) {
-                $transactionEntity = $transactionRepo->find($transactionRow['id']); /* @var $transactionEntity EntityDir\AccountTransaction */
-                $transactionEntity->setAmount($transactionRow['amount']);
-                if (array_key_exists('more_details', $transactionRow)) {
-                    $transactionEntity->setMoreDetails($transactionRow['more_details']);
-                }
-            }
+            array_map(function($transactionRow) use ($transactionRepo) {
+                $transactionRepo->find($transactionRow['id'])
+                    ->setAmount($transactionRow['amount'])
+                    ->setMoreDetails($transactionRow['more_details']);
+            }, array_merge($data['money_in'], $data['money_out']));
             $this->setJmsSerialiserGroup('transactions');
         }
         

@@ -48,7 +48,7 @@ class AccountTransaction
      * @var string
      * @JMS\Groups({"transactions"})
      *
-     * @ORM\Column(type="decimal", precision=14, scale=2, nullable=false)
+     * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amount;
     
