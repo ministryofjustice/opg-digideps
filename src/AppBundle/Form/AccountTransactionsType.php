@@ -13,8 +13,16 @@ class AccountTransactionsType extends AbstractType
      {
          $builder 
                  ->add('id', 'hidden')
-                 ->add('moneyIn',  'collection', ['type' => new AccountTransactionSingleType()])
-                 ->add('moneyOut', 'collection', ['type' => new AccountTransactionSingleType()])
+                 ->add('moneyIn',  'collection', [
+                     'type' => new AccountTransactionSingleType(),
+                     'error_bubbling' => false,
+                     'cascade_validation' => true,
+                 ])
+                 ->add('moneyOut', 'collection', [
+                     'type' => new AccountTransactionSingleType(),
+                     'error_bubbling' => true,
+                     'cascade_validation' => true,
+                 ])
                  ->add('save', 'submit');
      }
      
@@ -23,6 +31,7 @@ class AccountTransactionsType extends AbstractType
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\Account',
              'validation_groups' => ['transactions'],
+             'cascade_validation' => true,
         ]);
      }
      

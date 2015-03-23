@@ -17,6 +17,7 @@ class AccountTransaction
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"transactions"})
+     * @Assert\Type(type="numeric", message="account.moneyInOut.notNumeric", groups={"transactions"})
      * @var string
      */
     private $amount;
