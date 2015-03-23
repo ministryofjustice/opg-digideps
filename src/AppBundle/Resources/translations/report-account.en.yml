@@ -1,7 +1,7 @@
 page:
   htmlTitle: Account %accountName%
   totalBalance: Total Balance
-  description: Add and edit totals for the reporting period for the client's account.
+  pageSectionWarning: Add and edit totals for the reporting period for the client's account.
 moneyIn:
   legend: Money paid in
   elements:
