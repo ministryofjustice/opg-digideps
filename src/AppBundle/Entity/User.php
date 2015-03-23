@@ -453,6 +453,9 @@ class User implements AdvancedUserInterface
      */
     public function getGaTrackingId()
     {
+        if(empty($this->gaTrackingId)){
+            $this->gaTrackingId = md5($this->id);
+        }
         return $this->gaTrackingId;
     }
     

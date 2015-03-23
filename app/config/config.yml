@@ -26,6 +26,8 @@ framework:
 
 # Twig Configuration
 twig:
+    globals:
+        env: %env%
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     exception_controller:  AppBundle:Exception:showException
