@@ -111,6 +111,7 @@ class Account
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
     
