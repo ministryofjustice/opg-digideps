@@ -9,6 +9,7 @@ use JMS\Serializer\Annotation as JMS;
  * Account
  *
  * @ORM\Table(name="account")
+ * @ORM\Entity
  */
 class Account
 {
