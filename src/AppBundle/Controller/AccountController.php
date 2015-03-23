@@ -40,19 +40,15 @@ class AccountController extends RestController
         }
         
         $account = new EntityDir\Account();
-        $account->setBank($accountData['bank']);
-        $account->setSortCode($accountData['sort_code']);
-        $account->setAccountNumber($accountData['account_number']);
-        $account->setOpeningDate(new \DateTime($accountData['opening_date']));
-        $account->setOpeningBalance($accountData['opening_balance']);
-        $account->setReport($report);
-        $account->setLastEdit(new \DateTime());
+        $account->setBank($accountData['bank'])
+            ->setSortCode($accountData['sort_code'])
+            ->setAccountNumber($accountData['account_number'])
+            ->setOpeningDate(new \DateTime($accountData['opening_date']))
+            ->setOpeningBalance($accountData['opening_balance'])
+            ->setReport($report)
+            ->setLastEdit(new \DateTime());
         
-        // add empty transactions. one of each type.
-        foreach ($this->getRepository('AccountTransactionType')->findAll() as $transactionType) {
-            $transaction = new EntityDir\AccountTransaction($account, $transactionType, null);
-            $account->getTransactions()->add($transaction); 
-        }
+        $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
         $this->getEntityManager()->persist($account);
         $this->getEntityManager()->flush();
