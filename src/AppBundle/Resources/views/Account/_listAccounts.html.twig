@@ -10,7 +10,7 @@
                     <dt class="visuallyhidden">{{ 'listing.bank' | trans }}</dt>
                     <dd class="report-list__item-fields-description">
                         <h3>
-                            <a href="{{ path('account', {'reportId': report.id, 'accountId': account.id}) }}">
+                            <a href="{{ path('account', {'reportId': report.id, 'accountId': account.id}) }}" class="behat-link-account-n{{loop.index}}">
                                 {{ account.bank }}
                             </a>
                         </h3></dd>

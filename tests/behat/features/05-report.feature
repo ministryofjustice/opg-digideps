@@ -177,3 +177,37 @@ Feature: report
         And I should be on "/report/1/accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
+
+
+    @deputy
+    Scenario: add account transactions
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I follow "tab-accounts"
+        And I click on "account-n1"
+        Then the following fields should have the corresponding values:
+            | transactions_moneyIn_0_amount        |  | 
+            | transactions_moneyIn_15_amount       |  | 
+            | transactions_moneyIn_15_moreDetails  |  | 
+            | transactions_moneyOut_0_amount       |  | 
+            | transactions_moneyOut_11_amount      |  | 
+            | transactions_moneyOut_11_moreDetails |  | 
+        And I save the page as "report-account-transactions-empty"
+        # right values
+        When I fill in the following:
+            | transactions_moneyIn_0_amount       | 125 | 
+            | transactions_moneyIn_15_amount      | 200 | 
+            | transactions_moneyIn_15_moreDetails | more-details-in-15  |
+            | transactions_moneyOut_0_amount       | 250 | 
+            | transactions_moneyOut_11_amount      | 500 | 
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+        And I submit the form
+        Then the form should not contain an error
+        And the following fields should have the corresponding values:
+            | transactions_moneyIn_0_amount       | 125 | 
+            | transactions_moneyIn_15_amount      | 200 | 
+            | transactions_moneyIn_15_moreDetails | more-details-in-15  |
+            | transactions_moneyOut_0_amount       | 250 | 
+            | transactions_moneyOut_11_amount      | 500 | 
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+        And I save the page as "report-account-transactions-data-saved"
+        
