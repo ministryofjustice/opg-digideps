@@ -79,5 +79,8 @@
     
     <target name="release" depends="cache-clear,composer-install,db-migrate,phplint">
     </target>
+    
+    <target name="test" depends="behat,phpunit">
+    </target>
 
 </project>
