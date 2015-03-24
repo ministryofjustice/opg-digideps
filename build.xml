@@ -27,7 +27,7 @@
             </else>
         </if>
         <exec command="export SYMFONY__ENV=develop" checkreturn="true" passthru="true"/>
-        <exec command="export SYMFONY__ENV=develop && php composer.phar install --no-interaction" checkreturn="true" passthru="true"/>
+        <exec command="export SYMFONY__ENV=develop; php composer.phar install --no-interaction" checkreturn="true" passthru="true"/>
     </target>
     
     <target name="optimise">
