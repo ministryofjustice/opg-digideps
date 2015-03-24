@@ -88,6 +88,21 @@ class Account
      */
     private $moneyOut;
     
+    /**
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyInTotal;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyOutTotal;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyTotal;
+    
     
     public function getId()
     {
@@ -216,6 +231,30 @@ class Account
     public function setMoneyOut(array $moneyOut)
     {
         $this->moneyOut = $moneyOut;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyInTotal()
+    {
+        return $this->moneyInTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        return $this->moneyOutTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyTotal()
+    {
+        return $this->moneyTotal;
     }
 
 }
