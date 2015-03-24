@@ -11,7 +11,6 @@
         <phplint haltonfailure="true" level="info">
             <fileset refid="source" />
         </phplint>
-        <exec command="whoami" checkreturn="true" passthru="true"/>
         <exec command="php app/console twig:lint app/Resources/views" checkreturn="true" passthru="true"></exec>
         <exec command="php app/console twig:lint src/AppBundle/Resources/views" checkreturn="true" passthru="true"></exec>
     </target>
@@ -27,6 +26,7 @@
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
+        <exec command="whoami" checkreturn="true" passthru="true"/>
         <exec command="php composer.phar install --no-interaction" checkreturn="true" passthru="true"/>
     </target>
     
