@@ -43,6 +43,8 @@ class AccountController extends Controller
 
                 $apiClient->postC('add_report_account', $account);
                 return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $reportId]));
+            } else {
+                echo $form->getErrorsAsString();
             }
         }
 

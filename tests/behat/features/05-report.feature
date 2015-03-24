@@ -184,6 +184,7 @@ Feature: report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I follow "tab-accounts"
         And I click on "account-n1"
+        # check no data was previously saved
         Then the following fields should have the corresponding values:
             | transactions_moneyIn_0_amount        |  | 
             | transactions_moneyIn_15_amount       |  | 
@@ -192,14 +193,17 @@ Feature: report
             | transactions_moneyOut_11_amount      |  | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I save the page as "report-account-transactions-empty"
-        # wrong values
+        # wrong values (wrong amount types and amount without explanation)
         When I fill in the following:
             | transactions_moneyIn_0_amount        | aaa | 
             | transactions_moneyOut_11_amount      | bbb | 
+            | transactions_moneyIn_15_amount       | 250 | 
         And I submit the form
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
+            | transactions_moneyIn_15_moreDetails |
             | transactions_moneyOut_11_amount |
+            | transactions_moneyOut_11_moreDetails |
         And I save the page as "report-account-transactions-errors"    
         # right values
         When I fill in the following:
