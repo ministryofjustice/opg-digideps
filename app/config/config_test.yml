@@ -13,4 +13,4 @@ swiftmailer:
 
 doctrine:
     dbal:
-        dbname:   dd_api_unit_test
+        dbname:   digideps_unit_test
