@@ -1,0 +1,42 @@
+# behat.yml
+default:
+    #http://docs.behat.org/en/latest/guides/6.profiles.html#custom-autoloading
+    autoload:
+        '': %paths.base%/tests/behat/bootstrap
+    suites:
+      deputy:
+        description: End to end journey for Lay deputy user
+        paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: @deputy
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+      admin:
+        description: End to end journey for Admin user
+        paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: @admin
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+    extensions:
+        Behat\Symfony2Extension: ~
+        Behat\MinkExtension:
+            base_url: 'http://digideps-client.local/'
+            sessions:
+              default:
+                goutte: ~
+                #   guzzle_parameters:
+                #      # http://guzzle3.readthedocs.org/http-client/client.html
+                #      ssl.certificate_authority: false
+                #      # curl.options: ~
+                #      command.request_options:
+                #        timeout: 5
+                #        connect_timeout: 5
+                # the following is faster but not behaving the same as the browser. Goutte better for now
+                #symfony2: ~  

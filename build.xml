@@ -29,6 +29,10 @@
         <exec command="export SYMFONY__ENV=develop; php composer.phar install --no-interaction" checkreturn="true" passthru="true"/>
     </target>
     
+    <target name="phpunit">
+        <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c app/" checkreturn="true"></exec>
+    </target>
+    
     <target name="optimise">
         <exec passthru="true" command="export SYMFONY__ENV=develop; php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
     </target>
@@ -69,6 +73,9 @@
     </target>
     
     <target name="release" depends="build">
+    </target>
+    
+    <target name="test" depends="behat,phpunit">
     </target>
 
 </project>
