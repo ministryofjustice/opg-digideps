@@ -539,6 +539,6 @@ class Account
      */
     public function getMoneyTotal()
     {
-        return $this->getMoneyInTotal() - $this->getMoneyOutTotal();
+        return $this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
     }
 }

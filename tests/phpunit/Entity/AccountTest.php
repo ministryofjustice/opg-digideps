@@ -32,6 +32,7 @@ class AccountTest extends WebTestCase
     public function testTotals()
     {
         $account = new Account();
+        $account->setOpeningBalance(10.0);
         
         $this->em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($account);
         
@@ -39,17 +40,17 @@ class AccountTest extends WebTestCase
         $this->em->flush($account);
         
         //edit money In
-        $account->findTransactionByTypeId('attendance_allowance')->setAmount(400);
-        $account->findTransactionByTypeId('state_pension')->setAmount(150);
+        $account->findTransactionByTypeId('attendance_allowance')->setAmount(400.0);
+        $account->findTransactionByTypeId('state_pension')->setAmount(150.0);
         
         // edit money out
-        $account->findTransactionByTypeId('tax_payable_to_hmrc')->setAmount(50);
-        $account->findTransactionByTypeId('gifts')->setAmount(30);
+        $account->findTransactionByTypeId('tax_payable_to_hmrc')->setAmount(50.0);
+        $account->findTransactionByTypeId('gifts')->setAmount(30.0);
         
         $this->em->flush();
         
-        $this->assertEquals(400 + 150, $account->getMoneyInTotal());
-        $this->assertEquals(50+30, $account->getMoneyOutTotal());
-        $this->assertEquals(400 + 150 - 50 - 30, $account->getMoneyTotal());
+        $this->assertEquals(400.0 + 150.0, $account->getMoneyInTotal());
+        $this->assertEquals(50.0 + 30.0, $account->getMoneyOutTotal());
+        $this->assertEquals(10.0 + 400.0 + 150.0 - 50.0 - 30.0, $account->getMoneyTotal());
     }
 }
