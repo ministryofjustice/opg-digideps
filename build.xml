@@ -31,7 +31,7 @@
     </target>
     
     <target name="optimise">
-        <exec passthru="true" command="export SYMFONY__ENV=develop && php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
+        <exec passthru="true" command="php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
     </target>
     
         <target name="cache-clear" description="">
