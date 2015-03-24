@@ -134,6 +134,63 @@ Feature: report
         And I should see a "#tab-accounts" element
         And I should see a "#tab-assets" element
 
+    
+       
+
+    @deputy
+    Scenario: add asset
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I follow "tab-assets"
+        And I save the page as "report-assets-empty"
+        # wrong form
+        And I submit the form
+        And I save the page as "report-assets-add-error-empty"
+        Then the following fields should have an error:
+            | asset_title |
+            | asset_value |
+            | asset_description |
+        # invalid date
+        When I fill in the following:
+            | asset_title       | Vehicles | 
+            | asset_value       | 13000.00 | 
+            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_valuationDate_day | 99 | 
+            | asset_valuationDate_month |  | 
+            | asset_valuationDate_year | 2015 | 
+        And I submit the form
+        And I save the page as "report-assets-add-error-date"
+        Then the following fields should have an error:
+            | asset_valuationDate_day |
+            | asset_valuationDate_month |
+            | asset_valuationDate_year |
+        # 1st asset (empty date)
+        When I fill in the following:
+            | asset_title       | Property | 
+            | asset_value       | 250000.00 | 
+            | asset_description | 2 beds flat in HA2 | 
+            | asset_valuationDate_day |  | 
+            | asset_valuationDate_month |  | 
+            | asset_valuationDate_year |  | 
+        And I submit the form
+        And I save the page as "report-assets-list-one"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And I should see "2 beds flat in HA2" in the "list-assets" region
+        And I should see "£250,000.00" in the "list-assets" region
+        When I click on "add-an-asset"
+        # 2nd asset (with date)
+        And I fill in the following:
+            | asset_title       | Vehicles | 
+            | asset_value       | 13000.00 | 
+            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_valuationDate_day | 10 | 
+            | asset_valuationDate_month | 11 | 
+            | asset_valuationDate_year | 2015 | 
+        And I submit the form
+        And I save the page as "report-assets-list-two"
+        Then I should see "Alfa Romeo 156 1.9 JTD" in the "list-assets" region
+        And I should see "£13,000.00" in the "list-assets" region
+
 
     @deputy
     Scenario: add account
@@ -177,7 +234,8 @@ Feature: report
         And I should be on "/report/1/accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
-
+     
+    
 
     @deputy
     Scenario: add account transactions
