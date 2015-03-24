@@ -3,7 +3,7 @@ Feature: report
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/contacts/add"
+        When I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
         And I submit the form
@@ -35,7 +35,7 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/decisions/add"
+        When I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
         When I submit the form
@@ -120,9 +120,11 @@ Feature: report
         But I should not see a "#tab-accounts" element
         And I should not see a "#tab-assets" element
 
+
     @deputy
     Scenario: change report type to "Property and Affairs"
         Given I change the report "1" court order type to "Property and Affairs"
+
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
@@ -134,8 +136,6 @@ Feature: report
         And I should see a "#tab-accounts" element
         And I should see a "#tab-assets" element
 
-    
-       
 
     @deputy
     Scenario: add asset
@@ -234,7 +234,6 @@ Feature: report
         And I should be on "/report/1/accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
-     
     
 
     @deputy
@@ -282,4 +281,3 @@ Feature: report
             | transactions_moneyOut_11_amount      | 500 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
         And I save the page as "report-account-transactions-data-saved"
-        
