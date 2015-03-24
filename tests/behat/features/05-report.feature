@@ -3,7 +3,7 @@ Feature: report
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/contacts/add"
+        When I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
         And I submit the form
@@ -35,7 +35,7 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/decisions/add"
+        When I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
         When I submit the form
@@ -120,9 +120,11 @@ Feature: report
         But I should not see a "#tab-accounts" element
         And I should not see a "#tab-assets" element
 
+
     @deputy
     Scenario: change report type to "Property and Affairs"
         Given I change the report "1" court order type to "Property and Affairs"
+
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
@@ -133,6 +135,61 @@ Feature: report
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
         And I should see a "#tab-assets" element
+
+
+    @deputy
+    Scenario: add asset
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I follow "tab-assets"
+        And I save the page as "report-assets-empty"
+        # wrong form
+        And I submit the form
+        And I save the page as "report-assets-add-error-empty"
+        Then the following fields should have an error:
+            | asset_title |
+            | asset_value |
+            | asset_description |
+        # invalid date
+        When I fill in the following:
+            | asset_title       | Vehicles | 
+            | asset_value       | 13000.00 | 
+            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_valuationDate_day | 99 | 
+            | asset_valuationDate_month |  | 
+            | asset_valuationDate_year | 2015 | 
+        And I submit the form
+        And I save the page as "report-assets-add-error-date"
+        Then the following fields should have an error:
+            | asset_valuationDate_day |
+            | asset_valuationDate_month |
+            | asset_valuationDate_year |
+        # 1st asset (empty date)
+        When I fill in the following:
+            | asset_title       | Property | 
+            | asset_value       | 250000.00 | 
+            | asset_description | 2 beds flat in HA2 | 
+            | asset_valuationDate_day |  | 
+            | asset_valuationDate_month |  | 
+            | asset_valuationDate_year |  | 
+        And I submit the form
+        And I save the page as "report-assets-list-one"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And I should see "2 beds flat in HA2" in the "list-assets" region
+        And I should see "£250,000.00" in the "list-assets" region
+        When I click on "add-an-asset"
+        # 2nd asset (with date)
+        And I fill in the following:
+            | asset_title       | Vehicles | 
+            | asset_value       | 13000.00 | 
+            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_valuationDate_day | 10 | 
+            | asset_valuationDate_month | 11 | 
+            | asset_valuationDate_year | 2015 | 
+        And I submit the form
+        And I save the page as "report-assets-list-two"
+        Then I should see "Alfa Romeo 156 1.9 JTD" in the "list-assets" region
+        And I should see "£13,000.00" in the "list-assets" region
 
 
     @deputy
@@ -177,3 +234,50 @@ Feature: report
         And I should be on "/report/1/accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
+    
+
+    @deputy
+    Scenario: add account transactions
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I follow "tab-accounts"
+        And I click on "account-n1"
+        # check no data was previously saved
+        Then the following fields should have the corresponding values:
+            | transactions_moneyIn_0_amount        |  | 
+            | transactions_moneyIn_15_amount       |  | 
+            | transactions_moneyIn_15_moreDetails  |  | 
+            | transactions_moneyOut_0_amount       |  | 
+            | transactions_moneyOut_11_amount      |  | 
+            | transactions_moneyOut_11_moreDetails |  | 
+        And I save the page as "report-account-transactions-empty"
+        # wrong values (wrong amount types and amount without explanation)
+        When I fill in the following:
+            | transactions_moneyIn_0_amount        | aaa | 
+            | transactions_moneyOut_11_amount      | bbb | 
+            | transactions_moneyIn_15_amount       | 250 | 
+        And I submit the form
+        Then the following fields should have an error:
+            | transactions_moneyIn_0_amount  |
+            | transactions_moneyIn_15_moreDetails |
+            | transactions_moneyOut_11_amount |
+            | transactions_moneyOut_11_moreDetails |
+        And I save the page as "report-account-transactions-errors"    
+        # right values
+        When I fill in the following:
+            | transactions_moneyIn_0_amount       | 125 | 
+            | transactions_moneyIn_15_amount      | 200 | 
+            | transactions_moneyIn_15_moreDetails | more-details-in-15  |
+            | transactions_moneyOut_0_amount       | 250 | 
+            | transactions_moneyOut_11_amount      | 500 | 
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+        And I submit the form
+        Then the form should not contain an error
+        # assert value saved
+        And the following fields should have the corresponding values:
+            | transactions_moneyIn_0_amount       | 125 | 
+            | transactions_moneyIn_15_amount      | 200 | 
+            | transactions_moneyIn_15_moreDetails | more-details-in-15  |
+            | transactions_moneyOut_0_amount       | 250 | 
+            | transactions_moneyOut_11_amount      | 500 | 
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+        And I save the page as "report-account-transactions-data-saved"

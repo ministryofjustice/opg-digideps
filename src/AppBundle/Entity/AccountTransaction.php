@@ -5,6 +5,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
+/**
+ * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"transactions"})
+ */
 class AccountTransaction
 {
     /**
@@ -17,6 +20,7 @@ class AccountTransaction
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"transactions"})
+     * @Assert\Type(type="numeric", message="account.moneyInOut.account.notNumeric", groups={"transactions"})
      * @var string
      */
     private $amount;
@@ -117,7 +121,7 @@ class AccountTransaction
      */
     public function getMoreDetails()
     {
-      return $this->moreDetails;
+       return $this->moreDetails;
     }
 
     /**
@@ -129,11 +133,15 @@ class AccountTransaction
     }
     
     /**
-     * @return array
+     * Add error if the transaction needs more details, an amount is give, but not details are provided
+     * @param ExecutionContextInterface $context
      */
-    public function getValidationGroups()
+    public function moreDetailsValidate(ExecutionContextInterface $context)
     {
-        return $this->hasMoreDetails ? ['transactions', 'detail'] : ['transactions'];
+        $moreDetailsClean = trim($this->getMoreDetails(), " \n");
+        if ($this->hasMoreDetails() && $this->getAmount() !== null  && !$moreDetailsClean){
+            $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
+        }
     }
 
 }

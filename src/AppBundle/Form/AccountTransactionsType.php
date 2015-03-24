@@ -23,6 +23,8 @@ class AccountTransactionsType extends AbstractType
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\Account',
              'validation_groups' => ['transactions'],
+             // enable validation on AccountTransactionSingleType collections
+             'cascade_validation' => true,
         ]);
      }
      

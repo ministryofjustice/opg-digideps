@@ -21,7 +21,7 @@
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
     linkButtonLabel: 'form.listing.addButton.label',
-    linkClass: 'button-secondary',
+    linkClass: 'button-secondary behat-link-add-an-asset',
     linkHref: path('assets', {'reportId': params['reportId'], 'action': 'add' })
     } %}
 
@@ -36,7 +36,10 @@
     } %}
 
     {{ form_select(form.title, 'form.newAsset.controls.title') }}
-    {{ form_input(form.value, 'form.newAsset.controls.value') }}
+    {{ form_input(form.value, 'form.newAsset.controls.value', {
+        'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
+        'inputClass' : 'form-control__number'
+    } ) }}
     {{ form_input(form.description, 'form.newAsset.controls.description') }}
     {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
 

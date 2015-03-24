@@ -32,6 +32,7 @@ class DeputyProvider implements UserProviderInterface
         try {
             return $this->apiclient->getEntity('User', 'find_user_by_email', [ 'query' => [ 'email' => $email ] ]);
         } catch (\Exception $e) {
+           
             throw new UsernameNotFoundException("We can't log you in at this time.");
         }
         
