@@ -26,7 +26,7 @@
                 <chmod file="composer.phar" mode="0755" />
             </else>
         </if>
-        <exec command="whoami" checkreturn="true" passthru="true"/>
+        <exec command="export SYMFONY__ENV=develop" checkreturn="true" passthru="true"/>
         <exec command="php composer.phar install --no-interaction" checkreturn="true" passthru="true"/>
     </target>
     
