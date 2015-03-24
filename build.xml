@@ -53,7 +53,7 @@
     </target>
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
-        <exec command="export SYMFONY__ENV=develop && vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
+        <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
     </target>
     
     <target name="behat-log" description="Run all the behat journeys and create HTML output (note: no return code)" depends="behat-init">
