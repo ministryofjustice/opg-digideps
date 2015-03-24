@@ -58,7 +58,7 @@
     
     <target name="behat-log" description="Run all the behat journeys and create HTML output (note: no return code)" depends="behat-init">
         <exec command="rm misc/build/behat.log*"></exec>
-        <exec command="export SYMFONY__ENV=develop && vendor/behat/behat/bin/behat | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
+        <exec command="vendor/behat/behat/bin/behat | sed '/@journey/d' | sed 's/\[30m#.*/[39m/' | misc/scripts/aha/aha &gt; misc/build/behat.html" />
         <echo msg="Check behat reports inside misc/build/"></echo>
     </target>
     
