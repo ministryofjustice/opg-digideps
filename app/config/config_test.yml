@@ -11,6 +11,6 @@ framework:
 swiftmailer:
     disable_delivery: true
 
-doctrine:
-    dbal:
-        dbname:   dd_api_unit_test
+#doctrine:
+#    dbal:
+#        dbname:   dd_api_unit_test
