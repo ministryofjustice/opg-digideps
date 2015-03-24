@@ -1,149 +1,55 @@
 <?php
 namespace AppBundle\Entity;
 
-class AccountTest extends \PHPUnit_Framework_TestCase
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class AccountTest extends WebTestCase
 {
     /**
-     * @var Account
+     * @var \Doctrine\ORM\EntityManager 
      */
-    protected $object;
+    private $em;
 
     protected function setUp()
     {
-        $this->object = new Account;
+        $this->client = static::createClient();
+        
+        
+        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     public function testSetterGetters()
     {
-        $this->assertEquals('123456', $this->object->setAccountNumber('123456')->getAccountNumber());
-        $this->assertEquals('123456', $this->object->setBalanceJustification('123456')->getBalanceJustification());
-        $this->assertEquals('123456', $this->object->setBank('123456')->getBank());
-        $this->assertEquals('123456', $this->object->setClosingBalance('123456')->getClosingBalance());
-        $this->assertEquals('123456', $this->object->setOpeningBalance('123456')->getOpeningBalance());
+        $account = new Account;
+        
+        $this->assertEquals('123456', $account->setAccountNumber('123456')->getAccountNumber());
+        $this->assertEquals('123456', $account->setBalanceJustification('123456')->getBalanceJustification());
+        $this->assertEquals('123456', $account->setBank('123456')->getBank());
+        $this->assertEquals('123456', $account->setClosingBalance('123456')->getClosingBalance());
+        $this->assertEquals('123456', $account->setOpeningBalance('123456')->getOpeningBalance());
     }
     
-    /**
-     * Tests is date justifiable when true
-     */
-    public function testIsDateJustifiableTrue()
+    public function testTotals()
     {
-        $this->assertTrue($this->object->isDateJustifiable());
+        $account = new Account();
         
-        $mockReport = \Mockery::mock('AppBundle\Entity\Report')->shouldReceive([ 'getStartDate' => new \DateTime('2013-10-10'),
-                                                                                   'getEndDate' => new \DateTime('2014-08-10')
-                                                                                 ])->getMock();
+        $this->em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($account);
         
-        $this->object->setOpeningDate(new \DateTime('2013-10-10'));
-        $this->object->setClosingDate(new \DateTime('2014-08-10'));
-        $this->object->setReport($mockReport);
+        $this->em->persist($account);
+        $this->em->flush($account);
         
-        $this->assertTrue($this->object->isDateJustifiable());
-    }
-    
-    /**
-     * Testing is date justifiable when false
-     */
-    public function testIsDateJustifiableFalse()
-    {
-        $this->object->setOpeningDate(new \DateTime('2013-10-11'));
-        $this->object->setClosingDate(new \DateTime('2014-08-11'));
+        //edit money In
+        $account->findTransactionByTypeId('attendance_allowance')->setAmount(400);
+        $account->findTransactionByTypeId('state_pension')->setAmount(150);
         
-        $mockReport = \Mockery::mock('AppBundle\Entity\Report')->shouldReceive([ 'getStartDate' => new \DateTime('2013-10-10'),
-                                                                                   'getEndDate' => new \DateTime('2014-08-10')
-                                                                                 ])->getMock();
+        // edit money out
+        $account->findTransactionByTypeId('tax_payable_to_hmrc')->setAmount(50);
+        $account->findTransactionByTypeId('gifts')->setAmount(30);
         
-        $this->object->setReport($mockReport);
+        $this->em->flush();
         
-        $this->assertFalse($this->object->isDateJustifiable());
-    }
-    
-    /**
-     * Testing is balance justifiable when false
-     */
-    public function testIsBalanceJustifiableFalse()
-    {
-        $mockIncome = \Mockery::mock('AppBundle\Entity\Income')->shouldReceive('getTotal')->andReturn(100)->getMock();
-        $mockBenefit = \Mockery::mock('AppBundle\Entity\Benefit')->shouldReceive('getTotal')->andReturn(100)->getMock();
-        $mockExpenditure = \Mockery::mock('AppBundle\Entity\Expenditure')->shouldReceive('getTotal')->andReturn(10)->getMock();
-        
-        //add incomes
-        $this->object->addIncome($mockIncome);
-        $this->object->addIncome($mockIncome);
-        $this->object->addIncome($mockIncome);
-        
-        //add benefits
-        $this->object->addBenefit($mockBenefit);
-        $this->object->addBenefit($mockBenefit);
-        $this->object->addBenefit($mockBenefit);
-        
-        //add expenditure
-        $this->object->addExpenditure($mockExpenditure);
-        $this->object->addExpenditure($mockExpenditure);
-        $this->object->addExpenditure($mockExpenditure);
-        
-        $this->object->setClosingBalance(0);
-        $this->object->setOpeningBalance(0);
-        
-        $this->assertFalse($this->object->isBalanceJustifiable());
-    }
-    
-    /**
-     * Testing is balance justifiable when true
-     */
-    public function testIsBalanceJustifiableTrue()
-    {
-        $this->assertTrue($this->object->isBalanceJustifiable());
-    }
-    
-    /**
-     * Testing is get balance offset
-     */
-    public function testGetBalanceOffset()
-    {
-//        $mockIncome = \Mockery::mock('AppBundle\Entity\Income')->shouldReceive('getTotal')->andReturn(100)->getMock();
-//        $mockBenefit = \Mockery::mock('AppBundle\Entity\Benefit')->shouldReceive('getTotal')->andReturn(100)->getMock();
-//        $mockExpenditure = \Mockery::mock('AppBundle\Entity\Expenditure')->shouldReceive('getTotal')->andReturn(10)->getMock();
-//        
-//        $this->object->setClosingBalance(1000);
-//        
-//        $this->assertEquals(430,$this->object->getBalanceOffset());
-    }
-    
-    /**
-     * testing get current balance when zero
-     */
-    public function testGetCurrentBalanceWhenZero()
-    {
-        $this->assertEquals(0,$this->object->getCurrentBalance());
-    }
-    
-    
-    /**
-     * testing get current balance when not zero
-     */
-    public function testGetCurrentBalanceWhenNotZero()
-    {
-        $mockIncome = \Mockery::mock('AppBundle\Entity\Income')->shouldReceive('getTotal')->andReturn(100)->getMock();
-        $mockBenefit = \Mockery::mock('AppBundle\Entity\Benefit')->shouldReceive('getTotal')->andReturn(100)->getMock();
-        $mockExpenditure = \Mockery::mock('AppBundle\Entity\Expenditure')->shouldReceive('getTotal')->andReturn(10)->getMock();
-        
-        //add incomes
-        $this->object->addIncome($mockIncome);
-        $this->object->addIncome($mockIncome);
-        $this->object->addIncome($mockIncome);
-        
-        //add benefits
-        $this->object->addBenefit($mockBenefit);
-        $this->object->addBenefit($mockBenefit);
-        $this->object->addBenefit($mockBenefit);
-        
-        //add expenditure
-        $this->object->addExpenditure($mockExpenditure);
-        $this->object->addExpenditure($mockExpenditure);
-        $this->object->addExpenditure($mockExpenditure);
-        
-        $this->object->setOpeningBalance(50);
-        
-        $this->assertEquals(620,($this->object->getCurrentBalance()));
+        $this->assertEquals(400 + 150, $account->getMoneyInTotal());
+        $this->assertEquals(50+30, $account->getMoneyOutTotal());
+        $this->assertEquals(400 + 150 - 50 - 30, $account->getMoneyTotal());
     }
 }

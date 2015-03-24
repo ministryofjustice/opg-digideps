@@ -129,6 +129,20 @@ class Account
      */
     private $moneyOut;
     
+    /**
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyInTotal;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyOutTotal;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyTotal;
     
     /**
      * Constructor
@@ -479,5 +493,49 @@ class Account
         return $this->getTransactions()->filter(function(AccountTransaction $transaction) {
             return $transaction->getTransactionType() instanceof AccountTransactionTypeOut;
         });
+    }
+    
+    /**
+     * @param string $transactionTypeId
+     * 
+     * @return AccountTransaction
+     */
+    public function findTransactionByTypeId($transactionTypeId)
+    {
+        return $this->getTransactions()->filter(function($accountTransaction) use($transactionTypeId) {
+            return $accountTransaction->getTransactionTypeId() == $transactionTypeId;
+        })->first();
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyInTotal()
+    {
+        $ret = 0.0;
+        foreach ($this->getMoneyIn() as $money) {
+            $ret += $money->getAmount();
+        }
+        return $ret;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        $ret = 0.0;
+        foreach ($this->getMoneyOut() as $money) {
+            $ret += $money->getAmount();
+        }
+        return $ret;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyTotal()
+    {
+        return $this->getMoneyInTotal() - $this->getMoneyOutTotal();
     }
 }

@@ -49,7 +49,7 @@ class Version018 extends AbstractMigration
             [12, 'out', 'client_s_personal_allowance_eg_spending_money', true],
             [13, 'out', 'cash_withdrawals', true],
             [14, 'out', 'professional_fees_eg_solicitor_or_accountant_fees', true],
-            [15, 'out', 'deputy_s_expenses ', true],
+            [15, 'out', 'deputy_s_expenses', true],
             [16, 'out', 'gifts', true],
             [17, 'out', 'major_purchases_eg_property_vehicles', true],
             [18, 'out', 'property_maintenance_or_improvement', true],
