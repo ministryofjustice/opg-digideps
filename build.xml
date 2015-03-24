@@ -80,7 +80,7 @@
     <target name="release" depends="cache-clear,composer-install,db-migrate,phplint">
     </target>
     
-    <target name="test" depends="">
+    <target name="test" depends="phpunit">
     </target>
 
 </project>
