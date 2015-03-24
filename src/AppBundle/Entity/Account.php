@@ -12,7 +12,7 @@ class Account
 {
     /**
      * @JMS\Type("integer")
-     * @Assert\NotBlank(message="Missing account ID", groups={"transactions"})
+     * @Assert\NotBlank(message="Missing account ID")
      * @JMS\Groups({"transactions"})
      * @var integer $id
      */
