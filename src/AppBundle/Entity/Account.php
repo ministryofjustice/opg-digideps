@@ -89,16 +89,19 @@ class Account
     private $moneyOut;
     
     /**
+     * @JMS\Type("double")
      * @JMS\Groups({"transactions"})
      */
     private $moneyInTotal;
     
     /**
+     * @JMS\Type("double")
      * @JMS\Groups({"transactions"})
      */
     private $moneyOutTotal;
     
     /**
+     * @JMS\Type("double")
      * @JMS\Groups({"transactions"})
      */
     private $moneyTotal;
