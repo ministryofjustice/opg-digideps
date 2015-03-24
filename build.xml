@@ -11,15 +11,15 @@
         <phplint haltonfailure="true" level="info">
             <fileset refid="source" />
         </phplint>
-        <exec command="php app/console twig:lint app/Resources/views" checkreturn="true" passthru="true"></exec>
-        <exec command="php app/console twig:lint src/AppBundle/Resources/views" checkreturn="true" passthru="true"></exec>
+        <exec command="export SYMFONY__ENV=develop; php app/console twig:lint app/Resources/views" checkreturn="true" passthru="true"></exec>
+        <exec command="export SYMFONY__ENV=develop; php app/console twig:lint src/AppBundle/Resources/views" checkreturn="true" passthru="true"></exec>
     </target>
     
     <target name="composer-install" description="Install packages from composer.lock" unless="skipComposer">
         <if>
             <available file="composer.phar" />
             <then>
-                <exec command="php composer.phar self-update" checkreturn="true" passthru="true"/>
+                <exec command="export SYMFONY__ENV=develop; php composer.phar self-update" checkreturn="true" passthru="true"/>
             </then>
             <else>
                 <exec command="curl -O http://getcomposer.org/composer.phar"/>
