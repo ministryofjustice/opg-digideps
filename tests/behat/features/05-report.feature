@@ -268,7 +268,7 @@ Feature: report
             | transactions_moneyIn_15_amount      | 200 | 
             | transactions_moneyIn_15_moreDetails | more-details-in-15  |
             | transactions_moneyOut_0_amount       | 250 | 
-            | transactions_moneyOut_11_amount      | 500 | 
+            | transactions_moneyOut_11_amount      | 500.50 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
         And I submit the form
         Then the form should not contain an error
@@ -278,6 +278,6 @@ Feature: report
             | transactions_moneyIn_15_amount      | 200 | 
             | transactions_moneyIn_15_moreDetails | more-details-in-15  |
             | transactions_moneyOut_0_amount       | 250 | 
-            | transactions_moneyOut_11_amount      | 500 | 
+            | transactions_moneyOut_11_amount      | 500.50 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
         And I save the page as "report-account-transactions-data-saved"
