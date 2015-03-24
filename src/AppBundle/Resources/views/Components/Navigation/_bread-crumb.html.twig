@@ -2,9 +2,9 @@
 {% if breadCrumb is defined %}
     <ul class="bread-crumb">
         {% for step in breadCrumb %}
-            <li>
+            <li class="bread-crumbs">
                 {% if step.href is defined %}
-                    <a href="{{ step.href }}">{{ step.label | trans }}</a>
+                    <a href="{{ step.href }}" class="bread-crumbs-link">{{ step.label | trans }}</a>
                 {% else %}
                     {{ step.label | trans }}
                 {% endif %}

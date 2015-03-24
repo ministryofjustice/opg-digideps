@@ -1,0 +1,86 @@
+.account-transactions {
+
+  overflow: hidden;
+  @include core-24();
+
+  &__header {
+    margin-bottom: 30px;
+    margin-top: 10px;
+    padding: 10px;
+  }
+
+  &__footer {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+  }
+
+  &__total-balance-label {
+    float: left;
+    width: 649px;
+
+  }
+
+  &__total-balance-total {
+    float: left;
+  }
+
+  &__accordion {
+    margin-bottom: 30px;
+
+    details, summary {
+      display: block;
+    }
+
+    .details {
+      position: relative;
+      border-top: 1px solid $grey-3;
+
+      &:last-of-type{
+        border-bottom: 1px solid $grey-3;
+      }
+    }
+
+    .summary {
+      padding: 10px 0;
+      overflow: hidden;
+
+      .summary-title{
+        float: left;
+        font-weight: 700;
+        width: 648px;
+        margin-left: 10px;
+      }
+      .transaction-total{
+        float: left;
+        color: $text-colour;
+      }
+    }
+
+    .details .content {
+      display: none;
+      clear: both;
+      overflow: hidden;
+      margin-left: 10px;
+    }
+
+    .details.open, details[open]{
+
+      .content{
+        display: block;
+      }
+
+      .summary{
+        background-color: $grey-3;
+      }
+
+    }
+
+    summary::-webkit-details-marker {
+      display: none
+    }
+
+  }
+
+}
+
