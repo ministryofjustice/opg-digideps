@@ -18,14 +18,10 @@ class CasesTest extends \PHPUnit_Framework_TestCase
     
     public function testGetFullName()
     {
-        $mr = new Title();
-        $mr->setTitle('Mr');
-        
-        $this->object->setTitle($mr);
         $this->object->setFirstname('first name');
         $this->object->setLastname('last');
         
-        $this->assertEquals('Mr&nbsp;first name&nbsp;last', $this->object->getFullName("&nbsp;"));
+        $this->assertEquals('first name&nbsp;last', $this->object->getFullName("&nbsp;"));
     }
     
     public function testSetterGetters()
