@@ -131,16 +131,19 @@ class Account
     
     /**
      * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyInTotal")
      */
     private $moneyInTotal;
     
     /**
      * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOutTotal")
      */
     private $moneyOutTotal;
     
     /**
      * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyTotal")
      */
     private $moneyTotal;
     
