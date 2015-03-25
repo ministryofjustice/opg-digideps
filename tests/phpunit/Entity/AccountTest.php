@@ -41,12 +41,12 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $out2->setId('out2')->setHasMoreDetails(false);
         
         // add account transaction
-        new AccountTransaction($account, $in1, 400.0); //(1)
-        new AccountTransaction($account, $in2, 150.0);
+        $account->addTransaction(new AccountTransaction($account, $in1, 400.0));
+        $account->addTransaction(new AccountTransaction($account, $in2, 150.0));
         
         // add account transaction
-        new AccountTransaction($account, $out1, 50.0);
-        new AccountTransaction($account, $out2, 30.0);
+        $account->addTransaction(new AccountTransaction($account, $out1, 50.0));
+        $account->addTransaction(new AccountTransaction($account, $out2, 30.0));
         
         $this->assertEquals(400.0 + 150.0, $account->getMoneyInTotal());
         $this->assertEquals(50.0 + 30.0, $account->getMoneyOutTotal());

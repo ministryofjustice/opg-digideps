@@ -72,7 +72,6 @@ class AccountTransaction
     public function __construct(Account $account, AccountTransactionType $transactionType, $amount)
     {
         $this->account = $account;
-        $account->addTransaction($this);
         
         $this->transactionType = $transactionType;
         $this->amount = $amount;

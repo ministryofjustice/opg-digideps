@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class UserControllerTest extends WebTestCase
+class AccountControllerTest extends WebTestCase
 {
     /**
      * @var Symfony\Bundle\FrameworkBundle\Client 
