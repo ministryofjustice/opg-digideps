@@ -10,11 +10,13 @@ class AccountController extends RestController
 {
     
     /**
-     * @Route("/report/get-accounts/{id}")
+     * @Route("/report/get-accounts/{id}/{serialiseGroup}", defaults={"serialiseGroup": null})
      * @Method({"GET"})
      */
-    public function getAccountsAction($id)
+    public function getAccountsAction($id, $serialiseGroup = null)
     {
+        $this->setJmsSerialiserGroup($serialiseGroup);
+        
         $report = $this->findEntityBy('Report', $id);
         
         $accounts = $this->getRepository('Account')->findByReport($report);

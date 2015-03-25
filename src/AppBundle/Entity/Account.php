@@ -15,7 +15,7 @@ class Account
 {
     /**
      * @var integer
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -26,14 +26,14 @@ class Account
     
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * @ORM\Column(name="bank_name", type="string", length=100, nullable=true)
      */
     private $bank;
 
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
@@ -41,7 +41,7 @@ class Account
 
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
@@ -49,7 +49,7 @@ class Account
 
     /**
      * @var \DateTime
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
@@ -57,7 +57,7 @@ class Account
 
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -65,7 +65,7 @@ class Account
 
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -73,7 +73,7 @@ class Account
 
     /**
      * @var \Date
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="opening_date", type="date", nullable=true)
      */
@@ -81,7 +81,7 @@ class Account
 
     /**
      * @var \Date
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
@@ -142,7 +142,7 @@ class Account
     private $moneyOutTotal;
     
     /**
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getMoneyTotal")
      */
     private $moneyTotal;
