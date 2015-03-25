@@ -49,6 +49,7 @@ class FormFieldsExtension extends \Twig_Extension
             'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
             'tab' => new \Twig_Function_Method($this, 'renderTab'),
+            'accordionLinks' => new \Twig_Function_Method($this, 'renderAccordionLinks'),
         ];
     }
     
@@ -59,6 +60,55 @@ class FormFieldsExtension extends \Twig_Extension
                 return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
             }),
         ];
+    }
+    
+    /**
+     * 
+     * @param array $options keys: clickedPanel, allOpenHref, allClosedHref, firstPanelHref, secondPanelHref
+     * @return array [ first => [open=>boolean, href=>], second => [open=>boolean, href=>] ]
+     */
+    public function renderAccordionLinks(array $options)
+    {
+        $clickedPanel = $options['clickedPanel'];
+        $bothOpenHref = $options['bothOpenHref'];
+        $allClosedHref = $options['allClosedHref'];
+        $firstPanelHref = $options['firstPanelHref'];
+        $secondPanelHref = $options['secondPanelHref'];
+        
+        // default: closed
+        $ret = [
+            'first' => [
+                'open' => false,
+                'href' => $firstPanelHref,
+            ],
+            'second' => [
+                'open' => false,
+                'href' => $secondPanelHref,
+            ]
+        ];
+        
+        switch ($clickedPanel) {
+            case $firstPanelHref:
+                $ret['first']['open'] = true;
+                $ret['first']['href'] = $allClosedHref;
+                $ret['second']['href'] = $bothOpenHref;
+                break;
+            
+            case $secondPanelHref:
+                $ret['second']['open'] = true;
+                $ret['first']['href'] = $bothOpenHref;
+                $ret['second']['href'] = $allClosedHref;
+                break;
+            
+            case $bothOpenHref:
+                $ret['first']['open'] = true;
+                $ret['second']['open'] = true;
+                $ret['first']['href'] = $secondPanelHref;
+                $ret['second']['href'] = $firstPanelHref;
+                break;
+        }
+        
+        return $ret;
     }
     
     /**

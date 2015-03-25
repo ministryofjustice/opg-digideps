@@ -39,5 +39,7 @@ listing:
   bank: "Bank/Building Society name"
   accountNumber: "Last four digits of account number"
   balance: "Opening balance:"
+  totalBalance: "Total balance:"
+  lastEdited: "Last edited:"
   edited: "Created:"
   currencySymbol: "£"

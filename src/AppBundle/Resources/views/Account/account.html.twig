@@ -5,40 +5,13 @@
 {% set URL = app.request.requestUri %}
 {% set queryString = URL | split('?') %}
 
-{% set clickedPanel = "" %}
-{% if queryString[1] is defined %}
-    {% set clickedPanel = queryString[1] %}
-{% endif %}
-
-{% if clickedPanel is same as("") %}
-    {% set moneyInPane = false %}
-    {% set moneyInHref = "money-in" %}
-
-    {% set moneyOutPane = false %}
-    {% set moneyOutHref = "money-out" %}
-
-{% elseif clickedPanel is same as("money-in") %}
-    {% set moneyInPane = true %}
-    {% set moneyInHref = "" %}
-
-    {% set moneyOutPane = false %}
-    {% set moneyOutHref = "money-both" %}
-
-{% elseif clickedPanel is same as("money-out") %}
-    {% set moneyInPane = false %}
-    {% set moneyInHref = "money-both" %}
-
-    {% set moneyOutPane = true %}
-    {% set moneyOutHref = "" %}
-
-{% elseif clickedPanel is same as("money-both") %}
-    {% set moneyInPane = true %}
-    {% set moneyInHref = "money-out" %}
-
-    {% set moneyOutPane = true %}
-    {% set moneyOutHref = "money-in" %}
-
-{% endif %}
+{% set accordionLinks = accordionLinks({
+  clickedPanel: app.request.get('action'),
+  bothOpenHref: "money-both", 
+  allClosedHref: "list", 
+  firstPanelHref: "money-in", 
+  secondPanelHref: "money-out"
+}) %}
 
 {% set breadCrumb = [
     {
@@ -60,7 +33,6 @@
 {% endblock %}
 
 {% block pageBody %}
-
 
     {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
@@ -94,11 +66,12 @@
     </div>
 
     <div class="account-transactions account-transactions__accordion">
-
+      
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyIn.legend' | trans,
-        openPanel: moneyInPane,
-        summaryHref: moneyInHref,
+        openPanel: accordionLinks.first.open,
+        href: 'moneyIn',
+        link: path('account', {action: accordionLinks.first.href, reportId: report.id, accountId: account.id}),
         elements: form.moneyIn,
         section: 'moneyIn',
         transactionTotal: account.moneyInTotal,
@@ -107,9 +80,9 @@
 
 
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
-        legend: 'moneyOut.legend' | trans,
-        openPanel: moneyOutPane,
-        summaryHref: moneyOutHref,
+        openPanel: accordionLinks.second.open,
+        href: 'moneyOut',
+        link: path('account', {action: accordionLinks.second.href, reportId: report.id, accountId: account.id}),
         elements: form.moneyOut,
         section: 'moneyOut',
         transactionTotal: account.moneyOutTotal,
@@ -121,7 +94,7 @@
     <div class="account-transactions account-transactions__footer">
         <ul class="account-transactions__total-balance">
             <li class="account-transactions__total-balance-label">Total balance</li>
-            <li class="account-transactions__total-balance-total">
+            <li class="account-transactions__total-balance-total behat-region-money-totals">
                 £{{ account.moneyTotal | number_format(2, '.', ',') }}</li>
         </ul>
     </div>

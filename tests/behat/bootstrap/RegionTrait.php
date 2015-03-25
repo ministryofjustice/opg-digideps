@@ -131,6 +131,6 @@ trait RegionTrait
     
     private static function linkfyBehatName($name)
     {
-        return strtolower(preg_replace('/\s+/', '-', $name));
+        return preg_replace('/\s+/', '-', $name);
     }
 }

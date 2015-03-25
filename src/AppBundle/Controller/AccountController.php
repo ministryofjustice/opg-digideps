@@ -28,7 +28,7 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient');
-        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId]]);
+        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId, 'group' => 'basic']]);
 
         $account = new EntityDir\Account();
         $account->setReportObject($report);
@@ -58,12 +58,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @Route("/report/{reportId}/account/{accountId}", name="account", requirements={
-     *   "accountId" = "\d+"
-     * })
+     * @Route("/report/{reportId}/account/{accountId}/{action}", name="account", requirements={
+     *   "accountId" = "\d+",
+     *   "action" = "[\w-]*"
+     * }, defaults={ "action" = "list"})
      * @Template()
      */
-    public function accountAction($reportId, $accountId, $action = 'list')
+    public function accountAction($reportId, $accountId, $action)
     {
         $util = $this->get('util');
         $request = $this->getRequest();
@@ -82,6 +83,8 @@ class AccountController extends Controller
             $apiClient->putC('account/' .  $account->getId(), $form->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
+            // refresh account
+            $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         }
 
         return [

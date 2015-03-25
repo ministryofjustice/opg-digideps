@@ -241,6 +241,8 @@ Feature: report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I follow "tab-accounts"
         And I click on "account-n1"
+        And I click on "moneyIn-tab"
+        And I click on "moneyOut-tab"
         # check no data was previously saved
         Then the following fields should have the corresponding values:
             | transactions_moneyIn_0_amount        |  | 
@@ -255,7 +257,7 @@ Feature: report
             | transactions_moneyIn_0_amount        | aaa | 
             | transactions_moneyOut_11_amount      | bbb | 
             | transactions_moneyIn_15_amount       | 250 | 
-        And I submit the form
+        And I press "transactions_saveMoneyIn"
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
             | transactions_moneyIn_15_moreDetails |
@@ -270,7 +272,7 @@ Feature: report
             | transactions_moneyOut_0_amount       | 250 | 
             | transactions_moneyOut_11_amount      | 500.50 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
-        And I submit the form
+        And I press "transactions_saveMoneyIn"
         Then the form should not contain an error
         # assert value saved
         And the following fields should have the corresponding values:
@@ -280,4 +282,7 @@ Feature: report
             | transactions_moneyOut_0_amount       | 250 | 
             | transactions_moneyOut_11_amount      | 500.50 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+        And I should see "£325.00" in the "moneyIn-total" region
+        And I should see "£750.50" in the "moneyOut-total" region
+        And I should see "£-375.50" in the "money-totals" region
         And I save the page as "report-account-transactions-data-saved"
