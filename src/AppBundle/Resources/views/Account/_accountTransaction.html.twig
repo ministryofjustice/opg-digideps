@@ -4,11 +4,11 @@
 <div id="{{ href }}" class="details {{ openPanel ? ' open' : '' }}">
     <details>
         <summary>
-            <a href="{{ link }}#{{ href }}">
+            <a href="{{ link }}#{{ href }}" class="behat-link-{{href}}-tab">
                 <div class="summary">
                     <h3 class="summary-title">{{ (section ~ '.panelTitle') | trans }}</h3>
 
-                    <div class="transaction-total">£{{ transactionTotal | number_format(2, '.', ',') }}</div>
+                    <div class="transaction-total behat-region-{{href}}-total">£{{ transactionTotal | number_format(2, '.', ',') }}</div>
                 </div>
             </a>
         </summary>
