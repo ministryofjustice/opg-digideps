@@ -61,14 +61,4 @@ class UserControllerTest extends WebTestCase
         
         return $account->getId();
     }
-    
-    /**
-     * @test 
-     * @depends addAccount
-     */
-    public function addTransactions($accountId)
-    {
-        $this->markTestIncomplete("todo");
-    }
-    
 }
