@@ -23,7 +23,7 @@ class UserControllerTest extends WebTestCase
     {
         // create user
          $this->client->request(
-            'POST', '/user/', 
+            'POST', '/user', 
             array(), array(), 
             array('CONTENT_TYPE' => 'application/json'), 
             json_encode(array(
@@ -78,15 +78,4 @@ class UserControllerTest extends WebTestCase
         
     }
     
-    /**
-     * @test
-     * @depends addJson
-     */
-    public function getOneXml($id)
-    {
-        $this->client->request('GET', '/user/' . $id, array(), array(), array('CONTENT_TYPE' => 'application/xml'), 'wrong content type' );
-        $response =  $this->client->getResponse();
-        $xml = simplexml_load_string($response->getContent());
-        $this->assertTrue(count($xml->children()) > 1);
-    }
 }
