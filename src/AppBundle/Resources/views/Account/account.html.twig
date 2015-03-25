@@ -13,12 +13,9 @@
   secondPanelHref: "money-out"
 }) %}
 
-{% set moneyInTotal = 0 %}
-{% set moneyOutTotal = 0 %}
-
 {% set breadCrumb = [
     {
-        'label': 'Accounts',
+        'label': 'Accounts' | trans,
         'href': '../accounts'
     },
     {
@@ -28,7 +25,7 @@
 
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
-{% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
+{% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
 {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
@@ -37,6 +34,7 @@
 
 {% block pageBody %}
 
+    {{ dump(accordionLinks) }}
 
     {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
@@ -74,20 +72,23 @@
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyIn.legend' | trans,
         openPanel: accordionLinks.first.open,
-        summaryHref: path('account', {action: accordionLinks.first.href, reportId: report.id, accountId: account.id}),
+        href: 'moneyIn',
+        link: path('account', {action: accordionLinks.first.href, reportId: report.id, accountId: account.id}),
         elements: form.moneyIn,
         section: 'moneyIn',
-        transactionTotal: moneyInTotal
+        transactionTotal: account.moneyInTotal,
+            submitButton: form.saveMoneyIn
         } %}
 
 
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
-        legend: 'moneyOut.legend' | trans,
         openPanel: accordionLinks.second.open,
-        summaryHref: path('account', {action: accordionLinks.second.href, reportId: report.id, accountId: account.id}),
+        href: 'moneyOut',
+        link: path('account', {action: accordionLinks.second.href, reportId: report.id, accountId: account.id}),
         elements: form.moneyOut,
         section: 'moneyOut',
-        transactionTotal: moneyOutTotal
+        transactionTotal: account.moneyOutTotal,
+        submitButton: form.saveMoneyOut
         } %}
 
     </div>
@@ -99,10 +100,6 @@
                 £{{ account.moneyTotal | number_format(2, '.', ',') }}</li>
         </ul>
     </div>
-
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save, 'save', {'buttonClass': 'behat-link-save'}) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

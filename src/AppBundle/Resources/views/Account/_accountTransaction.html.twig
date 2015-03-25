@@ -1,10 +1,10 @@
 {% set translationDomain = "report-account" %}
 {% trans_default_domain translationDomain %}
 
-<div class="details{{ openPanel ? ' open' : '' }}">
+<div id="{{ href }}" class="details {{ openPanel ? ' open' : '' }}">
     <details>
         <summary>
-            <a href="{{ summaryHref }}">
+            <a href="{{ link }}#{{ href }}">
                 <div class="summary">
                     <h3 class="summary-title">{{ (section ~ '.panelTitle') | trans }}</h3>
 
@@ -16,6 +16,17 @@
             {% for t in elements %}
 
                 {% set elementId = t.type.vars.value %}
+
+                {% if t.moreDetails is defined %}
+                    {# Fieldset
+
+                    {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
+
+                    } %}
+#}
+                {% else %}
+
+                {% endif %}
 
                 {{ form_row(t.id) }}
                 {{ form_row(t.type) }}
@@ -31,6 +42,11 @@
                 {% endif %}
 
             {% endfor %}
+
+            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+            {{ form_submit(submitButton, 'save', {'buttonClass': 'behat-link-save'}) }}
+            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
         </div>
     </details>
 </div>

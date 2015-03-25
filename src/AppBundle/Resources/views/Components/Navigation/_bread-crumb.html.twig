@@ -4,9 +4,9 @@
         {% for step in breadCrumb %}
             <li class="bread-crumbs">
                 {% if step.href is defined %}
-                    <a href="{{ step.href }}" class="bread-crumbs-link">{{ step.label | trans }}</a>
+                    <a href="{{ step.href }}" class="bread-crumbs-link">{{ step.label }}</a>
                 {% else %}
-                    {{ step.label | trans }}
+                    {{ step.label }}
                 {% endif %}
             </li>
         {% endfor %}
