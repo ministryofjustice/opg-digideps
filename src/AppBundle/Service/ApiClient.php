@@ -71,7 +71,7 @@ class ApiClient extends GuzzleClient
     public function getEntity($class, $endpoint, array $options = [])
     {
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
-        
+       
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
        
         return $ret;
@@ -115,6 +115,7 @@ class ApiClient extends GuzzleClient
         try {
             return parent::send($request);
         } catch (\Exception $e) {
+            
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
                 $debugData = $this->getDebugRequestExceptionData($e);
@@ -165,6 +166,7 @@ class ApiClient extends GuzzleClient
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
         
         $ret = [];
+        
         foreach ($responseArray['data'] as $row) { 
             $entity = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
             $ret[$entity->getId()] = $entity;
@@ -198,9 +200,9 @@ class ApiClient extends GuzzleClient
     public function putC($endpoint, $bodyorEntity, array $options = [])
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
-        
+       
         $responseArray = $this->deserialiseResponse($this->put($endpoint, ['body'=>$body]));
-        
+       
         return $responseArray['data'];
     }
     

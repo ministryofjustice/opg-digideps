@@ -13,3 +13,4 @@ app/config/parameters.yml
 bower_downloads/*
 web/bundles/*
 web/elb_healthcheck.html
+behat.yml

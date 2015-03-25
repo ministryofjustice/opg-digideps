@@ -41,7 +41,7 @@ class IndexController extends Controller
                 
                 try{
                     $user = $deputyProvider->loadUserByUsername($data['email']);
-                    
+                   
                     $encoder = $this->get('security.encoder_factory')->getEncoder($user);
                     
                     if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
@@ -49,6 +49,7 @@ class IndexController extends Controller
                         throw new \Exception($message);
                     }
                 }catch(\Exception $e){
+                    
                     return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
                 }
                 
