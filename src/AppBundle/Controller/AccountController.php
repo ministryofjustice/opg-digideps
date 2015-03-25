@@ -83,6 +83,8 @@ class AccountController extends Controller
             $apiClient->putC('account/' .  $account->getId(), $form->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
+            // refresh account
+            $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         }
 
         return [
