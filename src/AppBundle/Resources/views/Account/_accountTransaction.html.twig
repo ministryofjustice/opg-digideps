@@ -1,23 +1,34 @@
 {% set translationDomain = "report-account" %}
 {% trans_default_domain translationDomain %}
 
-<div id="{{ href }}" class="details {{ openPanel ? ' open' : '' }}">
-    <details>
+{% set summaryClass = "summary-title" %}
+{% if section is sameas("moneyOut") %}
+    {% set summaryClass = "summary-title summary-title--adjust" %}
+{% endif %}
+
+<div id="{{ href }}" class="details {{ openPanel ? 'open' : '' }}">
+    <details {{ openPanel ? 'open' : '' }}>
         <summary>
             <a href="{{ link }}#{{ href }}">
                 <div class="summary">
-                    <h3 class="summary-title">{{ (section ~ '.panelTitle') | trans }}</h3>
+                    <h3 class="{{ summaryClass }}">{{ (section ~ '.panelTitle') | trans }}</h3>
 
-                    <div class="transaction-total">£{{ transactionTotal | number_format(2, '.', ',') }}</div>
+                    <div class="transaction-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
                 </div>
             </a>
         </summary>
         <div class="content">
-            {% for t in elements %}
+            {% for element in elements %}
 
-                {% set elementId = t.type.vars.value %}
+                {% set elementId = element.type.vars.value %}
 
-                {% if t.moreDetails is defined %}
+                {% if element.moreDetails is defined %}
+
+                    {% set hasErrors = true %}
+                    {% if element.vars.valid and element.moreDetails.vars.valid %}
+                        {% set hasErrors = false %}
+                    {% endif %}
+
                     {# Fieldset
                     {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
                         'element': t,
@@ -25,38 +36,43 @@
                         'hintText': 'hintText'
                     } %} #}
 
-                    <div class="form-group form-inline form-input-description-combo {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+                    <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-with-errors behat-region-form-errors{% endif %}">
                         <fieldset>
-                            <legend>{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
-                            <div class="form-combo">
+                            <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
 
-                                {{ form_row(t.id) }}
-                                {{ form_row(t.type) }}
+                                {{ form_row(element.id) }}
+                                {{ form_row(element.type) }}
 
-                                {{ form_input(t.amount,'firstname', {
-                                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
-                                    'formGroupClass': 'form-group-combo-input'
+                                {{ form_input(element.amount,'', {
+                                'labelText': 'Total Value',
+                                'labelClass': 'visuallyhidden',
+                                'formGroupClass': 'form-group-combo-input',
+                                'inputPrefix' : '£',
+                                'inputClass' : 'form-control__number'
                                 }) }}
 
-                                {{ form_input(t.moreDetails, '', {
-                                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans,
-                                    'formGroupClass': 'form-group-combo-description'
+                                {{ form_input(element.moreDetails, '', {
+                                'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans,
+                                'formGroupClass': 'form-group-combo-description'
                                 }) }}
 
-                            </div>
                         </fieldset>
                     </div>
                 {% else %}
 
-                    {{ form_row(t.id) }}
-                    {{ form_row(t.type) }}
+                    {{ form_row(element.id) }}
+                    {{ form_row(element.type) }}
 
-                    {{ form_input(t.amount,'firstname', {
-                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
+                    {{ form_input(element.amount,'', {
+                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans,
+                    'formGroupClass': 'form-inline',
+                    'inputPrefix' : '£',
+                    'inputClass' : 'form-control__number'
                     }) }}
 
                 {% endif %}
 
+                {#
                 {{ form_row(t.id) }}
                 {{ form_row(t.type) }}
 
@@ -65,16 +81,26 @@
                 }) }}
 
                 {% if t.moreDetails is defined %}
-                    {{ form_input(t.moreDetails, '', {
-                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
-                    }) }}
+                {{ form_input(t.moreDetails, '', {
+                'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
+                }) }}
                 {% endif %}
+                #}
 
             {% endfor %}
 
             {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-            {{ form_submit(submitButton, 'save', {'buttonClass': 'behat-link-save'}) }}
+            {{ form_submit(submitButton, 'save', {
+            'labelText': ( 'save.label') | trans,
+            'buttonClass': 'behat-link-save'
+            }) }}
             {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+            <div class=" form-group total-footer">
+                <span class="sub-total-label">{{ (section ~ '.panelFooter') | trans }}</span>
+
+                <div class="sub-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
+            </div>
 
         </div>
     </details>

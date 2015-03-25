@@ -1443,16 +1443,7 @@ input[type=number] {
         line-height: 1.2; } }
 
 .account-transactions {
-  overflow: hidden;
-  font-family: "nta", Arial, sans-serif;
-  font-size: 24px;
-  line-height: 1.25;
-  font-weight: 400;
-  text-transform: none; }
-  @media (max-width: 640px) {
-    .account-transactions {
-      font-size: 18px;
-      line-height: 1.2; } }
+  overflow: hidden; }
   .account-transactions__header {
     margin-bottom: 30px;
     margin-top: 10px;
@@ -1462,10 +1453,28 @@ input[type=number] {
     margin-bottom: 20px;
     padding: 10px; }
   .account-transactions__total-balance-label {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
     float: left;
     width: 649px; }
+    @media (max-width: 640px) {
+      .account-transactions__total-balance-label {
+        font-size: 18px;
+        line-height: 1.2; } }
   .account-transactions__total-balance-total {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
     float: left; }
+    @media (max-width: 640px) {
+      .account-transactions__total-balance-total {
+        font-size: 18px;
+        line-height: 1.2; } }
   .account-transactions__accordion {
     margin-bottom: 30px; }
     .account-transactions__accordion details, .account-transactions__accordion summary {
@@ -1476,27 +1485,96 @@ input[type=number] {
       .account-transactions__accordion .details:last-of-type {
         border-bottom: 1px solid #dee0e2; }
     .account-transactions__accordion .summary {
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 400;
+      text-transform: none;
       padding: 10px 0;
       overflow: hidden; }
+      @media (max-width: 640px) {
+        .account-transactions__accordion .summary {
+          font-size: 18px;
+          line-height: 1.2; } }
       .account-transactions__accordion .summary .summary-title {
         float: left;
         font-weight: 700;
-        width: 648px;
+        width: 638px;
         margin-left: 10px; }
+        .account-transactions__accordion .summary .summary-title--adjust {
+          width: 630px; }
       .account-transactions__accordion .summary .transaction-total {
         float: left;
         color: #0b0c0c; }
     .account-transactions__accordion .details .content {
       display: none;
       clear: both;
-      overflow: hidden;
-      margin-left: 10px; }
+      overflow: hidden; }
     .account-transactions__accordion .details.open .content, .account-transactions__accordion details[open] .content {
       display: block; }
     .account-transactions__accordion .details.open .summary, .account-transactions__accordion details[open] .summary {
-      background-color: #dee0e2; }
+      background-color: #dee0e2;
+      color: #0b0c0c; }
     .account-transactions__accordion summary::-webkit-details-marker {
       display: none; }
+  .account-transactions .form-group.button-bar {
+    margin-top: 20px; }
+    .account-transactions .form-group.button-bar button {
+      margin-left: 68%; }
+  .account-transactions .form-inline {
+    padding: 20px 0 20px 10px;
+    margin: 0;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #dee0e2; }
+  .account-transactions .form-input-description-combo {
+    overflow: hidden; }
+    .account-transactions .form-input-description-combo .form-group {
+      border-bottom: 0; }
+    .account-transactions .form-input-description-combo .form-group-combo-input {
+      display: inline;
+      padding: 0;
+      float: none;
+      overflow: auto; }
+    .account-transactions .form-input-description-combo .form-group-combo-description {
+      padding: 0;
+      float: none;
+      overflow: auto; }
+      .account-transactions .form-input-description-combo .form-group-combo-description .form-label {
+        color: #6f777b;
+        float: none;
+        margin-top: 0; }
+      .account-transactions .form-input-description-combo .form-group-combo-description.field-with-errors .form-label {
+        margin-top: 0; }
+  .account-transactions .form-inline .form-label {
+    width: 66%;
+    margin-top: 7px;
+    margin-right: 8px; }
+  .account-transactions .form-inline.field-with-errors .form-label {
+    margin-top: 17px; }
+  .account-transactions .form-group.button-bar {
+    background-color: #f8f8f8;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    margin: 0; }
+  .account-transactions .form-group.total-footer {
+    background-color: #f8f8f8;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    padding-left: 10px;
+    margin: 0;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .account-transactions .form-group.total-footer {
+        font-size: 18px;
+        line-height: 1.2; } }
+    .account-transactions .form-group.total-footer .sub-total-label {
+      float: left;
+      width: 66%;
+      margin-right: 3px; }
 
 @font-face {
   font-family: GDS-Logo;
@@ -1631,12 +1709,17 @@ header.page-header {
 .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
+  fieldset .field-with-errors {
+    border-left: 0; }
 
 .field-with-errors input, .field-with-errors select, .field-with-errors textarea {
   border: 2px solid #df3034; }
 
+.field-with-errors ul {
+  width: auto; }
 .field-with-errors li {
-  color: #df3034; }
+  color: #df3034;
+  width: auto; }
 
 .button-link {
   margin-left: 15px;
@@ -1651,6 +1734,8 @@ form {
 
 .form-group .input-group-prefix + input {
   padding-left: 2em; }
+.form-group.form-inline .form-label {
+  float: left; }
 
 .form-group_button-bar {
   padding-top: 60px; }

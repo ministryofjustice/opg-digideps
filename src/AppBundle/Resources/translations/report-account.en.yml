@@ -4,6 +4,9 @@ page:
   pageSectionWarning: Add and edit totals for the reporting period for the client's account.
 moneyIn:
   panelTitle: Money paid in
+  panelFooter: Money in total
+  totalPrefix: "-"
+  currencySymbol: "£"
   elements:
     disability_living_allowance_or_personal_independence_payment:
       label: Disability Living Allowance or Personal Independence Payment
@@ -37,18 +40,21 @@ moneyIn:
       label: Bequests, eg inheritance, gifts received
     sale_of_investments_property_or_assets:
       label: Sale of investments, property or assets (total)
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     compensation_or_damages_awards:
       label: Compensation or damages awards
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     transfers_in_from_client_s_other_accounts:
       label: Transfers in from client’s other accounts
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     any_other_money_paid_in_and_not_listed_above:
       label: Any other money paid in and not listed above
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
 moneyOut:  
   panelTitle: Money paid out
+  panelFooter: Money out total
+  totalPrefix: "+"
+  currencySymbol: "£"
   elements:
     care_fees_or_local_authority_charges_for_care:
       label: Care fees or local authority charges for care
@@ -74,31 +80,31 @@ moneyOut:
       label: Deputy’s security bond
     client_s_personal_allowance_eg_spending_money:
       label: Client’s personal allowance, eg spending money
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     cash_withdrawals:
       label: Cash withdrawals
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     professional_fees_eg_solicitor_or_accountant_fees:
       label: Professional fees, eg solicitor or accountant fees
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     deputy_s_expenses:
       label: Deputy’s expenses
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     gifts:
       label: Gifts
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     major_purchases_eg_property_vehicles:
       label: Major purchases, eg property, vehicles
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     property_maintenance_or_improvement:
       label: Property maintenance or improvement
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     investments_eg_shares_bonds_savings:
       label: Investments, eg shares, bonds, savings
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     transfers_out_to_other_client_s_accounts:
       label: Transfers out to other client’s accounts
-      further_guidance: Please Give more details
+      further_guidance: Please give more details
     any_other_money_paid_out_and_not_listed_above:
       label: Any other money paid out and not listed above
 save:

@@ -17,6 +17,13 @@ form {
       padding-left: 2em;
     }
   }
+
+  &.form-inline {
+    .form-label {
+      float: left;
+    }
+  }
+
 }
 
 .form-group_button-bar {

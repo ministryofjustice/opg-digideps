@@ -1,10 +1,14 @@
 .field-with-errors {
-    border-left: 3px solid $error-colour;
-    padding: 0 0 0 15px;
+  border-left: 3px solid $error-colour;
+  padding: 0 0 0 15px;
+
+  fieldset & {
+    border-left: 0;
+  }
 }
 
-.field-with-errors{
-  & input, select, textarea{
+.field-with-errors {
+  & input, select, textarea {
     border: 2px solid $error-colour;
   }
 }
@@ -15,12 +19,16 @@
 }
 
 .field-with-errors {
-	li {
-		color: $error-colour
-	}
+  ul {
+    width: auto;
+  }
+  li {
+    color: $error-colour;
+    width: auto;
+  }
 }
 
-.button-link{
+.button-link {
   margin-left: 15px;
   top: 1px;
   position: relative;
