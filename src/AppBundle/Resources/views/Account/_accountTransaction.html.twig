@@ -1,15 +1,10 @@
 {% set translationDomain = "report-account" %}
 {% trans_default_domain translationDomain %}
 
-{% set detailsClass = "" %}
-{% if openPanel %}
-    {% set detailsClass = " open" %}
-{% endif %}
-
-<div id="{{ summaryHref }}" class="details{{ detailsClass }}">
+<div id="{{ href }}" class="details {{ openPanel ? ' open' : '' }}">
     <details>
         <summary>
-            <a href="{{ '?' ~ summaryHref ~ '#' ~ summaryHref }}">
+            <a href="{{ link }}#{{ href }}">
                 <div class="summary">
                     <h3 class="summary-title">{{ (section ~ '.panelTitle') | trans }}</h3>
 
