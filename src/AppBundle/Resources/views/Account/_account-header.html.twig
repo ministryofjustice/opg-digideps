@@ -1,0 +1,31 @@
+<div class="account-header">
+
+    <dl class="account-header__item-fields">
+        <div class="account-header__item-fields-set">
+            <dt class="account-header__item-fields-term visuallyhidden">Bank or Building Society name</dt>
+            <dd class="account-header__item-fields-description"><h2 class="account-header__title">{{ account.bank }}</h2></dd>
+        </div>
+        <div class="account-header__item-fields-set account-header__item-fields-set--left">
+            <dt class="account-header__item-fields-term">Account no.</dt>
+            <dd class="account-header__item-fields-description">****{{ account.accountNumber }}</dd>
+        </div>
+        <div class="account-header__item-fields-set account-header__item-fields-set--opening-date">
+            <dt class="account-header__item-fields-term visuallyhidden">Opening balance date</dt>
+            <dd class="account-header__item-fields-description account-header__item-fields-description--opening-date">{{ account.openingDate | date("d/m/Y") }}</dd>
+        </div>
+        <div class="account-header__item-fields-set">
+            <dt class="account-header__item-fields-term">Opening balance</dt>
+            <dd class="account-header__item-fields-description account-header__item-fields-description--balance">
+                £{{ account.openingBalance | number_format(2, '.', ',') }}</dd>
+        </div>
+        <div class="account-header__item-fields-set account-header__item-fields-set--left">
+            <dt class="account-header__item-fields-term">Sort code</dt>
+            <dd class="account-header__item-fields-description account-header__item-fields-description--sort-code">{{ account.sortCode | split('', 2) | join('-')}}</dd>
+        </div>
+        <div class="account-header__item-fields-set account-header__item-fields-set--edit-link">
+            <dt class="account-header__item-fields-term visuallyhidden">Account Edit Link</dt>
+            <dd class="account-header__item-fields-description account-header__item-fields-description--edit-link"><a href="#">Edit account details</a></dd>
+        </div>
+    </dl>
+
+</div>

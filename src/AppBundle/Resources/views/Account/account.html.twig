@@ -1,0 +1,131 @@
+{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
+{% set translationDomain = "report-account" %}
+{% trans_default_domain translationDomain %}
+
+{% set URL = app.request.requestUri %}
+{% set queryString = URL | split('?') %}
+
+{% set clickedPanel = "" %}
+{% if queryString[1] is defined %}
+    {% set clickedPanel = queryString[1] %}
+{% endif %}
+
+{% if clickedPanel is same as("") %}
+    {% set moneyInPane = false %}
+    {% set moneyInHref = "money-in" %}
+
+    {% set moneyOutPane = false %}
+    {% set moneyOutHref = "money-out" %}
+
+{% elseif clickedPanel is same as("money-in") %}
+    {% set moneyInPane = true %}
+    {% set moneyInHref = "" %}
+
+    {% set moneyOutPane = false %}
+    {% set moneyOutHref = "money-both" %}
+
+{% elseif clickedPanel is same as("money-out") %}
+    {% set moneyInPane = false %}
+    {% set moneyInHref = "money-both" %}
+
+    {% set moneyOutPane = true %}
+    {% set moneyOutHref = "" %}
+
+{% elseif clickedPanel is same as("money-both") %}
+    {% set moneyInPane = true %}
+    {% set moneyInHref = "money-out" %}
+
+    {% set moneyOutPane = true %}
+    {% set moneyOutHref = "money-in" %}
+
+{% endif %}
+
+{% set breadCrumb = [
+    {
+        'label': 'Accounts' | trans,
+        'href': '../accounts'
+    },
+    {
+        'label': account.bank
+    }
+] %}
+
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
+{% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
+{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+{% block pageNavigation %}
+    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
+{% endblock %}
+
+{% block pageBody %}
+
+
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+
+    {% include 'AppBundle:Account:_account-header.html.twig' %}
+
+    {#
+        * Finish breadcrumb
+    #}
+
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'page.pageSectionWarning'
+    } %}
+
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_row(form.id) }}
+
+    <div class="account-transactions account-transactions__header">
+        <dl class="account-transactions__total-balance">
+            <dt class="account-transactions__total-balance-label">Total balance</dt>
+            <dd class="account-transactions__total-balance-total">
+                £{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
+        </dl>
+    </div>
+
+    <div class="account-transactions account-transactions__accordion">
+
+        {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
+        legend: 'moneyIn.legend' | trans,
+        openPanel: moneyInPane,
+        summaryHref: moneyInHref,
+        elements: form.moneyIn,
+        section: 'moneyIn',
+        transactionTotal: account.moneyInTotal,
+            submitButton: form.saveMoneyIn
+        } %}
+
+
+        {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
+        legend: 'moneyOut.legend' | trans,
+        openPanel: moneyOutPane,
+        summaryHref: moneyOutHref,
+        elements: form.moneyOut,
+        section: 'moneyOut',
+        transactionTotal: account.moneyOutTotal,
+        submitButton: form.saveMoneyOut
+        } %}
+
+    </div>
+
+    <div class="account-transactions account-transactions__footer">
+        <ul class="account-transactions__total-balance">
+            <li class="account-transactions__total-balance-label">Total balance</li>
+            <li class="account-transactions__total-balance-total">
+                £{{ account.moneyTotal | number_format(2, '.', ',') }}</li>
+        </ul>
+    </div>
+
+    {{ form_end(form) }}
+
+{% endblock %}

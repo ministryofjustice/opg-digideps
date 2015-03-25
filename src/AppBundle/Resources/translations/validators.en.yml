@@ -132,6 +132,11 @@ account:
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
+    moneyInOut:
+        account:
+          notNumeric: Please enter a valid value e.g. 1200,50
+        moreDetails:
+          empty: You must enter details if an amount is given
 asset:
     title:
         notBlank: Please select an asset title

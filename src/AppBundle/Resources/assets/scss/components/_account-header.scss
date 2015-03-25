@@ -1,0 +1,70 @@
+.account-header {
+  position: relative;
+  background-color: $grey-4;
+  padding: 20px;
+  overflow: hidden;
+  margin-bottom: 30px;
+
+  &__item-fields{
+    @include core-19();
+  }
+
+  &__item-fields-set {
+    float: left;
+    width: 56%;
+    overflow: hidden;
+
+    &--left {
+      width: 40%;
+    }
+
+    &--opening-date {
+      position: absolute;
+      top: 53px;
+    }
+
+    &--edit-link {
+      float: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: auto;
+    }
+
+  }
+
+  &__item-fields-term {
+    display: inline;
+    margin-right: 20px;
+    color: $grey-1;
+  }
+
+  &__item-fields-description {
+    display: inline;
+    font-weight: 700;
+
+    &--balance {
+      margin-left: 150px;
+    }
+
+    &--opening-date {
+      margin: 0 0 0 175px;
+      font-weight: 400;
+    }
+
+    &--sort-code{
+      margin-left: 20px;
+    }
+
+    &--edit-link{
+      font-weight: 400;
+    }
+  }
+
+  &__title {
+    @include bold-24();
+    font-size: 27px;
+
+  }
+
+}

@@ -1,0 +1,57 @@
+{% set translationDomain = "report-account" %}
+{% trans_default_domain translationDomain %}
+
+{% set detailsClass = "" %}
+{% if openPanel %}
+    {% set detailsClass = " open" %}
+{% endif %}
+
+<div id="{{ summaryHref }}" class="details{{ detailsClass }}">
+    <details>
+        <summary>
+            <a href="{{ '?' ~ summaryHref ~ '#' ~ summaryHref }}">
+                <div class="summary">
+                    <h3 class="summary-title">{{ (section ~ '.panelTitle') | trans }}</h3>
+
+                    <div class="transaction-total">£{{ transactionTotal | number_format(2, '.', ',') }}</div>
+                </div>
+            </a>
+        </summary>
+        <div class="content">
+            {% for t in elements %}
+
+                {% set elementId = t.type.vars.value %}
+
+                {% if t.moreDetails is defined %}
+                    {# Fieldset
+
+                    {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
+
+                    } %}
+#}
+                {% else %}
+
+                {% endif %}
+
+                {{ form_row(t.id) }}
+                {{ form_row(t.type) }}
+
+                {{ form_input(t.amount,'firstname', {
+                'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
+                }) }}
+
+                {% if t.moreDetails is defined %}
+                    {{ form_input(t.moreDetails, '', {
+                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
+                    }) }}
+                {% endif %}
+
+            {% endfor %}
+
+            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+            {{ form_submit(submitButton, 'save', {'buttonClass': 'behat-link-save'}) }}
+            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        </div>
+    </details>
+</div>

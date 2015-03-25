@@ -1383,6 +1383,119 @@ input[type=number] {
     Do need import application specific code into this file.
 ***************************************************************
 */
+.account-header {
+  position: relative;
+  background-color: #f8f8f8;
+  padding: 20px;
+  overflow: hidden;
+  margin-bottom: 30px; }
+  .account-header__item-fields {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .account-header__item-fields {
+        font-size: 16px;
+        line-height: 1.25; } }
+  .account-header__item-fields-set {
+    float: left;
+    width: 56%;
+    overflow: hidden; }
+    .account-header__item-fields-set--left {
+      width: 40%; }
+    .account-header__item-fields-set--opening-date {
+      position: absolute;
+      top: 53px; }
+    .account-header__item-fields-set--edit-link {
+      float: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: auto; }
+  .account-header__item-fields-term {
+    display: inline;
+    margin-right: 20px;
+    color: #6f777b; }
+  .account-header__item-fields-description {
+    display: inline;
+    font-weight: 700; }
+    .account-header__item-fields-description--balance {
+      margin-left: 150px; }
+    .account-header__item-fields-description--opening-date {
+      margin: 0 0 0 175px;
+      font-weight: 400; }
+    .account-header__item-fields-description--sort-code {
+      margin-left: 20px; }
+    .account-header__item-fields-description--edit-link {
+      font-weight: 400; }
+  .account-header__title {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: none;
+    font-size: 27px; }
+    @media (max-width: 640px) {
+      .account-header__title {
+        font-size: 18px;
+        line-height: 1.2; } }
+
+.account-transactions {
+  overflow: hidden;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .account-transactions {
+      font-size: 18px;
+      line-height: 1.2; } }
+  .account-transactions__header {
+    margin-bottom: 30px;
+    margin-top: 10px;
+    padding: 10px; }
+  .account-transactions__footer {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px; }
+  .account-transactions__total-balance-label {
+    float: left;
+    width: 649px; }
+  .account-transactions__total-balance-total {
+    float: left; }
+  .account-transactions__accordion {
+    margin-bottom: 30px; }
+    .account-transactions__accordion details, .account-transactions__accordion summary {
+      display: block; }
+    .account-transactions__accordion .details {
+      position: relative;
+      border-top: 1px solid #dee0e2; }
+      .account-transactions__accordion .details:last-of-type {
+        border-bottom: 1px solid #dee0e2; }
+    .account-transactions__accordion .summary {
+      padding: 10px 0;
+      overflow: hidden; }
+      .account-transactions__accordion .summary .summary-title {
+        float: left;
+        font-weight: 700;
+        width: 648px;
+        margin-left: 10px; }
+      .account-transactions__accordion .summary .transaction-total {
+        float: left;
+        color: #0b0c0c; }
+    .account-transactions__accordion .details .content {
+      display: none;
+      clear: both;
+      overflow: hidden;
+      margin-left: 10px; }
+    .account-transactions__accordion .details.open .content, .account-transactions__accordion details[open] .content {
+      display: none; }
+    .account-transactions__accordion summary::-webkit-details-marker {
+      display: none; }
+
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
@@ -1456,6 +1569,8 @@ header.page-header {
 
 .page-section-warning {
   border-left: 3px solid #bfc1c3;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding-left: 10px;
   width: 65%;
   margin-bottom: 30px; }
@@ -1478,6 +1593,32 @@ header.page-header {
 .sub-section-description {
   width: 50%;
   margin-bottom: 40px; }
+
+.bread-crumb {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #6f777b;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .bread-crumb {
+      font-size: 16px;
+      line-height: 1.25; } }
+  .bread-crumb .bread-crumbs {
+    display: inline;
+    margin-left: 5px; }
+    .bread-crumb .bread-crumbs:before {
+      content: ">";
+      margin-right: 10px; }
+    .bread-crumb .bread-crumbs:first-of-type {
+      margin-left: 0;
+      margin-right: 10px; }
+      .bread-crumb .bread-crumbs:first-of-type:before {
+        content: "";
+        margin: 0; }
 
 .button-bar {
   margin-top: 10px;
@@ -1741,13 +1882,16 @@ form {
 
 .page-body {
   margin-top: 0;
-  overflow: hidden; }
+  overflow: hidden;
+  position: relative; }
   .page-service-content .page-body {
     margin-top: 40px; }
   .page-admin-content .page-body {
     margin-top: 60px; }
   .page-report-content .page-body {
     margin-top: 60px; }
+  .report-money-input .page-body {
+    margin-top: 0; }
 
 .page-report-content .page-report-header .page-header-titles {
   float: left;
