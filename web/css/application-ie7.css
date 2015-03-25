@@ -1533,7 +1533,9 @@ input[type=number] {
       overflow: hidden;
       margin-left: 10px; }
     .account-transactions__accordion .details.open .content, .account-transactions__accordion details[open] .content {
-      display: none; }
+      display: block; }
+    .account-transactions__accordion .details.open .summary, .account-transactions__accordion details[open] .summary {
+      background-color: #dee0e2; }
     .account-transactions__accordion summary::-webkit-details-marker {
       display: none; }
 

@@ -67,11 +67,11 @@
     .details.open, details[open]{
 
       .content{
-        display: none;
+        display: block;
       }
 
       .summary{
-        //background-color: $grey-3;
+        background-color: $grey-3;
       }
 
     }
