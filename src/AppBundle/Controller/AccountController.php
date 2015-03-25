@@ -28,7 +28,7 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient');
-        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId]]);
+        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId, 'group' => 'basic']]);
 
         $account = new EntityDir\Account();
         $account->setReportObject($report);

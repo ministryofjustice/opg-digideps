@@ -21,12 +21,12 @@
                 </div>
                 <div class="report-list__item-fields-col-info">
                     <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.balance' | trans }}</dt>
+                        <dt class="report-list__item-fields-term">{{ 'listing.totalBalance' | trans }}</dt>
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
-                            {{ 'listing.currencySymbol' | trans }}{{ account.openingBalance | number_format(2, '.', ',') }}</dd>
+                            {{ 'listing.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
                     </div>
                     <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.edited' | trans }}</dt>
+                        <dt class="report-list__item-fields-term">{{ 'listing.lastEdited' | trans }}</dt>
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.lastEdit | date("d/m/Y") }}</dd>
                     </div>
                 </div>
