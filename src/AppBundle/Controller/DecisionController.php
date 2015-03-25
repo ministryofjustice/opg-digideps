@@ -25,7 +25,6 @@ class DecisionController extends RestController
         $decision->setReport($report);
 
         $this->hydrateEntityWithArrayData($decision, $data, [
-            'title' => 'setTitle',
             'description' => 'setDescription',
             'client_involved_boolean' => 'setClientInvolvedBoolean',
             'client_involved_details' => 'setClientInvolvedDetails',

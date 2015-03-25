@@ -25,13 +25,6 @@ class Decision
     /**
      * @var string
      *
-     * @ORM\Column(name="title",type="string", length=500)
-     */
-    private $title;
-    
-    /**
-     * @var string
-     *
      * @ORM\Column(type="text")
      */
     private $description;
@@ -71,22 +64,6 @@ class Decision
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * @return integer
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-    }
-
-    /**
-     * @return integer
-     */
-    public function getTitle()
-    {
-        return $this->title;
     }
 
     /**
