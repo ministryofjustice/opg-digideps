@@ -41,7 +41,7 @@ Feature: report
         When I submit the form
         And I save the page as "report-decision-add-error"
         Then the following fields should have an error:
-            | decision_title |
+            #| decision_title |
             | decision_description |
             | decision_clientInvolvedDetails |
             | decision_decisionDate_day |
@@ -51,7 +51,7 @@ Feature: report
             | decision_clientInvolvedBoolean_1 |
         # wrong date
         And I fill in the following:
-            | decision_title | Bought house in Sw18 |
+            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 02 |
@@ -62,7 +62,7 @@ Feature: report
         And the form should contain an error
         # date not in report range
         And I fill in the following:
-            | decision_title | Bought house in Sw18 |
+            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
@@ -73,7 +73,7 @@ Feature: report
         And the form should contain an error
         # missing involvement details
         And I fill in the following:
-            | decision_title | Bought house in Sw18 |
+            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
@@ -84,7 +84,7 @@ Feature: report
         And the form should contain an error
         # add decision on 1/1/2015
         And I fill in the following:
-            | decision_title | Bought house in Sw18 |
+            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 1 |
             | decision_decisionDate_month | 1 |
@@ -97,8 +97,8 @@ Feature: report
         And the form should not contain an error
         # add another decision on 31/12/2015
          And I fill in the following:
-            | decision_title | Sold house in Sw18 |
-            | decision_description | 2 beds |
+            #| decision_title | Sold house in Sw18 |
+            | decision_description | 3 beds |
             | decision_decisionDate_day | 31 |
             | decision_decisionDate_month | 12 |
             | decision_decisionDate_year | 2015 |
@@ -106,8 +106,8 @@ Feature: report
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
         And I submit the form
         And the form should not contain an error
-        And I should see "Bought house in Sw18" in the "list-decisions" region
-        And I should see "Sold house in Sw18" in the "list-decisions" region
+        And I should see "2 beds" in the "list-decisions" region
+        And I should see "3 beds" in the "list-decisions" region
         
 
     @deputy

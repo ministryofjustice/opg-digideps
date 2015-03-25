@@ -31,14 +31,6 @@ class Decision
     private $report;
     
     /**
-     * @Assert\NotBlank( message="decision.title.notBlank" )
-     * @Assert\Length( min=2, minMessage="decision.title.length")
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $title;
-
-    /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="decision.description.notBlank" )
      * @Assert\Length( min=2, minMessage="decision.description.length")
@@ -84,11 +76,6 @@ class Decision
     {
         return $this->reportId;
     }
-        
-    public function getTitle()
-    {
-        return $this->title;
-    }
 
     public function getDescription()
     {
@@ -118,11 +105,6 @@ class Decision
     public function setId($id)
     {
         $this->id = $id;
-    }
-
-    public function setTitle($title)
-    {
-        $this->title = $title;
     }
 
     public function setDescription($description)
