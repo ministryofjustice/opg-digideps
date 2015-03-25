@@ -1,52 +1,41 @@
 {% set translationDomain = "report-account" %}
 {% trans_default_domain translationDomain %}
 
+{% set detailsClass = "" %}
+{% if openPanel %}
+    {% set detailsClass = " open" %}
+{% endif %}
 
-<div class="details">
+<div class="details{{ detailsClass }}">
     <details>
         <summary>
-            <a href="http://www.google.co.uk">
+            <a href="{{ summaryHref }}">
                 <div class="summary">
-                    Money In
+                    <h3 class="summary-title">{{ (section ~ '.panelTitle') | trans }}</h3>
+
+                    <div class="transaction-total">£{{ transactionTotal | number_format(2, '.', ',') }}</div>
                 </div>
             </a>
         </summary>
         <div class="content">
-            transactions<br />
-            transactions<br />
-            transactions<br />
-            transactions<br />
-            transactions<br />
-            transactions<br />
-            transactions<br />
-            transactions<br />
-            transactions<br />
+            {% for t in elements %}
+
+                {% set elementId = t.type.vars.value %}
+
+                {{ form_row(t.id) }}
+                {{ form_row(t.type) }}
+
+                {{ form_input(t.amount,'firstname', {
+                'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
+                }) }}
+
+                {% if t.moreDetails is defined %}
+                    {{ form_input(t.moreDetails, '', {
+                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
+                    }) }}
+                {% endif %}
+
+            {% endfor %}
         </div>
     </details>
-</div>
-
-<div style="background-color: lightgrey; margin: 20px; padding: 20px; height: 1%; overflow: hidden;">
-    <h1 class="form-title heading-medium-large">
-        {{ legend }}
-    </h1> [collapse/expand logic here ...]
-    
-    {% for t in elements %}
-     
-      {% set elementId = t.type.vars.value %}
-      
-      {{ form_row(t.id) }}
-      {{ form_row(t.type) }}
-      
-      {{ form_input(t.amount,'firstname', { 
-        'labelText': ( keySection ~ '.elements.' ~ elementId ~ '.label') | trans
-      }) }}
-      
-      {% if t.moreDetails is defined %}
-        {{ form_input(t.moreDetails, '', { 
-          'labelText': ( keySection ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
-        }) }}
-      {% endif %}
-     
-    {% endfor %}
-
 </div>

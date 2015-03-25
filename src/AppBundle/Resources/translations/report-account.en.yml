@@ -3,7 +3,7 @@ page:
   totalBalance: Total Balance
   pageSectionWarning: Add and edit totals for the reporting period for the client's account.
 moneyIn:
-  legend: Money paid in
+  panelTitle: Money paid in
   elements:
     disability_living_allowance_or_personal_independence_payment:
       label: Disability Living Allowance or Personal Independence Payment
@@ -48,7 +48,7 @@ moneyIn:
       label: Any other money paid in and not listed above
       further_guidance: Please Give more details
 moneyOut:  
-  legend: Money paid out
+  panelTitle: Money paid out
   elements:
     care_fees_or_local_authority_charges_for_care:
       label: Care fees or local authority charges for care
