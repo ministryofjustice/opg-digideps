@@ -3,6 +3,7 @@ parameters:
     locale:   en
     secret:   setme
     api_base_url: https://digideps-api.local/
+    env: develop
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"
