@@ -6,16 +6,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity as EntityDir;
 
 
-
 class AccountController extends RestController
 {
     
     /**
-     * @Route("/report/get-accounts/{id}")
+     * @Route("/report/get-accounts/{id}/{serialiseGroup}", defaults={"serialiseGroup": null})
      * @Method({"GET"})
      */
-    public function getAccountsAction($id)
+    public function getAccountsAction($id, $serialiseGroup = null)
     {
+        $this->setJmsSerialiserGroup($serialiseGroup);
+        
         $report = $this->findEntityBy('Report', $id);
         
         $accounts = $this->getRepository('Account')->findByReport($report);
@@ -41,37 +42,16 @@ class AccountController extends RestController
         }
         
         $account = new EntityDir\Account();
-        $account->setBank($accountData['bank']);
-        $account->setSortCode($accountData['sort_code']);
-        $account->setAccountNumber($accountData['account_number']);
-        $account->setOpeningDate(new \DateTime($accountData['opening_date']));
-        $account->setOpeningBalance($accountData['opening_balance']);
-        $account->setReport($report);
-        $account->setLastEdit(new \DateTime());
+        $account->setBank($accountData['bank'])
+            ->setSortCode($accountData['sort_code'])
+            ->setAccountNumber($accountData['account_number'])
+            ->setOpeningDate(new \DateTime($accountData['opening_date']))
+            ->setOpeningBalance($accountData['opening_balance'])
+            ->setReport($report)
+            ->setLastEdit(new \DateTime());
         
-        $benefits = $this->getRepository('Benefit')->findAll();
+        $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
-        if(count($benefits) > 0){
-            foreach($benefits as $benefit){
-                $account->addBenefit($benefit);
-            }
-        }
-        
-        $incomes = $this->getRepository('Income')->findAll();
-        
-        if(count($incomes) > 0){
-            foreach($incomes as $income){
-                $account->addIncome($income);
-            }
-        }
-        
-        $expenditures = $this->getRepository('Expenditure')->findAll();
-        
-        if(count($expenditures) > 0){
-            foreach($expenditures as $expenditure){
-                $account->addExpenditure($expenditure);
-            }
-        }
         $this->getEntityManager()->persist($account);
         $this->getEntityManager()->flush();
         
@@ -79,13 +59,42 @@ class AccountController extends RestController
     }
     
    /**
-     * @Route("/report/find-account-by-id/{id}")
+     * @Route("/report/find-account-by-id/{id}/{serialiseGroup}", defaults={"serialiseGroup": null})
      * @Method({"GET"})
      */
-    public function get($id)
+    public function get($id, $serialiseGroup = null)
     {
-        $ret = $this->findEntityBy('Account', $id, 'Account not found');
+        $this->setJmsSerialiserGroup($serialiseGroup);
+        
+        $account = $this->findEntityBy('Account', $id, 'Account not found');
 
-        return $ret;
+        return $account;
     }
+    
+    /**
+     * @Route("/account/{id}")
+     * @Method({"PUT"})
+     */
+    public function edit($id)
+    {
+        $account = $this->findEntityBy('Account', $id, 'Account not found');
+        
+        $data = $this->deserializeBodyContent();
+        
+        // edit transactions
+        if (isset($data['money_in']) && isset($data['money_out'])) {
+            $transactionRepo = $this->getRepository('AccountTransaction');
+            array_map(function($transactionRow) use ($transactionRepo) {
+                $transactionRepo->find($transactionRow['id'])
+                    ->setAmount($transactionRow['amount'])
+                    ->setMoreDetails($transactionRow['more_details']);
+            }, array_merge($data['money_in'], $data['money_out']));
+            $this->setJmsSerialiserGroup('transactions');
+        }
+        
+        $this->getEntityManager()->flush();
+        
+        return $account;
+    }
+    
 }
