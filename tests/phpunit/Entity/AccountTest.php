@@ -1,27 +1,17 @@
 <?php
 namespace AppBundle\Entity;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
-class AccountTest extends WebTestCase
+class AccountTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var \Doctrine\ORM\EntityManager 
-     */
-    private $em;
 
     protected function setUp()
     {
-        $this->client = static::createClient();
-        
-        
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     public function testSetterGetters()
     {
         $account = new Account;
-        
+        $account->setLastEdit(new \DateTime('2015-01-01'));
         $this->assertEquals('123456', $account->setAccountNumber('123456')->getAccountNumber());
         $this->assertEquals('123456', $account->setBalanceJustification('123456')->getBalanceJustification());
         $this->assertEquals('123456', $account->setBank('123456')->getBank());
@@ -35,25 +25,39 @@ class AccountTest extends WebTestCase
         $account->setLastEdit(new \DateTime('2015-01-01'));
         $account->setOpeningBalance(10.0);
         
-        $this->em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($account);
         
-        $this->em->persist($account);
-        $this->em->flush($account);
+        // add account transaction type
+        $in1 = new AccountTransactionTypeIn();
+        $in1->setId('in1')->setHasMoreDetails(true);
         
-        //edit money In
-        $account->findTransactionByTypeId('attendance_allowance')->setAmount(400.0);
-        $account->findTransactionByTypeId('state_pension')->setAmount(150.0);
+        $in2 = new AccountTransactionTypeIn();
+        $in2->setId('in2')->setHasMoreDetails(false);
         
-        // edit money out
-        $account->findTransactionByTypeId('tax_payable_to_hmrc')->setAmount(50.0);
-        $account->findTransactionByTypeId('gifts')->setAmount(30.0);
+        //add account transaction type
+        $out1 = new AccountTransactionTypeOut();
+        $out1->setId('out1')->setHasMoreDetails(true);
         
-        $this->em->flush();
+        $out2 = new AccountTransactionTypeOut();
+        $out2->setId('out2')->setHasMoreDetails(false);
+        
+        // add account transaction
+        new AccountTransaction($account, $in1, 400.0); //(1)
+        new AccountTransaction($account, $in2, 150.0);
+        
+        // add account transaction
+        new AccountTransaction($account, $out1, 50.0);
+        new AccountTransaction($account, $out2, 30.0);
         
         $this->assertEquals(400.0 + 150.0, $account->getMoneyInTotal());
         $this->assertEquals(50.0 + 30.0, $account->getMoneyOutTotal());
         $this->assertEquals(10.0 + 400.0 + 150.0 - 50.0 - 30.0, $account->getMoneyTotal());
         
+        // edit transaction
+        $account->findTransactionByTypeId('in1')->setAmount(400.50); //edit (1)
+        $this->assertEquals(10.0 + 400.50 + 150.0 - 50.0 - 30.0, $account->getMoneyTotal());
+        
+        
         $this->assertTrue( time() - $account->getLastEdit()->getTimestamp() < 1000, "Account.lastEdit not updated when transaction were edited" );
+        
     }
 }

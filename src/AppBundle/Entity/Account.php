@@ -492,6 +492,18 @@ class Account
     }
     
     /**
+     * @param AccountTransaction $transaction
+     */
+    public function addTransaction(AccountTransaction $transaction)
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+        }
+        
+        return $this;
+    }
+    
+    /**
      * @return AccountTransaction[]
      */
     public function getMoneyIn()

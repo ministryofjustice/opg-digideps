@@ -72,6 +72,8 @@ class AccountTransaction
     public function __construct(Account $account, AccountTransactionType $transactionType, $amount)
     {
         $this->account = $account;
+        $account->addTransaction($this);
+        
         $this->transactionType = $transactionType;
         $this->amount = $amount;
     }
@@ -135,17 +137,19 @@ class AccountTransaction
 
     public function setAmount($amount)
     {
+        $this->amount = $amount;
+        
         $this->getAccount()->setLastEditNow();
         
-        $this->amount = $amount;
         return $this;
     }
 
     public function setMoreDetails($moreDetails)
     {
+        $this->moreDetails = $moreDetails;
+        
         $this->getAccount()->setLastEditNow();
         
-        $this->moreDetails = $moreDetails;
         return $this;
     }
 
