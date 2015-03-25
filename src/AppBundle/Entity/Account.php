@@ -153,6 +153,7 @@ class Account
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
+        $this->lastEdit = new \DateTime();
     }
 
     /**
@@ -243,6 +244,18 @@ class Account
     public function setLastEdit($lastEdit)
     {
         $this->lastEdit = $lastEdit;
+
+        return $this;
+    }
+    
+    /**
+     * Set lastEdit to now
+     * 
+     * @return Account
+     */
+    public function setLastEditNow()
+    {
+        $this->lastEdit = new \DateTime;
 
         return $this;
     }

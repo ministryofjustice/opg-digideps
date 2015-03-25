@@ -32,6 +32,7 @@ class AccountTest extends WebTestCase
     public function testTotals()
     {
         $account = new Account();
+        $account->setLastEdit(new \DateTime('2015-01-01'));
         $account->setOpeningBalance(10.0);
         
         $this->em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($account);
@@ -52,5 +53,7 @@ class AccountTest extends WebTestCase
         $this->assertEquals(400.0 + 150.0, $account->getMoneyInTotal());
         $this->assertEquals(50.0 + 30.0, $account->getMoneyOutTotal());
         $this->assertEquals(10.0 + 400.0 + 150.0 - 50.0 - 30.0, $account->getMoneyTotal());
+        
+        $this->assertTrue( time() - $account->getLastEdit()->getTimestamp() < 1000, "Account.lastEdit not updated when transaction were edited" );
     }
 }
