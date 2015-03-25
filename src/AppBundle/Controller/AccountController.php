@@ -58,12 +58,13 @@ class AccountController extends Controller
     }
 
     /**
-     * @Route("/report/{reportId}/account/{accountId}", name="account", requirements={
-     *   "accountId" = "\d+"
-     * })
+     * @Route("/report/{reportId}/account/{accountId}/{action}", name="account", requirements={
+     *   "accountId" = "\d+",
+     *   "action" = "[\w-]*"
+     * }, defaults={ "action" = "list"})
      * @Template()
      */
-    public function accountAction($reportId, $accountId, $action = 'list')
+    public function accountAction($reportId, $accountId, $action)
     {
         $util = $this->get('util');
         $request = $this->getRequest();
