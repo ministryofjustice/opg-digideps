@@ -40,22 +40,19 @@
 
 {% endif %}
 
-{% set moneyInTotal = 0 %}
-{% set moneyOutTotal = 0 %}
-
 {% set breadCrumb = [
     {
-        'label': 'Accounts',
+        'label': 'Accounts' | trans,
         'href': '../accounts'
     },
     {
-        'label': '%accountName%'
+        'label': account.bank
     }
 ] %}
 
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
-{% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
+{% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
 {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
@@ -101,20 +98,22 @@
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyIn.legend' | trans,
         openPanel: moneyInPane,
-        summaryHref: '?' ~ moneyInHref,
+        summaryHref: moneyInHref,
         elements: form.moneyIn,
         section: 'moneyIn',
-        transactionTotal: moneyInTotal
+        transactionTotal: account.moneyInTotal,
+            submitButton: form.saveMoneyIn
         } %}
 
 
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyOut.legend' | trans,
         openPanel: moneyOutPane,
-        summaryHref: '?' ~ moneyOutHref,
+        summaryHref: moneyOutHref,
         elements: form.moneyOut,
         section: 'moneyOut',
-        transactionTotal: moneyOutTotal
+        transactionTotal: account.moneyOutTotal,
+        submitButton: form.saveMoneyOut
         } %}
 
     </div>
@@ -126,10 +125,6 @@
                 £{{ account.moneyTotal | number_format(2, '.', ',') }}</li>
         </ul>
     </div>
-
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save, 'save', {'buttonClass': 'behat-link-save'}) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 

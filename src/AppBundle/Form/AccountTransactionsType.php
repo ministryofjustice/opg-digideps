@@ -15,7 +15,9 @@ class AccountTransactionsType extends AbstractType
                  ->add('id', 'hidden')
                  ->add('moneyIn',  'collection', ['type' => new AccountTransactionSingleType()])
                  ->add('moneyOut', 'collection', ['type' => new AccountTransactionSingleType()])
-                 ->add('save', 'submit');
+                 ->add('saveMoneyIn', 'submit')
+                 ->add('saveMoneyOut', 'submit')
+                ;
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)
