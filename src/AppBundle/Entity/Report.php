@@ -712,48 +712,6 @@ class Report
         return $this->noDecisionToAdd;
     }
     
-    /**
-     * Check if this report has any payments associated to it
-     * 
-     * @return boolean
-     */
-    public function hasPayments()
-    {
-        //check if this report is associated to any accounts
-        if($this->accounts->count() < 1){
-            return false;
-        }
-        
-        foreach($this->accounts as $account){
-            //check if this account has any income payments associated to it
-            $incomes = $account->getIncomes();
-            
-            foreach($incomes as $income){
-                if($income->getIncomePayments()->count() > 0){
-                    return true;
-                }
-            }
-            
-            //check if this account has any benefits payment associated to it
-            $benefits = $account->getBenefits();
-            
-            foreach($benefits as $benefit){
-                if($benefit->getBenefitPayments()->count() > 0){
-                    return true;
-                }
-            }
-            
-            //check if this account has any expenditure payment associated to it
-            $expenditures = $account->getExpenditures();
-            
-            foreach($expenditures as $expenditure){
-                if($expenditure->getExpenditurePayments()->count() > 0){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Set courtOrderType

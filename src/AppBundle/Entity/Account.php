@@ -2,18 +2,20 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Account
  *
  * @ORM\Table(name="account")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
  */
 class Account
 {
     /**
      * @var integer
-     *
+     * @JMS\Groups({"transactions", "basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -21,73 +23,66 @@ class Account
      */
     private $id;
     
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Expenditure", mappedBy="account", cascade={ "persist"})
-     */
-    private $expenditures;
     
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Income", mappedBy="account", cascade={ "persist"})
-     */
-    private $incomes;
-    
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Benefit", mappedBy="account", cascade={ "persist"})
-     */
-    private $benefits;
-
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions", "basic"})
      * @ORM\Column(name="bank_name", type="string", length=100, nullable=true)
      */
     private $bank;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
     private $sortCode;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
     private $accountNumber;
 
     /**
      * @var \DateTime
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastEdit;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $closingBalance;
 
     /**
      * @var \Date
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="opening_date", type="date", nullable=true)
      */
     private $openingDate;
 
     /**
      * @var \Date
-     *
+     * @JMS\Groups({"transactions", "basic"})
+     * 
      * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
     private $closingDate;
@@ -115,13 +110,50 @@ class Account
     private $balanceJustification;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
+     */
+    private $transactions;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyIn")
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
+     */
+    private $moneyIn;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOut")
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
+     */
+    private $moneyOut;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyInTotal")
+     */
+    private $moneyInTotal;
+    
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOutTotal")
+     */
+    private $moneyOutTotal;
+    
+    /**
+     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Accessor(getter="getMoneyTotal")
+     */
+    private $moneyTotal;
+    
+    /**
      * Constructor
      */
     public function __construct()
     {
-        $this->expenditures = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->incomes = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->benefits = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->lastEdit = new \DateTime();
     }
 
     /**
@@ -212,6 +244,18 @@ class Account
     public function setLastEdit($lastEdit)
     {
         $this->lastEdit = $lastEdit;
+
+        return $this;
+    }
+    
+    /**
+     * Set lastEdit to now
+     * 
+     * @return Account
+     */
+    public function setLastEditNow()
+    {
+        $this->lastEdit = new \DateTime;
 
         return $this;
     }
@@ -365,105 +409,6 @@ class Account
     }
 
     /**
-     * Add expenditures
-     *
-     * @param \AppBundle\Entity\Expenditure $expenditures
-     * @return Account
-     */
-    public function addExpenditure(\AppBundle\Entity\Expenditure $expenditures)
-    {
-        $this->expenditures[] = $expenditures;
-
-        return $this;
-    }
-
-    /**
-     * Remove expenditures
-     *
-     * @param \AppBundle\Entity\Expenditure $expenditures
-     */
-    public function removeExpenditure(\AppBundle\Entity\Expenditure $expenditures)
-    {
-        $this->expenditures->removeElement($expenditures);
-    }
-
-    /**
-     * Get expenditures
-     *
-     * @return Expenditure[]
-     */
-    public function getExpenditures()
-    {
-        return $this->expenditures;
-    }
-
-    /**
-     * Add incomes
-     *
-     * @param \AppBundle\Entity\Income $incomes
-     * @return Account
-     */
-    public function addIncome(\AppBundle\Entity\Income $incomes)
-    {
-        $this->incomes[] = $incomes;
-
-        return $this;
-    }
-
-    /**
-     * Remove incomes
-     *
-     * @param \AppBundle\Entity\Income $incomes
-     */
-    public function removeIncome(\AppBundle\Entity\Income $incomes)
-    {
-        $this->incomes->removeElement($incomes);
-    }
-
-    /**
-     * Get incomes
-     *
-     * @return Income[]
-     */
-    public function getIncomes()
-    {
-        return $this->incomes;
-    }
-
-    /**
-     * Add benefits
-     *
-     * @param \AppBundle\Entity\Benefit $benefits
-     * @return Account
-     */
-    public function addBenefit(\AppBundle\Entity\Benefit $benefits)
-    {
-        $this->benefits[] = $benefits;
-
-        return $this;
-    }
-
-    /**
-     * Remove benefits
-     *
-     * @param \AppBundle\Entity\Benefit $benefits
-     */
-    public function removeBenefit(\AppBundle\Entity\Benefit $benefits)
-    {
-        $this->benefits->removeElement($benefits);
-    }
-
-    /**
-     * Get benefits
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getBenefits()
-    {
-        return $this->benefits;
-    }
-
-    /**
      * Set report
      *
      * @param \AppBundle\Entity\Report $report
@@ -531,25 +476,94 @@ class Account
     {
         $balance = 0;
         
-        if(!empty($this->incomes)){
-            foreach($this->incomes as $income){
-                $balance += $income->getTotal();
-            }
-        }
         
-        if(!empty($this->benefits)){
-            foreach($this->benefits as $benefit){
-                $balance += $benefit->getTotal();
-            }
-        }
-        
-        $balance += $this->openingBalance;
-        
-        if(!empty($this->expenditures)){
-            foreach($this->expenditures as $expenditure){
-                $balance -= $expenditure->getTotal();
-            }
-        }
         return $balance;
+    }
+    
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    public function setTransactions($transactions)
+    {
+        $this->transactions = $transactions;
+        return $this;
+    }
+    
+    /**
+     * @param AccountTransaction $transaction
+     */
+    public function addTransaction(AccountTransaction $transaction)
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyIn()
+    {
+        return $this->getTransactions()->filter(function(AccountTransaction $transaction) {
+            return $transaction->getTransactionType() instanceof AccountTransactionTypeIn;
+        });
+    }
+
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyOut()
+    {
+        return $this->getTransactions()->filter(function(AccountTransaction $transaction) {
+            return $transaction->getTransactionType() instanceof AccountTransactionTypeOut;
+        });
+    }
+    
+    /**
+     * @param string $transactionTypeId
+     * 
+     * @return AccountTransaction
+     */
+    public function findTransactionByTypeId($transactionTypeId)
+    {
+        return $this->getTransactions()->filter(function($accountTransaction) use($transactionTypeId) {
+            return $accountTransaction->getTransactionTypeId() == $transactionTypeId;
+        })->first();
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyInTotal()
+    {
+        $ret = 0.0;
+        foreach ($this->getMoneyIn() as $money) {
+            $ret += $money->getAmount();
+        }
+        return $ret;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        $ret = 0.0;
+        foreach ($this->getMoneyOut() as $money) {
+            $ret += $money->getAmount();
+        }
+        return $ret;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyTotal()
+    {
+        return $this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
     }
 }

@@ -77,5 +77,4 @@ class UserControllerTest extends WebTestCase
         $this->assertContains('not found', $return['message']);
         
     }
-    
 }
