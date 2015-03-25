@@ -10,20 +10,16 @@
 
             <p class="form-hint">{{ hintText }}</p>
 
-            <div class="form-group form-group-day">
+            <div class="form-group form-group-combo-input">
                 {{ form_label(element.day,'Day', {'label_attr': {'for': 'dob-day', 'class': 'visuallyhidden' } }) }}
                 {{ form_widget(element.day, { 'attr': {'class': 'form-control', 'pattern': '[0-9]'} }) }}
             </div>
 
-            <div class="form-group form-group-month">
+            <div class="form-group form-group-combo-description">
                 {{ form_label(element.month,'Month', {'label_attr': {'for': 'dob-month', 'class': 'visuallyhidden' } }) }}
                 {{ form_widget(element.month, { 'attr': {'class': 'form-control', 'pattern': '[0-9]'} }) }}
             </div>
 
-            <div class="form-group form-group-year">
-                {{ form_label(element.year,'Year', {'label_attr': {'for': 'dob-year', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.year, { 'attr': {'class': 'form-control', 'pattern': '[0-9]'} }) }}
-            </div>
         </div>
 
     </fieldset>

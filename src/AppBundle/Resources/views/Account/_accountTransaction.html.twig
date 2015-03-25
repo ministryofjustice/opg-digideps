@@ -24,12 +24,41 @@
 
                 {% if t.moreDetails is defined %}
                     {# Fieldset
-
                     {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
+                        'element': t,
+                        'legendText': 'legendText',
+                        'hintText': 'hintText'
+                    } %} #}
 
-                    } %}
-#}
+                    <div class="form-group form-inline form-input-description-combo {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+                        <fieldset>
+                            <legend>{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
+                            <div class="form-combo">
+
+                                {{ form_row(t.id) }}
+                                {{ form_row(t.type) }}
+
+                                {{ form_input(t.amount,'firstname', {
+                                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
+                                    'formGroupClass': 'form-group-combo-input'
+                                }) }}
+
+                                {{ form_input(t.moreDetails, '', {
+                                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans,
+                                    'formGroupClass': 'form-group-combo-description'
+                                }) }}
+
+                            </div>
+                        </fieldset>
+                    </div>
                 {% else %}
+
+                    {{ form_row(t.id) }}
+                    {{ form_row(t.type) }}
+
+                    {{ form_input(t.amount,'firstname', {
+                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
+                    }) }}
 
                 {% endif %}
 

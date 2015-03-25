@@ -333,6 +333,7 @@ class FormFieldsExtension extends \Twig_Extension
 
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
+        $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass']: "";
         
         return [ 
             'labelText' => $labelText,
@@ -340,7 +341,8 @@ class FormFieldsExtension extends \Twig_Extension
             'element'  => $element,
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
-            'inputPrefix' => $inputPrefix
+            'inputPrefix' => $inputPrefix,
+            'formGroupClass' => $formGroupClass
         ];
     }
     
