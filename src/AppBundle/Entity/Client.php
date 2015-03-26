@@ -3,10 +3,12 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @JMS\XmlRoot("client")
  * @JMS\ExclusionPolicy("none")
+ * @Assert\Callback(methods={"isValidCourtDate"})
  */
 class Client
 {
@@ -217,7 +219,8 @@ class Client
     
     public function getFullname()
     {
-        return $this->firstname.' '.$this->lastname;
+        $this->fullname = $this->firstname.' '.$this->lastname;
+        return $this->fullname;
     }
     
     /**
@@ -423,6 +426,15 @@ class Client
     public function setId($id)
     {
         $this->id = $id;
+    }
+    
+    public function isValidCourtDate(ExecutionContextInterface $context)
+    {
+        $today = new \DateTime();
+        
+        if($this->courtDate > $today){
+            $context->addViolationAt('courtDate','Court Date cannot be in the future');
+        }
     }
 
 }
