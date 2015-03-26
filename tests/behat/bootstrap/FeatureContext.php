@@ -219,6 +219,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     
     /**
+     * Check if the given elements (input/textarea inside each .behat-region-form-errors) 
+     *  are the only ones with errors 
+     * 
      * @Then the following fields should have an error:
      */
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
