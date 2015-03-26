@@ -1,12 +1,5 @@
 Feature: admin
     
-    @deputy @admin
-    Scenario: prepare environment
-        Given I delete all the existing behat users
-        When I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I go to "/admin"
-        Then I should not see "behat-" in the "users" region
-
     @cleanMail @deputy
     Scenario: login and add deputy user
         Given I am on "/"
