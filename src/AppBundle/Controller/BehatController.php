@@ -35,6 +35,19 @@ class BehatController extends RestController
         return "Email reset successfully";
     }
     
+    /**
+     * @Route("/users/behat-users")
+     * @Method({"DELETE"})
+     */
+    public function usersBehatDeleteAction()
+    {
+        $this->getEntityManager()
+            ->createQuery("DELETE FROM AppBundle\Entity\User u WHERE u.email LIKE 'behat-%'")
+            ->execute();
+        
+        return "User deleted";
+    }
+    
     private function getBehatMailFilePath()
     {
         return current($this->get('mailer.transport.sendgrid')->getEmailFileWriters());
