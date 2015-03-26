@@ -254,13 +254,14 @@ Feature: report
         And I save the page as "report-account-transactions-empty"
         # wrong values (wrong amount types and amount without explanation)
         When I fill in the following:
-            | transactions_moneyIn_0_amount        | aaa | 
-            | transactions_moneyOut_11_amount      | bbb | 
-            | transactions_moneyIn_15_amount       | 250 | 
+            | transactions_moneyIn_0_amount        | in | 
+            | transactions_moneyOut_11_amount      | 250 | 
+            | transactions_moneyOut_11_moreDetails |  | 
         And I press "transactions_saveMoneyIn"
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
-            | transactions_moneyIn_15_moreDetails |
+            | transactions_moneyOut_11_id |
+            | transactions_moneyOut_11_type |
             | transactions_moneyOut_11_amount |
             | transactions_moneyOut_11_moreDetails |
         And I save the page as "report-account-transactions-errors"    
