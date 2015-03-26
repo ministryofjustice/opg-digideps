@@ -3,7 +3,8 @@
     <dl class="account-header__item-fields">
         <div class="account-header__item-fields-set">
             <dt class="account-header__item-fields-term visuallyhidden">Bank or Building Society name</dt>
-            <dd class="account-header__item-fields-description"><h2 class="account-header__title">{{ account.bank }}</h2></dd>
+            <dd class="account-header__item-fields-description"><h2
+                        class="account-header__title">{{ account.bank }}</h2></dd>
         </div>
         <div class="account-header__item-fields-set account-header__item-fields-set--left">
             <dt class="account-header__item-fields-term">Account no.</dt>
@@ -20,11 +21,12 @@
         </div>
         <div class="account-header__item-fields-set account-header__item-fields-set--left">
             <dt class="account-header__item-fields-term">Sort code</dt>
-            <dd class="account-header__item-fields-description account-header__item-fields-description--sort-code">{{ account.sortCode | split('', 2) | join('-')}}</dd>
+            <dd class="account-header__item-fields-description account-header__item-fields-description--sort-code">{{ account.sortCode | split('', 2) | join('-') }}</dd>
         </div>
         <div class="account-header__item-fields-set account-header__item-fields-set--edit-link">
             <dt class="account-header__item-fields-term visuallyhidden">Account Edit Link</dt>
-            <dd class="account-header__item-fields-description account-header__item-fields-description--edit-link"><a href="#">Edit account details</a></dd>
+            <dd class="account-header__item-fields-description account-header__item-fields-description--edit-link"><a
+                        href="#">Edit account details</a></dd>
         </div>
     </dl>
 

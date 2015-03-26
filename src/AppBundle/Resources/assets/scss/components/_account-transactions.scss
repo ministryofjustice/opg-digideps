@@ -43,10 +43,17 @@
     }
 
     .summary {
+      position: relative;
       @include core-24();
 
       padding: 10px 0;
       overflow: hidden;
+
+      .icon__accordion {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+      }
 
       .summary-title {
         float: left;
@@ -80,6 +87,11 @@
       .summary {
         background-color: $grey-3;
         color: $text-colour;
+
+        .icon__accordion {
+          background-position: -12px -61px;
+          
+        }
       }
 
     }

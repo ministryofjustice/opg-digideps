@@ -1549,6 +1549,7 @@ input[type=number] {
       .account-transactions__accordion .details:last-of-type {
         border-bottom: 1px solid #dee0e2; }
     .account-transactions__accordion .summary {
+      position: relative;
       font-family: "nta", Arial, sans-serif;
       font-size: 24px;
       line-height: 1.25;
@@ -1560,6 +1561,10 @@ input[type=number] {
         .account-transactions__accordion .summary {
           font-size: 18px;
           line-height: 1.2; } }
+      .account-transactions__accordion .summary .icon__accordion {
+        position: absolute;
+        right: 20px;
+        top: 20px; }
       .account-transactions__accordion .summary .summary-title {
         float: left;
         font-weight: 700;
@@ -1579,6 +1584,8 @@ input[type=number] {
     .account-transactions__accordion .details.open .summary, .account-transactions__accordion details[open] .summary {
       background-color: #dee0e2;
       color: #0b0c0c; }
+      .account-transactions__accordion .details.open .summary .icon__accordion, .account-transactions__accordion details[open] .summary .icon__accordion {
+        background-position: -12px -61px; }
     .account-transactions__accordion summary::-webkit-details-marker {
       display: none; }
   .account-transactions .form-group.button-bar {
@@ -2354,6 +2361,38 @@ ol.progress {
 
 .user-list {
   margin-top: 60px; }
+
+span.icon {
+  /*
+  I'm purposefully forcing icons to be used with span tags, some
+  implementers like using the i tag, to stand for icon, but we all know
+  that really that stands for italic which is semantically incorrect.
+
+  Here's how to use them.
+
+  1. Set the container which holds the icon to have a CSS position, possibly :relative.
+  2. Insert the SPAN.icon__??? tag and create a new icon block below.
+  3. DO NOT SPECIFY ICON POSITIONS IN THIS FILE, PUT THOSE SPECIFICS
+  IN THE  RELEVANT CSS FILE, e.g. An accordion icon can be used in multiple accordion objects
+  and the icons location can change so put the positioning CSS in the specific CSS files.
+
+  Set some defaults */
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  display: block;
+  height: 16px;
+  width: 16px;
+  text-indent: -9999em;
+  /* In case we have used some text as well */ }
+  span.icon__accordion {
+    background-image: url("/images/accordian-arrow.png");
+    background-position: -12px -16px;
+    width: 21px;
+    height: 13px; }
+    @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+      span.icon__accordion {
+        background-image: url("icons/icon-steps/icon-step-11-2x.png");
+        background-size: 100%; } }
 
 .form-last-four-digits ul {
   list-style: disc;

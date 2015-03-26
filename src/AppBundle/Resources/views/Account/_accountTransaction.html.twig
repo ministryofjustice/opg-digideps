@@ -11,6 +11,7 @@
         <summary>
             <a href="{{ link }}#{{ href }}" class="behat-link-{{href}}-tab">
                 <div class="summary">
+                    <span class="icon icon__accordion"></span>
                     <h3 class="{{ summaryClass }}">{{ (section ~ '.panelTitle') | trans }}</h3>
 
                     <div class="transaction-total behat-region-{{href}}-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
@@ -71,21 +72,6 @@
                     }) }}
 
                 {% endif %}
-
-                {#
-                {{ form_row(t.id) }}
-                {{ form_row(t.type) }}
-
-                {{ form_input(t.amount,'firstname', {
-                'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans
-                }) }}
-
-                {% if t.moreDetails is defined %}
-                {{ form_input(t.moreDetails, '', {
-                'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans
-                }) }}
-                {% endif %}
-                #}
 
             {% endfor %}
 

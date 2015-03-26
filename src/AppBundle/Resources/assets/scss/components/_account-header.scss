@@ -5,7 +5,7 @@
   overflow: hidden;
   margin-bottom: 30px;
 
-  &__item-fields{
+  &__item-fields {
     @include core-19();
   }
 
@@ -52,11 +52,11 @@
       font-weight: 400;
     }
 
-    &--sort-code{
+    &--sort-code {
       margin-left: 20px;
     }
 
-    &--edit-link{
+    &--edit-link {
       font-weight: 400;
     }
   }
