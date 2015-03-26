@@ -4,12 +4,12 @@ namespace AppBundle\Test\Twig;
 //use AppBundle\Service\ApiClient;
 use Mockery as m;
 
-class FormFieldsExtensionTest extends \PHPUnit_Framework_TestCase
+class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
-        $this->object = new \AppBundle\Twig\FormFieldsExtension($this->translator, []);
+        $this->object = new \AppBundle\Twig\ComponentsExtension($this->translator, []);
     }
  
     public static function accordionLinksProvider()
