@@ -274,4 +274,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
     }
     
+    /**
+     * @When I delete all the existing behat users
+     */
+    public function iDeleteAllTheExistingBehatUsers()
+    {
+        $this->visit('behat/delete-behat-users');
+    }
+    
 }

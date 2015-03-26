@@ -16,7 +16,8 @@ class BehatController extends Controller
     {
         $isBehat = $_SERVER['REMOTE_ADDR'] === '127.0.0.1' 
                    && $_SERVER['HTTP_USER_AGENT'] === 'Symfony2 BrowserKit';
-        if (!$isBehat) {
+        $isProd = $this->get('kernel')->getEnvironment() == 'prod';
+        if (!$isBehat || $isProd) {
             return $this->createNotFoundException('Not found');
         }
     }
@@ -55,6 +56,19 @@ class BehatController extends Controller
         $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
             'cotId' => $cot
         ]));
+        
+        return new Response('done');
+    }
+    
+    /**
+     * @Route("/delete-behat-users")
+     * @Method({"GET"})
+     */
+    public function deleteBehatUser()
+    {
+        $this->checkIsBehatBrowser();
+        
+        $this->get('apiclient')->delete('behat/users/behat-users');
         
         return new Response('done');
     }
