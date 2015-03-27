@@ -107,5 +107,6 @@ moneyOut:
       further_guidance: Please give more details
     any_other_money_paid_out_and_not_listed_above:
       label: Any other money paid out and not listed above
+      further_guidance: Please give more details
 save:
   label: "Save money"
