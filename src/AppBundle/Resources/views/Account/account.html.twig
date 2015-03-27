@@ -2,9 +2,6 @@
 {% set translationDomain = "report-account" %}
 {% trans_default_domain translationDomain %}
 
-{% set URL = app.request.requestUri %}
-{% set queryString = URL | split('?') %}
-
 {% set accordionLinks = accordionLinks({
   clickedPanel: actionParam,
   bothOpenHref: "money-both",
@@ -66,10 +63,10 @@
     </div>
 
     <div class="account-transactions account-transactions__accordion">
-
+        
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyIn.legend' | trans,
-        openPanel: accordionLinks.first.open or subformWithErrors == 'money-in',
+        openPanel: accordionLinks.first.open or not form.moneyIn.vars.valid,
 
         href: 'moneyIn',
         link: path('account', {action: accordionLinks.first.href, reportId: report.id, accountId: account.id}),
@@ -81,7 +78,7 @@
 
 
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
-        openPanel: accordionLinks.second.open or subformWithErrors == 'money-in',
+        openPanel: accordionLinks.second.open or not form.moneyOut.vars.valid,
         href: 'moneyOut',
         link: path('account', {action: accordionLinks.second.href, reportId: report.id, accountId: account.id}),
         elements: form.moneyOut,

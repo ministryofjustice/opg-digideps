@@ -81,7 +81,6 @@ class AccountController extends Controller
             'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ])
         ]);
         
-        $subformWithErrors = null;
         $form->handleRequest($request);
         if ($form->isValid()) {
             #$this->debugFormData($form);
@@ -98,7 +97,6 @@ class AccountController extends Controller
             'form' => $form->createView(),
             'account' => $account,
             'actionParam' => $action,
-            'subformWithErrors' => $subformWithErrors
         ];
     }
 }
