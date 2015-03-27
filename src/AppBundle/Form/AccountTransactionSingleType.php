@@ -15,7 +15,7 @@ class AccountTransactionSingleType extends AbstractType
          $builder 
                  ->add('id', 'hidden')
                  ->add('type', 'hidden')
-                 ->add('amount', 'text', ['error_bubbling' => false]);
+                 ->add('amount', 'number', ['error_bubbling' => false, 'grouping' => true, 'precision' => 2 ]);
          
          $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $accountTransaction = $event->getData(); /* @var $accountTransaction AccountTransaction */
