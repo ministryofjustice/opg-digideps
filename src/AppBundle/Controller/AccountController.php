@@ -77,8 +77,11 @@ class AccountController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
 
-        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account);
-
+        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
+            'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ])
+        ]);
+        
+        $subformWithErrors = null;
         $form->handleRequest($request);
         if ($form->isValid()) {
             #$this->debugFormData($form);
@@ -94,7 +97,8 @@ class AccountController extends Controller
             'client' => $client,
             'form' => $form->createView(),
             'account' => $account,
-            'actionParam' => $action
+            'actionParam' => $action,
+            'subformWithErrors' => $subformWithErrors
         ];
     }
 }
