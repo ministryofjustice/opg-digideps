@@ -47,8 +47,7 @@ class AccountController extends RestController
             ->setAccountNumber($accountData['account_number'])
             ->setOpeningDate(new \DateTime($accountData['opening_date']))
             ->setOpeningBalance($accountData['opening_balance'])
-            ->setReport($report)
-            ->setLastEdit(new \DateTime());
+            ->setReport($report);
         
         $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
@@ -91,6 +90,8 @@ class AccountController extends RestController
             }, array_merge($data['money_in'], $data['money_out']));
             $this->setJmsSerialiserGroup('transactions');
         }
+        
+        $account->setLastEdit(new \DateTime());
         
         $this->getEntityManager()->flush();
         
