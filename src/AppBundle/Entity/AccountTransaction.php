@@ -138,16 +138,12 @@ class AccountTransaction
     {
         $this->amount = $amount;
         
-        $this->getAccount()->setLastEditNow();
-        
         return $this;
     }
 
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
-        
-        $this->getAccount()->setLastEditNow();
         
         return $this;
     }

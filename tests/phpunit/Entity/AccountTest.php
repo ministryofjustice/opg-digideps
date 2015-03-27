@@ -22,9 +22,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     public function testTotals()
     {
         $account = new Account();
-        $account->setLastEdit(new \DateTime('2015-01-01'));
         $account->setOpeningBalance(10.0);
-        
         
         // add account transaction type
         $in1 = new AccountTransactionTypeIn();
@@ -55,9 +53,6 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         // edit transaction
         $account->findTransactionByTypeId('in1')->setAmount(400.50); //edit (1)
         $this->assertEquals(10.0 + 400.50 + 150.0 - 50.0 - 30.0, $account->getMoneyTotal());
-        
-        
-        $this->assertTrue( time() - $account->getLastEdit()->getTimestamp() < 1000, "Account.lastEdit not updated when transaction were edited" );
         
     }
 }
