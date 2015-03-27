@@ -226,7 +226,7 @@ Feature: report
             | account_openingDate_day   | 01 |
             | account_openingDate_month | 01 |
             | account_openingDate_year  | 2015 |
-            | account_openingBalance  | 50.00 |
+            | account_openingBalance  | 1,150.00 |
         And I submit the form
         And I save the page as "report-account-list"
         Then the response status code should be 200
@@ -235,6 +235,7 @@ Feature: report
         When I follow "tab-accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
+        And I should see "£1,150.00" in the "list-accounts" region
     
 
     @deputy
@@ -256,11 +257,17 @@ Feature: report
         # wrong values (wrong amount types and amount without explanation)
         When I fill in the following:
             | transactions_moneyIn_0_amount        | in | 
-            | transactions_moneyOut_11_amount      | 250 | 
+            | transactions_moneyIn_1_amount        | 25,0000 | 
+            | transactions_moneyIn_2_amount        | 25.25.25 | 
+            | transactions_moneyIn_3_amount        | 250.250,12 | 
+            | transactions_moneyOut_11_amount      | 250.12 | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I press "transactions_saveMoneyIn"
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
+            | transactions_moneyIn_1_amount  |
+            | transactions_moneyIn_2_amount  |
+            | transactions_moneyIn_3_amount  |
             | transactions_moneyOut_11_id |
             | transactions_moneyOut_11_type |
             | transactions_moneyOut_11_amount |
@@ -268,23 +275,26 @@ Feature: report
         And I save the page as "report-account-transactions-errors"    
         # right values
         When I fill in the following:
-            | transactions_moneyIn_0_amount       | 125 | 
-            | transactions_moneyIn_15_amount      | 200 | 
+            | transactions_moneyIn_0_amount       | 1,250 | 
+            | transactions_moneyIn_1_amount       |  | 
+            | transactions_moneyIn_2_amount       |  | 
+            | transactions_moneyIn_3_amount       |  | 
+            | transactions_moneyIn_15_amount      | 2,000.0 | 
             | transactions_moneyIn_15_moreDetails | more-details-in-15  |
-            | transactions_moneyOut_0_amount       | 250 | 
-            | transactions_moneyOut_11_amount      | 500.50 | 
+            | transactions_moneyOut_0_amount       | 02500 | 
+            | transactions_moneyOut_11_amount      | 5000.501 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
         And I press "transactions_saveMoneyIn"
         Then the form should not contain an error
         # assert value saved
         And the following fields should have the corresponding values:
-            | transactions_moneyIn_0_amount       | 125 | 
-            | transactions_moneyIn_15_amount      | 200 | 
+            | transactions_moneyIn_0_amount       | 1,250.00 | 
+            | transactions_moneyIn_15_amount      | 2,000.00 | 
             | transactions_moneyIn_15_moreDetails | more-details-in-15  |
-            | transactions_moneyOut_0_amount       | 250 | 
-            | transactions_moneyOut_11_amount      | 500.50 | 
+            | transactions_moneyOut_0_amount       | 2,500.00 | 
+            | transactions_moneyOut_11_amount      | 5,000.50 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
-        And I should see "£325.00" in the "moneyIn-total" region
-        And I should see "£750.50" in the "moneyOut-total" region
-        And I should see "£-375.50" in the "money-totals" region
+        And I should see "£3,250.00" in the "moneyIn-total" region
+        And I should see "£7,500.50" in the "moneyOut-total" region
+        And I should see "£-3,100.50" in the "money-totals" region
         And I save the page as "report-account-transactions-data-saved"
