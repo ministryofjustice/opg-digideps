@@ -41,5 +41,5 @@ listing:
   balance: "Opening balance:"
   totalBalance: "Total balance:"
   lastEdited: "Last edited:"
-  edited: "Created:"
+  created: "Created:"
   currencySymbol: "£"

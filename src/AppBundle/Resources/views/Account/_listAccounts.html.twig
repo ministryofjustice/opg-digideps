@@ -25,10 +25,17 @@
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
                             {{ 'listing.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
                     </div>
-                    <div>
+                    {% if account.lastEdit %}
+                     <div>
                         <dt class="report-list__item-fields-term">{{ 'listing.lastEdited' | trans }}</dt>
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.lastEdit | date("d/m/Y") }}</dd>
-                    </div>
+                     </div>
+                    {% else %}
+                     <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.created' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.createdAt | date("d/m/Y") }}</dd>
+                     </div>  
+                    {% endif %}
                 </div>
             </dl>
 

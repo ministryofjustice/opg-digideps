@@ -28,6 +28,12 @@ class ApiClient extends GuzzleClient
     private $format;
     
      /**
+      * If true, prints more info on exception
+     * @var boolean
+     */
+    private $debug;
+    
+     /**
      * @var string
      */
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
@@ -149,7 +155,18 @@ class ApiClient extends GuzzleClient
      */
     private function deserialiseResponse($response)
     {
-        $ret = $this->serialiser->deserialize($response->getBody(), 'array', $this->format);
+        try {
+            $ret = $this->serialiser->deserialize($response->getBody(), 'array', $this->format);
+        } catch (\JMS\Serializer\Exception\RuntimeException $e) {
+            $msg = 'Cannot deserialise response.';
+            if ($this->debug) {
+                $msg .= 'Body:' . $response->getBody();
+            }
+            throw new RuntimeException(
+                $e->getMessage() . '.' 
+                . ($this->debug ? 'Body:' . $response->getBody() : '')
+            );
+        }
         
         return $ret;
     }

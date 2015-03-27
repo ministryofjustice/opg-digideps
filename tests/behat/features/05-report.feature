@@ -231,7 +231,8 @@ Feature: report
         And I save the page as "report-account-list"
         Then the response status code should be 200
         And the form should not contain an error
-        And I should be on "/report/1/accounts"
+        And I should be on "/report/1/account/1"
+        When I follow "tab-accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
     

@@ -139,7 +139,7 @@ class AccountTransaction
     public function moreDetailsValidate(ExecutionContextInterface $context)
     {
         $moreDetailsClean = trim($this->getMoreDetails(), " \n");
-        if ($this->hasMoreDetails() && $this->getAmount() !== null  && !$moreDetailsClean){
+        if ($this->hasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
         }
     }
