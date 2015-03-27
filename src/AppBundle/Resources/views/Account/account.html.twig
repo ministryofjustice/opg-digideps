@@ -6,11 +6,11 @@
 {% set queryString = URL | split('?') %}
 
 {% set accordionLinks = accordionLinks({
-clickedPanel: app.request.get('action'),
-bothOpenHref: "money-both",
-allClosedHref: "list",
-firstPanelHref: "money-in",
-secondPanelHref: "money-out"
+  clickedPanel: actionParam,
+  bothOpenHref: "money-both",
+  allClosedHref: "list",
+  firstPanelHref: "money-in",
+  secondPanelHref: "money-out"
 }) %}
 
 {% set breadCrumb = [

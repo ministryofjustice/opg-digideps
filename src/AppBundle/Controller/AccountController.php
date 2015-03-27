@@ -41,8 +41,10 @@ class AccountController extends Controller
                 $account = $form->getData();
                 $account->setReport($reportId);
 
-                $apiClient->postC('add_report_account', $account);
-                return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $reportId]));
+                $response = $apiClient->postC('add_report_account', $account);
+                return $this->redirect(
+                    $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
+                );
             } else {
                 echo $form->getErrorsAsString();
             }
@@ -91,7 +93,8 @@ class AccountController extends Controller
             'report' => $report,
             'client' => $client,
             'form' => $form->createView(),
-            'account' => $account
+            'account' => $account,
+            'actionParam' => $action
         ];
     }
 }
