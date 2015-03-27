@@ -19,7 +19,9 @@ class AccountController extends RestController
         
         $report = $this->findEntityBy('Report', $id);
         
-        $accounts = $this->getRepository('Account')->findByReport($report);
+        $accounts = $this->getRepository('Account')->findByReport($report, [
+            'id' => 'DESC'
+        ]);
        
         if(count($accounts) == 0){
             return [];
