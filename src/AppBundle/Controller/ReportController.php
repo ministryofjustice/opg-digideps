@@ -5,7 +5,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use AppBundle\Entity as EntityDir;
 
-
 class ReportController extends RestController
 {
     /**
