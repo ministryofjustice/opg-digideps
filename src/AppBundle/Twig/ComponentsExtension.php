@@ -66,6 +66,7 @@ class ComponentsExtension extends \Twig_Extension
         $allClosedHref = $options['allClosedHref'];
         $firstPanelHref = $options['firstPanelHref'];
         $secondPanelHref = $options['secondPanelHref'];
+        $onlyOneATime = $options['onlyOneATime'];
         
         // default: closed
         $ret = [
@@ -83,12 +84,12 @@ class ComponentsExtension extends \Twig_Extension
             case $firstPanelHref:
                 $ret['first']['open'] = true;
                 $ret['first']['href'] = $allClosedHref;
-                $ret['second']['href'] = $bothOpenHref;
+                $ret['second']['href'] = $onlyOneATime ? $secondPanelHref : $bothOpenHref;
                 break;
             
             case $secondPanelHref:
                 $ret['second']['open'] = true;
-                $ret['first']['href'] = $bothOpenHref;
+                $ret['first']['href'] = $onlyOneATime ? $firstPanelHref : $bothOpenHref;
                 $ret['second']['href'] = $allClosedHref;
                 break;
             
