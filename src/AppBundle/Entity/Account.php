@@ -65,9 +65,15 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @var type 
+     * @var \DateTime 
      */
     private $lastEdit;
+    
+     /**
+     * @JMS\Type("DateTime")
+     * @var \DateTime 
+     */
+    private $createdAt;
     
     /**
      * @JMS\Type("integer")
@@ -183,6 +189,22 @@ class Account
         return $this->lastEdit;
     }
     
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+        
     public function getReport()
     {
         return $this->report;
