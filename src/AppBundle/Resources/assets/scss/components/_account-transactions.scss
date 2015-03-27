@@ -40,6 +40,12 @@
       &:last-of-type {
         border-bottom: 1px solid $grey-3;
       }
+
+      a.details-summary-link:focus{
+        background-color: inherit;
+        outline: inherit;
+      }
+
     }
 
     .summary {
@@ -151,7 +157,7 @@
         margin-top: 0;
       }
 
-      &.field-with-errors {
+      &.field-combo-with-errors {
         .form-label {
           margin-top: 0;
         }
@@ -166,7 +172,7 @@
       margin-top: 7px;
       margin-right: 8px;
     }
-    &.field-with-errors {
+    &.field-combo-with-errors {
       margin: 10px 0 10px 10px;
 
       .form-label {

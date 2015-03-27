@@ -9,7 +9,7 @@
 <div id="{{ href }}" class="details {{ openPanel ? 'open' : '' }}">
     <details {{ openPanel ? 'open' : '' }}>
         <summary>
-            <a href="{{ link }}#account-header" class="behat-link-{{ href }}-tab">
+            <a href="{{ link }}#account-header" class="details-summary-link behat-link-{{ href }}-tab">
                 <div class="summary">
                     <span class="icon icon__accordion"></span>
 
@@ -39,7 +39,7 @@
                             'hintText': 'hintText'
                         } %} #}
 
-                        <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-with-errors behat-region-form-errors{% endif %}">
+                        <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-combo-with-errors behat-region-form-errors{% endif %}">
                             <fieldset>
                                 <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
 

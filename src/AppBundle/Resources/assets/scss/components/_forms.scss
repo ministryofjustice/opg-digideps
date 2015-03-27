@@ -73,4 +73,9 @@ form {
   font-size: 19px;
   padding: 4px 8px 2px;
   border: 1px solid $grey-2;
+
+  .field-with-errors &{
+    border: 2px solid #df3034;
+    border-right: 0;
+  }
 }

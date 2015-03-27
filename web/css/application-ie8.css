@@ -1484,6 +1484,9 @@ input[type=number] {
       border-top: 1px solid #dee0e2; }
       .account-transactions__accordion .details:last-of-type {
         border-bottom: 1px solid #dee0e2; }
+      .account-transactions__accordion .details a.details-summary-link:focus {
+        background-color: inherit;
+        outline: inherit; }
     .account-transactions__accordion .summary {
       position: relative;
       font-family: "nta", Arial, sans-serif;
@@ -1559,15 +1562,15 @@ input[type=number] {
         color: #6f777b;
         float: none;
         margin-top: 0; }
-      .account-transactions .form-input-description-combo .form-group-combo-description.field-with-errors .form-label {
+      .account-transactions .form-input-description-combo .form-group-combo-description.field-combo-with-errors .form-label {
         margin-top: 0; }
   .account-transactions .form-inline .form-label {
     width: 66%;
     margin-top: 7px;
     margin-right: 8px; }
-  .account-transactions .form-inline.field-with-errors {
+  .account-transactions .form-inline.field-combo-with-errors {
     margin: 10px 0 10px 10px; }
-    .account-transactions .form-inline.field-with-errors .form-label {
+    .account-transactions .form-inline.field-combo-with-errors .form-label {
       margin-top: 17px;
       margin-right: -5px; }
   .account-transactions .form-group.button-bar {
@@ -1725,10 +1728,10 @@ header.page-header {
   .button-bar.add-bar {
     margin-left: 56%; }
 
-.field-with-errors {
+.field-combo-with-errors, .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
-  fieldset .field-with-errors {
+  fieldset .field-combo-with-errors, fieldset .field-with-errors {
     border-left: 0; }
 
 .field-with-errors input, .field-with-errors select, .field-with-errors textarea {
@@ -1795,6 +1798,9 @@ form {
   font-size: 19px;
   padding: 4px 8px 2px;
   border: 1px solid #bfc1c3; }
+  .field-with-errors .input-group-prefix {
+    border: 2px solid #df3034;
+    border-right: 0; }
 
 .column-full {
   float: left;

@@ -78,7 +78,7 @@ class AccountController extends Controller
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
 
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
-            'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ])
+            'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#account-header'
         ]);
         
         $form->handleRequest($request);
