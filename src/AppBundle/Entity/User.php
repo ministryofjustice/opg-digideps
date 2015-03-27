@@ -439,7 +439,7 @@ class User implements AdvancedUserInterface
     /**
      * Get clients
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Client[]
      */
     public function getClients()
     {
