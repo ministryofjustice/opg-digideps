@@ -55,7 +55,7 @@ class Version018 extends AbstractMigration
             [18, 'out', 'property_maintenance_or_improvement', true],
             [19, 'out', 'investments_eg_shares_bonds_savings', true],
             [20, 'out', 'transfers_out_to_other_client_s_accounts', true],
-            [21, 'out', 'any_other_money_paid_out_and_not_listed_above', false]
+            [21, 'out', 'any_other_money_paid_out_and_not_listed_above', true]
         ];
         foreach ($rows as $row) {
             list($displayOrder, $type, $id, $hasMoreDetails) = $row;
