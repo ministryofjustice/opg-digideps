@@ -15,7 +15,13 @@ services:
     formFieldsExtension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
-        arguments: [ @translator, "%twig_form_fields_extension%" ]
+        arguments: [ @translator ]
+        tags:
+            - { name: twig.extension }
+    componentsExtension:
+        class: AppBundle\Twig\ComponentsExtension
+        public: false
+        arguments: [  @translator, "%twig_components_extension%" ]
         tags:
             - { name: twig.extension }
     mailSender:

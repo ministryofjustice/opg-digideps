@@ -219,6 +219,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     
     /**
+     * Check if the given elements (input/textarea inside each .behat-region-form-errors) 
+     *  are the only ones with errors 
+     * 
      * @Then the following fields should have an error:
      */
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
@@ -269,6 +272,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
         
         $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
+    }
+    
+    /**
+     * @When I delete all the existing behat users
+     */
+    public function iDeleteAllTheExistingBehatUsers()
+    {
+        $this->visit('behat/delete-behat-users');
     }
     
 }

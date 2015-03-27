@@ -9,7 +9,11 @@
                 <div class="report-list__item-fields-col-bank">
                     <dt class="visuallyhidden">{{ 'listing.bank' | trans }}</dt>
                     <dd class="report-list__item-fields-description">
-                        <h3>{{ account.bank }}</h3></dd>
+                        <h3>
+                            <a href="{{ path('account', {'reportId': report.id, 'accountId': account.id}) }}" class="behat-link-account-n{{loop.index}}">
+                                {{ account.bank }}
+                            </a>
+                        </h3></dd>
                 </div>
                 <div class="report-list__item-fields-col-acc-num">
                     <dt class="visuallyhidden">{{ 'listing.accountNumber' | trans }}</dt>
@@ -17,14 +21,21 @@
                 </div>
                 <div class="report-list__item-fields-col-info">
                     <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.balance' | trans }}</dt>
+                        <dt class="report-list__item-fields-term">{{ 'listing.totalBalance' | trans }}</dt>
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
-                            {{ 'listing.currencySymbol' | trans }}{{ account.openingBalance | number_format(2, '.', ',') }}</dd>
+                            {{ 'listing.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
                     </div>
-                    <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.edited' | trans }}</dt>
+                    {% if account.lastEdit %}
+                     <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.lastEdited' | trans }}</dt>
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.lastEdit | date("d/m/Y") }}</dd>
-                    </div>
+                     </div>
+                    {% else %}
+                     <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.created' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.createdAt | date("d/m/Y") }}</dd>
+                     </div>  
+                    {% endif %}
                 </div>
             </dl>
 

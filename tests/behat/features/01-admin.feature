@@ -16,7 +16,6 @@ Feature: admin
             | login_password  | Abcd1234 |
         And I click on "login"
         When I go to "/admin"
-        And I should not see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         # invalid email
         When I fill in the following:
             | admin_email | invalidEmail | 

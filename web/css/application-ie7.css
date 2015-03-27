@@ -1424,6 +1424,221 @@ input[type=number] {
     Do need import application specific code into this file.
 ***************************************************************
 */
+.account-header {
+  position: relative;
+  background-color: #f8f8f8;
+  padding: 20px;
+  overflow: hidden;
+  margin-bottom: 30px; }
+  .account-header__item-fields {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .account-header__item-fields {
+        font-size: 16px;
+        line-height: 1.25; } }
+  .account-header__item-fields-set {
+    float: left;
+    width: 56%;
+    overflow: hidden; }
+    .account-header__item-fields-set--left {
+      width: 40%; }
+    .account-header__item-fields-set--opening-date {
+      position: absolute;
+      top: 53px; }
+    .account-header__item-fields-set--edit-link {
+      float: none;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: auto; }
+  .account-header__item-fields-term {
+    display: inline;
+    margin-right: 20px;
+    color: #6f777b; }
+  .account-header__item-fields-description {
+    display: inline;
+    font-weight: 700; }
+    .account-header__item-fields-description--balance {
+      margin-left: 150px; }
+    .account-header__item-fields-description--opening-date {
+      margin: 0 0 0 175px;
+      font-weight: 400; }
+    .account-header__item-fields-description--sort-code {
+      margin-left: 20px; }
+    .account-header__item-fields-description--edit-link {
+      font-weight: 400; }
+  .account-header__title {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: none;
+    font-size: 27px; }
+    @media (max-width: 640px) {
+      .account-header__title {
+        font-size: 18px;
+        line-height: 1.2; } }
+
+.account-transactions {
+  overflow: hidden; }
+  .account-transactions__header {
+    margin-bottom: 30px;
+    margin-top: 10px;
+    padding: 10px; }
+  .account-transactions__footer {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 10px; }
+  .account-transactions__total-balance-label {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    float: left;
+    width: 649px; }
+    @media (max-width: 640px) {
+      .account-transactions__total-balance-label {
+        font-size: 18px;
+        line-height: 1.2; } }
+  .account-transactions__total-balance-total {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    float: left; }
+    @media (max-width: 640px) {
+      .account-transactions__total-balance-total {
+        font-size: 18px;
+        line-height: 1.2; } }
+  .account-transactions__accordion {
+    margin-bottom: 30px; }
+    .account-transactions__accordion details, .account-transactions__accordion summary {
+      display: block; }
+    .account-transactions__accordion .details {
+      position: relative;
+      border-top: 1px solid #dee0e2; }
+      .account-transactions__accordion .details:last-of-type {
+        border-bottom: 1px solid #dee0e2; }
+      .account-transactions__accordion .details a.details-summary-link:focus {
+        background-color: inherit;
+        outline: inherit; }
+    .account-transactions__accordion .summary {
+      position: relative;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 400;
+      text-transform: none;
+      padding: 10px 0;
+      overflow: hidden; }
+      @media (max-width: 640px) {
+        .account-transactions__accordion .summary {
+          font-size: 18px;
+          line-height: 1.2; } }
+      .account-transactions__accordion .summary .icon__accordion {
+        position: absolute;
+        right: 20px;
+        top: 20px; }
+      .account-transactions__accordion .summary .summary-title {
+        float: left;
+        font-weight: 700;
+        width: 638px;
+        margin-left: 10px; }
+        .account-transactions__accordion .summary .summary-title--adjust {
+          width: 630px; }
+      .account-transactions__accordion .summary .transaction-total {
+        float: left;
+        color: #0b0c0c; }
+    .account-transactions__accordion .details .content {
+      display: none;
+      clear: both;
+      overflow: hidden; }
+    .account-transactions__accordion .details.open .content, .account-transactions__accordion details[open] .content {
+      display: block; }
+    .account-transactions__accordion .details.open .summary, .account-transactions__accordion details[open] .summary {
+      background-color: #dee0e2;
+      color: #0b0c0c; }
+      .account-transactions__accordion .details.open .summary .icon__accordion, .account-transactions__accordion details[open] .summary .icon__accordion {
+        background-position: -12px -61px; }
+    .account-transactions__accordion summary::-webkit-details-marker {
+      display: none; }
+  .account-transactions .form-group.button-bar {
+    margin-top: 20px; }
+    .account-transactions .form-group.button-bar button {
+      margin-left: 68%; }
+  .account-transactions .form-row {
+    background-color: #f8f8f8;
+    padding: 0;
+    margin: 0;
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #dee0e2; }
+  .account-transactions .form-inline {
+    padding: 20px 0 20px 10px;
+    margin: 0;
+    float: none; }
+  .account-transactions .form-input-description-combo {
+    overflow: hidden; }
+    .account-transactions .form-input-description-combo .form-group {
+      border-bottom: 0; }
+    .account-transactions .form-input-description-combo .form-group-combo-input {
+      display: inline;
+      padding: 0;
+      float: none;
+      overflow: auto; }
+    .account-transactions .form-input-description-combo .form-group-combo-description {
+      padding: 0;
+      float: none;
+      overflow: auto;
+      margin-bottom: 0; }
+      .account-transactions .form-input-description-combo .form-group-combo-description .form-label {
+        color: #6f777b;
+        float: none;
+        margin-top: 0; }
+      .account-transactions .form-input-description-combo .form-group-combo-description.field-combo-with-errors .form-label {
+        margin-top: 0; }
+  .account-transactions .form-inline .form-label {
+    width: 66%;
+    margin-top: 7px;
+    margin-right: 8px; }
+  .account-transactions .form-inline.field-combo-with-errors {
+    margin: 10px 0 10px 10px; }
+    .account-transactions .form-inline.field-combo-with-errors .form-label {
+      margin-top: 17px;
+      margin-right: -5px; }
+  .account-transactions .form-group.button-bar {
+    background-color: #f8f8f8;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    margin: 0; }
+  .account-transactions .form-group.total-footer {
+    background-color: #f8f8f8;
+    padding-top: 20px;
+    padding-bottom: 40px;
+    padding-left: 10px;
+    margin: 0;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .account-transactions .form-group.total-footer {
+        font-size: 18px;
+        line-height: 1.2; } }
+    .account-transactions .form-group.total-footer .sub-total-label {
+      float: left;
+      width: 66%;
+      margin-right: 3px; }
+
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
@@ -1497,6 +1712,8 @@ header.page-header {
 
 .page-section-warning {
   border-left: 3px solid #bfc1c3;
+  padding-top: 10px;
+  padding-bottom: 10px;
   padding-left: 10px;
   width: 65%;
   margin-bottom: 30px; }
@@ -1520,21 +1737,52 @@ header.page-header {
   width: 50%;
   margin-bottom: 40px; }
 
+.bread-crumb {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  color: #6f777b;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .bread-crumb {
+      font-size: 16px;
+      line-height: 1.25; } }
+  .bread-crumb .bread-crumbs {
+    display: inline;
+    margin-left: 5px; }
+    .bread-crumb .bread-crumbs:before {
+      content: ">";
+      margin-right: 10px; }
+    .bread-crumb .bread-crumbs:first-of-type {
+      margin-left: 0;
+      margin-right: 10px; }
+      .bread-crumb .bread-crumbs:first-of-type:before {
+        content: "";
+        margin: 0; }
+
 .button-bar {
   margin-top: 10px;
   margin-bottom: 10px; }
   .button-bar.add-bar {
     margin-left: 56%; }
 
-.field-with-errors {
+.field-combo-with-errors, .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
+  fieldset .field-combo-with-errors, fieldset .field-with-errors {
+    border-left: 0; }
 
 .field-with-errors input, .field-with-errors select, .field-with-errors textarea {
   border: 2px solid #df3034; }
 
+.field-with-errors ul {
+  width: auto; }
 .field-with-errors li {
-  color: #df3034; }
+  color: #df3034;
+  width: auto; }
 
 .button-link {
   margin-left: 15px;
@@ -1549,6 +1797,8 @@ form {
 
 .form-group .input-group-prefix + input {
   padding-left: 2em; }
+.form-group.form-inline .form-label {
+  float: left; }
 
 .form-group_button-bar {
   padding-top: 60px; }
@@ -1589,6 +1839,9 @@ form {
   font-size: 19px;
   padding: 4px 8px 2px;
   border: 1px solid #bfc1c3; }
+  .field-with-errors .input-group-prefix {
+    border: 2px solid #df3034;
+    border-right: 0; }
 
 .column-full {
   float: left;
@@ -1787,13 +2040,16 @@ form {
 
 .page-body {
   margin-top: 0;
-  overflow: hidden; }
+  overflow: hidden;
+  position: relative; }
   .page-service-content .page-body {
     margin-top: 40px; }
   .page-admin-content .page-body {
     margin-top: 60px; }
   .page-report-content .page-body {
     margin-top: 60px; }
+  .report-money-input .page-body {
+    margin-top: 0; }
 
 .page-report-content .page-report-header .page-header-titles {
   float: left;
@@ -2075,6 +2331,40 @@ ol.progress {
 
 .user-list {
   margin-top: 60px; }
+
+span.icon {
+  /*
+  I'm purposefully forcing icons to be used with span tags, some
+  implementers like using the i tag, to stand for icon, but we all know
+  that really that stands for italic which is semantically incorrect.
+
+  Here's how to use them.
+
+  1. Set the container which holds the icon to have a CSS position, possibly :relative.
+  2. Insert the SPAN.icon__??? tag and create a new icon block below.
+  3. DO NOT SPECIFY ICON POSITIONS IN THIS FILE, PUT THOSE SPECIFICS
+  IN THE  RELEVANT CSS FILE, e.g. An accordion icon can be used in multiple accordion objects
+  and the icons location can change so put the positioning CSS in the specific CSS files.
+
+  Set some defaults */
+  background-repeat: no-repeat;
+  background-position: 0px 0px;
+  display: block;
+  height: 16px;
+  width: 16px;
+  text-indent: -9999em;
+  /* In case we have used some text as well */ }
+  span.icon__accordion {
+    background-image: url("/images/accordian-arrow.png");
+    /*
+        @include device-pixel-ratio() {
+          background-image: url("/images/accordian-arrow-2x.png");
+          background-size: 100%;
+        }
+    */
+    background-position: -12px -16px;
+    width: 21px;
+    height: 13px; }
 
 .form-last-four-digits ul {
   list-style: disc;

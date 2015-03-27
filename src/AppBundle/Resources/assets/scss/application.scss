@@ -1,6 +1,9 @@
 @import "import-moj";
 
+@import "components/account-header";
+@import "components/account-transactions";
 @import "components/app-typography";
+@import "components/bread-crumb";
 @import "components/button-bar";
 @import "components/element";
 @import "components/forms";
@@ -13,6 +16,7 @@
 @import "components/report-meta-data";
 @import "components/user-list";
 
+@import "elements/icon";
 @import "elements/forms/form-date";
 @import "elements/forms/form-last-four-digits";
 @import "elements/forms/form-sort-code";

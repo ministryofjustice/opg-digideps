@@ -65,9 +65,15 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @var type 
+     * @var \DateTime 
      */
     private $lastEdit;
+    
+     /**
+     * @JMS\Type("DateTime")
+     * @var \DateTime 
+     */
+    private $createdAt;
     
     /**
      * @JMS\Type("integer")
@@ -75,6 +81,37 @@ class Account
     private $report;
     
     private $reportObject;
+    
+    /**
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyIn;
+    
+    /**
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
+     * @JMS\Groups({"transactions"}) 
+     */
+    private $moneyOut;
+    
+    /**
+     * @JMS\Type("double")
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyInTotal;
+    
+    /**
+     * @JMS\Type("double")
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyOutTotal;
+    
+    /**
+     * @JMS\Type("double")
+     * @JMS\Groups({"transactions"})
+     */
+    private $moneyTotal;
+    
     
     public function getId()
     {
@@ -152,6 +189,22 @@ class Account
         return $this->lastEdit;
     }
     
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+        
     public function getReport()
     {
         return $this->report;
@@ -185,4 +238,48 @@ class Account
         }
     }
     
+    public function getMoneyIn()
+    {
+        return $this->moneyIn;
+    }
+
+    public function getMoneyOut()
+    {
+        return $this->moneyOut;
+    }
+
+    public function setMoneyIn(array $moneyIn)
+    {
+        $this->moneyIn = $moneyIn;
+    }
+
+    public function setMoneyOut(array $moneyOut)
+    {
+        $this->moneyOut = $moneyOut;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getMoneyInTotal()
+    {
+        return $this->moneyInTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        return $this->moneyOutTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyTotal()
+    {
+        return $this->moneyTotal;
+    }
+
 }

@@ -1,7 +1,8 @@
 "use strict";
 
 /*
- TODO
+ TODO: Fix auto copy of JS files
+ TODO: Implement a watch on the scss folder and auto insert files to the application.scss
  */
 
 
@@ -50,12 +51,18 @@ module.exports = function (grunt) {
                 tasks: ['sass']
             },
             js: {
-              files: [jsPath + '/**/*.js'],
-              task: ['copy']
+                files: [jsPath + '/**/*.js'],
+                task: ['copy:copyJS']
             }
         },
 
         copy: {
+            copyMoJImages: {
+                cwd: 'bower_downloads/govuk_frontend_toolkit/images',
+                src: ['**/*'],
+                dest: 'web/images',
+                expand: true
+            },
             copyGDSImages: {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/images',
                 src: ['**/*'],
@@ -70,11 +77,11 @@ module.exports = function (grunt) {
             },
             copyPlugins: {
                 cwd: 'bower_downloads',
-                src: ['jquery/dist/**/*','jquery-validation/dist/**/*' ],
+                src: ['jquery/dist/**/*', 'jquery-validation/dist/**/*' ],
                 dest: 'web/javascripts/vendor',
                 expand: true
             },
-            copyJS:{
+            copyJS: {
                 cwd: 'src/AppBundle/Resources/assets/js',
                 src: ['**/*' ],
                 dest: 'web/js',
