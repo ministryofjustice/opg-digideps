@@ -15,23 +15,29 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
     public static function accordionLinksProvider()
     {
         return [
-            ['list', false, false, 'money-in', 'money-out'],
-            ['money-in', true, false, 'list', 'money-both'],
-            ['money-out', false, true, 'money-both', 'list'],
-            ['money-both', true, true, 'money-out', 'money-in'],
+            ['list', false, false, 'money-in', 'money-out', false],
+            ['money-in', true, false, 'list', 'money-both', false],
+            ['money-out', false, true, 'money-both', 'list', false],
+            ['money-both', true, true, 'money-out', 'money-in', false],
+            // oneATime
+            ['list', false, false, 'money-in', 'money-out', true],
+            ['money-in', true, false, 'list', 'money-out', true],
+            ['money-out', false, true, 'money-in', 'list', true],
+            ['money-both', true, true, 'money-out', 'money-in', true],
         ];
     }
     
     /**
      * @dataProvider accordionLinksProvider
      */
-    public function testRenderAccordionLinks($clickedPanel, $open1, $open2, $href1, $href2)
+    public function testRenderAccordionLinks($clickedPanel, $open1, $open2, $href1, $href2, $oneATime)
     {
         $options = ['clickedPanel' => $clickedPanel, 
                     'bothOpenHref' => 'money-both', 
                     'allClosedHref' => 'list',
                     'firstPanelHref' => 'money-in',
-                    'secondPanelHref'=>'money-out'];
+                    'secondPanelHref'=>'money-out',
+                    'onlyOneATime' => $oneATime];
         
         $expected = [ //expected
             'first'=>[
