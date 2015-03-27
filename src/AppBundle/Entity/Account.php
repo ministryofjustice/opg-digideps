@@ -54,6 +54,14 @@ class Account
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastEdit;
+    
+    /**
+     * @var \DateTime
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
 
     /**
      * @var string
@@ -153,7 +161,8 @@ class Account
     public function __construct()
     {
         $this->transactions = new ArrayCollection();
-        $this->lastEdit = new \DateTime();
+        $this->lastEdit = null;
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -247,18 +256,6 @@ class Account
 
         return $this;
     }
-    
-    /**
-     * Set lastEdit to now
-     * 
-     * @return Account
-     */
-    public function setLastEditNow()
-    {
-        $this->lastEdit = new \DateTime;
-
-        return $this;
-    }
 
     /**
      * Get lastEdit
@@ -269,7 +266,24 @@ class Account
     {
         return $this->lastEdit;
     }
+    
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
 
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+    
     /**
      * Set openingBalance
      *
