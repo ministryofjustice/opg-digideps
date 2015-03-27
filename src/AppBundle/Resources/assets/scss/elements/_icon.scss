@@ -24,10 +24,12 @@ span.icon {
   &__accordion {
     background-image: url('/images/accordian-arrow.png');
 
+/*
     @include device-pixel-ratio() {
-      background-image: url("icons/icon-steps/icon-step-11-2x.png");
+      background-image: url("/images/accordian-arrow-2x.png");
       background-size: 100%;
     }
+*/
     background-position: -12px -16px;
     width: 21px;
     height: 13px;

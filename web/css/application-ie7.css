@@ -1569,11 +1569,19 @@ input[type=number] {
     margin-top: 20px; }
     .account-transactions .form-group.button-bar button {
       margin-left: 68%; }
+  .account-transactions .form-row {
+    background-color: #f8f8f8;
+    padding: 0;
+    margin: 0;
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #dee0e2; }
   .account-transactions .form-inline {
     padding: 20px 0 20px 10px;
     margin: 0;
-    background-color: #f8f8f8;
-    border-bottom: 1px solid #dee0e2; }
+    float: none; }
   .account-transactions .form-input-description-combo {
     overflow: hidden; }
     .account-transactions .form-input-description-combo .form-group {
@@ -1586,7 +1594,8 @@ input[type=number] {
     .account-transactions .form-input-description-combo .form-group-combo-description {
       padding: 0;
       float: none;
-      overflow: auto; }
+      overflow: auto;
+      margin-bottom: 0; }
       .account-transactions .form-input-description-combo .form-group-combo-description .form-label {
         color: #6f777b;
         float: none;
@@ -1597,8 +1606,11 @@ input[type=number] {
     width: 66%;
     margin-top: 7px;
     margin-right: 8px; }
-  .account-transactions .form-inline.field-with-errors .form-label {
-    margin-top: 17px; }
+  .account-transactions .form-inline.field-with-errors {
+    margin: 10px 0 10px 10px; }
+    .account-transactions .form-inline.field-with-errors .form-label {
+      margin-top: 17px;
+      margin-right: -5px; }
   .account-transactions .form-group.button-bar {
     background-color: #f8f8f8;
     padding-top: 30px;
@@ -2338,13 +2350,15 @@ span.icon {
   /* In case we have used some text as well */ }
   span.icon__accordion {
     background-image: url("/images/accordian-arrow.png");
+    /*
+        @include device-pixel-ratio() {
+          background-image: url("/images/accordian-arrow-2x.png");
+          background-size: 100%;
+        }
+    */
     background-position: -12px -16px;
     width: 21px;
     height: 13px; }
-    @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-      span.icon__accordion {
-        background-image: url("icons/icon-steps/icon-step-11-2x.png");
-        background-size: 100%; } }
 
 .form-last-four-digits ul {
   list-style: disc;

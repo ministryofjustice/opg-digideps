@@ -5,7 +5,7 @@ page:
 moneyIn:
   panelTitle: Money paid in
   panelFooter: Money in total
-  totalPrefix: "-"
+  totalPrefix: "+"
   currencySymbol: "£"
   elements:
     disability_living_allowance_or_personal_independence_payment:
@@ -53,7 +53,7 @@ moneyIn:
 moneyOut:  
   panelTitle: Money paid out
   panelFooter: Money out total
-  totalPrefix: "+"
+  totalPrefix: "-"
   currencySymbol: "£"
   elements:
     care_fees_or_local_authority_charges_for_care:

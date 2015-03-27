@@ -9,12 +9,13 @@
 <div id="{{ href }}" class="details {{ openPanel ? 'open' : '' }}">
     <details {{ openPanel ? 'open' : '' }}>
         <summary>
-            <a href="{{ link }}#{{ href }}" class="behat-link-{{href}}-tab">
+            <a href="{{ link }}#account-header" class="behat-link-{{ href }}-tab">
                 <div class="summary">
                     <span class="icon icon__accordion"></span>
+
                     <h3 class="{{ summaryClass }}">{{ (section ~ '.panelTitle') | trans }}</h3>
 
-                    <div class="transaction-total behat-region-{{href}}-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
+                    <div class="transaction-total behat-region-{{ href }}-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
                 </div>
             </a>
         </summary>
@@ -23,23 +24,24 @@
 
                 {% set elementId = element.type.vars.value %}
 
-                {% if element.moreDetails is defined %}
+                <div class="form-row">
+                    {% if element.moreDetails is defined %}
 
-                    {% set hasErrors = true %}
-                    {% if element.vars.valid and element.moreDetails.vars.valid %}
-                        {% set hasErrors = false %}
-                    {% endif %}
+                        {% set hasErrors = true %}
+                        {% if element.vars.valid and element.moreDetails.vars.valid %}
+                            {% set hasErrors = false %}
+                        {% endif %}
 
-                    {# Fieldset
-                    {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
-                        'element': t,
-                        'legendText': 'legendText',
-                        'hintText': 'hintText'
-                    } %} #}
+                        {# Fieldset
+                        {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
+                            'element': t,
+                            'legendText': 'legendText',
+                            'hintText': 'hintText'
+                        } %} #}
 
-                    <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-with-errors behat-region-form-errors{% endif %}">
-                        <fieldset>
-                            <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
+                        <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-with-errors behat-region-form-errors{% endif %}">
+                            <fieldset>
+                                <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
 
                                 {{ form_row(element.id) }}
                                 {{ form_row(element.type) }}
@@ -57,21 +59,22 @@
                                 'formGroupClass': 'form-group-combo-description'
                                 }) }}
 
-                        </fieldset>
-                    </div>
-                {% else %}
+                            </fieldset>
+                        </div>
+                    {% else %}
 
-                    {{ form_row(element.id) }}
-                    {{ form_row(element.type) }}
+                        {{ form_row(element.id) }}
+                        {{ form_row(element.type) }}
 
-                    {{ form_input(element.amount,'', {
-                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans,
-                    'formGroupClass': 'form-inline',
-                    'inputPrefix' : '£',
-                    'inputClass' : 'form-control__number'
-                    }) }}
+                        {{ form_input(element.amount,'', {
+                        'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans,
+                        'formGroupClass': 'form-inline',
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control__number'
+                        }) }}
 
-                {% endif %}
+                    {% endif %}
+                </div>
 
             {% endfor %}
 

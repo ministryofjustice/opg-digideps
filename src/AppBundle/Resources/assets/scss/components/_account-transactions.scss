@@ -90,7 +90,7 @@
 
         .icon__accordion {
           background-position: -12px -61px;
-          
+
         }
       }
 
@@ -109,11 +109,21 @@
     }
   }
 
+  .form-row{
+    background-color: $grey-4;
+    padding: 0;
+    margin: 0;
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    background-color: $grey-4;
+    border-bottom: 1px solid $grey-3;
+  }
+
   .form-inline {
     padding: 20px 0 20px 10px;
     margin: 0;
-    background-color: $grey-4;
-    border-bottom: 1px solid $grey-3;
+    float: none;
   }
 
   .form-input-description-combo {
@@ -133,6 +143,7 @@
       padding: 0;
       float: none;
       overflow: auto;
+      margin-bottom: 0;
 
       .form-label {
         color: $secondary-text-colour;
@@ -156,8 +167,11 @@
       margin-right: 8px;
     }
     &.field-with-errors {
+      margin: 10px 0 10px 10px;
+
       .form-label {
         margin-top: 17px;
+        margin-right: -5px;
       }
     }
   }
