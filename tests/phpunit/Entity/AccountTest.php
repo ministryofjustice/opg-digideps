@@ -24,6 +24,8 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $account = new Account();
         $account->setOpeningBalance(10.0);
         
+        $this->assertTrue(time() - $account->getCreatedAt()->getTimestamp() < 1000, 'account.createdAt not set with current date');
+        
         // add account transaction type
         $in1 = new AccountTransactionTypeIn();
         $in1->setId('in1')->setHasMoreDetails(true);
