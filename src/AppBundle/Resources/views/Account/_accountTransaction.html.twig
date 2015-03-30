@@ -32,13 +32,6 @@
                             {% set hasErrors = false %}
                         {% endif %}
 
-                        {# Fieldset
-                        {% include 'AppBundle:Components/Form:_input_description_combo.html.twig' with {
-                            'element': t,
-                            'legendText': 'legendText',
-                            'hintText': 'hintText'
-                        } %} #}
-
                         <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-combo-with-errors behat-region-form-errors{% endif %}">
                             <fieldset>
                                 <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>

@@ -3,6 +3,15 @@
   @include grid-column(1);
 }
 
-.phase-banner {
-  @include phase-banner(beta);
+#global-header-bar .header-bar{
+  height: 0;
 }
+
+#wrapper{
+  border-bottom: 0;
+}
+
+.phase-banner {
+  //@include phase-banner(beta);
+}
+
