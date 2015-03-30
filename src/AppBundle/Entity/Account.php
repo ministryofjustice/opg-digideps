@@ -64,6 +64,23 @@ class Account
     private $openingBalance;
     
     /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="account.closingBalance.notBlank")
+     * @Assert\Type(type="numeric", message="account.closingBalance.type")
+     * 
+     * @var decimal
+     */
+    private $closingBalance;
+    
+    /**
+     * @JMS\Type("DateTime")
+     * @Assert\NotBlank(message="account.closingDate.notBlank")
+     * @Assert\Date(message="account.closingDate.date")
+     * @var \DateTime  
+     */
+    private $closingDate;
+    
+    /**
      * @JMS\Type("DateTime")
      * @var \DateTime 
      */
@@ -195,6 +212,29 @@ class Account
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+    
+    public function getClosingBalance()
+    {
+        return $this->closingBalance;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getClosingDate()
+    {
+        return $this->closingDate;
+    }
+
+    public function setClosingBalance($closingBalance)
+    {
+        $this->closingBalance = $closingBalance;
+    }
+
+    public function setClosingDate($closingDate)
+    {
+        $this->closingDate = $closingDate;
     }
 
     /**
