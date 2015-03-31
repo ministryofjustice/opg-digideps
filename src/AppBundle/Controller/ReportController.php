@@ -64,7 +64,7 @@ class ReportController extends Controller
     {
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
-        
+
         if($report->getCourtOrderType() == EntityDir\Report::PROPERTY_AND_AFFAIRS){
             $apiClient = $this->get('apiclient');
             $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId, 'group' => 'transactions']]);

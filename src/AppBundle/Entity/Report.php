@@ -258,13 +258,13 @@ class Report
         if(empty($this->accounts)){
             return false;
         }
-        
+       
         foreach($this->accounts as $account){
             if(!$account->hasClosingBalance()){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     /**
@@ -384,7 +384,7 @@ class Report
     public function readyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if(!$this->hasAccounts() || !$this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
+            if(!$this->hasAccounts() || $this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
                 return false;
             }
         }else{
