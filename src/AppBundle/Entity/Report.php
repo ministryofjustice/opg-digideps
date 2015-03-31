@@ -90,7 +90,6 @@ class Report
      */
     private $outstandingAccounts;
     
-    
     /**
      * 
      * @return integer $id
@@ -422,5 +421,21 @@ class Report
         if($dateInterval->days > 366){
             $context->addViolationAt('endDate','report.endDate.greaterThan12Months');
         }
+    }
+    
+    public function isDue()
+    {
+        if (!$this->getEndDate()) {
+            return false;
+        }
+        
+        // reset time on dates
+        $today = new \DateTime;
+        $today->setTime(0, 0, 0);
+        
+        $reportDueOn = clone $this->getEndDate();
+        $reportDueOn->setTime(0, 0, 0);
+        
+        return $today >= $reportDueOn;
     }
 }

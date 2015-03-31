@@ -129,9 +129,15 @@ account:
     openingDate:
         notBlank: Please enter opening balance date
         date: Please enter a valid date
+    closingDate:
+        notBlank: Please enter closing balance date
+        date: Please enter a valid date
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
+    closingBalance:
+        notBlank: Please enter a closing balance
+        type: Please enter a valid opclosing balance
     moneyInOut:
         account:
           notNumeric: Please enter a total amount
