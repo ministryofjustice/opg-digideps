@@ -36,6 +36,18 @@
                         <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.createdAt | date("d/m/Y") }}</dd>
                      </div>  
                     {% endif %}
+                    {% if account.closingBalance %}
+                    <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.closingBalance' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
+                    </div>
+                    {% endif %}
+                    {% if account.closingDate %}
+                      <div>
+                        <dt class="report-list__item-fields-term">{{ 'listing.closingDate' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.closingDate | date("d/m/Y") }}</dd>
+                    </div>
+                    {% endif %} 
                 </div>
             </dl>
 
