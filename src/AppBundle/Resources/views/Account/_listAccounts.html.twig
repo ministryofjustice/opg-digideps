@@ -17,7 +17,7 @@
                     </dd>
                     {% if report.isDue and account.closingBalance is null %}
                     <dd style="border-left: #c0c0c0 5px solid; padding-left: 10px;">
-                      <a href="{{ linkToAccountPage }}#">
+                      <a href="{{ linkToAccountPage }}#addClosingBalance">
                       {{ 'listing.addClosingBalanceWarning' | trans }} 
                       </a>
                     </dd>
