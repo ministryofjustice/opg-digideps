@@ -1877,6 +1877,11 @@ form {
       float: left;
       width: 100%; } }
 
+#global-header.with-proposition .header-wrapper .header-proposition {
+  width: 45%;
+  margin-right: 5px;
+  float: right; }
+
 #global-header-bar .header-bar {
   height: 0; }
 

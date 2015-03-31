@@ -1809,6 +1809,11 @@ form {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
+#global-header.with-proposition .header-wrapper .header-proposition {
+  width: 45%;
+  margin-right: 5px;
+  float: right; }
+
 #global-header-bar .header-bar {
   height: 0; }
 

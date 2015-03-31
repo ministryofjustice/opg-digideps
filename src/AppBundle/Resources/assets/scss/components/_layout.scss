@@ -3,11 +3,28 @@
   @include grid-column(1);
 }
 
-#global-header-bar .header-bar{
-  height: 0;
+#global-header.with-proposition {
+
+  .header-wrapper {
+
+    .header-proposition {
+      width: 45%;
+      margin-right: 5px;
+      float: right;
+    }
+
+  }
+
 }
 
-#wrapper{
+#global-header-bar {
+
+  .header-bar {
+    height: 0;
+  }
+}
+
+#wrapper {
   border-bottom: 0;
 }
 
