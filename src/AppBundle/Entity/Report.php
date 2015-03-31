@@ -90,12 +90,6 @@ class Report
      */
     private $incompleteAccounts;
     
-     /**
-     * @JMS\Type("boolean")
-     * @var boolean
-     */
-    private $isDue;
-    
     /**
      * 
      * @return integer $id
@@ -425,6 +419,17 @@ class Report
     
     public function isDue()
     {
-        return $this->isDue;
+        if (!$this->getEndDate()) {
+            return false;
+        }
+        
+        // reset time on dates
+        $today = new \DateTime;
+        $today->setTime(0, 0, 0);
+        
+        $reportDueOn = clone $this->getEndDate();
+        $reportDueOn->setTime(0, 0, 0);
+        
+        return $today >= $reportDueOn;
     }
 }
