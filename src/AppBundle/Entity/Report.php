@@ -417,9 +417,13 @@ class Report
         }
     }
     
+    /**
+     * Return true when the report is Due (today's date => report end date)
+     * @return boolean
+     */
     public function isDue()
     {
-        if (!$this->getEndDate()) {
+        if (!$this->getEndDate() instanceof \DateTime) {
             return false;
         }
         
