@@ -88,7 +88,7 @@ class Report
      * @JMS\Exclude
      * @var array
      */
-    private $incompleteAccounts;
+    private $outstandingAccounts;
     
     
     /**
@@ -254,28 +254,34 @@ class Report
     /**
      * @return boolean
      */
-    public function hasAccounts()
+    public function hasOutstandingAccounts()
     {
         if(empty($this->accounts)){
             return false;
+        }
+        
+        foreach($this->accounts as $account){
+            if(!$account->hasClosingBalance()){
+                return false;
+            }
         }
         return true;
     }
     
     /**
      * 
-     * @return array $incompleteAccounts
+     * @return array $outstandingAccounts
      */
-    public function getIncompleteAccounts()
+    public function getOutstandingAccounts()
     {
-        /*if(!empty($this->accounts) && empty($this->incompleteAccounts)){
-            foreach($this->accounts as $account){
-                if(is_null($account->getOpeningBalance())){
-                    $this->incompleteAccounts[] = $account;
+        if($this->hasOutstandingAccounts() && empty($this->outstandingAccounts)){
+            foreach ($this->accounts as $account){
+                if(!$account->hasClosingBalance()){
+                    $this->outstandingAccounts[] = $account;
                 }
             }
         }
-        return $this->incompleteAccounts;*/
+        return $this->outstandingAccounts;
     }
     
     /**
@@ -379,7 +385,7 @@ class Report
     public function readyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if(!$this->hasAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
+            if(!$this->hasAccounts() || !$this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
                 return false;
             }
         }else{
