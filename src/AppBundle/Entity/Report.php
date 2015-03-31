@@ -54,11 +54,6 @@ class Report
      */
     private $period;
     
-    /**
-     * @JMS\Exclude
-     * @var string $dueDate
-     */
-    private $dueDate;
     
     /**
      * @JMS\Type("array")
@@ -149,13 +144,10 @@ class Report
      */
     public function getDueDate()
     {
-        if(!empty($this->dueDate)){
-            return $this->dueDate;
-        }
+        $dueDate = clone $this->endDate;
+        $dueDate->modify('+8 weeks');
         
-        $this->dueDate = $this->endDate->modify('+8 weeks');
-     
-        return $this->dueDate;
+        return $dueDate;
     }
     
     /**
