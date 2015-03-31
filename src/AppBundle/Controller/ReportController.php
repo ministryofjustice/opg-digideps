@@ -53,7 +53,6 @@ class ReportController extends Controller
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
-        
         return [ 'form' => $form->createView() ];
     }
     

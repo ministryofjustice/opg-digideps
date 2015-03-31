@@ -64,6 +64,13 @@ class Account
     private $openingBalance;
     
     /**
+     * @JMS\Type("string")
+     * @Assert\Type(type="numeric", message="account.closingBalance.type")
+     * @var decimal
+     */
+    private $closingBalance;
+    
+    /**
      * @JMS\Type("DateTime")
      * @var \DateTime 
      */
@@ -176,6 +183,26 @@ class Account
     public function getOpeningBalance()
     {
         return $this->openingBalance;
+    }
+    
+    /**
+     * 
+     * @param type $closingBalance
+     * @return type
+     */
+    public function setClosingBalance($closingBalance)
+    {
+        $this->closingBalance = $closingBalance;
+        return $this->closingBalance;
+    }
+    
+    /**
+     * 
+     * @return decimal $closingBalance
+     */
+    public function getClosingBalance()
+    {
+        return $this->closingBalance;
     }
     
     public function setLastEdit($lastEdit)

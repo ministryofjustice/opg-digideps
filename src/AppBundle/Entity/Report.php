@@ -60,6 +60,36 @@ class Report
      */
     private $dueDate;
     
+    /**
+     * @JMS\Type("array")
+     * @var array $accounts
+     */
+    private $accounts;
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $contacts
+     */
+    private $contacts;
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $assets
+     */
+    private $assets;
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $decisions
+     */
+    private $decisions;
+    
+    /**
+     * @JMS\Exclude
+     * @var array
+     */
+    private $incompleteAccounts;
+    
     
     /**
      * 
@@ -125,10 +155,7 @@ class Report
         }
         
         $this->dueDate = $this->endDate->modify('+8 weeks');
-      
-        if($this->dueDate->format("N") > 5){
-            $this->dueDate->modify('next monday');
-        }
+     
         return $this->dueDate;
     }
     
@@ -204,6 +231,163 @@ class Report
     {
         $this->courtOrderType = $courtOrderType;
         return $this;
+    }
+    
+    /**
+     * @return array $accounts
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+    
+    /**
+     * @param array $accounts
+     * @return \AppBundle\Entity\Report
+     */
+    public function setAccounts($accounts)
+    {
+        $this->accounts = $accounts;
+        return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function hasAccounts()
+    {
+        if(empty($this->accounts)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @return array $incompleteAccounts
+     */
+    public function getIncompleteAccounts()
+    {
+        /*if(!empty($this->accounts) && empty($this->incompleteAccounts)){
+            foreach($this->accounts as $account){
+                if(is_null($account->getOpeningBalance())){
+                    $this->incompleteAccounts[] = $account;
+                }
+            }
+        }
+        return $this->incompleteAccounts;*/
+    }
+    
+    /**
+     * 
+     * @return array $contacts
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
+    
+    /**
+     * @param array $contacts
+     * @return array $contacts
+     */
+    public function setContacts($contacts)
+    {
+        $this->contacts = $contacts;
+        return $this->contacts;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     * @return boolean@var boolean
+     */
+    public function hasContacts()
+    {
+        if(empty($this->contacts)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * @var array $decisions
+     */
+    public function getDecisions()
+    {
+        return $this->decisions;
+    }
+    
+    /**
+     * 
+     * @param type $decisions
+     * @return \AppBundle\Entity\Report
+     */
+    public function setDecisions($decisions)
+    {
+        $this->decisions = $decisions;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function hasDecisions()
+    {
+        if(empty($this->decisions)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @param array $assets
+     * @return \AppBundle\Entity\Report
+     */
+    public function setAssets($assets)
+    {
+        $this->assets = $assets;
+        return $this;
+    }
+    
+    /**
+     * @return array $assets
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function hasAssets()
+    {
+        if(empty($this->assets)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function readyToSubmit()
+    {
+        if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
+            if(!$this->hasAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
+                return false;
+            }
+        }else{
+            if(!$this->hasContacts() || !$this->hasDecisions()){
+                return false;
+            }
+        }
+        return true;
     }
     
     /**
