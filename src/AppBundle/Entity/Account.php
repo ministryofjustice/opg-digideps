@@ -50,6 +50,7 @@ class Account
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank")
      * @Assert\Date(message="account.openingDate.date")
+     *
      * @var type 
      */
     private $openingDate;
@@ -58,15 +59,16 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.openingBalance.notBlank")
      * @Assert\Type(type="numeric", message="account.openingBalance.type")
-     * 
+     *
      * @var decimal
      */
     private $openingBalance;
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.closingBalance.notBlank")
-     * @Assert\Type(type="numeric", message="account.closingBalance.type")
+     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"balance"})
+     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"balance"})
+     * @JMS\Groups({"balance"})
      * 
      * @var decimal
      */
@@ -74,8 +76,9 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.closingDate.notBlank")
-     * @Assert\Date(message="account.closingDate.date")
+     * @JMS\Groups({"balance"})
+     * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"balance"})
+     * @Assert\Date(message="account.closingDate.date", groups={"balance"})
      * @var \DateTime  
      */
     private $closingDate;

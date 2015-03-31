@@ -77,13 +77,26 @@ class AccountController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
 
+        // balance form
+        $formBalance = $this->createForm(new FormDir\AccountBalanceType(), $account, [
+            'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#closing-balance'
+        ]);
+        $formBalance->handleRequest($request);
+        $formBalanceIsClicked = $formBalance->get('save')->isClicked();
+        if ($formBalanceIsClicked && $formBalance->isValid()) {
+            $apiClient->putC('account/' .  $accountId, $formBalance->getData(), [
+                'deserialise_group' => 'balance',
+            ]);
+            $this->redirect($this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#closing-balance');
+        }
+        
+        // transactions form
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
             'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#account-header'
         ]);
-        
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            #$this->debugFormData($form);
+        $formIsClicked = $form->get('saveMoneyIn')->isClicked() || $form->get('saveMoneyOut')->isClicked();
+        if ($formIsClicked && $form->isValid()) {
             $apiClient->putC('account/' .  $account->getId(), $form->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
@@ -95,6 +108,7 @@ class AccountController extends Controller
             'report' => $report,
             'client' => $client,
             'form' => $form->createView(),
+            'formBalance' => $formBalance->createView(),
             'account' => $account,
             'actionParam' => $action,
         ];
