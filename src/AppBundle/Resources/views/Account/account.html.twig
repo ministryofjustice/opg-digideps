@@ -14,7 +14,7 @@
 {% set breadCrumb = [
 {
 'label': 'Accounts' | trans,
-'href': '../accounts'
+'href': path('accounts', {reportId: report.id}),
 },
 {
 'label': account.bank
@@ -24,7 +24,6 @@
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
 {% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
-{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
@@ -36,7 +35,9 @@
     breadCrumb: breadCrumb
     } %}
 
-    {% include 'AppBundle:Account:_account-header.html.twig' %}
+    {% include 'AppBundle:Account:_account-header.html.twig' with {
+    transDomain: translationDomain
+    } %}
 
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
     transDomain: translationDomain,
@@ -53,9 +54,9 @@
 
     <div class="account-transactions account-transactions__header">
         <dl class="account-transactions__total-balance">
-            <dt class="account-transactions__total-balance-label">Total balance</dt>
+            <dt class="account-transactions__total-balance-label">{{ 'page.totalBalance' | trans }}</dt>
             <dd class="account-transactions__total-balance-total">
-                £{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
+                {{ 'page.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
         </dl>
     </div>
 
@@ -64,7 +65,6 @@
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyIn.legend' | trans,
         openPanel: accordionLinks.first.open or not form.moneyIn.vars.valid,
-
         href: 'moneyIn',
         link: path('account', {action: accordionLinks.first.href, reportId: report.id, accountId: account.id}),
         elements: form.moneyIn,
@@ -88,9 +88,9 @@
 
     <div class="account-transactions account-transactions__footer">
         <ul class="account-transactions__total-balance">
-            <li class="account-transactions__total-balance-label">Total balance</li>
+            <li class="account-transactions__total-balance-label">{{ 'page.totalBalance' | trans }}</li>
             <li class="account-transactions__total-balance-total behat-region-money-totals">
-                £{{ account.moneyTotal | number_format(2, '.', ',') }}</li>
+                {{ 'page.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</li>
         </ul>
     </div>
 
