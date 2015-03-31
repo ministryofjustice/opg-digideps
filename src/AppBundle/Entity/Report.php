@@ -103,7 +103,7 @@ class Report
     private $startDate;
 
     /**
-     * @var \Date
+     * @var \DateTime
      * 
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
