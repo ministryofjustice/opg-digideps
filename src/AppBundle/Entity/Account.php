@@ -195,6 +195,24 @@ class Account
         return $this->openingBalance;
     }
     
+    /**
+     * @param type $closingBalance
+     * @return type
+     */
+    public function setClosingBalance($closingBalance)
+    {
+        $this->closingBalance = $closingBalance;
+        return $this->closingBalance;
+    }
+    
+    /**
+     * @return decimal $closingBalance
+     */
+    public function getClosingBalance()
+    {
+        return $this->closingBalance;
+    }
+    
     public function setLastEdit($lastEdit)
     {
         $this->lastEdit = $lastEdit;
@@ -213,11 +231,6 @@ class Account
     {
         return $this->createdAt;
     }
-    
-    public function getClosingBalance()
-    {
-        return $this->closingBalance;
-    }
 
     /**
      * @return \DateTime
@@ -225,11 +238,6 @@ class Account
     public function getClosingDate()
     {
         return $this->closingDate;
-    }
-
-    public function setClosingBalance($closingBalance)
-    {
-        $this->closingBalance = $closingBalance;
     }
 
     public function setClosingDate($closingDate)
