@@ -90,6 +90,11 @@ class Report
      */
     private $incompleteAccounts;
     
+     /**
+     * @JMS\Type("boolean")
+     * @var boolean
+     */
+    private $isDue;
     
     /**
      * 
@@ -416,5 +421,10 @@ class Report
         if($dateInterval->days > 366){
             $context->addViolationAt('endDate','report.endDate.greaterThan12Months');
         }
+    }
+    
+    public function isDue()
+    {
+        return $this->isDue;
     }
 }
