@@ -16,7 +16,7 @@ class AccountBalanceType extends AbstractType
                  ->add('closingDate', 'date',[ 'widget' => 'text',
                                                  'input' => 'datetime',
                                                  'format' => 'dd-MM-yyyy',
-                                                 'invalid_message' => 'Invalid date'
+                                                 'invalid_message' => 'Value or character is not valid'
                                               ])
                  ->add('closingBalance', 'number', [ 'grouping' => true, 'precision' => 2 ])
                  ->add('save', 'submit')
