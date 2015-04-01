@@ -45,7 +45,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     protected function getSymfonyParam($name)
     {
-        $this->getContainer()->getParameter($name);
+        return $this->getContainer()->getParameter($name);
     }
 
     
@@ -295,7 +295,9 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     public function visitBehatLink($link)
     {
-       $this->visit('behat/' . $link);
+       $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
+       
+       $this->visit("behat/{$secret}/{$link}");
        $this->assertResponseStatus(200);
     }
     
