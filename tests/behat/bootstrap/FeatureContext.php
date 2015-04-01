@@ -139,7 +139,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     private function getLatestEmailMockFromApi()
     {
-        $this->visit('behat/email-get-last');
+        $this->visitBehatLink('email-get-last');
         $this->assertResponseStatus(200);
         
         $content =  $this->getSession()->getPage()->getContent();
@@ -158,7 +158,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function beforeScenarioCleanMail(BeforeScenarioScope $scope)
     {
-        $this->visit('behat/email-reset');
+        $this->visitBehatLink('email-reset');
         $this->assertResponseStatus(200);
     }
     
@@ -271,8 +271,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
         
-        $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
-        $this->assertResponseStatus(200);
+        $this->visitBehatLink('report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
     }
     
     /**
@@ -280,8 +279,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function iDeleteAllTheExistingBehatUsers()
     {
-        $this->visit('behat/delete-behat-users');
-        $this->assertResponseStatus(200);
+        $this->visitBehatLink('delete-behat-users');
     }
     
     /**
@@ -292,7 +290,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
        $endDate = new \DateTime;
        $endDate->modify($dateModifier);
        
-       $this->visit("behat/report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+       $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+    }
+    
+    public function visitBehatLink($link)
+    {
+       $this->visit('behat/' . $link);
        $this->assertResponseStatus(200);
     }
     
