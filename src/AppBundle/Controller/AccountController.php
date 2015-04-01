@@ -78,32 +78,31 @@ class AccountController extends Controller
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
 
         // balance form
-        $formBalance = $this->createForm(new FormDir\AccountBalanceType(), $account, [
-            'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#closing-balance'
-        ]);
+        $formBalance = $this->createForm(new FormDir\AccountBalanceType(), $account);
         $formBalance->handleRequest($request);
         $formBalanceIsClicked = $formBalance->get('save')->isClicked();
         if ($formBalanceIsClicked && $formBalance->isValid()) {
             $apiClient->putC('account/' .  $accountId, $formBalance->getData(), [
                 'deserialise_group' => 'balance',
             ]);
-            $this->redirect($this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#closing-balance');
+            return $this->redirect($this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#closing-balance');
         }
         
         // transactions form
+        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
             'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#account-header'
         ]);
         $form->handleRequest($request);
         $formIsClicked = $form->get('saveMoneyIn')->isClicked() || $form->get('saveMoneyOut')->isClicked();
         if ($formIsClicked && $form->isValid()) {
-            $apiClient->putC('account/' .  $account->getId(), $form->getData(), [
+            $apiClient->putC('account/' .  $accountId, $form->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
-            // refresh account
+            // refresh account with the transactions
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         }
-
+        
         return [
             'report' => $report,
             'client' => $client,
