@@ -10,6 +10,13 @@ Feature: admin
             | login_password  |  WRONG PASSWORD !! |
         And I click on "login"
         Then I should see the "header errors" region
+        # test user email in caps
+        When I fill in the following:
+            | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |
+            | login_password  | Abcd1234 |
+        And I click on "login
+        Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
+        When I go to "/logout"
         # test right credentials
         When I fill in the following:
             | login_email     | admin@publicguardian.gsi.gov.uk |
