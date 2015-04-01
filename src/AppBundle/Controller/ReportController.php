@@ -178,7 +178,7 @@ class ReportController extends Controller
         asort($titles);
         $titles['Other assets'] = $other;
         
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $asset = new EntityDir\Asset();
