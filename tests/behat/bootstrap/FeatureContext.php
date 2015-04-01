@@ -292,9 +292,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
        $endDate = new \DateTime;
        $endDate->modify($dateModifier);
        
-       $url = "behat/report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d');
-       
-       $this->visit($url);
+       $this->visit("behat/report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
        $this->assertResponseStatus(200);
     }
     
