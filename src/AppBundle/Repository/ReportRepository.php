@@ -15,7 +15,7 @@ class ReportRepository extends EntityRepository
     /**
      * @param integer $id
      * @param integer $userId
-     * @return type
+     * @return AppBundle\Entity\Report or null
      */
     public function findByIdAndUser($id,$userId)
     {
