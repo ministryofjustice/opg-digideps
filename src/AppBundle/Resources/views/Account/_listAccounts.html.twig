@@ -17,7 +17,7 @@
                     </dd>
                     {% if report.isDue and account.closingBalance is null %}
                     <dd style="border-left: #c0c0c0 5px solid; padding-left: 10px;">
-                      <a href="{{ linkToAccountPage }}#closing-balance">
+                      <a href="{{ linkToAccountPage }}#closing-balance" class="behat-link-account-{{ account.id }}-add-closing-balance">
                       {{ 'listing.addClosingBalanceWarning' | trans }} 
                       </a>
                     </dd>
@@ -47,13 +47,13 @@
                     {% if account.closingBalance %}
                     <div>
                         <dt class="report-list__item-fields-term">{{ 'listing.closingBalance' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal behat-region-account-{{ account.id }}-closing-balance">{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
                     </div>
                     {% endif %}
                     {% if account.closingDate %}
                       <div>
                         <dt class="report-list__item-fields-term">{{ 'listing.closingDate' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.closingDate | date("d/m/Y") }}</dd>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal behat-region-account-{{ account.id }}-closing-date">{{ account.closingDate | date("d/m/Y") }}</dd>
                     </div>
                     {% endif %} 
                 </div>

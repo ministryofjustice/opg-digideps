@@ -1,7 +1,7 @@
 {% set translationDomain = "report-account-balance" %}
 {% trans_default_domain translationDomain %}
 
-<div id="closing-balance">
+<div id="closing-balance" class="behat-region-account-closing-balance-form">
   
   {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
     transDomain: translationDomain,
@@ -11,6 +11,8 @@
   {{ form_start(formBalance, {attr: {novalidate: 'novalidate' }}) }}
   
     {{ form_known_date(formBalance.closingDate, 'closingDate') }}
+    
+    {{ form_widget(formBalance.id) }}
 
     {{ form_input(formBalance.closingBalance, 'closingBalance', {
         'inputPrefix' : '£',
