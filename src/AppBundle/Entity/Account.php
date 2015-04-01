@@ -177,7 +177,7 @@ class Account
         return $this->accountNumber;
     }
     
-    public function setOpeningDate($openingDate)
+    public function setOpeningDate(\DateTime $openingDate = null)
     {
         $this->openingDate = $openingDate;
     }
@@ -279,10 +279,16 @@ class Account
         return $this->reportObject;
     }
     
+    /**
+     * Add violation if Opening date is not between report start and end date
+     */
     public function isValidOpeningDate(ExecutionContextInterface $context)
     {
-        $reportStartDate = $this->reportObject->getStartDate();
-        $reportEndDate = $this->reportObject->getEndDate();
+        $reportStartDate = clone $this->reportObject->getStartDate();
+        $reportEndDate = clone $this->reportObject->getEndDate();
+        
+        $reportStartDate->setTime(0, 0, 0);
+        $reportEndDate->setTime(23, 59, 59);
         
         if(($reportStartDate > $this->openingDate) || ($reportEndDate < $this->openingDate)){
              $context->addViolationAt('openingDate','Opening balance date must be between '.$reportStartDate->format('d/m/Y').' and '.$reportEndDate->format('d/m/Y'));
