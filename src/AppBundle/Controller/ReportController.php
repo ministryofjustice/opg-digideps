@@ -225,6 +225,6 @@ class ReportController extends Controller
      */
     protected function getReport($reportId)
     {
-        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ]]);
     }
 }

@@ -272,7 +272,7 @@ class Report
      * @return array $outstandingAccounts
      */
     public function getOutstandingAccounts()
-    {
+    {  
         if($this->hasOutstandingAccounts() && empty($this->outstandingAccounts)){
             foreach ($this->accounts as $account){
                 if(!$account->hasClosingBalance()){

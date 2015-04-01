@@ -69,4 +69,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($this->report->hasOutstandingAccounts());
     }
     
+    public function testGetOutstandingAccounts()
+    {
+        $this->account->shouldReceive('hasClosingBalance')->times(4)->andReturn(false,false,false);
+        
+        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
+        
+        $accounts = $this->report->getOutstandingAccounts();
+        
+        $this->assertInternalType('array', $accounts);
+        $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
+    }
+    
 }
