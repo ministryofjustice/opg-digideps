@@ -105,26 +105,22 @@ class Report
     }
     
     /**
-     * @return \DateTime $startDate
+     * @return \DateTime
      */
     public function getStartDate()
     {
-        if(!is_object($this->startDate)){
-            return $this->startDate;
-        }
-        return new \DateTime($this->startDate->format('Y-m-d'));
+        return $this->startDate;
     }
     
     /**
      * @param \DateTime $startDate
+     * 
      * @return \AppBundle\Entity\Report
      */
     public function setStartDate(\DateTime $startDate = null)
     {
-        if ($startDate instanceof \DateTime) {
-            $startDate->setTime(0,0,0);
-        }
         $this->startDate = $startDate;
+        
         return $this;
     }
     
@@ -133,13 +129,12 @@ class Report
      */
     public function getEndDate()
     {
-        if(!is_object($this->endDate)){
-            return $this->endDate;
-        }
-        return new \DateTime($this->endDate->format('Y-m-d'));
+        return $this->endDate;
     }
     
     /**
+     * Return the date 8 weeks after the end date
+     * 
      * @return string $dueDate
      */
     public function getDueDate()
@@ -156,14 +151,15 @@ class Report
      */
     public function setEndDate(\DateTime $endDate = null)
     {
-        if ($endDate instanceof \DateTime) {
-            $endDate->setTime(23, 59, 59);
-        }
         $this->endDate = $endDate;
+        
         return $this;
     }
     
     /**
+     * Return string representation of the start-end date period
+     * e.g. 2004 to 2005
+     * 
      * @return string $period
      */
     public function getPeriod()
