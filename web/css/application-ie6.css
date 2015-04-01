@@ -1788,7 +1788,6 @@ form {
   width: 50%; }
 
 .input-group-prefix {
-  box-sizing: border-box;
   position: absolute;
   background: #dee0e2;
   font-size: 19px;
@@ -1805,50 +1804,16 @@ form {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-.phase-banner {
-  padding: 10px 0 8px 0;
-  border-bottom: 1px solid #bfc1c3; }
-  .phase-banner p {
-    margin: 0;
-    color: #000;
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none; }
-    @media (max-width: 640px) {
-      .phase-banner p {
-        font-size: 14px;
-        line-height: 1.14286; } }
-  .phase-banner .phase-tag {
-    display: -moz-inline-stack;
-    display: inline-block;
-    zoom: 1;
-    display: inline;
-    vertical-align: top;
-    margin: 0 8px 0 0;
-    padding: 2px 5px 0;
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 700;
-    text-transform: none;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-decoration: none;
-    color: #fff;
-    background-color: #f47738; }
-    @media (max-width: 640px) {
-      .phase-banner .phase-tag {
-        font-size: 14px;
-        line-height: 1.14286; } }
-  .phase-banner span {
-    display: -moz-inline-stack;
-    display: inline-block;
-    zoom: 1;
-    display: inline;
-    width: 75%;
-    vertical-align: top; }
+#global-header.with-proposition .header-wrapper .header-proposition {
+  width: 45%;
+  margin-right: 5px;
+  float: right; }
+
+#global-header-bar .header-bar {
+  height: 0; }
+
+#wrapper {
+  border-bottom: 0; }
 
 .nav-tabs {
   zoom: 1;
