@@ -137,7 +137,7 @@ account:
         type: Please enter a valid opening balance
     closingBalance:
         notBlank: Please enter a closing balance
-        type: Please enter a valid opclosing balance
+        type: Please enter a valid closing balance
     moneyInOut:
         account:
           notNumeric: Please enter a total amount
