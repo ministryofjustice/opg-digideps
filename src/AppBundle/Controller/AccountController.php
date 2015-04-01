@@ -24,7 +24,7 @@ class AccountController extends Controller
         $util = $this->get('util');
         $request = $this->getRequest();
 
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient');
@@ -71,7 +71,7 @@ class AccountController extends Controller
         $util = $this->get('util');
         $request = $this->getRequest();
 
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
