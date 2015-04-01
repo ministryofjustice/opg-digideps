@@ -72,4 +72,17 @@ class BehatController extends Controller
         
         return new Response('done');
     }
+    
+    /**
+     * @Route("/report/{reportId}/change-report-end-date/{dateYmd}")
+     * @Method({"GET"})
+     */
+    public function accountChangeReportDate($reportId, $dateYmd)
+    {
+        $this->get('apiclient')->putC('report/' . $reportId, json_encode([
+            'endDate' => $dateYmd
+        ]));
+        
+        return new Response('done');
+    }
 }
