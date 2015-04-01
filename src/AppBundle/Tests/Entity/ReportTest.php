@@ -1,13 +1,22 @@
 <?php
 namespace AppBundle\Entity;
 
+use Mockery as m;
+
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
     private $report;
+    private $account;
     
     protected function setUp()
     {
         $this->report = new Report;
+        $this->account = m::mock('AppBundle\Entity\Account');
+    }
+    
+    public function tearDown()
+    {
+        m::close();
     }
     
     public function isDueProvider()
@@ -41,4 +50,35 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($expected, $actual);
     }
+    
+    public function testHasOutstandingAccountsIsTrue()
+    {
+        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(true,true,false);
+        
+        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
+        
+        $this->assertTrue($this->report->hasOutstandingAccounts());
+    }
+    
+    public function testHasOutstandingAccountsIsFalse()
+    {
+        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(true,true,true);
+        
+        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
+        
+        $this->assertFalse($this->report->hasOutstandingAccounts());
+    }
+    
+    public function testGetOutstandingAccounts()
+    {
+        $this->account->shouldReceive('hasClosingBalance')->times(4)->andReturn(false,false,false);
+        
+        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
+        
+        $accounts = $this->report->getOutstandingAccounts();
+        
+        $this->assertInternalType('array', $accounts);
+        $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
+    }
+    
 }

@@ -216,6 +216,17 @@ class Account
         return $this->closingBalance;
     }
     
+    /**
+     * @return boolean
+     */
+    public function hasClosingBalance()
+    {
+        if(empty($this->closingBalance)){
+            return false;
+        }
+        return true;
+    }
+    
     public function setLastEdit($lastEdit)
     {
         $this->lastEdit = $lastEdit;

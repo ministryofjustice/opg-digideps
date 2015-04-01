@@ -3,10 +3,11 @@ namespace AppBundle\Service;
 
 use JMS\Serializer\SerializerInterface;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;;
+use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;
 use AppBundle\Exception\DisplayableException;
 use RuntimeException;
 use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class ApiClient extends GuzzleClient
 {
@@ -32,6 +33,12 @@ class ApiClient extends GuzzleClient
      * @var boolean
      */
     private $debug;
+    
+    /**
+     *
+     * @var type 
+     */
+    private $securityContext;
     
      /**
      * @var string

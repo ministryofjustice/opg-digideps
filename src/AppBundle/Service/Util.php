@@ -50,8 +50,8 @@ class Util
         return $this->apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
     }
     
-    public function getReport($reportId)
+    public function getReport($reportId,$userId)
     {
-        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $userId ,'id' => $reportId ]]);
     }
 }

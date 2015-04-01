@@ -64,6 +64,12 @@ class ReportController extends Controller
     {
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
+
+        if($report->getCourtOrderType() == EntityDir\Report::PROPERTY_AND_AFFAIRS){
+            $apiClient = $this->get('apiclient');
+            $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId, 'group' => 'transactions']]);
+            $report->setAccounts($accounts);
+        }
         
         return [
             'report' => $report,
@@ -219,6 +225,6 @@ class ReportController extends Controller
      */
     protected function getReport($reportId)
     {
-        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ]]);
     }
 }
