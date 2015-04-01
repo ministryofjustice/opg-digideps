@@ -246,7 +246,7 @@ class User implements AdvancedUserInterface
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        $this->email = strtolower($email);
 
         return $this;
     }
