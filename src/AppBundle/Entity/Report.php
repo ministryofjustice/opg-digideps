@@ -17,6 +17,7 @@ class Report
     /**
      * @var integer
      *
+     * @JMS\Groups({"accounts"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -28,6 +29,7 @@ class Report
     /**
      * @var integer
      * 
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getClientId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
@@ -36,6 +38,7 @@ class Report
     private $client;
     
     /**
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getContactIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
@@ -50,6 +53,12 @@ class Report
     private $accounts;
     
     /**
+     * @JMS\Groups({"accounts"})
+     * @JMS\Type("array<AppBundle\Entity\Account>")
+     */
+    private $accountObjs;
+    
+    /**
      * @JMS\Accessor(getter="getDecisionInvolvementIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\DecisionInvolvement", mappedBy="report", cascade={"persist"})
@@ -57,6 +66,7 @@ class Report
     private $decisionInvolvements;
     
     /**
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getDecisionIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
@@ -64,6 +74,7 @@ class Report
     private $decisions;
     
     /**
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getAssetIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
@@ -78,6 +89,7 @@ class Report
     private $pdfTokens;
     
     /**
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
@@ -88,6 +100,7 @@ class Report
     /**
      * @var string
      *
+     * @JMS\Groups({"accounts"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -96,6 +109,7 @@ class Report
     /**
      * @var \Date
      *
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -105,6 +119,7 @@ class Report
     /**
      * @var \Date
      * 
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -113,6 +128,7 @@ class Report
 
     /**
      * @var \DateTime
+     * 
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -465,6 +481,24 @@ class Report
             }
         }
         return $accounts;
+    }
+    
+    /**
+     * @param type $accountObjs
+     * @return \AppBundle\Entity\Report
+     */
+    public function setAccountObjs($accountObjs)
+    {
+        $this->accountObjs = $accountObjs;
+        return $this;
+    }
+    
+    /**
+     * @return type
+     */
+    public function getAccountObjs()
+    {
+        return $this->accountObjs;
     }
 
     /**
