@@ -26,7 +26,7 @@
 {% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
+    {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
 {% endblock %}
 
 {% block pageBody %}

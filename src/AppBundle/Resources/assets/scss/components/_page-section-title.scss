@@ -1,0 +1,10 @@
+.page-section-title {
+  @include bold-27();
+  margin-bottom: 30px;
+
+  .report-overview & {
+    margin-bottom: 10px;
+
+  }
+
+}

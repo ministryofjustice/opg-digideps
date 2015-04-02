@@ -1650,52 +1650,6 @@ header.page-header {
       font-size: 16px;
       line-height: 1.25; } }
 
-.page-section-title {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 27px;
-  line-height: 1.11111;
-  font-weight: 700;
-  text-transform: none;
-  margin-bottom: 30px; }
-  @media (max-width: 640px) {
-    .page-section-title {
-      font-size: 20px;
-      line-height: 1.11111; } }
-
-.page-section-description {
-  width: 65%;
-  margin-bottom: 30px; }
-  .page-section-description span.page-section-example {
-    display: block;
-    margin-top: 5px; }
-
-.page-section-warning {
-  border-left: 3px solid #bfc1c3;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 10px;
-  width: 65%;
-  margin-bottom: 30px; }
-
-.sub-section-title {
-  margin-bottom: 30px; }
-  .sub-section-title h3 {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 700;
-    text-transform: none; }
-    @media (max-width: 640px) {
-      .sub-section-title h3 {
-        font-size: 18px;
-        line-height: 1.2; } }
-  .form-group + .sub-section-title {
-    margin-top: 20px; }
-
-.sub-section-description {
-  width: 50%;
-  margin-bottom: 40px; }
-
 .bread-crumb {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -1754,10 +1708,15 @@ form {
     border-left: 3px solid #bfc1c3;
     padding-left: 10px; }
 
-.form-group .input-group-prefix + input {
-  padding-left: 2em; }
-.form-group.form-inline .form-label {
-  float: left; }
+.form-group {
+  float: none;
+  /* Only flat left if within a form container. */ }
+  form .form-group {
+    float: left; }
+  .form-group .input-group-prefix + input {
+    padding-left: 2em; }
+  .form-group.form-inline .form-label {
+    float: left; }
 
 .form-group_button-bar {
   padding-top: 60px; }
@@ -1992,6 +1951,58 @@ form {
     .page-report-content .page-report-header .client-name {
       font-size: 32px;
       line-height: 1.09375; } }
+
+.page-section-description {
+  width: 65%;
+  margin-bottom: 30px; }
+  .report-overview .page-section-description {
+    margin-bottom: 20px; }
+  .page-section-description span.page-section-example {
+    display: block;
+    margin-top: 5px; }
+
+.page-section-list {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none;
+  list-style-type: disc;
+  padding-left: 1em;
+  margin-bottom: 40px;
+  width: 65%; }
+  @media (max-width: 640px) {
+    .page-section-list {
+      font-size: 16px;
+      line-height: 1.25; } }
+  .report-overview .page-section-list {
+    margin-bottom: 20px; }
+  form .page-section-list {
+    width: 50%; }
+  .page-section-list li {
+    margin: 5px 0; }
+
+.page-section-title {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 700;
+  text-transform: none;
+  margin-bottom: 30px; }
+  @media (max-width: 640px) {
+    .page-section-title {
+      font-size: 20px;
+      line-height: 1.11111; } }
+  .report-overview .page-section-title {
+    margin-bottom: 10px; }
+
+.page-section-warning {
+  border-left: 3px solid #bfc1c3;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  width: 65%;
+  margin-bottom: 30px; }
 
 ol.progress {
   display: table;
@@ -2250,6 +2261,37 @@ ol.progress {
 
 .report-meta__data {
   color: #0b0c0c; }
+
+.report-overview .overview-link {
+  display: block;
+  position: relative;
+  top: -20px;
+  margin-bottom: 10px; }
+
+.sub-section-description {
+  margin-bottom: 40px;
+  width: 65%; }
+  .report-overview .sub-section-description {
+    margin-bottom: 20px; }
+  form .sub-section-description {
+    width: 50%; }
+
+.sub-section-title {
+  margin-bottom: 30px; }
+  .sub-section-title h3 {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .sub-section-title h3 {
+        font-size: 18px;
+        line-height: 1.2; } }
+  .form-group + .sub-section-title {
+    margin-top: 20px; }
+  .report-overview .sub-section-title {
+    margin-bottom: 10px; }
 
 .user-list {
   margin-top: 60px; }

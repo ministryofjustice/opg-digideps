@@ -12,6 +12,12 @@ form {
 }
 
 .form-group {
+
+  float: none;  /* Only flat left if within a form container. */
+  form &{
+    float: left;
+  }
+
   .input-group-prefix {
     & + input {
       padding-left: 2em;
