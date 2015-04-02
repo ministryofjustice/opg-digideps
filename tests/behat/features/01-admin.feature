@@ -1,6 +1,6 @@
 Feature: admin
     
-    @cleanMail @deputy
+    @deputy
     Scenario: login and add deputy user
         Given I am on "/"
         Then the response status code should be 200
@@ -47,7 +47,7 @@ Feature: admin
         And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         
         
-    @cleanMail @admin
+    @admin
     Scenario: login and add admin user
         Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "/admin"
