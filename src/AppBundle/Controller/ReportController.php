@@ -62,7 +62,7 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId);
+        $report = $this->getReport($reportId, $this->getUser()->getId());
         $client = $this->getClient($report->getClient());
 
         if($report->getCourtOrderType() == EntityDir\Report::PROPERTY_AND_AFFAIRS){

@@ -50,6 +50,7 @@ class Account
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank")
      * @Assert\Date(message="account.openingDate.date")
+     *
      * @var type 
      */
     private $openingDate;
@@ -58,15 +59,16 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.openingBalance.notBlank")
      * @Assert\Type(type="numeric", message="account.openingBalance.type")
-     * 
+     *
      * @var decimal
      */
     private $openingBalance;
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.closingBalance.notBlank")
-     * @Assert\Type(type="numeric", message="account.closingBalance.type")
+     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"balance"})
+     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"balance"})
+     * @JMS\Groups({"balance"})
      * 
      * @var decimal
      */
@@ -74,8 +76,9 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.closingDate.notBlank")
-     * @Assert\Date(message="account.closingDate.date")
+     * @JMS\Groups({"balance"})
+     * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"balance"})
+     * @Assert\Date(message="account.closingDate.date", groups={"balance"})
      * @var \DateTime  
      */
     private $closingDate;
@@ -174,7 +177,7 @@ class Account
         return $this->accountNumber;
     }
     
-    public function setOpeningDate($openingDate)
+    public function setOpeningDate(\DateTime $openingDate = null)
     {
         $this->openingDate = $openingDate;
     }
@@ -287,10 +290,16 @@ class Account
         return $this->reportObject;
     }
     
+    /**
+     * Add violation if Opening date is not between report start and end date
+     */
     public function isValidOpeningDate(ExecutionContextInterface $context)
     {
-        $reportStartDate = $this->reportObject->getStartDate();
-        $reportEndDate = $this->reportObject->getEndDate();
+        $reportStartDate = clone $this->reportObject->getStartDate();
+        $reportEndDate = clone $this->reportObject->getEndDate();
+        
+        $reportStartDate->setTime(0, 0, 0);
+        $reportEndDate->setTime(23, 59, 59);
         
         if(($reportStartDate > $this->openingDate) || ($reportEndDate < $this->openingDate)){
              $context->addViolationAt('openingDate','Opening balance date must be between '.$reportStartDate->format('d/m/Y').' and '.$reportEndDate->format('d/m/Y'));

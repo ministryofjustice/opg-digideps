@@ -45,7 +45,7 @@ class User implements AdvancedUserInterface
      * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user"})
      * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user"}, checkMX=true, checkHost=true )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user"}, checkMX=false, checkHost=false )
      * @var string $email
      */
     private $email;

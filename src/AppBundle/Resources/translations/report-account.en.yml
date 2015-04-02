@@ -1,7 +1,21 @@
 page:
-  htmlTitle: Account %accountName%
+  htmlTitle: Report Account - Money
   totalBalance: Total Balance
   pageSectionWarning: Add and edit totals for the reporting period for the client's account.
+  currencySymbol: "£"
+  header:
+    bankBuildingSociety:
+      label: "Bank or Building Society name"
+    accounNumber:
+      label: "Account no."
+    openingBalanceDate:
+      label: "Opening balance date"
+    openingBalance:
+      label: "Opening balance"
+    sortCode:
+      label: "Sort code"
+    accountEditLink:
+      label: "Edit account details"
 moneyIn:
   panelTitle: Money paid in
   panelFooter: Money in total

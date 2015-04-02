@@ -50,7 +50,7 @@ class AddUserCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
             // check params
             $violations = $this->getContainer()->get('validator')->validate($user, 'admin_add_user'); /* @var $violations ConstraintViolationList */
             if ($violations->count()) {
-                $this->writeln("Cannot add user $email: $violations");
+                $output->writeln("Cannot add user $email: $violations");
                 continue;
             }
 

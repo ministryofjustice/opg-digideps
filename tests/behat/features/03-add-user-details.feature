@@ -73,7 +73,7 @@ Feature: add details
             | user_details_lastname | Doe admin |
         And I submit the form
         Then the form should not contain an error
-        When I click on "user details"
+        When I go to "user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
