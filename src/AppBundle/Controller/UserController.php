@@ -33,6 +33,10 @@ class UserController extends RestController
         
         $this->populateUser($user, $data);
         
+        /**
+         * Not sure we need this check, email field is set as unique in the db. May be try catch the unique value exception
+         * thrown when persist flush ?
+         */
         if ($user->getEmail() && $this->getRepository('User')->findOneBy(['email'=>$user->getEmail()])) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
         }
@@ -93,7 +97,7 @@ class UserController extends RestController
      */
     public function getByEmail($email)
     {
-        return $this->findEntityBy('User', ['email'=>$email], "User not found");
+        return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
     
     

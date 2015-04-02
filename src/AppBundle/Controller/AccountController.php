@@ -78,7 +78,7 @@ class AccountController extends RestController
      */
     public function edit($id)
     {
-        $account = $this->findEntityBy('Account', $id, 'Account not found');
+        $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account*/ 
         
         $data = $this->deserializeBodyContent();
         
@@ -91,6 +91,15 @@ class AccountController extends RestController
                     ->setMoreDetails($transactionRow['more_details']);
             }, array_merge($data['money_in'], $data['money_out']));
             $this->setJmsSerialiserGroup('transactions');
+        }
+        
+        // edit balance
+        if (array_key_exists('closing_date', $data)) {
+           $account->setClosingDate(new \DateTime($data['closing_date']));
+        }
+        
+        if (array_key_exists('closing_balance', $data)) {
+           $account->setClosingBalance($data['closing_balance']);
         }
         
         $account->setLastEdit(new \DateTime());

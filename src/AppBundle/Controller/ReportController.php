@@ -163,8 +163,14 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent();
         
-        $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
-        $report->setCourtOrderType($cot);
+        if (array_key_exists('cotId', $data)) {
+            $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
+            $report->setCourtOrderType($cot);
+        }
+        
+        if (array_key_exists('endDate', $data)) {
+            $report->setEndDate(new \DateTime($data['endDate']));
+        }
         
         $this->getEntityManager()->flush($report);
         

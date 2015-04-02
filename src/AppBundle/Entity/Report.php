@@ -109,7 +109,7 @@ class Report
     private $startDate;
 
     /**
-     * @var \Date
+     * @var \DateTime
      * 
      * @JMS\Groups({"transactions"})
      * @JMS\Accessor(getter="getEndDate")
