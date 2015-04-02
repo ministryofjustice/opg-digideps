@@ -218,6 +218,9 @@ class ReportController extends Controller
     {
         $util = $this->get('util');
         $report = $this->getReport($reportId);
+        if (!$report->isDue()) {
+            throw new \RuntimeException("Report not ready for submission.");
+        }
         $client = $util->getClient($report->getClient());
         
         $form = $this->createForm(new FormDir\ReportDeclarationType());
