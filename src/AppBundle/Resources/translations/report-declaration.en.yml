@@ -17,6 +17,7 @@ page:
         Code of Practice and the court order in this case. I understand the 
         duties and obligations placed on me.
   report-submitted-flash-message: The report has been submitted.
+  goBackLink: Go back to make changes to the report
 agree:
   label: I agree to this statement
 save:
