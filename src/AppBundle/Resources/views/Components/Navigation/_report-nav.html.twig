@@ -1,5 +1,13 @@
 {% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
-     {{ tab('report-paa', tab, {'reportId': report.id}) }}
+    {% if notifications is defined %}
+        {{ tab('report-paa', tab, {'reportId': report.id}, notifications ) }}
+    {% else %}
+        {{ tab('report-paa', tab, {'reportId': report.id}) }}
+    {% endif %}
 {% else %}
-     {{ tab('report-pw', tab, {'reportId': report.id}) }}
+    {% if notifications is defined %}
+      {{ tab('report-pw', tab, {'reportId': report.id}, notifications ) }}
+    {% else %}
+      {{ tab('report-pw', tab, {'reportId': report.id}) }}
+    {% endif %}
 {% endif %}

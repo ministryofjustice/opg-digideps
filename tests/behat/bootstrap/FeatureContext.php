@@ -45,7 +45,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     protected function getSymfonyParam($name)
     {
-        $this->getContainer()->getParameter($name);
+        return $this->getContainer()->getParameter($name);
     }
 
     
@@ -139,7 +139,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     private function getLatestEmailMockFromApi()
     {
-        $this->visit('behat/email-get-last');
+        $this->visitBehatLink('email-get-last');
+        $this->assertResponseStatus(200);
         
         $content =  $this->getSession()->getPage()->getContent();
         $contentJson = json_decode($content, true);
@@ -157,7 +158,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function beforeScenarioCleanMail(BeforeScenarioScope $scope)
     {
-        $this->visit('behat/reset');
+        $this->visitBehatLink('email-reset');
+        $this->assertResponseStatus(200);
     }
     
     /**
@@ -204,8 +206,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function theFormShouldContainAnError()
     {
-        $this->iShouldSeeTheRegion('form-errors');
-//        $this->debug();
+        $this->iShouldSeeTheBehatElement('form-errors', 'region');
     }
     
     /**
@@ -213,8 +214,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function theFormShouldNotContainAnError()
     {
-        $this->iShouldNotSeeTheRegion('form-errors');
-//        $this->debug();
+        $this->iShouldNotSeeTheBehatElement('form-errors', 'region');
     }
     
     
@@ -227,7 +227,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
     {
         $fields = array_keys($table->getRowsHash());
-        $errorRegionCss = self::behatRegionToCssSelector('form-errors');
+        $errorRegionCss = self::behatElementToCssSelector('form-errors', 'region');
         $errorRegions = $this->getSession()->getPage()->findAll('css', $errorRegionCss);
         $foundIdsWithErrors = [];
         foreach ($errorRegions as $errorRegion) {
@@ -271,7 +271,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
         
-        $this->visit('behat/report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
+        $this->visitBehatLink('report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
     }
     
     /**
@@ -279,7 +279,26 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function iDeleteAllTheExistingBehatUsers()
     {
-        $this->visit('behat/delete-behat-users');
+        $this->visitBehatLink('delete-behat-users');
+    }
+    
+    /**
+     * @Given I modify the report :reportId end date to today :dateModifier 
+     */
+    public function iChangeTheReportEndDateToDaysAgo($reportId, $dateModifier)
+    {
+       $endDate = new \DateTime;
+       $endDate->modify($dateModifier);
+       
+       $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+    }
+    
+    public function visitBehatLink($link)
+    {
+       $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
+       
+       $this->visit("behat/{$secret}/{$link}");
+       $this->assertResponseStatus(200);
     }
     
 }

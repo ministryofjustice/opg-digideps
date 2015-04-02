@@ -144,7 +144,7 @@ class ComponentsExtension extends \Twig_Extension
      * 
      * @return string
      */
-    public function renderTab($tabGroup, $activeTab, array $pathOptions = [])
+    public function renderTab($tabGroup, $activeTab, array $pathOptions = [], $notifications = [])
     {
         $activeClass ='active';
         
@@ -153,9 +153,11 @@ class ComponentsExtension extends \Twig_Extension
         }
         
         $tabDataProvider = [];
+        $counter = 0;
+        
         // set classes and labels from translation
         foreach ($this->params['tabs'][$tabGroup] as $tabId => $tabData) {
-            $tabDataProvider[] = [
+            $tabDataProvider[$counter] = [
                 'label' => $this->translator->trans($tabGroup . '.' . $tabId . '.label', [], 'tabs'),
                 'class' => $activeTab == $tabId ? $activeClass : '',
                 'tabId' => $tabId,
@@ -164,6 +166,12 @@ class ComponentsExtension extends \Twig_Extension
                     'params' => $pathOptions,
                 ]
             ];
+            
+            //check if there's notification icon class
+            if(array_key_exists($tabId, $notifications)){ 
+                $tabDataProvider[$counter]['iconClass'] = $notifications[$tabId];
+            }
+            $counter++;
         }
         
         echo $this->environment->render('AppBundle:Components/Navigation:_tab-bar.html.twig', [

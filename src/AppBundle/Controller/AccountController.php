@@ -24,7 +24,7 @@ class AccountController extends Controller
         $util = $this->get('util');
         $request = $this->getRequest();
 
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient');
@@ -71,30 +71,43 @@ class AccountController extends Controller
         $util = $this->get('util');
         $request = $this->getRequest();
 
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
 
+        // balance form
+        $formBalance = $this->createForm(new FormDir\AccountBalanceType(), $account);
+        $formBalance->handleRequest($request);
+        $formBalanceIsClicked = $formBalance->get('save')->isClicked();
+        if ($formBalanceIsClicked && $formBalance->isValid()) {
+            $apiClient->putC('account/' .  $accountId, $formBalance->getData(), [
+                'deserialise_group' => 'balance',
+            ]);
+            return $this->redirect($this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#closing-balance');
+        }
+        
+        // transactions form
+        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
             'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#account-header'
         ]);
-        
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            #$this->debugFormData($form);
-            $apiClient->putC('account/' .  $account->getId(), $form->getData(), [
+        $formIsClicked = $form->get('saveMoneyIn')->isClicked() || $form->get('saveMoneyOut')->isClicked();
+        if ($formIsClicked && $form->isValid()) {
+            $apiClient->putC('account/' .  $accountId, $form->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
-            // refresh account
+            // refresh account with the transactions
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         }
-
+        
         return [
             'report' => $report,
             'client' => $client,
             'form' => $form->createView(),
+            'formBalance' => $formBalance->createView(),
             'account' => $account,
             'actionParam' => $action,
         ];

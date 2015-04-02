@@ -14,16 +14,20 @@ class BehatController extends Controller
 {
     private function checkIsBehatBrowser()
     {
+        $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
+        
         $isBehat = $_SERVER['REMOTE_ADDR'] === '127.0.0.1' 
                    && $_SERVER['HTTP_USER_AGENT'] === 'Symfony2 BrowserKit';
         $isProd = $this->get('kernel')->getEnvironment() == 'prod';
-        if (!$isBehat || $isProd) {
-            return $this->createNotFoundException('Not found');
+        $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
+        
+        if (!$isBehat || $isProd || !$isSecretParamCorrect) {
+            throw $this->createNotFoundException('Not found');
         }
     }
     
     /**
-     * @Route("/email-get-last")
+     * @Route("/{secret}/email-get-last")
      * @Method({"GET"})
      */
     public function getLastAction()
@@ -35,7 +39,7 @@ class BehatController extends Controller
     }
     
     /**
-     * @Route("/email-reset")
+     * @Route("/{secret}/email-reset")
      * @Method({"GET"})
      */
     public function resetAction()
@@ -47,7 +51,7 @@ class BehatController extends Controller
     }
     
     /**
-     * @Route("/report/{reportId}/change-report-cot/{cot}")
+     * @Route("/{secret}/report/{reportId}/change-report-cot/{cot}")
      * @Method({"GET"})
      */
     public function changeReportCot($reportId, $cot)
@@ -61,7 +65,7 @@ class BehatController extends Controller
     }
     
     /**
-     * @Route("/delete-behat-users")
+     * @Route("/{secret}/delete-behat-users")
      * @Method({"GET"})
      */
     public function deleteBehatUser()
@@ -69,6 +73,19 @@ class BehatController extends Controller
         $this->checkIsBehatBrowser();
         
         $this->get('apiclient')->delete('behat/users/behat-users');
+        
+        return new Response('done');
+    }
+    
+    /**
+     * @Route("/{secret}/report/{reportId}/change-report-end-date/{dateYmd}")
+     * @Method({"GET"})
+     */
+    public function accountChangeReportDate($reportId, $dateYmd)
+    {
+        $this->get('apiclient')->putC('report/' . $reportId, json_encode([
+            'endDate' => $dateYmd
+        ]));
         
         return new Response('done');
     }

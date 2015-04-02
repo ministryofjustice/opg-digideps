@@ -30,7 +30,7 @@
 {% endblock %}
 
 {% block pageBody %}
-
+    
     {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
     } %}
@@ -46,7 +46,15 @@
 
     {% block validationSummary %}
         {{ form_errors_list(form) }}
+        {{ form_errors_list(formBalance) }}
     {% endblock %}
+    
+    {% if report.isDue and account.closingBalance is null %}
+        {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
+          formBalance: formBalance,
+        } %}
+    {% endif%}
+    
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 

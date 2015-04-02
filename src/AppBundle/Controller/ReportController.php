@@ -53,7 +53,6 @@ class ReportController extends Controller
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
-        
         return [ 'form' => $form->createView() ];
     }
     
@@ -63,8 +62,14 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId);
+        $report = $this->getReport($reportId, $this->getUser()->getId());
         $client = $this->getClient($report->getClient());
+
+        if($report->getCourtOrderType() == EntityDir\Report::PROPERTY_AND_AFFAIRS){
+            $apiClient = $this->get('apiclient');
+            $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId, 'group' => 'transactions']]);
+            $report->setAccounts($accounts);
+        }
         
         return [
             'report' => $report,
@@ -173,7 +178,7 @@ class ReportController extends Controller
         asort($titles);
         $titles['Other assets'] = $other;
         
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $asset = new EntityDir\Asset();
@@ -220,6 +225,6 @@ class ReportController extends Controller
      */
     protected function getReport($reportId)
     {
-        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ]]);
     }
 }
