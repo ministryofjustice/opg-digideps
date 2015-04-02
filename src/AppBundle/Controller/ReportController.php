@@ -40,14 +40,14 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/report/find-by-id/{userId}/{id}")
+     * @Route("/report/find-by-id/{userId}/{id}/{serialiseGroup}", defaults={ "serialiseGroup" = "basic" })
      * @Method({"GET"})
      */
-    public function get($userId,$id)
+    public function get($userId,$id,$serialiseGroup = null)
     {   
-        //$ret = $this->findEntityBy('Report', $id, 'Report not found');
+        $this->setJmsSerialiserGroup($serialiseGroup);
         $ret = $this->getRepository('Report')->findByIdAndUser($id,$userId);
-        
+   
         if(empty($ret)){
             throw new \Exception("Report not found");
         }
