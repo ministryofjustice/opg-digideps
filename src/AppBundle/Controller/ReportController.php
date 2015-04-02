@@ -211,7 +211,7 @@ class ReportController extends Controller
 
     
     /**
-     * @Route("/report/{reportId}/declaration", name="report-declaration")
+     * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template()
      */
     public function declarationAction(Request $request, $reportId)
@@ -233,7 +233,7 @@ class ReportController extends Controller
             
             $request->getSession()->getFlashBag()->add(
                 'notice', 
-                $this->get('translator')->trans('page.report-submitted-flash-message', [], 'report-declaration')
+                $this->get('translator')->trans('page.reportSubmittedFlashMessage', [], 'report_declaration')
             );
             return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
         }

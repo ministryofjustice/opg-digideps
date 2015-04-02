@@ -17,13 +17,13 @@
         
         
         
-        {% if app.request.attributes.get('_route') == 'report-declaration' %}
+        {% if app.request.attributes.get('_route') == 'report_declaration' %}
             <a href="{{ path('report_overview', {reportId: report.id}) }}">
               {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
             </a>
         {% else %}
           {# ADD HERE THE BUTTON "READY TO SUBMIT" #}
-          <a href="{{ path('report-declaration', {reportId: report.id}) }}">Ready to submit</a>
+          <a href="{{ path('report_declaration', {reportId: report.id}) }}">Ready to submit</a>
         {% endif %}
         
     </div>
