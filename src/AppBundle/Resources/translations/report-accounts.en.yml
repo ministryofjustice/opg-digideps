@@ -43,3 +43,6 @@ listing:
   lastEdited: "Last edited:"
   created: "Created:"
   currencySymbol: "£"
+  closingBalance: "Closing balance:"
+  closingDate: "End of year:"
+  addClosingBalanceWarning: Add the closing balance of the account

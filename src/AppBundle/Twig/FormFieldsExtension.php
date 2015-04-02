@@ -119,6 +119,7 @@ class FormFieldsExtension extends \Twig_Extension
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
         
         //sort hint text translation
