@@ -236,7 +236,7 @@ class ReportController extends Controller
             
             $request->getSession()->getFlashBag()->add(
                 'notice', 
-                $this->get('translator')->trans('page.reportSubmittedFlashMessage', [], 'report_declaration')
+                $this->get('translator')->trans('page.reportSubmittedFlashMessage', [], 'report-declaration')
             );
             return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
         }
