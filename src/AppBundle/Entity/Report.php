@@ -62,6 +62,13 @@ class Report
     private $accounts;
     
     /**
+     * @JMS\Type("array<AppBundle\Entity\Account>")
+     * @JMS\Accessor(getter="getAccounts", setter="setAccounts")
+     * @var array $accountObs
+     */
+    private $accountObjs;
+    
+    /**
      * @JMS\Type("array")
      * @var array $contacts
      */
