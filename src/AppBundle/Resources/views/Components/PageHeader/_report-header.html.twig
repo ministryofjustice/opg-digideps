@@ -14,6 +14,9 @@
             <span class="report-meta report-meta__label">Due date:</span>
             <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y")}}</span>
         </div>
+        
+        {# TO STYLE, just keep the "path" stuff #}
+        <a href="{{ path('report-declaration', {reportId: report.id}) }}">Ready to submit</a>
     </div>
-
+        
 </header>

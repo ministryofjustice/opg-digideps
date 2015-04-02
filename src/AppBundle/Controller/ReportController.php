@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
@@ -208,6 +209,44 @@ class ReportController extends Controller
         ];
     }
 
+    
+    /**
+     * @Route("/report/{reportId}/declaration", name="report-declaration")
+     * @Template()
+     */
+    public function declarationAction(Request $request, $reportId)
+    {
+        $util = $this->get('util');
+        $report = $this->getReport($reportId);
+        $client = $util->getClient($report->getClient());
+        
+        $form = $this->createForm(new FormDir\ReportDeclarationType());
+        $form->handleRequest($request);
+        if($form->isValid()){
+            
+            /**
+             * //TODO
+             * 
+             * ADD REAL SUBMISSION OR SENDIN HERE
+             * 
+             */
+            
+            $request->getSession()->getFlashBag()->add(
+                'notice', 
+                $this->get('translator')->trans('page.report-submitted-flash-message', [], 'report-declaration')
+            );
+            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+        }
+        
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+    
+    
     /**
      * @param integer $clientId
      *
