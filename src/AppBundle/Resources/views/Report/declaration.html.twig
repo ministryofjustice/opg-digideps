@@ -7,7 +7,7 @@
 {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
 
  {% block pageNavigation %}
-     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-assets'} %}
+   {# no navigation bar for declaration #}
  {% endblock %}
 
 {% block pageBody %}
