@@ -1,5 +1,4 @@
 <?php
-
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -17,7 +16,7 @@ class Report
     /**
      * @var integer
      *
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions","basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -29,7 +28,7 @@ class Report
     /**
      * @var integer
      * 
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions","basic"})
      * @JMS\Accessor(getter="getClientId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
@@ -38,7 +37,7 @@ class Report
     private $client;
     
     /**
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions","basic"})
      * @JMS\Accessor(getter="getContactIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
@@ -46,6 +45,7 @@ class Report
     private $contacts;
     
     /**
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getAccountIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report")
@@ -53,20 +53,14 @@ class Report
     private $accounts;
     
     /**
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getAccounts", setter="addAccount")
      * @JMS\Type("array<AppBundle\Entity\Account>")
      */
     private $accountObjs;
     
     /**
-     * @JMS\Accessor(getter="getDecisionInvolvementIds")
-     * @JMS\Type("array")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DecisionInvolvement", mappedBy="report", cascade={"persist"})
-     */
-    private $decisionInvolvements;
-    
-    /**
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getDecisionIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
@@ -74,7 +68,7 @@ class Report
     private $decisions;
     
     /**
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions","basic"})
      * @JMS\Accessor(getter="getAssetIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
@@ -89,7 +83,7 @@ class Report
     private $pdfTokens;
     
     /**
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
@@ -100,7 +94,7 @@ class Report
     /**
      * @var string
      *
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -109,7 +103,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -119,7 +113,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"accounts"})
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -129,6 +123,7 @@ class Report
     /**
      * @var \DateTime
      * 
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -177,6 +172,7 @@ class Report
     /**
      * @var boolean
      *
+     * @JMS\Groups({"transactions", "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -190,7 +186,6 @@ class Report
     {
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->decisionInvolvements = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
         $this->pdfTokens = new \Doctrine\Common\Collections\ArrayCollection();
@@ -481,68 +476,6 @@ class Report
             }
         }
         return $accounts;
-    }
-    
-    /**
-     * @param type $accountObjs
-     * @return \AppBundle\Entity\Report
-     */
-    public function setAccountObjs($accountObjs)
-    {
-        $this->accountObjs = $accountObjs;
-        return $this;
-    }
-    
-    /**
-     * @return type
-     */
-    public function getAccountObjs()
-    {
-        return $this->accountObjs;
-    }
-
-    /**
-     * Add decisionInvolvements
-     *
-     * @param \AppBundle\Entity\DecisionInvolvement $decisionInvolvements
-     * @return Report
-     */
-    public function addDecisionInvolvement(\AppBundle\Entity\DecisionInvolvement $decisionInvolvements)
-    {
-        $this->decisionInvolvements[] = $decisionInvolvements;
-
-        return $this;
-    }
-
-    /**
-     * Remove decisionInvolvements
-     *
-     * @param \AppBundle\Entity\DecisionInvolvement $decisionInvolvements
-     */
-    public function removeDecisionInvolvement(\AppBundle\Entity\DecisionInvolvement $decisionInvolvements)
-    {
-        $this->decisionInvolvements->removeElement($decisionInvolvements);
-    }
-
-    /**
-     * Get decisionInvolvements
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getDecisionInvolvements()
-    {
-        return $this->decisionInvolvements;
-    }
-    
-    public function getDecisionInvolvementIds()
-    {
-        $decisionInvolvements = [];
-        if(!empty($this->decisionInvolvements)){
-            foreach($this->decisionInvolvements as $decisionInvolvement){
-                $decisionInvolvements[] = $decisionInvolvement->getId();
-            }
-        }
-        return $decisionInvolvements;
     }
 
     /**
