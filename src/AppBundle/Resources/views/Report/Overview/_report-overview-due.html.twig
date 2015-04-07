@@ -7,20 +7,21 @@ transDomain: translationDomain,
 pageSectionTitle: 'pages.pageSectionTitle.reportPeriod.pageSectionTitle'
 } %}
 
-{% if report.isComplete() %}
+{% if report.readyToSubmit() %}
 
     (!) Confirm you've reviewed your report by checking the box above.
 
 {% else %}
 
-    {% if report.missingContacts() %}
+    {% if not report.hasContacts() %}
         (!) No contact details added.
     {% endif %}
 
 
-    {% if report.missingDecisions() %}
+    {% if not report.hasDecisions() %}
         (!) No decision details added.
     {% endif %}
+
 
 
     {% if report.missingAccounts() %}

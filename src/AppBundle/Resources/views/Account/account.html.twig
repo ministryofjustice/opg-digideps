@@ -3,12 +3,12 @@
 {% trans_default_domain translationDomain %}
 
 {% set accordionLinks = accordionLinks({
-  clickedPanel: actionParam,
-  bothOpenHref: "money-both",
-  allClosedHref: "list",
-  firstPanelHref: "money-in",
-  secondPanelHref: "money-out",
-  onlyOneATime: true
+clickedPanel: actionParam,
+bothOpenHref: "money-both",
+allClosedHref: "list",
+firstPanelHref: "money-in",
+secondPanelHref: "money-out",
+onlyOneATime: true
 }) %}
 
 {% set breadCrumb = [
@@ -21,16 +21,21 @@
 }
 ] %}
 
+{% set tabClasses = [] %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
 {% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
 
 {% block pageNavigation %}
-    {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
+    {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with {
+    'report': report,
+    tab: 'tab-accounts',
+    notifications: { 'tab-overview': 'test-icon-class'}
+    } %}
 {% endblock %}
 
 {% block pageBody %}
-    
+
     {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
     breadCrumb: breadCrumb
     } %}
@@ -48,13 +53,13 @@
         {{ form_errors_list(form) }}
         {{ form_errors_list(formBalance) }}
     {% endblock %}
-    
+
     {% if report.isDue and account.closingBalance is null %}
         {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
-          formBalance: formBalance,
+        formBalance: formBalance,
         } %}
-    {% endif%}
-    
+    {% endif %}
+
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
@@ -69,7 +74,7 @@
     </div>
 
     <div class="account-transactions account-transactions__accordion">
-        
+
         {% include 'AppBundle:Account:_accountTransaction.html.twig' with {
         legend: 'moneyIn.legend' | trans,
         openPanel: accordionLinks.first.open or not form.moneyIn.vars.valid,
