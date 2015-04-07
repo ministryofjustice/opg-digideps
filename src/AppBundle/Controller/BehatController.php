@@ -31,12 +31,17 @@ class BehatController extends Controller
      * @Route("/{secret}/email-get-last")
      * @Method({"GET"})
      */
-    public function getLastAction()
+    public function getLastEmailAction()
     {
         $this->checkIsBehatBrowser();
         $content = $this->get('apiclient')->get('behat/email')->getBody();
         
-        return new Response(json_decode($content, 1)['data']);
+        $contentArray = json_decode($content, 1);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new Response($content);
+        }
+        
+        return new Response($contentArray['data']);
     }
     
     /**
