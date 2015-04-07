@@ -20,6 +20,14 @@ class BehatController extends RestController
     {
         $mailPath = $this->getBehatMailFilePath();
         
+        if (!file_exists($mailPath)) {
+            throw new \RuntimeException("Mail log $mailPath not existing.");
+        }
+        
+        if (!is_readable($mailPath)) {
+            throw new \RuntimeException("Mail log $mailPath unreadable.");
+        }
+        
         return file_get_contents($mailPath);
     }
     
@@ -37,11 +45,10 @@ class BehatController extends RestController
     }
     
     /**
-     * @Route("/users/behat-users")
+     * @Route("/behat-data")
      * @Method({"DELETE"})
      */
-    public function usersBehatDeleteAction()
-    {
+    public function deleteBehatDataAction()    {
         $em = $this->getEntityManager();
         
         foreach ($this->getRepository('User')->findAll() as $user) {  /* @var $user User */
@@ -55,11 +62,6 @@ class BehatController extends RestController
                 $em->remove($user);
             }
         }
-//        $this->getEntityManager()
-//            ->createQuery("DELETE FROM AppBundle\Entity\User u WHERE u.email LIKE 'behat-%'")
-//            ->execute();
-        
-        //TODO fix cascade delete
         
         return "User deleted";
     }
