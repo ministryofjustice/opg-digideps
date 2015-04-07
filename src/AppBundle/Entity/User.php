@@ -522,6 +522,9 @@ class User implements AdvancedUserInterface
     
     public function getRoleId()
     {
+        if(empty($this->roleId)){
+            $this->roleId = $this->role['id'];
+        }
         return $this->roleId;
     }
 
