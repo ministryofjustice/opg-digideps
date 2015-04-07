@@ -21,7 +21,7 @@ class BehatController extends Controller
         $isProd = $this->get('kernel')->getEnvironment() == 'prod';
         $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
         
-        if (!$isBehat || $isProd /*|| !$isSecretParamCorrect*/) {
+        if (!$isBehat || $isProd || !$isSecretParamCorrect) {
             throw $this->createNotFoundException('Not found');
         }
     }
