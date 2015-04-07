@@ -1,7 +1,7 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
 <h1 class="form-title heading-medium-large">
-    Add a user
+    {{title}}
 </h1>
 
   {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
@@ -11,6 +11,31 @@
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
   {{ form_submit(form.save,'submit', {'buttonClass': 'behat-link-save'}) }}
+  
+  {% if action is defined %}
+      {% if action == 'edit' %}
+             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                    transDomain: 'admin',
+                    linkButtonLabel: 'cancel.label',
+                    linkClass: 'button-link',
+                    linkHref: path('admin_homepage')
+                    } %}
+                    
+             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                    transDomain: 'admin',
+                    linkButtonLabel: 'expiration.label',
+                    linkClass: 'button-link',
+                    linkHref: '#'
+                    } %}
+                    
+             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                    transDomain: 'admin',
+                    linkButtonLabel: 'delete.label',
+                    linkClass: 'button-link',
+                    linkHref: path('admin_delete_confirm', { id: id })
+                    } %}
+      {% endif %}
+  {% endif %}
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
 {# KNOWN DATE #}
