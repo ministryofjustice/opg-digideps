@@ -62,6 +62,13 @@ class Report
     private $accounts;
     
     /**
+     * @JMS\Type("array<AppBundle\Entity\Account>")
+     * @JMS\Accessor(getter="getAccounts", setter="setAccounts")
+     * @var array $accountObs
+     */
+    private $accountObjs;
+    
+    /**
      * @JMS\Type("array")
      * @var array $contacts
      */
@@ -378,7 +385,7 @@ class Report
     public function readyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if(!$this->hasAccounts() || $this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
+            if($this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
                 return false;
             }
         }else{

@@ -1,12 +1,19 @@
 {% extends 'AppBundle:Components/Page:page-report.html.twig' %}
-{% trans_default_domain "report-overview" %}
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'overview.pageTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} js-report-overview{% endblock %}
-{% block title %}{% trans %}overview.pageTitle{% endtrans %}{% endblock %}
+{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') != report.courtOrderType %}
+    {% set reportType = "propertyAndAffairs" %}
+{% else %}
+    {% set reportType = "healthAndWelfare" %}
+{% endif %}
+
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+{% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
 
  {% block pageNavigation %}
-     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with { 'report': report, tab: 'tab-overview'} %}
+     {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with { 'report': report, tab: 'tab-overview'} %}
  {% endblock %}
 
 {% block pageBody %}
@@ -15,11 +22,17 @@
 
     {% if report_isDue %}
 
-        {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' %}
+        {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' with {
+        'translationDomain': translationDomain,
+        'reportType': reportType
+        } %}
 
     {% else %}
 
-        {% include 'AppBundle:Report/Overview:_report-overview.html.twig' %}
+        {% include 'AppBundle:Report/Overview:_report-overview.html.twig' with {
+        'translationDomain': translationDomain,
+        'reportType': reportType
+        } %}
 
     {% endif %}
 
