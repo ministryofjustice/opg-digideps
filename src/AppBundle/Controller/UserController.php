@@ -79,6 +79,28 @@ class UserController extends RestController
     {
         return $this->findEntityBy('User', $id, 'User not found');
     }
+    
+    /**
+     * 
+     * @Route("/{id}")
+     * @Method({"DELETE"})
+     * 
+     * @param integer $id
+     * @return array []
+     * @throws \RuntimeException
+     */
+    public function delete($id)
+    {
+        $user = $this->getRepository('User')->find($id);
+        
+        if(empty($user)){
+            throw new \RuntimeException("User not found");
+        }
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+        
+        return [];
+    }
 
     
     /**
