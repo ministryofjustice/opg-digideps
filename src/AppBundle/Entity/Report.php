@@ -322,10 +322,6 @@ class Report
      */
     public function missingContacts()
     {
-        if( $this->courtOrderType != self::PROPERTY_AND_AFFAIRS ){
-            return false;
-        }
-        
         if(empty($this->contacts)){
             return true;
         }
