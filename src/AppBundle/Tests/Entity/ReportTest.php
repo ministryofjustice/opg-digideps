@@ -71,14 +71,40 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     
     public function testGetOutstandingAccounts()
     {
-        $this->account->shouldReceive('hasClosingBalance')->times(4)->andReturn(false,false,false);
+        $this->account->shouldReceive('hasClosingBalance')->times(4)->andReturn(false,true,false);
         
         $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
         
         $accounts = $this->report->getOutstandingAccounts();
         
         $this->assertInternalType('array', $accounts);
+        $this->assertEquals(count($accounts),2);
         $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
     }
     
+    public function testReadyToSubmitIsFalse()
+    {
+        $this->report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
+        $this->assertFalse($this->report->readyToSubmit());
+        
+        $this->report->setCourtOrderType(1);
+        $this->assertFalse($this->report->readyToSubmit());
+    }
+    
+    public function testReadyToSubmitIsTrue()
+    {
+       $this->report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
+       
+       $this->account->shouldReceive('hasClosingBalance')->times(1)->andReturn(true);
+       $contact = m::mock('AppBundle\Entity\Contact');
+       $decision = m::mock('AppBundle\Entity\Decision');
+       $asset = m::mock('AppBundle\Entity\Asset');
+       
+       $this->report->setAccounts([ $this->account]);
+       $this->report->setContacts([ $contact ]); 
+       $this->report->setDecisions([ $decision ]);
+       $this->report->setAssets([ $asset ]);
+       
+       $this->assertTrue($this->report->readyToSubmit());
+    }
 }
