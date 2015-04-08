@@ -28,7 +28,7 @@ Feature: report
         And I save the page as "report-contact-list"
         Then the response status code should be 200
         And the form should not contain an error
-        And I should be on "/report/1/contacts"
+        And the URL should match "/report/\d+/contacts"
         And I should see "Andy White" in the "list-contacts" region
 
 
@@ -114,7 +114,7 @@ Feature: report
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
-        When I am on "/report/1/overview"
+        When I am on the homepage
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
         But I should not see a "#tab-accounts" element
@@ -129,7 +129,7 @@ Feature: report
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I am on "/report/1/overview"
+        When I am on the homepage
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
@@ -195,7 +195,8 @@ Feature: report
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/accounts/add"
+        When I am on the homepage
+        And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # wrong form
         And I submit the form
@@ -231,7 +232,7 @@ Feature: report
         And I save the page as "report-account-list"
         Then the response status code should be 200
         And the form should not contain an error
-        And I should be on "/report/1/account/1"
+        And the URL should match "/report/\d+/account/\d+"
         When I follow "tab-accounts"
         And I should see "HSBC main account" in the "list-accounts" region
         And I should see "1234" in the "list-accounts" region
@@ -307,8 +308,8 @@ Feature: report
         When I follow "tab-accounts"
         Then I should not see the "account-1-add-closing-balance" link
         When I modify the report 1 end date to today "-3 days"
-        And I go to "/report/1/account/1"
-        And I follow "tab-accounts"
+        And I go to the homepage
+        When I follow "tab-accounts"
         And I click on "account-1-add-closing-balance"
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 

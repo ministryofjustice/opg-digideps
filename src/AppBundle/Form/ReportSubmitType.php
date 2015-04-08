@@ -23,7 +23,7 @@ class ReportSubmitType extends AbstractType
                                               'multiple' => true, 
                                               'expanded' => true,
                                               'constraints' => [ new Constraints\NotBlank()] ])
-                ->add('Ready to submit report', 'submit');
+                ->add('submit_report', 'submit');
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)

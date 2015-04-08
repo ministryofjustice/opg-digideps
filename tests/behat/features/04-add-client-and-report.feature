@@ -40,12 +40,12 @@ Feature: add client and report
         And I submit the form
         Then the form should not contain an error
         # assert you are on create report page
-        And I should be on "report/create/1"
+        And the URL should match "report/create/\d+"
 
     @deputy    
     Scenario: create report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "report/create/1"
+        Then the URL should match "report/create/\d+"
         And I save the page as "deputy-step4"
         Then the following fields should have the corresponding values:
             | report_startDate_day | 1 |
@@ -93,19 +93,19 @@ Feature: add client and report
         And I submit the form
         Then the form should not contain an error
         # assert you are on dashboard
-        And I should be on "/report/1/overview"
+        And the URL should match "report/\d+/overview"
 
 
     @deputy
     Scenario: report overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "/report/1/overview"
+        Then the URL should match "report/\d+/overview"
         And I save the page as "deputy-report-overview"
     
     
     @deputy
     Scenario: check homepage redirect
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "/report/1/overview"
+        Then the URL should match "report/\d+/overview"
         When I go to "/"
-        Then I should be on "/report/1/overview"
+        Then the URL should match "report/\d+/overview"
