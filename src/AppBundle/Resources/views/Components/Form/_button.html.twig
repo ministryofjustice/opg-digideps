@@ -1,2 +1,13 @@
 {% set buttonClass = buttonClass | default('') %}
-{{ form_widget(element, { 'label': labelText ,  'attr': {'class': 'button ' ~ buttonClass } }) }}
+{% if 'disabled' in buttonClass %}
+    {{ form_widget(element, {
+    'label': labelText ,
+    'attr': {'class': 'button ' ~ buttonClass },
+    'disabled': true
+    }) }}
+{% else %}
+    {{ form_widget(element, {
+    'label': labelText ,
+    'attr': {'class': 'button ' ~ buttonClass }
+    }) }}
+{% endif %}
