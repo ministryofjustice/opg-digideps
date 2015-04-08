@@ -18,28 +18,18 @@ class HealthCheckController extends Controller
     public function indexAction()
     {
         $data = [
-            'app' => [
-                'healthy' => true,
-            ],
-            'database' => [
-                'connection' => $this->isDdConnected(),
-                'migrated' => $this->isDdConnected() && $this->isDdMigrated(),
-            ],
-            'permissions' => [
-                'app/log' => $this->areLogPermissionCorrect(),
-                'app/cache' => $this->areCachePermissionCorrect()
-            ],
-            'environment' => [
-                'php-version' => $this->isPhpVersionCorrect(),
-            ],
+            'healthy' => true,
+            'database_connected' => $this->isDdConnected(),
+            'database_migrated' => $this->isDdConnected() && $this->isDdMigrated(),
+            'permissions_app/log' => $this->areLogPermissionCorrect(),
+            'permissions_app/cache' => $this->areCachePermissionCorrect(),
+            'php-version' => $this->isPhpVersionCorrect(),
         ];
         
         // set healthy to false if one is false
         foreach ($data as $v) {
-            foreach ($v as $v2) {
-                if (!$v2) {
-                     $data['app']['healthy'] = false;
-                }
+            if (!$v) {
+                 $data['app']['healthy'] = false;
             }
         }
 
