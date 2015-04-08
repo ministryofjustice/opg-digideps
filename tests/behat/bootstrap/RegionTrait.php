@@ -13,11 +13,11 @@ trait RegionTrait
 {
     
     /**
-     * @Then I should not see the :region region
+     * @Then I should not see the :region :type
      */
-    public function iShouldNotSeeTheRegion($region)
+    public function iShouldNotSeeTheBehatElement($region, $type)
     {
-        $regionCss = self::behatRegionToCssSelector($region);
+        $regionCss = self::behatElementToCssSelector($region, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         $count = count($linksElementsFound);
         if ($count > 0) {
@@ -26,11 +26,11 @@ trait RegionTrait
     }
     
     /**
-     * @Then I should see the :region region
+     * @Then I should see the :region :type
      */
-    public function iShouldSeeTheRegion($region)
+    public function iShouldSeeTheBehatElement($region, $type)
     {
-        $regionCss = self::behatRegionToCssSelector($region);
+        $regionCss = self::behatElementToCssSelector($region, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element $regionCss not found");
@@ -42,7 +42,7 @@ trait RegionTrait
      */
     public function iShouldSeeInTheRegion($text, $region)
     {
-        $this->assertSession()->elementTextContains('css', self::behatRegionToCssSelector($region), $text);
+        $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
     
     /**
@@ -50,7 +50,7 @@ trait RegionTrait
      */
     public function iShouldNotSeeInTheRegion($text, $region)
     {
-        $this->assertSession()->elementTextNotContains('css', self::behatRegionToCssSelector($region), $text);
+        $this->assertSession()->elementTextNotContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 
     /**
@@ -72,7 +72,7 @@ trait RegionTrait
     public function clickOnBehatLink($link)
     {
         // find link inside the region
-        $linkSelector = self::behatLinkToCssSelector($link);
+        $linkSelector = self::behatElementToCssSelector($link, 'link');
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than a $linkSelector element in the page. Interrupted");
@@ -94,7 +94,7 @@ trait RegionTrait
     public function clickLinkInsideElement($link, $region)
     {
         // find region
-        $regionSelector = self::behatRegionToCssSelector($region);
+        $regionSelector = self::behatElementToCssSelector($region, 'region');
         $regionsFound = $this->getSession()->getPage()->findAll('css', $regionSelector);
         if (count($regionsFound) > 1) {
             throw new \RuntimeException("Found more than one $regionSelector");
@@ -104,7 +104,7 @@ trait RegionTrait
         }
         
         // find link inside the region
-        $linkSelector = self::behatLinkToCssSelector($link);
+        $linkSelector = self::behatElementToCssSelector($link, 'link');
         $linksElementsFound = $regionsFound[0]->findAll('css', $linkSelector);
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than a $linkSelector element inside $regionSelector . Interrupted");
@@ -119,18 +119,8 @@ trait RegionTrait
     }
     
     
-    protected static function behatRegionToCssSelector($region)
+    protected static function behatElementToCssSelector($region, $type)
     {
-        return '.behat-region-' . self::linkfyBehatName($region);
-    }
-    
-    protected static function behatLinkToCssSelector($link)
-    {
-        return '.behat-link-' . self::linkfyBehatName($link);
-    }
-    
-    private static function linkfyBehatName($name)
-    {
-        return preg_replace('/\s+/', '-', $name);
+        return '.behat-'.$type.'-' . preg_replace('/\s+/', '-', $region);
     }
 }

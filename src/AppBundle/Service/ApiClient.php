@@ -3,10 +3,11 @@ namespace AppBundle\Service;
 
 use JMS\Serializer\SerializerInterface;
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;;
+use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;
 use AppBundle\Exception\DisplayableException;
 use RuntimeException;
 use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class ApiClient extends GuzzleClient
 {
@@ -32,6 +33,12 @@ class ApiClient extends GuzzleClient
      * @var boolean
      */
     private $debug;
+    
+    /**
+     *
+     * @var type 
+     */
+    private $securityContext;
     
      /**
      * @var string
@@ -77,7 +84,7 @@ class ApiClient extends GuzzleClient
     public function getEntity($class, $endpoint, array $options = [])
     {
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
-       
+         
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
        
         return $ret;
@@ -258,7 +265,7 @@ class ApiClient extends GuzzleClient
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             $url = $this->endpoints[$url];
             
-            if($method == 'GET' && array_key_exists('query', $options)){
+            if((($method == 'GET') || ($method == 'DELETE')) && array_key_exists('query', $options)){
                 foreach($options['query'] as $param){
                     $url = $url.'/'.$param;
                 }

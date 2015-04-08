@@ -1,4 +1,11 @@
-<h3>Reviewing and submitting your report</h3>
+{% set page = 'duePeriod' %}
+
+{{ dump(translationDomain) }}
+
+{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+transDomain: translationDomain,
+pageSectionTitle: 'pages.pageSectionTitle.reportPeriod.pageSectionTitle'
+} %}
 
 {% if report.isComplete() %}
 

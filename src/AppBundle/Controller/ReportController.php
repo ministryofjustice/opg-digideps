@@ -53,7 +53,6 @@ class ReportController extends Controller
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
-        
         return [ 'form' => $form->createView() ];
     }
     
@@ -63,7 +62,7 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId);
+        $report = $this->getReport($reportId, 'transactions');
         $client = $this->getClient($report->getClient());
         
         return [
@@ -173,7 +172,7 @@ class ReportController extends Controller
         asort($titles);
         $titles['Other assets'] = $other;
         
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $asset = new EntityDir\Asset();
@@ -218,8 +217,8 @@ class ReportController extends Controller
      * 
      * @return Report
      */
-    protected function getReport($reportId)
+    protected function getReport($reportId,$group = 'basic')
     {
-        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'id' => $reportId ]]);
+        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId, 'group' => $group ]]);
     }
 }

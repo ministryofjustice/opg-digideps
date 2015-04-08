@@ -1,0 +1,12 @@
+cancel: Cancel
+header: Add the closing balance of the account
+closingDate:
+  legend: End date of reporting period
+  hint: (DD/MM/YYYY)
+closingBalance:
+  label: Closing Balance
+save:
+  label: Save
+
+  
+  

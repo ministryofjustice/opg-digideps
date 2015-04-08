@@ -54,12 +54,43 @@ class Report
      */
     private $period;
     
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $accounts
+     */
+    private $accounts;
+    
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Account>")
+     * @JMS\Accessor(getter="getAccounts", setter="setAccounts")
+     * @var array $accountObs
+     */
+    private $accountObjs;
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $contacts
+     */
+    private $contacts;
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $assets
+     */
+    private $assets;
+    
+    /**
+     * @JMS\Type("array")
+     * @var array $decisions
+     */
+    private $decisions;
+    
     /**
      * @JMS\Exclude
-     * @var string $dueDate
+     * @var array
      */
-    private $dueDate;
-    
+    private $outstandingAccounts;
     
     /**
      * 
@@ -81,26 +112,25 @@ class Report
     }
     
     /**
-     * @return \DateTime $startDate
+     * @return \DateTime
      */
     public function getStartDate()
     {
-        if(!is_object($this->startDate)){
-            return $this->startDate;
-        }
-        return new \DateTime($this->startDate->format('Y-m-d'));
+        return $this->startDate;
     }
     
     /**
      * @param \DateTime $startDate
+     * 
      * @return \AppBundle\Entity\Report
      */
     public function setStartDate(\DateTime $startDate = null)
     {
         if ($startDate instanceof \DateTime) {
-            $startDate->setTime(0,0,0);
+            $startDate->setTime(0, 0, 0);
         }
         $this->startDate = $startDate;
+        
         return $this;
     }
     
@@ -109,27 +139,20 @@ class Report
      */
     public function getEndDate()
     {
-        if(!is_object($this->endDate)){
-            return $this->endDate;
-        }
-        return new \DateTime($this->endDate->format('Y-m-d'));
+        return $this->endDate;
     }
     
     /**
+     * Return the date 8 weeks after the end date
+     * 
      * @return string $dueDate
      */
     public function getDueDate()
     {
-        if(!empty($this->dueDate)){
-            return $this->dueDate;
-        }
+        $dueDate = clone $this->endDate;
+        $dueDate->modify('+8 weeks');
         
-        $this->dueDate = $this->endDate->modify('+8 weeks');
-      
-        if($this->dueDate->format("N") > 5){
-            $this->dueDate->modify('next monday');
-        }
-        return $this->dueDate;
+        return $dueDate;
     }
     
     /**
@@ -142,10 +165,14 @@ class Report
             $endDate->setTime(23, 59, 59);
         }
         $this->endDate = $endDate;
+        
         return $this;
     }
     
     /**
+     * Return string representation of the start-end date period
+     * e.g. 2004 to 2005
+     * 
      * @return string $period
      */
     public function getPeriod()
@@ -207,6 +234,169 @@ class Report
     }
     
     /**
+     * @return array $accounts
+     */
+    public function getAccounts()
+    {
+        return $this->accounts;
+    }
+    
+    /**
+     * @param array $accounts
+     * @return \AppBundle\Entity\Report
+     */
+    public function setAccounts($accounts)
+    {
+        $this->accounts = $accounts;
+        return $this;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function hasOutstandingAccounts()
+    {
+        if(empty($this->accounts)){
+            return false;
+        }
+       
+        foreach($this->accounts as $account){
+            if(!$account->hasClosingBalance()){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * 
+     * @return array $outstandingAccounts
+     */
+    public function getOutstandingAccounts()
+    {  
+        if($this->hasOutstandingAccounts() && empty($this->outstandingAccounts)){
+            foreach ($this->accounts as $account){
+                if(!$account->hasClosingBalance()){
+                    $this->outstandingAccounts[] = $account;
+                }
+            }
+        }
+        return $this->outstandingAccounts;
+    }
+    
+    /**
+     * 
+     * @return array $contacts
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
+    
+    /**
+     * @param array $contacts
+     * @return array $contacts
+     */
+    public function setContacts($contacts)
+    {
+        $this->contacts = $contacts;
+        return $this->contacts;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     * @return boolean@var boolean
+     */
+    public function hasContacts()
+    {
+        if(empty($this->contacts)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * @var array $decisions
+     */
+    public function getDecisions()
+    {
+        return $this->decisions;
+    }
+    
+    /**
+     * 
+     * @param type $decisions
+     * @return \AppBundle\Entity\Report
+     */
+    public function setDecisions($decisions)
+    {
+        $this->decisions = $decisions;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function hasDecisions()
+    {
+        if(empty($this->decisions)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @param array $assets
+     * @return \AppBundle\Entity\Report
+     */
+    public function setAssets($assets)
+    {
+        $this->assets = $assets;
+        return $this;
+    }
+    
+    /**
+     * @return array $assets
+     */
+    public function getAssets()
+    {
+        return $this->assets;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function hasAssets()
+    {
+        if(empty($this->assets)){
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function readyToSubmit()
+    {
+        if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
+            if($this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
+                return false;
+            }
+        }else{
+            if(!$this->hasContacts() || !$this->hasDecisions()){
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
      * @param ExecutionContextInterface $context
      */
     public function isValidEndDate(ExecutionContextInterface $context)
@@ -232,5 +422,25 @@ class Report
         if($dateInterval->days > 366){
             $context->addViolationAt('endDate','report.endDate.greaterThan12Months');
         }
+    }
+    
+    /**
+     * Return true when the report is Due (today's date => report end date)
+     * @return boolean
+     */
+    public function isDue()
+    {
+        if (!$this->getEndDate() instanceof \DateTime) {
+            return false;
+        }
+        
+        // reset time on dates
+        $today = new \DateTime;
+        $today->setTime(0, 0, 0);
+        
+        $reportDueOn = clone $this->getEndDate();
+        $reportDueOn->setTime(0, 0, 0);
+        
+        return $today >= $reportDueOn;
     }
 }

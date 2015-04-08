@@ -9,6 +9,7 @@ use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 use Symfony\Component\Form\FormError;
 use AppBundle\Service\ApiClient;
+use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends Controller
 {
@@ -23,8 +24,8 @@ class AccountController extends Controller
     {
         $util = $this->get('util');
         $request = $this->getRequest();
-
-        $report = $util->getReport($reportId);
+        
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient');
@@ -60,6 +61,10 @@ class AccountController extends Controller
     }
 
     /**
+     * Single account page
+     * - money in/out
+     * - account closing balance
+     * 
      * @Route("/report/{reportId}/account/{accountId}/{action}", name="account", requirements={
      *   "accountId" = "\d+",
      *   "action" = "[\w-]*"
@@ -69,34 +74,77 @@ class AccountController extends Controller
     public function accountAction($reportId, $accountId, $action)
     {
         $util = $this->get('util');
-        $request = $this->getRequest();
 
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
-
-        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
-            'action' => $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$accountId ]) . '#account-header'
-        ]);
+        $account->setReportObject($report);
         
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            #$this->debugFormData($form);
-            $apiClient->putC('account/' .  $account->getId(), $form->getData(), [
+        // closing balance logic
+        list($formBalance, $validFormBalance) = $this->handleClosingBalance($account);
+        if ($validFormBalance) {
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
+                'deserialise_group' => 'balance',
+            ]);
+            return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
+        }
+        
+        // money in/out logic
+        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOut($account);
+        if ($formMoneyValid) {
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
-            // refresh account
+        }
+        
+        // refresh account data
+        if ($validFormBalance || $formMoneyValid) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
         }
-
+        
         return [
             'report' => $report,
             'client' => $client,
-            'form' => $form->createView(),
+            'form' => $formMoneyInOut->createView(),
+            'formBalance' => $formBalance->createView(),
             'account' => $account,
             'actionParam' => $action,
         ];
+    }
+    
+    
+    /**
+     * @param EntityDir\Account $account
+     * 
+     * @return [FormDir\AccountTransactionsType, boolean]
+     */
+    private function handleClosingBalance(EntityDir\Account $account)
+    {
+        $form = $this->createForm(new FormDir\AccountBalanceType(), $account);
+        $form->handleRequest($this->getRequest());
+        $isClicked = $form->get('save')->isClicked();
+        $valid = $isClicked && $form->isValid();
+        
+        return [$form, $valid];
+    }
+    
+    
+    /**
+     * @param EntityDir\Account $account
+     * 
+     * @return [FormDir\AccountTransactionsType, boolean]
+     */
+    private function handleMoneyInOut(EntityDir\Account $account)
+    {
+        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
+            'action' => $this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#account-header'
+        ]);
+        $form->handleRequest($this->getRequest());
+        $isClicked = $form->get('saveMoneyIn')->isClicked() || $form->get('saveMoneyOut')->isClicked();
+        $valid = $isClicked && $form->isValid();
+        
+        return [$form, $valid];
     }
 }
