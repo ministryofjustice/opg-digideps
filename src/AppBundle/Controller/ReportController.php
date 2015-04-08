@@ -67,7 +67,7 @@ class ReportController extends Controller
         $client = $this->getClient($report->getClient());
         $request = $this->getRequest();
         
-        $form = $this->createForm(new FormDir\ReportSubmitType());
+        $form = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
         
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);

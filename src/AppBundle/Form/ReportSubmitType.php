@@ -5,14 +5,21 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class ReportSubmitType extends AbstractType
-{
+{  
+    private $translator;
+    
+    public function __construct(Translator $translator) 
+    {
+        $this->translator = $translator;
+    }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('reviewed_n_checked', 'choice', 
-                                            [ 'choices' => [ 1 => 'I have reviewed and checked this report' ], 
+                                            [ 'choices' => [ 1 => $this->translator->trans('reportSubmit.checkbox.label') ], 
                                               'multiple' => true, 
                                               'expanded' => true,
                                               'constraints' => [ new Constraints\NotBlank()] ])
