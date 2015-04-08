@@ -63,4 +63,7 @@ pages:
       subSectionTitle: "Assets"
       subSectionWarning: "You've not added any of the client's assets details."
       subSectionDescription: "Go to the Assets section and add them now. If there are no assets to add, please confirm this."
+reportSubmit:
+    checkbox:
+        label: I have reviewed and checked this report.
 
