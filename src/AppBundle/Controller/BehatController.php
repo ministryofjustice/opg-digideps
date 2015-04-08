@@ -23,7 +23,7 @@ class BehatController extends Controller
         $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
         
         if (!$isBehat || $isProd || !$isSecretParamCorrect) {
-            throw $this->createNotFoundException('Not found');
+            //throw $this->createNotFoundException('Not found');
         }
     }
     
@@ -38,7 +38,7 @@ class BehatController extends Controller
         
         $contentArray = json_decode($content, 1);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return new Response($content);
+            return new Response("Error decoding email: body:" . $content);
         }
         
         return new Response($contentArray['data']);
