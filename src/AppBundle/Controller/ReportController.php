@@ -119,8 +119,10 @@ class ReportController extends Controller
                     return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
                 }
             }else{
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
+                $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
+         
+                if(!empty($checkArray)){
+                    if(!$report->readyToSubmit()){
                         return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                     }
                 }
@@ -161,7 +163,7 @@ class ReportController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             $reportSubmit->handleRequest($request);
-            //var_dump($form->get('save')->isClicked()); die;
+           
             if($form->get('save')->isClicked()){
                 if ($form->isValid()) {
                     // add decision
@@ -170,9 +172,10 @@ class ReportController extends Controller
                     return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
                 }
             }else{
-                die('sfdsfds');
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
+                $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
+         
+                if(!empty($checkArray)){
+                    if(!$report->readyToSubmit()){
                         return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                     }
                 }
@@ -220,18 +223,30 @@ class ReportController extends Controller
         $asset = new EntityDir\Asset();
         
         $form = $this->createForm(new FormDir\AssetType($titles),$asset);
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'query' => ['id' => $reportId ]]);
         
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
+            $reportSubmit->handleRequest($request);
 
-            if($form->isValid()){
-                $asset = $form->getData();
-                $asset->setReport($reportId);
+            if($form->get('save')->isClicked()){
+                if($form->isValid()){
+                    $asset = $form->getData();
+                    $asset->setReport($reportId);
 
-                $apiClient->postC('add_report_asset', $asset);
-                return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
+                    $apiClient->postC('add_report_asset', $asset);
+                    return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
+                }
+            }else{
+                $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
+         
+                if(!empty($checkArray)){
+                    if(!$report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
 
@@ -240,7 +255,8 @@ class ReportController extends Controller
             'client' => $client,
             'action' => $action,
             'form'   => $form->createView(),
-            'assets' => $assets
+            'assets' => $assets,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
 

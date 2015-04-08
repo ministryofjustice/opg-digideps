@@ -35,19 +35,32 @@ class AccountController extends Controller
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
-        $form->handleRequest($request);
-
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
         if ($request->getMethod() == 'POST') {
-            if ($form->isValid()) {
-                $account = $form->getData();
-                $account->setReport($reportId);
+            $form->handleRequest($request);
+            $reportSubmit->handleRequest($request);
+            
+            if($form->get('save')->isClicked()){
+                if ($form->isValid()) {
+                    $account = $form->getData();
+                    $account->setReport($reportId);
 
-                $response = $apiClient->postC('add_report_account', $account);
-                return $this->redirect(
-                    $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
-                );
-            } else {
-                echo $form->getErrorsAsString();
+                    $response = $apiClient->postC('add_report_account', $account);
+                    return $this->redirect(
+                        $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
+                    );
+                } else {
+                    echo $form->getErrorsAsString();
+                }
+            }else{
+                $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
+         
+                if(!empty($checkArray)){
+                    if(!$report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
 
@@ -56,7 +69,8 @@ class AccountController extends Controller
             'client' => $client,
             'action' => $action,
             'form' => $form->createView(),
-            'accounts' => $accounts
+            'accounts' => $accounts,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
 
