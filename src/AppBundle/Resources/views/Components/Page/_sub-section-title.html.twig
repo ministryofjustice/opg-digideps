@@ -1,4 +1,7 @@
 <!--Component: Page/sub-section-title-->
 <div class="form-group sub-section-title">
+    {% if iconClass is defined %}
+        <span class="{{ iconClass }}"></span>
+    {% endif %}
     <h3>{{ subSectionTitle|trans({}, transDomain) }}</h3>
 </div>

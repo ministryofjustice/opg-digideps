@@ -1,6 +1,10 @@
 .sub-section-title {
   margin-bottom: 30px;
 
+  .icon {
+    float: left;
+  }
+
   h3 {
     @include bold-24();
   }

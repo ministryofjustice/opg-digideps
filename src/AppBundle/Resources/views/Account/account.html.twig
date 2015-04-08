@@ -38,11 +38,6 @@ activeTab: "tab-accounts"
         transDomain: translationDomain
         } %}
 
-        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionWarning: 'page.pageSectionWarning'
-        } %}
-
         {% block validationSummary %}
             {{ form_errors_list(form) }}
             {{ form_errors_list(formBalance) }}
@@ -53,6 +48,11 @@ activeTab: "tab-accounts"
             formBalance: formBalance,
             } %}
         {% endif %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'page.pageSectionWarning'
+        } %}
 
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

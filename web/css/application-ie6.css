@@ -1381,6 +1381,11 @@ input[type=number] {
     Do need import application specific code into this file.
 ***************************************************************
 */
+.account-closing-balance-form {
+  margin-bottom: 30px;
+  padding-left: 10px;
+  border-left: 3px solid #bfc1c3; }
+
 .account-header {
   position: relative;
   background-color: #f8f8f8;
@@ -2310,6 +2315,8 @@ ol.progress {
 
 .sub-section-title {
   margin-bottom: 30px; }
+  .sub-section-title .icon {
+    float: left; }
   .sub-section-title h3 {
     font-family: "nta", Arial, sans-serif;
     font-size: 24px;
