@@ -95,6 +95,10 @@ class ReportController extends Controller
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
 
+
+//        var_dump($report->hasOutstandingAccounts());
+//        die();
+
         $request = $this->getRequest();
         
         $apiClient = $this->get('apiclient');

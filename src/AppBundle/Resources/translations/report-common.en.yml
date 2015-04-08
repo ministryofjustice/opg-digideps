@@ -1,0 +1,9 @@
+report:
+  header:
+    report: "report"
+    reportingPeriod: "Reporting period:"
+    dueDate: "Due date:"
+    form:
+      controls:
+        submit:
+          label: "Ready to submit report"
