@@ -21,7 +21,7 @@ class HealthCheckController extends Controller
     public function indexAction()
     {
         $data = [
-            'api' => $this->getHealthCheckDataFromApi(),
+            'api' => $this->getApiHealthData(),
             'client' => $this->getHealthData(),
         ];
         
@@ -48,7 +48,7 @@ class HealthCheckController extends Controller
     }
     
     
-    private function getHealthCheckDataFromApi()
+    private function getApiHealthData()
     {
         $content = $this->get('apiclient')->get('health-check')->getBody();
         $contentArray = json_decode($content, 1);
