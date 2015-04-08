@@ -19,7 +19,7 @@ class HealthCheckController extends Controller
     {
         $data = [
             'database_connected' => $this->isDdConnected(),
-            'database_migrated' => $this->isDdConnected() && $this->isDdMigrated(),
+            //'database_migrated' => $this->isDdConnected() && $this->isDdMigrated(),
             'permissions_app/log' => $this->areLogPermissionCorrect(),
             'permissions_app/cache' => $this->areCachePermissionCorrect(),
             'php_version' => $this->isPhpVersionCorrect(),
@@ -40,10 +40,10 @@ class HealthCheckController extends Controller
         
     }
     
-    private function isDdMigrated()
-    {
-        return true;
-    }
+//    private function isDdMigrated()
+//    {
+//        return true;
+//    }
     
     private function areLogPermissionCorrect()
     {
