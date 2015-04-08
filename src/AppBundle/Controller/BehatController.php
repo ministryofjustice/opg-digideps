@@ -19,10 +19,9 @@ class BehatController extends Controller
         
         $isBehat = $_SERVER['REMOTE_ADDR'] === '127.0.0.1' 
                    && $_SERVER['HTTP_USER_AGENT'] === 'Symfony2 BrowserKit';
-        $isProd = $this->get('kernel')->getEnvironment() == 'prod';
         $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
         
-        if (!$isBehat || $isProd || !$isSecretParamCorrect) {
+        if (!$isBehat || !$isSecretParamCorrect) {
             //throw $this->createNotFoundException('Not found');
         }
     }
