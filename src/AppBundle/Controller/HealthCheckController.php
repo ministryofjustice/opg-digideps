@@ -31,7 +31,13 @@ class HealthCheckController extends Controller
     
     private function isDdConnected()
     {
-        return true;
+        try {
+            $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findAll();
+            return true;
+        } catch (\Ecception $e) {
+            return false;
+        }
+        
     }
     
     private function isDdMigrated()
@@ -41,12 +47,12 @@ class HealthCheckController extends Controller
     
     private function areLogPermissionCorrect()
     {
-        return true;
+        return is_writable($this->get('kernel')->getRootDir() . '/logs/');
     }
     
     private function areCachePermissionCorrect()
     {
-        return true;
+        return is_writable($this->get('kernel')->getRootDir() . '/cache/');
     }
     
     private function isPhpVersionCorrect()
