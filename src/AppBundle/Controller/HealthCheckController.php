@@ -38,10 +38,13 @@ class HealthCheckController extends Controller
     
     private function getHealthData()
     {
-        return [
-            'healthy' => true,
-            'php_version' => true
+        $data = [
+            'php_version' => version_compare(PHP_VERSION, "5.4") >= 0
         ];
+        
+        $data['healthy'] = count(array_filter($data)) === count($data);
+        
+        return $data;
     }
     
     
