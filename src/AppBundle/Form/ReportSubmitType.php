@@ -18,12 +18,10 @@ class ReportSubmitType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('reviewed_n_checked', 'choice', 
-                                            [ 'choices' => [ 1 => $this->translator->trans('reportSubmit.checkbox.label') ], 
-                                              'multiple' => true, 
-                                              'expanded' => true,
-                                              'constraints' => new Constraints\NotBlank(),
-                                              'empty_data' => null ])
+        $builder->add('reviewed_n_checked', 'checkbox', [
+            'label' => $this->translator->trans('reportSubmit.checkbox.label'),
+            'constraints' => new Constraints\NotBlank()
+        ])
                 ->add('submitReport', 'submit');
     }
     
