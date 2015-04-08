@@ -22,7 +22,7 @@ class BehatController extends Controller
         $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
         
         if (!$isBehat || !$isSecretParamCorrect) {
-            //throw $this->createNotFoundException('Not found');
+            throw $this->createNotFoundException('Not found');
         }
     }
     
