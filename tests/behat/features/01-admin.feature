@@ -1,5 +1,9 @@
 Feature: admin
     
+    @deputy @admin
+    Scenario: reset behat data before starting
+        Given I reset the behat data
+
     @deputy
     Scenario: login and add deputy user
         Given I am on "/"

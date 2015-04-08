@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Service\ApiClient;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\User;
 
 /**
  * @Route("/behat")
@@ -30,12 +31,17 @@ class BehatController extends Controller
      * @Route("/{secret}/email-get-last")
      * @Method({"GET"})
      */
-    public function getLastAction()
+    public function getLastEmailAction()
     {
         $this->checkIsBehatBrowser();
         $content = $this->get('apiclient')->get('behat/email')->getBody();
         
-        return new Response(json_decode($content, 1)['data']);
+        $contentArray = json_decode($content, 1);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new Response($content);
+        }
+        
+        return new Response($contentArray['data']);
     }
     
     /**
@@ -88,5 +94,40 @@ class BehatController extends Controller
         ]));
         
         return new Response('done');
+    }
+    
+    /**
+     * @Route("/{secret}/delete-behat-data")
+     * @Method({"GET"})
+     */
+    public function resetBehatData()
+    {
+       return new Response('done');
+        
+//       $apiClient = $this->get('apiclient');
+//       
+//       // delete behat data and related records
+//       $apiClient->delete('behat/behat-data');
+//       
+//        // re-add beaht-admin user
+//        $user = (new User)
+//                ->setFirstname('Be')
+//                ->setLastname('Hat')
+//                ->setEmail('behat-admin@publicguardian.gsi.gov.uk')
+//                ->setRoleId(1); //admin
+//
+//        // add user
+//        $response = $apiClient->postC('add_user', $user, [
+//            'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
+//        ]);
+//            // refresh from aPI and get salt
+//        $user = $apiClient->getEntity('User', 'user/' . $response['id']);
+//        // set password and activate
+//        $apiClient->putC('user/' . $user->getId(), json_encode([
+//            'password' => $this->encodePassword($user, 'Abcd1234'),
+//            'active' => true
+//        ]));
+//       
+//       return new Response('done');
     }
 }
