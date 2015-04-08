@@ -18,20 +18,13 @@ class HealthCheckController extends Controller
     public function indexAction()
     {
         $data = [
-            'healthy' => true,
             'database_connected' => $this->isDdConnected(),
             'database_migrated' => $this->isDdConnected() && $this->isDdMigrated(),
             'permissions_app/log' => $this->areLogPermissionCorrect(),
             'permissions_app/cache' => $this->areCachePermissionCorrect(),
-            'php-version' => $this->isPhpVersionCorrect(),
+            'php_version' => $this->isPhpVersionCorrect(),
         ];
-        
-        // set healthy to false if one is false
-        foreach ($data as $v) {
-            if (!$v) {
-                 $data['app']['healthy'] = false;
-            }
-        }
+        $data['healthy'] = count(array_filter($data)) === count($data);
 
         return $data;
     }
@@ -58,7 +51,7 @@ class HealthCheckController extends Controller
     
     private function isPhpVersionCorrect()
     {
-        return true;
+        return version_compare(PHP_VERSION, "5.4") >= 0;
     }
 
 }
