@@ -16,13 +16,14 @@ class BehatController extends Controller
     private function checkIsBehatBrowser()
     {
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
+        $secret = $this->getRequest()->get('secret');
         
-        $isBehat = $_SERVER['REMOTE_ADDR'] === '127.0.0.1' 
-                   && $_SERVER['HTTP_USER_AGENT'] === 'Symfony2 BrowserKit';
-        $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
-        
-        if (!$isBehat || !$isSecretParamCorrect) {
-            //throw $this->createNotFoundException('Not found');
+        if ($secret !== $expectedSecretParam) {
+            
+            // log access
+            $this->get('logger')->error($this->getRequest()->getPathInfo(). ": $expectedSecretParam secret expected. 404 will be returned.");
+            
+            throw $this->createNotFoundException('Not found');
         }
     }
     
