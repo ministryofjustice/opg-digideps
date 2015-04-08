@@ -107,15 +107,27 @@ class ReportController extends Controller
         $contact = new EntityDir\Contact();
         
         $form = $this->createForm(new FormDir\ContactType(), $contact);
-        $form->handleRequest($request);
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
         
         if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $contact = $form->getData();
-                $contact->setReport($reportId);
-                
-                $apiClient->postC('add_report_contact', $contact);
-                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+            $form->handleRequest($request);
+            $reportSubmit->handleRequest($request);
+           
+            if($form->isSubmitted()){
+                if($form->isValid()){
+                    $contact = $form->getData();
+                    $contact->setReport($reportId);
+
+                    $apiClient->postC('add_report_contact', $contact);
+                    return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+                }
+            }else{
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
         
@@ -124,7 +136,8 @@ class ReportController extends Controller
             'contacts' => $contacts,
             'action' => $action,
             'report' => $report,
-            'client' => $client];
+            'client' => $client,
+            'report_form_submit' => $reportSubmit->createView() ];
     }
     
   
