@@ -29,7 +29,7 @@ class ReportSubmitType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-            'translation_domain' => 'report-overview',
+            'translation_domain' => 'report-common',
         ]);
     }
     

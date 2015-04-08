@@ -1951,6 +1951,30 @@ form {
     .page-report-content .page-report-header .client-name {
       font-size: 32px;
       line-height: 1.09375; } }
+.page-report-content .page-report-header .page-report-submission-form button {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 20px; }
+  @media (max-width: 640px) {
+    .page-report-content .page-report-header .page-report-submission-form button {
+      font-size: 16px;
+      line-height: 1.25; } }
+.page-report-content .page-report-header .page-report-message {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none;
+  background-color: #dee0e2;
+  margin-top: 30px;
+  padding: 15px; }
+  @media (max-width: 640px) {
+    .page-report-content .page-report-header .page-report-message {
+      font-size: 16px;
+      line-height: 1.25; } }
 
 .page-section-description {
   width: 65%;

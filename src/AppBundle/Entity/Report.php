@@ -268,8 +268,6 @@ class Report
      */
     public function hasOutstandingAccounts()
     {
-//        var_dump($this->accounts);
-
         if(empty($this->accounts)){
             return false;
         }

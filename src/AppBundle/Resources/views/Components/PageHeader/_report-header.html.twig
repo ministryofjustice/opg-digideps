@@ -27,11 +27,11 @@
             {# ADD HERE THE BUTTON "READY TO SUBMIT" #}
             {# <a href="{{ path('report_declaration', {reportId: report.id}) }}">Ready to submit</a> #}
 
-            {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: '' } }) }}
+            {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
             {% if report.readyToSubmit() %}
                 {{ form_input(report_form_submit.reviewed_n_checked, 'form.accountDetails.controls.accountNumber') }}
             {% else %}
-                <div>
+                <div class="page-report-message">
                     Your report will be ready to submit when you've completed all tasks
                 </div>
             {% endif %}
