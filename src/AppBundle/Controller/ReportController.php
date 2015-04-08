@@ -64,10 +64,23 @@ class ReportController extends Controller
     {
         $report = $this->getReport($reportId, 'transactions');
         $client = $this->getClient($report->getClient());
+        $request = $this->getRequest();
+        
+        $form = $this->createForm(new FormDir\ReportSubmitType());
+        
+        if($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            
+            if($form->isValid()){
+                if($report->readyToSubmit()){ 
+                }
+            }
+        }
         
         return [
             'report' => $report,
             'client' => $client,
+            'form' => $form->createView()
         ];
     }
     
