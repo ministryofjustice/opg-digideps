@@ -22,15 +22,15 @@ class HealthCheckController extends Controller
                 'healthy' => true,
             ],
             'database' => [
-                'connection' => true,
-                'migrated' => true,
+                'connection' => $this->isDdConnected(),
+                'migrated' => $this->isDdConnected() && $this->isDdMigrated(),
             ],
             'permissions' => [
-                'app/log' => true,
-                'app/cache' => true
+                'app/log' => $this->areLogPermissionCorrect(),
+                'app/cache' => $this->areCachePermissionCorrect()
             ],
             'environment' => [
-                'php-version' => true,
+                'php-version' => $this->isPhpVersionCorrect(),
             ],
         ];
         
@@ -44,6 +44,31 @@ class HealthCheckController extends Controller
         }
 
         return $data;
+    }
+    
+    private function isDdConnected()
+    {
+        return true;
+    }
+    
+    private function isDdMigrated()
+    {
+        return true;
+    }
+    
+    private function areLogPermissionCorrect()
+    {
+        return true;
+    }
+    
+    private function areCachePermissionCorrect()
+    {
+        return true;
+    }
+    
+    private function isPhpVersionCorrect()
+    {
+        return true;
     }
 
 }
