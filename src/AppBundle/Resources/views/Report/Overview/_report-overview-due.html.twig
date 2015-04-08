@@ -1,46 +1,151 @@
 {% set page = 'duePeriod' %}
 
-{{ dump(translationDomain) }}
 
 {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
 transDomain: translationDomain,
-pageSectionTitle: 'pages.pageSectionTitle.reportPeriod.pageSectionTitle'
+pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 } %}
 
 {% if report.readyToSubmit() %}
 
-    (!) Confirm you've reviewed your report by checking the box above.
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionConfirmation'
+    } %}
 
 {% else %}
 
-    {% if not report.hasContacts() %}
-        (!) No contact details added.
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionWarning'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'pages.' ~ page ~ '.pageSectionDescription'
+    } %}
+
+    {% if report.missingContacts() %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.contacts.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.contacts.subSectionWarning'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.contacts.subSectionDescription'
+        } %}
+
     {% endif %}
 
 
-    {% if not report.hasDecisions() %}
-        (!) No decision details added.
-    {% endif %}
+    {% if report.missingDecisions() %}
 
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.decisions.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.decisions.subSectionWarning'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.decisions.subSectionDescription'
+        } %}
+
+    {% endif %}
 
 
     {% if report.missingAccounts() %}
 
-        (!) No account details added.
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.accounts.subSectionTitle'
+        } %}
 
-    {% elseif report.closingBalancesMissingAccounts %}
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningMissing'
+        } %}
 
-        {% for account in report.closingBalancesMissingAccounts %}
-            {{ account.name }}<br/>
-            {{ account.accountNumber }}<br/>
-            {{ account.link }}<hr/>
-        {% endfor %}
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.accounts.subSectionDescriptionMissing'
+        } %}
 
+    {% elseif report.hasOutstandingAccounts() %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.accounts.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningClosing'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.accounts.subSectionDescriptionClosing'
+        } %}
+
+        <ul class="behat-region-list-accounts report-list report-list--accounts-closing">
+            {% for account in report.getOutstandingAccounts() %}
+                {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id}) %}
+                <li class="report-list__item">
+                    <dl class="report-list__item-fields">
+                        <div class="report-list__item-fields-col-bank">
+                            <dt class="visuallyhidden">Bank/Building Society name</dt>
+                            <dd class="report-list__item-fields-description">
+                                <h4>
+                                    <a href="{{ linkToAccountPage }}#account-header" class="behat-link-account-n1">
+                                        {{ account.bank }}
+                                    </a>
+                                </h4>
+                            </dd>
+                        </div>
+                        <div class="report-list__item-fields-col-acc-num">
+                            <dt class="visuallyhidden">Last four digits of account number</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
+                                ****{{ account.accountNumber }}
+                            </dd>
+                        </div>
+
+                    </dl>
+
+                </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
 
     {% if report.missingAssets() %}
-        (!) No assets details added.
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.assets.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.assets.subSectionWarning'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.assets.subSectionDescription'
+        } %}
+
     {% endif %}
 
 {% endif %}

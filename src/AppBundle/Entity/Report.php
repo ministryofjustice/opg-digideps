@@ -401,7 +401,7 @@ class Report
     public function readyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if($this->hasOutstandingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions()){
+            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions()){
                 return false;
             }
         }else{

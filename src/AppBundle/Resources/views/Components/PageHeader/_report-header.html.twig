@@ -8,12 +8,28 @@
     <div class="page-header-meta-data">
         <div class="report-meta-data">
             <div class="report-meta report-meta__label">Reporting period:</div>
-            <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }} to {{ report.endDate | date("d F Y") }}</span>
+            <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }}
+                to {{ report.endDate | date("d F Y") }}</span>
         </div>
         <div class="report-meta-data">
             <span class="report-meta report-meta__label">Due date:</span>
-            <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y")}}</span>
+            <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y") }}</span>
         </div>
+
+        {% if report.isDue() %}
+            <form>
+                {% if report.readyToSubmit() %}
+                    <input type="checkbox" name="report[reviewedAndChecked]" id="report_reviewedAndChecked" value="true"/>
+                    <label for="report_reviewedAndChecked">I have reviewed and checked this report</label>
+                {% else %}
+                    <div>
+                        Your report will be ready to submit when you've completed all tasks
+                    </div>
+                {% endif %}
+                <button type="submit" id="report_submit" name="report[submit]" class="button ">Ready to submit report
+                </button>
+            </form>
+        {% endif %}
     </div>
 
 </header>

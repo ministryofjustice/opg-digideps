@@ -22,30 +22,6 @@
 
 {% block pageBody %}
 
-    {{ dump(report.readyToSubmit() ) }}
-
-    {{ dump(report.isDue() ) }}
-
-    {{ dump(report.hasOutstandingAccounts() ) }}
-
-    {% if report.hasOutstandingAccounts %}
-        {% for account in report.getOutstandingAccounts() %}
-            {{ dump( account.sortCode ) }}
-        {% endfor %}
-    {% endif %}
-
-    {{ dump(report.hasAssets()) }}
-    {{ dump(report.getAssets()) }}
-
-    {{ dump(report.hasContacts()) }}
-    {{ dump(report.getContacts()) }}
-
-    {{ dump(report.hasDecisions()) }}
-    {{ dump(report.getDecisions()) }}
-
-
-    {% set report_isDue = false %}
-
     {% if report.isDue() %}
 
         {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' with {

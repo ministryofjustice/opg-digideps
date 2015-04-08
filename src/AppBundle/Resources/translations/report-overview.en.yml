@@ -41,4 +41,26 @@ pages:
         subSectionDescription: "Add details of the client's assets and saving, such as:"
         subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
   duePeriod:
-    pageSectionTitle: "The deputy report"
+    pageSectionTitle: "Reviewing and submitting your report"
+    pageSectionWarning: "Your report is now due"
+    pageSectionConfirmation: "Confirm you've reviewed your report by checking the box above."
+    pageSectionDescription: "Please review your report - check the notifications below to make sure you've completed all tasks. You can then click the 'ready to submit report' above."
+    contacts:
+      subSectionTitle: "Contacts"
+      subSectionWarning: "You've not added any contact details."
+      subSectionDescription: "Go to the Contacts section and add them now. If you have no contacts to add, let us know why."
+    decisions:
+      subSectionTitle: "Decisions"
+      subSectionWarning: "You've not added any decision details."
+      subSectionDescription: "Go to the Decisions section and add them now. If you have no contacts to add, let us know why."
+    accounts:
+      subSectionTitle: "Accounts"
+      subSectionWarningMissing: "You've not added any of your client's accounts."
+      subSectionDescriptionMissing: "Go to the Accounts section and add them now."
+      subSectionWarningClosing: "Add the closing balances to your accounts."
+      subSectionDescriptionClosing: "To sign off the report make sure you add the closing balances."
+    assets:
+      subSectionTitle: "Assets"
+      subSectionWarning: "You've not added any of the client's assets details."
+      subSectionDescription: "Go to the Assets section and add them now. If there are no assets to add, please confirm this."
+

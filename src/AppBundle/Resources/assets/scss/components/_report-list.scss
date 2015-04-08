@@ -152,6 +152,36 @@
 
 }
 
+.report-list--accounts-closing {
+  border: 0;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 30px;
+
+  & .report-list__item {
+    border: 0;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .report-list__item-fields-col {
+
+    &-bank {
+      display: block;
+      float: left;
+      width: 35%;
+    }
+
+    &-acc-num {
+      display: block;
+      float: left;
+      width: 30%;
+    }
+
+  }
+
+}
+
 .report-list--assets {
   dt.report-list__item-fields-term {
     width: 130px;
