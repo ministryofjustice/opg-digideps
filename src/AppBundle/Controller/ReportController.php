@@ -95,10 +95,6 @@ class ReportController extends Controller
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
 
-
-//        var_dump($report->hasOutstandingAccounts());
-//        die();
-
         $request = $this->getRequest();
         
         $apiClient = $this->get('apiclient');
@@ -114,7 +110,7 @@ class ReportController extends Controller
             $form->handleRequest($request);
             $reportSubmit->handleRequest($request);
            
-            if($form->isSubmitted()){
+            if($form->get('save')->isClicked()){
                 if($form->isValid()){
                     $contact = $form->getData();
                     $contact->setReport($reportId);
@@ -159,14 +155,27 @@ class ReportController extends Controller
         $form = $this->createForm(new FormDir\DecisionType([
             'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
         ]), $decision);
+        
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            if ($form->isValid()) {
-                // add decision
-                $apiClient->postC('add_decision', $form->getData());
-                
-                return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
+            $reportSubmit->handleRequest($request);
+            //var_dump($form->get('save')->isClicked()); die;
+            if($form->get('save')->isClicked()){
+                if ($form->isValid()) {
+                    // add decision
+                    $apiClient->postC('add_decision', $form->getData());
+
+                    return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
+                }
+            }else{
+                die('sfdsfds');
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
         
@@ -175,7 +184,8 @@ class ReportController extends Controller
             'form' => $form->createView(),
             'report' => $report,
             'client' => $this->getClient($report->getClient()),
-            'action' => $action
+            'action' => $action,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
     
