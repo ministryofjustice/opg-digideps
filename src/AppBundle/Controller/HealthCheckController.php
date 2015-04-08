@@ -39,7 +39,9 @@ class HealthCheckController extends Controller
     private function getHealthData()
     {
         $data = [
-            'php_version' => version_compare(PHP_VERSION, "5.4") >= 0
+            'php_version' => version_compare(PHP_VERSION, "5.4") >= 0,
+            'permissions_app/log' => $this->areLogPermissionCorrect(),
+            'permissions_app/cache' => $this->areCachePermissionCorrect(),
         ];
         
         $data['healthy'] = count(array_filter($data)) === count($data);
@@ -56,5 +58,15 @@ class HealthCheckController extends Controller
             throw new \RuntimeException("Cannot decode API response. " . json_last_error_msg());
         }
         return $contentArray['data'];
+    }
+    
+    private function areLogPermissionCorrect()
+    {
+        return is_writable($this->get('kernel')->getRootDir() . '/logs/');
+    }
+    
+    private function areCachePermissionCorrect()
+    {
+        return is_writable($this->get('kernel')->getRootDir() . '/cache/');
     }
 }
