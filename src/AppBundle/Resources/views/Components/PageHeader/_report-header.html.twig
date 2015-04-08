@@ -1,6 +1,7 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
 
+
 <header class="page-report-header page-header group">
 
     <div class="page-header-titles">
@@ -12,7 +13,7 @@
         <div class="report-meta-data">
             <div class="report-meta report-meta__label">{{ 'report.header.reportingPeriod' | trans }}</div>
             <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }}
-                to {{ report.endDate | date("d F Y") }}</span>
+                {{ 'report.header.to' | trans }} {{ report.endDate | date("d F Y") }}</span>
         </div>
         <div class="report-meta-data">
             <span class="report-meta report-meta__label">{{ 'report.header.dueDate' | trans }}</span>
@@ -23,9 +24,8 @@
             <a href="{{ path('report_overview', {reportId: report.id}) }}">
                 {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
             </a>
-        {% elseif report.isDue %}
-            {# ADD HERE THE BUTTON "READY TO SUBMIT" #}
-            {# <a href="{{ path('report_declaration', {reportId: report.id}) }}">Ready to submit</a> #}
+
+        {% elseif report.isDue() %}
 
             {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
             {% set checkboxClass = '' %}
@@ -34,7 +34,7 @@
                 {% set checkboxClass = 'visuallyhidden' %}
                 {% set buttonClass = 'disabled' %}
                 <div class="page-report-message">
-                    Your report will be ready to submit when you've completed all tasks
+                    {{ 'report.header.form.readyMessage' | trans }}
                 </div>
             {% endif %}
             {{ form_input(report_form_submit.reviewed_n_checked, 'form.accountDetails.controls.accountNumber', {'formGroupClass': checkboxClass }) }}

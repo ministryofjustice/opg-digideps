@@ -48,21 +48,21 @@ pages:
     contacts:
       subSectionTitle: "Contacts"
       subSectionWarning: "You've not added any contact details."
-      subSectionDescription: "Go to the Contacts section and add them now. If you have no contacts to add, let us know why."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Contacts section</a> and add them now. If you have no contacts to add, let us know why."
     decisions:
       subSectionTitle: "Decisions"
       subSectionWarning: "You've not added any decision details."
-      subSectionDescription: "Go to the Decisions section and add them now. If you have no contacts to add, let us know why."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Decisions section</a> and add them now. If you have no contacts to add, let us know why."
     accounts:
       subSectionTitle: "Accounts"
       subSectionWarningMissing: "You've not added any of your client's accounts."
-      subSectionDescriptionMissing: "Go to the Accounts section and add them now."
+      subSectionDescriptionMissing: "<a href=\"%pageHref%\">Go to the Accounts section</a> and add them now."
       subSectionWarningClosing: "Add the closing balances to your accounts."
       subSectionDescriptionClosing: "To sign off the report make sure you add the closing balances."
     assets:
       subSectionTitle: "Assets"
       subSectionWarning: "You've not added any of the client's assets details."
-      subSectionDescription: "Go to the Assets section and add them now. If there are no assets to add, please confirm this."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Assets section</a> and add them now. If there are no assets to add, please confirm this."
 reportSubmit:
     checkbox:
         label: I have reviewed and checked this report.

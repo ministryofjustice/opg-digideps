@@ -39,7 +39,10 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,
-        subSectionDescription: 'pages.' ~ page ~ '.contacts.subSectionDescription'
+        subSectionDescription: 'pages.' ~ page ~ '.contacts.subSectionDescription',
+        transOptions: {
+            '%pageHref%': path('contacts', {'reportId': report.id})
+        }
         } %}
 
     {% endif %}
@@ -59,7 +62,10 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,
-        subSectionDescription: 'pages.' ~ page ~ '.decisions.subSectionDescription'
+        subSectionDescription: 'pages.' ~ page ~ '.decisions.subSectionDescription',
+        transOptions: {
+        '%pageHref%': path('decisions', {'reportId': report.id})
+        }
         } %}
 
     {% endif %}
@@ -79,7 +85,10 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,
-        subSectionDescription: 'pages.' ~ page ~ '.accounts.subSectionDescriptionMissing'
+        subSectionDescription: 'pages.' ~ page ~ '.accounts.subSectionDescriptionMissing',
+        transOptions: {
+        '%pageHref%': path('accounts', {'reportId': report.id})
+        }
         } %}
 
     {% elseif report.hasOutstandingAccounts() %}
@@ -143,7 +152,10 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,
-        subSectionDescription: 'pages.' ~ page ~ '.assets.subSectionDescription'
+        subSectionDescription: 'pages.' ~ page ~ '.assets.subSectionDescription',
+        transOptions: {
+        '%pageHref%': path('assets', {'reportId': report.id})
+        }
         } %}
 
     {% endif %}
