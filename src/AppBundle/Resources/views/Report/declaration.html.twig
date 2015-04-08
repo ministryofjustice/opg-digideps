@@ -1,40 +1,42 @@
-{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
-{% set translationDomain = "report-declaration" %}
-{% trans_default_domain translationDomain %}
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+    {% set translationDomain = "report-declaration" %}
+    {% trans_default_domain translationDomain %}
 
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
 
- {% block pageNavigation %}
-   {# no navigation bar for declaration #}
- {% endblock %}
-
-{% block pageBody %}
-
-    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionTitle: 'page.pageSectionTitle'
-    } %}
-    
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
+    {% block pageNavigation %}
+        {# no navigation bar for declaration #}
     {% endblock %}
-    
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription',
-    transOptions: {'%separator%': '<br/><br/>'}
-    } %}
 
-    
-    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-    
-    {{ form_input(form.agree, 'agree', { 'labelClass': 'required' }) }}
-    
-    {{ form_submit(form.save,'save') }}
-    
-    {{ form_end(form) }}
-    
+    {% block pageBody %}
 
-{% endblock %}
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'page.pageSectionTitle'
+        } %}
+
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription',
+        transOptions: {'%separator%': '<br/><br/>'}
+        } %}
+
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+        {{ form_input(form.agree, 'agree', { 'labelClass': 'required' }) }}
+
+        {{ form_submit(form.save,'save') }}
+
+        {{ form_end(form) }}
+
+
+    {% endblock %}
+
+{% endembed %}

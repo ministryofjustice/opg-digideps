@@ -1,41 +1,37 @@
-{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
-{% set translationDomain = "report-overview" %}
-{% trans_default_domain translationDomain %}
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+activeTab: "tab-overview"
+} %}
+    {% set translationDomain = "report-overview" %}
+    {% trans_default_domain translationDomain %}
 
-{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') != report.courtOrderType %}
-    {% set reportType = "propertyAndAffairs" %}
-{% else %}
-    {% set reportType = "healthAndWelfare" %}
-{% endif %}
-
-
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
-
- {% block pageNavigation %}
-     {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with {
-     'report': report,
-     tab: 'tab-overview',
-     notifications: { 'tab-overview': 'test-icon-class'}
-     } %}
- {% endblock %}
-
-{% block pageBody %}
-    {% if report.isDue() %}
-
-        {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' with {
-        'translationDomain': translationDomain,
-        'reportType': reportType
-        } %}
-
+    {% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
+        {% set reportType = "propertyAndAffairs" %}
     {% else %}
-
-        {% include 'AppBundle:Report/Overview:_report-overview.html.twig' with {
-        'translationDomain': translationDomain,
-        'reportType': reportType
-        } %}
-
+        {% set reportType = "healthAndWelfare" %}
     {% endif %}
 
 
-{% endblock %}
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+    {% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
+
+    {% block pageBody %}
+        {% if report.isDue() %}
+
+            {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' with {
+            'translationDomain': translationDomain,
+            'reportType': reportType
+            } %}
+
+        {% else %}
+
+            {% include 'AppBundle:Report/Overview:_report-overview.html.twig' with {
+            'translationDomain': translationDomain,
+            'reportType': reportType
+            } %}
+
+        {% endif %}
+
+
+    {% endblock %}
+
+{% endembed %}

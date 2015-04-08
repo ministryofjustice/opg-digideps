@@ -48,11 +48,11 @@ pages:
     contacts:
       subSectionTitle: "Contacts"
       subSectionWarning: "You've not added any contact details."
-      subSectionDescription: "<a href=\"%pageHref%\">Go to the Contacts section</a> and add them now. If you have no contacts to add, let us know why."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Contacts section</a> and add them now."
     decisions:
       subSectionTitle: "Decisions"
       subSectionWarning: "You've not added any decision details."
-      subSectionDescription: "<a href=\"%pageHref%\">Go to the Decisions section</a> and add them now. If you have no contacts to add, let us know why."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Decisions section</a> and add them now."
     accounts:
       subSectionTitle: "Accounts"
       subSectionWarningMissing: "You've not added any of your client's accounts."
@@ -62,7 +62,7 @@ pages:
     assets:
       subSectionTitle: "Assets"
       subSectionWarning: "You've not added any of the client's assets details."
-      subSectionDescription: "<a href=\"%pageHref%\">Go to the Assets section</a> and add them now. If there are no assets to add, please confirm this."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Assets section</a> and add them now."
 reportSubmit:
     checkbox:
         label: I have reviewed and checked this report.
