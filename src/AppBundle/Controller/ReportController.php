@@ -122,7 +122,7 @@ class ReportController extends Controller
                 $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
          
                 if(!empty($checkArray)){
-                    if(!$report->readyToSubmit()){
+                    if($report->readyToSubmit()){
                         return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                     }
                 }
@@ -175,7 +175,7 @@ class ReportController extends Controller
                 $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
          
                 if(!empty($checkArray)){
-                    if(!$report->readyToSubmit()){
+                    if($report->readyToSubmit()){
                         return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                     }
                 }
@@ -243,7 +243,7 @@ class ReportController extends Controller
                 $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
          
                 if(!empty($checkArray)){
-                    if(!$report->readyToSubmit()){
+                    if($report->readyToSubmit()){
                         return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                     }
                 }
