@@ -21,7 +21,6 @@
  {% endblock %}
 
 {% block pageBody %}
-
     {% if report.isDue() %}
 
         {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' with {
