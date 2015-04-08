@@ -63,7 +63,7 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId, 'transactions');
+        $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
         $request = $this->getRequest();
         
@@ -273,7 +273,7 @@ class ReportController extends Controller
      * 
      * @return Report
      */
-    protected function getReport($reportId,$group = 'basic')
+    protected function getReport($reportId,$group = 'transactions')
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId, 'group' => $group ]]);
     }
