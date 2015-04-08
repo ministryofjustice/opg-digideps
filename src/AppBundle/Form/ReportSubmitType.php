@@ -22,7 +22,8 @@ class ReportSubmitType extends AbstractType
                                             [ 'choices' => [ 1 => $this->translator->trans('reportSubmit.checkbox.label') ], 
                                               'multiple' => true, 
                                               'expanded' => true,
-                                              'constraints' => [ new Constraints\NotBlank()] ])
+                                              'constraints' => new Constraints\NotBlank(),
+                                              'empty_data' => null ])
                 ->add('submitReport', 'submit');
     }
     
