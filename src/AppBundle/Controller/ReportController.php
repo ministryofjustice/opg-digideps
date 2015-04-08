@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
@@ -72,7 +73,8 @@ class ReportController extends Controller
             $form->handleRequest($request);
             
             if($form->isValid()){
-                if($report->readyToSubmit()){ 
+                if($report->readyToSubmit()){
+                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                 }
             }
         }
@@ -215,6 +217,47 @@ class ReportController extends Controller
         ];
     }
 
+    
+    /**
+     * @Route("/report/{reportId}/declaration", name="report_declaration")
+     * @Template()
+     */
+    public function declarationAction(Request $request, $reportId)
+    {
+        $util = $this->get('util');
+        $report = $this->getReport($reportId);
+        if (!$report->isDue()) {
+            throw new \RuntimeException("Report not ready for submission.");
+        }
+        $client = $util->getClient($report->getClient());
+        
+        $form = $this->createForm(new FormDir\ReportDeclarationType());
+        $form->handleRequest($request);
+        if($form->isValid()){
+            
+            /**
+             * //TODO
+             * 
+             * ADD REAL SUBMISSION OR SENDIN HERE
+             * 
+             */
+            
+            $request->getSession()->getFlashBag()->add(
+                'notice', 
+                $this->get('translator')->trans('page.reportSubmittedFlashMessage', [], 'report-declaration')
+            );
+            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+        }
+        
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+    
+    
     /**
      * @param integer $clientId
      *

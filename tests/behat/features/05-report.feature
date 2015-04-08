@@ -340,6 +340,24 @@ Feature: report
         When I follow "tab-accounts"
         Then I should see "3,105.50" in the "account-1-closing-balance" region
         And I should see "30/12/2015" in the "account-1-closing-date" region
+
+
+    @deputy
+    Scenario: submit report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I follow "Ready to submit"
+        And I follow "Go back to make changes to the report"
+        When I follow "Ready to submit"
+        # wrong values
+        And I submit the form
+        Then the following fields should have an error:
+            | report_declaration_agree   |
+        # right values  
+        When I check "report_declaration_agree"
+        And I submit the form
+        And the form should not contain an error
+        And the report is submitted
+        #And I should not see "Ready to submit"
         
 
         
