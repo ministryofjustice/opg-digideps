@@ -27,18 +27,17 @@
             {# ADD HERE THE BUTTON "READY TO SUBMIT" #}
             {# <a href="{{ path('report_declaration', {reportId: report.id}) }}">Ready to submit</a> #}
 
-            {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
+            {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: '' } }) }}
             {% if report.readyToSubmit() %}
-                {{ form_input(form.reviewed_n_checked, 'form.accountDetails.controls.accountNumber') }}
+                {{ form_input(report_form_submit.reviewed_n_checked, 'form.accountDetails.controls.accountNumber') }}
             {% else %}
                 <div>
                     Your report will be ready to submit when you've completed all tasks
                 </div>
             {% endif %}
-            {{ form_submit(form.submit_report,'report.header.form.controls.submit.label') }}
-            <button type="submit" id="report_submit" name="report[submit]" class="button ">
-            </button>
-            {{ form_end(form) }}
+            {% set formSubmitLabel = 'report.header.form.controls.submit.label'|trans({}, translationDomain)|raw %}
+            {{ form_submit(report_form_submit.submit_report, formSubmitLabel) }}
+            {{ form_end(report_form_submit) }}
 
         {% endif %}
     </div>
