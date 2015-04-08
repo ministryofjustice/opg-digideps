@@ -40,13 +40,18 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/report/find-by-id/{id}")
+     * @Route("/report/find-by-id/{userId}/{id}/{serialiseGroup}", defaults={ "serialiseGroup" = "basic" })
      * @Method({"GET"})
      */
-    public function get($id)
-    {
-        $ret = $this->findEntityBy('Report', $id, 'Report not found');
-
+    public function get($userId,$id,$serialiseGroup = null)
+    {   
+        $this->setJmsSerialiserGroup($serialiseGroup);
+        $ret = $this->getRepository('Report')->findByIdAndUser($id,$userId);
+   
+        if(empty($ret)){
+            throw new \Exception("Report not found");
+        }
+        
         return $ret;
     }
         
@@ -158,8 +163,14 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent();
         
-        $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
-        $report->setCourtOrderType($cot);
+        if (array_key_exists('cotId', $data)) {
+            $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
+            $report->setCourtOrderType($cot);
+        }
+        
+        if (array_key_exists('endDate', $data)) {
+            $report->setEndDate(new \DateTime($data['endDate']));
+        }
         
         $this->getEntityManager()->flush($report);
         

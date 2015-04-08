@@ -79,6 +79,34 @@ class UserController extends RestController
     {
         return $this->findEntityBy('User', $id, 'User not found');
     }
+    
+    /**
+     * 
+     * @Route("/{adminId}/{id}")
+     * @Method({"DELETE"})
+     * 
+     * @param integer $id
+     * @return array []
+     * @throws \RuntimeException
+     */
+    public function delete($id,$adminId)
+    {
+        $adminUser = $this->getRepository('User')->find($adminId);
+        
+        if(empty($adminUser) || ($adminUser->getRole()->getRole() != "ROLE_ADMIN") || ($adminId == $id)){
+            throw new \RuntimeException("You are not authorized to perform this action");
+        }
+        
+        $user = $this->getRepository('User')->find($id);
+        
+        if(empty($user)){
+            throw new \RuntimeException("User not found");
+        }
+        $this->getEntityManager()->remove($user);
+        $this->getEntityManager()->flush();
+        
+        return [];
+    }
 
     
     /**
