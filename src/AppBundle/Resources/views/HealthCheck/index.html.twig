@@ -6,7 +6,7 @@
       <ul>
         {% for setting, value in componentOptions%}
           <li>
-            <b>{{ setting | capitalize }}</b>:
+            <b>{{ setting | replace('_', ' ') | capitalize }}</b>:
             {% if value %}
               OK
             {% else %}
