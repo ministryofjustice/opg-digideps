@@ -34,7 +34,7 @@ class HealthCheckController extends Controller
         try {
             $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findAll();
             return true;
-        } catch (\Ecception $e) {
+        } catch (\Exception $e) {
             return false;
         }
         
