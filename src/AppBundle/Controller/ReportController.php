@@ -82,7 +82,7 @@ class ReportController extends Controller
         return [
             'report' => $report,
             'client' => $client,
-            'form' => $form->createView()
+            'report_form_submit' => $form->createView()
         ];
     }
     
