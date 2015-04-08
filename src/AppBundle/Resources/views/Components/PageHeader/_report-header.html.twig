@@ -18,7 +18,7 @@
             <span class="report-meta report-meta__label">{{ 'report.header.dueDate' | trans }}</span>
             <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y") }}</span>
         </div>
-
+          
         {% if app.request.attributes.get('_route') == 'report_declaration' %}
             <a href="{{ path('report_overview', {reportId: report.id}) }}">
                 {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
@@ -36,8 +36,7 @@
                 </div>
             {% endif %}
             {% set formSubmitLabel = 'report.header.form.controls.submit.label'|trans({}, translationDomain)|raw %}
-            {{ form_submit(report_form_submit.submit_report, formSubmitLabel) }}
-            {{ form_end(report_form_submit) }}
+            {{ form_submit(report_form_submit.submitReport, formSubmitLabel) }}
 
         {% endif %}
     </div>
