@@ -54,10 +54,9 @@ class AccountController extends Controller
                     echo $form->getErrorsAsString();
                 }
             }else{
-                $checkArray = $reportSubmit->get('reviewed_n_checked')->getData();
          
-                if(!empty($checkArray)){
-                    if(!$report->readyToSubmit()){
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
                         return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                     }
                 }
@@ -91,6 +90,8 @@ class AccountController extends Controller
 
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
+        
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
@@ -113,6 +114,20 @@ class AccountController extends Controller
             ]);
         }
         
+        if($this->getRequest()->getMethod() == 'POST'){
+            $reportSubmit->handleRequest($this->getRequest());
+            
+            if($reportSubmit->get('submitReport')->isClicked()){
+               
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
+                
+            }
+        }
+        
         // refresh account data
         if ($validFormBalance || $formMoneyValid) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
@@ -125,6 +140,7 @@ class AccountController extends Controller
             'formBalance' => $formBalance->createView(),
             'account' => $account,
             'actionParam' => $action,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
     
