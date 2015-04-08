@@ -1,0 +1,20 @@
+<h1>App Health Check</h1>
+<ul>
+  {% for componentName, componentOptions in data %}
+    <li>
+      <h2>{{ componentName | capitalize }}</h2>
+      <ul>
+        {% for setting, value in componentOptions%}
+          <li>
+            <b>{{ setting | capitalize }}</b>:
+            {% if value %}
+              OK
+            {% else %}
+              <span style="color: #FF0000">ERROR</span>
+            {% endif %}
+          </li>
+        {% endfor %}   
+      </ul>
+    </li>  
+  {% endfor %}   
+</ul>
