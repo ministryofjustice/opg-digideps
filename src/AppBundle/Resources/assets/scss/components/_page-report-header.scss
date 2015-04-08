@@ -26,7 +26,7 @@
 
     .page-report-submission-form{
       button{
-        @include bold-19();
+        @include core-19();
         margin-top: 20px;
       }
     }
