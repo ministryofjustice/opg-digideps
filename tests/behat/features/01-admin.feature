@@ -2,7 +2,9 @@ Feature: admin
     
     @deputy @admin
     Scenario: reset behat data before starting
-        Given I reset the behat data
+        Given I am on "/health-check"
+        Then the response status code should be 200
+        And I reset the behat data
 
     @deputy
     Scenario: login and add deputy user
