@@ -1,20 +1,13 @@
 <h1>App Health Check</h1>
 <ul>
-  {% for componentName, componentOptions in data %}
+  {% for serviceName, serviceInfo in info %}
     <li>
-      <h2>{{ componentName | capitalize }}</h2>
-      <ul>
-        {% for setting, value in componentOptions%}
-          <li>
-            <b>{{ setting | replace('_', ' ') | capitalize }}</b>:
-            {% if value %}
-              OK
-            {% else %}
-              <span style="color: #FF0000">ERROR</span>
-            {% endif %}
-          </li>
-        {% endfor %}   
-      </ul>
-    </li>  
+      <b>{{ serviceName | replace('_', ' ') | capitalize }}</b>:
+      {% if serviceInfo.healthy %}
+        OK
+      {% else %}
+        <span style="color: #FF0000">{{ serviceInfo.errors }}</span>
+      {% endif %}
+    </li>
   {% endfor %}   
 </ul>
