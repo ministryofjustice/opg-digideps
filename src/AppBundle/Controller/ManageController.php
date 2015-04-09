@@ -22,18 +22,13 @@ class ManageController extends Controller
      */
     public function availabilityAction()
     {
-        $apiInfo = new \AppBundle\Service\Availability\Api($this->get('apiclient'));
-        // add here other services
+        list($healthy, $errors, $services) = $this->servicesHealth();
         
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
-            'info' => [
-                'API' => $apiInfo->toArray()
-            ]
+            'services' => $services
         ]);
-
-        if (!$apiInfo->isHealthy()) {
-            $response->setStatusCode('500');
-        }
+        
+        $response->setStatusCode($healthy ? 200 : 500);
 
         return $response;
     }
@@ -46,16 +41,38 @@ class ManageController extends Controller
     {
         $start = microtime(true);
 
-        $apiInfo = new \AppBundle\Service\Availability\Api($this->get('apiclient'));
-
+        list($healthy, $errors) = $this->servicesHealth();
+        
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $apiInfo->isHealthy() ? 'OK' : 'ERROR: ' . $apiInfo->getErrors(),
+            'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
             'time' => microtime(true) - $start
         ]);
-        $response->setStatusCode($apiInfo->isHealthy() ? 200 : 500);
+        $response->setStatusCode($healthy ? 200 : 500);
         $response->headers->set('Content-Type', 'text/xml');
 
         return $response;
+    }
+    
+    /**
+     * @return array [boolean isHealty, string errors, array services]
+     */
+    private function servicesHealth()
+    {
+        $services = [
+            new \AppBundle\Service\Availability\ApiAvailability($this->get('apiclient'))
+        ];
+        
+        $healthy = true;
+        $errors = [];
+        
+        foreach ($services as $service) {
+            if (!$service->isHealthy()) {
+                $healthy = false;
+                $errors[] = $service->getErrors();
+            }
+        }
+        
+        return [$healthy, implode('. ', $errors), $services];
     }
 
 }
