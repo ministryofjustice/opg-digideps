@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ManageController extends Controller
 {
+
     /**
      * @Route("/availability")
      * @Method({"GET"})
@@ -20,88 +22,41 @@ class ManageController extends Controller
      */
     public function availabilityAction()
     {
-        $data = [
-            'api' => $this->getApiHealthData(),
-//            'client' => $this->getHealthData(),
-        ];
+        $apiInfo = new \AppBundle\Service\Availability\Api($this->get('apiclient'));
+        // add here other services
         
         $response = $this->render('AppBundle:Manage:availability.html.twig', [
-            'data' => $data
+            'info' => [
+                'API' => $apiInfo->toArray()
+            ]
         ]);
-        
-        if (!$data['api']['healthy']/* || !$data['client']['healthy']*/) {
+
+        if (!$apiInfo->isHealthy()) {
             $response->setStatusCode('500');
         }
-        
+
         return $response;
     }
-    
-     /**
+
+    /**
      * @Route("/availability/health-check.xml")
      * @Method({"GET"})
      */
     public function healthCheckXmlAction()
     {
         $start = microtime(true);
-        
-        $api = $this->getApiHealthData();
-//        $client = $this->getHealthData();        
-        
-        $status = $api['healthy']/* && $client['healthy']*/;
-        
+
+        $apiInfo = $this->getApiInfo();
+        $allHealthy = $apiInfo['healthy'];
+
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $status ? 'OK' : 'API down',
+            'status' => $allHealthy ? 'OK' : 'ERROR: ' . $apiInfo['errors'],
             'time' => microtime(true) - $start
         ]);
-        $response->setStatusCode($status ? 200 : 500);
+        $response->setStatusCode($allHealthy ? 200 : 500);
         $response->headers->set('Content-Type', 'text/xml');
-        
+
         return $response;
-//        
-//        
-//        $ret = $this->forward('availability');
-//        print_r($ret);die;
-//        
-//        $this->_helper->viewRenderer->setNoRender(true);
-//        $this->_helper->getHelper('layout')->disableLayout();
-//        header('Content-Type: text/xml');
-//        $xml->status = $state['all_ok']?'OK':$serviceDown;
-//        $xml->response_time = $response_time;
-//        echo $xml->asXML();
     }
-    
-    
-//    private function getHealthData()
-//    {
-//        $data = [
-//            'php_version' => version_compare(PHP_VERSION, "5.4") >= 0,
-//            'permissions_app/log' => $this->areLogPermissionCorrect(),
-//            'permissions_app/cache' => $this->areCachePermissionCorrect(),
-//        ];
-//        
-//        $data['healthy'] = count(array_filter($data)) === count($data);
-//        
-//        return $data;
-//    }
-    
-    
-    private function getApiHealthData()
-    {
-        $content = $this->get('apiclient')->get('/manage/availability')->getBody();
-        $contentArray = json_decode($content, 1);
-        if (json_last_error() !== JSON_ERROR_NONE || empty($contentArray['data'])) {
-            throw new \RuntimeException("Cannot decode API response. " . json_last_error_msg());
-        }
-        return $contentArray['data'];
-    }
-    
-    private function areLogPermissionCorrect()
-    {
-        return is_writable($this->get('kernel')->getRootDir() . '/logs/');
-    }
-    
-    private function areCachePermissionCorrect()
-    {
-        return is_writable($this->get('kernel')->getRootDir() . '/cache/');
-    }
+
 }
