@@ -4,7 +4,7 @@ namespace AppBundle\Service\Availability;
 
 use AppBundle\Service\ApiClient;
 
-class Api extends AvailabilityAbstract
+class ApiAvailability extends ServiceAvailabilityAbstract
 {
     public function __construct(ApiClient $apiClient)
     {
@@ -19,6 +19,11 @@ class Api extends AvailabilityAbstract
         
         $this->isHealthy = $contentArray['data']['healthy'];
         $this->errors = $contentArray['data']['errors'];
+    }
+    
+    public function getName()
+    {
+        return 'Api';
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Service\Availability;
 
-abstract class AvailabilityAbstract
+abstract class ServiceAvailabilityAbstract
 {
 
     /**
@@ -42,5 +42,10 @@ abstract class AvailabilityAbstract
             'errors' => $this->getErrors(),
         ];
     }
+    
+     /**
+     * @return string
+     */
+    abstract public function getName();
 
 }
