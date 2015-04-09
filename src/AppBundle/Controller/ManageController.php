@@ -18,15 +18,15 @@ class ManageController extends Controller
     public function availabilityAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
-        
+
         $data = [
             'healthy' => $dbHealthy,
             'errors' => $dbError
         ];
-        
+
         return $data;
     }
-    
+
     /**
      * @return array [boolean healthy, error string]
      */
@@ -34,11 +34,23 @@ class ManageController extends Controller
     {
         try {
             $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findAll();
+
             return [true, ''];
         } catch (\Exception $e) {
-            return [false, 'Database error: ' . $e->getMessage()];
+            // customise error message if possible
+            $returnMessage = 'Database generic error';
+            if ($e instanceof \PDOException && $e->getCode() === 7) {
+                $returnMessage = 'Database service not running';
+            }
+            if ($e instanceof \Doctrine\DBAL\DBALException) {
+                $returnMessage = 'Database schema error';
+            }
+
+            // log real error message
+            $this->get('logger')->error($e->getMessage());
+
+            return [false, $returnMessage];
         }
-        
     }
 
 }
