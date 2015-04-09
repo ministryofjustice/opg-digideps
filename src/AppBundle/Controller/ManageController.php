@@ -17,42 +17,28 @@ class ManageController extends Controller
      */
     public function availabilityAction()
     {
+        list($dbHealthy, $dbError) = $this->dbInfo();
+        
         $data = [
-            'database_connected' => $this->isDdConnected(),
-            //'permissions_app/log' => $this->areLogPermissionCorrect(),
-            //'permissions_app/cache' => $this->areCachePermissionCorrect(),
-            //'php_version' => $this->isPhpVersionCorrect(),
+            'healthy' => $dbHealthy,
+            'errors' => $dbError
         ];
-        $data['healthy'] = count(array_filter($data)) === count($data);
-
+        
         return $data;
     }
     
-    
-    private function isDdConnected()
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function dbInfo()
     {
         try {
             $this->getDoctrine()->getRepository('AppBundle\Entity\User')->findAll();
-            return true;
+            return [true, ''];
         } catch (\Exception $e) {
-            return false;
+            return [false, 'Database error: ' . $e->getMessage()];
         }
         
     }
-    
-//    private function areLogPermissionCorrect()
-//    {
-//        return is_writable($this->get('kernel')->getRootDir() . '/logs/');
-//    }
-//    
-//    private function areCachePermissionCorrect()
-//    {
-//        return is_writable($this->get('kernel')->getRootDir() . '/cache/');
-//    }
-//    
-//    private function isPhpVersionCorrect()
-//    {
-//        return version_compare(PHP_VERSION, "5.4") >= 0;
-//    }
 
 }
