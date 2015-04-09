@@ -104,6 +104,7 @@ class BehatController extends Controller
     {
        return new Response('done');
         
+       //TODO implement and test, including corrupted data sets, or password changed
 //       $apiClient = $this->get('apiclient');
 //       
 //       // delete behat data and related records
