@@ -46,14 +46,13 @@ class ManageController extends Controller
     {
         $start = microtime(true);
 
-        $apiInfo = $this->getApiInfo();
-        $allHealthy = $apiInfo['healthy'];
+        $apiInfo = new \AppBundle\Service\Availability\Api($this->get('apiclient'));
 
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
-            'status' => $allHealthy ? 'OK' : 'ERROR: ' . $apiInfo['errors'],
+            'status' => $apiInfo->isHealthy() ? 'OK' : 'ERROR: ' . $apiInfo->getErrors(),
             'time' => microtime(true) - $start
         ]);
-        $response->setStatusCode($allHealthy ? 200 : 500);
+        $response->setStatusCode($apiInfo->isHealthy() ? 200 : 500);
         $response->headers->set('Content-Type', 'text/xml');
 
         return $response;
