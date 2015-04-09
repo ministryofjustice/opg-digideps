@@ -30,9 +30,9 @@ security:
             pattern:  ^/behat/*
             security: false
             
-        healthCheckController:
-            pattern:  ^/health-check/*
-            security: false    
+        manageController:
+            pattern:  ^/manage/availability*
+            security: false
 
         secured_area:
             form_login:
