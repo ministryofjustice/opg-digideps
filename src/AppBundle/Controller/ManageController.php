@@ -39,13 +39,11 @@ class ManageController extends Controller
      */
     public function healthCheckXmlAction()
     {
-        $start = microtime(true);
-
-        list($healthy, $errors) = $this->servicesHealth();
+        list($healthy, $errors, $services, $time) = $this->servicesHealth();
         
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
-            'time' => microtime(true) - $start
+            'time' => $time
         ]);
         $response->setStatusCode($healthy ? 200 : 500);
         $response->headers->set('Content-Type', 'text/xml');
@@ -58,6 +56,8 @@ class ManageController extends Controller
      */
     private function servicesHealth()
     {
+        $start = microtime(true);
+        
         $services = [
             new \AppBundle\Service\Availability\ApiAvailability($this->get('apiclient'))
         ];
@@ -72,7 +72,7 @@ class ManageController extends Controller
             }
         }
         
-        return [$healthy, implode('. ', $errors), $services];
+        return [$healthy, implode('. ', $errors), $services, microtime(true) - $start];
     }
 
 }
