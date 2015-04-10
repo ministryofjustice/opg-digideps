@@ -21,7 +21,7 @@
         </div>
 
         {% if app.request.attributes.get('_route') == 'report_declaration' %}
-            <a href="{{ path('report_overview', {reportId: report.id}) }}">
+            <a href="{{ path('report_overview', {reportId: report.id}) }}" class="behat-link-report-preview-go-back">
                 {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
             </a>
 

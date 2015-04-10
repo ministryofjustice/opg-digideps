@@ -346,18 +346,29 @@ Feature: report
     @deputy
     Scenario: submit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I follow "Ready to submit"
-        And I follow "Go back to make changes to the report"
-        When I follow "Ready to submit"
-        # wrong values
-        And I submit the form
+        # submit without ticking
+        When I press "report_submit_submitReport"
         Then the following fields should have an error:
-            | report_declaration_agree   |
+            | report_submit_reviewed_n_checked   |
+        # tick and submit
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        # test "go back" link
+        And I click on "report-preview-go-back"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        # preview page: submit without ticking "agree"
+        When I submit the form
+        Then the following fields should have an error:
+            | report_declaration_agree |
         # right values  
         When I check "report_declaration_agree"
         And I submit the form
         And the form should not contain an error
         And the report is submitted
+        And the URL should match "/report/\d+/overview"
         #And I should not see "Ready to submit"
         
 
