@@ -101,7 +101,7 @@ class AdminController extends Controller
     
     /**
      * @Route("/delete/{id}", name="admin_delete")
-     * @Method({"DELETE"})
+     * @Method({"GET"})
      * @Template()
      * 
      * @param integer $id
