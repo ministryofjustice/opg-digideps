@@ -13,8 +13,8 @@ form {
 
 .form-group {
 
-  float: none;  /* Only flat left if within a form container. */
-  form &{
+  float: none; /* Only flat left if within a form container. */
+  form & {
     float: left;
   }
 
@@ -45,6 +45,11 @@ form {
   width: 50%;
   background-color: #dee0e2;
   border: 1px solid #0b0c0c;
+}
+
+.form-control__checkbox {
+  -webkit-appearance: checkbox;
+  width: auto;
 }
 
 .form-control__select {
@@ -79,7 +84,7 @@ form {
   padding: 4px 8px 2px;
   border: 1px solid $grey-2;
 
-  .field-with-errors &{
+  .field-with-errors & {
     border: 2px solid #df3034;
     border-right: 0;
   }

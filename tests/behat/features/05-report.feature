@@ -1,6 +1,44 @@
 Feature: report
     
     @deputy
+    Scenario: test tabs for "Health & Welfare" report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I save the page as "report-health-welfare-homepage"
+        When I am on the homepage
+        Then I should see a "#tab-contacts" element
+        And I should see a "#tab-decisions" element
+        But I should not see a "#tab-accounts" element
+        And I should not see a "#tab-assets" element
+
+    @deputy
+    Scenario: change report type to "Property and Affairs"
+        Given I change the report "1" court order type to "Property and Affairs"
+
+    @deputy
+    Scenario: test tabs for "Property and Affairs" report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I am on the homepage
+        And I save the page as "report-property-affairs-homepage"
+        Then I should see a "#tab-contacts" element
+        And I should see a "#tab-decisions" element
+        And I should see a "#tab-accounts" element
+        And I should see a "#tab-assets" element
+
+    @deputy
+    Scenario: Check report notification and submission warnings
+        # set report due
+        Given I modify the report 1 end date to today "-3 days"
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should see the "tab-contacts-warning" region
+        Then I should see the "tab-decisions-warning" region
+        Then I should see the "tab-accounts-warning" region
+        Then I should see the "tab-assets-warning" region
+        # disabled element are not visible from behat
+        And I should not see a "report_submit_submitReport" element
+        # set back report not to be due
+        And I modify the report 1 end date to today "+3 days"
+
+    @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I follow "tab-contacts"
@@ -95,12 +133,13 @@ Feature: report
         And I save the page as "report-decision-list"
         Then the response status code should be 200
         And the form should not contain an error
+        When I click on "add-a-decision"
         # add another decision on 31/12/2015
          And I fill in the following:
             #| decision_title | Sold house in Sw18 |
             | decision_description | 3 beds |
-            | decision_decisionDate_day | 31 |
-            | decision_decisionDate_month | 12 |
+            | decision_decisionDate_day | 2 |
+            | decision_decisionDate_month | 1 |
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
@@ -109,41 +148,13 @@ Feature: report
         And I should see "2 beds" in the "list-decisions" region
         And I should see "3 beds" in the "list-decisions" region
         
-
-    @deputy
-    Scenario: test tabs for "Health & Welfare" report
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I save the page as "report-health-welfare-homepage"
-        When I am on the homepage
-        Then I should see a "#tab-contacts" element
-        And I should see a "#tab-decisions" element
-        But I should not see a "#tab-accounts" element
-        And I should not see a "#tab-assets" element
-
-
-    @deputy
-    Scenario: change report type to "Property and Affairs"
-        Given I change the report "1" court order type to "Property and Affairs"
-
-
-    @deputy
-    Scenario: test tabs for "Property and Affairs" report
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I am on the homepage
-        And I save the page as "report-property-affairs-homepage"
-        Then I should see a "#tab-contacts" element
-        And I should see a "#tab-decisions" element
-        And I should see a "#tab-accounts" element
-        And I should see a "#tab-assets" element
-
-
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I follow "tab-assets"
         And I save the page as "report-assets-empty"
         # wrong form
-        And I submit the form
+        And I press "asset_save"
         And I save the page as "report-assets-add-error-empty"
         Then the following fields should have an error:
             | asset_title |
@@ -157,7 +168,7 @@ Feature: report
             | asset_valuationDate_day | 99 | 
             | asset_valuationDate_month |  | 
             | asset_valuationDate_year | 2015 | 
-        And I submit the form
+        And I press "asset_save"
         And I save the page as "report-assets-add-error-date"
         Then the following fields should have an error:
             | asset_valuationDate_day |
@@ -171,7 +182,7 @@ Feature: report
             | asset_valuationDate_day |  | 
             | asset_valuationDate_month |  | 
             | asset_valuationDate_year |  | 
-        And I submit the form
+        And I press "asset_save"
         And I save the page as "report-assets-list-one"
         Then the response status code should be 200
         And the form should not contain an error
@@ -186,7 +197,7 @@ Feature: report
             | asset_valuationDate_day | 10 | 
             | asset_valuationDate_month | 11 | 
             | asset_valuationDate_year | 2015 | 
-        And I submit the form
+        And I press "asset_save"
         And I save the page as "report-assets-list-two"
         Then I should see "Alfa Romeo 156 1.9 JTD" in the "list-assets" region
         And I should see "£13,000.00" in the "list-assets" region
@@ -199,7 +210,7 @@ Feature: report
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # wrong form
-        And I submit the form
+        And I press "account_save"
         And I save the page as "report-account-add-error"
         Then the following fields should have an error:
             | account_bank |
@@ -228,7 +239,7 @@ Feature: report
             | account_openingDate_month | 01 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,150.00 |
-        And I submit the form
+        And I press "account_save"
         And I save the page as "report-account-list"
         Then the response status code should be 200
         And the form should not contain an error
@@ -310,7 +321,8 @@ Feature: report
         When I modify the report 1 end date to today "-3 days"
         And I go to the homepage
         When I follow "tab-accounts"
-        And I click on "account-1-add-closing-balance"
+        Then I should see the "account-n1-warning" region
+        And I click on "account-n1"
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 
             | accountBalance_closingDate_month | | 
@@ -341,6 +353,44 @@ Feature: report
         When I follow "tab-accounts"
         Then I should see "3,105.50" in the "account-1-closing-balance" region
         And I should see "30/12/2015" in the "account-1-closing-date" region
+
+
+    @deputy
+    Scenario: submit report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # check there are no notifications
+        Then I should not see the "tab-contacts-warning" region
+        Then I should not see the "tab-decisions-warning" region
+        Then I should not see the "tab-accounts-warning" region
+        Then I should not see the "tab-assets-warning" region
+        # set report due
+        Given I modify the report 1 end date to today "-3 days"
+        And I go to the homepage
+        Then I should not see a "tab-contact-notification" element
+        # submit without ticking
+        When I press "report_submit_submitReport"
+        Then the following fields should have an error:
+            | report_submit_reviewed_n_checked   |
+        # tick and submit
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        # test "go back" link
+        And I click on "report-preview-go-back"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        # preview page: submit without ticking "agree"
+        When I submit the form
+        Then the following fields should have an error:
+            | report_declaration_agree |
+        # right values  
+        When I check "report_declaration_agree"
+        And I submit the form
+        And the form should not contain an error
+        And the report is submitted
+        And the URL should match "/report/\d+/overview"
+        #And I should not see "Ready to submit"
         
 
         

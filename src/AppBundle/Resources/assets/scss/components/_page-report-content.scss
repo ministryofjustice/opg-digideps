@@ -1,0 +1,16 @@
+.page-report-content {
+
+  .nav-tabs {
+    li {
+      position: relative;
+
+      .icon__notification {
+        top: 8px;
+        position: absolute;
+        left: 6px;
+        z-index: 10;
+      }
+    }
+  }
+
+}

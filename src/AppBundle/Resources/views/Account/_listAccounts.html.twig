@@ -10,53 +10,60 @@
                     <dt class="visuallyhidden">{{ 'listing.bank' | trans }}</dt>
                     <dd class="report-list__item-fields-description">
                         <h3>
-                            <a href="{{ linkToAccountPage }}" class="behat-link-account-n{{loop.index}}">
-                                {{ account.bank }}
-                            </a>
+                            {% if report.isDue() and account.closingBalance is null %}
+                                <a href="{{ linkToAccountPage }}#account-header"
+                                   class="behat-link-account-n{{ loop.index }}">
+                                    {{ account.bank }}
+                                </a>
+                            {% else %}
+                                <a href="{{ linkToAccountPage }}" class="behat-link-account-n{{ loop.index }}">
+                                    {{ account.bank }}
+                                </a>
+                            {% endif %}
                         </h3>
                     </dd>
-                    {% if report.isDue and account.closingBalance is null %}
-                    <dd style="border-left: #c0c0c0 5px solid; padding-left: 10px;">
-                      <a href="{{ linkToAccountPage }}#closing-balance" class="behat-link-account-{{ account.id }}-add-closing-balance">
-                      {{ 'listing.addClosingBalanceWarning' | trans }} 
-                      </a>
-                    </dd>
-                    {% endif %}
                 </div>
                 <div class="report-list__item-fields-col-acc-num">
                     <dt class="visuallyhidden">{{ 'listing.accountNumber' | trans }}</dt>
                     <dd class="report-list__item-fields-description report-list__item-fields-description--normal">&bull;&bull;&bull;&bull;{{ account.accountNumber }}</dd>
                 </div>
                 <div class="report-list__item-fields-col-info">
-                    <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.totalBalance' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
-                            {{ 'listing.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
-                    </div>
-                    {% if account.lastEdit %}
-                     <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.lastEdited' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.lastEdit | date("d/m/Y") }}</dd>
-                     </div>
-                    {% else %}
-                     <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.created' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.createdAt | date("d/m/Y") }}</dd>
-                     </div>  
-                    {% endif %}
                     {% if account.closingBalance %}
-                    <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.closingBalance' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal behat-region-account-{{ account.id }}-closing-balance">{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
-                    </div>
+                        <div>
+                            <dt class="report-list__item-fields-term">{{ 'listing.closingBalance' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal behat-region-account-{{ account.id }}-closing-balance">{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
+                        </div>
+                    {% else %}
+                        <div>
+                            <dt class="report-list__item-fields-term">{{ 'listing.totalBalance' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
+                                {{ 'listing.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
+                        </div>
                     {% endif %}
                     {% if account.closingDate %}
-                      <div>
-                        <dt class="report-list__item-fields-term">{{ 'listing.closingDate' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--normal behat-region-account-{{ account.id }}-closing-date">{{ account.closingDate | date("d/m/Y") }}</dd>
-                    </div>
-                    {% endif %} 
+                        <div>
+                            <dt class="report-list__item-fields-term">{{ 'listing.closingDate' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal behat-region-account-{{ account.id }}-closing-date">{{ account.closingDate | date("d/m/Y") }}</dd>
+                        </div>
+                    {% elseif account.lastEdit %}
+                        <div>
+                            <dt class="report-list__item-fields-term">{{ 'listing.lastEdited' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.lastEdit | date("d/m/Y") }}</dd>
+                        </div>
+                    {% else %}
+                        <div>
+                            <dt class="report-list__item-fields-term">{{ 'listing.created' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal">{{ account.createdAt | date("d/m/Y") }}</dd>
+                        </div>
+                    {% endif %}
                 </div>
+                {% if report.isDue() and account.closingBalance is null %}
+                    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+                    transDomain: translationDomain,
+                    pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
+                    iconClass: 'icon icon__notification behat-region-account-n' ~ account.id ~ '-warning'
+                    } %}
+                {% endif %}
             </dl>
 
         </li>

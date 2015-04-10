@@ -1,29 +1,39 @@
 {% set translationDomain = "report-account-balance" %}
 {% trans_default_domain translationDomain %}
 
-<div id="closing-balance" class="behat-region-account-closing-balance-form">
-  
-  {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+
+<div id="closing-balance" class="behat-region-account-closing-balance-form account-closing-balance-form">
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
-    pageSectionTitle: 'header'
-  } %}
-  
-  {{ form_start(formBalance, {attr: {novalidate: 'novalidate' }}) }}
-  
-    {{ form_known_date(formBalance.closingDate, 'closingDate') }}
-    
+    subSectionTitle: 'form.closing.subSectionTitle',
+    iconClass: 'icon icon__notification'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'form.closing.subSectionDescription'
+    } %}
+
+    {{ form_start(formBalance, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_known_date(formBalance.closingDate, 'form.closing.controls.closingDate') }}
+
     {{ form_widget(formBalance.id) }}
 
-    {{ form_input(formBalance.closingBalance, 'closingBalance', {
-        'inputPrefix' : '£',
-        'inputClass' : 'form-control__number'
+    {{ form_input(formBalance.closingBalance, 'form.closing.controls.closingBalance', {
+    'inputPrefix' : 'form.closing.currencySymbol',
+    'inputClass' : 'form-control__number'
     } ) }}
 
-    
+
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(formBalance.save, 'save', {
-              'labelText': ( 'save.label') | trans,
-              'buttonClass': 'behat-link-save'
-              }) }}
+    'labelText': ( 'form.closing.controls.save.label') | trans,
+    'buttonClass': 'behat-link-save'
+    }) }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {{ form_end(formBalance) }}
+
 </div>

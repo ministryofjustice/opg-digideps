@@ -1,5 +1,6 @@
 @import "import-moj";
 
+@import "components/account-closing-balance-form";
 @import "components/account-header";
 @import "components/account-transactions";
 @import "components/app-typography";
@@ -10,12 +11,14 @@
 @import "components/layout";
 @import "components/nav-tabs";
 @import "components/page-body";
+@import "components/page-report-content";
 @import "components/page-report-header";
 @import "components/page-section-description";
 @import "components/page-section-list";
 @import "components/page-section-title";
 @import "components/page-section-warning";
 @import "components/progress_indicator";
+@import "components/report-declaration";
 @import "components/report-list";
 @import "components/report-meta-data";
 @import "components/report-overview";

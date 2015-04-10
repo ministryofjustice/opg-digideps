@@ -307,4 +307,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
        $this->visit("behat/{$secret}/{$link}");
     }
     
+    /**
+     * @When the report is submitted
+     */
+    public function theReportIsSubmitted()
+    {
+        //TODO check db
+        $this->assertPageContainsText('The report has been submitted');
+    }
+    
 }

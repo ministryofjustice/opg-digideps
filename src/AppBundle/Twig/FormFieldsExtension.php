@@ -150,7 +150,7 @@ class FormFieldsExtension extends \Twig_Extension
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
-        
+
         //sort out labelText translation
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label', [], $domain );
         $buttonClass = isset($vars['buttonClass']) ? $vars['buttonClass']: null;

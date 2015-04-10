@@ -1,4 +1,4 @@
 <!--Component: Page/sub-section-description-->
 <p class="sub-section-description">
-    {{ subSectionDescription|trans({}, transDomain)|raw }}
+    {{ subSectionDescription|trans(transOptions | default({}), transDomain)|raw }}
 </p>

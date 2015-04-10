@@ -16,6 +16,10 @@ page:
       label: "Sort code"
     accountEditLink:
       label: "Edit account details"
+    closingBalanceDate:
+      label: "Closing balance date"
+    closingBalance:
+      label: "Closing balance"
 moneyIn:
   panelTitle: Money paid in
   panelFooter: Money in total

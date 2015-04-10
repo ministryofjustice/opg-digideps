@@ -1,4 +1,4 @@
-<div class="form-group {{ formGroupClass }} {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+<div class="form-group{% if not element.vars.valid %} field-with-errors behat-region-form-errors{% endif %}{% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 
     {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
 

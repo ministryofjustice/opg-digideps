@@ -1,39 +1,39 @@
-{% extends 'AppBundle:Components/Page:page-report.html.twig' %}
-{% set translationDomain = "report-accounts" %}
-{% trans_default_domain translationDomain %}
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+activeTab: "tab-accounts"
+} %}
+    {% set translationDomain = "report-accounts" %}
+    {% trans_default_domain translationDomain %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
-{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
+    {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
-{% block pageNavigation %}
-    {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with { 'report': report, tab: 'tab-accounts'} %}
-{% endblock %}
+    {% block pageBody %}
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'page.pageSectionTitle'
+        } %}
 
-{% block pageBody %}
-    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionTitle: 'page.pageSectionTitle'
-    } %}
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription'
+        } %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'page.pageSectionWarning'
+        } %}
 
-    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionWarning: 'page.pageSectionWarning'
-    } %}
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
 
-    {% block validationSummary %}
-        {{ form_errors_list(form) }}
+        {% include 'AppBundle:Account:_account_form.html.twig' %}
+
+        {% if accounts is not empty %}
+            {% include 'AppBundle:Account:_listAccounts.html.twig' %}
+        {% endif %}
+
     {% endblock %}
 
-    {% include 'AppBundle:Account:_account_form.html.twig' %}
-
-    {% if accounts is not empty %}
-        {% include 'AppBundle:Account:_listAccounts.html.twig' %}
-    {% endif %}
-
-{% endblock %}
+{% endembed %}

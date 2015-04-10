@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
@@ -62,12 +63,26 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId, 'transactions');
+        $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
+        $request = $this->getRequest();
+        
+        $form = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
+        if($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            
+            if($form->isValid()){
+                if($report->readyToSubmit()){
+                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                }
+            }
+        }
         
         return [
             'report' => $report,
             'client' => $client,
+            'report_form_submit' => $form->createView()
         ];
     }
     
@@ -88,15 +103,28 @@ class ReportController extends Controller
         $contact = new EntityDir\Contact();
         
         $form = $this->createForm(new FormDir\ContactType(), $contact);
-        $form->handleRequest($request);
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
         
         if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $contact = $form->getData();
-                $contact->setReport($reportId);
-                
-                $apiClient->postC('add_report_contact', $contact);
-                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+            $form->handleRequest($request);
+            $reportSubmit->handleRequest($request);
+           
+            if($form->get('save')->isClicked()){
+                if($form->isValid()){
+                    $contact = $form->getData();
+                    $contact->setReport($reportId);
+
+                    $apiClient->postC('add_report_contact', $contact);
+                    return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+                }
+            }else{
+               
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
         
@@ -105,7 +133,8 @@ class ReportController extends Controller
             'contacts' => $contacts,
             'action' => $action,
             'report' => $report,
-            'client' => $client];
+            'client' => $client,
+            'report_form_submit' => $reportSubmit->createView() ];
     }
     
   
@@ -127,14 +156,27 @@ class ReportController extends Controller
         $form = $this->createForm(new FormDir\DecisionType([
             'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
         ]), $decision);
+        
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            if ($form->isValid()) {
-                // add decision
-                $apiClient->postC('add_decision', $form->getData());
+            $reportSubmit->handleRequest($request);
+           
+            if($form->get('save')->isClicked()){
+                if ($form->isValid()) {
+                    // add decision
+                    $apiClient->postC('add_decision', $form->getData());
+
+                    return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
+                }
+            }else{
                 
-                return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
         
@@ -143,7 +185,8 @@ class ReportController extends Controller
             'form' => $form->createView(),
             'report' => $report,
             'client' => $this->getClient($report->getClient()),
-            'action' => $action
+            'action' => $action,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
     
@@ -178,18 +221,29 @@ class ReportController extends Controller
         $asset = new EntityDir\Asset();
         
         $form = $this->createForm(new FormDir\AssetType($titles),$asset);
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'query' => ['id' => $reportId ]]);
         
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
+            $reportSubmit->handleRequest($request);
 
-            if($form->isValid()){
-                $asset = $form->getData();
-                $asset->setReport($reportId);
+            if($form->get('save')->isClicked()){
+                if($form->isValid()){
+                    $asset = $form->getData();
+                    $asset->setReport($reportId);
 
-                $apiClient->postC('add_report_asset', $asset);
-                return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
+                    $apiClient->postC('add_report_asset', $asset);
+                    return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
+                }
+            }else{
+         
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
 
@@ -198,10 +252,52 @@ class ReportController extends Controller
             'client' => $client,
             'action' => $action,
             'form'   => $form->createView(),
-            'assets' => $assets
+            'assets' => $assets,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
 
+    
+    /**
+     * @Route("/report/{reportId}/declaration", name="report_declaration")
+     * @Template()
+     */
+    public function declarationAction(Request $request, $reportId)
+    {
+        $util = $this->get('util');
+        $report = $this->getReport($reportId);
+        if (!$report->isDue()) {
+            throw new \RuntimeException("Report not ready for submission.");
+        }
+        $client = $util->getClient($report->getClient());
+        
+        $form = $this->createForm(new FormDir\ReportDeclarationType());
+        $form->handleRequest($request);
+        if($form->isValid()){
+            
+            /**
+             * //TODO
+             * 
+             * ADD REAL SUBMISSION OR SENDIN HERE
+             * 
+             */
+            
+            $request->getSession()->getFlashBag()->add(
+                'notice', 
+                $this->get('translator')->trans('page.reportSubmittedFlashMessage', [], 'report-declaration')
+            );
+            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+        }
+        
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+    
+    
     /**
      * @param integer $clientId
      *
@@ -217,7 +313,7 @@ class ReportController extends Controller
      * 
      * @return Report
      */
-    protected function getReport($reportId,$group = 'basic')
+    protected function getReport($reportId,$group = 'transactions')
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId, 'group' => $group ]]);
     }

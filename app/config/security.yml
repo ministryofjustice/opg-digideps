@@ -29,6 +29,10 @@ security:
         behatControllers:
             pattern:  ^/behat/*
             security: false
+            
+        manageController:
+            pattern:  ^/manage/availability*
+            security: false
 
         secured_area:
             form_login:

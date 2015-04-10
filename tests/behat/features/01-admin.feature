@@ -1,8 +1,10 @@
 Feature: admin
     
     @deputy @admin
-    Scenario: reset behat data before starting
-        Given I reset the behat data
+    Scenario: check app before starting
+        Given I am on "/manage/availability/health-check.xml"
+        Then the response status code should be 200
+        #And I reset the behat data # not implemented yet. run phing behat on api and then on the client to prepare
 
     @deputy
     Scenario: login and add deputy user

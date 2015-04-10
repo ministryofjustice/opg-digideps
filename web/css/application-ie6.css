@@ -1381,6 +1381,11 @@ input[type=number] {
     Do need import application specific code into this file.
 ***************************************************************
 */
+.account-closing-balance-form {
+  margin-bottom: 30px;
+  padding: 5px 0 5px 10px;
+  border-left: 3px solid #bfc1c3; }
+
 .account-header {
   position: relative;
   background-color: #f8f8f8;
@@ -1406,6 +1411,12 @@ input[type=number] {
     .account-header__item-fields-set--opening-date {
       position: absolute;
       top: 53px; }
+    .account-header__item-fields-set--closing-date {
+      position: absolute;
+      top: 78px;
+      margin-top: 5px; }
+    .account-header__item-fields-set--closing-balance {
+      margin-top: 5px; }
     .account-header__item-fields-set--edit-link {
       float: none;
       position: absolute;
@@ -1726,6 +1737,10 @@ form {
   background-color: #dee0e2;
   border: 1px solid #0b0c0c; }
 
+.form-control__checkbox {
+  -webkit-appearance: checkbox;
+  width: auto; }
+
 .form-control__select {
   border: 0;
   width: 100%;
@@ -1924,6 +1939,14 @@ form {
   .report-money-input .page-body {
     margin-top: 0; }
 
+.page-report-content .nav-tabs li {
+  position: relative; }
+  .page-report-content .nav-tabs li .icon__notification {
+    top: 8px;
+    position: absolute;
+    left: 6px;
+    z-index: 10; }
+
 .page-report-content .page-report-header .page-header-titles {
   float: left;
   width: 56%; }
@@ -1946,6 +1969,46 @@ form {
     .page-report-content .page-report-header .client-name {
       font-size: 32px;
       line-height: 1.09375; } }
+.page-report-content .page-report-header .page-report-submission-form button {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none;
+  margin-top: 20px; }
+  @media (max-width: 640px) {
+    .page-report-content .page-report-header .page-report-submission-form button {
+      font-size: 16px;
+      line-height: 1.25; } }
+.page-report-content .page-report-header .page-report-submission-form .reviewed_n_checked {
+  margin-top: 10px;
+  margin-bottom: 0;
+  background-color: #dee0e2;
+  position: relative;
+  padding: 10px; }
+  .page-report-content .page-report-header .page-report-submission-form .reviewed_n_checked label {
+    width: auto;
+    margin-left: 30px;
+    margin-top: 3px; }
+  .page-report-content .page-report-header .page-report-submission-form .reviewed_n_checked .form-control__checkbox {
+    position: absolute;
+    top: 13px; }
+.page-report-content .page-report-header .page-report-message {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 400;
+  text-transform: none;
+  background-color: #dee0e2;
+  margin-top: 30px;
+  padding: 15px; }
+  @media (max-width: 640px) {
+    .page-report-content .page-report-header .page-report-message {
+      font-size: 16px;
+      line-height: 1.25; } }
+.page-report-content .page-report-header .report-go-back-link {
+  display: block;
+  margin-top: 20px; }
 
 .page-section-description {
   width: 65%;
@@ -1997,7 +2060,15 @@ form {
   padding-bottom: 10px;
   padding-left: 10px;
   width: 65%;
-  margin-bottom: 30px; }
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden; }
+  .page-section-warning .icon {
+    float: left; }
+    .page-section-warning .icon + p {
+      float: left;
+      margin-top: 6px;
+      margin-left: 10px; }
 
 ol.progress {
   display: table;
@@ -2082,6 +2153,9 @@ ol.progress {
         margin-right: 14px; }
     ol.progress li:last-child .progress__step {
       margin-right: 14px; }
+
+.report-declaration .tab-content .tab-pane {
+  border-top: 0; }
 
 .report-list {
   border-top: 1px solid #dee0e2;
@@ -2206,6 +2280,29 @@ ol.progress {
   overflow: hidden;
   margin-left: 8px;
   width: 30%; }
+.report-list--accounts .page-section-warning {
+  top: -10px;
+  margin-bottom: 0; }
+  #content .report-list--accounts .page-section-warning .icon + p {
+    font-weight: 700; }
+
+.report-list--accounts-closing {
+  border: 0;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 30px; }
+  .report-list--accounts-closing .report-list__item {
+    border: 0;
+    padding: 0;
+    margin-bottom: 10px; }
+  .report-list--accounts-closing .report-list__item-fields-col-bank {
+    display: block;
+    float: left;
+    width: 35%; }
+  .report-list--accounts-closing .report-list__item-fields-col-acc-num {
+    display: block;
+    float: left;
+    width: 30%; }
 
 .report-list--assets dt.report-list__item-fields-term {
   width: 130px; }
@@ -2260,6 +2357,12 @@ ol.progress {
 
 .sub-section-title {
   margin-bottom: 30px; }
+  .sub-section-title .icon {
+    float: left; }
+    .sub-section-title .icon + h3 {
+      float: left;
+      margin-top: 5px;
+      margin-left: 10px; }
   .sub-section-title h3 {
     font-family: "nta", Arial, sans-serif;
     font-size: 24px;
@@ -2311,6 +2414,17 @@ span.icon {
     background-position: -12px -16px;
     width: 21px;
     height: 13px; }
+  span.icon__notification {
+    background-image: url("/images/icon-notification.png");
+    /*
+        @include device-pixel-ratio() {
+          background-image: url("/images/accordian-arrow-2x.png");
+          background-size: 100%;
+        }
+    */
+    background-position: 0px 0px;
+    width: 35px;
+    height: 35px; }
 
 .form-last-four-digits ul {
   list-style: disc;

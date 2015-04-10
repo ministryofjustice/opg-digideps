@@ -251,6 +251,18 @@ class Report
         return $this;
     }
     
+    public function missingAccounts()
+    {
+        if( $this->courtOrderType != self::PROPERTY_AND_AFFAIRS ){
+            return false;
+        }
+        
+        if(empty($this->accounts)){
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * @return boolean
      */
@@ -308,12 +320,12 @@ class Report
      * @return boolean
      * @return boolean@var boolean
      */
-    public function hasContacts()
+    public function missingContacts()
     {
         if(empty($this->contacts)){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
     
     /**
@@ -339,12 +351,12 @@ class Report
      * 
      * @return boolean
      */
-    public function hasDecisions()
+    public function missingDecisions()
     {
         if(empty($this->decisions)){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
     
     /**
@@ -370,12 +382,16 @@ class Report
      * 
      * @return boolean
      */
-    public function hasAssets()
+    public function missingAssets()
     {
-        if(empty($this->assets)){
+        if( $this->courtOrderType != self::PROPERTY_AND_AFFAIRS ){
             return false;
         }
-        return true;
+        
+        if(empty($this->assets)){
+            return true;
+        }
+        return false;
     }
     
     /**
@@ -385,11 +401,11 @@ class Report
     public function readyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if($this->hasOutstandingAccounts() || !$this->hasContacts() || !$this->hasAssets() || !$this->hasDecisions()){
+            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions()){
                 return false;
             }
         }else{
-            if(!$this->hasContacts() || !$this->hasDecisions()){
+            if($this->missingContacts() || $this->missingDecisions()){
                 return false;
             }
         }
