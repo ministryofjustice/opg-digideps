@@ -40,16 +40,17 @@ form {
   margin-left: 2px;
 }
 
+.form-group__checkbox {
+
+  label {
+  }
+}
+
 .form-control__select-container {
   border: 1px solid #bfc1c3;
   width: 50%;
   background-color: #dee0e2;
   border: 1px solid #0b0c0c;
-}
-
-.form-control__checkbox {
-  -webkit-appearance: checkbox;
-  width: auto;
 }
 
 .form-control__select {

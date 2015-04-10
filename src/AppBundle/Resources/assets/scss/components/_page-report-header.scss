@@ -33,22 +33,9 @@
       .reviewed_n_checked {
         margin-top: 10px;
         margin-bottom: 0;
-        background-color: $grey-3;
         position: relative;
-        padding: 10px;
-
-        label {
-          width: auto;
-          margin-left: 30px;
-          margin-top: 3px;
-        }
-
-        .form-control__checkbox {
-          position: absolute;
-          top: 13px;
-        }
-
       }
+
     }
 
     .page-report-message {
@@ -58,7 +45,11 @@
       padding: 15px;
     }
 
-    .report-go-back-link{
+    .page-section-warning{
+      margin: 20px 0 10px 0;
+    }
+
+    .report-go-back-link {
       display: block;
       margin-top: 20px;
     }

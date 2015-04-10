@@ -12,6 +12,7 @@
     padding-bottom: 0;
     line-height: 19px;
   }
+
 }
 
 .report-meta-data + .report-meta-data {
@@ -30,4 +31,8 @@
 
 .report-meta__data {
   color: $black;
+
+  &--bold {
+    font-weight: 700;
+  }
 }
