@@ -7,5 +7,7 @@ report:
     form:
       readyMessage: "Your report will be ready to submit when you've completed all tasks"
       controls:
+        reviewed_n_checked:
+          label: "I have reviewed and checked this report"
         submit:
           label: "Ready to submit report"

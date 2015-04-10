@@ -21,14 +21,14 @@
         </div>
 
         {% if app.request.attributes.get('_route') == 'report_declaration' %}
-            <a href="{{ path('report_overview', {reportId: report.id}) }}" class="behat-link-report-preview-go-back">
+            <a href="{{ path('report_overview', {reportId: report.id}) }}" class="report-go-back-link behat-link-report-preview-go-back">
                 {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
             </a>
 
         {% elseif report.isDue() %}
 
             {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
-            {% set checkboxClass = '' %}
+            {% set checkboxClass = 'reviewed_n_checked' %}
             {% set buttonClass = '' %}
             {% if not report.readyToSubmit() %}
                 {% set checkboxClass = 'visuallyhidden' %}
@@ -37,7 +37,12 @@
                     {{ 'report.header.form.readyMessage' | trans }}
                 </div>
             {% endif %}
-            {{ form_input(report_form_submit.reviewed_n_checked, 'form.accountDetails.controls.accountNumber', {'formGroupClass': checkboxClass }) }}
+            {{ form_input(report_form_submit.reviewed_n_checked, 'report.header.form.controls.reviewed_n_checked',
+            {
+                'formGroupClass': checkboxClass,
+                'inputClass': 'form-control__checkbox'
+            })
+            }}
 
             {{ form_submit(report_form_submit.submitReport, 'report.header.form.controls.submit', {'buttonClass': buttonClass }) }}
 

@@ -24,20 +24,44 @@
       margin-bottom: 0px;
     }
 
-    .page-report-submission-form{
-      button{
+    .page-report-submission-form {
+      button {
         @include core-19();
         margin-top: 20px;
       }
+
+      .reviewed_n_checked {
+        margin-top: 10px;
+        margin-bottom: 0;
+        background-color: $grey-3;
+        position: relative;
+        padding: 10px;
+
+        label {
+          width: auto;
+          margin-left: 30px;
+          margin-top: 3px;
+        }
+
+        .form-control__checkbox {
+          position: absolute;
+          top: 13px;
+        }
+
+      }
     }
 
-    .page-report-message{
+    .page-report-message {
       @include core-19();
       background-color: $grey-3;
       margin-top: 30px;
       padding: 15px;
     }
 
+    .report-go-back-link{
+      display: block;
+      margin-top: 20px;
+    }
 
   }
 

@@ -1807,6 +1807,10 @@ form {
   background-color: #dee0e2;
   border: 1px solid #0b0c0c; }
 
+.form-control__checkbox {
+  -webkit-appearance: checkbox;
+  width: auto; }
+
 .form-control__select {
   border: 0;
   width: 100%;
@@ -2049,6 +2053,19 @@ form {
     .page-report-content .page-report-header .page-report-submission-form button {
       font-size: 16px;
       line-height: 1.25; } }
+.page-report-content .page-report-header .page-report-submission-form .reviewed_n_checked {
+  margin-top: 10px;
+  margin-bottom: 0;
+  background-color: #dee0e2;
+  position: relative;
+  padding: 10px; }
+  .page-report-content .page-report-header .page-report-submission-form .reviewed_n_checked label {
+    width: auto;
+    margin-left: 30px;
+    margin-top: 3px; }
+  .page-report-content .page-report-header .page-report-submission-form .reviewed_n_checked .form-control__checkbox {
+    position: absolute;
+    top: 13px; }
 .page-report-content .page-report-header .page-report-message {
   font-family: "nta", Arial, sans-serif;
   font-size: 19px;
@@ -2062,6 +2079,9 @@ form {
     .page-report-content .page-report-header .page-report-message {
       font-size: 16px;
       line-height: 1.25; } }
+.page-report-content .page-report-header .report-go-back-link {
+  display: block;
+  margin-top: 20px; }
 
 .page-section-description {
   width: 65%;
@@ -2227,6 +2247,9 @@ ol.progress {
         margin-right: 14px; }
     ol.progress li:last-child .progress__step {
       margin-right: 14px; }
+
+.report-declaration .tab-content .tab-pane {
+  border-top: 0; }
 
 .report-list {
   border-top: 1px solid #dee0e2;
