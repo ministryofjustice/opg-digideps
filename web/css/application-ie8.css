@@ -1413,6 +1413,12 @@ input[type=number] {
     .account-header__item-fields-set--opening-date {
       position: absolute;
       top: 53px; }
+    .account-header__item-fields-set--closing-date {
+      position: absolute;
+      top: 78px;
+      margin-top: 5px; }
+    .account-header__item-fields-set--closing-balance {
+      margin-top: 5px; }
     .account-header__item-fields-set--edit-link {
       float: none;
       position: absolute;
@@ -2264,6 +2270,11 @@ ol.progress {
   overflow: hidden;
   margin-left: 8px;
   width: 30%; }
+.report-list--accounts .page-section-warning {
+  top: -10px;
+  margin-bottom: 0; }
+  #content .report-list--accounts .page-section-warning .icon + p {
+    font-weight: 700; }
 
 .report-list--accounts-closing {
   border: 0;
@@ -2399,7 +2410,7 @@ span.icon {
     width: 21px;
     height: 13px; }
   span.icon__notification {
-    background-image: url("/images/icon-important.png");
+    background-image: url("/images/icon-notification.png");
     /*
         @include device-pixel-ratio() {
           background-image: url("/images/accordian-arrow-2x.png");

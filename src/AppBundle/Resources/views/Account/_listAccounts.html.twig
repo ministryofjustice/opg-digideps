@@ -10,25 +10,17 @@
                     <dt class="visuallyhidden">{{ 'listing.bank' | trans }}</dt>
                     <dd class="report-list__item-fields-description">
                         <h3>
-                            <a href="{{ linkToAccountPage }}" class="behat-link-account-n{{loop.index}}">
-                                {{ account.bank }}
-                            </a>
+                            {% if report.isDue() and account.closingBalance is null %}
+                                <a href="{{ linkToAccountPage }}#account-header" class="behat-link-account-n{{loop.index}}">
+                                    {{ account.bank }}
+                                </a>
+                            {% else %}
+                                <a href="{{ linkToAccountPage }}" class="behat-link-account-n{{loop.index}}">
+                                    {{ account.bank }}
+                                </a>
+                            {% endif %}
                         </h3>
                     </dd>
-                    {% if report.isDue() and account.closingBalance is null %}
-
-                        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-                        transDomain: translationDomain,
-                        pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
-                        iconClass: 'icon icon__notification'
-                        } %}
-
-                    <div style="border-left: #c0c0c0 5px solid; padding-left: 10px;" class="visuallyhidden">
-                      <a href="{{ linkToAccountPage }}#closing-balance" class="behat-link-account-{{ account.id }}-add-closing-balance">
-                      {{ 'listing.addClosingBalanceWarning' | trans }}
-                      </a>
-                    </div>
-                    {% endif %}
                 </div>
                 <div class="report-list__item-fields-col-acc-num">
                     <dt class="visuallyhidden">{{ 'listing.accountNumber' | trans }}</dt>
@@ -64,6 +56,13 @@
                     </div>
                     {% endif %} 
                 </div>
+                {% if report.isDue() and account.closingBalance is null %}
+                    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+                    transDomain: translationDomain,
+                    pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
+                    iconClass: 'icon icon__notification'
+                    } %}
+                {% endif %}
             </dl>
 
         </li>

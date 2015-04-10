@@ -150,6 +150,17 @@
 
   }
 
+  .page-section-warning {
+    top: -10px;
+    margin-bottom: 0;
+
+    #content & {
+      .icon + p {
+        font-weight: 700;
+      }
+    }
+  }
+
 }
 
 .report-list--accounts-closing {
