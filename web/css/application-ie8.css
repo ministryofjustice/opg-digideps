@@ -2264,6 +2264,10 @@ ol.progress {
   overflow: hidden;
   margin-left: 8px;
   width: 30%; }
+.report-list--accounts .page-section-warning {
+  top: -10px;
+  margin-bottom: 0;
+  padding-top: 0; }
 
 .report-list--accounts-closing {
   border: 0;
