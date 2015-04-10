@@ -75,6 +75,8 @@ report:
 report-declaration:
     agree:
         notBlank: You must agree to the statement to proceed
+report-review-submit:
+    notBlank: Please check this box
 login:
     email:
         notBlank: Please enter your email

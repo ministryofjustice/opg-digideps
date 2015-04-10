@@ -20,7 +20,7 @@ class ReportSubmitType extends AbstractType
     {
         $builder->add('reviewed_n_checked', 'checkbox', [
             'label' => $this->translator->trans('reportSubmit.checkbox.label'),
-            'constraints' => new Constraints\NotBlank()
+            'constraints' => new Constraints\NotBlank([ 'message' => 'report-review-submit.notBlank'])
         ])
                 ->add('submitReport', 'submit');
     }
