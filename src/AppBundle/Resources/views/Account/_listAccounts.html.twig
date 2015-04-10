@@ -60,7 +60,7 @@
                     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
                     transDomain: translationDomain,
                     pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
-                    iconClass: 'icon icon__notification'
+                    iconClass: 'icon icon__notification behat-region-account-n' ~ account.id ~ '-warning'
                     } %}
                 {% endif %}
             </dl>

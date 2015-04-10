@@ -321,7 +321,8 @@ Feature: report
         When I modify the report 1 end date to today "-3 days"
         And I go to the homepage
         When I follow "tab-accounts"
-        And I click on "account-1-add-closing-balance"
+        Then I should see the "account-n1-warning" region
+        And I click on "account-n1"
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 
             | accountBalance_closingDate_month | | 
