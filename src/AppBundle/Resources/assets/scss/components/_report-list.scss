@@ -150,10 +150,15 @@
 
   }
 
-  .page-section-warning{
+  .page-section-warning {
     top: -10px;
     margin-bottom: 0;
-    padding-top: 0;
+
+    #content & {
+      .icon + p {
+        font-weight: 700;
+      }
+    }
   }
 
 }

@@ -1413,6 +1413,12 @@ input[type=number] {
     .account-header__item-fields-set--opening-date {
       position: absolute;
       top: 53px; }
+    .account-header__item-fields-set--closing-date {
+      position: absolute;
+      top: 78px;
+      margin-top: 5px; }
+    .account-header__item-fields-set--closing-balance {
+      margin-top: 5px; }
     .account-header__item-fields-set--edit-link {
       float: none;
       position: absolute;
@@ -2266,8 +2272,9 @@ ol.progress {
   width: 30%; }
 .report-list--accounts .page-section-warning {
   top: -10px;
-  margin-bottom: 0;
-  padding-top: 0; }
+  margin-bottom: 0; }
+  #content .report-list--accounts .page-section-warning .icon + p {
+    font-weight: 700; }
 
 .report-list--accounts-closing {
   border: 0;
