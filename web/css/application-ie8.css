@@ -2403,7 +2403,7 @@ span.icon {
     width: 21px;
     height: 13px; }
   span.icon__notification {
-    background-image: url("/images/icon-important.png");
+    background-image: url("/images/icon-notification.png");
     /*
         @include device-pixel-ratio() {
           background-image: url("/images/accordian-arrow-2x.png");
