@@ -34,7 +34,7 @@
                 <dd class="account-header__item-fields-description account-header__item-fields-description--opening-date">{{ account.closingDate | date("d/m/Y") }}</dd>
             </div>
             <div class="account-header__item-fields-set account-header__item-fields-set--closing-balance">
-                <dt class="account-header__item-fields-term">{{ 'page.header.openingBalance.label' |trans({}, transDomain)|raw }}</dt>
+                <dt class="account-header__item-fields-term">{{ 'page.header.closingBalance.label' |trans({}, transDomain)|raw }}</dt>
                 <dd class="account-header__item-fields-description account-header__item-fields-description--balance">
                     £{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
             </div>
