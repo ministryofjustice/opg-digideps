@@ -17,7 +17,7 @@
         {% set tabNotificationClass = tabNotificationClass| merge({'tab-decisions': 'icon icon__notification'}) %}
     {% endif %}
 
-    {% if report.missingAccounts() %}
+    {% if report.missingAccounts() or report.hasOutstandingAccounts() %}
         {% set tabNotificationClass = tabNotificationClass| merge({'tab-accounts': 'icon icon__notification'}) %}
     {% endif %}
 

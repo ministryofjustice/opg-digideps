@@ -10,14 +10,16 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
     transDomain: translationDomain,
-    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionConfirmation'
+    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionConfirmation',
+    iconClass: 'icon icon__notification'
     } %}
 
 {% else %}
 
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
     transDomain: translationDomain,
-    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionWarning'
+    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionWarning',
+    iconClass: 'icon icon__notification'
     } %}
 
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
@@ -34,7 +36,8 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
-        pageSectionWarning: 'pages.' ~ page ~ '.contacts.subSectionWarning'
+        pageSectionWarning: 'pages.' ~ page ~ '.contacts.subSectionWarning',
+        iconClass: 'icon icon__notification'
         } %}
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
@@ -57,7 +60,8 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
-        pageSectionWarning: 'pages.' ~ page ~ '.decisions.subSectionWarning'
+        pageSectionWarning: 'pages.' ~ page ~ '.decisions.subSectionWarning',
+        iconClass: 'icon icon__notification'
         } %}
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
@@ -80,7 +84,8 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
-        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningMissing'
+        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningMissing',
+        iconClass: 'icon icon__notification'
         } %}
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
@@ -100,7 +105,8 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
-        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningClosing'
+        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningClosing',
+        iconClass: 'icon icon__notification'
         } %}
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
@@ -147,7 +153,8 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
-        pageSectionWarning: 'pages.' ~ page ~ '.assets.subSectionWarning'
+        pageSectionWarning: 'pages.' ~ page ~ '.assets.subSectionWarning',
+        iconClass: 'icon icon__notification'
         } %}
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {

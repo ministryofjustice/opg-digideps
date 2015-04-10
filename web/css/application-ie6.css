@@ -1383,7 +1383,7 @@ input[type=number] {
 */
 .account-closing-balance-form {
   margin-bottom: 30px;
-  padding-left: 10px;
+  padding: 5px 0 5px 10px;
   border-left: 3px solid #bfc1c3; }
 
 .account-header {
@@ -2034,7 +2034,15 @@ form {
   padding-bottom: 10px;
   padding-left: 10px;
   width: 65%;
-  margin-bottom: 30px; }
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden; }
+  .page-section-warning .icon {
+    float: left; }
+    .page-section-warning .icon + p {
+      float: left;
+      margin-top: 6px;
+      margin-left: 10px; }
 
 ol.progress {
   display: table;
@@ -2317,6 +2325,10 @@ ol.progress {
   margin-bottom: 30px; }
   .sub-section-title .icon {
     float: left; }
+    .sub-section-title .icon + h3 {
+      float: left;
+      margin-top: 5px;
+      margin-left: 10px; }
   .sub-section-title h3 {
     font-family: "nta", Arial, sans-serif;
     font-size: 24px;

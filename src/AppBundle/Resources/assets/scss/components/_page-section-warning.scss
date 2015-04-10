@@ -5,5 +5,18 @@
   padding-left: 10px;
   width: 65%;
   margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+
+  .icon {
+    float: left;
+
+    & + p {
+      float: left;
+      margin-top: 6px;
+      margin-left: 10px;
+    }
+
+  }
 
 }
