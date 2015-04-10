@@ -24,6 +24,21 @@
       margin-bottom: 0px;
     }
 
+    .page-report-submission-form{
+      button{
+        @include core-19();
+        margin-top: 20px;
+      }
+    }
+
+    .page-report-message{
+      @include core-19();
+      background-color: $grey-3;
+      margin-top: 30px;
+      padding: 15px;
+    }
+
+
   }
 
 }

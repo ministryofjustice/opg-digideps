@@ -16,13 +16,13 @@ class BehatController extends Controller
     private function checkIsBehatBrowser()
     {
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
-        $secret = $this->getRequest()->get('secret');
         
-        if ($secret !== $expectedSecretParam) {
-            
-            // log access
-            $this->get('logger')->error($this->getRequest()->getPathInfo(). ": $expectedSecretParam secret expected. 404 will be returned.");
-            
+        $isBehat = $_SERVER['REMOTE_ADDR'] === '127.0.0.1' 
+                   && $_SERVER['HTTP_USER_AGENT'] === 'Symfony2 BrowserKit';
+        $isProd = $this->get('kernel')->getEnvironment() == 'prod';
+        $isSecretParamCorrect = $this->getRequest()->get('secret') == $expectedSecretParam;
+        
+        if (!$isBehat || $isProd || !$isSecretParamCorrect) {
             throw $this->createNotFoundException('Not found');
         }
     }
@@ -38,7 +38,7 @@ class BehatController extends Controller
         
         $contentArray = json_decode($content, 1);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            return new Response("Error decoding email: body:" . $content);
+            return new Response($content);
         }
         
         return new Response($contentArray['data']);
@@ -104,7 +104,6 @@ class BehatController extends Controller
     {
        return new Response('done');
         
-       //TODO implement and test, including corrupted data sets, or password changed
 //       $apiClient = $this->get('apiclient');
 //       
 //       // delete behat data and related records

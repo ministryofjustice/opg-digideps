@@ -1,19 +1,49 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+
+
 <header class="page-report-header page-header group">
 
     <div class="page-header-titles">
-        <h1 class="heading-large report-title">{{ report.period }} report
+        <h1 class="heading-large report-title">{{ report.period }} {{ 'report.header.report' | trans }}
             <div class="heading-large client-name">{{ client.fullname }}</div>
         </h1>
     </div>
     <div class="page-header-meta-data">
         <div class="report-meta-data">
-            <div class="report-meta report-meta__label">Reporting period:</div>
-            <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }} to {{ report.endDate | date("d F Y") }}</span>
+            <div class="report-meta report-meta__label">{{ 'report.header.reportingPeriod' | trans }}</div>
+            <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }}
+                {{ 'report.header.to' | trans }} {{ report.endDate | date("d F Y") }}</span>
         </div>
         <div class="report-meta-data">
-            <span class="report-meta report-meta__label">Due date:</span>
-            <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y")}}</span>
+            <span class="report-meta report-meta__label">{{ 'report.header.dueDate' | trans }}</span>
+            <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y") }}</span>
         </div>
+
+        {% if app.request.attributes.get('_route') == 'report_declaration' %}
+            <a href="{{ path('report_overview', {reportId: report.id}) }}" class="behat-link-report-preview-go-back">
+                {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
+            </a>
+
+        {% elseif report.isDue() %}
+
+            {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
+            {% set checkboxClass = '' %}
+            {% set buttonClass = '' %}
+            {% if not report.readyToSubmit() %}
+                {% set checkboxClass = 'visuallyhidden' %}
+                {% set buttonClass = 'disabled' %}
+                <div class="page-report-message">
+                    {{ 'report.header.form.readyMessage' | trans }}
+                </div>
+            {% endif %}
+            {{ form_input(report_form_submit.reviewed_n_checked, 'form.accountDetails.controls.accountNumber', {'formGroupClass': checkboxClass }) }}
+
+            {{ form_submit(report_form_submit.submitReport, 'report.header.form.controls.submit', {'buttonClass': buttonClass }) }}
+
+            {{ form_end(report_form_submit) }}
+
+        {% endif %}
     </div>
 
 </header>

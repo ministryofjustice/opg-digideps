@@ -140,12 +140,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     private function getLatestEmailMockFromApi()
     {
         $this->visitBehatLink('email-get-last');
+        $this->assertResponseStatus(200);
         
         $content =  $this->getSession()->getPage()->getContent();
         $contentJson = json_decode($content, true);
         
         if (empty($contentJson['to'])) {
-            throw new \RuntimeException("Email has not been sent. Api returned: " . $content);
+            throw new \RuntimeException("Email has not been sent");
         }
         
         return $contentJson;
@@ -305,6 +306,16 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
        
        $this->visit("behat/{$secret}/{$link}");
+//       $this->assertResponseStatus(200);
+    }
+    
+    /**
+     * @When the report is submitted
+     */
+    public function theReportIsSubmitted()
+    {
+        //TODO check db
+        $this->assertPageContainsText('The report has been submitted');
     }
     
 }

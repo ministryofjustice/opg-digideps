@@ -13,13 +13,3 @@ roleId:
   defaultOption: Please select ...
 submit:
   label: Submit
-cancel:
-    label: Cancel
-expiration:
-    label: Expire registration token
-delete:
-    label: Delete User
-no:
-    label: No
-yes:
-    label: Yes

@@ -6,8 +6,6 @@ parameters:
         list_users: user
         find_user_by_token: user/get-by-token
         list_roles: role
-        find_user_by_id: user
-        delete_user_by_id: user
         #client
         get_all_court_order_type: court-order-type/all
         add_client: client/add

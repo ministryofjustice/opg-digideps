@@ -1,0 +1,11 @@
+report:
+  header:
+    report: "report"
+    to: "to"
+    reportingPeriod: "Reporting period:"
+    dueDate: "Due date:"
+    form:
+      readyMessage: "Your report will be ready to submit when you've completed all tasks"
+      controls:
+        submit:
+          label: "Ready to submit report"

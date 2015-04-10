@@ -1,45 +1,170 @@
 {% set page = 'duePeriod' %}
 
-{{ dump(translationDomain) }}
 
 {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
 transDomain: translationDomain,
-pageSectionTitle: 'pages.pageSectionTitle.reportPeriod.pageSectionTitle'
+pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 } %}
 
-{% if report.isComplete() %}
+{% if report.readyToSubmit() %}
 
-    (!) Confirm you've reviewed your report by checking the box above.
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionConfirmation',
+    iconClass: 'icon icon__notification'
+    } %}
 
 {% else %}
 
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'pages.' ~ page ~ '.pageSectionWarning',
+    iconClass: 'icon icon__notification'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'pages.' ~ page ~ '.pageSectionDescription'
+    } %}
+
     {% if report.missingContacts() %}
-        (!) No contact details added.
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.contacts.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.contacts.subSectionWarning',
+        iconClass: 'icon icon__notification'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.contacts.subSectionDescription',
+        transOptions: {
+            '%pageHref%': path('contacts', {'reportId': report.id})
+        }
+        } %}
+
     {% endif %}
 
 
     {% if report.missingDecisions() %}
-        (!) No decision details added.
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.decisions.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.decisions.subSectionWarning',
+        iconClass: 'icon icon__notification'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.decisions.subSectionDescription',
+        transOptions: {
+        '%pageHref%': path('decisions', {'reportId': report.id})
+        }
+        } %}
+
     {% endif %}
 
 
     {% if report.missingAccounts() %}
 
-        (!) No account details added.
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.accounts.subSectionTitle'
+        } %}
 
-    {% elseif report.closingBalancesMissingAccounts %}
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningMissing',
+        iconClass: 'icon icon__notification'
+        } %}
 
-        {% for account in report.closingBalancesMissingAccounts %}
-            {{ account.name }}<br/>
-            {{ account.accountNumber }}<br/>
-            {{ account.link }}<hr/>
-        {% endfor %}
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.accounts.subSectionDescriptionMissing',
+        transOptions: {
+        '%pageHref%': path('accounts', {'reportId': report.id})
+        }
+        } %}
 
+    {% elseif report.hasOutstandingAccounts() %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.accounts.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.accounts.subSectionWarningClosing',
+        iconClass: 'icon icon__notification'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.accounts.subSectionDescriptionClosing'
+        } %}
+
+        <ul class="behat-region-list-accounts report-list report-list--accounts-closing">
+            {% for account in report.getOutstandingAccounts() %}
+                {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id}) %}
+                <li class="report-list__item">
+                    <dl class="report-list__item-fields">
+                        <div class="report-list__item-fields-col-bank">
+                            <dt class="visuallyhidden">Bank/Building Society name</dt>
+                            <dd class="report-list__item-fields-description">
+                                <h4>
+                                    <a href="{{ linkToAccountPage }}#account-header" class="behat-link-account-n1">
+                                        {{ account.bank }}
+                                    </a>
+                                </h4>
+                            </dd>
+                        </div>
+                        <div class="report-list__item-fields-col-acc-num">
+                            <dt class="visuallyhidden">Last four digits of account number</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--normal">
+                                ****{{ account.accountNumber }}
+                            </dd>
+                        </div>
+
+                    </dl>
+
+                </li>
+            {% endfor %}
+        </ul>
     {% endif %}
 
 
     {% if report.missingAssets() %}
-        (!) No assets details added.
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.assets.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.assets.subSectionWarning',
+        iconClass: 'icon icon__notification'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.assets.subSectionDescription',
+        transOptions: {
+        '%pageHref%': path('assets', {'reportId': report.id})
+        }
+        } %}
+
     {% endif %}
 
 {% endif %}

@@ -265,7 +265,7 @@ class ApiClient extends GuzzleClient
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             $url = $this->endpoints[$url];
             
-            if((($method == 'GET') || ($method == 'DELETE')) && array_key_exists('query', $options)){
+            if($method == 'GET' && array_key_exists('query', $options)){
                 foreach($options['query'] as $param){
                     $url = $url.'/'.$param;
                 }

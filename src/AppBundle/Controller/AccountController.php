@@ -35,19 +35,31 @@ class AccountController extends Controller
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
-        $form->handleRequest($request);
-
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
         if ($request->getMethod() == 'POST') {
-            if ($form->isValid()) {
-                $account = $form->getData();
-                $account->setReport($reportId);
+            $form->handleRequest($request);
+            $reportSubmit->handleRequest($request);
+            
+            if($form->get('save')->isClicked()){
+                if ($form->isValid()) {
+                    $account = $form->getData();
+                    $account->setReport($reportId);
 
-                $response = $apiClient->postC('add_report_account', $account);
-                return $this->redirect(
-                    $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
-                );
-            } else {
-                echo $form->getErrorsAsString();
+                    $response = $apiClient->postC('add_report_account', $account);
+                    return $this->redirect(
+                        $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
+                    );
+                } else {
+                    echo $form->getErrorsAsString();
+                }
+            }else{
+         
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
             }
         }
 
@@ -56,7 +68,8 @@ class AccountController extends Controller
             'client' => $client,
             'action' => $action,
             'form' => $form->createView(),
-            'accounts' => $accounts
+            'accounts' => $accounts,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
 
@@ -77,6 +90,8 @@ class AccountController extends Controller
 
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
+        
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
@@ -99,6 +114,20 @@ class AccountController extends Controller
             ]);
         }
         
+        if($this->getRequest()->getMethod() == 'POST'){
+            $reportSubmit->handleRequest($this->getRequest());
+            
+            if($reportSubmit->get('submitReport')->isClicked()){
+               
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
+                
+            }
+        }
+        
         // refresh account data
         if ($validFormBalance || $formMoneyValid) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
@@ -111,6 +140,7 @@ class AccountController extends Controller
             'formBalance' => $formBalance->createView(),
             'account' => $account,
             'actionParam' => $action,
+            'report_form_submit' => $reportSubmit->createView()
         ];
     }
     

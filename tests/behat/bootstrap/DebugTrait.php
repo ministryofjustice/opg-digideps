@@ -28,9 +28,12 @@ trait DebugTrait
             }
         }
         $data = $this->getSession()->getPage()->getContent();
-        $bytes = file_put_contents($filename, $data);
+        if (!is_writable($filename)) {
+            echo "$filename not writeable\n";
+        }
+        file_put_contents($filename, $data);
         #exec("firefox $filename 2>&1");
-        echo "Open $filename to debug last response ($bytes bytes written).\n";
+        echo "Open $filename to debug last response.\n";
     }
     
     

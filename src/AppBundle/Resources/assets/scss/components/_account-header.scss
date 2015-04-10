@@ -23,6 +23,16 @@
       top: 53px;
     }
 
+    &--closing-date {
+      position: absolute;
+      top: 78px;
+      margin-top: 5px;
+    }
+
+    &--closing-balance {
+      margin-top: 5px;
+    }
+
     &--edit-link {
       float: none;
       position: absolute;

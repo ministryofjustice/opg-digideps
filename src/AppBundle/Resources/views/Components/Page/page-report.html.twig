@@ -2,6 +2,31 @@
 {% block pageTitle %}Deputyship Report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
+{# Build up the tab icons #}
+{% if activeTab is not defined %}
+    {% set activeTab = "tab-overview" %}
+{% endif %}
+{% set tabNotificationClass = {} %}
+{% if report.isDue() %}
+
+    {% if report.missingContacts() %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-contacts': 'icon icon__notification behat-region-tab-contacts-warning'}) %}
+    {% endif %}
+
+    {% if report.missingDecisions() %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-decisions': 'icon icon__notification behat-region-tab-decisions-warning'}) %}
+    {% endif %}
+
+    {% if report.missingAccounts() or report.hasOutstandingAccounts() %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-accounts': 'icon icon__notification behat-region-tab-accounts-warning'}) %}
+    {% endif %}
+
+    {% if report.missingAssets() %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-assets': 'icon icon__notification behat-region-tab-assets-warning'}) %}
+    {% endif %}
+
+{% endif %}
+
 
 {% block pageContent %}
     {% block pageHeader %}
@@ -9,6 +34,11 @@
     {% endblock %}
 
     {% block pageNavigation %}
+        {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with {
+        'report': report,
+        tab: activeTab,
+        notifications: tabNotificationClass
+        } %}
     {% endblock %}
 
     {% block errorSummary %}
