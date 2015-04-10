@@ -10,19 +10,19 @@
 {% if report.isDue() %}
 
     {% if report.missingContacts() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-contacts': 'icon icon__notification'}) %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-contacts': 'icon icon__notification behat-region-tab-contacts-warning'}) %}
     {% endif %}
 
     {% if report.missingDecisions() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-decisions': 'icon icon__notification'}) %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-decisions': 'icon icon__notification behat-region-tab-decisions-warning'}) %}
     {% endif %}
 
     {% if report.missingAccounts() or report.hasOutstandingAccounts() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-accounts': 'icon icon__notification'}) %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-accounts': 'icon icon__notification behat-region-tab-accounts-warning'}) %}
     {% endif %}
 
     {% if report.missingAssets() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-assets': 'icon icon__notification'}) %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-assets': 'icon icon__notification behat-region-tab-assets-warning'}) %}
     {% endif %}
 
 {% endif %}
