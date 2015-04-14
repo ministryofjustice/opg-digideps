@@ -19,7 +19,22 @@ class ClientController extends Controller
      */
     public function indexAction()
     {
-        return [];
+        $util = $this->get('util');
+        $clients = $this->getUser()->getClients();
+        $client = !empty($clients)? $clients[0]: null;
+        
+        $reportIds = $client->getReports();
+        $reports = [];
+        
+        if(!empty($reportIds)){
+            foreach($reportIds as $id){
+                $reports[$id] = $util->getReport($id,$this->getUser()->getId(),'basic');
+            }
+        }
+        
+        return [ 'client' => $client,
+                 'reports' => $reports
+               ];
     }
     
     /**

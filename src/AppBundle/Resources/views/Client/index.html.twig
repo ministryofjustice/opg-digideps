@@ -6,5 +6,6 @@
 {% block title %}{% trans %}clientHome.pageTitle{% endtrans %}{% endblock %}
 
 {% block pageBody %}
-    <h1>Client Home</h1>
+    {{dump(client)}}
+    {{dump(reports)}}
 {% endblock %}

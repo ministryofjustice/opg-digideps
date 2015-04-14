@@ -121,6 +121,7 @@ class Client
     {
         $this->allowedCourtOrderTypes = [];
         $this->users = [];
+        $this->reports = [];
     }
     
     /**
