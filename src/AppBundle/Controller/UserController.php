@@ -127,7 +127,7 @@ class UserController extends RestController
     {
         $request = $this->getRequest();
         
-        $serialisedGroups = null;
+        $serialisedGroups = ['basic'];
         
         if($request->query->has('groups')){
             $serialisedGroups = $request->query->get('groups');
