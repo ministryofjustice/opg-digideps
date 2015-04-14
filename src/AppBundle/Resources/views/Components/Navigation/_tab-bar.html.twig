@@ -3,10 +3,13 @@
         <ul class="tabs-nav">
             {% for tab in tabDataProvider %}
                 <li class="{{ tab.class }}">
-                    <a id="{{ tab.tabId }}" href="{{ path(tab.href.path, tab.href.params) }}">{{ tab.label }}</a>
-                    {% if tab.iconClass is defined %}
-                        <span class="{{ tab.iconClass }}"></span>
-                    {% endif %}
+                    <a id="{{ tab.tabId }}" href="{{ path(tab.href.path, tab.href.params) }}" class="tab-container">
+                        {% if tab.iconClass is defined %}
+                            <span class="{{ tab.iconClass }}">{{ tab.label }}</span>
+                        {% else %}
+                            {{ tab.label }}
+                        {% endif %}
+                    </a>
                 </li>
             {% endfor %}
         </ul>
