@@ -1842,7 +1842,11 @@ form {
   position: relative;
   text-align: center;
   top: 0;
-  width: 100%; }
+  width: 100%;
+  border-right: 1px solid #dee0e2; }
+
+.nav-tabs li:last-of-type .tab-container {
+  border-right: 0; }
 
 @media (max-width: 640px) {
   .nav-tabs li .tab-container {

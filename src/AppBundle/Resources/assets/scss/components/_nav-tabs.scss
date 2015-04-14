@@ -69,6 +69,13 @@
   text-align: center;
   top: 0;
   width: 100%;
+  border-right: 1px solid $grey-3;
+}
+
+.nav-tabs li:last-of-type{
+  .tab-container{
+    border-right: 0;
+  }
 }
 
 @media (max-width: 640px) {
