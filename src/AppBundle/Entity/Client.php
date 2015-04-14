@@ -18,6 +18,7 @@ class Client
      * @var integer
      * 
      * @JMS\Type("integer")
+     * @JMS\Groups({"related","basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -26,6 +27,7 @@ class Client
     private $id;
     
     /**
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getUserIds")
      * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User", inversedBy="clients")
@@ -37,14 +39,30 @@ class Client
     private $users;
     
     /**
+     * @JMS\Groups({"related"})
+     * @JMS\Accessor(getter="getUsers", setter="addUser")
+     * @JMS\Type("array<AppBundle\Entity\User>")
+     */
+    private $userObjs;
+    
+    /**
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getReportIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
+    
+    /**
+     * @JMS\Groups({"related"})
+     * @JMS\Accessor(getter="getReports", setter="addReport")
+     * @JMS\Type("array<AppBundle\Entity\Report>")
+     */
+    private $reportObjs;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
@@ -53,14 +71,16 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
-     *
+     * 
      * @ORM\Column(name="email", type="string", length=60, nullable=true)
      */
     private $email;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
@@ -69,6 +89,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
@@ -77,6 +98,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
@@ -85,6 +107,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="county", type="string", length=75, nullable=true)
@@ -93,6 +116,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
@@ -101,6 +125,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=10, nullable=true)
@@ -109,6 +134,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
@@ -117,6 +143,7 @@ class Client
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"related","basic"})
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
@@ -125,6 +152,7 @@ class Client
     
     /**
      * @JMS\Type("array")
+     * @JMS\Groups({"related","basic"})
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
      * 
      * @var array $allowedCourtOrderTypes
@@ -133,6 +161,7 @@ class Client
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"related","basic"})
      * @var \Date
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
@@ -468,6 +497,19 @@ class Client
             }
         }
         return $reportIds;
+    }
+    
+    /**
+     * 
+     */
+    public function getReportObjs()
+    {
+        if(!empty($this->reports) && empty($this->reportObjs)){
+            foreach($this->reports as $report){
+                $this->reportObjs[] = $report;
+            }
+        }
+        return $this->reportObjs;
     }
 
     /**
