@@ -27,11 +27,11 @@ security:
             security: false
         
         behatControllers:
-            pattern:  ^/behat/*
+            pattern:  ^/behat
             security: false
             
         manageController:
-            pattern:  ^/manage/availability*
+            pattern:  ^/manage/availability
             security: false
 
         secured_area:
