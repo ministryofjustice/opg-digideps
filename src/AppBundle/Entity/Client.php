@@ -498,19 +498,6 @@ class Client
         }
         return $reportIds;
     }
-    
-    /**
-     * 
-     */
-    public function getReportObjs()
-    {
-        if(!empty($this->reports) && empty($this->reportObjs)){
-            foreach($this->reports as $report){
-                $this->reportObjs[] = $report;
-            }
-        }
-        return $this->reportObjs;
-    }
 
     /**
      * Set allowedCourtOrderTypes
