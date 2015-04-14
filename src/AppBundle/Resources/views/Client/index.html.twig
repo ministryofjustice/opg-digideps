@@ -1,0 +1,10 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "client" %}
+
+{% block pageTitle %}{{ 'clientHome.pageTitle' | trans }} {% endblock %}
+{% block contentClass %}{{ parent() }}{% endblock %}
+{% block title %}{% trans %}clientHome.pageTitle{% endtrans %}{% endblock %}
+
+{% block pageBody %}
+    <h1>Client Home</h1>
+{% endblock %}

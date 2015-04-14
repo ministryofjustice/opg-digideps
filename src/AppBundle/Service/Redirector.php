@@ -48,8 +48,7 @@ class Redirector
                 $route = 'report_create';
                 $options = [ 'clientId' => $clients[0]['id']];
             }else{
-                $route = "report_overview";
-                $options = [ 'reportId' => $clients[0]['reports'][0] ];
+                $route = "client_home";
             }
         }
         

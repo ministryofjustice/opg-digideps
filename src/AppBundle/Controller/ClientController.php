@@ -14,6 +14,15 @@ use AppBundle\Entity\Client;
 class ClientController extends Controller
 {
     /**
+     * @Route("/", name="client_home")
+     * @Template()
+     */
+    public function indexAction()
+    {
+        return [];
+    }
+    
+    /**
      * @Route("/add", name="client_add")
      * @Template()
      */
