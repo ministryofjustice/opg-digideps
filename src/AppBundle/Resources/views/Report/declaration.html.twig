@@ -30,7 +30,7 @@
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {{ form_input(form.agree, 'agree', { 'labelClass': 'required', 'inputClass': 'form-control__checkbox' }) }}
+        {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
 
         {{ form_submit(form.save,'save') }}
 

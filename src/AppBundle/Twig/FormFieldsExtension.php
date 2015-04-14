@@ -41,9 +41,10 @@ class FormFieldsExtension extends \Twig_Extension
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
+            'form_checkbox' => new \Twig_Function_Method($this, 'renderCheckboxInput')
         ];
     }
-    
+
     /**
      * Renders form input field
      *
@@ -56,7 +57,23 @@ class FormFieldsExtension extends \Twig_Extension
     {
         //generate input field html using variables supplied
         echo $this->environment->render(
-            'AppBundle:Components/Form:_input.html.twig', 
+            'AppBundle:Components/Form:_input.html.twig',
+            $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
+        );
+    }
+
+    /**
+     * Renders form checkbox field
+     *
+     * @param type $element
+     * @param type $elementName
+     * @param type $transIndex
+     * @param array $vars
+     */
+    public function renderCheckboxInput($element, $elementName,array $vars = [], $transIndex = null )
+    {
+        echo $this->environment->render(
+            'AppBundle:Components/Form:_checkbox.html.twig',
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
@@ -88,7 +105,7 @@ class FormFieldsExtension extends \Twig_Extension
         $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
         
          //generate input field html using variables supplied
-        echo $this->environment->render( 'AppBundle:Components/Form:_checkbox.html.twig', [
+        echo $this->environment->render( 'AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
             'legendText' => $legendText,
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass']: null,

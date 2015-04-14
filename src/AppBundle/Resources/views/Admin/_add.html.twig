@@ -23,13 +23,6 @@
                     
              {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                     transDomain: 'admin',
-                    linkButtonLabel: 'expiration.label',
-                    linkClass: 'button-link',
-                    linkHref: '#'
-                    } %}
-                    
-             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: 'admin',
                     linkButtonLabel: 'delete.label',
                     linkClass: 'button-link',
                     linkHref: path('admin_delete_confirm', { id: id })

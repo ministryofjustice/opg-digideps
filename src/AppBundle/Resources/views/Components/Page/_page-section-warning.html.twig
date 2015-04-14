@@ -3,5 +3,9 @@
     {% if iconClass is defined %}
         <span class="{{ iconClass }}"></span>
     {% endif %}
-    <p>{{ pageSectionWarning|trans({}, transDomain)|raw }}</p>
+    {% if transDomain is defined %}
+        <p>{{ pageSectionWarning|trans({}, transDomain)|raw }}</p>
+    {% else %}
+        {{ pageSectionWarning|raw }}
+    {% endif %}
 </div>

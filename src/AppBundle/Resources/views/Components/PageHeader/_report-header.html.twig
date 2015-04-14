@@ -15,13 +15,24 @@
             <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }}
                 {{ 'report.header.to' | trans }} {{ report.endDate | date("d F Y") }}</span>
         </div>
-        <div class="report-meta-data">
-            <span class="report-meta report-meta__label">{{ 'report.header.dueDate' | trans }}</span>
-            <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y") }}</span>
-        </div>
+        {% if not report.isDue() %}
+            <div class="report-meta-data">
+                <span class="report-meta report-meta__label">{{ "report.header.dueDate" | trans }}</span>
+                <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y") }}</span>
+            </div>
+        {% else %}
+            {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionWarning: '
+            <span class="report-meta report-meta__label">' ~ ("report.header.dueDate" | trans) ~ '</span>
+            <span class="report-meta report-meta__data report-meta__data--bold">' ~ (report.dueDate | date("d F Y")) ~ '</span>',
+            iconClass: 'icon icon__notification'
+            } %}
+        {% endif %}
 
         {% if app.request.attributes.get('_route') == 'report_declaration' %}
-            <a href="{{ path('report_overview', {reportId: report.id}) }}" class="report-go-back-link behat-link-report-preview-go-back">
+            <a href="{{ path('report_overview', {reportId: report.id}) }}"
+               class="report-go-back-link behat-link-report-preview-go-back">
                 {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
             </a>
 
@@ -37,12 +48,11 @@
                     {{ 'report.header.form.readyMessage' | trans }}
                 </div>
             {% endif %}
-            {{ form_input(report_form_submit.reviewed_n_checked, 'report.header.form.controls.reviewed_n_checked',
+
+            {{ form_checkbox(report_form_submit.reviewed_n_checked, 'report.header.form.controls.reviewed_n_checked',
             {
-                'formGroupClass': checkboxClass,
-                'inputClass': 'form-control__checkbox'
-            })
-            }}
+            'formGroupClass': checkboxClass
+            }) }}
 
             {{ form_submit(report_form_submit.submitReport, 'report.header.form.controls.submit', {'buttonClass': buttonClass }) }}
 
