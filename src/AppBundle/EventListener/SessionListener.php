@@ -28,20 +28,22 @@ class SessionListener
             throw new \InvalidArgumentException(__CLASS__ . " :session timeout cannot be lower than 30 seconds");
         }
     }
-
+    
     public function onKernelRequest(GetResponseEvent $event)
     {
         // Only operate on the master request and when there is a session
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()
-            || !$event->getRequest()->hasSession()) {
-            return;
+        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+            return 'no-master-request';
+        }
+        if (!$event->getRequest()->hasSession()) {
+            return 'no-session';
         }
         
         $session = $event->getRequest()->getSession();
         
         $lastUsed = (int)$session->getMetadataBag()->getLastUsed();
         if (!$lastUsed) {
-            return;
+            return 'no-last-used';
         }
         
         $idleTime = time() - $lastUsed;
@@ -52,5 +54,7 @@ class SessionListener
             $session->invalidate();
             throw new CredentialsExpiredException();
         }
+        
+        return 'session-valid';
     }
 }
