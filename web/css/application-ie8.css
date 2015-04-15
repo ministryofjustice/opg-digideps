@@ -1734,6 +1734,15 @@ form {
 
 .form-group__checkbox-group {
   margin-left: 2px; }
+  .form-group__checkbox-group .vertical .description {
+    float: left;
+    clear: both; }
+  .form-group__checkbox-group .vertical label {
+    clear: both; }
+  .form-group__checkbox-group .vertical label + p {
+    margin-top: 30px; }
+  .form-group__checkbox-group .vertical p + p {
+    margin-top: 30px; }
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
