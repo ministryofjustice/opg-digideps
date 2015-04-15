@@ -35,6 +35,10 @@ security:
             security: false
 
         secured_area:
+#            remember_me:
+#              key:      "%secret%"
+#              lifetime: 10
+#              path:     /
             form_login:
                 #check_path: /login_check
                 login_path: /login
