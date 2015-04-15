@@ -7,9 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
-use Symfony\Component\Form\FormError;
 use AppBundle\Service\ApiClient;
-use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends Controller
 {
@@ -29,7 +27,7 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
 
         $apiClient = $this->get('apiclient');
-        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'query' => ['id' => $reportId, 'group' => 'basic']]);
+        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'parameters' => ['id' => $reportId], 'query' => [ 'groups' => [ 'basic']]]);
 
         $account = new EntityDir\Account();
         $account->setReportObject($report);
@@ -94,7 +92,7 @@ class AccountController extends Controller
         $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
+        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
         $account->setReportObject($report);
         
         // closing balance logic
@@ -130,7 +128,7 @@ class AccountController extends Controller
         
         // refresh account data
         if ($validFormBalance || $formMoneyValid) {
-            $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'query' => ['id' => $accountId, 'group' => 'transactions']]);
+            $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         }
         
         return [

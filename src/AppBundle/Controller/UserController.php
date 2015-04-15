@@ -32,7 +32,7 @@ class UserController extends Controller
         $translator = $this->get('translator');
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
         
         if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
             throw new \RuntimeException("token expired, require new link");
