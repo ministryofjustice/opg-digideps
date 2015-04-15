@@ -28,6 +28,8 @@ framework:
       gc_divisor: 1
       # session timeout (when GC kicks in)
       gc_maxlifetime: %session_expire_seconds%
+      # true:  cookie won't be accessible by Javascript, safer for XSS
+      cookie_httponly: true
     fragments:       ~
     http_method_override: true
 
