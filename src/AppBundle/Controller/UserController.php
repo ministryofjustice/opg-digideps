@@ -116,4 +116,13 @@ class UserController extends Controller
         
     }
     
+    /**
+     * @Route("/view", name="user_view")
+     * @Template()
+     */
+    public function viewAction()
+    {
+        return [];
+    }
+    
 }

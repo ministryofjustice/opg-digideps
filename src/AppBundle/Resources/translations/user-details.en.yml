@@ -25,3 +25,5 @@ phoneMobile:
 submit:
     label: Save and continue
 cancelText: Cancel
+view:
+    pageTitle: My details
