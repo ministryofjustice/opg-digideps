@@ -81,26 +81,6 @@ class IndexController extends Controller
         throw new AccessDeniedException();
     }
 
-    /**
-     * @Route("/nick-test")
-     */
-    public function nickTestAction()
-    {
-
-        $progressIndicator_arr = [];
-        $progressIndicator_arr[] = ['label' => 'pi.step.one'];
-        $progressIndicator_arr[] = ['label' => 'Add your details'];
-        $progressIndicator_arr[] = ['label' => 'Add your client\'s details'];
-        $progressIndicator_arr[] = ['label' => 'Create a report'];
-
-        $currentStep = 2;
-
-        return $this->render('AppBundle:Index:nick-test.html.twig', array(
-            //'progressSteps' => $this->get('progressbar')->get('registration')->setCurrentStep(1)->getSteps()
-            'progressSteps' => $this->initProgressIndicator($progressIndicator_arr, $currentStep)
-        ));
-    }
-
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;

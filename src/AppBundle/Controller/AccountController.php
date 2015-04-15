@@ -26,8 +26,7 @@ class AccountController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
 
-        $apiClient = $this->get('apiclient');
-        $accounts = $apiClient->getEntities('Account', 'get_report_accounts', [ 'parameters' => ['id' => $reportId], 'query' => [ 'groups' => [ 'basic']]]);
+        $accounts = $report->getAccounts();
 
         $account = new EntityDir\Account();
         $account->setReportObject($report);
@@ -93,6 +92,7 @@ class AccountController extends Controller
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
+        
         $account->setReportObject($report);
         
         // closing balance logic
