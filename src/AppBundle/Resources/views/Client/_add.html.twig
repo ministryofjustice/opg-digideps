@@ -10,11 +10,11 @@
 {{ form_known_date(form.courtDate, 'courtDate') }}
 
 {{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
-    'fieldSetClass' : 'inline',
+    'fieldSetClass' : 'vertical',
     'legendClass' : 'form-label',
     'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
+        {'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
+        {'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-1" | trans({}, translationDomain) }
     ]
 }) }}
 
@@ -30,4 +30,3 @@
     {{ form_submit(form.save,'saveAndContinue') }}
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 {{ form_end(form) }}
-
