@@ -76,8 +76,6 @@ class RestInputOuputFormatter
         if (!empty($serialiseGroups)) {
             if(is_array($serialiseGroups)){
                 $context->setGroups($serialiseGroups);
-            }else{
-                $context->setGroups([$serialiseGroups]);
             }
         }
         
