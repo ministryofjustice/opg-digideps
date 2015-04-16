@@ -5,6 +5,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Act on session on each request
@@ -40,7 +41,6 @@ class SessionListener
         }
         
         $session = $event->getRequest()->getSession();
-        
         $lastUsed = (int)$session->getMetadataBag()->getLastUsed();
         if (!$lastUsed) {
             return 'no-last-used';
@@ -52,9 +52,13 @@ class SessionListener
         if ($hasReachedIdleTimeout) {
             //Invalidate the current session and throw an exception
             $session->invalidate();
-            throw new CredentialsExpiredException();
+            $event->setResponse(new RedirectResponse('/login/timeout'));
+            $event->stopPropagation();
+            
+            return;
         }
         
         return 'session-valid';
     }
+    
 }

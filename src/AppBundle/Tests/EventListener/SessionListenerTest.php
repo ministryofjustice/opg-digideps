@@ -68,12 +68,12 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
     public static function provider()
     {
         return [
-            [1500, 0, false],
-            [1500, -10, false],
-            [1500, -1490, false], //close to epire
+            [1500, 0, 0],
+            [1500, -10, 0],
+            [1500, -1490, 0], //close to epire
             
-            [1500, -1500 - 10, true], // expired 10 sec ago
-            [1500, -1500 - 25 * 3600, true], //expired 25h ago
+            [1500, -1500 - 10, 1], // expired 10 sec ago
+            [1500, -1500 - 25 * 3600, 1], //expired 25h ago
         ];
     }
     
@@ -81,7 +81,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider provider
      */
-    public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $expectedExpire)
+    public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $expectedCallsToSessionExpire)
     {
         $object = new SessionListener(['idleTimeout'=>$idleTimeout]);
         
@@ -92,18 +92,11 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
          
         $event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(time() + $lastUsedRelativeToCurrentTime);
         
-        if ($expectedExpire) {
-            $event->shouldReceive('getRequest->getSession->invalidate')->once();
-            try {
-                $object->onKernelRequest($event);
-                 $this->fail('CredentialsExpiredException not thrown');
-            } catch (CredentialsExpiredException $cee) {
-            }
-            
-        } else {
-            $this->assertEquals('session-valid', $object->onKernelRequest($event));
-        }
+        $event->shouldReceive('getRequest->getSession->invalidate')->times($expectedCallsToSessionExpire);
+        $event->shouldReceive('setResponse')->times($expectedCallsToSessionExpire)->with(m::type('Symfony\Component\HttpFoundation\RedirectResponse'));
+        $event->shouldReceive('stopPropagation')->times($expectedCallsToSessionExpire);
         
+        $object->onKernelRequest($event);
     }
     
     public function tearDown()
