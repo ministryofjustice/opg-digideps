@@ -23,7 +23,7 @@ class Util
     /**
      * @return array $choices
      */
-    public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [])
+    public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
     {
         $response = $this->apiClient->get('get_all_court_order_type');
        
@@ -40,6 +40,11 @@ class Util
                 foreach($arrayData['data']['court_order_types'] as $value){
                     $choices[$value['id']] = $value['name'];
                 }
+            }
+
+            if ($sort != null)
+            {
+                $sort($choices);
             }
         }
         return $choices;
