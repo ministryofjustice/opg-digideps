@@ -3,18 +3,27 @@
   @include grid-column(1);
 }
 
-#global-header.with-proposition {
+#global-header {
 
-  .header-wrapper {
+  .header-proposition{
+    #proposition-name:hover{
+      border-bottom: 0;
+    }
+  }
 
-    .header-proposition {
-      width: 45%;
-      margin-right: 5px;
-      float: right;
+  &.with-proposition {
+
+    .header-wrapper {
+
+      .header-proposition {
+        width: 45%;
+        margin-right: 5px;
+        float: right;
+      }
+
     }
 
   }
-
 }
 
 #global-header-bar {
