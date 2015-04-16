@@ -24,17 +24,23 @@ class IndexController extends Controller
     }
     
     /**
-     * @Route("login", name="login")
+     * @Route("login/{options}", name="login", defaults={ "options" = null})
      * @Template()
      */
-    public function loginAction()
+    public function loginAction($options = null)
     {
         $request = $this->getRequest();
 
-        $form = $this->createForm(new LoginType());
+        $form = $this->createForm(new LoginType(), null, [
+            'action' => $this->generateUrl('login'),
+        ]);
         $form->handleRequest($request);
+        $ret = [
+            'timeoutOccured'=> ($options == 'timeout'),
+            'form' => $form->createView()
+        ];
         
-        if ($request->getMethod() == 'POST' && $form->isValid()){
+        if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
 
@@ -50,7 +56,7 @@ class IndexController extends Controller
                 }
             } catch(\Exception $e){
 
-                return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
+                return $ret + ['error' => $e->getMessage() ];
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
@@ -63,7 +69,7 @@ class IndexController extends Controller
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
         }
         
-        return [ 'form' => $form->createView()];
+        return $ret;
     }
     
     /**
