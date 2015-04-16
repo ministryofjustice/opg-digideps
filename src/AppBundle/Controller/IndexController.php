@@ -34,35 +34,35 @@ class IndexController extends Controller
         $form = $this->createForm(new LoginType());
         $form->handleRequest($request);
         
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $deputyProvider = $this->get('deputyprovider');
-                $data = $form->getData();
-                
-                try{
-                    $user = $deputyProvider->loadUserByUsername($data['email']);
-                   
-                    $encoder = $this->get('security.encoder_factory')->getEncoder($user);
-                    
-                    if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
-                        $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
-                        throw new \Exception($message);
-                    }
-                }catch(\Exception $e){
-                    
-                    return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
+        if ($request->getMethod() == 'POST' && $form->isValid()){
+            $deputyProvider = $this->get('deputyprovider');
+            $data = $form->getData();
+
+            try{
+                $user = $deputyProvider->loadUserByUsername($data['email']);
+
+                $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+
+                // exception if credentials not valid
+                if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
+                    $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
+                    throw new \Exception($message);
                 }
-                
-                $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
-                $this->get("security.context")->setToken($token);
-                
-                $this->get('session')->set('_security_secured_area', serialize($token));
-                
-                $request = $this->get("request");
-                $event = new InteractiveLoginEvent($request, $token);
-                $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+            } catch(\Exception $e){
+
+                return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
             }
+            // manually set session token into security context (manual login)
+            $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
+            $this->get("security.context")->setToken($token);
+
+            $this->get('session')->set('_security_secured_area', serialize($token));
+
+            $request = $this->get("request");
+            $event = new InteractiveLoginEvent($request, $token);
+            $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
         }
+        
         return [ 'form' => $form->createView()];
     }
     
