@@ -60,7 +60,7 @@ class SessionListener
         if ($hasReachedIdleTimeout) {
             //Invalidate the current session and throw an exception
             $session->invalidate();
-            $response = new RedirectResponse($this->router->generate('login'/*, ['options'=> 'timeout']*/));
+            $response = new RedirectResponse($this->router->generate('login'));
             $event->setResponse($response);
             $event->stopPropagation();
             $session->set(self::SESSION_FLAG_KEY, 1);

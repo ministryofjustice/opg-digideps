@@ -101,7 +101,8 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
         $this->event->shouldReceive('getRequest->getSession->invalidate')->times($callsToManualExpire);
         $this->event->shouldReceive('setResponse')->times($callsToManualExpire)->with(m::type('Symfony\Component\HttpFoundation\RedirectResponse'));
         $this->event->shouldReceive('stopPropagation')->times($callsToManualExpire);
-        $this->router->shouldReceive('generate')->with('login',['options'=>'timeout'])->times($callsToManualExpire)->andReturn('/login/timeout');
+        $this->router->shouldReceive('generate')->with('login')->times($callsToManualExpire)->andReturn('/login/timeout');
+        $this->event->shouldReceive('getRequest->getSession->set')->times($callsToManualExpire)->with(SessionListener::SESSION_FLAG_KEY, 1);
         
         $object->onKernelRequest($this->event);
     }
