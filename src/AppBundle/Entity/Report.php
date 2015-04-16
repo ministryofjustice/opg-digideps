@@ -93,6 +93,12 @@ class Report
     private $outstandingAccounts;
     
     /**
+     * @JMS\Type("boolean")
+     * @var boolean
+     */
+    private $submitted;
+    
+    /**
      * 
      * @return integer $id
      */
@@ -458,5 +464,23 @@ class Report
         $reportDueOn->setTime(0, 0, 0);
         
         return $today >= $reportDueOn;
+    }
+    
+    /**
+     * @return boolean $submitted
+     */
+    public function getSubmitted()
+    {
+        return $this->submitted;
+    }
+    
+    /**
+     * @param type $submitted
+     * @return \AppBundle\Entity\Report
+     */
+    public function setSubmitted($submitted)
+    {
+        $this->submitted = $submitted;
+        return $this;
     }
 }
