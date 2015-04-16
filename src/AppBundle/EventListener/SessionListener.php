@@ -2,18 +2,19 @@
 namespace AppBundle\EventListener;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Act on session on each request
+ * Redirect to login page when session is Idle for more than `idleTimeout` amount in seconds
  * 
  */
 class SessionListener
 {
+    const SESSION_FLAG_KEY = 'hasIdleTimedOut';
+    
     /**
      * @var integer
      */
@@ -59,13 +60,23 @@ class SessionListener
         if ($hasReachedIdleTimeout) {
             //Invalidate the current session and throw an exception
             $session->invalidate();
-            $event->setResponse(new RedirectResponse($this->router->generate('login', ['options'=> 'timeout'])));
+            $response = new RedirectResponse($this->router->generate('login'/*, ['options'=> 'timeout']*/));
+            $event->setResponse($response);
             $event->stopPropagation();
-            
+            $session->set(self::SESSION_FLAG_KEY, 1);
             return;
         }
         
         return 'session-valid';
+    }
+    
+    /**
+     * @param Request $request
+     * @return boolean
+     */
+    public static function hasIdleTimeoutOcccured(Request $request)
+    {
+        return (boolean)$request->getSession()->get(self::SESSION_FLAG_KEY);
     }
     
 }

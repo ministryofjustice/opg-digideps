@@ -19,7 +19,7 @@ security:
             security: false
 
         login:
-            pattern:  ^/login
+            pattern:  ^/login$
             security: false
             
         userActivate:

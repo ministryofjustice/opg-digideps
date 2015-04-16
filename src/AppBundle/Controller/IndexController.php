@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Form\FormError;
+use AppBundle\EventListener\SessionListener;
 
 class IndexController extends Controller
 {
@@ -24,10 +25,10 @@ class IndexController extends Controller
     }
     
     /**
-     * @Route("login/{options}", name="login", defaults={ "options" = null})
+     * @Route("login", name="login")
      * @Template()
      */
-    public function loginAction($options = null)
+    public function loginAction()
     {
         $request = $this->getRequest();
 
@@ -36,7 +37,7 @@ class IndexController extends Controller
         ]);
         $form->handleRequest($request);
         $ret = [
-            'timeoutOccured'=> ($options == 'timeout'),
+            'timeoutOccured'=> SessionListener::hasIdleTimeoutOcccured($request),
             'form' => $form->createView()
         ];
         

@@ -13,7 +13,7 @@
 
 
 {% block pageBody %}
-    
+  
     {# @nick warning above login when timeout happens. delete cookies and refresh to test #}
     {% if timeoutOccured | default(false) %}
       <div class="validation-summary-container" style="margin-bottom: 40px">
@@ -22,7 +22,6 @@
           <h2 >{{ 'sessionTimeoutOutWarning' | trans }}</h2>
         </div>
       </div>
-      <p></p>
     {% endif %}
   
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
