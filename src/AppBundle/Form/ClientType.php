@@ -25,7 +25,7 @@ class ClientType extends AbstractType
                                               'format' => 'yyyy-MM-dd',
                                               'invalid_message' => 'client.courtDate.message'
                                             ])
-                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->util->getAllowedCourtOrderTypeChoiceOptions(), 
+                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->util->getAllowedCourtOrderTypeChoiceOptions([], 'arsort'),
                                                             'multiple' => true,
                                                             'expanded' => true ])
                 ->add('address', 'text')
