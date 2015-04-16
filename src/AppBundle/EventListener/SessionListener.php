@@ -6,6 +6,7 @@ use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
 /**
  * Act on session on each request
@@ -17,13 +18,19 @@ class SessionListener
      * @var integer
      */
     private $idleTimeout;  
+    
+    /**
+     * @var Router
+     */
+    private $router; 
 
     /**
      * @param array $options keys: idleTimeout (seconds)
      * @throws \InvalidArgumentException
      */
-    public function __construct(array $options)
+    public function __construct(Router $router, array $options)
     {
+        $this->router = $router;
         $this->idleTimeout = (int)$options['idleTimeout'];
         if ($this->idleTimeout < 30) {
             throw new \InvalidArgumentException(__CLASS__ . " :session timeout cannot be lower than 30 seconds");
@@ -52,7 +59,7 @@ class SessionListener
         if ($hasReachedIdleTimeout) {
             //Invalidate the current session and throw an exception
             $session->invalidate();
-            $event->setResponse(new RedirectResponse('/login/timeout'));
+            $event->setResponse(new RedirectResponse($this->router->generate('login', ['options'=> 'timeout'])));
             $event->stopPropagation();
             
             return;

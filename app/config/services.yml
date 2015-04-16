@@ -39,6 +39,6 @@ services:
             - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
     kernel.listener.session_listener:
         class: AppBundle\EventListener\SessionListener
-        arguments: [ {idleTimeout: %session_expire_seconds%} ]
+        arguments: [ @router , {idleTimeout: %session_expire_seconds%} ]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

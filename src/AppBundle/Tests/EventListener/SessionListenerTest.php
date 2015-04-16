@@ -11,13 +11,20 @@ use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
  */
 class SessionListenerTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        $this->event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
+        $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
+    }
+    
+    
     /**
      * @test
      * @expectedException InvalidArgumentException
      */
     public function onKernelRequestNoMasterWrongCtor()
     {
-       new SessionListener(['idleTimeout' => 0]);
+       new SessionListener($this->router, ['idleTimeout' => 0]);
     }
     
     /**
@@ -25,11 +32,11 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoMasterReq()
     {
-        $object = new SessionListener(['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
         
-        $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
-        $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::SUB_REQUEST);
-        $this->assertEquals('no-master-request', $object->onKernelRequest($event));
+        
+        $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::SUB_REQUEST);
+        $this->assertEquals('no-master-request', $object->onKernelRequest($this->event));
         
     }
     
@@ -38,7 +45,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoSession()
     {
-        $object = new SessionListener(['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
         
         $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
@@ -52,7 +59,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoLastUsed()
     {
-        $object = new SessionListener(['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
         
         $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         
@@ -81,22 +88,22 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider provider
      */
-    public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $expectedCallsToSessionExpire)
+    public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $callsToManualExpire)
     {
-        $object = new SessionListener(['idleTimeout'=>$idleTimeout]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>$idleTimeout]);
         
-        $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
-        
-        $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
-        $event->shouldReceive('getRequest->hasSession')->andReturn(true);
+        $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
+        $this->event->shouldReceive('getRequest->hasSession')->andReturn(true);
          
-        $event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(time() + $lastUsedRelativeToCurrentTime);
+        $this->event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(time() + $lastUsedRelativeToCurrentTime);
         
-        $event->shouldReceive('getRequest->getSession->invalidate')->times($expectedCallsToSessionExpire);
-        $event->shouldReceive('setResponse')->times($expectedCallsToSessionExpire)->with(m::type('Symfony\Component\HttpFoundation\RedirectResponse'));
-        $event->shouldReceive('stopPropagation')->times($expectedCallsToSessionExpire);
+        // expectations
+        $this->event->shouldReceive('getRequest->getSession->invalidate')->times($callsToManualExpire);
+        $this->event->shouldReceive('setResponse')->times($callsToManualExpire)->with(m::type('Symfony\Component\HttpFoundation\RedirectResponse'));
+        $this->event->shouldReceive('stopPropagation')->times($callsToManualExpire);
+        $this->router->shouldReceive('generate')->with('login',['options'=>'timeout'])->times($callsToManualExpire)->andReturn('/login/timeout');
         
-        $object->onKernelRequest($event);
+        $object->onKernelRequest($this->event);
     }
     
     public function tearDown()
