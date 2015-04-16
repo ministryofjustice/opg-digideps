@@ -1,5 +1,6 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% trans_default_domain "registration" %}
+{% set translationDomain = "registration" %}
+{% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
 {% block contentClass %}{{ parent() }} registration-client-add behat-region-client-add{% endblock %}
@@ -11,7 +12,7 @@
     {% else %}
         {{ progress_bar('registration', 3) }}
     {% endif %}
-    
+
 {% endblock %}
 
 {% block validationSummary %}
@@ -20,5 +21,7 @@
 
 
 {% block pageBody %}
-    {% include 'AppBundle:Client:_add.html.twig' %}
+    {% include 'AppBundle:Client:_add.html.twig' with {
+    'translationDomain': translationDomain
+    } %}
 {% endblock %}
