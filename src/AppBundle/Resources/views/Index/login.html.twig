@@ -17,7 +17,7 @@
     {# @nick warning above login when timeout happens. delete cookies and refresh to test #}
     {% if timeoutOccured | default(false) %}
       <div class="validation-summary-container" style="margin-bottom: 40px">
-        <div aria-labelledby="error-heading" class="validation-summary group" id="error-summary" role="alert"
+        <div aria-labelledby="error-heading" class="validation-summary group behat-region-login-has-timeout" id="error-summary" role="alert"
            tabindex="-1">
           <h2 >{{ 'sessionTimeoutOutWarning' | trans }}</h2>
         </div>

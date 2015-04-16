@@ -64,6 +64,8 @@ class SessionListener
             $event->setResponse($response);
             $event->stopPropagation();
             $session->set(self::SESSION_FLAG_KEY, 1);
+            // save 
+            $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
             return;
         }
         
