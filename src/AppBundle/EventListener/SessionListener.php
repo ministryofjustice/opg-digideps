@@ -58,18 +58,24 @@ class SessionListener
         $hasReachedIdleTimeout = $idleTime > $this->idleTimeout;
         
         if ($hasReachedIdleTimeout) {
-            //Invalidate the current session and throw an exception
-            $session->invalidate();
-            $response = new RedirectResponse($this->router->generate('login'));
-            $event->setResponse($response);
-            $event->stopPropagation();
-            $session->set(self::SESSION_FLAG_KEY, 1);
-            // save 
-            $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
+            $this->hasReachedTimeout($event);
             return;
         }
         
         return 'session-valid';
+    }
+    
+    private function hasReachedTimeout(GetResponseEvent $event)
+    {
+        $session = $event->getRequest()->getSession();
+        //Invalidate the current session and throw an exception
+        $session->invalidate();
+        $response = new RedirectResponse($this->router->generate('login'));
+        $event->setResponse($response);
+        $event->stopPropagation();
+        $session->set(self::SESSION_FLAG_KEY, 1);
+        // save 
+        $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
     }
     
     /**
