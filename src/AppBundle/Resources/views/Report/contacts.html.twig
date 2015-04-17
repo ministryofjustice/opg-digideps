@@ -14,6 +14,8 @@ activeTab : "tab-contacts"
         pageSectionTitle: 'contact_form.pageSectionTitle'
         } %}
 
+        {% include 'AppBundle:Report:_no_contact_form.html.twig' %}
+        
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'contact_form.pageSectionDescription'

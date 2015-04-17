@@ -1,0 +1,9 @@
+{% set translationDomain = "report-contacts" %}
+{% trans_default_domain translationDomain %}
+
+{% if contacts is empty and report.isDue() %}
+    {{ form_start(no_contact, {attr: {novalidate: 'novalidate', class: 'report-form' } }) }}
+            {{ form_input(no_contact.reason, 'reason') }}
+            {{ form_submit(no_contact.saveReason,'save') }}
+    {{ form_end(no_contact) }}
+{% endif %}

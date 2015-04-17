@@ -12,7 +12,7 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
 
-{% if hideForm %}
+{% if hideForm or (report.isDue() and action != 'add') %}
     {# Then we need to show the Add Button Link #}
     {% set  params = app.request.attributes.get('_route_params') %}
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
@@ -29,7 +29,7 @@
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 {% endif %}
 
-<div {% if hideForm %} class="visuallyhidden" {% endif %}>
+<div {% if hideForm or (report.isDue() and action != 'add') %} class="visuallyhidden" {% endif %}>
 
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,

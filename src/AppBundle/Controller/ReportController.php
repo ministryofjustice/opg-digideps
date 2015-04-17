@@ -104,11 +104,13 @@ class ReportController extends Controller
         
         $form = $this->createForm(new FormDir\ContactType(), $contact);
         $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        $noContact = $this->createForm(new FormDir\ReasonForNoContactType());
         
         
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
             $reportSubmit->handleRequest($request);
+            $noContact->handleRequest($request);
            
             if($form->get('save')->isClicked()){
                 if($form->isValid()){
@@ -117,6 +119,10 @@ class ReportController extends Controller
 
                     $apiClient->postC('add_report_contact', $contact);
                     return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+                }
+            }elseif($noContact->get('saveReason')->isClicked()){
+                if($noContact->isValid()){
+                    
                 }
             }else{
                
@@ -134,7 +140,8 @@ class ReportController extends Controller
             'action' => $action,
             'report' => $report,
             'client' => $client,
-            'report_form_submit' => $reportSubmit->createView() ];
+            'report_form_submit' => $reportSubmit->createView(),
+            'no_contact' => $noContact->createView() ];
     }
     
   
