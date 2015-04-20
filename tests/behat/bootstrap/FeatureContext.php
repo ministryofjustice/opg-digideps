@@ -320,4 +320,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->assertPageContainsText('The report has been submitted');
     }
     
+    /**
+     * @Then I expire the session
+     */
+    public function iExpireTheSession()
+    {
+        $this->getSession()->setCookie('digideps', null);
+    }   
+    
 }

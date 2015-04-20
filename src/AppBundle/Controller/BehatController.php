@@ -131,15 +131,4 @@ class BehatController extends Controller
 //       
 //       return new Response('done');
     }
-    
-    /**
-     * @Route("/{secret}/destroy-session")
-     * @Method({"GET"})
-     */
-    public function destroySession()
-    {
-        $this->getRequest()->getSession()->clear();
-        
-        return new Response('done');
-    }
 }

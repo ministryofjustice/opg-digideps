@@ -6,10 +6,14 @@ Feature: report
         When I follow "tab-accounts"
         And I click on "account-n1"
         Then the URL should match "/report/\d+/account/\d+"
-        Then I visit the behat link "destroy-session"
-        When I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        # for weird reasons this check is OK with the browser, but fails with behat
-        #Then the URL should match "/report/\d+/account/d+"
+        When I expire the session
+        And I reload the page
+        Then I should be on "/login"
+        When I fill in the following:
+          | login_email | behat-user@publicguardian.gsi.gov.uk |
+          | login_password | Abcd1234 |
+        And I submit the form
+        Then the URL should match "/report/\d+/account/\d+"
     
         
         
