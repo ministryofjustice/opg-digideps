@@ -42,3 +42,6 @@ services:
         arguments: [ @router , {idleTimeout: %session_expire_seconds%} ]
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    logout_listener:
+      class:   AppBundle\EventListener\LogoutListener
+      arguments:  [@security.context, @router]

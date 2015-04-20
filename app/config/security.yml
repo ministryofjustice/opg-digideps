@@ -43,6 +43,7 @@ security:
             logout:
                 path:   /logout
                 target: /
+                success_handler: logout_listener
             anonymous: ~
             switch_user: true
             #http_basic:

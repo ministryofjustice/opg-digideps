@@ -38,8 +38,10 @@ class IndexController extends Controller
         $form->handleRequest($request);
         $ret = [
             'timeoutOccured'=> SessionListener::hasIdleTimeoutOcccured($request),
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'fromLogout' => $request->query->get('from') == 'logout'
         ];
+        
         
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
