@@ -171,12 +171,14 @@ class FormFieldsExtension extends \Twig_Extension
         //sort out labelText translation
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label', [], $domain );
         $buttonClass = isset($vars['buttonClass']) ? $vars['buttonClass']: null;
-        
+
         //generate input field html using variables supplied
-        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig', [ 'labelText' => $labelText, 
-                                                                                            'element'  => $element,
-                                                                                            'buttonClass' => $buttonClass
-                                                                                         ]);
+        $html = $this->environment->render('AppBundle:Components/Form:_button.html.twig',
+            [
+                'labelText' => $labelText,
+                'element'  => $element,
+                'buttonClass' => $buttonClass
+            ]);
         
         echo $html;
     }

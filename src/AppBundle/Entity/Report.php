@@ -34,6 +34,13 @@ class Report
      * @var \DateTime $endDate
      */
     private $endDate;
+
+    /**
+     * @var \DateTime $submitDate
+     * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
+     * @JMS\Type("DateTime<'Y-m-d'>")
+     */
+    private $submitDate;
     
     /**
      * @JMS\Type("integer")
@@ -159,6 +166,36 @@ class Report
         $dueDate->modify('+8 weeks');
         
         return $dueDate;
+    }
+
+    /**
+     * Get submitDate
+     *
+     * @return \DateTime
+     */
+    public function getSubmitDate()
+    {
+        if($this->submitted){
+            $submitDate = $this->submitDate;
+        }
+        else{
+            $submitDate = null;
+        }
+        return $submitDate;
+    }
+
+    /**
+     * @param \DateTime $submitDate
+     * @return \AppBundle\Entity\Report
+     */
+    public function setSubmitDate(\DateTime $submitDate = null)
+    {
+        if ($submitDate instanceof \DateTime) {
+            $submitDate->setTime(23, 59, 59);
+        }
+        $this->submitDate = $submitDate;
+
+        return $this;
     }
     
     /**

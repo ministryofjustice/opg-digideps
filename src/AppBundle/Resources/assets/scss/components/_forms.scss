@@ -9,6 +9,17 @@ form {
     padding-left: 10px;
   }
 
+  &.in-page-form {
+    border-left: 3px solid $grey-2;
+    padding-left: 10px;
+  }
+
+}
+
+.form {
+  &--client-add-report {
+    margin: 40px 0 20px 0;
+  }
 }
 
 .form-group {
@@ -38,6 +49,27 @@ form {
 
 .form-group__checkbox-group {
   margin-left: 2px;
+
+  .vertical {
+    .description {
+      float: left;
+      clear: both;
+    }
+
+    label {
+      clear: both;
+    }
+
+    label + p {
+      margin-top: 30px;
+    }
+
+    p + p {
+      margin-top: 30px;
+    }
+
+  }
+
 }
 
 .form-group__checkbox {

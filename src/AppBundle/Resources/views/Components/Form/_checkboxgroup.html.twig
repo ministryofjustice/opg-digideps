@@ -1,23 +1,27 @@
 <div class="form-group form-group__checkbox-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
-<fieldset class="{{fieldSetClass}}">
-   <legend class="{{legendClass}}">{{ legendText }}</legend>
-    {% if not element.vars.valid %}
-        <ul>
-            <li>{{ form_errors(element) }}</li>
-        </ul>
-    {% endif %}
-   <p class="form-hint">{{ hintText }}</p>
-    
-    {% for key,choiceElement in element %}
-        
-        {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
-        {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
-        
-        <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
-            {{ form_widget(choiceElement, {'attr': {'class': elementClass }}) }}
-            {{ choiceElement.vars.label }}
-        </label>
-    {% endfor %}
-   
-</fieldset>
+    <fieldset class="{{ fieldSetClass }}">
+        <legend class="{{ legendClass }}">{{ legendText }}</legend>
+        {% if not element.vars.valid %}
+            <ul>
+                <li>{{ form_errors(element) }}</li>
+            </ul>
+        {% endif %}
+        <p class="form-hint">{{ hintText }}</p>
+
+        {% for key,choiceElement in element %}
+
+            {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
+            {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
+            {% set description = items[key].description is defined ?  items[key].description : null %}
+
+            {% if description is not null %}
+                <p class="form-hint description">{{ description }}</p>
+            {% endif %}
+            <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
+                {{ form_widget(choiceElement, {'attr': {'class': elementClass }}) }}
+                {{ choiceElement.vars.label }}
+            </label>
+        {% endfor %}
+
+    </fieldset>
 </div>

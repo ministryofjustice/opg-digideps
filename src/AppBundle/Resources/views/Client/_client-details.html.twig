@@ -1,0 +1,80 @@
+{% trans_default_domain translationDomain %}
+
+{% block validationSummary %}
+    {{ form_errors_list(formClientNewReport) }}
+{% endblock %}
+
+
+{% if (action == 'edit-client') %}
+    {% set hideForm = false %}
+    {% set formClass = 'in-page-form' %}
+{% else %}
+    {% set hideForm = true %}
+    {% set formClass = '' %}
+{% endif %}
+
+{{ form_start(formEditClient, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+{% if hideForm %}
+
+    <div itemscope itemtype="http://schema.org/Person" class="data-item data-item--client-details">
+        <dl class="data-item-fields">
+            <div class="data-item-fields-row data-item-fields-row--header">
+                <dt class="visuallyhidden">{{ 'clientDetails.clientName' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <h2 class="data-item-header-title" itemprop="name">{{ client.getFullname }}</h2></dd>
+            </div>
+            <div class="data-item-fields-row data-item-fields-row--header">
+                <dt class="visuallyhidden">{{ 'clientDetails.editClient' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <a href="{{ path('client_home', {'action': 'edit-client' })~'#edit-client' }}"
+                       class="js-data-item-edit-link data-item-edit-link">{{ 'clientDetails.edit'| trans }}</a>
+                </dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'clientDetails.caseReference' | trans }}</dt>
+                <dd class="data-item-fields-description">{{ client.getCaseNumber }}</dd>
+            </div>
+            {#
+                    <div class="report-list__item-fields-row">
+                        <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'view_contact.reason' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ client.explanation }}</dd>
+                    </div>
+            #}
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'clientDetails.address' | trans }}</dt>
+                <dd class="data-item-fields-description" itemprop="address" itemscope
+                    itemtype="http://schema.org/PostalAddress">
+                    {% if client.address is not empty %}
+                        <div itemprop="streetAddress">{{ client.address }}</div>
+                    {% endif %}
+                    {% if client.address2 is not empty %}
+                        <div itemprop="addressLocality">{{ client.address2 }}</div>
+                    {% endif %}
+                    {% if client.county is not empty %}
+                        <div itemprop="addressRegion">{{ client.county }}</div>
+                    {% endif %}
+                    {% if client.postcode is not empty %}
+                        <div itemprop="postalCode">{{ client.postcode }}</div>
+                    {% endif %}
+                    {% if client.country is not empty %}
+                        <div itemprop="addressCountry">{{ client.country | country_name }}</div>
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
+    </div>
+
+{% endif %}
+
+
+<div id="edit-client" {% if hideForm %} class="visuallyhidden" {% endif %}>
+
+    {% include 'AppBundle:Client:_edit.html.twig' with {
+    'form': formEditClient,
+    'translationDomain': translationDomain
+    } %}
+
+</div>
+
+{{ form_end(formEditClient) }}

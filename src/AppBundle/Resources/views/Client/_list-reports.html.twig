@@ -1,0 +1,60 @@
+{% trans_default_domain translationDomain %}
+
+<ul class="data-list data-list--client-list-reports">
+    {% for report in reports %}
+        {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+        {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
+        {% set linkEditReportingPeriod = path('client_home', {'reportId': report.id, 'action': 'edit-reporting-period' })~'#edit-reporting-period' %}
+        <li class="data-item">
+            <dl class="data-item-fields">
+                <div class="data-item-fields-row data-item-fields-row--header">
+                    <dt class="visuallyhidden">{{ 'reportDataList.name' | trans }}</dt>
+                    <dd class="data-item-fields-description data-item-fields-description--header">
+                        <h3 class="data-item-header-title">
+                            <a href="{{ linkToReportOverviewPage }}#account-header"
+                               class="behat-link-report-n{{ loop.index }}">
+                                {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
+                            </a>
+                        </h3>
+                    </dd>
+                </div>
+                <div class="data-item-fields-row data-item-fields-row--header">
+                    <dt class="visuallyhidden">{{ 'reportDataList.editReportingPeriod' | trans }}</dt>
+                    <dd class="data-item-fields-description data-item-fields-description--header">
+                        <a href="{{ linkEditReportingPeriod }}"
+                           class="js-data-item-edit-link data-item-edit-link">{{ 'reportDataList.edit'| trans }}</a>
+                    </dd>
+                </div>
+                {% if report.isDue() %}
+                    <div class="data-item-fields-row">
+                        <dt class="data-item-fields-term">{{ 'reportDataList.status' | trans }}</dt>
+                        <dd class="data-item-fields-description data-item-fields-description--normal">{{ 'reportDataList.isDue' | trans }}</dd>
+                    </div>
+                {% elseif report.submitted %}
+                    <div class="data-item-fields-row">
+                        <dt class="data-item-fields-term">{{ 'reportDataList.status' | trans }}</dt>
+                        {% set submitDate = ( report.getSubmitDate() is null ? 'reportDataList.submitDateNotSet'|trans : report.getSubmitDate() | date(" d F Y") ) %}
+                        <dd class="data-item-fields-description data-item-fields-description--normal">{{ 'reportDataList.submitted' | trans( { '%date%': submitDate } ) }}</dd>
+                    </div>
+                {% else %}
+                    <div class="data-item-fields-row">
+                        <dt class="data-item-fields-term">{{ 'reportDataList.status' | trans }}</dt>
+                        <dd class="data-item-fields-description data-item-fields-description--normal">{{ 'reportDataList.inProgress' | trans }}</dd>
+                    </div>
+                {% endif %}
+                <div class="data-item-fields-row">
+                    <dt class="data-item-fields-term">{{ 'reportDataList.type' | trans }}</dt>
+                    <dd class="data-item-fields-description data-item-fields-description--normal">{{ ('reportDataList.'~(report.courtOrderType == 2 ? 'pa' : 'hw')) | trans }}</dd>
+                </div>
+                {% if not report.submitted %}
+                    <div class="data-item-fields-row">
+                        <dt class="data-item-fields-term">{{ 'reportDataList.dueDate' | trans }}</dt>
+                        <dd class="data-item-fields-description data-item-fields-description--normal">{{ report.dueDate | date(" d F Y") }}</dd>
+                    </div>
+                {% endif %}
+
+            </dl>
+
+        </li>
+    {% endfor %}
+</ul>

@@ -6,17 +6,6 @@
 
 {{ form_input(form.firstname, 'firstname') }}
 {{ form_input(form.lastname, 'lastname') }}
-{{ form_input(form.caseNumber, 'caseNumber') }}
-{{ form_known_date(form.courtDate, 'courtDate') }}
-
-{{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
-    'fieldSetClass' : 'inline',
-    'legendClass' : 'form-label',
-    'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-    ]
-}) }}
 
 {{ form_input(form.address, 'address') }}
 {{ form_input(form.address2, 'address2') }}
@@ -25,9 +14,20 @@
 {{ form_select(form.country, 'country') }}
 {{ form_input(form.phone, 'phone') }}
 
+{{ form_input(form.caseNumber, 'caseNumber') }}
+{{ form_known_date(form.courtDate, 'courtDate') }}
+
+{{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
+    'fieldSetClass' : 'vertical',
+    'legendClass' : 'form-label',
+    'items': [
+        {'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
+        {'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-1" | trans({}, translationDomain) }
+    ]
+}) }}
+
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'saveAndContinue') }}
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 {{ form_end(form) }}
-
