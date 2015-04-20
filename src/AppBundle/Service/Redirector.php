@@ -49,7 +49,8 @@ class Redirector
         if ($this->security->isGranted('ROLE_ADMIN') || ($this->security->isGranted('ROLE_LAY_DEPUTY'))) {
             if ($lastUsedUrl = $this->session->get('_security.secured_area.target_path')) {
                 // avoid loops (might happend in browser misbehaving with redirects)
-                $isHomepage = empty(trim(parse_url($lastUsedUrl)['path'], '/'));
+                $url = trim(parse_url($lastUsedUrl)['path'], '/');
+                $isHomepage = empty($url);
                 if (!$isHomepage) {
                     return $lastUsedUrl;
                 }

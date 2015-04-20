@@ -93,6 +93,12 @@ class Report
     private $outstandingAccounts;
     
     /**
+     * @JMS\Type("string")
+     * @var string $reasonForNoContacts
+     */
+    private $reasonForNoContacts;
+    
+    /**
      * @JMS\Type("boolean")
      * @var boolean
      */
@@ -328,7 +334,7 @@ class Report
      */
     public function missingContacts()
     {
-        if(empty($this->contacts)){
+        if(empty($this->contacts) && empty($this->reasonForNoContacts)){
             return true;
         }
         return false;
@@ -464,6 +470,24 @@ class Report
         $reportDueOn->setTime(0, 0, 0);
         
         return $today >= $reportDueOn;
+    }
+    
+    /**
+     * @param string $reasonForNoContacts
+     * @return \AppBundle\Entity\Report
+     */
+    public function setReasonForNoContacts($reasonForNoContacts)
+    {
+        $this->reasonForNoContacts = $reasonForNoContacts;
+        return $this;
+    }
+    
+    /**
+     * @return string $reasonForNoContacts
+     */
+    public function getReasonForNoContacts()
+    {
+        return $this->reasonForNoContacts;
     }
     
     /**
