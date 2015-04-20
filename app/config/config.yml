@@ -20,7 +20,16 @@ framework:
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_proxies: ~
-    session:         ~
+    session: 
+      name: digideps
+      # force session usage, no cookie (we want to logout when the browser closes)
+      cookie_lifetime: 0
+      gc_probability: 1 
+      gc_divisor: 1
+      # session timeout (when GC kicks in)
+      gc_maxlifetime: %session_expire_seconds%
+      # true:  cookie won't be accessible by Javascript, safer for XSS
+      cookie_httponly: true
     fragments:       ~
     http_method_override: true
 
