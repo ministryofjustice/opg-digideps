@@ -67,7 +67,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
         $event->shouldReceive('getRequest->hasSession')->andReturn(true);
          
         $event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(0);
-        $this->assertEquals('no-last-used', $object->onKernelRequest($event));
+        $this->assertEquals('no-timeout', $object->onKernelRequest($event));
         
     }
     

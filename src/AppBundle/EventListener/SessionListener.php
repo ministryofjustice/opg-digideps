@@ -47,29 +47,38 @@ class SessionListener
         if (!$event->getRequest()->hasSession()) {
             return 'no-session';
         }
-        
-        $session = $event->getRequest()->getSession();
-        $lastUsed = (int)$session->getMetadataBag()->getLastUsed();
-        if (!$lastUsed) {
-            return 'no-last-used';
-        }
-        
-        $idleTime = time() - $lastUsed;
-        $hasReachedIdleTimeout = $idleTime > $this->idleTimeout;
-        
-        if ($hasReachedIdleTimeout) {
-            //Invalidate the current session and throw an exception
-            $session->invalidate();
-            $response = new RedirectResponse($this->router->generate('login'));
-            $event->setResponse($response);
-            $event->stopPropagation();
-            $session->set(self::SESSION_FLAG_KEY, 1);
-            // save 
-            $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
+        if ($this->hasReachedTimeout($event)) {
+            $this->handleTimeout($event);
+            
             return;
         }
         
-        return 'session-valid';
+        return 'no-timeout';
+    }
+    
+    private function hasReachedTimeout(GetResponseEvent $event)
+    {
+        $session = $event->getRequest()->getSession();
+        $lastUsed = (int)$session->getMetadataBag()->getLastUsed();
+        if (!$lastUsed) {
+            return false;
+        }
+        $idleTime = time() - $lastUsed;
+        
+        return $idleTime > $this->idleTimeout;
+    }
+    
+    private function handleTimeout(GetResponseEvent $event)
+    {
+        $session = $event->getRequest()->getSession();
+        //Invalidate the current session and throw an exception
+        $session->invalidate();
+        $response = new RedirectResponse($this->router->generate('login'));
+        $event->setResponse($response);
+        $event->stopPropagation();
+        $session->set(self::SESSION_FLAG_KEY, 1);
+        // save 
+        $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
     }
     
     /**
