@@ -1,11 +1,14 @@
 <?php
 namespace AppBundle\Controller;
 
+use AppBundle\Form\ClientEditReportPeriodType;
+use AppBundle\Form\ClientNewReportType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Form\ClientType;
 use AppBundle\Entity\Client;
+use AppBundle\Entity as EntityDir;
 
 
 /**
@@ -14,10 +17,10 @@ use AppBundle\Entity\Client;
 class ClientController extends Controller
 {
     /**
-     * @Route("/", name="client_home")
+     * @Route("/{action}", name="client_home", defaults={ "action" = ""})
      * @Template()
      */
-    public function indexAction()
+    public function indexAction($action)
     {
         $util = $this->get('util');
         $clients = $this->getUser()->getClients();
@@ -31,10 +34,25 @@ class ClientController extends Controller
                 $reports[$id] = $util->getReport($id,$this->getUser()->getId(),'basic');
             }
         }
-        
-        return [ 'client' => $client,
-                 'reports' => $reports
-               ];
+
+
+        $report = new EntityDir\Report();
+        $report->setClient($client->getId());
+
+        $formClientNewReport = $this->createForm(new ClientNewReportType(), $report);
+        $formClientEditReportPeriod = $this->createForm(new ClientEditReportPeriodType(), $report);
+        $formEditClient = $this->createForm(new ClientType($util), $client);
+
+
+        return [
+            'client' => $client,
+            'reports' => $reports,
+            'action' => $action,
+            'formEditClient' => $formEditClient->createView(),
+            'formClientNewReport' => $formClientNewReport->createView(),
+            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView()
+        ];
+
     }
     
     /**

@@ -52,7 +52,7 @@ module.exports = function (grunt) {
             },
             js: {
                 files: [jsPath + '/**/*.js'],
-                task: ['copy:copyJS']
+                task: ['sass']
             }
         },
 
