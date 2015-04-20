@@ -157,6 +157,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({"transactions","basic"})
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;

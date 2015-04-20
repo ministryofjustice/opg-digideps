@@ -172,6 +172,10 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['endDate']));
         }
         
+        if (array_key_exists('reason_for_no_contacts', $data)) {
+            $report->setReasonForNoContacts($data['reason_for_no_contacts']);
+        }
+        
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
