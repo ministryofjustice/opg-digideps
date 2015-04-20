@@ -35,6 +35,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         //$options['session']; // not used
         ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
         ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
+        $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
     }
     
     
@@ -319,5 +320,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         //TODO check db
         $this->assertPageContainsText('The report has been submitted');
     }
+    
+    /**
+     * @Then I expire the session
+     */
+    public function iExpireTheSession()
+    {
+        $this->getSession()->setCookie($this->sessionName, null);
+    }   
     
 }
