@@ -39,9 +39,8 @@ class IndexController extends Controller
         $ret = [
             'timeoutOccured'=> SessionListener::hasIdleTimeoutOcccured($request),
             'form' => $form->createView(),
-            'fromLogout' => $request->query->get('from') == 'logout'
+            'fromLogoutPage' => $request->getSession()->get('loggedOutFrom') === 'logoutPage'
         ];
-        
         
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
@@ -66,7 +65,8 @@ class IndexController extends Controller
             $this->get("security.context")->setToken($token);
 
             $this->get('session')->set('_security_secured_area', serialize($token));
-
+            $this->get('session')->set('loggedOutFrom', null);            
+            
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);

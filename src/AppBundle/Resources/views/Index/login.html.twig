@@ -2,7 +2,14 @@
 {% trans_default_domain "login" %}
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
-{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+{% block title %}
+  {% if fromLogoutPage | default(false) %}
+     {{ 'manualLogout.title' | trans }}
+      <h2 class="behat-region-manual-logout-message">{{ 'manualLogout.description' | trans  }}</h2>
+  {% else %}
+      {% trans %}pageTitle{% endtrans %}
+  {% endif %}
+{% endblock %}
 
 {% block pageNavigation %}
 {% endblock %}

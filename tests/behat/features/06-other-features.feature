@@ -14,6 +14,12 @@ Feature: report
           | login_password | Abcd1234 |
         And I submit the form
         Then the URL should match "/report/\d+/account/\d+"
-    
         
+    @deputy
+    Scenario: manual logout
+      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      When I click on "logout"
+      Then I should be on "/login"
+      And I should see the "manual-logout-message" region
+
         
