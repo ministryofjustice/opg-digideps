@@ -329,4 +329,20 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->getSession()->setCookie($this->sessionName, null);
     }   
     
+    
+    /**
+     * @Then the response should have the :arg1 header equal to :arg2
+     */
+    public function theResponseShouldHaveTheHeaderEqualTo($header, $value)
+    {
+        $headers = $this->getSession()->getDriver()->getResponseHeaders();
+        if (empty($headers[$header][0])) {
+            throw new \Exception("Header '{$header}' not found.");
+        }
+        if ($headers[$header][0] != $value) {
+        throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' different from expected '{$value}'");
+        }
+        
+    }
+    
 }

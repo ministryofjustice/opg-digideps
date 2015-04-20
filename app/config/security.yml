@@ -43,6 +43,9 @@ security:
             logout:
                 path:   /logout
                 target: /
+                success_handler: logout_listener
+                # needed to save custom login params
+                invalidate_session: false
             anonymous: ~
             switch_user: true
             #http_basic:
