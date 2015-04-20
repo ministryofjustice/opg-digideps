@@ -52,36 +52,57 @@ class Redirector
         $this->session = $session;
     }
 
-    
+    /**
+     * @return string
+     */
     public function getUserFirstPage()
     {
         $user = $this->security->getToken()->getUser();
-        $clients = $user->getClients();
 
-        $route = 'access_denied';
-        $options = [];
-        
-        
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            $route = 'admin_homepage';
+            list($route, $options) = $this->getAdminHomepage();
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
-            
-            if (!$user->hasDetails()) {
-                $route = 'user_details';
-            }  else if(!$user->hasClients()) {
-                $route = 'client_add';
-            }else if(!$user->hasReports()){
-                $route = 'report_create';
-                $options = [ 'clientId' => $clients[0]['id']];
-            }else if ($lastUsedUri = $this->getLastAccessedUrl()) {
-                return $lastUsedUri;
-            } else {
-                $route = "report_overview";
-                $options = [ 'reportId' => $clients[0]['reports'][0] ];
-            }
+            list($route, $options) = $this->getLayDeputyHomepage($user);
+        } else {
+             $route = 'access_denied';
+             $options = [];
         }
         
         return $this->router->generate($route, $options);
+    }
+    
+    /**
+     * @return array [route, options]
+     */
+    private function getAdminHomepage()
+    {
+        return ['admin_homepage', []];
+    }
+    
+    /**
+     * @return array [route, options]
+     */
+    private function getLayDeputyHomepage($user)
+    {
+        if (!$user->hasDetails()) {
+            return ['user_details', []];
+        }
+        
+        if(!$user->hasClients()) {
+            return ['client_add', []];
+        }
+        
+        $clients = $user->getClients();
+        
+        if(!$user->hasReports()){
+            return ['report_create', [ 'clientId' => $clients[0]['id']]];
+        }
+        
+        if ($lastUsedUri = $this->getLastAccessedUrl()) {
+            return $lastUsedUri;
+        }
+        
+        return ["report_overview", [ 'reportId' => $clients[0]['reports'][0] ]];
     }
     
    
