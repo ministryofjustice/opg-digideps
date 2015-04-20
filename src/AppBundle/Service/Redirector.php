@@ -38,15 +38,13 @@ class Redirector
     
     public function getUserFirstPage()
     {
-        
-        
         $user = $this->security->getToken()->getUser();
         $clients = $user->getClients();
 
         $route = 'access_denied';
         $options = [];
         
-        if ($this->security->isGranted('ROLE_ADMIN') || ($this->security->isGranted('ROLE_LAY_DEPUTY'))) {
+        /*if ($this->security->isGranted('ROLE_ADMIN') || ($this->security->isGranted('ROLE_LAY_DEPUTY'))) {
             if ($lastUsedUrl = $this->session->get('_security.secured_area.target_path')) {
                 // avoid loops (might happend in browser misbehaving with redirects)
                 $isHomepage = empty(trim(parse_url($lastUsedUrl)['path'], '/'));
@@ -54,7 +52,7 @@ class Redirector
                     return $lastUsedUrl;
                 }
             }
-        }
+        }*/
         
         
         if ($this->security->isGranted('ROLE_ADMIN')) {
