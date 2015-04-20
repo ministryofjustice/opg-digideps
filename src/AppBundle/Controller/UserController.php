@@ -88,7 +88,7 @@ class UserController extends Controller
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
-        
+
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
         ]);
@@ -117,12 +117,23 @@ class UserController extends Controller
     }
     
     /**
-     * @Route("/view", name="user_view")
+     * @Route("/{action}", name="user_view", defaults={ "action" = ""})
      * @Template()
      */
-    public function viewAction()
+    public function indexAction($action)
     {
-        return [];
+        $user = $this->getUser();
+
+        $formEditDetails = $this->createForm(new UserDetailsFullType([
+            'addressCountryEmptyValue' => 'Please select...', [], 'user-activate'
+        ]), $user);
+
+
+        return [
+            'action' => $action,
+            'user' => $user,
+            'formEditDetails' => $formEditDetails->createView()
+        ];
     }
     
 }
