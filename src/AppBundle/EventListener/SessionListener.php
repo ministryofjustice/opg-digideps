@@ -79,7 +79,6 @@ class SessionListener
         $session->set(self::SESSION_FLAG_KEY, 1);
         // save 
         $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
-//        error_log('LAU: ' . $event->getRequest()->getUri());
     }
     
     /**
