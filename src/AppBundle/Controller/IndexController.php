@@ -36,10 +36,8 @@ class IndexController extends Controller
             'action' => $this->generateUrl('login'),
         ]);
         $form->handleRequest($request);
-        $ret = [
-            'timeoutOccured'=> SessionListener::hasIdleTimeoutOcccured($request),
+        $vars = [
             'form' => $form->createView(),
-            'fromLogoutPage' => $request->getSession()->get('loggedOutFrom') === 'logoutPage'
         ];
         
         if ($form->isValid()){
@@ -58,7 +56,7 @@ class IndexController extends Controller
                 }
             } catch(\Exception $e){
 
-                return $ret + ['error' => $e->getMessage() ];
+                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
@@ -72,7 +70,21 @@ class IndexController extends Controller
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
         }
         
-        return $ret;
+        return $this->render($this->getLoginPageTemplate(), $vars);
+    }
+    
+    /**
+     * @return string
+     */
+    private function getLoginPageTemplate()
+    {
+        if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'logoutPage') {
+            return 'AppBundle:Index:login-from-logout.html.twig';
+        } else if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'timeout') {
+            return 'AppBundle:Index:login-from-timeout.html.twig';
+        } else {
+            return 'AppBundle:Index:login.html.twig';
+        }
     }
     
     /**

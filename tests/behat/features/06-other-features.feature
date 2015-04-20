@@ -7,8 +7,10 @@ Feature: report
         And I click on "account-n1"
         Then the URL should match "/report/\d+/account/\d+"
         When I expire the session
+        # reload the page and trigger SesionListener 
         And I reload the page
         Then I should be on "/login"
+        #And I should see the "session-timeout" region
         When I fill in the following:
           | login_email | behat-user@publicguardian.gsi.gov.uk |
           | login_password | Abcd1234 |

@@ -76,18 +76,8 @@ class SessionListener
         $response = new RedirectResponse($this->router->generate('login'));
         $event->setResponse($response);
         $event->stopPropagation();
-        $session->set(self::SESSION_FLAG_KEY, 1);
-        // save 
+        $session->set('loggedOutFrom', 'timeout');
         $session->set('_security.secured_area.target_path', $event->getRequest()->getUri());
-    }
-    
-    /**
-     * @param Request $request
-     * @return boolean
-     */
-    public static function hasIdleTimeoutOcccured(Request $request)
-    {
-        return (boolean)$request->getSession()->get(self::SESSION_FLAG_KEY);
     }
     
 }

@@ -1,0 +1,7 @@
+{% extends 'AppBundle:Index:login.html.twig' %}
+{% trans_default_domain "login" %}
+
+{% block title %}
+    {{ 'manualLogout.title' | trans }}
+     <h2 class="behat-region-manual-logout-message">{{ 'manualLogout.description' | trans  }}</h2>
+{% endblock %}
