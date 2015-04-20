@@ -154,12 +154,12 @@ class Report
     private $noAssetToAdd;
     
     /**
-     * @var boolean
+     * @var string
      *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="no_contact_to_add", type="boolean", options={ "default": false})
+     * @JMS\Type("string")
+     * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
-    private $noContactToAdd;
+    private $reasonForNoContacts;
     
     /**
      * @var boolean
@@ -634,26 +634,26 @@ class Report
     }
 
     /**
-     * Set noContactToAdd
+     * Set reasonForNoContact
      *
-     * @param boolean $noContactToAdd
+     * @param string $reasonForNoContacts
      * @return Report
      */
-    public function setNoContactToAdd($noContactToAdd)
+    public function setReasonForNoContacts($reasonForNoContacts)
     {
-        $this->noContactToAdd = $noContactToAdd;
+        $this->reasonForNoContacts = $reasonForNoContacts;
 
         return $this;
     }
 
     /**
-     * Get noContactToAdd
+     * Get reasonForNoContacts
      *
-     * @return boolean 
+     * @return string 
      */
-    public function getNoContactToAdd()
+    public function getReasonForNoContacts()
     {
-        return $this->noContactToAdd;
+        return $this->reasonForNoContacts;
     }
 
     /**
