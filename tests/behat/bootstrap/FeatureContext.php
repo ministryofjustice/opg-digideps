@@ -300,6 +300,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitBehatLink("delete-behat-data");
     }
     
+    /**
+     * @Given I visit the behat link :link
+     */
+    
     public function visitBehatLink($link)
     {
        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));

@@ -10,6 +10,7 @@ login:
     label: Sign in
     invalidMessage: Invalid email or password
 forgotPassword: Forgotten your password?
+sessionTimeoutOutWarning: Sorry, your session has timed out either to inactivity or because you have signed in on another browser. Please sign in again.
 
 #_security:
 #    403_error:
