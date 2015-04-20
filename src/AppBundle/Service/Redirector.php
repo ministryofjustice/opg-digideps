@@ -60,23 +60,20 @@ class Redirector
         $user = $this->security->getToken()->getUser();
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
-            list($route, $options) = $this->getAdminHomepage();
+            return $this->getAdminHomepage();
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
-            list($route, $options) = $this->getLayDeputyHomepage($user);
+            return $this->getLayDeputyHomepage($user);
         } else {
-             $route = 'access_denied';
-             $options = [];
+            return $this->router->generate('access_denied');
         }
-        
-        return $this->router->generate($route, $options);
     }
     
     /**
-     * @return array [route, options]
+     * @return string URL
      */
     private function getAdminHomepage()
     {
-        return ['admin_homepage', []];
+        return $this->router->generate('admin_homepage');
     }
     
     /**
@@ -85,24 +82,24 @@ class Redirector
     private function getLayDeputyHomepage($user)
     {
         if (!$user->hasDetails()) {
-            return ['user_details', []];
+             return $this->router->generate('user_details');
         }
         
         if(!$user->hasClients()) {
-            return ['client_add', []];
+             return $this->router->generate('client_add');
         }
         
         $clients = $user->getClients();
         
         if(!$user->hasReports()){
-            return ['report_create', [ 'clientId' => $clients[0]['id']]];
+            return $this->router->generate('report_create', [ 'clientId' => $clients[0]['id']]);
         }
         
         if ($lastUsedUri = $this->getLastAccessedUrl()) {
             return $lastUsedUri;
         }
         
-        return ["report_overview", [ 'reportId' => $clients[0]['reports'][0] ]];
+        return $this->router->generate('report_overview', ['reportId' => $clients[0]['reports'][0]]);
     }
     
    
