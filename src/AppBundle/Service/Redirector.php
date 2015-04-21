@@ -46,7 +46,7 @@ class Redirector
                 $route = 'client_add';
             }else if(!$user->hasReports()){
                 $route = 'report_create';
-                $options = [ 'clientId' => $clients[0]['id']];
+                $options = [ 'clientId' => $clients[0]->getId()];
             }else{
                 $route = "client_home";
             }

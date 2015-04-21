@@ -22,18 +22,18 @@
             <div class="data-item-fields-row data-item-fields-row--header">
                 <dt class="visuallyhidden">{{ 'clientDetails.clientName' | trans }}</dt>
                 <dd class="data-item-fields-description data-item-fields-description--header">
-                    <h2 class="data-item-header-title" itemprop="name">{{ client.getFullname }}</h2></dd>
+                    <h2 class="data-item-header-title behat-region-client-name" itemprop="name">{{ client.getFullname }}</h2></dd>
             </div>
             <div class="data-item-fields-row data-item-fields-row--header">
                 <dt class="visuallyhidden">{{ 'clientDetails.editClient' | trans }}</dt>
                 <dd class="data-item-fields-description data-item-fields-description--header">
                     <a href="{{ path('client_home', {'action': 'edit-client' })~'#edit-client' }}"
-                       class="js-data-item-edit-link data-item-edit-link">{{ 'clientDetails.edit'| trans }}</a>
+                       class="js-data-item-edit-link data-item-edit-link behat-link-edit-client-details">{{ 'clientDetails.edit'| trans }}</a>
                 </dd>
             </div>
             <div class="data-item-fields-row">
                 <dt class="data-item-fields-term">{{ 'clientDetails.caseReference' | trans }}</dt>
-                <dd class="data-item-fields-description">{{ client.getCaseNumber }}</dd>
+                <dd class="data-item-fields-description behat-region-case-number">{{ client.getCaseNumber }}</dd>
             </div>
             {#
                     <div class="report-list__item-fields-row">
@@ -46,7 +46,7 @@
                 <dd class="data-item-fields-description" itemprop="address" itemscope
                     itemtype="http://schema.org/PostalAddress">
                     {% if client.address is not empty %}
-                        <div itemprop="streetAddress">{{ client.address }}</div>
+                        <div itemprop="streetAddress" class="behat-region-client-address">{{ client.address }}</div>
                     {% endif %}
                     {% if client.address2 is not empty %}
                         <div itemprop="addressLocality">{{ client.address2 }}</div>
