@@ -50,8 +50,6 @@ class AccountController extends Controller
                     return $this->redirect(
                         $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
                     );
-                } else {
-                    echo $form->getErrorsAsString();
                 }
             }else{
          
