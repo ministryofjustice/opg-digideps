@@ -1,5 +1,3 @@
-page:
-  htmlTitle: "Sign in"
 pageTitle: Sign in
 header: Sign in to the admin area
 subtitle: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, aperiam!
@@ -14,9 +12,9 @@ login:
 forgotPassword: Forgotten your password?
 sessionTimeoutOutWarning: Sorry, your session has timed out either to inactivity or because you have signed in on another browser. Please sign in again.
 manualLogout:
-  pageTitle: You are now signed out
-  pageSectionTitle: Thank you for using the Complete a deputy report service.
-  pageSectionDescription: Sign in to get started again.
+  title: You are now signed out
+  thankYou: Thank you for using the Complete a deputy report service.
+  startAgain: Sign in to get started again.
 
 #_security:
 #    403_error:
