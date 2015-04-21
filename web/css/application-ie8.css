@@ -1693,6 +1693,180 @@ header.page-header {
   .button-bar.add-bar {
     margin-left: 56%; }
 
+.data-item {
+  overflow: hidden;
+  padding: 20px 0 10px 0; }
+  .data-list .data-item {
+    padding: 30px 0 10px 0;
+    border-bottom: 1px solid #dee0e2; }
+  .data-item:last-child {
+    border-bottom: 0; }
+  .data-item .data-item-fields {
+    overflow: hidden;
+    position: relative; }
+    .data-item .data-item-fields .data-item-fields-row {
+      overflow: hidden;
+      clear: both;
+      margin-top: 5px; }
+      .data-item .data-item-fields .data-item-fields-row--header {
+        float: left;
+        clear: none;
+        margin-top: 0; }
+    .data-item .data-item-fields dt.data-item-fields-term {
+      display: inline;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.31579;
+      font-weight: 400;
+      text-transform: none;
+      color: #6f777b;
+      float: left; }
+      @media (max-width: 640px) {
+        .data-item .data-item-fields dt.data-item-fields-term {
+          font-size: 16px;
+          line-height: 1.25; } }
+      .data-item .data-item-fields dt.data-item-fields-term--block {
+        float: none; }
+    .data-item .data-item-fields dd.data-item-fields-description {
+      display: block;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.31579;
+      font-weight: 700;
+      text-transform: none; }
+      @media (max-width: 640px) {
+        .data-item .data-item-fields dd.data-item-fields-description {
+          font-size: 16px;
+          line-height: 1.25; } }
+      .data-item .data-item-fields dd.data-item-fields-description--block {
+        position: relative;
+        margin-left: auto;
+        font-weight: 400; }
+      .data-item .data-item-fields dd.data-item-fields-description--normal {
+        font-weight: 400; }
+      .data-item .data-item-fields dd.data-item-fields-description--header {
+        overflow: hidden;
+        position: relative;
+        margin-left: 0px; }
+        .data-item .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
+          float: left;
+          font-family: "nta", Arial, sans-serif;
+          font-size: 24px;
+          line-height: 1.25;
+          font-weight: 700;
+          text-transform: none;
+          margin-bottom: 5px; }
+          @media (max-width: 640px) {
+            .data-item .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
+              font-size: 18px;
+              line-height: 1.2; } }
+        .data-item .data-item-fields dd.data-item-fields-description--header .data-item-edit-link {
+          font-family: "nta", Arial, sans-serif;
+          font-size: 19px;
+          line-height: 1.31579;
+          font-weight: 400;
+          text-transform: none; }
+          @media (max-width: 640px) {
+            .data-item .data-item-fields dd.data-item-fields-description--header .data-item-edit-link {
+              font-size: 16px;
+              line-height: 1.25; } }
+  .data-item--client-details dd.data-item-fields-description {
+    margin-left: 140px; }
+    .data-item--client-details dd.data-item-fields-description--header a {
+      margin-left: 419px; }
+  .data-list--client-list-reports .data-item {
+    padding: 20px 0 10px 0;
+    border-bottom: 1px solid #dee0e2; }
+    .data-list--client-list-reports .data-item dd.data-item-fields-description--header .data-item-edit-link {
+      margin-left: 409px; }
+    .data-list--client-list-reports .data-item .data-item-fields-row {
+      margin-top: 0; }
+      .data-list--client-list-reports .data-item .data-item-fields-row dt.data-item-fields-term {
+        margin-right: 5px; }
+
+.data-list {
+  border-top: 1px solid #dee0e2;
+  border-bottom: 1px solid #dee0e2;
+  margin-top: 30px;
+  padding-left: 15px;
+  width: 85%; }
+  .data-list--client-list-reports {
+    padding-left: 0; }
+
+.report-list--contacts dt.report-list__item-fields-term {
+  width: 210px; }
+.report-list--contacts dd.report-list__item-fields-description {
+  margin-left: 220px; }
+
+.report-list--decisions dd.report-list__item-fields-description {
+  margin-left: 50px; }
+
+.report-list--accounts.report-list {
+  padding-left: 0; }
+  .report-list--accounts.report-list .report-list__item dt.report-list__item-fields-term {
+    display: inline;
+    margin-right: 5px;
+    color: inherit; }
+  .report-list--accounts.report-list .report-list__item dd.report-list__item-fields-description {
+    display: inline;
+    font-weight: 400; }
+    .report-list--accounts.report-list .report-list__item dd.report-list__item-fields-description h3 {
+      display: inline;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 700;
+      text-transform: none;
+      color: #005ea5; }
+      @media (max-width: 640px) {
+        .report-list--accounts.report-list .report-list__item dd.report-list__item-fields-description h3 {
+          font-size: 18px;
+          line-height: 1.2; } }
+.report-list--accounts .report-list__item-fields-row {
+  display: inline; }
+.report-list--accounts .report-list__item-fields-col-bank {
+  display: block;
+  float: left;
+  width: 35%; }
+.report-list--accounts .report-list__item-fields-col-acc-num {
+  display: block;
+  float: left;
+  width: 30%; }
+.report-list--accounts .report-list__item-fields-col-info {
+  display: block;
+  float: left;
+  overflow: hidden;
+  margin-left: 8px;
+  width: 30%; }
+.report-list--accounts .page-section-warning {
+  top: -10px;
+  margin-bottom: 0; }
+  #content .report-list--accounts .page-section-warning .icon + p {
+    font-weight: 700; }
+
+.report-list--accounts-closing {
+  border: 0;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 30px; }
+  .report-list--accounts-closing .report-list__item {
+    border: 0;
+    padding: 0;
+    margin-bottom: 10px; }
+  .report-list--accounts-closing .report-list__item-fields-col-bank {
+    display: block;
+    float: left;
+    width: 35%; }
+  .report-list--accounts-closing .report-list__item-fields-col-acc-num {
+    display: block;
+    float: left;
+    width: 30%; }
+
+.report-list--assets dt.report-list__item-fields-term {
+  width: 130px; }
+.report-list--assets dd.report-list__item-fields-description {
+  margin-left: 135px; }
+
 .field-combo-with-errors, .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
@@ -1718,6 +1892,12 @@ form {
   form.report-form {
     border-left: 3px solid #bfc1c3;
     padding-left: 10px; }
+  form.in-page-form {
+    border-left: 3px solid #bfc1c3;
+    padding-left: 10px; }
+
+.form--client-add-report {
+  margin: 40px 0 20px 0; }
 
 .form-group {
   float: none;

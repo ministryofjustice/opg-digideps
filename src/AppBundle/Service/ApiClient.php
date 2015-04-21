@@ -269,7 +269,13 @@ class ApiClient extends GuzzleClient
                 foreach($options['query'] as $param){
                     $url = $url.'/'.$param;
                 }
-                unset($options['query']);
+                
+                if(array_key_exists('queryStr',$options)){
+                    $options['query'] = $options['queryStr'];
+                    unset($options['queryStr']);
+                }else{
+                    unset($options['query']);
+                }
             }
         }
         return parent::createRequest($method, $url, $options);
