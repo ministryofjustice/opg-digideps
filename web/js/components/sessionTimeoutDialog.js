@@ -9,24 +9,33 @@ var sessionTimeoutPopup = {
     },
     startCountdown: function() {
       var that = this;
-      this.interval = window.setInterval(
+      this.countDownPopup = window.setInterval(
         function() {
           that.element.css('visibility', 'visible');
         },
         this.sessionPopupShowAfterMs
       );
+      this.countDownLogout = window.setInterval(
+        function() {
+          window.location.reload();
+        },
+        this.sessionExpiresMs + 5000
+      );
     },
+    // ok button: restart countdowns
     ok: function() {
       //
       this.element.css('visibility', 'hidden');
       this.refreshPageHiddenMode();
       // restart countdown
-      clearTimeout(this.interval);
+      clearTimeout(this.countDownPopup);
+      clearTimeout(this.countDownLogout);
       this.startCountdown();
     },
+    // close: hide popup but after the timeout it still logs you out
     close: function() {
       this.element.css('visibility', 'hidden');
-      clearTimeout(this.interval);
+      clearTimeout(this.countDownPopup);
     },
     refreshPageHiddenMode: function() {
       $.ajax({
