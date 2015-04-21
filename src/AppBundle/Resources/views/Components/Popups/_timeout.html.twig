@@ -9,8 +9,8 @@
     <div><a href="#" data-role="close" style="float:right">X</a></div>
     <p style="font-weight: bold">{{ 'title' | trans }}</p>
     <p>{{ 'firstLine' | trans({
-        '%inactiveFor%': session_popup_show_after // 60,
-        '%loggedOutIn%': (session_expires_seconds - session_popup_show_after) // 60
+        '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
+        '%loggedOutIn%': ((session_expires_seconds - session_popup_show_after) / 60) | round(2, 'floor')
       }) }}
     </p>
     <p></p>

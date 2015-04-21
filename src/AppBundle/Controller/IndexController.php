@@ -41,6 +41,11 @@ class IndexController extends Controller
             'form' => $form->createView(),
         ];
         
+        // reset loggedOutFrom information after form has been submitted
+        if ($form->isSubmitted()) {
+            $this->getRequest()->getSession()->set('loggedOutFrom', null);
+        }
+        
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
@@ -71,22 +76,16 @@ class IndexController extends Controller
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
         }
         
-        return $this->render($this->getLoginPageTemplate(), $vars);
+        
+        if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'logoutPage') {
+            return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
+        } else if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'timeout') {
+            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
+        }
+        
+        return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
     
-    /**
-     * @return string
-     */
-    private function getLoginPageTemplate()
-    {
-        if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'logoutPage') {
-            return 'AppBundle:Index:login-from-logout.html.twig';
-        } else if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'timeout') {
-            return 'AppBundle:Index:login-from-timeout.html.twig';
-        } else {
-            return 'AppBundle:Index:login.html.twig';
-        }
-    }
     
     /**
      * @Route("login_check", name="login_check")
