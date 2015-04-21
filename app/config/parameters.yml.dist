@@ -4,6 +4,7 @@ parameters:
     secret:   setme
     api_base_url: https://digideps-api.local/
     env: develop
+    session_expire_seconds: 1500
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"

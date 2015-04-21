@@ -2,7 +2,9 @@
 {% trans_default_domain "login" %}
 
 {% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
-{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+{% block title %}
+   {% trans %}pageTitle{% endtrans %}
+{% endblock %}
 
 {% block pageNavigation %}
 {% endblock %}
@@ -13,6 +15,7 @@
 
 
 {% block pageBody %}
+  
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
