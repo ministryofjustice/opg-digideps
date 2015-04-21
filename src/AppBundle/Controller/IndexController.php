@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Form\LoginType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -92,6 +93,16 @@ class IndexController extends Controller
      */
     public function loginCheckAction()
     {
+    }
+    
+     /**
+     * @Route("session-keep-alive", name="session-keep-alive")
+     */
+    public function sessionKeepAliveAction(Request $request)
+    {
+        $request->getSession()->set('refreshedAt', time());
+        
+        return new Response('refreshed');
     }
 
     /**

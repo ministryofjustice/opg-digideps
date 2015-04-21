@@ -20,41 +20,8 @@
   </div>
 </div>
   
-<script>
-// SESSION TIMEOUT POPUP LOGIC    
-var sessionTimeoutPopup = {
-    // init
-    init: function (element, sessionExpiresMs, sessionPopupShowAfterMs) {
-        this.element = element;
-        this.sessionExpiresMs = sessionExpiresMs;
-        this.sessionPopupShowAfterMs = sessionPopupShowAfterMs;
-    },
-    startCountdown: function() {
-      var that = this;
-      this.interval = window.setInterval(
-        function() {
-          that.element.css('visibility', 'visible');
-        },
-        this.sessionPopupShowAfterMs
-      );
-    },
-    ok: function() {
-      //
-      this.element.css('visibility', 'hidden');
-      this.refreshPageHiddenMode();
-      // restart countdown
-      clearTimeout(this.interval);
-      this.startCountdown();
-    },
-    close: function() {
-      this.element.css('visibility', 'hidden');
-      clearTimeout(this.interval);
-    },
-    refreshPageHiddenMode: function() {
-      // ajax call to page to refresh session
-    }
-};
-
+<script type="text/javascript" src="/js/components/sessionTimeoutDialog.js"></script>
+<script type="text/javascript">
 
 // instantiate object and attach events on page load
 $(document).ready(function() {
@@ -63,16 +30,18 @@ $(document).ready(function() {
   sessionTimeoutPopup.init(
     sessionTimeoutPopupElement,
     {{ session_expires_seconds|default(1500) }} * 1000,
-    {{ session_popup_show_after|default(1200) }}  * 1000    
+    {{ session_popup_show_after|default(1200) }}  * 1000,
+    '{{ path('session-keep-alive') }}'
   );
   sessionTimeoutPopup.startCountdown();
 
-  // attach "on" events to buttons
-  sessionTimeoutPopupElement.on('click', '[data-role="close"]', function(e) {
+  // events on buttons
+  sessionTimeoutPopupElement
+  .on('click', '[data-role="close"]', function(e) {
     e.preventDefault();
     sessionTimeoutPopup.close();
-  });
-  sessionTimeoutPopupElement.on('click', '[data-role="ok"]', function(e) {
+  })
+  .on('click', '[data-role="ok"]', function(e) {
     e.preventDefault();
     sessionTimeoutPopup.ok();
   });
