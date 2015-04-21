@@ -37,6 +37,8 @@ framework:
 twig:
     globals:
         env: %env%
+        session_expires_seconds: %session_expire_seconds%
+        session_popup_show_after: %session_popup_show_after%
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     exception_controller:  AppBundle:Exception:showException

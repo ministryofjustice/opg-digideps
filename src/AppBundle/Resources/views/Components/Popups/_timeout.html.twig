@@ -1,0 +1,85 @@
+{% set translationDomain = "popup-timeout" %}
+{% trans_default_domain translationDomain %}
+
+<div id="timeoutPopup" style="visibility: hidden;      position: fixed;     left: 0px;
+    top: 0px;      width:100%;      height:100%;      text-align:center; 
+    z-index: 1000;" data-role="timeout-popup">
+  <div style="width:500px;      margin: 150px auto;      background-color: #fff;
+  border:#000 5px solid;      padding:15px;      text-align:center;">
+    <div><a href="#" data-role="close" style="float:right">X</a></div>
+    <p style="font-weight: bold">{{ 'title' | trans }}</p>
+    <p>{{ 'firstLine' | trans({
+        '%inactiveFor%': session_popup_show_after // 60,
+        '%loggedOutIn%': (session_expires_seconds - session_popup_show_after) // 60
+      }) }}
+    </p>
+    <p></p>
+    <p>{{ 'secondLine' | trans }}</p>
+    <a class="button" href="#" data-role="ok" onclick="">{{ 'okButton' | trans }}</a>
+    <a class="button" href="{{ path('logout')}}" data-role="signout">{{ 'signoutButton' | trans }}</a>
+  </div>
+</div>
+  
+<script>
+// SESSION TIMEOUT POPUP LOGIC    
+var sessionTimeoutPopup = {
+    // init
+    init: function (element, sessionExpiresMs, sessionPopupShowAfterMs) {
+        this.element = element;
+        this.sessionExpiresMs = sessionExpiresMs;
+        this.sessionPopupShowAfterMs = sessionPopupShowAfterMs;
+    },
+    startCountdown: function() {
+      var that = this;
+      this.interval = window.setInterval(
+        function() {
+          that.element.css('visibility', 'visible');
+        },
+        this.sessionPopupShowAfterMs
+      );
+    },
+    ok: function() {
+      //
+      this.element.css('visibility', 'hidden');
+      this.refreshPageHiddenMode();
+      // restart countdown
+      clearTimeout(this.interval);
+      this.startCountdown();
+    },
+    close: function() {
+      this.element.css('visibility', 'hidden');
+      clearTimeout(this.interval);
+    },
+    refreshPageHiddenMode: function() {
+      // ajax call to page to refresh session
+    }
+};
+
+
+// instantiate object and attach events on page load
+$(document).ready(function() {
+  var sessionTimeoutPopupElement = $('#timeoutPopup');
+  
+  sessionTimeoutPopup.init(
+    sessionTimeoutPopupElement,
+    {{ session_expires_seconds|default(1500) }} * 1000,
+    {{ session_popup_show_after|default(1200) }}  * 1000    
+  );
+  sessionTimeoutPopup.startCountdown();
+
+  // attach "on" events to buttons
+  sessionTimeoutPopupElement.on('click', '[data-role="close"]', function(e) {
+    e.preventDefault();
+    sessionTimeoutPopup.close();
+  });
+  sessionTimeoutPopupElement.on('click', '[data-role="ok"]', function(e) {
+    e.preventDefault();
+    sessionTimeoutPopup.ok();
+  });
+  
+});
+    
+    
+    
+    
+</script>
