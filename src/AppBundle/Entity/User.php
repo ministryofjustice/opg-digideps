@@ -17,6 +17,7 @@ class User implements AdvancedUserInterface
     /**
      * @var integer
      * @JMS\Type("integer")
+     * @JMS\Groups({"basic"})
      * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -27,6 +28,8 @@ class User implements AdvancedUserInterface
     
    
     /**
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("array")
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Client", mappedBy="users", cascade={"persist"})
      */
     private $clients;
@@ -34,6 +37,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * 
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -44,17 +48,22 @@ class User implements AdvancedUserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      */
     private $lastname;
     
     /**
      * @var string
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("string")
      */
     private $password;
 
     /**
      * @var string
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("string")
      *
      * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
      */
@@ -63,6 +72,7 @@ class User implements AdvancedUserInterface
     /**
      * @var boolean
      * @JMS\Type("boolean")
+     * @JMS\Groups({"basic"})
      * 
      * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
@@ -78,6 +88,7 @@ class User implements AdvancedUserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"basic"})
      *
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
@@ -85,14 +96,16 @@ class User implements AdvancedUserInterface
 
     /**
      * @var string
-     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
      */
     private $registrationToken;
 
     /**
      * @var boolean
-     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="email_confirmed", type="boolean", nullable=true)
      */
     private $emailConfirmed;
@@ -101,6 +114,7 @@ class User implements AdvancedUserInterface
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"basic"})
      * 
      * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
@@ -109,6 +123,8 @@ class User implements AdvancedUserInterface
     /**
      * @var integer
      * 
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("AppBundle\Entity\Role")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
      * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
      */
@@ -119,6 +135,8 @@ class User implements AdvancedUserInterface
      * does not get stored in the database
      * 
      * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      */
     private $gaTrackingId;
     
@@ -126,13 +144,17 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
     private $address1;
     
     /**
      * @var string
-     *
+     * 
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
@@ -140,6 +162,8 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address3", type="string", length=200, nullable=true)
      */
     private $address3;
@@ -147,6 +171,8 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
     private $addressPostcode;
@@ -154,6 +180,8 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
      */
     private $addressCountry;
@@ -161,6 +189,8 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="phone_work", type="string", length=20, nullable=true)
      */
     private $phoneWork;
@@ -168,6 +198,8 @@ class User implements AdvancedUserInterface
      /**
      * @var string
      *
+      * @JMS\Type("string")
+      * @JMS\Groups({"basic"})
      * @ORM\Column(name="phone_home", type="string", length=20, nullable=true)
      */
     private $phoneHome;
@@ -175,6 +207,8 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="phone_mobile", type="string", length=20, nullable=true)
      */
     private $phoneMobile;
