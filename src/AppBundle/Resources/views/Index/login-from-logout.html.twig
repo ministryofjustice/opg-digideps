@@ -16,7 +16,8 @@
 
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
     transDomain: translationDomain,
-    pageSectionDescription: 'manualLogout.pageSectionDescription'
+    pageSectionDescription: 'manualLogout.pageSectionDescription',
+    additionalClass: 'behat-region-manual-logout-message'
     } %}
 
 {% endblock %}
