@@ -2,6 +2,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -97,14 +98,17 @@ class IndexController extends Controller
     {
     }
     
-     /**
+    /**
+     * keep session alive. Called from session timeout dialog
+     * 
      * @Route("session-keep-alive", name="session-keep-alive")
+     * @Method({"POST"})
      */
     public function sessionKeepAliveAction(Request $request)
     {
         $request->getSession()->set('refreshedAt', time());
         
-        return new Response('refreshed');
+        return new Response('session refreshed successfully');
     }
 
     /**

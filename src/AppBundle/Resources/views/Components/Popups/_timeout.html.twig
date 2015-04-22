@@ -6,7 +6,7 @@
     z-index: 1000;" data-role="timeout-popup">
   <div style="width:500px;      margin: 150px auto;      background-color: #fff;
   border:#000 5px solid;      padding:15px;      text-align:center;">
-    <div><a href="#" data-role="close" style="float:right">X</a></div>
+    <div><a href="#" data-role="keep-session-alive" style="float:right">X</a></div>
     <p style="font-weight: bold">{{ 'title' | trans }}</p>
     <p>{{ 'firstLine' | trans({
         '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
@@ -15,7 +15,7 @@
     </p>
     <p></p>
     <p>{{ 'secondLine' | trans }}</p>
-    <a class="button" href="#" data-role="ok" onclick="">{{ 'okButton' | trans }}</a>
+    <a class="button" href="#" data-role="keep-session-alive" onclick="">{{ 'okButton' | trans }}</a>
     <a class="button" href="{{ path('logout')}}" data-role="signout">{{ 'signoutButton' | trans }}</a>
   </div>
 </div>
@@ -30,17 +30,7 @@ $().ready(function() {
     'element': $('#timeoutPopup'),
     'sessionExpiresMs': {{ session_expires_seconds|default(1500) }} * 1000,
     'sessionPopupShowAfterMs': {{ session_popup_show_after|default(1200) }}  * 1000,
-    'refreshUrl': '{{ path('session-keep-alive') }}'
-  })
-  .getElement()
-  // events on buttons
-  .on('click', '[data-role="close"]', function(e) {
-    e.preventDefault();
-    SessionTimeoutDialog.closePopup();
-  })
-  .on('click', '[data-role="ok"]', function(e) {
-    e.preventDefault();
-    SessionTimeoutDialog.hidePopupAndRestartCountdown();
+    'keepSessionAliveUrl': '{{ path('session-keep-alive') }}'
   });
   
 });

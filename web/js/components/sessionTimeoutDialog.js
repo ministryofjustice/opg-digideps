@@ -10,11 +10,17 @@ var SessionTimeoutDialog = {
         this.element = options.element;
         this.sessionExpiresMs = options.sessionExpiresMs;
         this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs;
-        this.refreshUrl = options.refreshUrl;
+        this.keepSessionAliveUrl = options.keepSessionAliveUrl;
         this.redirectAfterMs = 3000;
         this.startCountdown();
+        var that = this;
         
-        return this;
+        
+        // attach event
+        this.element.find('[data-role="keep-session-alive"]').click(function(e) {
+          e.preventDefault();
+          that.hidePopupAndRestartCountdown();
+        });
     },
     startCountdown: function() {
       var that = this;
@@ -31,29 +37,16 @@ var SessionTimeoutDialog = {
         this.sessionExpiresMs + this.redirectAfterMs
       );
     },
-    // ok button: restart countdowns
     hidePopupAndRestartCountdown: function() {
-      //
       this.element.css('visibility', 'hidden');
-      this.refreshPageHiddenMode();
+      this.keepSessionAlive();
       // restart countdown
       clearTimeout(this.countDownPopup);
       clearTimeout(this.countDownLogout);
       this.startCountdown();
     },
-    // close: hide popup but after the timeout it still logs you out
-    closePopup: function() {
-      this.element.css('visibility', 'hidden');
-//      clearTimeout(this.countDownPopup);
-    },
-    refreshPageHiddenMode: function() {
-      $.ajax({
-        type: "POST",
-        url: this.refreshUrl,
-        data: {},
-        success: function(data) {console.log(data);},
-        error: function(data) {console.log(data);}
-      });
+    keepSessionAlive: function() {
+      $.post(this.keepSessionAliveUrl);
     },
     getElement: function () {
       return this.element;
