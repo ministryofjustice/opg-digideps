@@ -52,11 +52,11 @@ class Util
     
     public function getClient($clientId, array $groups = [])
     {
-        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ], 'queryStr' => ['groups' => $groups] ]);
+        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ], 'query' => ['groups' => $groups] ]);
     }
     
-    public function getReport($reportId,$userId, $group = "transactions")
+    public function getReport($reportId,$userId, $groups = [ "transactions"])
     {
-        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $userId ,'id' => $reportId, 'group' => $group ]]);
+        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $userId ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
     }
 }

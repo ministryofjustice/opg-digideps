@@ -69,7 +69,7 @@ class AdminController extends Controller
     {
         $apiClient = $this->get('apiclient');
         
-        $user = $apiClient->getEntity('User','find_user_by_id', [ 'query' => [ $id ] ]);
+        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]);
        
         if(empty($user)){
             throw new \Exception('User does not exists');
@@ -94,7 +94,7 @@ class AdminController extends Controller
     {
        $apiClient = $this->get('apiclient');
         
-       $user = $apiClient->getEntity('User','find_user_by_id', [ 'query' => [ $id ] ]); 
+       $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]); 
        
        return [ 'user' => $user ];
     }
@@ -109,7 +109,7 @@ class AdminController extends Controller
     public function deleteAction($id)
     {
         $apiClient = $this->get('apiclient');
-        $apiClient->delete('delete_user_by_id',[ 'query' => ['adminId' => $this->getUser()->getId(), 'id' => $id ]]);
+        $apiClient->delete('delete_user_by_id',[ 'parameters' => ['adminId' => $this->getUser()->getId(), 'id' => $id ]]);
         
         return $this->redirect($this->generateUrl('admin_homepage'));
     }

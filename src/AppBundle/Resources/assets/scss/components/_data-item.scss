@@ -76,12 +76,33 @@
     dd.data-item-fields-description {
       margin-left: 140px;
       &--header {
-        a {
+        .data-item-edit-link {
           margin-left: 419px;
         }
       }
 
     }
+  }
+
+  &--your-details {
+    .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
+      margin-bottom: 25px;
+    }
+
+    .data-item-fields .data-item-fields-row {
+      margin-top: 25px;
+    }
+
+    dd.data-item-fields-description {
+      margin-left: 235px;
+      &--header {
+        .data-item-edit-link {
+          margin-left: 353px;
+        }
+      }
+
+    }
+
   }
 
   .data-list--client-list-reports & {
@@ -92,7 +113,7 @@
 
       &--header {
         .data-item-edit-link {
-          margin-left: 409px;
+          margin-left: 323px;
         }
       }
 
