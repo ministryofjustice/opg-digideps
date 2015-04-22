@@ -16,6 +16,7 @@ class Role implements RoleInterface
     /**
      * @var integer
      *
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -24,6 +25,7 @@ class Role implements RoleInterface
     private $id;
     
     /**
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="name", type="string", length=60 )
      */
     private $name;
@@ -35,6 +37,7 @@ class Role implements RoleInterface
     private $user;
     
     /**
+     * @JMS\Groups({"basic"})
      * @ORM\Column( name="role", type="string", length=50, nullable=true)
      */
     private $role;
