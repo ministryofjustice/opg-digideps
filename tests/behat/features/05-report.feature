@@ -4,9 +4,7 @@ Feature: report
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
-        When I am on the homepage
-        Then I should see the "report-n1" link
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         Then I should see a "#tab-overview" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-contacts" element
@@ -20,10 +18,8 @@ Feature: report
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I am on the homepage
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I save the page as "report-property-affairs-homepage"
-        Then I should see the "report-n1" link
-        When I click on "report-n1"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
@@ -34,7 +30,7 @@ Feature: report
         # set report due
         Given I modify the report 1 end date to today "-3 days"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         Then I should see the "tab-contacts-warning" region
         Then I should see the "tab-decisions-warning" region
         Then I should see the "tab-accounts-warning" region
@@ -47,7 +43,7 @@ Feature: report
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
@@ -80,7 +76,7 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
@@ -155,7 +151,7 @@ Feature: report
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-assets"
         And I save the page as "report-assets-empty"
         # wrong form
@@ -211,8 +207,7 @@ Feature: report
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I am on the homepage
-        And I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # wrong form
@@ -259,7 +254,7 @@ Feature: report
     @deputy
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-accounts"
         And I click on "account-n1"
         And I click on "moneyIn-tab"
@@ -323,12 +318,12 @@ Feature: report
     Scenario: add closing balance to account
         Given I modify the report 1 end date to today "+3 days"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-accounts"
         Then I should not see the "account-1-add-closing-balance" link
         When I modify the report 1 end date to today "-3 days"
         And I go to the homepage
-        When I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-accounts"
         Then I should see the "account-n1-warning" region
         And I click on "account-n1"
@@ -367,7 +362,7 @@ Feature: report
     @deputy
     Scenario: submit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         # check there are no notifications
         Then I should not see the "tab-contacts-warning" region
         Then I should not see the "tab-decisions-warning" region
@@ -376,7 +371,7 @@ Feature: report
         # set report due
         Given I modify the report 1 end date to today "-3 days"
         And I go to the homepage
-        And I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         Then I should not see a "tab-contact-notification" element
         # submit without ticking
         When I press "report_submit_submitReport"
