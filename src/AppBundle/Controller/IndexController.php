@@ -66,9 +66,12 @@ class IndexController extends Controller
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
             $this->get("security.context")->setToken($token);
-
-            $this->get('session')->set('_security_secured_area', serialize($token));
-            $this->get('session')->set('loggedOutFrom', null);            
+            
+            $session = $request->getSession();
+            $session->set('_security_secured_area', serialize($token));
+            $session->set('loggedOutFrom', null);   
+            // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
+            $session->migrate();
             
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
