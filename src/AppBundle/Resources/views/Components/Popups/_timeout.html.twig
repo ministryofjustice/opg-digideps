@@ -24,31 +24,25 @@
 <script type="text/javascript">
 
 // instantiate object and attach events on page load
-$(document).ready(function() {
-  var sessionTimeoutPopupElement = $('#timeoutPopup');
+$().ready(function() {
   
-  sessionTimeoutPopup.init(
-    sessionTimeoutPopupElement,
-    {{ session_expires_seconds|default(1500) }} * 1000,
-    {{ session_popup_show_after|default(1200) }}  * 1000,
-    '{{ path('session-keep-alive') }}'
-  );
-  sessionTimeoutPopup.startCountdown();
-
+  SessionTimeoutPopup.init({
+    'element': $('#timeoutPopup'),
+    'sessionExpiresMs': {{ session_expires_seconds|default(1500) }} * 1000,
+    'sessionPopupShowAfterMs': {{ session_popup_show_after|default(1200) }}  * 1000,
+    'refreshUrl': '{{ path('session-keep-alive') }}'
+  })
+  .getElement()
   // events on buttons
-  sessionTimeoutPopupElement
   .on('click', '[data-role="close"]', function(e) {
     e.preventDefault();
-    sessionTimeoutPopup.close();
+    SessionTimeoutPopup.closePopup();
   })
   .on('click', '[data-role="ok"]', function(e) {
     e.preventDefault();
-    sessionTimeoutPopup.ok();
+    SessionTimeoutPopup.hidePopupAndRestartCountdown();
   });
   
 });
-    
-    
-    
     
 </script>

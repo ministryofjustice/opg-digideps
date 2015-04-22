@@ -1,11 +1,20 @@
 // SESSION TIMEOUT POPUP LOGIC    
-var sessionTimeoutPopup = {
-    // init
-    init: function (element, sessionExpiresMs, sessionPopupShowAfterMs, refreshUrl) {
-        this.element = element;
-        this.sessionExpiresMs = sessionExpiresMs;
-        this.sessionPopupShowAfterMs = sessionPopupShowAfterMs;
-        this.refreshUrl = refreshUrl;
+var SessionTimeoutPopup = {
+    /**
+     * @param element
+     * @param sessionExpiresMs
+     * @param sessionPopupShowAfterMs
+     * @param refreshUrl
+     */
+    init: function (options) {
+        this.element = options.element;
+        this.sessionExpiresMs = options.sessionExpiresMs;
+        this.sessionPopupShowAfterMs = options.sessionPopupShowAfterMs;
+        this.refreshUrl = options.refreshUrl;
+        this.redirectAfterMs = 3000;
+        this.startCountdown();
+        
+        return this;
     },
     startCountdown: function() {
       var that = this;
@@ -19,11 +28,11 @@ var sessionTimeoutPopup = {
         function() {
           window.location.reload();
         },
-        this.sessionExpiresMs + 5000
+        this.sessionExpiresMs + this.redirectAfterMs
       );
     },
     // ok button: restart countdowns
-    ok: function() {
+    hidePopupAndRestartCountdown: function() {
       //
       this.element.css('visibility', 'hidden');
       this.refreshPageHiddenMode();
@@ -33,9 +42,9 @@ var sessionTimeoutPopup = {
       this.startCountdown();
     },
     // close: hide popup but after the timeout it still logs you out
-    close: function() {
+    closePopup: function() {
       this.element.css('visibility', 'hidden');
-      clearTimeout(this.countDownPopup);
+//      clearTimeout(this.countDownPopup);
     },
     refreshPageHiddenMode: function() {
       $.ajax({
@@ -45,5 +54,8 @@ var sessionTimeoutPopup = {
         success: function(data) {console.log(data);},
         error: function(data) {console.log(data);}
       });
+    },
+    getElement: function () {
+      return this.element;
     }
 };
