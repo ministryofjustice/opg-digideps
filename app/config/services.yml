@@ -31,9 +31,21 @@ services:
             - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
     redirectorService:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router ]
+        arguments: [ @security.context, @router, @session ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
         arguments: [ @event_dispatcher, @redirectorService ]
         tags:
             - { name: kernel.event_listener, event: security.interactive_login, method: onSecurityInteractiveLogin }
+    kernel.listener.session_listener:
+        class: AppBundle\EventListener\SessionListener
+        arguments: [ @router , {idleTimeout: %session_expire_seconds%} ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    logout_listener:
+      class:   AppBundle\EventListener\LogoutListener
+      arguments:  [@security.context, @router]
+    response_nocache_listener:
+       class:   AppBundle\EventListener\ResponseNoCacheListener
+       tags:
+            - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }

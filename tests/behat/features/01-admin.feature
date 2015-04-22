@@ -5,7 +5,7 @@ Feature: admin
         Given I am on "/manage/availability/health-check.xml"
         Then the response status code should be 200
         #And I reset the behat data # not implemented yet. run phing behat on api and then on the client to prepare
-
+        
     @deputy
     Scenario: login and add deputy user
         Given I am on "/"

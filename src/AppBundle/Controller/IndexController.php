@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Form\FormError;
+use AppBundle\EventListener\SessionListener;
 
 class IndexController extends Controller
 {
@@ -31,40 +32,62 @@ class IndexController extends Controller
     {
         $request = $this->getRequest();
 
-        $form = $this->createForm(new LoginType());
+        $form = $this->createForm(new LoginType(), null, [
+            'action' => $this->generateUrl('login'),
+        ]);
         $form->handleRequest($request);
+        $vars = [
+            'form' => $form->createView(),
+        ];
         
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $deputyProvider = $this->get('deputyprovider');
-                $data = $form->getData();
-                
-                try{
-                    $user = $deputyProvider->loadUserByUsername($data['email']);
-                   
-                    $encoder = $this->get('security.encoder_factory')->getEncoder($user);
-                    
-                    if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
-                        $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
-                        throw new \Exception($message);
-                    }
-                }catch(\Exception $e){
-                    
-                    return [ 'form' => $form->createView(), 'error' => $e->getMessage() ];
-                }
-                
-                $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
-                $this->get("security.context")->setToken($token);
-                
-                $this->get('session')->set('_security_secured_area', serialize($token));
-                
-                $request = $this->get("request");
-                $event = new InteractiveLoginEvent($request, $token);
-                $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-            }
+        // reset loggedOutFrom information after form has been submitted
+        if ($form->isSubmitted()) {
+            $this->getRequest()->getSession()->set('loggedOutFrom', null);
         }
-        return [ 'form' => $form->createView()];
+        
+        if ($form->isValid()){
+            $deputyProvider = $this->get('deputyprovider');
+            $data = $form->getData();
+
+            try{
+                $user = $deputyProvider->loadUserByUsername($data['email']);
+
+                $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+
+                // exception if credentials not valid
+                if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
+                    $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
+                    throw new \Exception($message);
+                }
+            } catch(\Exception $e){
+
+                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
+            }
+            // manually set session token into security context (manual login)
+            $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
+            $this->get("security.context")->setToken($token);
+            
+            $session = $request->getSession();
+            $session->set('_security_secured_area', serialize($token));
+            $session->set('loggedOutFrom', null);   
+            // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
+            $session->migrate();
+            
+            $request = $this->get("request");
+            $event = new InteractiveLoginEvent($request, $token);
+            $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+        }
+        
+        
+        if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'logoutPage') {
+            return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
+        } else if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'timeout') {
+            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
+        }
+        
+        return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
+    
     
     /**
      * @Route("login_check", name="login_check")

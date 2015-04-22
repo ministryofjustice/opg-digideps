@@ -35,6 +35,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         //$options['session']; // not used
         ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
         ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
+        $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
     }
     
     
@@ -300,6 +301,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitBehatLink("delete-behat-data");
     }
     
+    /**
+     * @Given I visit the behat link :link
+     */
+    
     public function visitBehatLink($link)
     {
        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
@@ -314,6 +319,30 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         //TODO check db
         $this->assertPageContainsText('The report has been submitted');
+    }
+    
+    /**
+     * @Then I expire the session
+     */
+    public function iExpireTheSession()
+    {
+        $this->getSession()->setCookie($this->sessionName, null);
+    }   
+    
+    
+    /**
+     * @Then the response should have the :arg1 header containing :arg2
+     */
+    public function theResponseShouldHaveTheHeaderContaining($header, $value)
+    {
+        $headers = $this->getSession()->getDriver()->getResponseHeaders();
+        if (empty($headers[$header][0])) {
+            throw new \Exception("Header '{$header}' not found.");
+        }
+        if (strpos($headers[$header][0], $value) === false) {
+            throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
+        }
+        
     }
     
 }
