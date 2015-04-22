@@ -10,12 +10,16 @@ class AccountController extends RestController
 {
     
     /**
-     * @Route("/report/get-accounts/{id}/{serialiseGroup}", defaults={"serialiseGroup": null})
+     * @Route("/report/get-accounts/{id}")
      * @Method({"GET"})
      */
-    public function getAccountsAction($id, $serialiseGroup = null)
+    public function getAccountsAction($id)
     {
-        $this->setJmsSerialiserGroup($serialiseGroup);
+        $request = $this->getRequest();
+        
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : null;
+        
+        $this->setJmsSerialiserGroup($serialiseGroups);
         
         $report = $this->findEntityBy('Report', $id);
         
@@ -60,12 +64,16 @@ class AccountController extends RestController
     }
     
    /**
-     * @Route("/report/find-account-by-id/{id}/{serialiseGroup}", defaults={"serialiseGroup": null})
+     * @Route("/report/find-account-by-id/{id}")
      * @Method({"GET"})
      */
-    public function get($id, $serialiseGroup = null)
+    public function get($id)
     {
-        $this->setJmsSerialiserGroup($serialiseGroup);
+        $request = $this->getRequest();
+        
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : null;
+        
+        $this->setJmsSerialiserGroup($serialiseGroups);
         
         $account = $this->findEntityBy('Account', $id, 'Account not found');
 
