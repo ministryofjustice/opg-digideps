@@ -99,6 +99,7 @@ Feature: add client and report
     @deputy
     Scenario: my client
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am on client home page "client-home"
         Then the URL should match "client/show"
         And I should see "Peter White" in the "client-name" region
         And I should see the "edit-client-details" link
@@ -112,13 +113,13 @@ Feature: add client and report
     @deputy
     Scenario: report-overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "report-n1"
+        Given I am on client home "client-home" and I click first report "report-n1"
         Then the URL should match "report/\d+/overview"
         And I save the page as "deputy-report-overview"
 
     @deputy
     Scenario: check homepage redirect
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then the URL should match "client/show"
+        Then the URL should match "report/\d+/overview"
         When I go to "/"
-        Then the URL should match "client/show"
+        Then the URL should match "report/\d+/overview"

@@ -76,6 +76,26 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->assertResponseStatus(200);
     }
     
+    
+    /**
+     * @Given I am on client home :clientHome and I click first report :link
+     */
+    public function iAmOnClientHomeAndClickReport($clientHome,$link)
+    {
+        $this->clickOnBehatLink($clientHome);
+        $this->clickOnBehatLink($link);
+        $this->assertResponseStatus(200);
+    }
+    
+    /**
+     * @Given I am on client home page :client_home
+     */
+    public function iAmOnClientHome($client_home)
+    {
+        $this->clickOnBehatLink($client_home);
+        $this->assertResponseStatus(200);
+    }
+    
     /**
      * @Given I am not logged in
      */

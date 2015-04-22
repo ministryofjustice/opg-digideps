@@ -200,6 +200,7 @@ class User implements AdvancedUserInterface
     private $phoneMobile;
     
     
+    
     /**
      * @return integer $id
      */

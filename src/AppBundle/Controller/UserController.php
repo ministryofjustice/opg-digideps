@@ -32,7 +32,7 @@ class UserController extends Controller
         $translator = $this->get('translator');
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'query' => [ 'token' => $token ] ]); /* @var $user User*/
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
         
         if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
             throw new \RuntimeException("token expired, require new link");
@@ -88,7 +88,7 @@ class UserController extends Controller
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
-        
+
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
         ]);
@@ -114,6 +114,26 @@ class UserController extends Controller
             'form' => $form->createView(),
         ];
         
+    }
+    
+    /**
+     * @Route("/{action}", name="user_view", defaults={ "action" = ""})
+     * @Template()
+     */
+    public function indexAction($action)
+    {
+        $user = $this->getUser();
+
+        $formEditDetails = $this->createForm(new UserDetailsFullType([
+            'addressCountryEmptyValue' => 'Please select...', [], 'user-activate'
+        ]), $user);
+
+
+        return [
+            'action' => $action,
+            'user' => $user,
+            'formEditDetails' => $formEditDetails->createView()
+        ];
     }
     
 }

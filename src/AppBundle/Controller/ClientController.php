@@ -31,7 +31,7 @@ class ClientController extends Controller
         
         if(!empty($reportIds)){
             foreach($reportIds as $id){
-                $reports[$id] = $util->getReport($id,$this->getUser()->getId(),'basic');
+                $reports[$id] = $util->getReport($id,$this->getUser()->getId(),[ 'basic' ]);
             }
         }
 

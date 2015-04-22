@@ -1,7 +1,6 @@
 page:
   htmlTitle: "Deputyship - My Client"
   pageSectionTitle: "My client"
-  pageSectionTitle: "My client"
   pageSectionDescription: "You can update your client's details and the deputy reporting period below."
 clientDetails:
   editClient: "Edit Client"

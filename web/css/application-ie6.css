@@ -1768,13 +1768,21 @@ header.page-header {
               line-height: 1.25; } }
   .data-item--client-details dd.data-item-fields-description {
     margin-left: 140px; }
-    .data-item--client-details dd.data-item-fields-description--header a {
+    .data-item--client-details dd.data-item-fields-description--header .data-item-edit-link {
       margin-left: 419px; }
+  .data-item--your-details .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
+    margin-bottom: 25px; }
+  .data-item--your-details .data-item-fields .data-item-fields-row {
+    margin-top: 25px; }
+  .data-item--your-details dd.data-item-fields-description {
+    margin-left: 235px; }
+    .data-item--your-details dd.data-item-fields-description--header .data-item-edit-link {
+      margin-left: 353px; }
   .data-list--client-list-reports .data-item {
     padding: 20px 0 10px 0;
     border-bottom: 1px solid #dee0e2; }
     .data-list--client-list-reports .data-item dd.data-item-fields-description--header .data-item-edit-link {
-      margin-left: 409px; }
+      margin-left: 323px; }
     .data-list--client-list-reports .data-item .data-item-fields-row {
       margin-top: 0; }
       .data-list--client-list-reports .data-item .data-item-fields-row dt.data-item-fields-term {
