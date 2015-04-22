@@ -26,12 +26,12 @@
 // instantiate object and attach events on page load
 $().ready(function() {
   
-  SessionTimeoutDialog.init({
+  new SessionTimeoutDialog({
     'element': $('#timeoutPopup'),
     'sessionExpiresMs': {{ session_expires_seconds|default(1500) }} * 1000,
     'sessionPopupShowAfterMs': {{ session_popup_show_after|default(1200) }}  * 1000,
     'keepSessionAliveUrl': '{{ path('session-keep-alive') }}'
-  });
+  }).startCountdown();
   
 });
     
