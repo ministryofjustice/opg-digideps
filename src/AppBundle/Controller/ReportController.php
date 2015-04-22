@@ -40,12 +40,17 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/report/find-by-id/{userId}/{id}/{serialiseGroup}", defaults={ "serialiseGroup" = "basic" })
+     * @Route("/report/find-by-id/{userId}/{id}")
      * @Method({"GET"})
      */
-    public function get($userId,$id,$serialiseGroup = null)
+    public function get($userId,$id)
     {   
-        $this->setJmsSerialiserGroup($serialiseGroup);
+        $request = $this->getRequest();
+        
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
+        
+        $this->setJmsSerialiserGroup($serialiseGroups);
+        
         $ret = $this->getRepository('Report')->findByIdAndUser($id,$userId);
    
         if(empty($ret)){
