@@ -1,8 +1,13 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 {% trans_default_domain "login" %}
 
-{% block pageTitle %} {% trans %}pageTitle{% endtrans %} {% endblock %}
-{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} sign-in-page js-sign-in-page{% endblock %}
+
+{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageHeader %}
+    {{ parent() }}
+{% endblock %}
 
 {% block pageNavigation %}
 {% endblock %}
@@ -13,23 +18,16 @@
 
 
 {% block pageBody %}
-  
-    {# @nick warning above login when timeout happens. delete cookies and refresh to test #}
-    {% if timeoutOccured | default(false) %}
-      <div class="validation-summary-container" style="margin-bottom: 40px">
-        <div aria-labelledby="error-heading" class="validation-summary group behat-region-login-has-timeout" id="error-summary" role="alert"
-           tabindex="-1">
-          <h2 >{{ 'sessionTimeoutOutWarning' | trans }}</h2>
-        </div>
-      </div>
-    {% endif %}
-  
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
     {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
+
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
     {{ form_end(form) }}
 
 {% endblock %}

@@ -1,0 +1,85 @@
+{% trans_default_domain translationDomain %}
+
+{% block validationSummary %}
+    {{ form_errors_list(formEditDetails) }}
+{% endblock %}
+
+
+{% if (action == 'edit-your-details') %}
+    {% set hideForm = false %}
+    {% set formClass = 'in-page-form' %}
+{% else %}
+    {% set hideForm = true %}
+    {% set formClass = '' %}
+{% endif %}
+
+
+{{ form_start(formEditDetails, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+{% if hideForm %}
+
+    <div itemscope itemtype="http://schema.org/Person" class="data-item data-item--your-details">
+        <dl class="data-item-fields behat-region-my-details">
+            <div class="data-item-fields-row data-item-fields-row--header">
+                <dt class="visuallyhidden">{{ 'yourDetails.yourName' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <h2 class="data-item-header-title" itemprop="name">{{ user.getFullname }}</h2></dd>
+            </div>
+            <div class="data-item-fields-row data-item-fields-row--header">
+                <dt class="visuallyhidden">{{ 'yourDetails.editYourDetails' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <a href="{{ path('user_view', {'action': 'edit-your-details' })~'#edit-your-details' }}"
+                       class="js-data-item-edit-link data-item-edit-link">{{ 'yourDetails.edit'| trans }}</a>
+                </dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'yourDetails.address' | trans }}</dt>
+                <dd class="data-item-fields-description" itemprop="address" itemscope
+                    itemtype="http://schema.org/PostalAddress">
+                    {% if user.address1 is not empty %}
+                        <div itemprop="streetAddress">{{ user.address1 }}</div>
+                    {% endif %}
+                    {% if user.address2 is not empty %}
+                        <div itemprop="addressLocality">{{ user.address2 }}</div>
+                    {% endif %}
+                    {% if user.address3 is not empty %}
+                        <div itemprop="addressRegion">{{ user.address3 }}</div>
+                    {% endif %}
+                    {% if user.addressPostcode is not empty %}
+                        <div itemprop="postalCode">{{ user.addressPostcode }}</div>
+                    {% endif %}
+                    {% if user.addressCountry is not empty %}
+                        <div itemprop="addressCountry">{{ user.addressCountry | country_name }}</div>
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'yourDetails.mainPhoneNumber' | trans }}</dt>
+                <dd class="data-item-fields-description">{{ user.phoneHome }}</dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'yourDetails.alternativePhoneNumber' | trans }}</dt>
+                <dd class="data-item-fields-description">{{ user.phoneWork }}</dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'yourDetails.mobilePhoneNumber' | trans }}</dt>
+                <dd class="data-item-fields-description">{{ user.phoneMobile }}</dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'yourDetails.emailAddress' | trans }}</dt>
+                <dd class="data-item-fields-description">{{ user.email }}</dd>
+            </div>
+        </dl>
+    </div>
+
+{% endif %}
+
+<div id="edit-your-details" {% if hideForm %} class="visuallyhidden" {% endif %}>
+
+    {% include 'AppBundle:User:_edit.html.twig' with {
+    'form': formEditDetails,
+    'translationDomain': translationDomain
+    } %}
+
+</div>
+{{ form_end(formEditDetails) }}

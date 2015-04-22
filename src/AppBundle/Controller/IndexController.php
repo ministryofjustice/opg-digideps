@@ -36,10 +36,14 @@ class IndexController extends Controller
             'action' => $this->generateUrl('login'),
         ]);
         $form->handleRequest($request);
-        $ret = [
-            'timeoutOccured'=> SessionListener::hasIdleTimeoutOcccured($request),
-            'form' => $form->createView()
+        $vars = [
+            'form' => $form->createView(),
         ];
+        
+        // reset loggedOutFrom information after form has been submitted
+        if ($form->isSubmitted()) {
+            $this->getRequest()->getSession()->set('loggedOutFrom', null);
+        }
         
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
@@ -57,21 +61,33 @@ class IndexController extends Controller
                 }
             } catch(\Exception $e){
 
-                return $ret + ['error' => $e->getMessage() ];
+                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
             $this->get("security.context")->setToken($token);
-
-            $this->get('session')->set('_security_secured_area', serialize($token));
-
+            
+            $session = $request->getSession();
+            $session->set('_security_secured_area', serialize($token));
+            $session->set('loggedOutFrom', null);   
+            // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
+            $session->migrate();
+            
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
         }
         
-        return $ret;
+        
+        if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'logoutPage') {
+            return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
+        } else if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'timeout') {
+            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
+        }
+        
+        return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
+    
     
     /**
      * @Route("login_check", name="login_check")
@@ -86,26 +102,6 @@ class IndexController extends Controller
     public function accessDeniedAction()
     {
         throw new AccessDeniedException();
-    }
-
-    /**
-     * @Route("/nick-test")
-     */
-    public function nickTestAction()
-    {
-
-        $progressIndicator_arr = [];
-        $progressIndicator_arr[] = ['label' => 'pi.step.one'];
-        $progressIndicator_arr[] = ['label' => 'Add your details'];
-        $progressIndicator_arr[] = ['label' => 'Add your client\'s details'];
-        $progressIndicator_arr[] = ['label' => 'Create a report'];
-
-        $currentStep = 2;
-
-        return $this->render('AppBundle:Index:nick-test.html.twig', array(
-            //'progressSteps' => $this->get('progressbar')->get('registration')->setCurrentStep(1)->getSteps()
-            'progressSteps' => $this->initProgressIndicator($progressIndicator_arr, $currentStep)
-        ));
     }
 
     private function initProgressIndicator($array, $currentStep)

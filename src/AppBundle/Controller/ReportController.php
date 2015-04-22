@@ -98,7 +98,7 @@ class ReportController extends Controller
         $request = $this->getRequest();
         
         $apiClient = $this->get('apiclient');
-        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'query' => ['id' => $reportId ]]);
+        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
         
         //set up add contact form
         $contact = new EntityDir\Contact();
@@ -202,7 +202,7 @@ class ReportController extends Controller
         }
         
         return [
-            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'query' => [ 'reportId' => $reportId ]]),
+            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]),
             'form' => $form->createView(),
             'report' => $report,
             'client' => $this->getClient($report->getClient()),
@@ -244,7 +244,7 @@ class ReportController extends Controller
         $form = $this->createForm(new FormDir\AssetType($titles),$asset);
         $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
-        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'query' => ['id' => $reportId ]]);
+        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
         
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
@@ -286,11 +286,12 @@ class ReportController extends Controller
     public function declarationAction(Request $request, $reportId)
     {
         $util = $this->get('util');
-        $report = $this->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         if (!$report->isDue()) {
             throw new \RuntimeException("Report not ready for submission.");
         }
-        $client = $util->getClient($report->getClient());
+        $clients = $this->getUser()->getClients();
+        $client = $clients[0];
         
         $form = $this->createForm(new FormDir\ReportDeclarationType());
         $form->handleRequest($request);
@@ -326,7 +327,7 @@ class ReportController extends Controller
      */
     protected function getClient($clientId)
     {
-        return $this->get('apiclient')->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
+        return $this->get('apiclient')->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ]]);
     }
     
     /**
@@ -334,8 +335,8 @@ class ReportController extends Controller
      * 
      * @return Report
      */
-    protected function getReport($reportId,$group = 'transactions')
+    protected function getReport($reportId,array $groups = [ 'transactions'])
     {
-        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId, 'group' => $group ]]);
+        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
     }
 }

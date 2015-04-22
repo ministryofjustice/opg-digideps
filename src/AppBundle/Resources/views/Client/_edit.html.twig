@@ -1,0 +1,41 @@
+{% trans_default_domain translationDomain %}
+
+{% include 'AppBundle:Components/Form:_form-title.html.twig' with {
+formTitle: "form.editClientForm.subSectionTitle" | trans
+} %}
+
+{{ form_input(form.firstname, 'firstname') }}
+{{ form_input(form.lastname, 'lastname') }}
+
+{{ form_input(form.address, 'address') }}
+{{ form_input(form.address2, 'address2') }}
+{{ form_input(form.county, 'county') }}
+{{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+{{ form_select(form.country, 'country') }}
+{{ form_input(form.phone, 'phone') }}
+
+{{ form_input(form.caseNumber, 'caseNumber') }}
+{{ form_known_date(form.courtDate, 'courtDate') }}
+
+{{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
+'fieldSetClass' : 'vertical',
+'legendClass' : 'form-label',
+'items': [
+{'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
+{'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-1" | trans({}, translationDomain) }
+]
+}) }}
+
+
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+    {{ form_submit(form.save,'saveAndContinue', {'buttonClass' : 'disabled'}) }}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.editClientForm.controls.cancel.label',
+    linkClass: 'button-link',
+    linkHref: path('client_home', {'action': '' })
+    } %}
+
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

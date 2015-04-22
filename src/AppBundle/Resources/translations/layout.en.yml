@@ -3,3 +3,5 @@ adminArea: Admin area
 userDetails: Your details
 logout: Logout
 Invalid credentials.: Enter a valid username and password
+clientHome: My client
+userDetails: My details

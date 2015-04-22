@@ -91,7 +91,7 @@ class User implements AdvancedUserInterface
     private $roleId;
     
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("array<AppBundle\Entity\Client>")
      * @var array
      */
     private $clients;
@@ -198,6 +198,8 @@ class User implements AdvancedUserInterface
      * @var string
      */
     private $phoneMobile;
+    
+    
     
     /**
      * @return integer $id
@@ -638,7 +640,9 @@ class User implements AdvancedUserInterface
     
     public function hasReports()
     {
-        if(!empty($this->clients[0]['reports'])){
+        $reports = $this->clients[0]->getReports();
+        
+        if(!empty($reports)){
             return true;
         }
         return false;
