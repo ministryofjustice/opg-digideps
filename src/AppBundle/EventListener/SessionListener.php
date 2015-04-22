@@ -33,8 +33,8 @@ class SessionListener
     {
         $this->router = $router;
         $this->idleTimeout = (int)$options['idleTimeout'];
-        if ($this->idleTimeout < 30) {
-            throw new \InvalidArgumentException(__CLASS__ . " :session timeout cannot be lower than 30 seconds");
+        if ($this->idleTimeout < 5) {
+            throw new \InvalidArgumentException(__CLASS__ . " :session timeout cannot be lower than 5 seconds");
         }
     }
     
