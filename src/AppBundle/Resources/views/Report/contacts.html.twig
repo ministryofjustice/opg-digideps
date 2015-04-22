@@ -15,7 +15,7 @@ activeTab : "tab-contacts"
         } %}
 
         {% include 'AppBundle:Report:_no_contact_form.html.twig' %}
-        
+
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'contact_form.pageSectionDescription'
@@ -25,7 +25,9 @@ activeTab : "tab-contacts"
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        {% include 'AppBundle:Report:_contact_form.html.twig' %}
+        {% include 'AppBundle:Report:_contact_form.html.twig' with {
+        'translationDomain': translationDomain
+        } %}
 
         {% if contacts is not empty %}
             {% include 'AppBundle:Report:_listContact.html.twig' %}

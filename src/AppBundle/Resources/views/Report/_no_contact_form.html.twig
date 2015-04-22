@@ -1,9 +1,15 @@
-{% set translationDomain = "report-contacts" %}
-{% trans_default_domain translationDomain %}
+
+{% block validationSummary %}
+    {{ form_errors_list(no_contact) }}
+{% endblock %}
 
 {% if contacts is empty and report.isDue() %}
-    {{ form_start(no_contact, {attr: {novalidate: 'novalidate', class: 'report-form' } }) }}
-            {{ form_input(no_contact.reason, 'reason') }}
-            {{ form_submit(no_contact.saveReason,'save') }}
+
+    {{ form_start(no_contact, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+
+    {{ form_input(no_contact.reason, 'reason') }}
+    {{ form_submit(no_contact.saveReason,'save') }}
+
     {{ form_end(no_contact) }}
+
 {% endif %}

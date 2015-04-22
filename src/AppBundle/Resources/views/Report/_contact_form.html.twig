@@ -1,13 +1,19 @@
 {% set translationDomain = "report-contacts" %}
 {% trans_default_domain translationDomain %}
 
+<hr/>
+{{ dump(contacts) }}
+<hr/>
+{{ dump(action) }}
+<hr/>
 
-{% if (contacts is not empty) and (action == 'list') %}
+{# {% if (contacts is not empty) and (action == 'list') %} #}
+{% if (action == 'add') %}
+    {% set hideForm = false %}
+    {% set formClass = 'in-page-form' %}
+{% else %}
     {% set hideForm = true %}
     {% set formClass = '' %}
-{% else %}
-    {% set hideForm = false %}
-    {% set formClass = 'report-form' %}
 {% endif %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
