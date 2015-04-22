@@ -21,6 +21,7 @@ class AccountController extends Controller
     public function accountsAction($reportId, $action)
     {
         $util = $this->get('util');
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $request = $this->getRequest();
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
