@@ -320,7 +320,7 @@ class Report
         if(empty($this->accounts)){
             return false;
         }
-       
+     
         foreach($this->accounts as $account){
             if(!$account->hasClosingBalance()){
                 return true;

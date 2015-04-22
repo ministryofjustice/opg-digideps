@@ -64,6 +64,7 @@ class ReportController extends Controller
     public function overviewAction($reportId)
     {
         $report = $this->getReport($reportId);
+        
         $client = $this->getClient($report->getClient());
         $request = $this->getRequest();
         

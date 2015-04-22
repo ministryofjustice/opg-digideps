@@ -268,8 +268,9 @@ class ApiClient extends GuzzleClient
 
             $methods = [ 'GET', 'DELETE'];
 
-            if(in_array($method,$methods) && array_key_exists('query', $options)){
-                foreach($options['query'] as $param){
+            if(in_array($method,$methods) && array_key_exists('parameters', $options)){
+               
+                foreach($options['parameters'] as $key => $param){
                     $url = $url.'/'.$param;
                 }
                 unset($options['parameters']); 
