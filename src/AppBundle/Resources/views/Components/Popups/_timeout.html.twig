@@ -26,7 +26,7 @@
 // instantiate object and attach events on page load
 $().ready(function() {
   
-  SessionTimeoutPopup.init({
+  SessionTimeoutDialog.init({
     'element': $('#timeoutPopup'),
     'sessionExpiresMs': {{ session_expires_seconds|default(1500) }} * 1000,
     'sessionPopupShowAfterMs': {{ session_popup_show_after|default(1200) }}  * 1000,
@@ -36,11 +36,11 @@ $().ready(function() {
   // events on buttons
   .on('click', '[data-role="close"]', function(e) {
     e.preventDefault();
-    SessionTimeoutPopup.closePopup();
+    SessionTimeoutDialog.closePopup();
   })
   .on('click', '[data-role="ok"]', function(e) {
     e.preventDefault();
-    SessionTimeoutPopup.hidePopupAndRestartCountdown();
+    SessionTimeoutDialog.hidePopupAndRestartCountdown();
   });
   
 });

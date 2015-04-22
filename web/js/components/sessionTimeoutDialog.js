@@ -1,5 +1,5 @@
 // SESSION TIMEOUT POPUP LOGIC    
-var SessionTimeoutPopup = {
+var SessionTimeoutDialog = {
     /**
      * @param element
      * @param sessionExpiresMs
