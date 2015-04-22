@@ -97,15 +97,28 @@ Feature: add client and report
 
 
     @deputy
-    Scenario: report overview
+    Scenario: my client
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then the URL should match "report/\d+/overview"
-        And I save the page as "deputy-report-overview"
+        Then the URL should match "client/show"
+        And I should see "Peter White" in the "client-name" region
+        And I should see the "edit-client-details" link
+        And I should see "123456ABC" in the "case-number" region
+        And I should see "1 South Parade" in the "client-address" region
+        And I should see the "report-n1" link
+        And I should see the "create-new-report" link
+        And I save the page as "deputy-client-home"
     
     
     @deputy
+    Scenario: report-overview
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "report-n1"
+        Then the URL should match "report/\d+/overview"
+        And I save the page as "deputy-report-overview"
+
+    @deputy
     Scenario: check homepage redirect
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then the URL should match "report/\d+/overview"
+        Then the URL should match "client/show"
         When I go to "/"
-        Then the URL should match "report/\d+/overview"
+        Then the URL should match "client/show"

@@ -50,13 +50,13 @@ class Util
         return $choices;
     }
     
-    public function getClient($clientId)
+    public function getClient($clientId, array $groups = [])
     {
-        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ]]);
+        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'query' => [ 'id' => $clientId ], 'queryStr' => ['groups' => $groups] ]);
     }
     
-    public function getReport($reportId,$userId)
+    public function getReport($reportId,$userId, $group = "transactions")
     {
-        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $userId ,'id' => $reportId, 'group' => 'transactions' ]]);
+        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'query' => [ 'userId' => $userId ,'id' => $reportId, 'group' => $group ]]);
     }
 }

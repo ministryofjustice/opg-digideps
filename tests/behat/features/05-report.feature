@@ -5,8 +5,11 @@ Feature: report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
         When I am on the homepage
-        Then I should see a "#tab-contacts" element
+        Then I should see the "report-n1" link
+        When I click on "report-n1"
+        Then I should see a "#tab-overview" element
         And I should see a "#tab-decisions" element
+        And I should see a "#tab-contacts" element
         But I should not see a "#tab-accounts" element
         And I should not see a "#tab-assets" element
 
@@ -19,6 +22,8 @@ Feature: report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I am on the homepage
         And I save the page as "report-property-affairs-homepage"
+        Then I should see the "report-n1" link
+        When I click on "report-n1"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
@@ -29,6 +34,7 @@ Feature: report
         # set report due
         Given I modify the report 1 end date to today "-3 days"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "report-n1"
         Then I should see the "tab-contacts-warning" region
         Then I should see the "tab-decisions-warning" region
         Then I should see the "tab-accounts-warning" region
@@ -41,7 +47,8 @@ Feature: report
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I follow "tab-contacts"
+        When I click on "report-n1"
+        And I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
         And I submit the form
@@ -73,13 +80,13 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I follow "tab-decisions"
+        When I click on "report-n1"
+        And I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
         When I submit the form
         And I save the page as "report-decision-add-error"
         Then the following fields should have an error:
-            #| decision_title |
             | decision_description |
             | decision_clientInvolvedDetails |
             | decision_decisionDate_day |
@@ -89,7 +96,6 @@ Feature: report
             | decision_clientInvolvedBoolean_1 |
         # wrong date
         And I fill in the following:
-            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 02 |
@@ -111,7 +117,6 @@ Feature: report
         And the form should contain an error
         # missing involvement details
         And I fill in the following:
-            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 30 |
             | decision_decisionDate_month | 12 |
@@ -122,7 +127,6 @@ Feature: report
         And the form should contain an error
         # add decision on 1/1/2015
         And I fill in the following:
-            #| decision_title | Bought house in Sw18 |
             | decision_description | 2 beds |
             | decision_decisionDate_day | 1 |
             | decision_decisionDate_month | 1 |
@@ -151,7 +155,8 @@ Feature: report
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I follow "tab-assets"
+        When I click on "report-n1"
+        And I follow "tab-assets"
         And I save the page as "report-assets-empty"
         # wrong form
         And I press "asset_save"
@@ -207,6 +212,7 @@ Feature: report
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I am on the homepage
+        And I click on "report-n1"
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # wrong form
@@ -253,7 +259,8 @@ Feature: report
     @deputy
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I follow "tab-accounts"
+        When I click on "report-n1"
+        And I follow "tab-accounts"
         And I click on "account-n1"
         And I click on "moneyIn-tab"
         And I click on "moneyOut-tab"
@@ -316,11 +323,13 @@ Feature: report
     Scenario: add closing balance to account
         Given I modify the report 1 end date to today "+3 days"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I follow "tab-accounts"
+        When I click on "report-n1"
+        And I follow "tab-accounts"
         Then I should not see the "account-1-add-closing-balance" link
         When I modify the report 1 end date to today "-3 days"
         And I go to the homepage
-        When I follow "tab-accounts"
+        When I click on "report-n1"
+        And I follow "tab-accounts"
         Then I should see the "account-n1-warning" region
         And I click on "account-n1"
         Then the following fields should have the corresponding values:
@@ -358,6 +367,7 @@ Feature: report
     @deputy
     Scenario: submit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "report-n1"
         # check there are no notifications
         Then I should not see the "tab-contacts-warning" region
         Then I should not see the "tab-decisions-warning" region
@@ -366,6 +376,7 @@ Feature: report
         # set report due
         Given I modify the report 1 end date to today "-3 days"
         And I go to the homepage
+        And I click on "report-n1"
         Then I should not see a "tab-contact-notification" element
         # submit without ticking
         When I press "report_submit_submitReport"

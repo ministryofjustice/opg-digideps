@@ -1,0 +1,34 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% set translationDomain = "client" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+{% block contentClass %}{{ parent() }} my-client{% endblock %}
+{% block title %}{% trans %}page.pageSectionTitle{% endtrans %}{% endblock %}
+
+{% block validationSummary %}
+    {# {{ form_errors_list(form) }} #}
+{% endblock %}
+
+
+{% block pageBody %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
+
+    {% include 'AppBundle:Client:_client-details.html.twig' with {
+    'translationDomain': translationDomain
+    } %}
+
+    {% include 'AppBundle:Client:_report-form.html.twig' %}
+
+    {% if reports is not empty %}
+        {% include 'AppBundle:Client:_list-reports.html.twig' with {
+        'translationDomain': translationDomain,
+        'reports': reports
+        } %}
+    {% endif %}
+
+{% endblock %}

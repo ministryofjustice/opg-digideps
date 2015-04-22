@@ -92,14 +92,14 @@ class Redirector
         $clients = $user->getClients();
         
         if(!$user->hasReports()){
-            return $this->router->generate('report_create', [ 'clientId' => $clients[0]['id']]);
+            return $this->router->generate('report_create', [ 'clientId' => $clients[0]->getId()]);
         }
         
         if ($lastUsedUri = $this->getLastAccessedUrl()) {
             return $lastUsedUri;
         }
         
-        return $this->router->generate('report_overview', ['reportId' => $clients[0]['reports'][0]]);
+        return $this->router->generate('report_overview', ['reportId' => $clients[0]->getReports()[0]]);
     }
     
    
