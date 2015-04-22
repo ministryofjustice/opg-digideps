@@ -47,7 +47,7 @@
                 {% endif %}
                 
                 {% if app.user.hasDetails() %}
-                    <li><a href="{{path('user_view')}}" >{% trans %}userDetails{% endtrans %} </a></li>
+                    <li><a href="{{path('user_view')}}" class="behat-link-my-details" >{% trans %}userDetails{% endtrans %} </a></li>
                 {% endif %}
                 
                 {% if is_granted('ROLE_ADMIN') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
