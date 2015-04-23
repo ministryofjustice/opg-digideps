@@ -1,0 +1,63 @@
+.session-timeout {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  &-dialog {
+    @include core-19();
+
+    width: 480px;
+    height: 210px;
+
+    border: 10px solid black;
+    background-color: #fff;
+    opacity: 1;
+
+    margin: 100px auto 0;
+    padding: 30px;
+
+    z-index: 9999;
+
+    .page-section-title {
+      font-size: 30px;
+
+      margin-bottom: 20px;
+    }
+
+    .page-section-description {
+
+      margin-bottom: 20px;
+      width: 100%;
+
+      & + .page-section-description {
+        margin-bottom: 20px;
+      }
+
+    }
+
+    .button {
+      margin-right: 20px;
+    }
+
+  }
+
+  &-underlay {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    color: #ffffff;
+    background-color: #000;
+    opacity: 0.3;
+
+  }
+
+}

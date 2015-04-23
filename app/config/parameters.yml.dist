@@ -5,6 +5,7 @@ parameters:
     api_base_url: https://digideps-api.local/
     env: develop
     session_expire_seconds: 1500
+    session_popup_show_after: 1200
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"
