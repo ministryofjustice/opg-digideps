@@ -1384,6 +1384,7 @@ input[type=number] {
 ***************************************************************
 */
 .session-timeout {
+  visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -1418,6 +1419,7 @@ input[type=number] {
     .session-timeout-dialog .button {
       margin-right: 20px; }
   .session-timeout-underlay {
+    visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;
