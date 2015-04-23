@@ -102,12 +102,13 @@
     <script type="text/javascript" src="{{ asset('js/application.js') }}"></script>
 {% endblock %}
 
-{% block popups %}
-  {% if app.request.attributes.get('_route') not in ['login', 'logout'] %}
-    {% include 'AppBundle:Components/Popups:_timeout.html.twig' %}
-  {% endif %}         
-          
+{% block bodyEnd %}
+    
+    {% block popups %}
+        {% if app.request.attributes.get('_route') not in ['login', 'logout'] %}
+            {% include 'AppBundle:Components/Popups:_timeout.html.twig' %}
+        {% endif %}
+
+    {% endblock %}
+
 {% endblock %}
-
-{% block bodyEnd %}{% endblock %}
-
