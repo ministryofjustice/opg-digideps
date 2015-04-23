@@ -6,7 +6,7 @@ Feature: add client and report
         Then I should be on "client/add"
         And I save the page as "deputy-step3"
         # form errors
-        When I submit the form
+        When I press "client_save"
         Then the following fields should have an error:
             | client_firstname |
             | client_lastname |
@@ -19,7 +19,7 @@ Feature: add client and report
             | client_caseNumber |
             | client_address |
             | client_postcode | 
-        And I submit the form
+        And I press "client_save"
         Then the form should contain an error
         And I save the page as "deputy-step3-error"
         # right values
@@ -37,7 +37,7 @@ Feature: add client and report
             | client_postcode | NG1 2HT  |
             | client_country | GB |
             | client_phone | 0123456789  |
-        And I submit the form
+        And I press "client_save"
         Then the form should not contain an error
         # assert you are on create report page
         And the URL should match "report/create/\d+"
@@ -56,33 +56,33 @@ Feature: add client and report
             | report_endDate_day |  |
             | report_endDate_month |  |
             | report_endDate_year |  |
-        And I submit the form
+        And I press "report_save"
         Then the following fields should have an error:
             | report_endDate_day |
             | report_endDate_month |
             | report_endDate_year |
-        And I submit the form
+        And I press "report_save"
         Then the form should contain an error
         # invalid date
         When I fill in the following:
             | report_endDate_day | 99 |
             | report_endDate_month | 99 |
             | report_endDate_year | 2015 |
-        And I submit the form
+        And I press "report_save"
         Then the form should contain an error
         # date before report
         When I fill in the following:
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2010 |
-        And I submit the form
+        And I press "report_save"
         Then the form should contain an error
         # date range too high
         When I fill in the following:
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2016 |
-        And I submit the form
+        And I press "report_save"
         Then the form should contain an error
         And I save the page as "deputy-step4-error"
         # valid form
@@ -90,7 +90,7 @@ Feature: add client and report
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2015 |
-        And I submit the form
+        And I press "report_save"
         Then the form should not contain an error
         # assert you are on dashboard
         And the URL should match "report/\d+/overview"

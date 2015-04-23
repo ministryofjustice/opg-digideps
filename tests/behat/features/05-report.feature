@@ -47,7 +47,7 @@ Feature: report
         And I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
-        And I submit the form
+        And I press "contact_save"
         And I save the page as "report-contact-add-error"
         Then the following fields should have an error:
             | contact_contactName |
@@ -65,7 +65,7 @@ Feature: report
             | contact_county | London |
             | contact_postcode | N2 5JF |
             | contact_country | GB |
-        And I submit the form
+        And I press "contact_save"
         And I save the page as "report-contact-list"
         Then the response status code should be 200
         And the form should not contain an error
@@ -80,7 +80,7 @@ Feature: report
         And I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
-        When I submit the form
+        When I press "decision_save"
         And I save the page as "report-decision-add-error"
         Then the following fields should have an error:
             | decision_description |
@@ -98,7 +98,7 @@ Feature: report
             | decision_decisionDate_year | 9999 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I submit the form
+        And I press "decision_save"
         And the form should contain an error
         # date not in report range
         And I fill in the following:
@@ -109,7 +109,7 @@ Feature: report
             | decision_decisionDate_year | 2002 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I submit the form
+        And I press "decision_save"
         And the form should contain an error
         # missing involvement details
         And I fill in the following:
@@ -119,7 +119,7 @@ Feature: report
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails |  |
-        And I submit the form
+        And I press "decision_save"
         And the form should contain an error
         # add decision on 1/1/2015
         And I fill in the following:
@@ -129,7 +129,7 @@ Feature: report
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I submit the form
+        And I press "decision_save"
         And I save the page as "report-decision-list"
         Then the response status code should be 200
         And the form should not contain an error
@@ -143,7 +143,7 @@ Feature: report
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
-        And I submit the form
+        And I press "decision_save"
         And the form should not contain an error
         And I should see "2 beds" in the "list-decisions" region
         And I should see "3 beds" in the "list-decisions" region
@@ -387,12 +387,12 @@ Feature: report
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/declaration"
         # preview page: submit without ticking "agree"
-        When I submit the form
+        When I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
         # right values  
         When I check "report_declaration_agree"
-        And I submit the form
+        And I press "report_declaration_save"
         And the form should not contain an error
         And the report is submitted
         And the URL should match "/report/\d+/overview"

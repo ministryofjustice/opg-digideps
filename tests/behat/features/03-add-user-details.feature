@@ -9,7 +9,7 @@ Feature: add details
         When I fill in the following:
             | user_details_firstname |  |
             | user_details_lastname |  |
-        And I submit the form
+        And I press "user_details_save"
         Then the following fields should have an error:
             | user_details_firstname |
             | user_details_lastname |
@@ -17,7 +17,7 @@ Feature: add details
             | user_details_addressPostcode |
             | user_details_addressCountry |
             | user_details_phoneHome |
-        And I submit the form
+        And I press "user_details_save"
         Then the form should contain an error
         And I save the page as "deputy-step2-error"
         # right values
@@ -32,7 +32,7 @@ Feature: add details
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
-        And I submit the form
+        And I press "user_details_save"
         Then the form should not contain an error
         When I go to "user/details"
         Then the following fields should have the corresponding values:
@@ -58,20 +58,20 @@ Feature: add details
         And I fill in the following:
             | user_details_firstname |  |
             | user_details_lastname | Doe admin |
-        And I submit the form
+        And I press "user_details_save"
         Then the form should contain an error
         # missing lastname
         And I fill in the following:
             | user_details_firstname | John admin |
             | user_details_lastname |  |
-        And I submit the form
+        And I press "user_details_save"
         Then the form should contain an error
         And I save the page as "admin-step2-error"
         # correct
         And I fill in the following:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
-        And I submit the form
+        And I press "user_details_save"
         Then the form should not contain an error
         When I go to "user/details"
         Then the following fields should have the corresponding values:
