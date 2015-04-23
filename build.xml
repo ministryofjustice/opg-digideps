@@ -56,7 +56,7 @@
         <exec passthru="true" command="php composer.phar dump-autoload --optimize" checkreturn="true"></exec>
     </target>
     
-    <target name="boostrap-build">
+    <target name="bootstrap-build">
         <exec passthru="true" command="php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php"></exec>
     </target>
 
