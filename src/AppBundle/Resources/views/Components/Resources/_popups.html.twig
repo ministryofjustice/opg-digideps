@@ -1,0 +1,6 @@
+<!--Component: Resources/popups-->
+<div class="js-popups">
+    {% if app.request.attributes.get('_route') not in ['login', 'logout'] %}
+        {% include 'AppBundle:Components/Popups:_timeout.html.twig' with {} %}
+    {% endif %}
+</div>

@@ -99,5 +99,10 @@
     <script type="text/javascript" src="{{ asset('js/application.js') }}"></script>
 {% endblock %}
 
-{% block bodyEnd %}{% endblock %}
+{% block bodyEnd %}
+    
+    {% block popups %}
+        {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
+    {% endblock %}
 
+{% endblock %}
