@@ -40,18 +40,13 @@ class IndexController extends Controller
             'form' => $form->createView(),
         ];
         
-        // reset loggedOutFrom information after form has been submitted
-        if ($form->isSubmitted()) {
-            $this->getRequest()->getSession()->set('loggedOutFrom', null);
-        }
-        
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
 
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
-
+               
                 $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
                 // exception if credentials not valid
@@ -78,12 +73,16 @@ class IndexController extends Controller
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
         }
         
-        
-        if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'logoutPage') {
+        // different page version for timeout and manual logout
+        $session = $this->getRequest()->getSession();
+        if ($session->get('loggedOutFrom') === 'logoutPage') {
+            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
-        } else if ($this->getRequest()->getSession()->get('loggedOutFrom') === 'timeout') {
+        } else if ($session->get('loggedOutFrom') === 'timeout') {
+            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
         }
+            
         
         return $this->render('AppBundle:Index:login.html.twig', $vars);
     }

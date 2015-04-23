@@ -24,6 +24,11 @@
         float: left;
         clear: none;
         margin-top: 0;
+
+        &.float-right {
+          float: right;
+        }
+
       }
     }
 
@@ -113,7 +118,7 @@
 
       &--header {
         .data-item-edit-link {
-          margin-left: 323px;
+          margin-right: 110px;
         }
       }
 
