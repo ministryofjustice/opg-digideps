@@ -1708,6 +1708,8 @@ header.page-header {
         float: left;
         clear: none;
         margin-top: 0; }
+        .data-item .data-item-fields .data-item-fields-row--header.float-right {
+          float: right; }
     .data-item .data-item-fields dt.data-item-fields-term {
       display: inline;
       font-family: "nta", Arial, sans-serif;
@@ -1782,7 +1784,7 @@ header.page-header {
     padding: 20px 0 10px 0;
     border-bottom: 1px solid #dee0e2; }
     .data-list--client-list-reports .data-item dd.data-item-fields-description--header .data-item-edit-link {
-      margin-left: 323px; }
+      margin-right: 110px; }
     .data-list--client-list-reports .data-item .data-item-fields-row {
       margin-top: 0; }
       .data-list--client-list-reports .data-item .data-item-fields-row dt.data-item-fields-term {
@@ -2156,6 +2158,23 @@ form {
     background-position-y: 7px;
     text-decoration: underline;
     color: inherit; }
+.page-report-content .no-contact-form {
+  padding: 20px 0 10px 65px;
+  margin-bottom: 30px; }
+  .page-report-content .no-contact-form .sub-section-description {
+    position: relative;
+    margin-left: -50px;
+    margin-bottom: 20px;
+    overflow: hidden; }
+    .page-report-content .no-contact-form .sub-section-description .icon {
+      float: left;
+      margin-right: 15px; }
+    .page-report-content .no-contact-form .sub-section-description p {
+      float: left;
+      margin-top: 6px; }
+  .page-report-content .no-contact-form .form-control {
+    width: 60%;
+    height: 100px; }
 
 .page-report-content .page-report-header .page-header-titles {
   float: left;
