@@ -263,10 +263,14 @@ class ApiClient extends GuzzleClient
     public function createRequest($method, $url = null, array $options = array()) 
     {
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
-            $url = $this->endpoints[$url];
             
-            if((($method == 'GET') || ($method == 'DELETE')) && array_key_exists('parameters', $options)){
-                foreach($options['parameters'] as $param){
+            $url = $this->endpoints[$url];
+
+            $methods = [ 'GET', 'DELETE'];
+
+            if(in_array($method,$methods) && array_key_exists('parameters', $options)){
+               
+                foreach($options['parameters'] as $key => $param){
                     $url = $url.'/'.$param;
                 }
                 unset($options['parameters']); 

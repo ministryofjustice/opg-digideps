@@ -1,0 +1,23 @@
+{% block validationSummary %}
+    {{ form_errors_list(no_contact) }}
+{% endblock %}
+
+{% if contacts is empty and report.isDue() %}
+
+    {{ form_start(no_contact, {attr: {novalidate: 'novalidate', class: 'no-contact-form in-page-form' } }) }}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'no_contact.subSectionDescription',
+    iconClass: 'icon icon__notification'
+    } %}
+
+    {{ form_input(no_contact.reason, 'no_contact.controls.reason', {
+    'labelClass': 'visuallyhidden'
+    }) }}
+
+    {{ form_submit(no_contact.saveReason,'save') }}
+
+    {{ form_end(no_contact) }}
+
+{% endif %}
