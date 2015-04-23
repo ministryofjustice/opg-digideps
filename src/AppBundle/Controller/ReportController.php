@@ -177,7 +177,29 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['endDate']));
         }
         
+        if (array_key_exists('reason_for_no_contacts', $data)) {
+            $report->setReasonForNoContacts($data['reason_for_no_contacts']);
+        }
+        
         $this->getEntityManager()->flush($report);
+        
+        return ['id'=>$report->getId()];
+    }
+    
+    /**
+     * @Route("/report/{id}/contacts")
+     * @Method({"DELETE"})
+     */
+    public function contactsDelete($id)
+    {
+        $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
+
+        foreach ($report->getContacts() as $contact) {
+            $this->getEntityManager()->remove($contact);
+        }
+        $report->setReasonForNoContacts(null);
+        
+        $this->getEntityManager()->flush();
         
         return ['id'=>$report->getId()];
     }
