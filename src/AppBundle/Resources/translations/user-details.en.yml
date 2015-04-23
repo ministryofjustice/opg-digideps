@@ -25,3 +25,24 @@ phoneMobile:
 submit:
     label: Save and continue
 cancelText: Cancel
+view:
+    pageTitle: My details
+page:
+  htmlTitle: "Deputyship - Your Details"
+  pageSectionTitle: "Your details"
+  pageSectionDescription: "You can update your contact details below."
+yourDetails:
+  yourName: "Client Name"
+  editYourDetails: "Edit Your Details"
+  edit: "Edit your details"
+  address: "Address"
+  mainPhoneNumber: "Main phone number"
+  alternativePhoneNumber: "Alternative phone number"
+  mobilePhoneNumber: "Mobile phone number"
+  emailAddress: "Email address"
+form:
+  editYourDetails:
+    subSectionTitle: "Edit your details"
+    controls:
+      cancel:
+        label: "Cancel"

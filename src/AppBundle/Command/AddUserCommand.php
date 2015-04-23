@@ -76,7 +76,7 @@ class AddUserCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
     {
         $apiClient = $this->getContainer()->get('apiclient'); /* @var $apiClient ApiClient */
         try {
-            $apiClient->getEntity('User', 'find_user_by_email', [ 'query' => [ 'email' => $email]]);
+            $apiClient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email]]);
             return true;
         } catch (\Exception $e) {
             return false;

@@ -1,7 +1,23 @@
 {% extends 'AppBundle:Index:login.html.twig' %}
-{% trans_default_domain "login" %}
+{% set translationDomain = "login" %}
+{% trans_default_domain translationDomain %}
 
-{% block title %}
-    {{ 'manualLogout.title' | trans }}
-     <h2 class="behat-region-manual-logout-message">{{ 'manualLogout.description' | trans  }}</h2>
+{% block title %}{{ 'manualLogout.pageTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} sign-in-page--manual-signout{% endblock %}
+
+
+{% block pageHeader %}
+    {{ parent() }}
+
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'manualLogout.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'manualLogout.pageSectionDescription',
+    additionalClass: 'behat-region-manual-logout-message'
+    } %}
+
 {% endblock %}

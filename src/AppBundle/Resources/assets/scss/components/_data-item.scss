@@ -1,0 +1,131 @@
+.data-item {
+  overflow: hidden;
+  padding: 20px 0 10px 0;
+
+  .data-list & {
+    padding: 30px 0 10px 0;
+    border-bottom: 1px solid $grey-3;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  .data-item-fields {
+    overflow: hidden;
+    position: relative;
+
+    .data-item-fields-row {
+      overflow: hidden;
+      clear: both;
+      margin-top: 5px;
+
+      &--header {
+        float: left;
+        clear: none;
+        margin-top: 0;
+      }
+    }
+
+    dt.data-item-fields-term {
+      display: inline;
+      @include core-19();
+      color: $grey-1;
+      float: left;
+
+      &--block {
+        float: none;
+      }
+
+    }
+
+    dd.data-item-fields-description {
+      display: block;
+      @include bold-19();
+
+      &--block {
+        position: relative;
+        margin-left: auto;
+        font-weight: 400;
+      }
+
+      &--normal {
+        font-weight: 400;
+      }
+
+      &--header {
+        overflow: hidden;
+        position: relative;
+        margin-left: 0px;
+
+        .data-item-header-title {
+          float: left;
+          @include bold-24();
+          margin-bottom: 5px;
+        }
+
+        .data-item-edit-link {
+          @include core-19();
+        }
+
+      }
+    }
+  }
+
+  &--client-details {
+    dd.data-item-fields-description {
+      margin-left: 140px;
+      &--header {
+        .data-item-edit-link {
+          margin-left: 419px;
+        }
+      }
+
+    }
+  }
+
+  &--your-details {
+    .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
+      margin-bottom: 25px;
+    }
+
+    .data-item-fields .data-item-fields-row {
+      margin-top: 25px;
+    }
+
+    dd.data-item-fields-description {
+      margin-left: 235px;
+      &--header {
+        .data-item-edit-link {
+          margin-left: 353px;
+        }
+      }
+
+    }
+
+  }
+
+  .data-list--client-list-reports & {
+    padding: 20px 0 10px 0;
+    border-bottom: 1px solid $grey-3;
+
+    dd.data-item-fields-description {
+
+      &--header {
+        .data-item-edit-link {
+          margin-left: 323px;
+        }
+      }
+
+    }
+
+    .data-item-fields-row {
+      margin-top: 0;
+
+      dt.data-item-fields-term {
+        margin-right: 5px;
+      }
+    }
+  }
+
+}

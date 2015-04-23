@@ -128,7 +128,7 @@ class ApiClient extends GuzzleClient
         try {
             return parent::send($request);
         } catch (\Exception $e) {
-            
+          
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
                 $debugData = $this->getDebugRequestExceptionData($e);
@@ -188,7 +188,7 @@ class ApiClient extends GuzzleClient
     public function getEntities($class, $endpoint, $options = [])
     {
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
-        
+   
         $ret = [];
         
         foreach ($responseArray['data'] as $row) { 
@@ -265,11 +265,11 @@ class ApiClient extends GuzzleClient
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             $url = $this->endpoints[$url];
             
-            if((($method == 'GET') || ($method == 'DELETE')) && array_key_exists('query', $options)){
-                foreach($options['query'] as $param){
+            if((($method == 'GET') || ($method == 'DELETE')) && array_key_exists('parameters', $options)){
+                foreach($options['parameters'] as $param){
                     $url = $url.'/'.$param;
                 }
-                unset($options['query']);
+                unset($options['parameters']); 
             }
         }
         return parent::createRequest($method, $url, $options);
