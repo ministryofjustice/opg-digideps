@@ -16,7 +16,7 @@ Feature: report
         When I fill in the following:
           | login_email | behat-user@publicguardian.gsi.gov.uk |
           | login_password | Abcd1234 |
-        And I submit the form
+        And I press "login_login"
         #Then the URL should match "/report/\d+/account/\d+"
         
     @deputy

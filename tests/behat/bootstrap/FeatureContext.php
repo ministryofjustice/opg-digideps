@@ -72,7 +72,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitPath('/login');
         $this->fillField('login_email',$email);
         $this->fillField('login_password', $password);
-        $this->iSubmitTheForm();
+        $this->pressButton('login_login');
         $this->assertResponseStatus(200);
     }
     
@@ -104,24 +104,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitPath('/logout');
     }
 
-    /**
-     * @Given I submit the form
-     */
-    public function iSubmitTheForm()
-    {
-        $linkSelector = 'button[type=submit]';
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
-        if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Found more than a $linkSelector element in the page. Interrupted");
-        }
-        if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element $linkSelector not found. Interrupted");
-        }
-        
-        // click on the found link
-        $linksElementsFound[0]->click();
-    }
-    
     
     /**
      * @Then the page title should be :text
