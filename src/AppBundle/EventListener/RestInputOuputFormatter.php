@@ -71,8 +71,12 @@ class RestInputOuputFormatter
         }
 
         $context = SerializationContext::create(); //->setSerializeNull(true);
-        if ($serialiseGroup = $request->headers->get(self::HEADER_JMS_GROUP)) {
-            $context->setGroups([$serialiseGroup]);
+        $serialiseGroups = $request->headers->get(self::HEADER_JMS_GROUP);
+        
+        if (!empty($serialiseGroups)) {
+            if(is_array($serialiseGroups)){
+                $context->setGroups($serialiseGroups);
+            }
         }
         
         $serializedData = $this->serializer->serialize($data, $format, $context);
@@ -84,7 +88,7 @@ class RestInputOuputFormatter
     
     public static function addJmsSerialiserGroupToRequest($request, $group)
     {
-        $request->headers->set(self::HEADER_JMS_GROUP, $group);
+        $request->headers->set(self::HEADER_JMS_GROUP, [$group]);
     }
 
     /**

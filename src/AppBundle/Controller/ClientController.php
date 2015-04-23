@@ -3,7 +3,6 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
 use AppBundle\Exception\NotFound;
 
@@ -55,13 +54,23 @@ class ClientController extends RestController
     
 
     /**
-     * @Route("/find-by-id/{id}", name="client_find_by_id")
+     * @Route("/find-by-id/{id}", name="client_find_by_id" )
      * @Method({"GET"})
      * 
      * @param integer $id
      */
     public function findByIdAction($id)
     {
+        $request = $this->getRequest();
+        
+        $serialisedGroups = null;
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
         $client = $this->getDoctrine()->getRepository('AppBundle:Client')->find($id);
         
         //if client does not exist
