@@ -185,4 +185,22 @@ class ReportController extends RestController
         
         return ['id'=>$report->getId()];
     }
+    
+    /**
+     * @Route("/report/{id}/contacts")
+     * @Method({"DELETE"})
+     */
+    public function contactsDelete($id)
+    {
+        $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
+
+        foreach ($report->getContacts() as $contact) {
+            $this->getEntityManager()->remove($contact);
+        }
+        $report->setReasonForNoContacts(null);
+        
+        $this->getEntityManager()->flush();
+        
+        return ['id'=>$report->getId()];
+    }
 }
