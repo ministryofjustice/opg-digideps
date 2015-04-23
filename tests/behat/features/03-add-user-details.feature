@@ -46,12 +46,6 @@ Feature: add details
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
             | user_details_phoneMobile | 079 123 456 78  |
-        # edit details
-        Given I click on "my-details"
-        Then I should see "John Doe" in the "my-details" region
-        And I should see "102 Petty France" in the "my-details" region
-        And I should see "020 3334 3555" in the "my-details" region
-        And I should see "behat-user@publicguardian.gsi.gov.uk" in the "my-details" region
         
 
     @admin

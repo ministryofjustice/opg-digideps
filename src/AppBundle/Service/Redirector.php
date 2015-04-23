@@ -39,6 +39,7 @@ class Redirector
         'decisions',
         'assets',
         'report_declaration',
+        'client_home'
     ];
     
     /**
@@ -99,7 +100,7 @@ class Redirector
             return $lastUsedUri;
         }
         
-        return $this->router->generate('report_overview', ['reportId' => $clients[0]->getReports()[0]]);
+        return $this->router->generate('client_home');
     }
     
    
