@@ -1,5 +1,6 @@
 .session-timeout {
 
+  visibility: hidden;
   position: absolute;
   top: 0;
   left: 0;
@@ -46,6 +47,7 @@
   }
 
   &-underlay {
+    visibility: hidden;
 
     position: absolute;
     top: 0;
