@@ -24,4 +24,32 @@
     }
   }
 
+  .no-contact-form {
+    padding: 20px 0 10px 65px;
+    margin-bottom: 30px;
+
+    .sub-section-description {
+      position: relative;
+      margin-left: -50px;
+      margin-bottom: 20px;
+      overflow: hidden;
+
+      .icon {
+        float: left;
+        margin-right: 15px;
+      }
+
+      p {
+        float: left;
+        margin-top: 6px;
+      }
+    }
+
+    .form-control{
+      width: 60%;
+      height: 100px;
+    }
+
+  }
+
 }

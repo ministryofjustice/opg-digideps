@@ -48,7 +48,7 @@ class IndexController extends Controller
 
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
-
+               
                 $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
                 // exception if credentials not valid

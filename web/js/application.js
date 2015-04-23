@@ -35,4 +35,3 @@ if ($('.registration-client-add')) {
 if ($('.js-report-decisions-input')) {
     new GOVUK.SelectionButtons(":radio");
 }
-

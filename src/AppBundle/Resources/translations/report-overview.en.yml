@@ -48,7 +48,7 @@ pages:
     contacts:
       subSectionTitle: "Contacts"
       subSectionWarning: "You've not added any contact details."
-      subSectionDescription: "<a href=\"%pageHref%\">Go to the Contacts section</a> and add them now."
+      subSectionDescription: "<a href=\"%pageHref%\">Go to the Contacts section</a> and add them now. If you have no contacts to add, let us know why."
     decisions:
       subSectionTitle: "Decisions"
       subSectionWarning: "You've not added any decision details."
