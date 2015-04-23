@@ -102,10 +102,7 @@
 {% block bodyEnd %}
     
     {% block popups %}
-        {% if app.request.attributes.get('_route') not in ['login', 'logout'] %}
-            {% include 'AppBundle:Components/Popups:_timeout.html.twig' %}
-        {% endif %}
-
+        {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
     {% endblock %}
 
 {% endblock %}

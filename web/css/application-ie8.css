@@ -1383,6 +1383,50 @@ input[type=number] {
     Do need import application specific code into this file.
 ***************************************************************
 */
+.session-timeout {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+  .session-timeout-dialog {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none;
+    width: 480px;
+    height: 210px;
+    border: 10px solid black;
+    background-color: #fff;
+    opacity: 1;
+    margin: 100px auto 0;
+    padding: 30px;
+    z-index: 9999; }
+    @media (max-width: 640px) {
+      .session-timeout-dialog {
+        font-size: 16px;
+        line-height: 1.25; } }
+    .session-timeout-dialog .page-section-title {
+      font-size: 30px;
+      margin-bottom: 20px; }
+    .session-timeout-dialog .page-section-description {
+      margin-bottom: 20px;
+      width: 100%; }
+      .session-timeout-dialog .page-section-description + .page-section-description {
+        margin-bottom: 20px; }
+    .session-timeout-dialog .button {
+      margin-right: 20px; }
+  .session-timeout-underlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #ffffff;
+    background-color: #000;
+    opacity: 0.3; }
+
 .account-closing-balance-form {
   margin-bottom: 30px;
   padding: 5px 0 5px 10px;

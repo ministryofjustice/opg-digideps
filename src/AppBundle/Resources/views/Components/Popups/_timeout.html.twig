@@ -1,38 +1,77 @@
 {% set translationDomain = "popup-timeout" %}
 {% trans_default_domain translationDomain %}
 
-<div id="timeoutPopup" style="visibility: hidden;      position: fixed;     left: 0px;
-    top: 0px;      width:100%;      height:100%;      text-align:center; 
-    z-index: 1000;" data-role="timeout-popup">
-  <div style="width:500px;      margin: 150px auto;      background-color: #fff;
-  border:#000 5px solid;      padding:15px;      text-align:center;">
-    <div><a href="#" data-role="keep-session-alive" style="float:right">X</a></div>
-    <p style="font-weight: bold">{{ 'title' | trans }}</p>
-    <p>{{ 'firstLine' | trans({
+
+<div class="session-timeout-underlay">
+</div>
+<div id="timeoutPopup" data-role="timeout-popup" class="session-timeout js-session-timeout">
+    <div class="session-timeout-dialog">
+
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'component.title'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'component.firstLine' | trans({
         '%inactiveFor%': (session_popup_show_after / 60) | round(2, 'floor'),
         '%loggedOutIn%': ((session_expires_seconds - session_popup_show_after) / 60) | round(2, 'floor')
-      }) }}
-    </p>
-    <p></p>
-    <p>{{ 'secondLine' | trans }}</p>
-    <a class="button" href="#" data-role="keep-session-alive" onclick="">{{ 'okButton' | trans }}</a>
-    <a class="button" href="{{ path('logout')}}" data-role="signout">{{ 'signoutButton' | trans }}</a>
-  </div>
+        })
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'component.secondLine'
+        } %}
+
+        {#
+
+                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'component.controls.okButton.label',
+                linkClass: 'button js-ok-button',
+                linkHref: '#'
+                } %}
+
+                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'component.controls.signOutButton.label',
+                linkClass: 'button-secondary',
+                linkHref: path('logout')
+                } %}
+
+        #}
+
+        <form name="session-timeout-form" action="/logout">
+            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+            <button type="button" name="continue" class="button js-ok-button">OK</button>
+            <button type="submit" name="subsmit" class="button-secondary">Sign out</button>
+
+            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+        </form>
+
+    </div>
 </div>
-  
+
 <script type="text/javascript" src="/js/components/sessionTimeoutDialog.js"></script>
 <script type="text/javascript">
 
-// instantiate object and attach events on page load
-$().ready(function() {
-  
-  new SessionTimeoutDialog({
-    'element': $('#timeoutPopup'),
-    'sessionExpiresMs': {{ session_expires_seconds|default(1500) }} * 1000,
-    'sessionPopupShowAfterMs': {{ session_popup_show_after|default(1200) }}  * 1000,
-    'keepSessionAliveUrl': '{{ path('session-keep-alive') }}'
-  }).startCountdown();
-  
-});
-    
+    // instantiate object and attach events on page load
+    $().ready(function () { // $DOM READY EVENT
+
+        var sessionExpires = {{ session_expires_seconds|default(1500) }},
+                sessionShowPopupMs = {{ session_popup_show_after|default(1200) }},
+                keepAliveUrl = '{{ path('session-keep-alive') }}';
+
+        new SessionTimeoutDialog({
+            'element': $('#timeoutPopup'),
+            'sessionExpiresMs': sessionExpires * 1000,
+            'sessionPopupShowAfterMs': sessionShowPopupMs * 1000,
+            'keepSessionAliveUrl': keepAliveUrl
+        }).startCountdown();
+
+    });
+
 </script>
