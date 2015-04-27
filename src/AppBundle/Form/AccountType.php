@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -9,30 +10,44 @@ use AppBundle\Form\Type\AccountNumberType;
 
 class AccountType extends AbstractType
 {
-     public function buildForm(FormBuilderInterface $builder, array $options)
-     {
-         $builder ->add('bank', 'text')
-                  ->add('openingDate', 'date', [ 'widget' => 'text',
-                                                 'input' => 'datetime',
-                                                 'format' => 'yyyy-MM-dd',
-                                                 'invalid_message' => 'account.openingDate.invalidMessage'
-                                          ])
-                  ->add('openingBalance','number', [ 'grouping' => true, 'precision' => 2 ])
-                  ->add('sortCode',new SortCodeType(), [ 'error_bubbling' => false ])
-                  ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false ])
-                  ->add('save', 'submit');
-     }
-     
-     public function setDefaultOptions(OptionsResolverInterface $resolver)
-     {
-         $resolver->setDefaults( [
-            'translation_domain' => 'report-accounts'
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('bank', 'text')
+            ->add('openingDate', 'date', [ 'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'yyyy-MM-dd',
+                'invalid_message' => 'account.openingDate.invalidMessage'
+            ])
+            ->add('openingBalance', 'number', [ 'grouping' => true, 'precision' => 2])
+            ->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
+            ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
+
+        
+        if (!empty($options['addClosingBalance'])) {
+
+            $builder->add('closingDate', 'date', [ 'widget' => 'text',
+                    'input' => 'datetime',
+                    'format' => 'dd-MM-yyyy',
+                    'invalid_message' => 'Value or character is not valid'
+                ])
+                ->add('closingBalance', 'number', [ 'grouping' => true, 'precision' => 2]);
+        }
+
+        $builder->add('save', 'submit');
+    }
+
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults([
+            'translation_domain' => 'report-accounts',
+            'data_class' => 'AppBundle\Entity\Account',
+            'addClosingBalance' => false
         ]);
-     }
-     
-     public function getName()
-     {
-         return 'account';
-     }
-     
+    }
+
+    public function getName()
+    {
+        return 'account';
+    }
+
 }
