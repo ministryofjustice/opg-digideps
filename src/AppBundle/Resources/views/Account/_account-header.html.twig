@@ -26,7 +26,7 @@
         <div class="account-header__item-fields-set account-header__item-fields-set--edit-link">
             <dt class="account-header__item-fields-term visuallyhidden">{{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}</dt>
             <dd class="account-header__item-fields-description account-header__item-fields-description--edit-link"><a
-                        href="#">{{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}</a></dd>
+                        href="{{ path('account', {'action': 'edit', 'reportId': report.id, 'accountId': account.id }) }}">{{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}</a></dd>
         </div>
         {% if report.isDue() and account.closingBalance is not null %}
             <div class="account-header__item-fields-set account-header__item-fields-set--closing-date">
