@@ -111,22 +111,31 @@ class AccountController extends Controller
             ]);
         }
         
-        if($this->getRequest()->getMethod() == 'POST'){
-            $reportSubmit->handleRequest($this->getRequest());
-            
-            if($reportSubmit->get('submitReport')->isClicked()){
-               
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
+        // report submit logic
+        $reportSubmit->handleRequest($this->getRequest());
+        if ($reportSubmit->get('submitReport')->isClicked()) {
+
+            if($reportSubmit->isValid()){
+                if($report->readyToSubmit()){
+                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
                 }
-                
+            }
+        }
+        
+        // edit balance logic
+        $formEdit = null;
+        $formEditValid = false;
+        if ($action == 'edit') {
+            $formEdit = $this->createForm(new FormDir\AccountType(), $account, ['addClosingBalance'=>true]);
+            if($formEdit->get('save')->isClicked() && ($formEditValid = $formEdit->isValid()) ){
+                $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
+                    'deserialise_group' => 'edit_account', //TODO implement group (all except Id) ?
+                ]);
             }
         }
         
         // refresh account data
-        if ($validFormBalance || $formMoneyValid) {
+        if ($validFormBalance || $formMoneyValid || $formEditValid) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         }
         
@@ -135,6 +144,7 @@ class AccountController extends Controller
             'client' => $client,
             'form' => $formMoneyInOut->createView(),
             'formBalance' => $formBalance->createView(),
+            'formEdit' => $formEdit ? $formEdit->createView() : null,
             'account' => $account,
             'actionParam' => $action,
             'report_form_submit' => $reportSubmit->createView()
