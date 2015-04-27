@@ -4,6 +4,22 @@ page:
   pageSectionDescription: "Add details for the main current bank or building society account you manage for the client."
   pageSectionWarning: "Do not include savings or investment accounts, such as ISAs - add these to the assets section."
 form:
+  edit:
+    currencySymbol: "£"
+    accountDetails:
+      subSectionTitle: Edit account details
+    openingBalance:
+      subSectionTitle: The opening balance of the account
+    closingBalance:
+      subSectionTitle: The closing balance of the account
+      subSectionDescription: The closing balance is the sum of money in the account on the end date of your reporting period.
+    controls:
+      # other controls are taken from the other sections in this file
+      closingDate:
+        legend: "End date of reporting period"
+        hint: "(DD/MM/YYYY)"
+      closingBalance:
+        label: "Closing Balance"
   listing:
     addButton:
       label: Add an account
