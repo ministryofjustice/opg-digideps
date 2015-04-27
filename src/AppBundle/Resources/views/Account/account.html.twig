@@ -49,7 +49,7 @@ activeTab: "tab-accounts"
             } %}
         {% endif %}
         
-        {% if formEdit %}
+        {% if actionParam == 'edit' %}
             {% include 'AppBundle:Account:_account_form_edit.html.twig' with {
               form: formEdit,
               formClass: 'report-form',

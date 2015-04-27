@@ -123,18 +123,14 @@ class AccountController extends Controller
         }
         
         // edit balance logic
-        $formEdit = null;
-        $formEditValid = false;
-        if ($action == 'edit') {
-            $formEdit = $this->createForm(new FormDir\AccountType(), $account, ['addClosingBalance'=>true]);
-            if($formEdit->get('save')->isClicked() && ($formEditValid = $formEdit->isValid()) ){
-                $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
-                    'deserialise_group' => 'edit_account', //TODO implement group (all except Id) ?
-                ]);
-            }
+        list($formEdit, $formEditValid) = $this->handleAccountEditing($account);
+        if($formEdit->get('save')->isClicked() && ($formEditValid = $formEdit->isValid()) ){
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
+                'deserialise_group' => 'edit_account', //TODO implement group (all except Id) ?
+            ]);
         }
         
-        // refresh account data
+        // refresh account data after if any form is successful
         if ($validFormBalance || $formMoneyValid || $formEditValid) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         }
@@ -151,6 +147,21 @@ class AccountController extends Controller
         ];
     }
     
+    
+    /**
+     * @param EntityDir\Account $account
+     * 
+     * @return [FormDir\AccountTransactionsType, boolean]
+     */
+    private function handleAccountEditing(EntityDir\Account $account)
+    {
+        $form = $this->createForm(new FormDir\AccountType(), $account, ['addClosingBalance'=>true]);
+        $form->handleRequest($this->getRequest());
+        $isClicked = $form->get('save')->isClicked();
+        $valid = $isClicked && $form->isValid();
+        
+        return [$form, $valid];
+    }
     
     /**
      * @param EntityDir\Account $account
