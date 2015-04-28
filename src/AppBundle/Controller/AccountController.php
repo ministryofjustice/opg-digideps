@@ -121,11 +121,11 @@ class AccountController extends Controller
         }
         
         // edit details logic
-        $reportIsDue = $account->getReportObject()->isDue();
-        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account, $reportIsDue);
+        $showClosingBalancePart = $account->getReportObject()->isDue() && $account->getClosingBalance() > 0;
+        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account, $showClosingBalancePart);
         if ($formEdit->get('save')->isClicked() && $formEditValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
-                'deserialise_group' => $reportIsDue ? 'edit_details_report_due' : 'edit_details',
+                'deserialise_group' => $showClosingBalancePart ? 'edit_details_report_due' : 'edit_details',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
         }
@@ -153,11 +153,9 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleAccountEditForm(EntityDir\Account $account)
+    private function handleAccountEditForm(EntityDir\Account $account, $showClosingBalancePart)
     {
-        $form = $this->createForm(new FormDir\AccountType(), $account, [
-            'addClosingBalance' => $account->getReportObject()->isDue()
-        ]);
+        $form = $this->createForm(new FormDir\AccountType(['showClosingBalance'=>$showClosingBalancePart]), $account);
         $form->handleRequest($this->getRequest());
         $isClicked = $form->get('save')->isClicked();
         $valid = $isClicked && $form->isValid();

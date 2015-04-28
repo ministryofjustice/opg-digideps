@@ -56,13 +56,13 @@
     
     
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'form.openingBalance.controls.save') }}
+    {{ form_submit(form.save,'form.edit.controls.save') }}
 
       {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
       transDomain: translationDomain,
-      linkButtonLabel: 'form.openingBalance.controls.cancel.label',
+      linkButtonLabel: 'form.edit.controls.cancel.label',
       linkClass: 'button-link',
-      linkHref: path('accounts', {'reportId': report.id})
+      linkHref: path('account', {'reportId': report.id, 'accountId': account.id})
       } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

@@ -20,6 +20,11 @@ form:
         hint: "(DD/MM/YYYY)"
       closingBalance:
         label: "Closing Balance"
+      cancel:
+        label: Cancel
+      save:
+        label: Save
+  listing:
   listing:
     addButton:
       label: Add an account

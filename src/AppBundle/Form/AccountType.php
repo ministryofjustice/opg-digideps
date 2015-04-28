@@ -11,6 +11,16 @@ use Symfony\Component\Form\FormInterface;
 
 class AccountType extends AbstractType
 {
+    private $showClosingBalance = false;
+    
+    /**
+     * @param boolean showClosingBalance,default false)
+     */
+    public function __construct(array $options)
+    {
+        $this->showClosingBalance = !empty($options['showClosingBalance']);
+    }
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('bank', 'text')
@@ -24,7 +34,7 @@ class AccountType extends AbstractType
             ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
 
         
-        if (!empty($options['addClosingBalance'])) {
+        if ($this->showClosingBalance) {
 
             $builder->add('closingDate', 'date', [ 'widget' => 'text',
                     'input' => 'datetime',
@@ -42,13 +52,7 @@ class AccountType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-accounts',
             'data_class' => 'AppBundle\Entity\Account',
-            'addClosingBalance' => false,
-            'validation_groups' => function(FormInterface $form) { 
-                $account = $form->getData();
-                $reportIsDue = $account->getReportObject()->isDue();
-                
-                return $reportIsDue ? ['basic', 'closing_balance'] : ['basic'];
-            }
+            'validation_groups' => $this->showClosingBalance ? ['basic', 'closing_balance'] : ['basic'],
         ]);
     }
 
