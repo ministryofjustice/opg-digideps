@@ -43,7 +43,7 @@ activeTab: "tab-accounts"
             {{ form_errors_list(formBalance) }}
         {% endblock %}
 
-        {% if report.isDue and account.closingBalance is null and formEdit is null %}
+        {% if report.isDue and account.closingBalance is null and actionParam != 'edit' %}
             {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
             formBalance: formBalance,
             } %}
