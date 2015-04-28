@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
+use Symfony\Component\Form\FormInterface;
 
 class AccountType extends AbstractType
 {
@@ -41,7 +42,13 @@ class AccountType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-accounts',
             'data_class' => 'AppBundle\Entity\Account',
-            'addClosingBalance' => false
+            'addClosingBalance' => false,
+            'validation_groups' => function(FormInterface $form) { 
+                $account = $form->getData();
+                $reportIsDue = $account->getReportObject()->isDue();
+                
+                return $reportIsDue ? ['basic', 'balance'] : ['basic'];
+            }
         ]);
     }
 

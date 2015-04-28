@@ -121,11 +121,13 @@ class AccountController extends Controller
         }
         
         // edit details logic
-        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account);
-        if($formEdit->get('save')->isClicked() && ($formEditValid = $formEdit->isValid()) ){
+        $reportIsDue = $account->getReportObject()->isDue();
+        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account, $reportIsDue);
+        if ($formEdit->get('save')->isClicked() && $formEditValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
-                'deserialise_group' => 'edit_account', //TODO implement group (all except Id) ?
+                'deserialise_group' => $reportIsDue ? 'edit_details_report_due' : 'edit_details',
             ]);
+            return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
         }
         
         // refresh account data after if any form is successful

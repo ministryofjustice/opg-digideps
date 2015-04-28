@@ -18,8 +18,9 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank")
-     * @Assert\Type(type="string", message="account.bank.type")
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic"})
+     * @Assert\Type(type="string", message="account.bank.type", groups={"basic"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due"})
      * 
      * @var string $bank
      */
@@ -27,9 +28,10 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank")
-     * @Assert\Type(type="numeric", message="account.sortCode.type")
-     * @Assert\Length(min=6, minMessage = "account.sortCode.length")
+     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic"})
+     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic"})
+     * @Assert\Length(min=6, minMessage = "account.sortCode.length", groups={"basic"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due"})
      * 
      * @var string $sortCode
      */
@@ -38,9 +40,10 @@ class Account
     /**
      *
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountNumber.notBlank")
-     * @Assert\Type(type="numeric", message="account.accountNumber.type")
-     * @Assert\Length(minMessage="account.accountNumber.length",min=4)
+     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic"})
+     * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic"})
+     * @Assert\Length(minMessage="account.accountNumber.length",min=4, groups={"basic"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due"})
      * 
      * @var string $accountNumber
      */
@@ -48,27 +51,29 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.openingDate.notBlank")
-     * @Assert\Date(message="account.openingDate.date")
-     *
-     * @var type 
+     * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"basic"})
+     * @Assert\Date(message="account.openingDate.date", groups={"basic"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * 
+     * @var \DateTime 
      */
     private $openingDate;
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.openingBalance.notBlank")
-     * @Assert\Type(type="numeric", message="account.openingBalance.type")
-     *
+     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
+     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * 
      * @var decimal
      */
     private $openingBalance;
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"balance"})
-     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"balance"})
-     * @JMS\Groups({"balance"})
+     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"balance"}, groups={"basic"})
+     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"balance"}, groups={"basic"})
+     * @JMS\Groups({"balance", "edit_details_report_due"})
      * 
      * @var decimal
      */
@@ -76,9 +81,9 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @JMS\Groups({"balance"})
      * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"balance"})
      * @Assert\Date(message="account.closingDate.date", groups={"balance"})
+     * @JMS\Groups({"balance", "edit_details_report_due"})
      * @var \DateTime  
      */
     private $closingDate;
