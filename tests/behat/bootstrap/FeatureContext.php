@@ -213,6 +213,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * @Then the form should not contain an error
+     * @Then the form should not contain any error
      */
     public function theFormShouldNotContainAnError()
     {

@@ -440,7 +440,38 @@ Feature: report
         And I should see "30/12/2015" in the "account-1-closing-date" region
 
     @deputy
-      Scenario: edit bank account, edit closing balance
+      Scenario: edit closing balance
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the report-n1-account-n1-edit page
+        Then I save the page as "report-account-edit-after-closing"
+        Then the following fields should have the corresponding values:
+            | account_closingDate_day   | 30 | 
+            | account_closingDate_month | 12 | 
+            | account_closingDate_year  | 2015 | 
+            | account_closingBalance    | 3,105.50 | 
+        # wrong values
+        When I fill in the following:
+            | account_closingDate_day   |  | 
+            | account_closingDate_month | 13 | 
+            | account_closingDate_year  | string | 
+            | account_closingBalance    |  | 
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_closingDate_day   |
+            | account_closingDate_month |
+            | account_closingDate_year  |
+            | account_closingBalance    |
+        And I save the page as "report-account-edit-after-closing-errors"
+        # right values
+        When I fill in the following:
+            | account_closingDate_day   | 31  | 
+            | account_closingDate_month | 12 | 
+            | account_closingDate_year  | 2015 | 
+            | account_closingBalance    | 3,100.00 | 
+        And I press "account_save"
+        Then the form should not contain any error
+        And I should see "31/12/2015" in the "account-closing-balance-date" region
+        And I should see "£3,100.00" in the "account-closing-balance" region
 
     @deputy
     Scenario: submit report

@@ -34,11 +34,11 @@
         {% if report.isDue() and account.closingBalance is not null %}
             <div class="account-header__item-fields-set account-header__item-fields-set--closing-date">
                 <dt class="account-header__item-fields-term visuallyhidden">{{ 'page.header.closingBalanceDate.label' |trans({}, transDomain)|raw }}</dt>
-                <dd class="account-header__item-fields-description account-header__item-fields-description--opening-date">{{ account.closingDate | date("d/m/Y") }}</dd>
+                <dd class="account-header__item-fields-description account-header__item-fields-description--opening-date behat-region-account-closing-balance-date">{{ account.closingDate | date("d/m/Y") }}</dd>
             </div>
             <div class="account-header__item-fields-set account-header__item-fields-set--closing-balance">
                 <dt class="account-header__item-fields-term">{{ 'page.header.closingBalance.label' |trans({}, transDomain)|raw }}</dt>
-                <dd class="account-header__item-fields-description account-header__item-fields-description--balance">
+                <dd class="account-header__item-fields-description account-header__item-fields-description--balance behat-region-account-closing-balance">
                     £{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
             </div>
         {% endif %}
