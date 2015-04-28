@@ -285,12 +285,23 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I modify the report :reportId end date to today :dateModifier 
+     * @Given I set the report :reportId due
      */
-    public function iChangeTheReportEndDateToDaysAgo($reportId, $dateModifier)
+    public function iSetTheReportDue($reportId)
     {
        $endDate = new \DateTime;
-       $endDate->modify($dateModifier);
+       $endDate->modify('-3 days');
+       
+       $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+    }
+    
+    /**
+     * @Given I set the report :reportId not due
+     */
+    public function iSetTheReportNotDue($reportId)
+    {
+       $endDate = new \DateTime;
+       $endDate->modify('+3 days');
        
        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
     }

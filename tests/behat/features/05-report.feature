@@ -28,7 +28,7 @@ Feature: report
     @deputy
     Scenario: Check report notification and submission warnings
         # set report due
-        Given I modify the report 1 end date to today "-3 days"
+        Given I set the report 1 due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Given I am on client home "client-home" and I click first report "report-n1"
         Then I should see the "tab-contacts-warning" region
@@ -38,7 +38,7 @@ Feature: report
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
         # set back report not to be due
-        And I modify the report 1 end date to today "+3 days"
+        And I set the report 1 not due
 
     @deputy
     Scenario: add contact
@@ -397,18 +397,18 @@ Feature: report
         And I save the page as "report-account-transactions-data-saved"
 
     @deputy
-    Scenario: edit bank account
-        Given I modify the report 1 end date to today "+3 days"
+    Scenario: edit bank account: check form
+        Given I set the report 1 not due
 
 
     @deputy
     Scenario: add closing balance to account
-        Given I modify the report 1 end date to today "+3 days"
+        Given I set the report 1 not due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-accounts"
         Then I should not see the "account-1-add-closing-balance" link
-        When I modify the report 1 end date to today "-3 days"
+        When I set the report 1 due
         And I go to the homepage
         Given I am on client home "client-home" and I click first report "report-n1"
         And I follow "tab-accounts"
@@ -456,7 +456,7 @@ Feature: report
         Then I should not see the "tab-accounts-warning" region
         Then I should not see the "tab-assets-warning" region
         # set report due
-        Given I modify the report 1 end date to today "-3 days"
+        Given I set the report 1 due
         And I go to the homepage
         Given I am on client home "client-home" and I click first report "report-n1"
         Then I should not see a "tab-contact-notification" element
