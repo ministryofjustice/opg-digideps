@@ -153,7 +153,9 @@ class AccountController extends Controller
      */
     private function handleAccountEditing(EntityDir\Account $account)
     {
-        $form = $this->createForm(new FormDir\AccountType(), $account, ['addClosingBalance'=>true]);
+        $form = $this->createForm(new FormDir\AccountType(), $account, [
+            'addClosingBalance' => $account->getReportObject()->isDue()
+        ]);
         $form->handleRequest($this->getRequest());
         $isClicked = $form->get('save')->isClicked();
         $valid = $isClicked && $form->isValid();

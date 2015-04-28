@@ -279,12 +279,15 @@ class Account
         return $this;
     }
     
-    public function setReportObject($reportObject)
+    public function setReportObject(Report $reportObject = null)
     {
         $this->reportObject = $reportObject;
         return $this;
     }
     
+    /**
+     * @return Report
+     */
     public function getReportObject()
     {
         return $this->reportObject;
