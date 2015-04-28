@@ -47,7 +47,7 @@ class AccountType extends AbstractType
                 $account = $form->getData();
                 $reportIsDue = $account->getReportObject()->isDue();
                 
-                return $reportIsDue ? ['basic', 'balance'] : ['basic'];
+                return $reportIsDue ? ['basic', 'closing_balance'] : ['basic'];
             }
         ]);
     }

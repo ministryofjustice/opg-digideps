@@ -71,8 +71,8 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"balance"}, groups={"basic"})
-     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"balance"}, groups={"basic"})
+     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"closing_balance"})
+     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance"})
      * @JMS\Groups({"balance", "edit_details_report_due"})
      * 
      * @var decimal
@@ -81,8 +81,8 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"balance"})
-     * @Assert\Date(message="account.closingDate.date", groups={"balance"})
+     * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
+     * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
      * @JMS\Groups({"balance", "edit_details_report_due"})
      * @var \DateTime  
      */

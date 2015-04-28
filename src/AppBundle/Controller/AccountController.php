@@ -172,7 +172,7 @@ class AccountController extends Controller
      */
     private function handleClosingBalanceForm(EntityDir\Account $account)
     {
-        $form = $this->createForm(new FormDir\AccountBalanceType(), $account);
+        $form = $this->createForm(new FormDir\AccountClosingBalanceType(), $account);
         $form->handleRequest($this->getRequest());
         $isClicked = $form->get('save')->isClicked();
         $valid = $isClicked && $form->isValid();
