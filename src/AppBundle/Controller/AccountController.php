@@ -113,13 +113,11 @@ class AccountController extends Controller
         
         // report submit logic
         $reportSubmit->handleRequest($this->getRequest());
-        if ($reportSubmit->get('submitReport')->isClicked()) {
-
-            if($reportSubmit->isValid()){
-                if($report->readyToSubmit()){
-                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                }
-            }
+        if ($reportSubmit->get('submitReport')->isClicked() 
+            && $reportSubmit->isValid() 
+            && $report->readyToSubmit()
+        ){
+            return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
         }
         
         // edit balance logic
