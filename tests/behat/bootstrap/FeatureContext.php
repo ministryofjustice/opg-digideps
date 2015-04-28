@@ -362,7 +362,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the report-n1 page
+     * @Given I am on the first report overview page
      */
     public function iAmOnTheReport1Page()
     {
@@ -371,7 +371,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the report-n1-accounts page
+     * @Given I am on the accounts page of the first report
      */
     public function iAmOnTheReport1AccountsPage()
     {
@@ -380,7 +380,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the report-n1-account-n1 page
+     * @Given I am on the first account page of the first report
      */
     public function iAmOnTheReport1Account1Page()
     {
@@ -389,7 +389,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the report-n1-account-n1-edit page
+     * @Given I am on the edit first account page of the first report
      */
     public function iAmOnTheReport1Account1EditPage()
     {

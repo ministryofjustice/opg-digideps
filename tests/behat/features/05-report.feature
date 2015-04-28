@@ -4,7 +4,7 @@ Feature: report
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         Then I should see a "#tab-overview" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-contacts" element
@@ -18,7 +18,7 @@ Feature: report
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
@@ -30,7 +30,7 @@ Feature: report
         # set report due
         Given I set the report 1 due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         Then I should see the "tab-contacts-warning" region
         Then I should see the "tab-decisions-warning" region
         Then I should see the "tab-accounts-warning" region
@@ -43,7 +43,7 @@ Feature: report
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         And I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
@@ -76,7 +76,7 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         And I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
@@ -151,7 +151,7 @@ Feature: report
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         And I follow "tab-assets"
         And I save the page as "report-assets-empty"
         # wrong form
@@ -175,7 +175,7 @@ Feature: report
             | asset_valuationDate_day |
             | asset_valuationDate_month |
             | asset_valuationDate_year |
-        # 1st asset (empty date)
+        # first asset (empty date)
         When I fill in the following:
             | asset_title       | Property | 
             | asset_value       | 250000.00 | 
@@ -207,7 +207,7 @@ Feature: report
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # wrong form
@@ -253,7 +253,7 @@ Feature: report
     @deputy
     Scenario: edit account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1-account-n1-edit page
+        And I am on the edit first account page of the first report
         And I save the page as "report-account-edit-start"
         # assert fields are filled in from db correctly
         Then the following fields should have the corresponding values:
@@ -334,7 +334,7 @@ Feature: report
     @deputy
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1-account-n1 page
+        And I am on the first account page of the first report
         And I click on "moneyIn-tab"
         And I click on "moneyOut-tab"
         # check no data was previously saved
@@ -395,17 +395,17 @@ Feature: report
     Scenario: edit bank account, check edit account does not show closing balance
         Given I set the report 1 not due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1-account-n1 page
+        And I am on the first account page of the first report
         And I click on "edit-account-details"
 
     @deputy
     Scenario: add closing balance to account
         Given I set the report 1 not due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1-accounts page
+        And I am on the accounts page of the first report
         Then I should not see the "account-1-add-closing-balance" link
         When I set the report 1 due
-        And I am on the report-n1-accounts page
+        And I am on the accounts page of the first report
         Then I should see the "account-n1-warning" region
         When I click on "account-n1"
         Then the following fields should have the corresponding values:
@@ -442,7 +442,7 @@ Feature: report
     @deputy
       Scenario: edit closing balance
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1-account-n1-edit page
+        And I am on the edit first account page of the first report
         Then I save the page as "report-account-edit-after-closing"
         Then the following fields should have the corresponding values:
             | account_closingDate_day   | 30 | 
@@ -476,7 +476,7 @@ Feature: report
     @deputy
     Scenario: submit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the report-n1 page
+        And I am on the first report overview page
         # check there are no notifications
         Then I should not see the "tab-contacts-warning" region
         Then I should not see the "tab-decisions-warning" region
@@ -484,7 +484,7 @@ Feature: report
         Then I should not see the "tab-assets-warning" region
         # set report due
         Given I set the report 1 due
-        And I am on the report-n1 page
+        And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
         # submit without ticking
         When I press "report_submit_submitReport"
