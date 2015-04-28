@@ -228,6 +228,81 @@ Feature: report
             | account_openingBalance |
         # right values
         And I fill in the following:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 5 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,155.00 |
+        And I press "account_save"
+        And I save the page as "report-account-list"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And the URL should match "/report/\d+/account/\d+"
+        When I follow "tab-accounts"
+        And I should see "HSBC - main account" in the "list-accounts" region
+        And I should see "8765" in the "list-accounts" region
+        And I should see "£1,155.00" in the "list-accounts" region
+        
+    @deputy
+    Scenario: edit account
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am on client home "client-home" and I click first report "report-n1"
+        And I follow "tab-accounts"
+        And I click on "account-n1"
+        And I click on "edit-account-details"
+        And I save the page as "report-account-edit-start"
+        # assert fields are filled in from db correctly
+        Then the following fields should have the corresponding values:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 5 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,155.00 |
+        # check invalid values
+        When I fill in the following:
+            | account_bank    |  | 
+            | account_accountNumber_part_1 | a | 
+            | account_accountNumber_part_2 | 123 | 
+            | account_accountNumber_part_3 | - | 
+            | account_accountNumber_part_4 |  | 
+            | account_sortCode_sort_code_part_1 | a |
+            | account_sortCode_sort_code_part_2 | 123 |
+            | account_sortCode_sort_code_part_3 |  |
+            | account_openingDate_day   |  |
+            | account_openingDate_month | 13 |
+            | account_openingDate_year  | string |
+            | account_openingBalance  |  |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_bank |
+            | account_accountNumber_part_1 |
+            | account_accountNumber_part_2 |
+            | account_accountNumber_part_3 |
+            | account_accountNumber_part_4 |
+            | account_sortCode_sort_code_part_1 |
+            | account_sortCode_sort_code_part_2 |
+            | account_sortCode_sort_code_part_3 |
+            | account_openingDate_day |
+            | account_openingDate_month |
+            | account_openingDate_year |
+            | account_openingBalance |
+        And I save the page as "report-account-edit-errors"
+        # right values
+        When I fill in the following:
             | account_bank    | HSBC main account | 
             | account_accountNumber_part_1 | 1 | 
             | account_accountNumber_part_2 | 2 | 
@@ -236,20 +311,28 @@ Feature: report
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
-            | account_openingDate_day   | 01 |
-            | account_openingDate_month | 01 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 1 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,150.00 |
         And I press "account_save"
-        And I save the page as "report-account-list"
-        Then the response status code should be 200
-        And the form should not contain an error
-        And the URL should match "/report/\d+/account/\d+"
-        When I follow "tab-accounts"
-        And I should see "HSBC main account" in the "list-accounts" region
-        And I should see "1234" in the "list-accounts" region
-        And I should see "£1,150.00" in the "list-accounts" region
-    
+        # check values are saved
+        When I click on "edit-account-details"
+        Then the following fields should have the corresponding values:
+            | account_bank    | HSBC main account | 
+            | account_accountNumber_part_1 | 1 | 
+            | account_accountNumber_part_2 | 2 | 
+            | account_accountNumber_part_3 | 3 | 
+            | account_accountNumber_part_4 | 4 | 
+            | account_sortCode_sort_code_part_1 | 12 |
+            | account_sortCode_sort_code_part_2 | 34 |
+            | account_sortCode_sort_code_part_3 | 56 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 1 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,150.00 | 
+        And I save the page as "report-account-edit-reloaded"
+
 
     @deputy
     Scenario: add account transactions
@@ -312,6 +395,10 @@ Feature: report
         And I should see "£7,500.50" in the "moneyOut-total" region
         And I should see "£-3,100.50" in the "money-totals" region
         And I save the page as "report-account-transactions-data-saved"
+
+    @deputy
+    Scenario: edit bank account
+        Given I modify the report 1 end date to today "+3 days"
 
 
     @deputy
