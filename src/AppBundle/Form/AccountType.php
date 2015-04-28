@@ -16,7 +16,7 @@ class AccountType extends AbstractType
     /**
      * @param boolean showClosingBalance,default false)
      */
-    public function __construct(array $options)
+    public function __construct(array $options = [])
     {
         $this->showClosingBalance = !empty($options['showClosingBalance']);
     }
