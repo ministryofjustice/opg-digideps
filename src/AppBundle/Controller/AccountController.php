@@ -90,6 +90,17 @@ class AccountController extends RestController
         
         $data = $this->deserializeBodyContent();
         
+        //basicdata
+        if (array_key_exists('bank', $data)) {
+           $account->setBank($data['bank']);
+        }
+        if (array_key_exists('sort_code', $data)) {
+           $account->setSortCode($data['sort_code']);
+        }
+        if (array_key_exists('account_number', $data)) {
+           $account->setAccountNumber($data['account_number']);
+        }
+        
         // edit transactions
         if (isset($data['money_in']) && isset($data['money_out'])) {
             $transactionRepo = $this->getRepository('AccountTransaction');
@@ -101,11 +112,16 @@ class AccountController extends RestController
             $this->setJmsSerialiserGroup('transactions');
         }
         
-        // edit balance
+        if (array_key_exists('opening_date', $data)) {
+           $account->setOpeningDate(new \DateTime($data['opening_date']));
+        }
+        if (array_key_exists('opening_balance', $data)) {
+           $account->setOpeningBalance($data['opening_balance']);
+        }
+        
         if (array_key_exists('closing_date', $data)) {
            $account->setClosingDate(new \DateTime($data['closing_date']));
         }
-        
         if (array_key_exists('closing_balance', $data)) {
            $account->setClosingBalance($data['closing_balance']);
         }
