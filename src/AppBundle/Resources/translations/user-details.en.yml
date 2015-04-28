@@ -24,6 +24,8 @@ phoneMobile:
     label: Mobile phone
 submit:
     label: Save and continue
+edit:
+    label: Save
 cancelText: Cancel
 view:
     pageTitle: My details

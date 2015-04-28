@@ -122,12 +122,25 @@ class UserController extends Controller
      */
     public function indexAction($action)
     {
+        $request = $this->getRequest();
         $user = $this->getUser();
 
         $formEditDetails = $this->createForm(new UserDetailsFullType([
-            'addressCountryEmptyValue' => 'Please select...', [], 'user-activate'
+            'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
 
+        if($request->getMethod() == 'POST'){
+            $formEditDetails->handleRequest($request);
+            
+            $apiClient = $this->get('apiclient');
+            
+            if($formEditDetails->isValid()){
+                $formData = $formEditDetails->getData();
+                $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+                
+                return $this->redirect($this->generateUrl('user_view'));
+            }
+        }
 
         return [
             'action' => $action,
