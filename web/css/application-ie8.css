@@ -1384,6 +1384,7 @@ input[type=number] {
 ***************************************************************
 */
 .session-timeout {
+  z-index: 9999;
   visibility: hidden;
   position: absolute;
   top: 0;
@@ -1402,8 +1403,7 @@ input[type=number] {
     background-color: #fff;
     opacity: 1;
     margin: 100px auto 0;
-    padding: 30px;
-    z-index: 9999; }
+    padding: 30px; }
     @media (max-width: 640px) {
       .session-timeout-dialog {
         font-size: 16px;
@@ -1419,12 +1419,14 @@ input[type=number] {
     .session-timeout-dialog .button {
       margin-right: 20px; }
   .session-timeout-underlay {
+    z-index: 9999;
     visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    /* This is also updated in JS to the px value */
     color: #ffffff;
     background-color: #000;
     opacity: 0.3; }

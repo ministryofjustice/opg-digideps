@@ -1,4 +1,5 @@
 .session-timeout {
+  z-index: 9999;
 
   visibility: hidden;
   position: absolute;
@@ -9,6 +10,7 @@
   height: 100%;
 
   &-dialog {
+
     @include core-19();
 
     width: 480px;
@@ -20,8 +22,6 @@
 
     margin: 100px auto 0;
     padding: 30px;
-
-    z-index: 9999;
 
     .page-section-title {
       font-size: 30px;
@@ -47,6 +47,8 @@
   }
 
   &-underlay {
+    z-index: 9999;
+
     visibility: hidden;
 
     position: absolute;
@@ -54,7 +56,7 @@
     left: 0;
 
     width: 100%;
-    height: 100%;
+    height: 100%; /* This is also updated in JS to the px value */
 
     color: #ffffff;
     background-color: #000;

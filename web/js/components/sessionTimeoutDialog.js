@@ -28,7 +28,11 @@ var SessionTimeoutDialog = function (options) {
 
         this.countDownPopup = window.setInterval(function () {
             that.element.css('visibility', 'visible');
-            $underlay.css('visibility', 'visible');
+            $underlay.css(
+                {
+                    'visibility': 'visible',
+                    'height': $(document).height() + 'px'
+                });
 
         }, this.sessionPopupShowAfterMs);
 
