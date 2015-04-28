@@ -293,6 +293,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
        $endDate->modify('-3 days');
        
        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+       $this->visit("/");
     }
     
     /**
@@ -304,6 +305,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
        $endDate->modify('+3 days');
        
        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+       $this->visit("/");
     }
     
     /**
@@ -356,6 +358,42 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
         }
         
+    }
+    
+    /**
+     * @Given I am on the report-n1 page
+     */
+    public function iAmOnTheReport1Page()
+    {
+        $this->clickOnBehatLink('client-home');
+        $this->clickOnBehatLink('report-n1');
+    }
+    
+    /**
+     * @Given I am on the report-n1-accounts page
+     */
+    public function iAmOnTheReport1AccountsPage()
+    {
+        $this->iAmOnTheReport1Page();
+        $this->clickLink('tab-accounts');
+    }
+    
+    /**
+     * @Given I am on the report-n1-account-n1 page
+     */
+    public function iAmOnTheReport1Account1Page()
+    {
+        $this->iAmOnTheReport1AccountsPage();
+        $this->clickOnBehatLink('account-n1');
+    }
+    
+    /**
+     * @Given I am on the report-n1-account-n1-edit page
+     */
+    public function iAmOnTheReport1Account1EditPage()
+    {
+        $this->iAmOnTheReport1Account1Page();
+        $this->clickOnBehatLink('edit-account-details');
     }
     
 }
