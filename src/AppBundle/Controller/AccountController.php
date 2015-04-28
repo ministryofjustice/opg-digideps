@@ -120,7 +120,7 @@ class AccountController extends Controller
             return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
         }
         
-        // edit balance logic
+        // edit details logic
         list($formEdit, $formEditValid) = $this->handleAccountEditing($account);
         if($formEdit->get('save')->isClicked() && ($formEditValid = $formEdit->isValid()) ){
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
