@@ -1966,6 +1966,9 @@ header.page-header {
 .report-list--assets dd.report-list__item-fields-description {
   margin-left: 135px; }
 
+.error-page .page-header h1 span {
+  display: none; }
+
 .field-combo-with-errors, .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
