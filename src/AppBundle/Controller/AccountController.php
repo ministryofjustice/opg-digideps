@@ -95,7 +95,7 @@ class AccountController extends Controller
         $account->setReportObject($report);
         
         // closing balance logic
-        list($formBalance, $validFormBalance) = $this->handleClosingBalance($account);
+        list($formBalance, $validFormBalance) = $this->handleClosingBalanceForm($account);
         if ($validFormBalance) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
                 'deserialise_group' => 'balance',
@@ -104,7 +104,7 @@ class AccountController extends Controller
         }
         
         // money in/out logic
-        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOut($account);
+        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOutForm($account);
         if ($formMoneyValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
@@ -121,7 +121,7 @@ class AccountController extends Controller
         }
         
         // edit details logic
-        list($formEdit, $formEditValid) = $this->handleAccountEditing($account);
+        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account);
         if($formEdit->get('save')->isClicked() && ($formEditValid = $formEdit->isValid()) ){
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
                 'deserialise_group' => 'edit_account', //TODO implement group (all except Id) ?
@@ -151,7 +151,7 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleAccountEditing(EntityDir\Account $account)
+    private function handleAccountEditForm(EntityDir\Account $account)
     {
         $form = $this->createForm(new FormDir\AccountType(), $account, [
             'addClosingBalance' => $account->getReportObject()->isDue()
@@ -168,7 +168,7 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleClosingBalance(EntityDir\Account $account)
+    private function handleClosingBalanceForm(EntityDir\Account $account)
     {
         $form = $this->createForm(new FormDir\AccountBalanceType(), $account);
         $form->handleRequest($this->getRequest());
@@ -184,7 +184,7 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleMoneyInOut(EntityDir\Account $account)
+    private function handleMoneyInOutForm(EntityDir\Account $account)
     {
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
             'action' => $this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#account-header'
