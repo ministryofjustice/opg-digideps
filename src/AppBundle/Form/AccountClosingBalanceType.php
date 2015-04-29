@@ -7,7 +7,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
 
-class AccountBalanceType extends AbstractType
+class AccountClosingBalanceType extends AbstractType
 {
      public function buildForm(FormBuilderInterface $builder, array $options)
      {
@@ -27,7 +27,7 @@ class AccountBalanceType extends AbstractType
      {
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\Account',
-             'validation_groups' => ['balance'],
+             'validation_groups' => ['closing_balance'],
              'translation_domain' => 'report-account-balance',
              'csrf_protection' => false
         ]);

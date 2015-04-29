@@ -28,7 +28,11 @@ activeTab: "tab-accounts"
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        {% include 'AppBundle:Account:_account_form.html.twig' %}
+        {% set isAccountPageWithAtLeastOneAccount = (accounts is not empty) and (action == 'list') %}
+        {% include 'AppBundle:Account:_account_form.html.twig' with {
+          hideForm:  isAccountPageWithAtLeastOneAccount ? true : false,
+          formClass: isAccountPageWithAtLeastOneAccount ? '' : 'report-form'
+        } %}
 
         {% if accounts is not empty %}
             {% include 'AppBundle:Account:_listAccounts.html.twig' %}

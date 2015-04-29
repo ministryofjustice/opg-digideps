@@ -1,14 +1,12 @@
+{# Required variables: 
+ - form
+ - hideForm
+ - formClass
+ - hideForm
+ - action
+#}
 {% set translationDomain = "report-accounts" %}
 {% trans_default_domain translationDomain %}
-
-
-{% if (accounts is not empty) and (action == 'list') %}
-    {% set hideForm = true %}
-    {% set formClass = '' %}
-{% else %}
-    {% set hideForm = false %}
-    {% set formClass = 'report-form' %}
-{% endif %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
 
