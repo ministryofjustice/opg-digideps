@@ -14,22 +14,18 @@ class ClientController extends RestController
     /**
      * Add client
      * 
-     * @Route("/add")
-     * @Method({"POST"})
+     * @Route("/upsert")
+     * @Method({"POST", "PUT"})
      */
-    public function addAction()
+    public function  upsertAction()
     {
         $data = $this->deserializeBodyContent();
+        $request = $this->getRequest();
       
-        // read user
-        $user = $this->findEntityBy('User', $data['users'][0], "User with id: {$data['users'][0]}  does not exist");
-
-        // create client if the ID it nos specified, otherwise create one and add the user
-        if (empty($data['id'])) {
-            $client = new Client();
-            $client->addUser($user);
-        } else {
-            $client = $this->findEntityBy('Client', $data['id'], 'Client not found');
+        if($request->getMethod() == "POST"){
+            $client = $this->add($data['users'][0]);
+        }else{
+            $client = $this->update( $data['id']);
         }
         
         $this->hydrateEntityWithArrayData($client, $data, [
@@ -50,6 +46,30 @@ class ClientController extends RestController
         $this->getEntityManager()->flush();
         
         return ['id' => $client->getId() ];
+    }
+    
+    /**
+     * 
+     * @param integer $userId
+     * @return AppBundle\Entity\Client
+     */
+    private function add($userId)
+    {
+       $user = $this->findEntityBy('User', $userId, "User with id: {$userId}  does not exist");
+        
+       $client = new Client();
+       $client->addUser($user);
+        
+       return $client;
+    }
+    
+    /**
+     * @param integer $clientId
+     * @return AppBundle\Entity\Client
+     */
+    private function update($clientId)
+    {
+        return $this->findEntityBy('Client', $clientId, 'Client not found');
     }
     
 
