@@ -141,6 +141,7 @@ class AccountController extends Controller
             'form' => $formMoneyInOut->createView(),
             'formBalance' => $formBalance->createView(),
             'formEdit' => $formEdit ? $formEdit->createView() : null,
+            'isEditPage' => $action == 'edit',
             'account' => $account,
             'actionParam' => $action,
             'report_form_submit' => $reportSubmit->createView()
