@@ -1,0 +1,15 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+<div id="accountDeleteConfirm" style="background-color: #DEE0E2; clear:both; padding: 10px; width: 50%">
+  {{ 'form.delete.legend' | trans | nl2br }}
+  
+  {{ form_submit(form.delete,'form.edit.controls.delete') }}
+  
+  {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+      transDomain: translationDomain,
+      linkButtonLabel: 'form.edit.controls.cancel.label',
+      linkClass: 'button-link',
+      linkHref: path('account', {'reportId': report.id, 'accountId': account.id, 'action':'edit'}) ~ '#account-header'
+    } %}
+</div>

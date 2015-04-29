@@ -87,12 +87,14 @@ class AccountController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
         
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+       
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
         
         $account->setReportObject($report);
+        
+        $edifFormHasClosingBalance = $report->isDue() && $account->getClosingBalance() > 0;
         
         // closing balance logic
         list($formBalance, $validFormBalance) = $this->handleClosingBalanceForm($account);
@@ -112,6 +114,7 @@ class AccountController extends Controller
         }
         
         // report submit logic
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
         $reportSubmit->handleRequest($this->getRequest());
         if ($reportSubmit->get('submitReport')->isClicked() 
             && $reportSubmit->isValid() 
@@ -120,18 +123,24 @@ class AccountController extends Controller
             return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
         }
         
-        // edit details logic
-        $showClosingBalancePart = $account->getReportObject()->isDue() && $account->getClosingBalance() > 0;
-        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account, $showClosingBalancePart);
-        if ($formEdit->get('save')->isClicked() && $formEditValid) {
+        // edit/delete logic
+        list($formEdit, $isEdit, $isDelete) = $this->handleAccountEditDeleteForm($account, [
+            'showClosingBalance' => $edifFormHasClosingBalance,
+            'showSubmitButton' => $action != 'delete',
+            'showDeleteButton' => $action == 'delete'
+        ]);
+        if ($isEdit) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
-                'deserialise_group' => $showClosingBalancePart ? 'edit_details_report_due' : 'edit_details',
+                'deserialise_group' => $edifFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
+        } else if ($isDelete) {
+            $this->get('apiclient')->delete('account/' .  $account->getId());
+            return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
         // refresh account data after if any form is successful
-        if ($validFormBalance || $formMoneyValid || $formEditValid) {
+        if ($validFormBalance || $formMoneyValid || $isEdit) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         }
         
@@ -141,7 +150,8 @@ class AccountController extends Controller
             'form' => $formMoneyInOut->createView(),
             'formBalance' => $formBalance->createView(),
             'formEdit' => $formEdit ? $formEdit->createView() : null,
-            'isEditPage' => $action == 'edit',
+            'showEditForm' => $action == 'edit' || $action == 'delete',
+            'showDeleteConfirmation' => $action == 'delete',
             'account' => $account,
             'actionParam' => $action,
             'report_form_submit' => $reportSubmit->createView()
@@ -154,15 +164,16 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleAccountEditForm(EntityDir\Account $account, $showClosingBalancePart)
+    private function handleAccountEditDeleteForm(EntityDir\Account $account, array $options)
     {
-        $form = $this->createForm(new FormDir\AccountType(['showClosingBalance'=>$showClosingBalancePart]), $account);
+        $form = $this->createForm(new FormDir\AccountType($options), $account);
         $form->handleRequest($this->getRequest());
-        $isClicked = $form->get('save')->isClicked();
-        $valid = $isClicked && $form->isValid();
+        $isEdit = $form->has('save') && $form->get('save')->isClicked() && $form->isValid();
+        $isDelete = $form->has('delete') && $form->get('delete')->isClicked();
         
-        return [$form, $valid];
+        return [$form, $isEdit, $isDelete];
     }
+    
     
     /**
      * @param EntityDir\Account $account

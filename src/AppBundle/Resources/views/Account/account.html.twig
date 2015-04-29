@@ -43,17 +43,16 @@ activeTab: "tab-accounts"
             {{ form_errors_list(formBalance) }}
         {% endblock %}
 
-        {% if report.isDue and account.closingBalance is null and not isEditPage %}
-            {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
-            formBalance: formBalance,
-            } %}
-        {% endif %}
-        
-        {% if isEditPage %}
+        {# show the edit form if on edit page, or the closing balance form (if not added yet) #}
+        {% if showEditForm %}
             {% include 'AppBundle:Account:_account_form_edit.html.twig' with {
               form: formEdit,
               formClass: 'report-form',
             } %}
+        {% elseif report.isDue and account.closingBalance is null %}
+           {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
+            formBalance: formBalance,
+           } %}
         {% endif %}
         
 

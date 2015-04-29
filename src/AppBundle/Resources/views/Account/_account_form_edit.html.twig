@@ -55,17 +55,30 @@
     {% endif %}
     
     
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'form.edit.controls.save') }}
+    {% if showDeleteConfirmation == 'delete' %}
+      {% include 'AppBundle:Account:_account_form_delete_confirm.html.twig' %}
+    {% else %}
+      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(form.save,'form.edit.controls.save') }}
 
-      {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-      transDomain: translationDomain,
-      linkButtonLabel: 'form.edit.controls.cancel.label',
-      linkClass: 'button-link',
-      linkHref: path('account', {'reportId': report.id, 'accountId': account.id})
-      } %}
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+          transDomain: translationDomain,
+          linkButtonLabel: 'form.edit.controls.cancel.label',
+          linkClass: 'button-link',
+          linkHref: path('account', {'reportId': report.id, 'accountId': account.id})
+        } %}
 
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+          transDomain: translationDomain,
+          linkButtonLabel: 'form.edit.controls.delete.label',
+          linkClass: 'button-link button',
+          linkHref: path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'delete'}) ~ '#accountDeleteConfirm'
+        } %}
+      {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% endif %}
+      
+
+    
 
 </div>
 
