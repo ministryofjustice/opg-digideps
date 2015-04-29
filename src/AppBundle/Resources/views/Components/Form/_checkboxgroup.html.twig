@@ -1,4 +1,4 @@
-<div class="form-group form-group__checkbox-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+<div class="form-group form-group__checkbox-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
     <fieldset class="{{ fieldSetClass }}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
         {% if not element.vars.valid %}
