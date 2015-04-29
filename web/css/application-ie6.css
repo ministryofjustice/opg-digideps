@@ -1429,6 +1429,9 @@ input[type=number] {
     background-color: #000;
     opacity: 0.3; }
 
+.visuallyhidden + .account__edit {
+  margin: 30px 0; }
+
 .account-closing-balance-form {
   margin-bottom: 30px;
   padding: 5px 0 5px 10px;
@@ -2018,6 +2021,16 @@ form {
   .field-with-errors .input-group-prefix {
     border: 2px solid #df3034;
     border-right: 0; }
+
+#content .visuallyhidden {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0; }
 
 .column-full {
   width: 960px;
