@@ -56,14 +56,14 @@ class Redirector
     /**
      * @return string
      */
-    public function getUserFirstPage()
+    public function getUserFirstPage($enabledLastAccessedUrl = true)
     {
         $user = $this->security->getToken()->getUser();
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return $this->getAdminHomepage();
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
-            return $this->getLayDeputyHomepage($user);
+            return $this->getLayDeputyHomepage($user, $enabledLastAccessedUrl);
         } else {
             return $this->router->generate('access_denied');
         }
@@ -80,7 +80,7 @@ class Redirector
     /**
      * @return array [route, options]
      */
-    private function getLayDeputyHomepage($user)
+    private function getLayDeputyHomepage($user, $enabledLastAccessedUrl)
     {
         if (!$user->hasDetails()) {
              return $this->router->generate('user_details');
@@ -96,7 +96,8 @@ class Redirector
             return $this->router->generate('report_create', [ 'clientId' => $clients[0]->getId()]);
         }
         
-        if ($lastUsedUri = $this->getLastAccessedUrl()) {
+        if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
+            
             return $lastUsedUri;
         }
         
@@ -130,5 +131,10 @@ class Redirector
         }
         
         return false;
+    }
+    
+    public function removeLastAccessedUrl()
+    {
+        $this->session->remove('_security.secured_area.target_path');
     }
 }

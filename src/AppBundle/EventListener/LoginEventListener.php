@@ -51,6 +51,8 @@ class LoginEventListener
     {
         $redirectUrl = $this->redirector->getUserFirstPage();
         
+        $this->redirector->removeLastAccessedUrl(); //avoid this URL to be used a the next login
+        
         $event->getResponse()->headers->set('Location', $redirectUrl);
     }
 }

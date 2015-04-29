@@ -23,7 +23,7 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        return new RedirectResponse($this->get('redirectorService')->getUserFirstPage());
+        return new RedirectResponse($this->get('redirectorService')->getUserFirstPage(false));
     }
     
     /**
