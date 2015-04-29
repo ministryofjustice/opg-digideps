@@ -29,7 +29,7 @@ formTitle: "form.editYourDetails.subSectionTitle" | trans
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
-    {{ form_submit(form.save,'edit', {'buttonClass': 'behat-link-save'}) }}
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,

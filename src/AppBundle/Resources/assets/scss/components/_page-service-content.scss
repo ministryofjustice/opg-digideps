@@ -11,4 +11,14 @@
 
   }
 
+  &.my-client {
+
+    .in-page-form + .in-page-form {
+      .sub-section-description {
+        margin-bottom: 10px;
+      }
+    }
+
+  }
+
 }

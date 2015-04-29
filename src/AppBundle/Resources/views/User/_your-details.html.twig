@@ -83,3 +83,16 @@
 
 </div>
 {{ form_end(formEditDetails) }}
+
+
+<form class="in-page-form">
+    {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
+    formTitle: "form.changeYourEmail.subSectionTitle" | trans
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'form.changeYourEmail.subSectionDescription'
+    } %}
+
+</form>

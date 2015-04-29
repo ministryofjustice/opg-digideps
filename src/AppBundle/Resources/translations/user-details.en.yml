@@ -24,8 +24,6 @@ phoneMobile:
     label: Mobile phone
 submit:
     label: Save and continue
-edit:
-    label: Save
 cancelText: Cancel
 view:
     pageTitle: My details
@@ -48,3 +46,8 @@ form:
     controls:
       cancel:
         label: "Cancel"
+      save:
+        label: "Save"
+  changeYourEmail:
+    subSectionTitle: "Change your email"
+    subSectionDescription: "Sed lectus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed aliquam, nisi quis porttitor congue, elit erat euismod orci, ac placerat dolor lectus quis orci. In dui magna, posuere eget, vestibulum et, tempor auctor, justo. Nunc nonummy metus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim."

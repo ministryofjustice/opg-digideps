@@ -1997,6 +1997,8 @@ form {
   form.in-page-form {
     border-left: 3px solid #bfc1c3;
     padding-left: 10px; }
+    form.in-page-form + .in-page-form {
+      margin-top: 40px; }
 
 .form--client-add-report {
   margin: 40px 0 20px 0; }
@@ -2392,6 +2394,8 @@ form {
 
 .page-service-content.sign-in-page--manual-signout .page-section-title {
   margin-top: 40px; }
+.page-service-content.my-client .in-page-form + .in-page-form .sub-section-description {
+  margin-bottom: 10px; }
 
 ol.progress {
   display: table;
