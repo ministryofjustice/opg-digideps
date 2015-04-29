@@ -95,7 +95,7 @@ class AccountController extends Controller
         $account->setReportObject($report);
         
         // closing balance logic
-        list($formBalance, $validFormBalance) = $this->handleClosingBalance($account);
+        list($formBalance, $validFormBalance) = $this->handleClosingBalanceForm($account);
         if ($validFormBalance) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
                 'deserialise_group' => 'balance',
@@ -104,29 +104,34 @@ class AccountController extends Controller
         }
         
         // money in/out logic
-        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOut($account);
+        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOutForm($account);
         if ($formMoneyValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
         }
         
-        if($this->getRequest()->getMethod() == 'POST'){
-            $reportSubmit->handleRequest($this->getRequest());
-            
-            if($reportSubmit->get('submitReport')->isClicked()){
-               
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
-                
-            }
+        // report submit logic
+        $reportSubmit->handleRequest($this->getRequest());
+        if ($reportSubmit->get('submitReport')->isClicked() 
+            && $reportSubmit->isValid() 
+            && $report->readyToSubmit()
+        ){
+            return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
         }
         
-        // refresh account data
-        if ($validFormBalance || $formMoneyValid) {
+        // edit details logic
+        $showClosingBalancePart = $account->getReportObject()->isDue() && $account->getClosingBalance() > 0;
+        list($formEdit, $formEditValid) = $this->handleAccountEditForm($account, $showClosingBalancePart);
+        if ($formEdit->get('save')->isClicked() && $formEditValid) {
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
+                'deserialise_group' => $showClosingBalancePart ? 'edit_details_report_due' : 'edit_details',
+            ]);
+            return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
+        }
+        
+        // refresh account data after if any form is successful
+        if ($validFormBalance || $formMoneyValid || $formEditValid) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         }
         
@@ -135,6 +140,7 @@ class AccountController extends Controller
             'client' => $client,
             'form' => $formMoneyInOut->createView(),
             'formBalance' => $formBalance->createView(),
+            'formEdit' => $formEdit ? $formEdit->createView() : null,
             'account' => $account,
             'actionParam' => $action,
             'report_form_submit' => $reportSubmit->createView()
@@ -147,9 +153,24 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleClosingBalance(EntityDir\Account $account)
+    private function handleAccountEditForm(EntityDir\Account $account, $showClosingBalancePart)
     {
-        $form = $this->createForm(new FormDir\AccountBalanceType(), $account);
+        $form = $this->createForm(new FormDir\AccountType(['showClosingBalance'=>$showClosingBalancePart]), $account);
+        $form->handleRequest($this->getRequest());
+        $isClicked = $form->get('save')->isClicked();
+        $valid = $isClicked && $form->isValid();
+        
+        return [$form, $valid];
+    }
+    
+    /**
+     * @param EntityDir\Account $account
+     * 
+     * @return [FormDir\AccountTransactionsType, boolean]
+     */
+    private function handleClosingBalanceForm(EntityDir\Account $account)
+    {
+        $form = $this->createForm(new FormDir\AccountClosingBalanceType(), $account);
         $form->handleRequest($this->getRequest());
         $isClicked = $form->get('save')->isClicked();
         $valid = $isClicked && $form->isValid();
@@ -163,7 +184,7 @@ class AccountController extends Controller
      * 
      * @return [FormDir\AccountTransactionsType, boolean]
      */
-    private function handleMoneyInOut(EntityDir\Account $account)
+    private function handleMoneyInOutForm(EntityDir\Account $account)
     {
         $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
             'action' => $this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#account-header'

@@ -4,7 +4,7 @@ Feature: report
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         Then I should see a "#tab-overview" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-contacts" element
@@ -18,7 +18,7 @@ Feature: report
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
@@ -28,9 +28,9 @@ Feature: report
     @deputy
     Scenario: Check report notification and submission warnings
         # set report due
-        Given I modify the report 1 end date to today "-3 days"
+        Given I set the report 1 due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         Then I should see the "tab-contacts-warning" region
         Then I should see the "tab-decisions-warning" region
         Then I should see the "tab-accounts-warning" region
@@ -38,12 +38,12 @@ Feature: report
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
         # set back report not to be due
-        And I modify the report 1 end date to today "+3 days"
+        And I set the report 1 not due
 
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         And I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
@@ -76,7 +76,7 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         And I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
@@ -151,7 +151,7 @@ Feature: report
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         And I follow "tab-assets"
         And I save the page as "report-assets-empty"
         # wrong form
@@ -175,7 +175,7 @@ Feature: report
             | asset_valuationDate_day |
             | asset_valuationDate_month |
             | asset_valuationDate_year |
-        # 1st asset (empty date)
+        # first asset (empty date)
         When I fill in the following:
             | asset_title       | Property | 
             | asset_value       | 250000.00 | 
@@ -207,7 +207,7 @@ Feature: report
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # wrong form
@@ -228,6 +228,78 @@ Feature: report
             | account_openingBalance |
         # right values
         And I fill in the following:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 5 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,155.00 |
+        And I press "account_save"
+        And I save the page as "report-account-list"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And the URL should match "/report/\d+/account/\d+"
+        When I follow "tab-accounts"
+        And I should see "HSBC - main account" in the "list-accounts" region
+        And I should see "8765" in the "list-accounts" region
+        And I should see "£1,155.00" in the "list-accounts" region
+        
+    @deputy
+    Scenario: edit account
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the edit first account page of the first report
+        And I save the page as "report-account-edit-start"
+        # assert fields are filled in from db correctly
+        Then the following fields should have the corresponding values:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 5 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,155.00 |
+        # check invalid values
+        When I fill in the following:
+            | account_bank    |  | 
+            | account_accountNumber_part_1 | a | 
+            | account_accountNumber_part_2 | 123 | 
+            | account_accountNumber_part_3 | - | 
+            | account_accountNumber_part_4 |  | 
+            | account_sortCode_sort_code_part_1 | a |
+            | account_sortCode_sort_code_part_2 | 123 |
+            | account_sortCode_sort_code_part_3 |  |
+            | account_openingDate_day   |  |
+            | account_openingDate_month | 13 |
+            | account_openingDate_year  | string |
+            | account_openingBalance  |  |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_bank |
+            | account_accountNumber_part_1 |
+            | account_accountNumber_part_2 |
+            | account_accountNumber_part_3 |
+            | account_accountNumber_part_4 |
+            | account_sortCode_sort_code_part_1 |
+            | account_sortCode_sort_code_part_2 |
+            | account_sortCode_sort_code_part_3 |
+            | account_openingDate_day |
+            | account_openingDate_month |
+            | account_openingDate_year |
+            | account_openingBalance |
+        And I save the page as "report-account-edit-errors"
+        # right values
+        When I fill in the following:
             | account_bank    | HSBC main account | 
             | account_accountNumber_part_1 | 1 | 
             | account_accountNumber_part_2 | 2 | 
@@ -236,27 +308,33 @@ Feature: report
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
-            | account_openingDate_day   | 01 |
-            | account_openingDate_month | 01 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 1 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,150.00 |
         And I press "account_save"
-        And I save the page as "report-account-list"
-        Then the response status code should be 200
-        And the form should not contain an error
-        And the URL should match "/report/\d+/account/\d+"
-        When I follow "tab-accounts"
-        And I should see "HSBC main account" in the "list-accounts" region
-        And I should see "1234" in the "list-accounts" region
-        And I should see "£1,150.00" in the "list-accounts" region
-    
+        # check values are saved
+        When I click on "edit-account-details"
+        Then the following fields should have the corresponding values:
+            | account_bank    | HSBC main account | 
+            | account_accountNumber_part_1 | 1 | 
+            | account_accountNumber_part_2 | 2 | 
+            | account_accountNumber_part_3 | 3 | 
+            | account_accountNumber_part_4 | 4 | 
+            | account_sortCode_sort_code_part_1 | 12 |
+            | account_sortCode_sort_code_part_2 | 34 |
+            | account_sortCode_sort_code_part_3 | 56 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 1 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,150.00 | 
+        And I save the page as "report-account-edit-reloaded"
+
 
     @deputy
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
-        And I follow "tab-accounts"
-        And I click on "account-n1"
+        And I am on the first account page of the first report
         And I click on "moneyIn-tab"
         And I click on "moneyOut-tab"
         # check no data was previously saved
@@ -313,20 +391,23 @@ Feature: report
         And I should see "£-3,100.50" in the "money-totals" region
         And I save the page as "report-account-transactions-data-saved"
 
+    @deputy
+    Scenario: edit bank account, check edit account does not show closing balance
+        Given I set the report 1 not due
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the first account page of the first report
+        And I click on "edit-account-details"
 
     @deputy
     Scenario: add closing balance to account
-        Given I modify the report 1 end date to today "+3 days"
+        Given I set the report 1 not due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
-        And I follow "tab-accounts"
+        And I am on the accounts page of the first report
         Then I should not see the "account-1-add-closing-balance" link
-        When I modify the report 1 end date to today "-3 days"
-        And I go to the homepage
-        Given I am on client home "client-home" and I click first report "report-n1"
-        And I follow "tab-accounts"
+        When I set the report 1 due
+        And I am on the accounts page of the first report
         Then I should see the "account-n1-warning" region
-        And I click on "account-n1"
+        When I click on "account-n1"
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 
             | accountBalance_closingDate_month | | 
@@ -358,20 +439,52 @@ Feature: report
         Then I should see "3,105.50" in the "account-1-closing-balance" region
         And I should see "30/12/2015" in the "account-1-closing-date" region
 
+    @deputy
+      Scenario: edit closing balance
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the edit first account page of the first report
+        Then I save the page as "report-account-edit-after-closing"
+        Then the following fields should have the corresponding values:
+            | account_closingDate_day   | 30 | 
+            | account_closingDate_month | 12 | 
+            | account_closingDate_year  | 2015 | 
+            | account_closingBalance    | 3,105.50 | 
+        # wrong values
+        When I fill in the following:
+            | account_closingDate_day   |  | 
+            | account_closingDate_month | 13 | 
+            | account_closingDate_year  | string | 
+            | account_closingBalance    |  | 
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_closingDate_day   |
+            | account_closingDate_month |
+            | account_closingDate_year  |
+            | account_closingBalance    |
+        And I save the page as "report-account-edit-after-closing-errors"
+        # right values
+        When I fill in the following:
+            | account_closingDate_day   | 31  | 
+            | account_closingDate_month | 12 | 
+            | account_closingDate_year  | 2015 | 
+            | account_closingBalance    | 3,100.00 | 
+        And I press "account_save"
+        Then the form should not contain any error
+        And I should see "31/12/2015" in the "account-closing-balance-date" region
+        And I should see "£3,100.00" in the "account-closing-balance" region
 
     @deputy
     Scenario: submit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        And I am on the first report overview page
         # check there are no notifications
         Then I should not see the "tab-contacts-warning" region
         Then I should not see the "tab-decisions-warning" region
         Then I should not see the "tab-accounts-warning" region
         Then I should not see the "tab-assets-warning" region
         # set report due
-        Given I modify the report 1 end date to today "-3 days"
-        And I go to the homepage
-        Given I am on client home "client-home" and I click first report "report-n1"
+        Given I set the report 1 due
+        And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
         # submit without ticking
         When I press "report_submit_submitReport"

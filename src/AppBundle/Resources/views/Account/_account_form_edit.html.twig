@@ -1,0 +1,72 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'report-form' } }) }}
+
+
+<div >
+    {# main form #}
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.edit.accountDetails.subSectionTitle'
+    } %}
+
+    {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
+    {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
+    {{ form_input(form.sortCode, 'form.accountDetails.controls.sortCode') }}
+
+    {# opening balance part #}
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.edit.openingBalance.subSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'form.openingBalance.subSectionDescription'
+    } %}
+
+    {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate') }}
+    {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance', {
+        'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
+        'inputClass' : 'form-control__number'
+    } ) }}
+
+    {# closing balance part #}
+    {% if form.closingDate is defined and form.closingBalance is defined %}
+      
+          {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+          transDomain: translationDomain,
+          subSectionTitle: 'form.edit.closingBalance.subSectionTitle'
+          } %}
+
+          {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+          transDomain: translationDomain,
+          subSectionDescription: 'form.edit.closingBalance.subSectionDescription'
+          } %}
+
+          {{ form_known_date(form.closingDate, 'form.edit.controls.closingDate') }}
+
+          {{ form_input(form.closingBalance, 'form.edit.controls.closingBalance', {
+          'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
+          'inputClass' : 'form-control__number'
+          } ) }}
+      
+    {% endif %}
+    
+    
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.edit.controls.save') }}
+
+      {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+      transDomain: translationDomain,
+      linkButtonLabel: 'form.edit.controls.cancel.label',
+      linkClass: 'button-link',
+      linkHref: path('account', {'reportId': report.id, 'accountId': account.id})
+      } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+</div>
+
+{{ form_end(form) }}
