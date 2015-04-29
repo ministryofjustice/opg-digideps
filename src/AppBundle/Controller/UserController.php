@@ -181,6 +181,10 @@ class UserController extends RestController
             $role = $this->findEntityBy('Role', $data['role_id'], 'Role not found');
             $user->setRole($role);
         }
+        
+        if (array_key_exists('last_logged_in', $data)) {
+            $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
+        }
     }
     
 }
