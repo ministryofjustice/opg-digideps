@@ -6,7 +6,7 @@ Feature: report
         And I go to the homepage
         Given I am on client home "client-home" and I click first report "report-n1"
         When I follow "tab-accounts"
-        And I click on "account-n1"
+        And I click on "account-1234"
         Then the URL should match "/report/\d+/account/\d+"
         When I expire the session
         # reload the page and trigger SesionListener 

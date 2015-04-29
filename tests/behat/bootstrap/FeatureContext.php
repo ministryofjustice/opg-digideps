@@ -380,21 +380,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the first account page of the first report
+     * @Given I am on the account :accountNumber page of the first report
      */
-    public function iAmOnTheReport1Account1Page()
+    public function iAmOnTheReport1AccountPageByAccNumber($accountNumber)
     {
         $this->iAmOnTheReport1AccountsPage();
-        $this->clickOnBehatLink('account-n1');
-    }
-    
-    /**
-     * @Given I am on the edit first account page of the first report
-     */
-    public function iAmOnTheReport1Account1EditPage()
-    {
-        $this->iAmOnTheReport1Account1Page();
-        $this->clickOnBehatLink('edit-account-details');
+        $this->clickOnBehatLink('account-' . $accountNumber);
     }
     
 }
