@@ -114,12 +114,8 @@ class AccountController extends Controller
         }
         
         // report submit logic
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
-        $reportSubmit->handleRequest($this->getRequest());
-        if ($reportSubmit->get('submitReport')->isClicked() 
-            && $reportSubmit->isValid() 
-            && $report->readyToSubmit()
-        ){
+        list($reportSubmit, $reportSubmitValid) = $this->handleAccountsubmitForm($report);
+        if ($reportSubmitValid) {
             return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
         }
         
@@ -139,7 +135,7 @@ class AccountController extends Controller
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
-        // refresh account data after if any form is successful
+        // refresh account data after forms have altered the account's data
         if ($validFormBalance || $formMoneyValid || $isEdit) {
             $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         }
@@ -158,6 +154,22 @@ class AccountController extends Controller
         ];
     }
     
+    
+    /**
+     * @param EntityDir\Account $report
+     * 
+     * @return [FormDir\AccountTransactionsType, boolean]
+     */
+    private function handleAccountsubmitForm(EntityDir\Report $report)
+    {
+       $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+       $reportSubmit->handleRequest($this->getRequest());
+       $valid = $reportSubmit->get('submitReport')->isClicked() 
+                && $reportSubmit->isValid() 
+                && $report->readyToSubmit();
+            
+        return [$reportSubmit, $valid];    
+    }
     
     /**
      * @param EntityDir\Account $account
