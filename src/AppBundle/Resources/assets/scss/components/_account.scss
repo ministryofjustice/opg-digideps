@@ -1,0 +1,11 @@
+.account {
+
+  &__edit {
+
+    .visuallyhidden + & {
+      margin: 30px 0
+    }
+
+  }
+
+}
