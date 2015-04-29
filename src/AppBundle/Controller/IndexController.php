@@ -88,13 +88,25 @@ class IndexController extends Controller
         
         return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
-    
-    
+
+
     /**
      * @Route("login_check", name="login_check")
      */
     public function loginCheckAction()
     {
+    }
+
+    /**
+     * @Route("error-503", name="error-503")
+     */
+    public function error503()
+    {
+        $request = $this->getRequest();
+        $vars = [];
+        $vars['request'] = $request;
+
+        return $this->render('AppBundle:Index:error-503.html.twig', $vars);
     }
     
     /**
