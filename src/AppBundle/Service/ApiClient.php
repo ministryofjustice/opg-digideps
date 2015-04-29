@@ -211,7 +211,12 @@ class ApiClient extends GuzzleClient
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
         
-        $responseArray = $this->deserialiseResponse($this->post($endpoint, ['body'=>$body]));
+        if(isset($options['deserialise_group'])){
+            unset($options['deserialise_group']);
+        }
+        $options['body'] = $body;
+        
+        $responseArray = $this->deserialiseResponse($this->post($endpoint, $options));
         return $responseArray['data'];
     }
     
@@ -224,8 +229,14 @@ class ApiClient extends GuzzleClient
     public function putC($endpoint, $bodyorEntity, array $options = [])
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
-       
-        $responseArray = $this->deserialiseResponse($this->put($endpoint, ['body'=>$body]));
+        
+        if(isset($options['deserialise_group'])){
+            unset($options['deserialise_group']);
+        }
+        
+        $options['body'] = $body;
+        
+        $responseArray = $this->deserialiseResponse($this->put($endpoint, $options));
        
         return $responseArray['data'];
     }
@@ -265,12 +276,12 @@ class ApiClient extends GuzzleClient
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             
             $url = $this->endpoints[$url];
-
-            $methods = [ 'GET', 'DELETE'];
-
+        
+            $methods = [ 'GET', 'DELETE', 'PUT', 'POST'];
+             
             if(in_array($method,$methods) && array_key_exists('parameters', $options)){
-               
-                foreach($options['parameters'] as $key => $param){
+                    
+                foreach($options['parameters'] as $param){
                     $url = $url.'/'.$param;
                 }
                 unset($options['parameters']); 

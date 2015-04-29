@@ -26,7 +26,6 @@
         } %}
 
         {#
-
                 {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                 transDomain: translationDomain,
                 linkButtonLabel: 'component.controls.okButton.label',
@@ -40,7 +39,6 @@
                 linkClass: 'button-secondary',
                 linkHref: path('logout')
                 } %}
-
         #}
 
         <form name="session-timeout-form" action="/logout">
