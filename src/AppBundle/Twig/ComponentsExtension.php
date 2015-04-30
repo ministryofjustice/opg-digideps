@@ -3,6 +3,7 @@ namespace AppBundle\Twig;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Translation\TranslatorInterface;
+use AppBundle\Service\DateFormatter;
 
 class ComponentsExtension extends \Twig_Extension
 {
@@ -50,6 +51,11 @@ class ComponentsExtension extends \Twig_Extension
         return [
             'country_name' => new \Twig_SimpleFilter('country_name', function($value) {
                 return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
+            }),
+           'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function($value) {
+               if ($value instanceof \DateTime)  {
+                   return DateFormatter::formatLastLogin($value, new \DateTime());
+               }
             }),
         ];
     }
