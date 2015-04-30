@@ -24,8 +24,6 @@ phoneMobile:
     label: Mobile phone
 submit:
     label: Save and continue
-edit:
-    label: Save
 cancelText: Cancel
 view:
     pageTitle: My details
@@ -48,3 +46,8 @@ form:
     controls:
       cancel:
         label: "Cancel"
+      save:
+        label: "Save"
+  changeYourEmail:
+    subSectionTitle: "Change your email"
+    subSectionDescription: "To change your email address, send your updated email information to the Office of the Public Guardian (OPG) at <a href='mailto:deputyemailchange@publicguardian.gsi.gov.uk'>deputyemailchange@publicguardian.gsi.gov.uk</a>"
