@@ -68,7 +68,7 @@
 {% endif %}
 
 
-<div id="edit-client" {% if hideForm %} class="visuallyhidden" {% endif %}>
+<div id="edit-client" class="{% if hideForm %}visuallyhidden{% endif %}">
 
     {% include 'AppBundle:Client:_edit.html.twig' with {
     'form': formEditClient,
