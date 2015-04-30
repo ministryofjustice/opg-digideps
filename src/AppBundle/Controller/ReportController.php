@@ -61,12 +61,13 @@ class ReportController extends RestController
     }
         
     /**
-     * @Route("/report/add-contact")
-     * @Method({"POST"})
-     */
-    public function addContactAction()
+     * @Route("/report/upsert-contact")
+     * @Method({"POST", "PUT"})
+     **/
+    public function upsertContactAction()
     {
         $contactData = $this->deserializeBodyContent();
+        $request = $this->getRequest();
         
         $report = $this->findEntityBy('Report', $contactData['report']);
         
@@ -74,8 +75,16 @@ class ReportController extends RestController
             throw new \Exception("Report id: ".$contactData['report']." does not exists");
         }
         
-        $contact = new EntityDir\Contact();
-        $contact->setReport($report);
+        if($request->getMethod() == "POST"){
+            $contact = new EntityDir\Contact();
+            $contact->setReport($report);
+        }else{
+            $contact = $this->findEntityBy('Contact', $contactData['id']);
+            
+            if(empty($contact)){
+                throw new \Exception("Contact with id: ".$contactData['id']);
+            }
+        }
         $contact->setContactName($contactData['contact_name']);
         $contact->setAddress($contactData['address']);
         $contact->setAddress2($contactData['address2']);
@@ -106,6 +115,29 @@ class ReportController extends RestController
             return [];
         }
         return $contacts;
+    }
+    
+    /**
+     * @Route("/report/get-contact/{id}")
+     * @Method({"GET"})
+     */
+    public function getContactAction($id)
+    {
+        $request = $this->getRequest();
+        
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        $contact = $this->findEntityBy('Contact', $id);
+        
+        if(empty($contact)){
+            throw new \Exception("Contact with id: $id does not exist");
+        }
+        return $contact;
     }
     
     /**
