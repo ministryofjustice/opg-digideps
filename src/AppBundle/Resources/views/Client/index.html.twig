@@ -5,6 +5,15 @@
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block contentClass %}{{ parent() }} my-client{% endblock %}
 {% block title %}{% trans %}page.pageSectionTitle{% endtrans %}{% endblock %}
+{% block afterTitle %}
+  {% if lastSignedIn %}
+    <div class="behat-region-last-loggedin">
+    {{ 'page.lastLoggedIn' | trans({
+      '%timeExpression%': (lastSignedIn | last_loggedin_date_formatter) 
+    }) }}
+    </div>
+  {% endif %}
+{% endblock %}
 
 {% block validationSummary %}
     {# {{ form_errors_list(form) }} #}
@@ -12,7 +21,7 @@
 
 
 {% block pageBody %}
-
+    
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
     transDomain: translationDomain,
     pageSectionDescription: 'page.pageSectionDescription'

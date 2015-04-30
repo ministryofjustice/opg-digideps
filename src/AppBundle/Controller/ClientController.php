@@ -53,7 +53,8 @@ class ClientController extends Controller
             'action' => $action,
             'formEditClient' => $formEditClient->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
-            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView()
+            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
+            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn')
         ];
 
     }
