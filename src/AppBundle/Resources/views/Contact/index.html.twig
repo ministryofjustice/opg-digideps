@@ -1,6 +1,7 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig' with {
 activeTab : "tab-contacts"
 } %}
+
     {% set translationDomain = "report-contacts" %}
     {% trans_default_domain translationDomain %}
 
@@ -8,13 +9,12 @@ activeTab : "tab-contacts"
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
 
     {% block pageBody %}
-
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
         transDomain: translationDomain,
         pageSectionTitle: 'contact_form.pageSectionTitle'
         } %}
 
-        {% include 'AppBundle:Report:_no_contact_form.html.twig' %}
+        {% include 'AppBundle:Contact:_no_contact_form.html.twig' %}
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
@@ -25,7 +25,7 @@ activeTab : "tab-contacts"
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        {% if (action == 'add') or (action == 'edit')%}
+        {% if (action == 'add') or (action == 'edit') or (action == 'delete-confirm') %}
             {% set hideForm = false %}
             {% set formClass = 'in-page-form' %}
         {% else %}
@@ -51,13 +51,13 @@ activeTab : "tab-contacts"
         {% endif %}
 
        
-            {% include 'AppBundle:Report:_contact_form.html.twig' with {
+            {% include 'AppBundle:Contact:_contact_form.html.twig' with {
             'translationDomain': translationDomain
             } %}
       
 
         {% if contacts is not empty %}
-            {% include 'AppBundle:Report:_listContact.html.twig' %}
+            {% include 'AppBundle:Contact:_listContact.html.twig' %}
         {% endif %}
 
     {% endblock %}

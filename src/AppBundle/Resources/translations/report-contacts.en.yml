@@ -2,6 +2,8 @@ save:
     label: Save
 cancel:
     label: Cancel
+delete:
+    label: Delete
 contactName:
     label: Contact name
     hint: ''

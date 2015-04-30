@@ -27,3 +27,4 @@ parameters:
         find_account_by_id: report/find-account-by-id
         get_report_assets: report/get-assets
         add_report_asset: report/add-asset
+        delete_report_contact: report/delete-contact
