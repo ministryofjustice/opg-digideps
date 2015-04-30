@@ -199,7 +199,12 @@ class User implements AdvancedUserInterface
      */
     private $phoneMobile;
     
-    
+    /**
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"lastLoggedIn"})
+     * @var \DateTime $tokenDate
+     */
+    private $lastLoggedIn;
     
     /**
      * @return integer $id
@@ -617,6 +622,16 @@ class User implements AdvancedUserInterface
         $this->phoneMobile = $phoneMobile;
     }
     
+    public function getLastLoggedIn()
+    {
+        return $this->lastLoggedIn;
+    }
+
+    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    {
+        $this->lastLoggedIn = $lastLoggedIn;
+    }
+        
     /**
      * @return boolean
      */
