@@ -36,7 +36,7 @@ activeTab: "tab-accounts"
 
         {% include 'AppBundle:Account:_account-header.html.twig' with {
         transDomain: translationDomain,
-        hideComponent: (isEditPage)
+        hideComponent: (showEditForm)
         } %}
 
         {% block validationSummary %}
@@ -47,14 +47,14 @@ activeTab: "tab-accounts"
         {% if report.isDue and account.closingBalance is null %}
             {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
             formBalance: formBalance,
-            hideForm: (isEditPage)
+            hideForm: (showEditForm)
             } %}
         {% endif %}
 
         {% include 'AppBundle:Account:_account_form_edit.html.twig' with {
         form: formEdit,
         formClass: 'report-form',
-        hideForm: (not isEditPage)
+        hideForm: (not showEditForm)
         } %}
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {

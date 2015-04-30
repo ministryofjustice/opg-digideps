@@ -24,6 +24,16 @@ form:
         label: Cancel
       save:
         label: Save
+      delete:
+        label: Delete
+  delete:
+    legend: | 
+      Are you sure that you want to delete this account ? 
+      You will lose all data that you have saved.
+    delete:
+      label: Delete
+    cancel:
+      label: Cancel
   listing:
   listing:
     addButton:
