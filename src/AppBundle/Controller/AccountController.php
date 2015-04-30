@@ -133,4 +133,23 @@ class AccountController extends RestController
         return $account;
     }
     
+    /**
+     * @Route("/account/{id}")
+     * @Method({"DELETE"})
+     */
+    public function accountDelete($id)
+    {
+        $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account */
+
+        foreach ($account->getTransactions() as $transaction) {
+            $this->getEntityManager()->remove($transaction);
+        }
+        
+        $this->getEntityManager()->remove($account);
+        
+        $this->getEntityManager()->flush();
+        
+        return [];
+    }
+    
 }
