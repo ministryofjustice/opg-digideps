@@ -5,6 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Entity\Client;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
@@ -86,12 +87,12 @@ class ReportController extends Controller
             'report_form_submit' => $form->createView()
         ];
     }
-    
+      
     /**
-     * @Route("/report/{reportId}/contacts/{action}", name="contacts", defaults={ "action" = "list"})
+     * @Route("/report/{reportId}/contacts/{action}/{id}", name="contacts", defaults={ "action" = "list", "id" = " "})
      * @Template()
      */
-    public function contactsAction($reportId,$action)
+    public function contactsAction($reportId,$action,$id)
     {
         $report = $this->getReport($reportId);
         $client = $this->getClient($report->getClient());
@@ -101,8 +102,12 @@ class ReportController extends Controller
         $apiClient = $this->get('apiclient');
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
         
-        //set up add contact form
-        $contact = new EntityDir\Contact();
+        if($action == 'edit'){
+            $contact = $apiClient->getEntity('Contact','get_report_contact', [ 'parameters' => ['id' => $id ]]);
+        }else{
+             //set up add contact form
+            $contact = new EntityDir\Contact();
+        }
         
         //set up report submit form
         $form = $this->createForm(new FormDir\ContactType(), $contact);
@@ -112,41 +117,20 @@ class ReportController extends Controller
         $noContact = $this->createForm(new FormDir\ReasonForNoContactType());
         $noContact->setData([ 'reason' => $report->getReasonForNoContacts() ]);
         
-        
         if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
-            $noContact->handleRequest($request);
-           
-            //check if contacts form was submitted
-            if($form->get('save')->isClicked()){
-                if($form->isValid()){
-                    $contact = $form->getData();
-                    $contact->setReport($reportId);
-                    $apiClient->postC('add_report_contact', $contact);
-                    
-                    return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
-                }
-             
-             //check if add reason for no contact form was submitted
-            }elseif($noContact->get('saveReason')->isClicked()){
-                if($noContact->isValid()){
-                     $formData = $noContact->getData();
-                     $report->setReasonForNoContacts($formData['reason']);
-                     
-                     $apiClient->putC('report/'.$report->getId(),$report);
-                     
-                     return $this->redirect($this->generateUrl('contacts',[ 'reportId' => $report->getId()]));
-                }
-               
-            //the above 2 forms test false then submission was for the overall report submit
-            }else{
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
+            $forms = [ 'contactForm' => $form,
+                       'reportSubmit' => $reportSubmit,
+                       'noContact' => $noContact ];
+            
+            $processedForms = $this->handleContactsFormSubmit($forms,$reportId,$action);
+            
+            if($processedForms instanceof RedirectResponse){
+                return $processedForms;
             }
+            
+            $form = $processedForms['contactForm'];
+            $reportSubmit = $processedForms['reportSubmit'];
+            $noContact = $processedForms['noContact'];
         }
         
         return [
@@ -159,7 +143,6 @@ class ReportController extends Controller
             'no_contact' => $noContact->createView() ];
     }
     
-  
     /**
      * @Route("/report/{reportId}/decisions/{action}", name="decisions", defaults={ "action" = "list"})
      * @Template()
@@ -320,7 +303,6 @@ class ReportController extends Controller
         ];
     }
     
-    
     /**
      * @param integer $clientId
      *
@@ -339,5 +321,63 @@ class ReportController extends Controller
     protected function getReport($reportId,array $groups = [ 'transactions'])
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
+    }
+    
+    /**
+     * @param array $forms
+     * @return array $forms
+     */
+    private function handleContactsFormSubmit(array $forms,$reportId, $action='add')
+    {
+        $request = $this->getRequest();
+        $apiClient = $this->get('apiclient');
+        
+        $form = $forms['contactForm'];
+        $reportSubmit = $forms['reportSubmit'];
+        $noContact    = $forms['noContact'];
+        
+        $form->handleRequest($request);
+        $reportSubmit->handleRequest($request);
+        $noContact->handleRequest($request);
+
+        //check if contacts form was submitted
+        if($form->get('save')->isClicked()){
+            if($form->isValid()){
+                $contact = $form->getData();
+                $contact->setReport($reportId);
+                
+                if($action == 'add'){
+                    $apiClient->postC('add_report_contact', $contact);
+                }else{
+                    $apiClient->putC('update_report_contact', $contact);
+                }
+
+                return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
+            }
+
+         //check if add reason for no contact form was submitted
+        }elseif($noContact->get('saveReason')->isClicked()){
+            if($noContact->isValid()){
+                 $formData = $noContact->getData();
+                 $report->setReasonForNoContacts($formData['reason']);
+
+                 $apiClient->putC('report/'.$report->getId(),$report);
+
+                 return $this->redirect($this->generateUrl('contacts',[ 'reportId' => $report->getId()]));
+            }
+
+        //the above 2 forms test false then submission was for the overall report submit
+        }else{
+            if($reportSubmit->isValid()){
+                if($report->readyToSubmit()){
+                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                }
+            }
+        }
+        $forms['contactForm'] = $form;
+        $forms['reportSubmit'] = $reportSubmit;
+        $forms['noContact'] = $noContact;
+        
+        return $forms;
     }
 }

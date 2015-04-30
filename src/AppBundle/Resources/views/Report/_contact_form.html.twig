@@ -1,42 +1,18 @@
-{% set translationDomain = "report-contacts" %}
-{% trans_default_domain translationDomain %}
-
-
-{# {% if (contacts is not empty) and (action == 'list') %} #}
-{% if (action == 'add') %}
-    {% set hideForm = false %}
-    {% set formClass = 'in-page-form' %}
-{% else %}
-    {% set hideForm = true %}
-    {% set formClass = '' %}
-{% endif %}
-
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
 
-{% if hideForm or (report.isDue() and action != 'add') %}
-    {# Then we need to show the Add Button Link #}
-    {% set  params = app.request.attributes.get('_route_params') %}
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
-    buttonBarClass: 'add-bar js-add-contact-button-bar'
-    } %}
+ <div {% if hideForm or (report.isDue() and action != 'add' and action != 'edit') %} class="visuallyhidden" {% endif %}>
 
-    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'contact_form.addContactButton.label',
-    linkClass: 'button-secondary',
-    linkHref: path('contacts', {'reportId': params['reportId'], 'action': 'add' })
-    } %}
-
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-{% endif %}
-
-<div {% if hideForm or (report.isDue() and action != 'add') %} class="visuallyhidden" {% endif %}>
-
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'contact_form.subSectionTitle'
-    } %}
-
+           {%if action == 'edit' %}
+               {% set subSectionTitleText = 'contact_form.subSectionTitleEdit' %}
+           {% else %}
+               {% set subSectionTitleText = 'contact_form.subSectionTitleAdd' %}
+           {% endif %}
+           
+            {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+            transDomain: translationDomain,
+            subSectionTitle: subSectionTitleText
+            } %}
+    
     {{ form_input(form.contactName, 'contactName') }}
     {{ form_input(form.relationship, 'relationship') }}
     {{ form_input(form.explanation, 'explanation') }}
@@ -56,10 +32,12 @@
         linkClass: 'button-link',
         linkHref: path('contacts', {'reportId': report.id})
         } %}
-
     {% endif %}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %} 
+    
+  </div>
+    
+ {{ form_end(form) }}
 
-</div>
 
-{{ form_end(form) }}
+

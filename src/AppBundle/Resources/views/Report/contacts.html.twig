@@ -25,9 +25,36 @@ activeTab : "tab-contacts"
             {{ form_errors_list(form) }}
         {% endblock %}
 
-        {% include 'AppBundle:Report:_contact_form.html.twig' with {
-        'translationDomain': translationDomain
-        } %}
+        {% if (action == 'add') or (action == 'edit')%}
+            {% set hideForm = false %}
+            {% set formClass = 'in-page-form' %}
+        {% else %}
+            {% set hideForm = true %}
+            {% set formClass = '' %}
+        {% endif %}
+
+        {% if hideForm or (report.isDue() and action != 'add') %}
+            {# Then we need to show the Add Button Link #}
+            {% set  params = app.request.attributes.get('_route_params') %}
+            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+            buttonBarClass: 'add-bar js-add-contact-button-bar'
+            } %}
+
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+            transDomain: translationDomain,
+            linkButtonLabel: 'contact_form.addContactButton.label',
+            linkClass: 'button-secondary',
+            linkHref: path('contacts', {'reportId': params['reportId'], 'action': 'add' })
+            } %}
+
+            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+        {% endif %}
+
+       
+            {% include 'AppBundle:Report:_contact_form.html.twig' with {
+            'translationDomain': translationDomain
+            } %}
+      
 
         {% if contacts is not empty %}
             {% include 'AppBundle:Report:_listContact.html.twig' %}
