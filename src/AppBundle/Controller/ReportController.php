@@ -212,10 +212,24 @@ class ReportController extends RestController
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
         }
-        
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
+    }
+    
+    /**
+     * 
+     * @Route("report/delete-contact/{id}")
+     * @Method({"DELETE"})
+     */
+    public function deleteContactAction($id)
+    {
+        $contact = $this->findEntityBy('Contact', $id, 'Contact not found');
+        
+        $this->getEntityManager()->remove($contact);
+        $this->getEntityManager()->flush();
+        
+        return [ ];
     }
     
     /**
@@ -235,4 +249,5 @@ class ReportController extends RestController
         
         return ['id'=>$report->getId()];
     }
+    
 }
