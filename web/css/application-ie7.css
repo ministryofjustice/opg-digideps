@@ -1701,6 +1701,16 @@ input[type=number] {
       width: 66%;
       margin-right: 3px; }
 
+.alert__delete-confirmation {
+  width: 50%;
+  background-color: #bfc1c3;
+  margin-bottom: 10px;
+  padding: 10px; }
+  .alert__delete-confirmation .button-bar {
+    margin-bottom: 0; }
+    .alert__delete-confirmation .button-bar .button-warning {
+      margin-left: 0; }
+
 @font-face {
   font-family: GDS-Logo;
   src: local("HelveticaNeue"), local("Helvetica Neue"), local("Arial"), local("Helvetica"); }
@@ -1991,6 +2001,9 @@ header.page-header {
   margin-left: 15px;
   top: 1px;
   position: relative; }
+
+.button-warning {
+  margin-left: 60px; }
 
 form {
   overflow: hidden; }

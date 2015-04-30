@@ -55,7 +55,21 @@
 
 
     {% if showDeleteConfirmation == 'delete' %}
-      {% include 'AppBundle:Account:_account_form_delete_confirm.html.twig' %}
+
+        {% include 'AppBundle:Components/Alerts:_delete-confirmation.html.twig' with
+        {
+        'translationDomain': translationDomain,
+        componentID: 'account-delete-confirm',
+        deleteMessageText: 'form.delete.legend' | trans,
+        deleteButtonType: form.delete,
+        deleteButtonText: 'form.edit.controls.delete' | trans,
+        deleteButtonClass: '',
+        cancelButtonLink: path('account', {'reportId': report.id, 'accountId': account.id, 'action':'edit'}) ~ '#account-header',
+        cancelButtonText: 'form.edit.controls.cancel.label' | trans,
+        cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
+        } %}
+
+
     {% else %}
       {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
       {{ form_submit(form.save,'form.edit.controls.save') }}
@@ -70,8 +84,8 @@
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
           transDomain: translationDomain,
           linkButtonLabel: 'form.edit.controls.delete.label',
-          linkClass: 'button-link button behat-link-delete-account',
-          linkHref: path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'delete'}) ~ '#accountDeleteConfirm'
+          linkClass: 'button-warning behat-link-delete-account',
+          linkHref: path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'delete'}) ~ '#account-delete-confirm'
         } %}
       {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
     {% endif %}
