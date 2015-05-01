@@ -205,6 +205,15 @@ class User implements AdvancedUserInterface
     private $phoneAlternative;
     
     /**
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"basic"})
+     * 
+     * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
+     */
+    private $lastLoggedIn;
+    
+    /**
      * Constructor
      */
     public function __construct()
@@ -674,6 +683,23 @@ class User implements AdvancedUserInterface
     public function setPhoneAlternative($phoneAlternative)
     {
         $this->phoneAlternative = $phoneAlternative;
+    }
+    
+    /**
+     * @return \DateTime
+     */
+    public function getLastLoggedIn()
+    {
+        return $this->lastLoggedIn;
+    }
+
+    /**
+     * @param \DateTime $lastLoggedIn
+     */
+    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
+    {
+        $this->lastLoggedIn = $lastLoggedIn;
+        return $this;
     }
 
 }
