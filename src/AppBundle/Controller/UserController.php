@@ -172,9 +172,8 @@ class UserController extends RestController
             'address3' => 'setAddress3', 
             'address_postcode' => 'setAddressPostcode', 
             'address_country' => 'setAddressCountry', 
-            'phone_home' => 'setPhoneHome', 
-            'phone_work' => 'setPhoneWork', 
-            'phone_mobile' => 'setPhoneMobile'
+            'phone_alternative' => 'setPhoneAlternative', 
+            'phone_main' => 'setPhoneMain', 
         ]);
         
         if (array_key_exists('role_id', $data)) {
