@@ -174,12 +174,12 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"user_details_full"})
-     * @Assert\NotBlank( message="user.phoneHome.notBlank", groups={"user_details_full"} )
+     * @Assert\NotBlank( message="user.phoneMain.notBlank", groups={"user_details_full"} )
      * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details_full"} )
      * 
      * @var string
      */
-    private $phoneHome;
+    private $phoneMain;
     
     /**
      * @JMS\Type("string")
@@ -188,7 +188,7 @@ class User implements AdvancedUserInterface
      * 
      * @var string
      */
-    private $phoneWork;
+    private $phoneAlternative;
     
     
     /**
@@ -552,14 +552,14 @@ class User implements AdvancedUserInterface
         return $this->addressCountry;
     }
 
-    public function getPhoneHome()
+    public function getPhoneMain()
     {
-        return $this->phoneHome;
+        return $this->phoneMain;
     }
 
-    public function getPhoneWork()
+    public function getPhoneAlternative()
     {
-        return $this->phoneWork;
+        return $this->phoneAlternative;
     }
 
     public function setAddress1($address1)
@@ -587,14 +587,14 @@ class User implements AdvancedUserInterface
         $this->addressCountry = $addressCountry;
     }
 
-    public function setPhoneHome($phoneHome)
+    public function setPhoneMain($phoneMain)
     {
-        $this->phoneHome = $phoneHome;
+        $this->phoneMain = $phoneMain;
     }
 
-    public function setPhoneWork($phoneWork)
+    public function setPhoneAlternative($phoneAlternative)
     {
-        $this->phoneWork = $phoneWork;
+        $this->phoneAlternative = $phoneAlternative;
     }
     
     /**
@@ -604,7 +604,7 @@ class User implements AdvancedUserInterface
     {
         return $this->getAddress1() || $this->getAddress2() || $this->getAddress3()
                || $this->getAddressCountry() || $this->getAddressPostcode()
-               || $this->getPhoneHome() || $this->getPhoneWork();
+               || $this->getPhoneMain() || $this->getPhoneAlternative();
     }
     
     /**
