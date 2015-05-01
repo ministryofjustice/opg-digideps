@@ -1431,6 +1431,8 @@ input[type=number] {
 
 .visuallyhidden + .account__edit {
   margin: 30px 0; }
+.account__edit .sub-section-title + .sub-section-description {
+  margin-bottom: 20px; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -2691,7 +2693,8 @@ ol.progress {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 20px; }
+    margin-top: 20px;
+    margin-bottom: 10px; }
   .report-overview .sub-section-title {
     margin-bottom: 10px; }
 

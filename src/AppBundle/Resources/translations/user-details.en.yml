@@ -16,12 +16,10 @@ addressPostcode:
 addressCountry:
     label: Country
     defaultOption: Please select ...
-phoneHome:
-    label: Main telephone number
-phoneWork:
-    label: Work phone
-phoneMobile:
-    label: Mobile phone
+phoneMain:
+    label: Main phone number
+phoneAlternative:
+    label: Alternative phone number 
 submit:
     label: Save and continue
 cancelText: Cancel
@@ -38,7 +36,6 @@ yourDetails:
   address: "Address"
   mainPhoneNumber: "Main phone number"
   alternativePhoneNumber: "Alternative phone number"
-  mobilePhoneNumber: "Mobile phone number"
   emailAddress: "Email address"
 form:
   editYourDetails:
