@@ -3,6 +3,7 @@ namespace AppBundle\Twig;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Translation\TranslatorInterface;
+use AppBundle\Service\DateFormatter;
 
 class ComponentsExtension extends \Twig_Extension
 {
@@ -51,7 +52,54 @@ class ComponentsExtension extends \Twig_Extension
             'country_name' => new \Twig_SimpleFilter('country_name', function($value) {
                 return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
             }),
+           'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function($value) {
+               if ($value instanceof \DateTime)  {
+                   return $this->formatTimeDifference([
+                       'from' => $value, 
+                       'to' => new \DateTime(),
+                       'translationDomain' => 'common',
+                       'translationPrefix' => 'lastLoggedIn.',
+                       'defaultDateFormat' => 'd F Y'
+                   ]);
+               }
+            }),
         ];
+    }
+    
+    
+    /**
+     * @param \DateTime from
+     * @param \DateTime to
+     * @param string translationPrefix
+     * @param string defaultDateFormat e.g. d F Y
+     * @param string translationDomain
+     * 
+     * @return string formatted interval
+     */
+    public function formatTimeDifference(array $options) {
+        $from = $options['from'];
+        $to = $options['to'];
+        $translationPrefix = $options['translationPrefix'];
+        $defaultDateFormat = $options['defaultDateFormat'];
+        $translationDomain = $options['translationDomain'];
+        
+        $secondsDiff = $to->getTimestamp() - $from->getTimestamp();
+        
+        if ($secondsDiff < 60) {
+            return $this->translator->trans($translationPrefix . 'lessThenAMinuteAgo', [], $translationDomain);
+        }
+        
+        if ($secondsDiff < 3600) {
+            $minutes = (int)round($secondsDiff / 60, 0);
+            return $this->translator->transChoice($translationPrefix . 'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
+        }
+        
+        if ($secondsDiff < 86400) {
+            $hours = (int)round($secondsDiff / 3600, 0);
+            return $this->translator->transChoice($translationPrefix . 'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
+        }
+        
+        return $this->translator->trans($translationPrefix . 'exactDate', ['%date%'=>$from->format($defaultDateFormat)], $translationDomain);
     }
     
     /**

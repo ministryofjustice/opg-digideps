@@ -27,7 +27,7 @@ country:
     label: Country
     defaultOption: Please select
 phone:
-    label: Main telephone number
+    label: Main phone number
 save:
     label: Save
 saveAndContinue:

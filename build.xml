@@ -69,7 +69,10 @@
         <exec command="php app/console digideps:fixtures" passthru="true" checkreturn="true"></exec>
     </target>
 
-    <target name="build" depends="cache-clear,composer-install,check-validation,phplint,fixtures">
+    <target name="check" depends="check-validation,phplint">
+    </target>
+
+    <target name="build" depends="cache-clear,composer-install,check,fixtures">
     </target>
     
     <target name="release" depends="build">
