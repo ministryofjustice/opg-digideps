@@ -8,7 +8,8 @@ form:
     addButton:
       label: "Add an asset"
   newAsset:
-    subSectionTitle: "Add an asset"
+    subSectionTitleAdd: "Add an asset"
+    subSectionTitleEdit: "Edit this asset"
     controls:
       title:
         label: "Asset title"
@@ -27,6 +28,8 @@ form:
         label: Save
       cancel:
         label: Cancel
+      delete:
+        label: Delete
 listing:
   value: "Value"
   description: "Asset description"

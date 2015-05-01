@@ -30,9 +30,15 @@
 
 <div {% if hideForm %} class="visuallyhidden" {% endif %}>
 
+    {% if (action == 'edit') or ( action == 'delete-confirm' ) %}
+        {% set subSectionTitleText = 'form.newAsset.subSectionTitleEdit' %}
+    {% else %}
+        {% set subSectionTitleText = 'form.newAsset.subSectionTitleAdd' %}
+    {% endif %}
+    
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
-    subSectionTitle: 'form.newAsset.subSectionTitle'
+    subSectionTitle: subSectionTitleText
     } %}
 
     {{ form_select(form.title, 'form.newAsset.controls.title') }}
@@ -44,14 +50,49 @@
     {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'form.newAsset.controls.save') }}
-    {% if hideForm or (action == 'add') %}
+    {% set buttonClass = '' %}
+    
+    {% if action == 'delete-confirm' %}
+          {% set buttonClass = 'visuallyhidden' %}
+          <div>
+              <b>Are you sure that you want to delete this asset ?</b>
+          </div>
+          
+          {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'form.newAsset.controls.delete.label',
+                linkClass: 'button-warning',
+                linkHref: path('delete_asset', {'reportId': report.id, 'id': app.request.get('id')})
+              } %}
+        
+          {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'form.newAsset.controls.cancel.label',
+                linkClass: 'button-link',
+                linkHref: path('assets', {'reportId': report.id})
+                } %}
+    {% endif %}
+    
+    {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': buttonClass }) }}
+    
+    {% if hideForm or (action == 'add') or (action == 'edit') %}
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'form.newAsset.controls.cancel.label',
         linkClass: 'button-link',
         linkHref: path('assets', {'reportId': report.id})
+        } %}
+
+    {% endif %}
+    
+    {% if (action == 'edit') %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.newAsset.controls.delete.label',
+        linkClass: 'button-warning',
+        linkHref: path('assets', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id')})
         } %}
 
     {% endif %}

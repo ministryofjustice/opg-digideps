@@ -20,14 +20,16 @@ activeTab: "tab-assets"
         pageSectionDescription: 'page.pageSectionDescription'
         } %}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
-
-        {% include 'AppBundle:Report:_asset_form.html.twig' %}
+        {% if (action != 'edit') and ( action != 'delete-confirm' ) %}
+            {% block validationSummary %}
+                {{ form_errors_list(form) }}
+            {% endblock %}
+        
+            {% include 'AppBundle:Asset:_asset_form.html.twig' %}
+        {% endif %}
 
         {% if assets is not empty %}
-            {% include 'AppBundle:Report:_listAsset.html.twig' %}
+            {% include 'AppBundle:Asset:_listAsset.html.twig' %}
         {% endif %}
 
     {% endblock %}
