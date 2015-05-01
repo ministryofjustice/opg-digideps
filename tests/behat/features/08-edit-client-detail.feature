@@ -44,6 +44,7 @@ Feature: edit client details
             | client_caseNumber |
             | client_address |
             | client_postcode |
+            | client_phone |
         When I fill in the following:
             | client_firstname | Nolan |
             | client_lastname | Ross |
