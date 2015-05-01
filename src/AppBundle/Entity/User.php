@@ -191,27 +191,27 @@ class User implements AdvancedUserInterface
      *
      * @JMS\Type("string")
      * @JMS\Groups({"basic"})
-     * @ORM\Column(name="phone_work", type="string", length=20, nullable=true)
+     * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
-    private $phoneWork;
+    private $phoneMain;
     
      /**
      * @var string
      *
       * @JMS\Type("string")
       * @JMS\Groups({"basic"})
-     * @ORM\Column(name="phone_home", type="string", length=20, nullable=true)
+     * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
-    private $phoneHome;
+    private $phoneAlternative;
     
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
+     * @var \DateTime
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"basic"})
-     * @ORM\Column(name="phone_mobile", type="string", length=20, nullable=true)
+     * 
+     * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
-    private $phoneMobile;
+    private $lastLoggedIn;
     
     /**
      * Constructor
@@ -616,25 +616,17 @@ class User implements AdvancedUserInterface
     /**
      * @return string
      */
-    public function getPhoneWork()
+    public function getPhoneMain()
     {
-        return $this->phoneWork;
+        return $this->phoneMain;
     }
 
     /**
      * @return string
      */
-    public function getPhoneHome()
+    public function getPhoneAlternative()
     {
-        return $this->phoneHome;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPhoneMobile()
-    {
-        return $this->phoneMobile;
+        return $this->phoneAlternative;
     }
 
     /**
@@ -680,25 +672,34 @@ class User implements AdvancedUserInterface
     /**
      * @return string
      */
-    public function setPhoneWork($phoneWork)
+    public function setPhoneMain($phoneMain)
     {
-        $this->phoneWork = $phoneWork;
+        $this->phoneMain = $phoneMain;
     }
 
     /**
      * @return string
      */
-    public function setPhoneHome($phoneHome)
+    public function setPhoneAlternative($phoneAlternative)
     {
-        $this->phoneHome = $phoneHome;
+        $this->phoneAlternative = $phoneAlternative;
+    }
+    
+    /**
+     * @return \DateTime
+     */
+    public function getLastLoggedIn()
+    {
+        return $this->lastLoggedIn;
     }
 
     /**
-     * @return string
+     * @param \DateTime $lastLoggedIn
      */
-    public function setPhoneMobile($phoneMobile)
+    public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
-        $this->phoneMobile = $phoneMobile;
+        $this->lastLoggedIn = $lastLoggedIn;
+        return $this;
     }
 
 }
