@@ -174,7 +174,6 @@ class UserController extends RestController
             'address_country' => 'setAddressCountry', 
             'phone_home' => 'setPhoneHome', 
             'phone_work' => 'setPhoneWork', 
-            'phone_mobile' => 'setPhoneMobile'
         ]);
         
         if (array_key_exists('role_id', $data)) {

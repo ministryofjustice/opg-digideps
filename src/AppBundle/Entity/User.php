@@ -205,15 +205,6 @@ class User implements AdvancedUserInterface
     private $phoneHome;
     
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"basic"})
-     * @ORM\Column(name="phone_mobile", type="string", length=20, nullable=true)
-     */
-    private $phoneMobile;
-    
-    /**
      * Constructor
      */
     public function __construct()
@@ -632,14 +623,6 @@ class User implements AdvancedUserInterface
     /**
      * @return string
      */
-    public function getPhoneMobile()
-    {
-        return $this->phoneMobile;
-    }
-
-    /**
-     * @return string
-     */
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
@@ -691,14 +674,6 @@ class User implements AdvancedUserInterface
     public function setPhoneHome($phoneHome)
     {
         $this->phoneHome = $phoneHome;
-    }
-
-    /**
-     * @return string
-     */
-    public function setPhoneMobile($phoneMobile)
-    {
-        $this->phoneMobile = $phoneMobile;
     }
 
 }
