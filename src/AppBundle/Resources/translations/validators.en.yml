@@ -35,12 +35,10 @@ user:
   genericPhone:
     minLength: The phone number must be at least {{ limit }} characters long
     maxLength: The phone number cannot be longer than {{ limit }} characters long
-  phoneHome:
+  phoneMain:
     notBlank: The main telephone number cannot be blank
-  phoneWork:
+  phoneAlternative:
     notBlank: The work phone cannot be blank
-  phoneMobile:
-    notBlank:  The mobile phone cannot be blank      
 client:
     firstname:
         notBlank: Please enter your firstname
