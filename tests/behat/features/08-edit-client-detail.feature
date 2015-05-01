@@ -32,7 +32,7 @@ Feature: edit client details
             | client_county | |
             | client_postcode | |
             | client_country | |
-            | client_phone | |
+            | client_phone | aaa |
         And I press "client_save"
         Then the following fields should have an error:
             | client_firstname |
