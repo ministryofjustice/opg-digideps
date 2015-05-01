@@ -50,7 +50,7 @@
     
     {{ form_submit(form.save,'save', { 'buttonClass': buttonClass }) }}
     
-    {% if hideForm or (action == 'add')%}
+    {% if hideForm or (action == 'add') or (action == 'edit')%}
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
             transDomain: translationDomain,
             linkButtonLabel: 'cancel.label',
@@ -60,14 +60,6 @@
     {% endif %}
     
     {% if action == 'edit' %}
-        
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-            transDomain: translationDomain,
-            linkButtonLabel: 'cancel.label',
-            linkClass: 'button-link',
-            linkHref: path('contacts', {'reportId': report.id})
-            } %}
-        
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                     transDomain: translationDomain,
                     linkButtonLabel: 'delete.label',

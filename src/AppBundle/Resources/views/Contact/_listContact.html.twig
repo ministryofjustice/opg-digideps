@@ -4,41 +4,51 @@
 <ul class="behat-region-list-contacts report-list report-list--contacts">
     {% for contact in contacts %}
         <li itemscope itemtype="http://schema.org/Person" class="report-list__item">
-            <div class="report-list__item-header"><h3 itemprop="name">{{ contact.contactName }}</h3>
-                <a href="{{url('contacts', { 'reportId': report.id, 'id': contact.id, 'action': 'edit' })}}"
-                   class="js-report-list__item-edit-link report-list__item-edit-link">{{ 'view_contact.edit'| trans }}</a>
-            </div>
-            <dl class="report-list__item-fields">
-                <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term">{{ 'view_contact.relationship' | trans }}</dt>
-                    <dd class="report-list__item-fields-description">{{ contact.relationship }}</dd>
+            {% if (contact.id == app.request.get('id')) and ((action == 'edit') or (action == 'delete-confirm')) %}
+                    {% block validationSummary %}
+                        {{ form_errors_list(form) }}
+                    {% endblock %}
+
+                    {% include 'AppBundle:Contact:_contact_form.html.twig' with {
+                        'translationDomain': translationDomain
+                        } %}
+            {% else %}
+                <div class="report-list__item-header"><h3 itemprop="name">{{ contact.contactName }}</h3>
+                    <a href="{{url('contacts', { 'reportId': report.id, 'id': contact.id, 'action': 'edit' })}}"
+                       class="js-report-list__item-edit-link report-list__item-edit-link">{{ 'view_contact.edit'| trans }}</a>
                 </div>
-                <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'view_contact.reason' | trans }}</dt>
-                    <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ contact.explanation }}</dd>
-                </div>
-                <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term">{{ 'view_contact.address' | trans }}</dt>
-                    <dd class="report-list__item-fields-description" itemprop="address" itemscope
-                        itemtype="http://schema.org/PostalAddress">
-                        {% if contact.address is not empty %}
-                            <div itemprop="streetAddress">{{ contact.address }}</div>
-                        {% endif %}
-                        {% if contact.address2 is not empty %}
-                            <div itemprop="addressLocality">{{ contact.address2 }}</div>
-                        {% endif %}
-                        {% if contact.county is not empty %}
-                            <div itemprop="addressRegion">{{ contact.county }}</div>
-                        {% endif %}
-                        {% if contact.postcode is not empty %}
-                            <div itemprop="postalCode">{{ contact.postcode }}</div>
-                        {% endif %}
-                        {% if contact.country is not empty %}
-                            <div itemprop="addressCountry">{{ contact.country | country_name }}</div>
-                        {% endif %}
-                    </dd>
-                </div>
-            </dl>
+                <dl class="report-list__item-fields">
+                    <div class="report-list__item-fields-row">
+                        <dt class="report-list__item-fields-term">{{ 'view_contact.relationship' | trans }}</dt>
+                        <dd class="report-list__item-fields-description">{{ contact.relationship }}</dd>
+                    </div>
+                    <div class="report-list__item-fields-row">
+                        <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'view_contact.reason' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ contact.explanation }}</dd>
+                    </div>
+                    <div class="report-list__item-fields-row">
+                        <dt class="report-list__item-fields-term">{{ 'view_contact.address' | trans }}</dt>
+                        <dd class="report-list__item-fields-description" itemprop="address" itemscope
+                            itemtype="http://schema.org/PostalAddress">
+                            {% if contact.address is not empty %}
+                                <div itemprop="streetAddress">{{ contact.address }}</div>
+                            {% endif %}
+                            {% if contact.address2 is not empty %}
+                                <div itemprop="addressLocality">{{ contact.address2 }}</div>
+                            {% endif %}
+                            {% if contact.county is not empty %}
+                                <div itemprop="addressRegion">{{ contact.county }}</div>
+                            {% endif %}
+                            {% if contact.postcode is not empty %}
+                                <div itemprop="postalCode">{{ contact.postcode }}</div>
+                            {% endif %}
+                            {% if contact.country is not empty %}
+                                <div itemprop="addressCountry">{{ contact.country | country_name }}</div>
+                            {% endif %}
+                        </dd>
+                    </div>
+                </dl>
+           {% endif %}
         </li>
     {% endfor %}
 </ul>

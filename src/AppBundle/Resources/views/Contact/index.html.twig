@@ -21,10 +21,6 @@ activeTab : "tab-contacts"
         pageSectionDescription: 'contact_form.pageSectionDescription'
         } %}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
-
         {% if (action == 'add') or (action == 'edit') or (action == 'delete-confirm') %}
             {% set hideForm = false %}
             {% set formClass = 'in-page-form' %}
@@ -32,7 +28,7 @@ activeTab : "tab-contacts"
             {% set hideForm = true %}
             {% set formClass = '' %}
         {% endif %}
-
+  
         {% if hideForm or (report.isDue() and action != 'add') %}
             {# Then we need to show the Add Button Link #}
             {% set  params = app.request.attributes.get('_route_params') %}
@@ -48,14 +44,18 @@ activeTab : "tab-contacts"
             } %}
 
             {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-        {% endif %}
+        {% endif %}      
 
-       
+        {% if (action != 'edit') and (action != 'delete-confirm') %}
+            {% block validationSummary %}
+                {{ form_errors_list(form) }}
+            {% endblock %}
+        
             {% include 'AppBundle:Contact:_contact_form.html.twig' with {
-            'translationDomain': translationDomain
-            } %}
+                'translationDomain': translationDomain
+                } %}
+       {% endif %}
       
-
         {% if contacts is not empty %}
             {% include 'AppBundle:Contact:_listContact.html.twig' %}
         {% endif %}
