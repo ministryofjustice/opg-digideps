@@ -54,10 +54,46 @@ class ComponentsExtension extends \Twig_Extension
             }),
            'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function($value) {
                if ($value instanceof \DateTime)  {
-                   return DateFormatter::formatLastLogin($value, new \DateTime());
+                   return $this->formatLastLoginTimeDifference($value, new \DateTime());
                }
             }),
         ];
+    }
+    
+    
+    /**
+     * @param \DateTime $date
+     * @param \DateTime $currentDate
+     * @return string
+     */
+    public function formatLastLoginTimeDifference(\DateTime $date, \DateTime $currentDate)
+    {
+        $secondsDiff = $currentDate->getTimestamp() - $date->getTimestamp();
+        
+        if ($secondsDiff < 60) {
+            return 'less than a minute ago';
+        }
+        
+        if ($secondsDiff < 3600) {
+            $minutes = (int)round($secondsDiff / 60, 0);
+            if ($minutes === 1) {
+                return '1 minute ago';
+            } else {
+                return $minutes . ' minutes ago';
+            }
+        }
+        
+        if ($secondsDiff < 86400) {
+            $hours = (int)round($secondsDiff / 3600, 0);
+            if ($hours === 1) {
+                return '1 hour ago';
+            } else {
+                return $hours . ' hours ago';
+            }
+        }
+        
+        return $date->format('d F Y');
+        
     }
     
     /**
