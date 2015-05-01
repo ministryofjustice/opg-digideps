@@ -17,7 +17,6 @@ Feature: edit user details
              | user_details_addressCountry | GB |
              | user_details_phoneHome | 020 3334 3555  |
              | user_details_phoneWork | 020 1234 5678  |
-             | user_details_phoneMobile | 079 123 456 78  |
          When I fill in the following:
             | user_details_firstname |  |
             | user_details_lastname |  |
@@ -45,7 +44,6 @@ Feature: edit user details
            | user_details_addressCountry | GB |
            | user_details_phoneHome | 020 3334 3556  |
            | user_details_phoneWork | 020 1234 5679  |
-           | user_details_phoneMobile | 079 123 456 70  |
        And I press "user_details_save"
        Then the form should not contain an error
        Then I should be on "user"
@@ -53,6 +51,5 @@ Feature: edit user details
        And I should see "103 Petty France" in the "my-details" region
        And I should see "020 3334 3556" in the "my-details" region
        And I should see "020 1234 5679" in the "my-details" region
-       And I should see "079 123 456 70" in the "my-details" region
        And I should see "behat-user@publicguardian.gsi.gov.uk" in the "my-details" region
             

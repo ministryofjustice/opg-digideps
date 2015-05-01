@@ -35,8 +35,7 @@ class UserDetailsFullType extends UserDetailsBasicType
             'empty_value' => $this->addressCountryEmptyValue
         ])
         ->add('phoneHome', 'text')
-        ->add('phoneWork', 'text')
-        ->add('phoneMobile', 'text');
+        ->add('phoneWork', 'text');
     }
     
     

@@ -190,16 +190,6 @@ class User implements AdvancedUserInterface
      */
     private $phoneWork;
     
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"user_details_full"})
-     * @Assert\Length(min=10, max=25, minMessage="user.genericPhone.minLength", maxMessage="user.genericPhone.maxLength", groups={"user_details_full"} )
-     * 
-     * @var string
-     */
-    private $phoneMobile;
-    
-    
     
     /**
      * @return integer $id
@@ -572,11 +562,6 @@ class User implements AdvancedUserInterface
         return $this->phoneWork;
     }
 
-    public function getPhoneMobile()
-    {
-        return $this->phoneMobile;
-    }
-
     public function setAddress1($address1)
     {
         $this->address1 = $address1;
@@ -611,11 +596,6 @@ class User implements AdvancedUserInterface
     {
         $this->phoneWork = $phoneWork;
     }
-
-    public function setPhoneMobile($phoneMobile)
-    {
-        $this->phoneMobile = $phoneMobile;
-    }
     
     /**
      * @return boolean
@@ -624,7 +604,7 @@ class User implements AdvancedUserInterface
     {
         return $this->getAddress1() || $this->getAddress2() || $this->getAddress3()
                || $this->getAddressCountry() || $this->getAddressPostcode()
-               || $this->getPhoneHome() || $this->getPhoneMobile() || $this->getPhoneWork();
+               || $this->getPhoneHome() || $this->getPhoneWork();
     }
     
     /**

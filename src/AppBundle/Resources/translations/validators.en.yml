@@ -39,8 +39,6 @@ user:
     notBlank: The main telephone number cannot be blank
   phoneWork:
     notBlank: The work phone cannot be blank
-  phoneMobile:
-    notBlank:  The mobile phone cannot be blank      
 client:
     firstname:
         notBlank: Please enter your firstname

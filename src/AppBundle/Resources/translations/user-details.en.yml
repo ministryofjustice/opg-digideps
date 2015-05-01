@@ -20,8 +20,6 @@ phoneHome:
     label: Main telephone number
 phoneWork:
     label: Work phone
-phoneMobile:
-    label: Mobile phone
 submit:
     label: Save and continue
 cancelText: Cancel

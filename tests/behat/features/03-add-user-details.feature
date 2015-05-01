@@ -31,7 +31,6 @@ Feature: add details
             | user_details_addressCountry | GB |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
-            | user_details_phoneMobile | 079 123 456 78  |
         And I press "user_details_save"
         Then the form should not contain an error
         When I go to "user/details"
@@ -45,7 +44,6 @@ Feature: add details
             | user_details_addressCountry | GB |
             | user_details_phoneHome | 020 3334 3555  |
             | user_details_phoneWork | 020 1234 5678  |
-            | user_details_phoneMobile | 079 123 456 78  |
         
 
     @admin
