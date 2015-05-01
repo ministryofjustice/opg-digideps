@@ -1,0 +1,7 @@
+lastLoggedIn:
+  lessThenAMinuteAgo:  less than a minute ago
+  minutesAgo: "{1} one minute ago | ]1,Inf] %count% minutes ago"
+  hoursAgo: "{1} about one hour ago | ]1,Inf] about %count% hours ago"
+  exactDate: "%date%"
+  
+    
