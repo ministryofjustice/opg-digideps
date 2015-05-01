@@ -54,7 +54,7 @@ class ComponentsExtension extends \Twig_Extension
             }),
            'last_loggedin_date_formatter' => new \Twig_SimpleFilter('last_loggedin_date_formatter', function($value) {
                if ($value instanceof \DateTime)  {
-                   return $this->formatLastLoginTimeDifference($value, new \DateTime());
+                   return $this->formatTimeDifference($value, new \DateTime());
                }
             }),
         ];
@@ -66,7 +66,7 @@ class ComponentsExtension extends \Twig_Extension
      * @param \DateTime $currentDate
      * @return string
      */
-    public function formatLastLoginTimeDifference(\DateTime $date, \DateTime $currentDate)
+    public function formatTimeDifference(\DateTime $date, \DateTime $currentDate)
     {
         $secondsDiff = $currentDate->getTimestamp() - $date->getTimestamp();
         

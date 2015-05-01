@@ -77,10 +77,10 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
      * @test
      * @dataProvider formatLastLogiProvider
      */
-    public function formatLastLoginTimeDifference($input, $expected)
+    public function formatTimeDifference($input, $expected)
     {
         $date = new \DateTime($input);
-        $actual =  $this->object->formatLastLoginTimeDifference($date, new \DateTime('2015-01-29 17:10:00'));
+        $actual =  $this->object->formatTimeDifference($date, new \DateTime('2015-01-29 17:10:00'));
         $this->assertEquals($expected, $actual);
     }
 }
