@@ -32,15 +32,8 @@ user:
     maxLength: The postcode cannot be longer than {{ limit }} characters long
   addressCountry:
     notBlank: The country cannot be blank
-  genericPhone:
-    minLength: The phone number must be at least {{ limit }} characters long
-    maxLength: The phone number cannot be longer than {{ limit }} characters long
-  phoneHome:
-    notBlank: The main telephone number cannot be blank
-  phoneWork:
-    notBlank: The work phone cannot be blank
-  phoneMobile:
-    notBlank:  The mobile phone cannot be blank      
+  phoneMain:
+    notBlank: The main phone number cannot be blank
 client:
     firstname:
         notBlank: Please enter your firstname
@@ -163,3 +156,8 @@ asset:
     date:
         notBlank: Please enter asset valuation date
         date: Please enter a valid asset valuation date
+# validation messages for common elements (e.g. phone fields)        
+common:
+  genericPhone:
+    minLength: The phone number must be at least {{ limit }} characters long
+    maxLength: The phone number cannot be longer than {{ limit }} characters long        

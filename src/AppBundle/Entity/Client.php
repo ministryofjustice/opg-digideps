@@ -112,6 +112,7 @@ class Client
     
     /**
      * @JMS\Type("string")
+     * @Assert\Length(min=10, max=25, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
      * @var string $phone
      */
     private $phone;
