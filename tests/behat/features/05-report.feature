@@ -210,7 +210,7 @@ Feature: report
         And I am on the first report overview page
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
-        # wrong form
+        # empty form
         And I press "account_save"
         And I save the page as "report-account-add-error"
         Then the following fields should have an error:
@@ -226,6 +226,35 @@ Feature: report
             | account_openingDate_month |
             | account_openingDate_year |
             | account_openingBalance |
+        # test validators
+        When I fill in the following:
+            | account_bank    | HSBC - main account | 
+            # invalid number
+            | account_accountNumber_part_1 | a | 
+            | account_accountNumber_part_2 | b | 
+            | account_accountNumber_part_3 | c | 
+            | account_accountNumber_part_4 | d | 
+            # invalid sort code
+            | account_sortCode_sort_code_part_1 | g |
+            | account_sortCode_sort_code_part_2 | h |
+            | account_sortCode_sort_code_part_3 |  |
+            # date outside report range
+            | account_openingDate_day   | 5 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 1983 |
+            | account_openingBalance  | 1,155.00 |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_accountNumber_part_1 |
+            | account_accountNumber_part_2 |
+            | account_accountNumber_part_3 |
+            | account_accountNumber_part_4 |
+            | account_sortCode_sort_code_part_1 |
+            | account_sortCode_sort_code_part_2 |
+            | account_sortCode_sort_code_part_3 |
+            | account_openingDate_day |
+            | account_openingDate_month |
+            | account_openingDate_year |
         # right values
         And I fill in the following:
             | account_bank    | HSBC - main account | 
