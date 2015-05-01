@@ -1384,6 +1384,7 @@ input[type=number] {
 ***************************************************************
 */
 .session-timeout {
+  z-index: 9999;
   visibility: hidden;
   position: absolute;
   top: 0;
@@ -1402,8 +1403,7 @@ input[type=number] {
     background-color: #fff;
     opacity: 1;
     margin: 100px auto 0;
-    padding: 30px;
-    z-index: 9999; }
+    padding: 30px; }
     @media (max-width: 640px) {
       .session-timeout-dialog {
         font-size: 16px;
@@ -1419,15 +1419,22 @@ input[type=number] {
     .session-timeout-dialog .button {
       margin-right: 20px; }
   .session-timeout-underlay {
+    z-index: 9999;
     visibility: hidden;
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    /* This is also updated in JS to the px value */
     color: #ffffff;
     background-color: #000;
     opacity: 0.3; }
+
+.visuallyhidden + .account__edit {
+  margin: 30px 0; }
+.account__edit .sub-section-title + .sub-section-description {
+  margin-bottom: 20px; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -1654,6 +1661,16 @@ input[type=number] {
       float: left;
       width: 66%;
       margin-right: 3px; }
+
+.alert__delete-confirmation {
+  width: 50%;
+  background-color: #bfc1c3;
+  margin-bottom: 10px;
+  padding: 10px; }
+  .alert__delete-confirmation .button-bar {
+    margin-bottom: 0; }
+    .alert__delete-confirmation .button-bar .button-warning {
+      margin-left: 0; }
 
 @font-face {
   font-family: GDS-Logo;
@@ -1923,6 +1940,9 @@ header.page-header {
 .report-list--assets dd.report-list__item-fields-description {
   margin-left: 135px; }
 
+.error-page .page-header h1 span {
+  display: none; }
+
 .field-combo-with-errors, .field-with-errors {
   border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
@@ -1943,6 +1963,9 @@ header.page-header {
   top: 1px;
   position: relative; }
 
+.button-warning {
+  margin-left: 60px; }
+
 form {
   overflow: hidden; }
   form.report-form {
@@ -1951,6 +1974,8 @@ form {
   form.in-page-form {
     border-left: 3px solid #bfc1c3;
     padding-left: 10px; }
+    form.in-page-form + .in-page-form {
+      margin-top: 40px; }
 
 .form--client-add-report {
   margin: 40px 0 20px 0; }
@@ -2015,6 +2040,16 @@ form {
   .field-with-errors .input-group-prefix {
     border: 2px solid #df3034;
     border-right: 0; }
+
+#content .visuallyhidden {
+  position: absolute;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  width: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0; }
 
 .column-full {
   float: left;
@@ -2345,6 +2380,8 @@ form {
 
 .page-service-content.sign-in-page--manual-signout .page-section-title {
   margin-top: 40px; }
+.page-service-content.my-client .in-page-form + .in-page-form .sub-section-description {
+  margin-bottom: 10px; }
 
 ol.progress {
   display: table;
@@ -2665,7 +2702,8 @@ ol.progress {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 20px; }
+    margin-top: 20px;
+    margin-bottom: 10px; }
   .report-overview .sub-section-title {
     margin-bottom: 10px; }
 

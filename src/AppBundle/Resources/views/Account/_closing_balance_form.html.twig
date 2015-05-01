@@ -2,7 +2,8 @@
 {% trans_default_domain translationDomain %}
 
 
-<div id="closing-balance" class="behat-region-account-closing-balance-form account-closing-balance-form">
+<div id="closing-balance" class="behat-region-account-closing-balance-form account-closing-balance-form {% if hideForm %}visuallyhidden{% endif %}">
+    {{ form_start(formBalance, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
@@ -14,8 +15,6 @@
     transDomain: translationDomain,
     pageSectionDescription: 'form.closing.subSectionDescription'
     } %}
-
-    {{ form_start(formBalance, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_known_date(formBalance.closingDate, 'form.closing.controls.closingDate') }}
 
@@ -35,5 +34,4 @@
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(formBalance) }}
-
 </div>

@@ -213,6 +213,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * @Then the form should not contain an error
+     * @Then the form should not contain any error
      */
     public function theFormShouldNotContainAnError()
     {
@@ -285,14 +286,27 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I modify the report :reportId end date to today :dateModifier 
+     * @Given I set the report :reportId due
      */
-    public function iChangeTheReportEndDateToDaysAgo($reportId, $dateModifier)
+    public function iSetTheReportDue($reportId)
     {
        $endDate = new \DateTime;
-       $endDate->modify($dateModifier);
+       $endDate->modify('-3 days');
        
        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+       $this->visit("/");
+    }
+    
+    /**
+     * @Given I set the report :reportId not due
+     */
+    public function iSetTheReportNotDue($reportId)
+    {
+       $endDate = new \DateTime;
+       $endDate->modify('+3 days');
+       
+       $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
+       $this->visit("/");
     }
     
     /**
@@ -345,6 +359,33 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
         }
         
+    }
+    
+    /**
+     * @Given I am on the first report overview page
+     */
+    public function iAmOnTheReport1Page()
+    {
+        $this->clickOnBehatLink('client-home');
+        $this->clickOnBehatLink('report-n1');
+    }
+    
+    /**
+     * @Given I am on the accounts page of the first report
+     */
+    public function iAmOnTheReport1AccountsPage()
+    {
+        $this->iAmOnTheReport1Page();
+        $this->clickLink('tab-accounts');
+    }
+    
+    /**
+     * @Given I am on the account :accountNumber page of the first report
+     */
+    public function iAmOnTheReport1AccountPageByAccNumber($accountNumber)
+    {
+        $this->iAmOnTheReport1AccountsPage();
+        $this->clickOnBehatLink('account-' . $accountNumber);
     }
     
 }

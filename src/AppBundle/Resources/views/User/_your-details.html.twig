@@ -14,8 +14,6 @@
 {% endif %}
 
 
-{{ form_start(formEditDetails, {attr: {novalidate: 'novalidate', class: formClass } }) }}
-
 {% if hideForm %}
 
     <div itemscope itemtype="http://schema.org/Person" class="data-item data-item--your-details">
@@ -29,7 +27,7 @@
                 <dt class="visuallyhidden">{{ 'yourDetails.editYourDetails' | trans }}</dt>
                 <dd class="data-item-fields-description data-item-fields-description--header">
                     <a href="{{ path('user_view', {'action': 'edit-your-details' })~'#edit-your-details' }}"
-                       class="js-data-item-edit-link data-item-edit-link">{{ 'yourDetails.edit'| trans }}</a>
+                       class="js-data-item-edit-link data-item-edit-link behat-link-edit-user-details">{{ 'yourDetails.edit'| trans }}</a>
                 </dd>
             </div>
             <div class="data-item-fields-row">
@@ -76,10 +74,27 @@
 
 <div id="edit-your-details" {% if hideForm %} class="visuallyhidden" {% endif %}>
 
+    {{ form_start(formEditDetails, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
     {% include 'AppBundle:User:_edit.html.twig' with {
     'form': formEditDetails,
     'translationDomain': translationDomain
     } %}
 
+    {{ form_end(formEditDetails) }}
+
+
+    <form class="in-page-form">
+
+        {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
+        formTitle: "form.changeYourEmail.subSectionTitle" | trans
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'form.changeYourEmail.subSectionDescription'
+        } %}
+
+    </form>
+
 </div>
-{{ form_end(formEditDetails) }}
