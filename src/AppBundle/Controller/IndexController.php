@@ -15,6 +15,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Form\FormError;
 use AppBundle\EventListener\SessionListener;
+use AppBundle\Service\ApiClient;
 
 class IndexController extends Controller
 {
@@ -57,7 +58,6 @@ class IndexController extends Controller
                     throw new \Exception($message);
                 }
             } catch(\Exception $e){
-
                 return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
             }
             // manually set session token into security context (manual login)
@@ -73,6 +73,14 @@ class IndexController extends Controller
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+            
+            $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+
+            $session->set('lastLoggedIn', $user->getLastLoggedIn());
+            $user->setLastLoggedIn(new \DateTime()); //save for future access
+            $apiClient->putC('user/' .  $user->getId(), $user, [
+                'deserialise_group' => 'lastLoggedIn',
+            ]);
         }
         
         // different page version for timeout and manual logout
