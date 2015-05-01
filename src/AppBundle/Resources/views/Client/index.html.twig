@@ -6,6 +6,19 @@
 {% block contentClass %}{{ parent() }} my-client{% endblock %}
 {% block title %}{% trans %}page.pageSectionTitle{% endtrans %}{% endblock %}
 
+{% block afterTitle %}
+    {% if lastSignedIn %}
+        <div class="behat-region-last-loggedin data-item data-item--last-logged-in">
+            <dl class="data-item-fields">
+                <div class="data-item-fields-row">
+                    <dt class="data-item-fields-term data-item-fields-term--block">{{ 'page.lastLoggedIn' | trans({}) }}</dt>
+                    <dd class="data-item-fields-description data-item-fields-description--inline data-item-fields-description--normal">{{ (lastSignedIn | last_loggedin_date_formatter) }}</dd>
+                </div>
+            </dl>
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block validationSummary %}
     {# {{ form_errors_list(form) }} #}
 {% endblock %}

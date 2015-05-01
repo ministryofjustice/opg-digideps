@@ -1699,7 +1699,8 @@ header.page-header {
   margin-bottom: 0; }
   header.page-header h1 {
     padding-bottom: 0;
-    padding-top: 0; }
+    padding-top: 0;
+    float: left; }
     header.page-header h1 span {
       font-family: "nta", Arial, sans-serif;
       font-size: 24px;
@@ -1803,6 +1804,8 @@ header.page-header {
         .data-item .data-item-fields dd.data-item-fields-description {
           font-size: 16px;
           line-height: 1.25; } }
+      .data-item .data-item-fields dd.data-item-fields-description--inline {
+        display: inline; }
       .data-item .data-item-fields dd.data-item-fields-description--block {
         position: relative;
         margin-left: auto;
@@ -1839,6 +1842,12 @@ header.page-header {
     margin-left: 140px; }
     .data-item--client-details dd.data-item-fields-description--header .data-item-edit-link {
       margin-left: 419px; }
+  .data-item--last-logged-in {
+    float: left;
+    padding-top: 55px;
+    margin-left: 339px; }
+    .data-item--last-logged-in .data-item-fields .data-item-fields-row dt.data-item-fields-term {
+      margin-right: 5px; }
   .data-item--your-details .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
     margin-bottom: 25px; }
   .data-item--your-details .data-item-fields .data-item-fields-row {

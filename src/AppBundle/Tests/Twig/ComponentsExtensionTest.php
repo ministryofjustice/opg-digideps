@@ -54,4 +54,33 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $actual);
         
     }
+    
+    /**
+     * expected results (time diff from 2015-01-29 17:10:00)
+     */
+    public static function formatLastLogiProvider()
+    {
+        return [
+            ['2015-01-29 17:09:30', 'less than a minute ago'],
+            
+            ['2015-01-29 17:09:00', '1 minute ago'],
+            ['2015-01-29 17:07:00', '3 minutes ago'],
+            
+            ['2015-01-29 16:10:00', '1 hour ago'],
+            ['2015-01-29 7:11:00', '10 hours ago'],
+            
+            ['2015-01-28 15:10:00', '28 January 2015'],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider formatLastLogiProvider
+     */
+    public function formatLastLoginTimeDifference($input, $expected)
+    {
+        $date = new \DateTime($input);
+        $actual =  $this->object->formatLastLoginTimeDifference($date, new \DateTime('2015-01-29 17:10:00'));
+        $this->assertEquals($expected, $actual);
+    }
 }
