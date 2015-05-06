@@ -1841,7 +1841,7 @@ header.page-header {
   .data-item--client-details dd.data-item-fields-description {
     margin-left: 140px; }
     .data-item--client-details dd.data-item-fields-description--header .data-item-edit-link {
-      margin-left: 419px; }
+      margin-right: 263px; }
   .data-item--last-logged-in {
     float: left;
     padding-top: 55px;
@@ -2322,7 +2322,8 @@ form {
       font-size: 16px;
       line-height: 1.25; } }
 .page-report-content .page-report-header .page-section-warning {
-  margin: 20px 0 10px 0; }
+  margin: 20px 0 10px 0;
+  width: 100%; }
 .page-report-content .page-report-header .report-go-back-link {
   display: block;
   margin-top: 20px; }
