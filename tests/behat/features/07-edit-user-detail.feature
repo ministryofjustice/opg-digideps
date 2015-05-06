@@ -15,16 +15,15 @@ Feature: edit user details
              | user_details_address3 | London |
              | user_details_addressPostcode | SW1H 9AJ |
              | user_details_addressCountry | GB |
-             | user_details_phoneHome | 020 3334 3555  |
-             | user_details_phoneWork | 020 1234 5678  |
-             | user_details_phoneMobile | 079 123 456 78  |
+             | user_details_phoneMain | 020 3334 3555  |
+             | user_details_phoneAlternative | 020 1234 5678  |
          When I fill in the following:
             | user_details_firstname |  |
             | user_details_lastname |  |
             | user_details_address1 | |
             | user_details_addressPostcode | |
             | user_details_addressCountry | |
-            | user_details_phoneHome |   |
+            | user_details_phoneMain |   |
         And I press "user_details_save"
         Then the following fields should have an error:
             | user_details_firstname |
@@ -32,7 +31,7 @@ Feature: edit user details
             | user_details_address1 |
             | user_details_addressPostcode |
             | user_details_addressCountry |
-            | user_details_phoneHome |
+            | user_details_phoneMain |
         And I press "user_details_save"
         Then the form should contain an error
         When I fill in the following:
@@ -43,9 +42,8 @@ Feature: edit user details
            | user_details_address3 | London |
            | user_details_addressPostcode | SW1H 9AA |
            | user_details_addressCountry | GB |
-           | user_details_phoneHome | 020 3334 3556  |
-           | user_details_phoneWork | 020 1234 5679  |
-           | user_details_phoneMobile | 079 123 456 70  |
+           | user_details_phoneMain | 020 3334 3556  |
+           | user_details_phoneAlternative | 020 1234 5679  |
        And I press "user_details_save"
        Then the form should not contain an error
        Then I should be on "user"
@@ -53,6 +51,5 @@ Feature: edit user details
        And I should see "103 Petty France" in the "my-details" region
        And I should see "020 3334 3556" in the "my-details" region
        And I should see "020 1234 5679" in the "my-details" region
-       And I should see "079 123 456 70" in the "my-details" region
        And I should see "behat-user@publicguardian.gsi.gov.uk" in the "my-details" region
             

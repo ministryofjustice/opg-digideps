@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isValidOpeningDate"})
+ * @Assert\Callback(methods={"isValidOpeningDate"}, groups={"basic"})
  */
 class Account
 {

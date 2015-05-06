@@ -16,7 +16,7 @@ Feature: add details
             | user_details_address1 |
             | user_details_addressPostcode |
             | user_details_addressCountry |
-            | user_details_phoneHome |
+            | user_details_phoneMain |
         And I press "user_details_save"
         Then the form should contain an error
         And I save the page as "deputy-step2-error"
@@ -29,9 +29,8 @@ Feature: add details
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
             | user_details_addressCountry | GB |
-            | user_details_phoneHome | 020 3334 3555  |
-            | user_details_phoneWork | 020 1234 5678  |
-            | user_details_phoneMobile | 079 123 456 78  |
+            | user_details_phoneMain | 020 3334 3555  |
+            | user_details_phoneAlternative | 020 1234 5678  |
         And I press "user_details_save"
         Then the form should not contain an error
         When I go to "user/details"
@@ -43,9 +42,8 @@ Feature: add details
             | user_details_address3 | London |
             | user_details_addressPostcode | SW1H 9AJ |
             | user_details_addressCountry | GB |
-            | user_details_phoneHome | 020 3334 3555  |
-            | user_details_phoneWork | 020 1234 5678  |
-            | user_details_phoneMobile | 079 123 456 78  |
+            | user_details_phoneMain | 020 3334 3555  |
+            | user_details_phoneAlternative | 020 1234 5678  |
         
 
     @admin

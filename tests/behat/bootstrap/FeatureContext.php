@@ -243,12 +243,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $unexpectedFields = array_diff($foundIdsWithErrors, $fields);
         
         if ($untriggeredField || $unexpectedFields) {
-            $message = "The form raised errors different than expected: \n";
+            $message = "";
             if ($untriggeredField) {
-                $message .= " - Fields not throwing error as expected: " . implode(', ', $untriggeredField) . "\n";
+                $message .= " - Form fields not throwing error as expected: \n      " . implode(', ', $untriggeredField) . "\n";
             }
             if ($unexpectedFields) {
-                 $message .= " - Fields unexpectedly throwing errors: " . implode(', ', $unexpectedFields) . "\n";
+                 $message .= " - Form fields unexpectedly throwing errors: \n      " . implode(', ', $unexpectedFields) . "\n";
             }
             
             throw new \RuntimeException($message);

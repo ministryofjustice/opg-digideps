@@ -32,7 +32,7 @@ Feature: edit client details
             | client_county | |
             | client_postcode | |
             | client_country | |
-            | client_phone | |
+            | client_phone | aaa |
         And I press "client_save"
         Then the following fields should have an error:
             | client_firstname |
@@ -44,6 +44,7 @@ Feature: edit client details
             | client_caseNumber |
             | client_address |
             | client_postcode |
+            | client_phone |
         When I fill in the following:
             | client_firstname | Nolan |
             | client_lastname | Ross |

@@ -117,7 +117,13 @@ Feature: add client and report
         And I should see the "report-n1" link
         And I should see the "create-new-report" link
         And I save the page as "deputy-client-home"
-   
+        
+    @deputy
+    Scenario: my client, check last logged in
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am on client home page "client-home"
+        Then I should see "less than a minute ago" in the "last-loggedin" region
+
     @deputy
     Scenario: report-overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
