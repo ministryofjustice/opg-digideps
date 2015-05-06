@@ -60,11 +60,11 @@ class AssetController extends Controller
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             $asset = $apiClient->getEntity('Asset','get_report_asset', [ 'parameters' => ['id' => $id ]]);
+            $form = $this->createForm(new FormDir\AssetType($titles),$asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $asset->getId() ])]);
         }else{
             $asset = new EntityDir\Asset();
+            $form = $this->createForm(new FormDir\AssetType($titles),$asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'add'])]);
         }
-       
-        $form = $this->createForm(new FormDir\AssetType($titles),$asset);
         $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
