@@ -19,24 +19,30 @@ class Decision
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\SequenceGenerator(sequenceName="decision_id_seq", allocationSize=1, initialValue=1)
+     * @JMS\Groups({"related","basic"})
+     * @JMS\Type("integer")
      */
     private $id;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"related","basic"})
+     * @JMS\Type("string")
      * @ORM\Column(type="text")
      */
     private $description;
 
     /**
      * @var boolean
-     *
+     * @JMS\Groups({"related","basic"})
+     * @JMS\Type("boolean")
      * @ORM\Column(name="client_involved_boolean", type="boolean")
      */
     private $clientInvolvedBoolean;
     
      /**
+     * @JMS\Groups({"related","basic"})
+      * @JMS\Type("string")
      * @ORM\Column(name="client_involved_details", type="text", nullable=true)
      */
     private $clientInvolvedDetails;
@@ -45,13 +51,14 @@ class Decision
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"related","basic"})
      * @ORM\Column(name="decision_date", type="date", nullable=true)
      */
     private $decisionDate;
 
     /**
      * @var integer
-     *
+     * @JMS\Groups({"related"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="decisions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
