@@ -21,7 +21,7 @@ activeTab : "tab-contacts"
         pageSectionDescription: 'contact_form.pageSectionDescription'
         } %}
 
-        {% if (action == 'add') or (action == 'edit') or (action == 'delete-confirm') %}
+        {% if (action == 'add') or (action == 'edit') or (action == 'delete-confirm') or (contacts is empty) %}
             {% set hideForm = false %}
             {% set formClass = 'in-page-form' %}
         {% else %}

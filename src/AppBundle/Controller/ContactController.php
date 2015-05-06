@@ -47,13 +47,14 @@ class ContactController extends Controller{
         
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             $contact = $apiClient->getEntity('Contact','get_report_contact', [ 'parameters' => ['id' => $id ]]);
+            $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
         }else{
              //set up add contact form
             $contact = new EntityDir\Contact();
+            $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts',[ 'reportId' => $reportId, 'action' => 'add' ]) ]);
         }
         
         //set up report submit form
-        $form = $this->createForm(new FormDir\ContactType(), $contact);
         $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
         
         //set up add reason for no contact form

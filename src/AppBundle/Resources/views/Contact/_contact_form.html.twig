@@ -1,7 +1,6 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
-
  <div {% if hideForm or (report.isDue() and action != 'add' and action != 'edit' and action != 'delete-confirm') %} class="visuallyhidden" {% endif %}>
-
+       
            {%if (action == 'edit') or (action == 'delete-confirm') %}
                {% set subSectionTitleText = 'contact_form.subSectionTitleEdit' %}
            {% else %}
