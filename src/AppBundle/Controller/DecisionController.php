@@ -43,15 +43,21 @@ class DecisionController extends Controller
        
         if(in_array($action, [ 'edit', 'delete-confirm']) && in_array($id,$report->getDecisions())){
             $decision = $apiClient->getEntity('Decision','get_report_decision', [ 'parameters' => ['id' => $id ] ]);
+            
+            $form = $this->createForm(new FormDir\DecisionType([
+                'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
+            ]), $decision, [ 'action' => $this->generateUrl('decisions',[ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
+            
         }else{
             $decision = new EntityDir\Decision;
+            
+            $form = $this->createForm(new FormDir\DecisionType([
+                'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
+            ]), $decision, [ 'action' => $this->generateUrl('decisions',[ 'reportId' => $reportId, 'action' => 'add' ])]);
         }
+        
         $decision->setReportId($reportId);
         $decision->setReport($report);
-        
-        $form = $this->createForm(new FormDir\DecisionType([
-            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
-        ]), $decision);
         
         $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
 
