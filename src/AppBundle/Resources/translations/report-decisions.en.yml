@@ -3,7 +3,8 @@ page:
     pageSectionTitle: Decisions made over the reporting period
     pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying and selling property, making gifts or changing the client's care home.
     addDecisionButton: Add a decision
-    subSectionTitle: Add a decision
+    subSectionTitleAdd: Add a decision
+    subSectionTitleEdit: Edit this decision
 
 # form
 title:
@@ -26,6 +27,8 @@ save:
   label: Save
 cancel:
   label: Cancel
+delete:
+    label: Delete
 listing:
   edit-link: Edit this decision
   description: Description

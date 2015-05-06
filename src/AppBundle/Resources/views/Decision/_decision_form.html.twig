@@ -31,12 +31,17 @@
 
 <div {% if hideForm %} class="visuallyhidden" {% endif %}>
 
+    {% if (action == 'edit') or (action == 'delete-confirm') %}
+          {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+    {% else %}
+          {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+    {% endif %}
+    
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
-    subSectionTitle: 'page.subSectionTitle'
+    subSectionTitle: subSectionTitleText
     } %}
 
-    {#{{ form_input(form.title,'title', { 'labelClass': 'required' }) }}#}
     {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
     {{ form_known_date(form.decisionDate, 'decisionDate') }}
 
@@ -52,9 +57,33 @@
     {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'save') }}
-    {% if hideForm or (action == 'add') %}
-
+    {% set buttonClass = '' %}
+    
+    {% if action == 'delete-confirm' %}
+            {% set buttonClass = 'visuallyhidden' %}
+            
+            <div>
+                <b>Are you sure that you want to delete this decision ?</b>
+            </div>
+            
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'delete.label',
+                linkClass: 'button-warning',
+                linkHref: path('decisions', {'reportId': report.id, 'action': 'delete', 'id': app.request.get('id') })
+                } %}
+                
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'cancel.label',
+                linkClass: 'button-link',
+                linkHref: path('decisions', {'reportId': report.id})
+                } %}
+    {% endif %}
+    
+    {{ form_submit(form.save,'save', { 'buttonClass': buttonClass }) }}
+    
+    {% if hideForm or (action == 'add') or ( action == 'edit' ) %}
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'cancel.label',
@@ -63,6 +92,16 @@
         } %}
 
     {% endif %}
+    
+    {% if (action == 'edit') %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'delete.label',
+                linkClass: 'button-warning',
+                linkHref: path('decisions', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id') })
+                } %}
+    {% endif %}
+    
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
 </div>

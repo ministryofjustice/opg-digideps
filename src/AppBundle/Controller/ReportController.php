@@ -159,59 +159,7 @@ class ReportController extends Controller
             'no_contact' => $noContact->createView() ];
     }
     
-  
-    /**
-     * @Route("/report/{reportId}/decisions/{action}", name="decisions", defaults={ "action" = "list"})
-     * @Template()
-     */
-    public function decisionsAction($reportId,$action)
-    {
-        $request = $this->getRequest();
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        
-        // just needed for title etc,
-        $report = $this->getReport($reportId);
-        $decision = new EntityDir\Decision;
-        $decision->setReportId($reportId);
-        $decision->setReport($report);
-        
-        $form = $this->createForm(new FormDir\DecisionType([
-            'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
-        ]), $decision);
-        
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
-
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
-           
-            if($form->get('save')->isClicked()){
-                if ($form->isValid()) {
-                    // add decision
-                    $apiClient->postC('add_decision', $form->getData());
-
-                    return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
-                }
-            }else{
-                
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
-            }
-        }
-        
-        return [
-            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]),
-            'form' => $form->createView(),
-            'report' => $report,
-            'client' => $this->getClient($report->getClient()),
-            'action' => $action,
-            'report_form_submit' => $reportSubmit->createView()
-        ];
-    }
-    
+   
     /**
      * @Route("/report/{reportId}/assets/{action}", name="assets", defaults={ "action" = "list"})
      * @Template()
