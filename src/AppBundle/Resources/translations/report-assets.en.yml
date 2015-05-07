@@ -30,6 +30,7 @@ form:
         label: Cancel
       delete:
         label: Delete
+        message: "Are you sure that you want to delete this asset?"
 listing:
   value: "Value"
   description: "Asset description"

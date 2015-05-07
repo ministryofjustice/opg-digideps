@@ -1,0 +1,76 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+{#
+Component parameters
+--------------------
+
+showDeleteConfirm (true/false)
+form
+#}
+
+{% set formClass = 'in-page-form' %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+<div>
+
+    {% set subSectionTitleText = 'form.newAsset.subSectionTitleEdit' %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: subSectionTitleText
+    } %}
+
+    {{ form_select(form.title, 'form.newAsset.controls.title') }}
+    {{ form_input(form.value, 'form.newAsset.controls.value', {
+    'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
+    'inputClass' : 'form-control__number'
+    } ) }}
+    {{ form_input(form.description, 'form.newAsset.controls.description') }}
+    {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
+
+    {% if (showDeleteConfirm) %}
+
+        {% include 'AppBundle:Components/Alerts:_delete-confirmation.html.twig' with
+        {
+        'translationDomain': translationDomain,
+        componentID: 'asset-delete-confirm',
+        deleteMessageText: 'form.newAsset.controls.delete.message' | trans,
+        deleteButtonType: path('delete_asset', {'reportId': report.id, 'id': app.request.get('id')}),
+        deleteButtonText: 'form.newAsset.controls.delete.label' | trans,
+        deleteButtonClass: 'button-warning',
+        cancelButtonLink: url('assets', {'reportId': report.id, 'id': asset.id, 'action':'edit'}) ~ '#asset-edit-' ~ asset.id,
+        cancelButtonText: 'form.newAsset.controls.cancel.label' | trans,
+        cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
+        } %}
+
+        {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': 'visuallyhidden' }) }}
+
+    {% else %}
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+        {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': '' }) }}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.newAsset.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('assets', {'reportId': report.id})
+        } %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.newAsset.controls.delete.label',
+        linkClass: 'button-warning',
+        linkHref: path('assets', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id')}) ~ '#asset-delete-confirm'
+        } %}
+
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {% endif %}
+
+</div>
+
+{{ form_end(form) }}
