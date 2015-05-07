@@ -42,6 +42,7 @@ activeTab: "tab-accounts"
         {% block validationSummary %}
             {{ form_errors_list(form) }}
             {{ form_errors_list(formBalance) }}
+            {{ form_errors_list(formEdit) }}
         {% endblock %}
 
         {% if report.isDue and account.closingBalance is null %}
