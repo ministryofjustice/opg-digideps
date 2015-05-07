@@ -107,6 +107,7 @@ class FormFieldsExtension extends \Twig_Extension
          //generate input field html using variables supplied
         echo $this->environment->render( 'AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
+            'formGroupClass' => isset($vars['formGroupClass']) ? $vars['formGroupClass']: null,
             'legendText' => $legendText,
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass']: null,
             'hintText' => $hintText,

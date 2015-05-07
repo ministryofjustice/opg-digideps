@@ -48,29 +48,29 @@ cancelButtonClass
 
     <div class="button-bar">
 
-        {% if deleteButtonType is iterable %}
+    {% if deleteButtonType is iterable %}
 
-            {{ form_submit(deleteButtonType, deleteButtonText,
-            {
-            'buttonClass': 'button-warning ' ~ deleteButtonClass
-            }) }}
+        {{ form_submit(deleteButtonType, deleteButtonText,
+        {
+        'buttonClass': 'button-warning ' ~ deleteButtonClass
+        }) }}
 
-        {% else %}
-
-            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-            transDomain: translationDomain,
-            linkButtonLabel: deleteButtonText,
-            linkClass: 'button-link ' ~ deleteButtonClass,
-            linkHref: deleteButtonType
-            } %}
-
-        {% endif %}
+    {% else %}
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
-        linkButtonLabel: cancelButtonText,
-        linkClass: 'button-link ' ~ cancelButtonClass,
-        linkHref: cancelButtonLink
+        linkButtonLabel: deleteButtonText,
+        linkClass: 'button-link ' ~ deleteButtonClass,
+        linkHref: deleteButtonType
         } %}
+
+    {% endif %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: cancelButtonText,
+    linkClass: 'button-link ' ~ cancelButtonClass,
+    linkHref: cancelButtonLink
+    } %}
     </div>
 </div>

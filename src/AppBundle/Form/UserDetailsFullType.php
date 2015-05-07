@@ -34,9 +34,8 @@ class UserDetailsFullType extends UserDetailsBasicType
             'preferred_choices' => ['', 'GB'],
             'empty_value' => $this->addressCountryEmptyValue
         ])
-        ->add('phoneHome', 'text')
-        ->add('phoneWork', 'text')
-        ->add('phoneMobile', 'text');
+        ->add('phoneMain', 'text')
+        ->add('phoneAlternative', 'text');
     }
     
     

@@ -1,0 +1,22 @@
+.alert {
+
+  &__delete-confirmation {
+    width: 50%;
+
+    background-color: $grey-2;
+    margin-bottom: 10px;
+
+    padding: 10px;
+
+    .button-bar {
+
+      margin-bottom: 0;
+
+      .button-warning {
+        margin-left: 0;
+      }
+    }
+
+  }
+
+}

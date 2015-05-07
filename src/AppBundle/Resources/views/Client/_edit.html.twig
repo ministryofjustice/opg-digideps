@@ -19,6 +19,7 @@ formTitle: "form.editClientForm.subSectionTitle" | trans
 
 {{ form_checkbox_group(form.allowedCourtOrderTypes, 'allowedCourtOrderTypes', {
 'fieldSetClass' : 'vertical',
+'formGroupClass': 'visuallyhidden',
 'legendClass' : 'form-label',
 'items': [
 {'labelClass': 'block-label', 'elementClass': '', 'description': "allowedCourtOrderTypes.description-0" | trans({}, translationDomain) },
@@ -29,7 +30,7 @@ formTitle: "form.editClientForm.subSectionTitle" | trans
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
-    {{ form_submit(form.save,'saveAndContinue', {'buttonClass' : 'disabled'}) }}
+    {{ form_submit(form.save,'save', {'buttonClass' : ''}) }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,

@@ -16,16 +16,12 @@ addressPostcode:
 addressCountry:
     label: Country
     defaultOption: Please select ...
-phoneHome:
-    label: Main telephone number
-phoneWork:
-    label: Work phone
-phoneMobile:
-    label: Mobile phone
+phoneMain:
+    label: Main phone number
+phoneAlternative:
+    label: Alternative phone number 
 submit:
     label: Save and continue
-edit:
-    label: Save
 cancelText: Cancel
 view:
     pageTitle: My details
@@ -40,7 +36,6 @@ yourDetails:
   address: "Address"
   mainPhoneNumber: "Main phone number"
   alternativePhoneNumber: "Alternative phone number"
-  mobilePhoneNumber: "Mobile phone number"
   emailAddress: "Email address"
 form:
   editYourDetails:
@@ -48,3 +43,8 @@ form:
     controls:
       cancel:
         label: "Cancel"
+      save:
+        label: "Save"
+  changeYourEmail:
+    subSectionTitle: "Change your email"
+    subSectionDescription: "To change your email address, send your updated email information to the Office of the Public Guardian (OPG) at <a href='mailto:deputyemailchange@publicguardian.gsi.gov.uk'>deputyemailchange@publicguardian.gsi.gov.uk</a>"

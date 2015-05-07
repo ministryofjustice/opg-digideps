@@ -243,12 +243,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $unexpectedFields = array_diff($foundIdsWithErrors, $fields);
         
         if ($untriggeredField || $unexpectedFields) {
-            $message = "The form raised errors different than expected: \n";
+            $message = "";
             if ($untriggeredField) {
-                $message .= " - Fields not throwing error as expected: " . implode(', ', $untriggeredField) . "\n";
+                $message .= " - Form fields not throwing error as expected: \n      " . implode(', ', $untriggeredField) . "\n";
             }
             if ($unexpectedFields) {
-                 $message .= " - Fields unexpectedly throwing errors: " . implode(', ', $unexpectedFields) . "\n";
+                 $message .= " - Form fields unexpectedly throwing errors: \n      " . implode(', ', $unexpectedFields) . "\n";
             }
             
             throw new \RuntimeException($message);
@@ -380,21 +380,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the first account page of the first report
+     * @Given I am on the account :accountNumber page of the first report
      */
-    public function iAmOnTheReport1Account1Page()
+    public function iAmOnTheReport1AccountPageByAccNumber($accountNumber)
     {
         $this->iAmOnTheReport1AccountsPage();
-        $this->clickOnBehatLink('account-n1');
-    }
-    
-    /**
-     * @Given I am on the edit first account page of the first report
-     */
-    public function iAmOnTheReport1Account1EditPage()
-    {
-        $this->iAmOnTheReport1Account1Page();
-        $this->clickOnBehatLink('edit-account-details');
+        $this->clickOnBehatLink('account-' . $accountNumber);
     }
     
 }

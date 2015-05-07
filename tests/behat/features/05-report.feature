@@ -210,7 +210,7 @@ Feature: report
         And I am on the first report overview page
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
-        # wrong form
+        # empty form
         And I press "account_save"
         And I save the page as "report-account-add-error"
         Then the following fields should have an error:
@@ -226,6 +226,35 @@ Feature: report
             | account_openingDate_month |
             | account_openingDate_year |
             | account_openingBalance |
+        # test validators
+        When I fill in the following:
+            | account_bank    | HSBC - main account | 
+            # invalid number
+            | account_accountNumber_part_1 | a | 
+            | account_accountNumber_part_2 | b | 
+            | account_accountNumber_part_3 | c | 
+            | account_accountNumber_part_4 | d | 
+            # invalid sort code
+            | account_sortCode_sort_code_part_1 | g |
+            | account_sortCode_sort_code_part_2 | h |
+            | account_sortCode_sort_code_part_3 |  |
+            # date outside report range
+            | account_openingDate_day   | 5 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 1983 |
+            | account_openingBalance  | 1,155.00 |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_accountNumber_part_1 |
+            | account_accountNumber_part_2 |
+            | account_accountNumber_part_3 |
+            | account_accountNumber_part_4 |
+            | account_sortCode_sort_code_part_1 |
+            | account_sortCode_sort_code_part_2 |
+            | account_sortCode_sort_code_part_3 |
+            | account_openingDate_day |
+            | account_openingDate_month |
+            | account_openingDate_year |
         # right values
         And I fill in the following:
             | account_bank    | HSBC - main account | 
@@ -253,7 +282,8 @@ Feature: report
     @deputy
     Scenario: edit account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the edit first account page of the first report
+        And I am on the account "8765" page of the first report
+        And I click on "edit-account-details"
         And I save the page as "report-account-edit-start"
         # assert fields are filled in from db correctly
         Then the following fields should have the corresponding values:
@@ -332,9 +362,45 @@ Feature: report
 
 
     @deputy
+    Scenario: add another account 6666 (will be deleted by next scenario)
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the accounts page of the first report
+        # add another account
+        And I fill in the following:
+            | account_bank    | Barclays acccount to delete | 
+            | account_accountNumber_part_1 | 6 | 
+            | account_accountNumber_part_2 | 6 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 6 | 
+            | account_sortCode_sort_code_part_1 | 55 |
+            | account_sortCode_sort_code_part_2 | 55 |
+            | account_sortCode_sort_code_part_3 | 55 |
+            | account_openingDate_day   | 4 |
+            | account_openingDate_month | 4 |
+            | account_openingDate_year  | 2015 |
+            | account_openingBalance  | 1,300.00 |
+        And I press "account_save"
+
+
+    @deputy
+    Scenario: delete account 6666 
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the accounts page of the first report
+        When I click on "account-6666"
+        And I click on "edit-account-details"
+        # delete and cancel
+        And I click on "delete-account"
+        And I click on "delete-confirm-cancel"
+        # delete and confirm
+        And I click on "delete-account"
+        And I press "account_delete"
+        Then I should not see the "account-6666" link
+
+
+    @deputy
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first account page of the first report
+        And I am on the account "1234" page of the first report
         And I click on "moneyIn-tab"
         And I click on "moneyOut-tab"
         # check no data was previously saved
@@ -395,8 +461,9 @@ Feature: report
     Scenario: edit bank account, check edit account does not show closing balance
         Given I set the report 1 not due
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first account page of the first report
+        And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
+        #TODO
 
     @deputy
     Scenario: add closing balance to account
@@ -406,8 +473,8 @@ Feature: report
         Then I should not see the "account-1-add-closing-balance" link
         When I set the report 1 due
         And I am on the accounts page of the first report
-        Then I should see the "account-n1-warning" region
-        When I click on "account-n1"
+        Then I should see the "account-1234-warning" region
+        When I click on "account-1234"
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 
             | accountBalance_closingDate_month | | 
@@ -439,10 +506,12 @@ Feature: report
         Then I should see "3,105.50" in the "account-1-closing-balance" region
         And I should see "30/12/2015" in the "account-1-closing-date" region
 
+
     @deputy
       Scenario: edit closing balance
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the edit first account page of the first report
+        And I am on the account "1234" page of the first report
+        And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
         Then the following fields should have the corresponding values:
             | account_closingDate_day   | 30 | 

@@ -23,6 +23,7 @@ class ClientController extends Controller
     {
         $util = $this->get('util');
         $clients = $this->getUser()->getClients();
+        $request = $this->getRequest();
        
         $client = !empty($clients)? $clients[0]: null;
         
@@ -35,25 +36,34 @@ class ClientController extends Controller
             }
         }
 
-
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
 
-        /**
-         * @todo refactor this when we get to the story for editing reports
-         */
         $formClientNewReport = $this->createForm(new ReportType(), $report);
         $formClientEditReportPeriod = $this->createForm(new ReportType(), $report);
-        $formEditClient = $this->createForm(new ClientType($util), $client);
-
-
+        $clientForm = $this->createForm(new ClientType($util), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
+        
+        if($request->getMethod() == "POST"){
+            $clientForm->handleRequest($request);
+            
+            if($clientForm->isValid()){
+                $apiClient = $this->get('apiclient');
+                $clientUpdated = $clientForm->getData();
+                
+                $apiClient->putC('update_client', $clientUpdated);
+                
+                return $this->redirect($this->generateUrl('client_home'));
+            }
+        }
+        
         return [
             'client' => $client,
             'reports' => $reports,
             'action' => $action,
-            'formEditClient' => $formEditClient->createView(),
+            'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
-            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView()
+            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
+            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn')
         ];
 
     }

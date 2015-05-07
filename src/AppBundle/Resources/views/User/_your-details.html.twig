@@ -14,8 +14,6 @@
 {% endif %}
 
 
-{{ form_start(formEditDetails, {attr: {novalidate: 'novalidate', class: formClass } }) }}
-
 {% if hideForm %}
 
     <div itemscope itemtype="http://schema.org/Person" class="data-item data-item--your-details">
@@ -55,15 +53,11 @@
             </div>
             <div class="data-item-fields-row">
                 <dt class="data-item-fields-term">{{ 'yourDetails.mainPhoneNumber' | trans }}</dt>
-                <dd class="data-item-fields-description">{{ user.phoneHome }}</dd>
+                <dd class="data-item-fields-description">{{ user.phoneMain }}</dd>
             </div>
             <div class="data-item-fields-row">
                 <dt class="data-item-fields-term">{{ 'yourDetails.alternativePhoneNumber' | trans }}</dt>
-                <dd class="data-item-fields-description">{{ user.phoneWork }}</dd>
-            </div>
-            <div class="data-item-fields-row">
-                <dt class="data-item-fields-term">{{ 'yourDetails.mobilePhoneNumber' | trans }}</dt>
-                <dd class="data-item-fields-description">{{ user.phoneMobile }}</dd>
+                <dd class="data-item-fields-description">{{ user.phoneAlternative }}</dd>
             </div>
             <div class="data-item-fields-row">
                 <dt class="data-item-fields-term">{{ 'yourDetails.emailAddress' | trans }}</dt>
@@ -76,10 +70,27 @@
 
 <div id="edit-your-details" {% if hideForm %} class="visuallyhidden" {% endif %}>
 
+    {{ form_start(formEditDetails, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
     {% include 'AppBundle:User:_edit.html.twig' with {
     'form': formEditDetails,
     'translationDomain': translationDomain
     } %}
 
+    {{ form_end(formEditDetails) }}
+
+
+    <form class="in-page-form">
+
+        {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
+        formTitle: "form.changeYourEmail.subSectionTitle" | trans
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'form.changeYourEmail.subSectionDescription'
+        } %}
+
+    </form>
+
 </div>
-{{ form_end(formEditDetails) }}

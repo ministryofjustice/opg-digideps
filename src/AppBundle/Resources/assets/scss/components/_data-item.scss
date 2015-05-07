@@ -48,6 +48,10 @@
       display: block;
       @include bold-19();
 
+      &--inline {
+        display: inline;
+      }
+
       &--block {
         position: relative;
         margin-left: auto;
@@ -82,8 +86,23 @@
       margin-left: 140px;
       &--header {
         .data-item-edit-link {
-          margin-left: 419px;
+          margin-right: 263px;
         }
+      }
+
+    }
+  }
+
+  &--last-logged-in {
+
+    float: left;
+    padding-top: 55px;
+    margin-left: 339px;
+
+    .data-item-fields .data-item-fields-row {
+
+      dt.data-item-fields-term {
+        margin-right: 5px;
       }
 
     }
