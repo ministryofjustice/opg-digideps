@@ -2652,6 +2652,8 @@ ol.progress {
 .report-list--contacts dd.report-list__item-fields-description {
   margin-left: 220px; }
 
+.report-list--decisions .report-list__item .report-list__item-header {
+  margin-bottom: 0; }
 .report-list--decisions dd.report-list__item-fields-description {
   margin-left: 50px; }
 

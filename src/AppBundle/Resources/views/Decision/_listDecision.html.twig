@@ -1,35 +1,56 @@
-{% set translationDomain = "report-decisions" %}
-{% trans_default_domain translationDomain %}
+{#
+Component parameters
+--------------------
 
-<ul class="behat-region-list-decisions report-list report-list--decisions">
-    {% for decision in decisions %}
-        <li class="report-list__item">
-           {% if (decision.id == app.request.get('id')) and ((action == 'edit') or (action == 'delete-confirm')) %}
-                    {% block validationSummary %}
-                            {{ form_errors_list(form) }}
-                    {% endblock %} 
-                    {% include 'AppBundle:Decision:_decision_form.html.twig' %}
-           {% else %}
-                <dl class="report-list__item-fields">
-                    <a href="{{url('decisions', {'reportId': report.id, 'action': 'edit', 'id': decision.id })}}" class="js-report-list__item-edit-link report-list__item-edit-link">{{ 'listing.edit-link'| trans }}</a>
-                    <div class="report-list__item-fields-row">
-                        <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ decision.description }}</dd>
-                    </div>
+showListData (true/false)
+showEditForm (true/false)
+showDeleteConfirm (true/false)
+form
+#}
 
-                    <div class="report-list__item-fields-row">
-                        <dt class="report-list__item-fields-term">{{ 'listing.date' | trans }}</dt>
-                        <dd class="report-list__item-fields-description">{{ decision.decisionDate | date("d F Y") }}</dd>
-                    </div>
+{% if (showListData) %}
 
-                    <div class="report-list__item-fields-row">
-                        <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.clientInvolvement' | trans }}</dt>
-                        <dd class="report-list__item-fields-description report-list__item-fields-description--block">
-                            <p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
-                                : {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
+    {% set translationDomain = "report-decisions" %}
+    {% trans_default_domain translationDomain %}
+
+    <ul class="behat-region-list-decisions report-list report-list--decisions">
+        {% for decision in decisions %}
+            <li class="report-list__item" id="edit-{{ decision.id }}">
+
+                {% if (decision.id == app.request.get('id')) and (showEditForm) %}
+
+                    {% include 'AppBundle:Decision:_decision_edit_form.html.twig' with {
+                    'translationDomain': translationDomain,
+                    'showDeleteConfirm': showDeleteConfirm,
+                    'form': form
+                    } %}
+
+                {% else %}
+                    <div class="report-list__item-header"><h3>&nbsp;</h3>
+                        <a href="{{ url('decisions', {'reportId': report.id, 'action': 'edit', 'id': decision.id }) ~ "#edit-" ~ decision.id }}"
+                           class="js-report-list__item-edit-link report-list__item-edit-link">{{ 'listing.edit-link'| trans }}</a>
                     </div>
-                </dl>
-           {% endif %}
-        </li>
-    {% endfor %}
-</ul>
+                    <dl class="report-list__item-fields">
+                        <div class="report-list__item-fields-row">
+                            <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ decision.description }}</dd>
+                        </div>
+
+                        <div class="report-list__item-fields-row">
+                            <dt class="report-list__item-fields-term">{{ 'listing.date' | trans }}</dt>
+                            <dd class="report-list__item-fields-description">{{ decision.decisionDate | date("d F Y") }}</dd>
+                        </div>
+
+                        <div class="report-list__item-fields-row">
+                            <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.clientInvolvement' | trans }}</dt>
+                            <dd class="report-list__item-fields-description report-list__item-fields-description--block">
+                                <p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
+                                    : {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
+                        </div>
+                    </dl>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endif %}

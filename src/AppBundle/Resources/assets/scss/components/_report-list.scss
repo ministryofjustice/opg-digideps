@@ -86,6 +86,11 @@
 }
 
 .report-list--decisions {
+
+  .report-list__item .report-list__item-header{
+    margin-bottom: 0;
+  }
+
   dt.report-list__item-fields-term {
   }
 

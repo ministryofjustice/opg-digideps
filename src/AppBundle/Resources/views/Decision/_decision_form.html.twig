@@ -1,89 +1,53 @@
-{% set translationDomain = "report-decisions" %}
-{% trans_default_domain translationDomain %}
+{#
+Component parameters
+--------------------
 
+showAddForm (true/false)
+form
+#}
 
-{% if (decisions is not empty) and (action == 'list') %}
-    {% set hideForm = true %}
-    {% set formClass = '' %}
-{% else %}
-    {% set hideForm = false %}
-    {% set formClass = 'report-form' %}
-{% endif %}
+{% if (showAddForm) %}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass }}) }}
-
-{% if hideForm %}
-    {# Then we need to show the Add Button Link #}
-    {% set  params = app.request.attributes.get('_route_params') %}
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
-    buttonBarClass: 'add-bar js-add-contact-button-bar'
-    } %}
-
-    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'page.addDecisionButton',
-    linkClass: 'button-secondary behat-link-add-a-decision',
-    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' })
-    } %}
-
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-{% endif %}
-
-<div {% if hideForm %} class="visuallyhidden" {% endif %}>
-
-    {% if (action == 'edit') or (action == 'delete-confirm') %}
-          {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+    {% if (showAddForm) %}
+        {% set formContainerClass = '' %}
+        {% set formClass = 'in-page-form' %}
     {% else %}
-          {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+        {% set formContainerClass = 'visuallyhidden' %}
+        {% set formClass = '' %}
     {% endif %}
-    
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: subSectionTitleText
-    } %}
 
-    {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
-    {{ form_known_date(form.decisionDate, 'decisionDate') }}
 
-    {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass }}) }}
+
+    <div id="add" class="{{ formContainerClass }}"> {# Show the Add Form #}
+
+        {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: subSectionTitleText
+        } %}
+
+        {# form block start #}
+        {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+        {{ form_known_date(form.decisionDate, 'decisionDate') }}
+
+        {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
         'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
         'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
         ]
-    }) }}
+        }) }}
 
-    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+        {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+        {# form block end #}
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {% set buttonClass = '' %}
-    
-    {% if action == 'delete-confirm' %}
-            {% set buttonClass = 'visuallyhidden' %}
-            
-            <div>
-                <b>Are you sure that you want to delete this decision ?</b>
-            </div>
-            
-            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'delete.label',
-                linkClass: 'button-warning',
-                linkHref: path('decisions', {'reportId': report.id, 'action': 'delete', 'id': app.request.get('id') })
-                } %}
-                
-            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'cancel.label',
-                linkClass: 'button-link',
-                linkHref: path('decisions', {'reportId': report.id})
-                } %}
-    {% endif %}
-    
-    {{ form_submit(form.save,'save', { 'buttonClass': buttonClass }) }}
-    
-    {% if hideForm or (action == 'add') or ( action == 'edit' ) %}
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'cancel.label',
@@ -91,19 +55,10 @@
         linkHref: path('decisions', {'reportId': report.id})
         } %}
 
-    {% endif %}
-    
-    {% if (action == 'edit') %}
-            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'delete.label',
-                linkClass: 'button-warning',
-                linkHref: path('decisions', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id') })
-                } %}
-    {% endif %}
-    
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-</div>
+    </div>
 
-{{ form_end(form) }}
+    {{ form_end(form) }}
+
+{% endif %}
