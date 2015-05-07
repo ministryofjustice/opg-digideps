@@ -1,8 +1,9 @@
-{% block validationSummary %}
-    {{ form_errors_list(no_contact) }}
-{% endblock %}
+{% if showNoContactForm %}
 
-{% if contacts is empty and report.isDue() %}
+    {% block validationSummary %}
+        {{ form_errors_list(no_contact) }}
+    {% endblock %}
+
 
     {{ form_start(no_contact, {attr: {novalidate: 'novalidate', class: 'no-contact-form in-page-form' } }) }}
 

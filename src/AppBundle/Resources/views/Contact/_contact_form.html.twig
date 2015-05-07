@@ -1,77 +1,59 @@
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
- <div {% if hideForm or (report.isDue() and action != 'add' and action != 'edit' and action != 'delete-confirm') %} class="visuallyhidden" {% endif %}>
-       
-           {%if (action == 'edit') or (action == 'delete-confirm') %}
-               {% set subSectionTitleText = 'contact_form.subSectionTitleEdit' %}
-           {% else %}
-               {% set subSectionTitleText = 'contact_form.subSectionTitleAdd' %}
-           {% endif %}
-           
-            {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-            transDomain: translationDomain,
-            subSectionTitle: subSectionTitleText
-            } %}
-    
-    {{ form_input(form.contactName, 'contactName') }}
-    {{ form_input(form.relationship, 'relationship') }}
-    {{ form_input(form.explanation, 'explanation') }}
-    {{ form_input(form.address, 'address') }}
-    {{ form_input(form.address2, 'address2') }}
-    {{ form_input(form.county, 'county') }}
-    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
-    {{ form_select(form.country, 'country') }}
+{#
+Component parameters
+--------------------
 
-    
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-  
-    {% set buttonClass = '' %}
-    
-    {% if action == 'delete-confirm' %}
-          {% set buttonClass = 'visuallyhidden' %}
-          <div>
-              <b>Are you sure that you want to delete this contact ?</b>
-          </div>
-          
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: translationDomain,
-                    linkButtonLabel: 'delete.label',
-                    linkClass: 'button-warning',
-                    linkHref: path('delete_contact', {'reportId': report.id, 'id': app.request.get('id') })
-                    } %}
+showAddForm (true/false)
+form
+#}
 
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'cancel.label',
-                linkClass: 'button-link',
-                linkHref: path('contacts', {'reportId': report.id})
-             } %}
+{% if (showAddForm) %}
+
+    {% if (showAddForm) %}
+        {% set formContainerClass = '' %}
+        {% set formClass = 'in-page-form' %}
+    {% else %}
+        {% set formContainerClass = 'visuallyhidden' %}
+        {% set formClass = '' %}
     {% endif %}
-    
-    {{ form_submit(form.save,'save', { 'buttonClass': buttonClass }) }}
-    
-    {% if hideForm or (action == 'add') or (action == 'edit')%}
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-            transDomain: translationDomain,
-            linkButtonLabel: 'cancel.label',
-            linkClass: 'button-link',
-            linkHref: path('contacts', {'reportId': report.id})
+
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+    <div id="add" class="{{ formContainerClass }}"> {# Show the Add Form #}
+
+        {% set subSectionTitleText = 'contact_form.subSectionTitleAdd' %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: subSectionTitleText
         } %}
-    {% endif %}
-    
-    {% if action == 'edit' %}
+
+        {{ form_input(form.contactName, 'contactName') }}
+        {{ form_input(form.relationship, 'relationship') }}
+        {{ form_input(form.explanation, 'explanation') }}
+        {{ form_input(form.address, 'address') }}
+        {{ form_input(form.address2, 'address2') }}
+        {{ form_input(form.county, 'county') }}
+        {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+        {{ form_select(form.country, 'country') }}
+
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: translationDomain,
-                    linkButtonLabel: 'delete.label',
-                    linkClass: 'button-warning',
-                    linkHref: path('contacts', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id') })
-                    } %}
-    {% endif %}
-    
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %} 
-    
-  </div>
-    
- {{ form_end(form) }}
+        transDomain: translationDomain,
+        linkButtonLabel: 'cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('contacts', {'reportId': report.id})
+        } %}
+
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    </div>
+
+    {{ form_end(form) }}
 
 
-
+{% endif %}

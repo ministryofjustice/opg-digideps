@@ -1,0 +1,80 @@
+{#
+Component parameters
+--------------------
+
+translationDomain
+showDeleteConfirm (true/false)
+form
+#}
+
+
+{% set formClass = "in-page-form" %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+<div>
+
+    {% set subSectionTitleText = 'contact_form.subSectionTitleEdit' %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: subSectionTitleText
+    } %}
+
+    {{ form_input(form.contactName, 'contactName') }}
+    {{ form_input(form.relationship, 'relationship') }}
+    {{ form_input(form.explanation, 'explanation') }}
+    {{ form_input(form.address, 'address') }}
+    {{ form_input(form.address2, 'address2') }}
+    {{ form_input(form.county, 'county') }}
+    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+    {{ form_select(form.country, 'country') }}
+
+
+    {% if (showDeleteConfirm) %}
+
+        {% include 'AppBundle:Components/Alerts:_delete-confirmation.html.twig' with
+        {
+        'translationDomain': translationDomain,
+        componentID: 'delete-confirm',
+        deleteMessageText: 'delete.message' | trans({}, translationDomain),
+        deleteButtonType: path('delete_contact', {'reportId': report.id, 'id': app.request.get('id') }),
+        deleteButtonText: 'delete.label' | trans({}, translationDomain),
+        deleteButtonClass: 'button-warning',
+        cancelButtonLink: url('contacts', { 'reportId': report.id, 'id': contact.id, 'action': 'edit' }) ~ '#edit-' ~ contact.id,
+        cancelButtonText: 'cancel.label' | trans({}, translationDomain),
+        cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
+        } %}
+
+        {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': 'visuallyhidden' }) }}
+
+    {% else %}
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('contacts', {'reportId': report.id})
+        } %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'delete.label',
+        linkClass: 'button-warning',
+        linkHref: path('contacts', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id') }) ~ "#delete-confirm"
+        } %}
+
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {% endif %}
+
+</div>
+
+{{ form_end(form) }}
+
+
+
