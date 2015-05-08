@@ -22,8 +22,11 @@ formTitle: "form.editYourDetails.subSectionTitle" | trans
     {{ form_input(form.phoneMain,'phoneMain', { 'labelClass': 'required' }) }}
 
     {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
-
 {% endif %}
+
+{{ form_input(form.password.current_password,'Current Password') }}
+{{ form_input(form.password.new_password.first,'password') }}
+{{ form_input(form.password.new_password.second,'new_password') }}
 
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
