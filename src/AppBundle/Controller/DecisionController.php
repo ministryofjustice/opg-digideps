@@ -11,16 +11,21 @@ use AppBundle\Entity\Decision;
 class DecisionController extends RestController
 {
     /**
-     * @Route("/add")
-     * @Method({"POST"})
+     * @Route("/upsert")
+     * @Method({"POST", "PUT"})
      */
-    public function addAction()
+    public function upsertAction()
     {
         $data = $this->deserializeBodyContent();
+        $request = $this->getRequest();
 
-        $report = $this->findEntityBy('Report', $data['report_id'], 'Report not found');
-        $decision = new Decision();
-        $decision->setReport($report);
+        if($request->getMethod() == "PUT"){
+            $decision = $this->findEntityBy('Decision', $data['id']);
+        }else{
+            $report = $this->findEntityBy('Report', $data['report_id'], 'Report not found');
+            $decision = new Decision();
+            $decision->setReport($report);
+        }
 
         $this->hydrateEntityWithArrayData($decision, $data, [
             'description' => 'setDescription',
@@ -49,5 +54,35 @@ class DecisionController extends RestController
         $report = $this->findEntityBy('Report', $reportId);
 
         return $this->getRepository('Decision')->findBy(['report'=>$report]);
+    }
+    
+    /**
+     * @Route("/{id}")
+     * @Method({"GET"})
+     * @param integer $id
+     */
+    public function get($id)
+    {
+        $request = $this->getRequest();
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
+        $this->setJmsSerialiserGroup($serialiseGroups);
+        
+        $decision = $this->findEntityBy('Decision', $id, "Decision with id:".$id." not found");
+        
+        return $decision;
+    }
+    
+    /**
+     * @Route("/{id}")
+     * @Method({"DELETE"})
+     */
+    public function deleteAction($id)
+    {
+        $decision = $this->findEntityBy('Decision', $id, 'Decision not found');
+        
+         $this->getEntityManager()->remove($decision);
+         $this->getEntityManager()->flush();
+         
+         return [ ];
     }
 }
