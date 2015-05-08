@@ -8,16 +8,15 @@ activeTab : "tab-contacts"
     {# Initialise View States ******************* #}
     {% set showNoContactForm = false %}
     {% set showListData = false %}
+    {% set showEditHelpInfo = false %}
     {% set showAddForm = false %}
     {% set showEditForm = false %}
     {% set showDeleteConfirm = false %}
 
-    {% if ( (contacts is empty) and (report.isDue() ) ) %}
-        {% set showNoContactForm = true %}
-    {% endif %}
 
     {% if contacts is not empty %}
         {% set showListData = true %}
+        {% set showEditHelpInfo = true %}
     {% endif %}
 
     {% if (action == 'edit') %}
@@ -29,9 +28,34 @@ activeTab : "tab-contacts"
         {% set showDeleteConfirm = true %}
     {% endif %}
 
-    {% if (action == 'add') or ( (action == 'list') and (contacts is empty) ) %}
-        {% set showAddForm = true %}
+    {% if (contacts is empty) %}
+
+        {% if (report.isDue() ) %}
+
+            {% if (action == 'list') %}
+                {% set showNoContactForm = true %}
+            {% elseif (action == 'add') %}
+                {% set showAddForm = true %}
+            {% endif %}
+
+        {% else %}
+
+            {% if ( (action == 'list') ) %}
+                {% set showAddForm = true %}
+            {% elseif (action == 'add') %}
+                {% set showAddForm = true %}
+            {% endif %}
+
+        {% endif %}
+
+    {% else %}
+
+        {% if (action == 'add') %}
+            {% set showAddForm = true %}
+        {% endif %}
+
     {% endif %}
+
     {#  ***************************************** #}
 
 
@@ -52,6 +76,15 @@ activeTab : "tab-contacts"
         transDomain: translationDomain,
         pageSectionDescription: 'contact_form.pageSectionDescription'
         } %}
+
+        {% if (showEditHelpInfo) %}
+
+            {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionDescription: 'page.pageSectionEditInfo'
+            } %}
+
+        {% endif %}
 
         {% block validationSummary %}
             {{ form_errors_list(form) }}

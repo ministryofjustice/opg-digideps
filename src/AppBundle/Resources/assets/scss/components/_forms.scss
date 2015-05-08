@@ -13,8 +13,24 @@ form {
     border-left: 3px solid $grey-2;
     padding-left: 10px;
 
+    .form-group {
+
+      .form-control {
+        width: 63%;
+      }
+
+      textarea.form-control {
+        height: 7em;
+      }
+      
+    }
+
     & + .in-page-form {
       margin-top: 40px;
+    }
+
+    .report-list__item & {
+      margin-bottom: 20px;
     }
 
   }
@@ -123,7 +139,8 @@ form {
   border: 1px solid $grey-2;
 
   .field-with-errors & {
-    border: 2px solid #df3034;
+    border: 0;
     border-right: 0;
+    margin: 2px;
   }
 }

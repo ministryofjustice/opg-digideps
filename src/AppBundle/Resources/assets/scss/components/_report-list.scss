@@ -76,22 +76,46 @@
 }
 
 .report-list--contacts {
-  dt.report-list__item-fields-term {
-    width: 210px;
+  .report-list__item {
+    position: relative;
+
+    .report-list__item-fields {
+
+      dd.report-list__item-fields-description {
+        margin-right: 300px;
+      }
+
+      dt.report-list__item-fields-term {
+        width: 210px;
+      }
+
+    }
+
   }
 
-  dd.report-list__item-fields-description {
-    margin-left: 220px;
-  }
 }
 
 .report-list--decisions {
+
+  .report-list__item {
+    position: relative;
+
+    .report-list__item-header {
+      margin-bottom: 0;
+      overflow: visible;
+      z-index: 10;
+    }
+
+    .report-list__item-fields dd.report-list__item-fields-description {
+      margin-left: 50px;
+      margin-right: 300px;
+    }
+
+  }
+
   dt.report-list__item-fields-term {
   }
 
-  dd.report-list__item-fields-description {
-    margin-left: 50px;
-  }
 }
 
 .report-list--accounts {
