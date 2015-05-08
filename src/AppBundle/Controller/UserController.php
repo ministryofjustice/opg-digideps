@@ -11,9 +11,11 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use AppBundle\Form\ChangePasswordType;
 use AppBundle\Form\UserDetailsBasicType;
 use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -97,7 +99,6 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                
                 $apiClient->putC('user/' . $user->getId(), $form->getData(), [
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
@@ -119,16 +120,18 @@ class UserController extends Controller
     /**
      * @Route("/{action}", name="user_view", defaults={ "action" = ""})
      * @Template()
-     */
+     **/
     public function indexAction($action)
     {
         $request = $this->getRequest();
         $user = $this->getUser();
-
+        
         $formEditDetails = $this->createForm(new UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
-
+        
+        $formEditDetails->add('password', new ChangePasswordType(), [ 'error_bubbling' => false ]);
+        
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
             
@@ -140,6 +143,7 @@ class UserController extends Controller
                 
                 return $this->redirect($this->generateUrl('user_view'));
             }
+            
         }
 
         return [
