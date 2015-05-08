@@ -17,12 +17,21 @@ parameters:
         # report
         add_report: report/add
         find_report_by_id: report/find-by-id
-        add_decision: decision/add
+        add_decision: decision/upsert
+        update_decision: decision/upsert
+        delete_decision: decision
         find_decision_by_report_id: decision/find-by-report-id
-        add_report_contact: report/add-contact
+        add_report_contact: report/upsert-contact
+        update_report_contact: report/upsert-contact
+        get_report_decision: decision
         get_report_contacts: report/get-contacts
+        get_report_contact: report/get-contact
         add_report_account: report/add-account
         get_report_accounts: report/get-accounts
         find_account_by_id: report/find-account-by-id
         get_report_assets: report/get-assets
-        add_report_asset: report/add-asset
+        delete_report_contact: report/delete-contact
+        add_report_asset: report/upsert-asset
+        update_report_asset: report/upsert-asset
+        get_report_asset: report/get-asset
+        delete_report_asset: report/delete-asset

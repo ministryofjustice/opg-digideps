@@ -13,8 +13,68 @@ form {
     border-left: 3px solid $grey-2;
     padding-left: 10px;
 
+    .form-date {
+      .form-group {
+        input {
+          width: 100%;
+        }
+      }
+    }
+
+    .form-group {
+
+      .form-control {
+        width: 55%;
+      }
+
+      textarea.form-control {
+        height: 7em;
+      }
+
+      .form-control__select {
+        width: 100%;
+      }
+
+      .form-control__postcode, .form-control__number {
+        width: 22%;
+      }
+
+    }
+
+    .report-list__item & {
+
+      .form-date {
+        .form-group {
+          input {
+            width: 100%;
+          }
+        }
+      }
+
+      .form-group {
+
+        .form-control {
+          width: 63%;
+        }
+
+        .form-control__select {
+          width: 100%;
+        }
+
+        .form-control__postcode, .form-control__number {
+          width: 25%;
+        }
+
+      }
+
+    }
+
     & + .in-page-form {
       margin-top: 40px;
+    }
+
+    .report-list__item & {
+      margin-bottom: 20px;
     }
 
   }
@@ -44,6 +104,11 @@ form {
     .form-label {
       float: left;
     }
+  }
+
+  textarea.form-control {
+    height: 7em;
+    width: 65%;
   }
 
 }
@@ -85,7 +150,8 @@ form {
 
 .form-control__select-container {
   border: 1px solid #bfc1c3;
-  width: 50%;
+  width: auto;
+  display: inline-block;
   background-color: #dee0e2;
   border: 1px solid #0b0c0c;
 }
@@ -123,7 +189,8 @@ form {
   border: 1px solid $grey-2;
 
   .field-with-errors & {
-    border: 2px solid #df3034;
+    border: 0;
     border-right: 0;
+    margin: 2px;
   }
 }

@@ -2,13 +2,15 @@ page:
   htmlTitle: "Report Assets"
   pageSectionTitle: "Client's assets"
   pageSectionDescription: "Add details of any property, savings or investments owned by your client."
+  pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
 form:
   listing:
     addButton:
       label: "Add an asset"
   newAsset:
-    subSectionTitle: "Add an asset"
+    subSectionTitleAdd: "Add an asset"
+    subSectionTitleEdit: "Edit this asset"
     controls:
       title:
         label: "Asset title"
@@ -27,6 +29,9 @@ form:
         label: Save
       cancel:
         label: Cancel
+      delete:
+        label: Delete
+        message: "Are you sure that you want to delete this asset?"
 listing:
   value: "Value"
   description: "Asset description"
