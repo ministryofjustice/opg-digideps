@@ -2658,8 +2658,15 @@ ol.progress {
 .report-list--contacts dd.report-list__item-fields-description {
   margin-left: 220px; }
 
-.report-list--decisions dd.report-list__item-fields-description {
-  margin-left: 50px; }
+.report-list--decisions .report-list__item {
+  position: relative; }
+  .report-list--decisions .report-list__item .report-list__item-header {
+    margin-bottom: 0;
+    overflow: visible;
+    z-index: 10; }
+  .report-list--decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description {
+    margin-left: 50px;
+    margin-right: 300px; }
 
 .report-list--accounts.report-list {
   padding-left: 0; }

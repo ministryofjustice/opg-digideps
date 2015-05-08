@@ -1,0 +1,64 @@
+{#
+Component parameters
+--------------------
+
+showAddForm (true/false)
+form
+#}
+
+{% if (showAddForm) %}
+
+    {% if (showAddForm) %}
+        {% set formContainerClass = '' %}
+        {% set formClass = 'in-page-form' %}
+    {% else %}
+        {% set formContainerClass = 'visuallyhidden' %}
+        {% set formClass = '' %}
+    {% endif %}
+
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass }}) }}
+
+    <div id="add" class="{{ formContainerClass }}"> {# Show the Add Form #}
+
+        {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: subSectionTitleText
+        } %}
+
+        {# form block start #}
+        {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+        {{ form_known_date(form.decisionDate, 'decisionDate') }}
+
+        {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
+        'fieldSetClass' : 'inline',
+        'legendClass' : 'form-label',
+        'items': [
+        {'labelClass': 'block-label', 'elementClass': '' },
+        {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+        }) }}
+
+        {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+        {# form block end #}
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('decisions', {'reportId': report.id})
+        } %}
+
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    </div>
+
+    {{ form_end(form) }}
+
+{% endif %}

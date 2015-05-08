@@ -1,0 +1,84 @@
+{#
+Component parameters
+--------------------
+
+translationDomain
+showDeleteConfirm (true/false)
+form
+#}
+
+
+{% set formClass = 'in-page-form' %}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass }}) }}
+
+<div>
+
+    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: subSectionTitleText
+    } %}
+
+    {# form block start #}
+    {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+    {{ form_known_date(form.decisionDate, 'decisionDate') }}
+
+    {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
+    'fieldSetClass' : 'inline',
+    'legendClass' : 'form-label',
+    'items': [
+    {'labelClass': 'block-label', 'elementClass': '' },
+    {'labelClass': 'block-label', 'elementClass': '' }
+    ]
+    }) }}
+
+    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+    {# form block end #}
+
+
+    {% if (showDeleteConfirm) %}
+
+        {% include 'AppBundle:Components/Alerts:_delete-confirmation.html.twig' with
+        {
+        'translationDomain': translationDomain,
+        componentID: 'delete-confirm',
+        deleteMessageText: 'delete.message' | trans({}, translationDomain),
+        deleteButtonType: path('decisions', {'reportId': report.id, 'action': 'delete', 'id': app.request.get('id') }),
+        deleteButtonText: 'delete.label' | trans({}, translationDomain),
+        deleteButtonClass: 'button-warning behat-link-delete',
+        cancelButtonLink: url('decisions', {'reportId': report.id, 'action': 'edit', 'id': decision.id }) ~ "#edit-" ~ decision.id,
+        cancelButtonText: 'cancel.label' | trans({}, translationDomain),
+        cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
+        } %}
+
+        {{ form_submit(form.save,'save', { 'buttonClass': 'visuallyhidden' }) }}
+
+    {% else %}
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'cancel.label',
+        linkClass: 'button-link behat-link-cancel-edit',
+        linkHref: path('decisions', {'reportId': report.id})
+        } %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'delete.label',
+        linkClass: 'button-warning behat-link-delete-confirm',
+        linkHref: path('decisions', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id') }) ~ '#delete-confirm'
+        } %}
+
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {% endif %}
+
+</div>
+
+{{ form_end(form) }}
