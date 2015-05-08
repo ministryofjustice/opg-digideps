@@ -13,6 +13,14 @@ form {
     border-left: 3px solid $grey-2;
     padding-left: 10px;
 
+    .form-date {
+      .form-group {
+        input {
+          width: 100%;
+        }
+      }
+    }
+
     .form-group {
 
       .form-control {
@@ -27,13 +35,21 @@ form {
         width: 100%;
       }
 
-      .form-control__postcode {
+      .form-control__postcode, .form-control__number {
         width: 22%;
       }
 
     }
 
     .report-list__item & {
+
+      .form-date {
+        .form-group {
+          input {
+            width: 100%;
+          }
+        }
+      }
 
       .form-group {
 
@@ -45,7 +61,7 @@ form {
           width: 100%;
         }
 
-        .form-control__postcode {
+        .form-control__postcode, .form-control__number {
           width: 25%;
         }
 
@@ -90,7 +106,7 @@ form {
     }
   }
 
-  textarea.form-control{
+  textarea.form-control {
     height: 7em;
     width: 65%;
   }

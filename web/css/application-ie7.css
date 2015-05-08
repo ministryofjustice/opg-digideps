@@ -2024,19 +2024,23 @@ form {
   form.in-page-form {
     border-left: 3px solid #bfc1c3;
     padding-left: 10px; }
+    form.in-page-form .form-date .form-group input {
+      width: 100%; }
     form.in-page-form .form-group .form-control {
       width: 55%; }
     form.in-page-form .form-group textarea.form-control {
       height: 7em; }
     form.in-page-form .form-group .form-control__select {
       width: 100%; }
-    form.in-page-form .form-group .form-control__postcode {
+    form.in-page-form .form-group .form-control__postcode, form.in-page-form .form-group .form-control__number {
       width: 22%; }
+    .report-list__item form.in-page-form .form-date .form-group input {
+      width: 100%; }
     .report-list__item form.in-page-form .form-group .form-control {
       width: 63%; }
     .report-list__item form.in-page-form .form-group .form-control__select {
       width: 100%; }
-    .report-list__item form.in-page-form .form-group .form-control__postcode {
+    .report-list__item form.in-page-form .form-group .form-control__postcode, .report-list__item form.in-page-form .form-group .form-control__number {
       width: 25%; }
     form.in-page-form + .in-page-form {
       margin-top: 40px; }
@@ -2638,7 +2642,7 @@ ol.progress {
   .report-list--decisions .report-list__item .report-list__item-header {
     margin-bottom: 0;
     overflow: visible;
-    z-index: 10; 
+    z-index: 10; }
   .report-list--decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
     margin-left: 0;
     margin-right: 300px; }
@@ -2839,6 +2843,9 @@ span.icon {
     background-position: 0px 0px;
     width: 35px;
     height: 35px; }
+
+.form-date .form-group input {
+  text-align: center; }
 
 .form-last-four-digits ul {
   list-style: disc;
