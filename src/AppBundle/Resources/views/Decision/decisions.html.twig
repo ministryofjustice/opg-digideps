@@ -6,12 +6,14 @@ activeTab: "tab-decisions"
 
     {# Initialise View States ******************* #}
     {% set showListData = false %}
+    {% set showEditHelpInfo = false %}
     {% set showAddForm = false %}
     {% set showEditForm = false %}
     {% set showDeleteConfirm = false %}
 
     {% if decisions is not empty %}
         {% set showListData = true %}
+        {% set showEditHelpInfo = true %}
     {% endif %}
 
     {% if (action == 'edit') %}
@@ -43,6 +45,15 @@ activeTab: "tab-decisions"
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
         } %}
+
+        {% if (showEditHelpInfo) %}
+
+            {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionDescription: 'page.pageSectionEditInfo'
+            } %}
+
+        {% endif %}
 
         {% block validationSummary %}
             {{ form_errors_list(form) }}

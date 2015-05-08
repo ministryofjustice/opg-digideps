@@ -17,6 +17,10 @@ form {
       margin-top: 40px;
     }
 
+    .report-list__item & {
+      margin-bottom: 20px;
+    }
+
   }
 
 }
@@ -44,6 +48,11 @@ form {
     .form-label {
       float: left;
     }
+  }
+
+  textarea.form-control{
+    height: 7em;
+    width: 65%;
   }
 
 }
