@@ -22,7 +22,7 @@ parameters:
         delete_decision: decision
         find_decision_by_report_id: decision/find-by-report-id
         add_report_contact: report/upsert-contact
-        update_report_contact: report/upsert-contac
+        update_report_contact: report/upsert-contact
         get_report_decision: decision
         get_report_contacts: report/get-contacts
         get_report_contact: report/get-contact

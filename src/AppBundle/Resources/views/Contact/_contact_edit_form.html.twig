@@ -40,7 +40,7 @@ form
         deleteMessageText: 'delete.message' | trans({}, translationDomain),
         deleteButtonType: path('delete_contact', {'reportId': report.id, 'id': app.request.get('id') }),
         deleteButtonText: 'delete.label' | trans({}, translationDomain),
-        deleteButtonClass: 'button-warning',
+        deleteButtonClass: 'button-warning behat-link-delete',
         cancelButtonLink: url('contacts', { 'reportId': report.id, 'id': contact.id, 'action': 'edit' }) ~ '#edit-' ~ contact.id,
         cancelButtonText: 'cancel.label' | trans({}, translationDomain),
         cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
@@ -57,14 +57,14 @@ form
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'cancel.label',
-        linkClass: 'button-link',
+        linkClass: 'button-link behat-link-cancel-edit',
         linkHref: path('contacts', {'reportId': report.id})
         } %}
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'delete.label',
-        linkClass: 'button-warning',
+        linkClass: 'button-warning behat-link-delete-confirm',
         linkHref: path('contacts', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id') }) ~ "#delete-confirm"
         } %}
 

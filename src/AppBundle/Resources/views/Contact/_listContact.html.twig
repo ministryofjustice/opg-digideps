@@ -27,7 +27,7 @@ form
                 {% else %}
                     <div class="report-list__item-header"><h3 itemprop="name">{{ contact.contactName }}</h3>
                         <a href="{{ url('contacts', { 'reportId': report.id, 'id': contact.id, 'action': 'edit' }) ~ '#edit-' ~ contact.id }}"
-                           class="js-report-list__item-edit-link report-list__item-edit-link">{{ 'view_contact.edit'| trans }}</a>
+                           class="js-report-list__item-edit-link report-list__item-edit-link behat-link-contact-n{{loop.index}}">{{ 'view_contact.edit'| trans }}</a>
                     </div>
                     <dl class="report-list__item-fields">
                         <div class="report-list__item-fields-row">
