@@ -1,0 +1,26 @@
+{#
+Component parameters
+--------------------
+
+showAddForm (true/false)
+#}
+
+{% if (not showAddForm) %}
+
+    {# Then we need to show the Add Button Link #}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+    buttonBarClass: 'add-bar js-add-contact-button-bar'
+    } %}
+
+    {% set  params = app.request.attributes.get('_route_params') %}
+
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    transDomain: translationDomain,
+    linkButtonLabel: 'form.controls.addButton.label',
+    linkClass: 'button-secondary behat-link-add-a-decision',
+    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' }) ~ "#add"
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{% endif %}

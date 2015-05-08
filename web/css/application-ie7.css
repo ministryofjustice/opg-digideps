@@ -1704,10 +1704,10 @@ input[type=number] {
       margin-right: 3px; }
 
 .alert__delete-confirmation {
-  width: 60%;
+  width: 62%;
   background-color: #dee0e2;
   margin-bottom: 10px;
-  padding: 10px 13px 15px 10px; }
+  padding: 10px 14px 15px 10px; }
   .alert__delete-confirmation .button-bar {
     margin-bottom: 0; }
     .alert__delete-confirmation .button-bar .button-warning {
@@ -2055,6 +2055,9 @@ form {
     padding-left: 2em; }
   .form-group.form-inline .form-label {
     float: left; }
+  .form-group textarea.form-control {
+    height: 7em;
+    width: 65%; }
 
 .form-group_button-bar {
   padding-top: 60px; }
@@ -2635,7 +2638,7 @@ ol.progress {
   .report-list--decisions .report-list__item .report-list__item-header {
     margin-bottom: 0;
     overflow: visible;
-    z-index: 10; }
+    z-index: 10; 
   .report-list--decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
     margin-left: 0;
     margin-right: 300px; }

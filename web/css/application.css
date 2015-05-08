@@ -1727,10 +1727,10 @@ input[type=number] {
       margin-right: 3px; }
 
 .alert__delete-confirmation {
-  width: 60%;
+  width: 62%;
   background-color: #dee0e2;
   margin-bottom: 10px;
-  padding: 10px 13px 15px 10px; }
+  padding: 10px 14px 15px 10px; }
   .alert__delete-confirmation .button-bar {
     margin-bottom: 0; }
     .alert__delete-confirmation .button-bar .button-warning {
@@ -2080,6 +2080,9 @@ form {
     padding-left: 2em; }
   .form-group.form-inline .form-label {
     float: left; }
+  .form-group textarea.form-control {
+    height: 7em;
+    width: 65%; }
 
 .form-group_button-bar {
   padding-top: 60px; }
