@@ -39,7 +39,7 @@ form
         deleteMessageText: 'form.newAsset.controls.delete.message' | trans,
         deleteButtonType: path('delete_asset', {'reportId': report.id, 'id': app.request.get('id')}),
         deleteButtonText: 'form.newAsset.controls.delete.label' | trans,
-        deleteButtonClass: 'button-warning',
+        deleteButtonClass: 'button-warning behat-link-delete',
         cancelButtonLink: url('assets', {'reportId': report.id, 'id': asset.id, 'action':'edit'}) ~ '#asset-edit-' ~ asset.id,
         cancelButtonText: 'form.newAsset.controls.cancel.label' | trans,
         cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
@@ -56,14 +56,14 @@ form
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'form.newAsset.controls.cancel.label',
-        linkClass: 'button-link',
+        linkClass: 'button-link behat-link-cancel-edit',
         linkHref: path('assets', {'reportId': report.id})
         } %}
 
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
         linkButtonLabel: 'form.newAsset.controls.delete.label',
-        linkClass: 'button-warning',
+        linkClass: 'button-warning behat-link-delete-confirm',
         linkHref: path('assets', {'reportId': report.id, 'action': 'delete-confirm', 'id': app.request.get('id')}) ~ '#asset-delete-confirm'
         } %}
 
