@@ -2,6 +2,7 @@ page:
   htmlTitle: "Report Assets"
   pageSectionTitle: "Client's assets"
   pageSectionDescription: "Add details of any property, savings or investments owned by your client."
+  pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
 form:
   listing:
