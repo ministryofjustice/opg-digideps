@@ -1728,9 +1728,9 @@ input[type=number] {
 
 .alert__delete-confirmation {
   width: 50%;
-  background-color: #bfc1c3;
+  background-color: #dee0e2;
   margin-bottom: 10px;
-  padding: 10px; }
+  padding: 10px 10px 15px 10px; }
   .alert__delete-confirmation .button-bar {
     margin-bottom: 0; }
     .alert__delete-confirmation .button-bar .button-warning {
