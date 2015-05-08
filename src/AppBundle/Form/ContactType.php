@@ -16,7 +16,8 @@ class ContactType extends AbstractType
                 ->add('address2', 'text')
                 ->add('county', 'text')
                 ->add('postcode', 'text')
-                 ->add('country', 'country', [ 
+                ->add('id','hidden')
+                ->add('country', 'country', [ 
                       'preferred_choices' => ['GB'], 
                       'empty_value' => 'country.defaultOption'
                 ])
