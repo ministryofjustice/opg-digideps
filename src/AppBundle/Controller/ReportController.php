@@ -125,27 +125,54 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/report/add-asset")
-     * @Method({"POST"})
+     * @Route("/report/get-asset/{id}")
+     * @Method({"GET"})
+     * 
+     * @param integer $id
      */
-    public function addAssetAction()
-    {
-        $reportData = $this->deserializeBodyContent();
+    public function getAssetAction($id)
+    { 
+        $asset = $this->findEntityBy('Asset', $id);
         
-        $report = $this->findEntityBy('Report', $reportData['report']);
+        if(empty($asset)){
+            throw new \Exception("Asset with id: $id does not exist");
+        }
+        return $asset;
+    }
+    
+    /**
+     * @Route("/report/upsert-asset")
+     * @Method({"POST", "PUT"})
+     */
+    public function upsertAssetAction()
+    {
+        $request = $this->getRequest();
+        
+        $assetData = $this->deserializeBodyContent();
+        
+        $report = $this->findEntityBy('Report', $assetData['report']);
         
         if(empty($report)){
-            throw new \Exception("Report id: ".$reportData['report']." does not exists");
+            throw new \Exception("Report id: ".$assetData['report']." does not exists");
         }
         
-        $asset = new EntityDir\Asset();
-        $asset->setReport($report);
-        $asset->setDescription($reportData['description']);
-        $asset->setValue($reportData['value']);
-        $asset->setTitle($reportData['title']);
+        if($request->getMethod() == 'POST'){
+            $asset = new EntityDir\Asset();
+            $asset->setReport($report);
+        }else{
+            $asset = $this->findEntityBy('Asset', $assetData['id']);
+            
+            if(empty($asset)){
+                throw new \Exception("Asset with id:".$assetData['id'].' was not found');
+            }
+        }
         
-        if(!empty($reportData['valuation_date'])){
-            $valuationDate = new \DateTime($reportData['valuation_date']);
+        $asset->setDescription($assetData['description']);
+        $asset->setValue($assetData['value']);
+        $asset->setTitle($assetData['title']);
+        
+        if(!empty($assetData['valuation_date'])){
+            $valuationDate = new \DateTime($assetData['valuation_date']);
         }else{
             $valuationDate = null;
         }
@@ -184,6 +211,22 @@ class ReportController extends RestController
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
+    }
+    
+    /**
+     * @Route("report/delete-asset/{id}")
+     * @Method({"DELETE"})
+     * 
+     * @param type $id
+     */
+    public function deleteAssetAction($id)
+    { 
+        $asset = $this->findEntityBy('Asset', $id, 'Asset not found');
+        
+        $this->getEntityManager()->remove($asset);
+        $this->getEntityManager()->flush();
+        
+        return [ ];
     }
     
     /**
