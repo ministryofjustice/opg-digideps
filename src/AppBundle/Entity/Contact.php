@@ -2,6 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Contacts
@@ -13,7 +14,9 @@ class Contact
 {
     /**
      * @var integer
-     *
+     * 
+     * @JMS\Type("integer")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -24,6 +27,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="contact_name", type="string", length=255, nullable=true)
      */
     private $contactName;
@@ -31,6 +36,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private $address;
@@ -38,6 +45,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
@@ -45,6 +54,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="county", type="string", length=200, nullable=true)
      */
     private $county;
@@ -52,6 +63,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     private $postcode;
@@ -59,6 +72,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
     private $country;
@@ -66,6 +81,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="explanation", type="text", nullable=true)
      */
     private $explanation;
@@ -73,6 +90,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="relationship", type="string", length=100, nullable=true)
      */
     private $relationship;
@@ -80,6 +99,8 @@ class Contact
     /**
      * @var string
      *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="phone1", type="string", length=20, nullable=true)
      */
     private $phone1;
