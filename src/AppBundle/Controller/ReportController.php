@@ -61,12 +61,13 @@ class ReportController extends RestController
     }
         
     /**
-     * @Route("/report/add-contact")
-     * @Method({"POST"})
-     */
-    public function addContactAction()
+     * @Route("/report/upsert-contact")
+     * @Method({"POST", "PUT"})
+     **/
+    public function upsertContactAction()
     {
         $contactData = $this->deserializeBodyContent();
+        $request = $this->getRequest();
         
         $report = $this->findEntityBy('Report', $contactData['report']);
         
@@ -74,8 +75,16 @@ class ReportController extends RestController
             throw new \Exception("Report id: ".$contactData['report']." does not exists");
         }
         
-        $contact = new EntityDir\Contact();
-        $contact->setReport($report);
+        if($request->getMethod() == "POST"){
+            $contact = new EntityDir\Contact();
+            $contact->setReport($report);
+        }else{
+            $contact = $this->findEntityBy('Contact', $contactData['id']);
+            
+            if(empty($contact)){
+                throw new \Exception("Contact with id: ".$contactData['id']);
+            }
+        }
         $contact->setContactName($contactData['contact_name']);
         $contact->setAddress($contactData['address']);
         $contact->setAddress2($contactData['address2']);
@@ -109,6 +118,29 @@ class ReportController extends RestController
     }
     
     /**
+     * @Route("/report/get-contact/{id}")
+     * @Method({"GET"})
+     */
+    public function getContactAction($id)
+    {
+        $request = $this->getRequest();
+        
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        $contact = $this->findEntityBy('Contact', $id);
+        
+        if(empty($contact)){
+            throw new \Exception("Contact with id: $id does not exist");
+        }
+        return $contact;
+    }
+    
+    /**
      * 
      * @Route("/report/get-assets/{id}")
      * @Method({"GET"})
@@ -125,27 +157,54 @@ class ReportController extends RestController
     }
     
     /**
-     * @Route("/report/add-asset")
-     * @Method({"POST"})
+     * @Route("/report/get-asset/{id}")
+     * @Method({"GET"})
+     * 
+     * @param integer $id
      */
-    public function addAssetAction()
-    {
-        $reportData = $this->deserializeBodyContent();
+    public function getAssetAction($id)
+    { 
+        $asset = $this->findEntityBy('Asset', $id);
         
-        $report = $this->findEntityBy('Report', $reportData['report']);
+        if(empty($asset)){
+            throw new \Exception("Asset with id: $id does not exist");
+        }
+        return $asset;
+    }
+    
+    /**
+     * @Route("/report/upsert-asset")
+     * @Method({"POST", "PUT"})
+     */
+    public function upsertAssetAction()
+    {
+        $request = $this->getRequest();
+        
+        $assetData = $this->deserializeBodyContent();
+        
+        $report = $this->findEntityBy('Report', $assetData['report']);
         
         if(empty($report)){
-            throw new \Exception("Report id: ".$reportData['report']." does not exists");
+            throw new \Exception("Report id: ".$assetData['report']." does not exists");
         }
         
-        $asset = new EntityDir\Asset();
-        $asset->setReport($report);
-        $asset->setDescription($reportData['description']);
-        $asset->setValue($reportData['value']);
-        $asset->setTitle($reportData['title']);
+        if($request->getMethod() == 'POST'){
+            $asset = new EntityDir\Asset();
+            $asset->setReport($report);
+        }else{
+            $asset = $this->findEntityBy('Asset', $assetData['id']);
+            
+            if(empty($asset)){
+                throw new \Exception("Asset with id:".$assetData['id'].' was not found');
+            }
+        }
         
-        if(!empty($reportData['valuation_date'])){
-            $valuationDate = new \DateTime($reportData['valuation_date']);
+        $asset->setDescription($assetData['description']);
+        $asset->setValue($assetData['value']);
+        $asset->setTitle($assetData['title']);
+        
+        if(!empty($assetData['valuation_date'])){
+            $valuationDate = new \DateTime($assetData['valuation_date']);
         }else{
             $valuationDate = null;
         }
@@ -180,10 +239,40 @@ class ReportController extends RestController
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
         }
-        
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
+    }
+    
+    /**
+     * 
+     * @Route("report/delete-contact/{id}")
+     * @Method({"DELETE"})
+     */
+    public function deleteContactAction($id)
+    {
+        $contact = $this->findEntityBy('Contact', $id, 'Contact not found');
+        
+        $this->getEntityManager()->remove($contact);
+        $this->getEntityManager()->flush();
+        
+        return [ ];
+    }
+    
+    /**
+     * @Route("report/delete-asset/{id}")
+     * @Method({"DELETE"})
+     * 
+     * @param type $id
+     */
+    public function deleteAssetAction($id)
+    { 
+        $asset = $this->findEntityBy('Asset', $id, 'Asset not found');
+        
+        $this->getEntityManager()->remove($asset);
+        $this->getEntityManager()->flush();
+        
+        return [ ];
     }
     
     /**
@@ -203,4 +292,5 @@ class ReportController extends RestController
         
         return ['id'=>$report->getId()];
     }
+    
 }
