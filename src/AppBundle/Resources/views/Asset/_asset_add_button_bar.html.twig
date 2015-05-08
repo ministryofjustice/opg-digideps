@@ -1,0 +1,26 @@
+{#
+Component parameters
+--------------------
+
+showAddForm (true/false)
+#}
+
+{% if (not showAddForm) %}
+    {# Then we need to show the Add Button Link instead of the Add Form #}
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+        buttonBarClass: 'add-bar js-add-assets-button-bar'
+        } %}
+
+        {% set  params = app.request.attributes.get('_route_params') %}
+
+        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.listing.addButton.label',
+        linkClass: 'button-secondary behat-link-add-an-asset',
+        linkHref: path('assets', {'reportId': params['reportId'], 'action': 'add' })
+        } %}
+
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{% endif %}

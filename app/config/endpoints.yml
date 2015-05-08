@@ -25,4 +25,7 @@ parameters:
         get_report_accounts: report/get-accounts
         find_account_by_id: report/find-account-by-id
         get_report_assets: report/get-assets
-        add_report_asset: report/add-asset
+        add_report_asset: report/upsert-asset
+        update_report_asset: report/upsert-asset
+        get_report_asset: report/get-asset
+        delete_report_asset: report/delete-asset
