@@ -90,8 +90,10 @@ class ContactController extends Controller{
     * @param array $forms
     * @return array $forms
     */
-    private function handleContactsFormSubmit(array $forms,$reportId, $action='add')
+    private function handleContactsFormSubmit(array $forms, $reportId, $action='add')
     {
+        $util = $this->get('util');
+        
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
         
@@ -122,6 +124,9 @@ class ContactController extends Controller{
         }elseif($noContact->get('saveReason')->isClicked()){
             if($noContact->isValid()){
                  $formData = $noContact->getData();
+                 
+                 $report = $util->getReport($reportId, $this->getUser()->getId());
+
                  $report->setReasonForNoContacts($formData['reason']);
 
                  $apiClient->putC('report/'.$report->getId(),$report);
