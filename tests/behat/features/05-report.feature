@@ -295,8 +295,8 @@ Feature: report
             | account_sortCode_sort_code_part_1 | 88 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingDate_day   | 5 |
-            | account_openingDate_month | 4 |
+            | account_openingDate_day   | 05 |
+            | account_openingDate_month | 04 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,155.00 |
         # check invalid values
@@ -354,8 +354,8 @@ Feature: report
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
-            | account_openingDate_day   | 1 |
-            | account_openingDate_month | 1 |
+            | account_openingDate_day   | 01 |
+            | account_openingDate_month | 01 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,150.00 | 
         And I save the page as "report-account-edit-reloaded"
