@@ -2913,7 +2913,8 @@ span.icon {
   .form-last-four-digits .form-group input {
     float: left;
     width: 40px;
-    margin-right: 5px; }
+    margin-right: 5px;
+    text-align: center; }
     .form-last-four-digits .form-group input::after {
       content: "-";
       display: inline; }
@@ -2929,7 +2930,8 @@ span.icon {
   .form-sort-code .form-group input.sort-code-part {
     float: left;
     width: 50px;
-    margin-right: 5px; }
+    margin-right: 5px;
+    text-align: center; }
     .form-sort-code .form-group input.sort-code-part::after {
       content: "-";
       display: inline; }
