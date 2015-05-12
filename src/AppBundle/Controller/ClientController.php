@@ -16,12 +16,13 @@ use AppBundle\Entity as EntityDir;
 class ClientController extends Controller
 {
     /**
-     * @Route("/show/{action}", name="client_home", defaults={ "action" = ""})
+     * @Route("/show/{action}/{reportId}", name="client_home", defaults={ "action" = "show", "reportId" = " "})
      * @Template()
      */
-    public function indexAction($action)
+    public function indexAction($action, $reportId)
     {
         $util = $this->get('util');  /* @var $util \AppBundle\Service\Util */
+        $apiClient = $this->get('apiclient');
         $clients = $this->getUser()->getClients();
         $request = $this->getRequest();
        
@@ -39,18 +40,33 @@ class ClientController extends Controller
         $clientForm->handleRequest($request);
 
         if ($clientForm->isValid()) {
-            $apiClient = $this->get('apiclient');
             $clientUpdated = $clientForm->getData();
-
             $apiClient->putC('update_client', $clientUpdated);
 
             return $this->redirect($this->generateUrl('client_home'));
+        }
+        
+        $reportEditDatesForm = null;
+        if ($action == 'edit-report' && $reportId) {
+            $report = $util->getReport($reportId, $this->getUser()->getId());
+            $reportEditDatesForm = $this->createForm(new ReportType(), $report, [
+                'translation_domain' => 'report-edit-dates'
+            ]);
+            $reportEditDatesForm->handleRequest($request);
+            if ($reportEditDatesForm->isValid()) {
+                $apiClient->putC('report/' . $reportId, $report, [
+                     'deserialise_group' => 'startEndDates',
+                ]);
+                return $this->redirect($this->generateUrl('client_home'));
+            }
         }
         
         return [
             'client' => $client,
             'reports' => $reports,
             'action' => $action,
+            'reportId' => $reportId,
+            'reportEditDatesForm' => $reportEditDatesForm ? $reportEditDatesForm->createView() : null,
             'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
