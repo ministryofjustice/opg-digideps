@@ -49,7 +49,7 @@ class ClientController extends Controller
         $reportEditDatesForm = null;
         if ($action == 'edit-report' && $reportId) {
             $report = $util->getReport($reportId, $this->getUser()->getId());
-            $reportEditDatesForm = $this->createForm(new ReportType(), $report, [
+            $reportEditDatesForm = $this->createForm(new ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates'
             ]);
             $reportEditDatesForm->handleRequest($request);

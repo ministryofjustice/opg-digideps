@@ -21,47 +21,47 @@ Feature: report
         When I click on "client-home"
         And I click on "report-edit-2015"
         Then the following fields should have the corresponding values:
-            | report_startDate_day | 01 |
-            | report_startDate_month | 01 |
-            | report_startDate_year | 2015 |
-            | report_endDate_day | 31 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |
+            | report_edit_startDate_day | 01 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2015 |
+            | report_edit_endDate_day | 31 |
+            | report_edit_endDate_month | 12 |
+            | report_edit_endDate_year | 2015 |
         # check validations
         When I fill in the following:
-            | report_startDate_day | aa |
-            | report_startDate_month | bb |
-            | report_startDate_year | c |
-            | report_endDate_day |  |
-            | report_endDate_month |  |
-            | report_endDate_year |  |
-        And I press "report_save"
+            | report_edit_startDate_day | aa |
+            | report_edit_startDate_month | bb |
+            | report_edit_startDate_year | c |
+            | report_edit_endDate_day |  |
+            | report_edit_endDate_month |  |
+            | report_edit_endDate_year |  |
+        And I press "report_edit_save"
         Then the following fields should have an error:
-           | report_startDate_day |
-            | report_startDate_month |
-            | report_startDate_year |
-            | report_endDate_day |
-            | report_endDate_month |
-            | report_endDate_year |
+           | report_edit_startDate_day |
+            | report_edit_startDate_month |
+            | report_edit_startDate_year |
+            | report_edit_endDate_day |
+            | report_edit_endDate_month |
+            | report_edit_endDate_year |
         # valid values
         When I fill in the following:
-            | report_startDate_day | 02 |
-            | report_startDate_month | 01 |
-            | report_startDate_year | 2015 |
-            | report_endDate_day | 30 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |    
-        And I press "report_save"
+            | report_edit_startDate_day | 02 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2015 |
+            | report_edit_endDate_day | 30 |
+            | report_edit_endDate_month | 12 |
+            | report_edit_endDate_year | 2015 |    
+        And I press "report_edit_save"
         Then the form should not contain an error
         # check values
         And I click on "report-edit-2015"
         Then the following fields should have the corresponding values:
-            | report_startDate_day | 02 |
-            | report_startDate_month | 01 |
-            | report_startDate_year | 2015 |
-            | report_endDate_day | 30 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |
+            | report_edit_startDate_day | 02 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2015 |
+            | report_edit_endDate_day | 30 |
+            | report_edit_endDate_month | 12 |
+            | report_edit_endDate_year | 2015 |
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
