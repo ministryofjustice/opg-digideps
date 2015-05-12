@@ -14,6 +14,54 @@ Feature: report
     @deputy
     Scenario: change report type to "Property and Affairs"
         Given I change the report "1" court order type to "Property and Affairs"
+        
+    @deputy
+    Scenario: edit report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
+        And I click on "report-edit-2015"
+        Then the following fields should have the corresponding values:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2015 |
+            | report_endDate_day | 31 |
+            | report_endDate_month | 12 |
+            | report_endDate_year | 2015 |
+        # check validations
+        When I fill in the following:
+            | report_startDate_day | aa |
+            | report_startDate_month | bb |
+            | report_startDate_year | c |
+            | report_endDate_day |  |
+            | report_endDate_month |  |
+            | report_endDate_year |  |
+        And I press "report_save"
+        Then the following fields should have an error:
+           | report_startDate_day |
+            | report_startDate_month |
+            | report_startDate_year |
+            | report_endDate_day |
+            | report_endDate_month |
+            | report_endDate_year |
+        # valid values
+        When I fill in the following:
+            | report_startDate_day | 02 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2015 |
+            | report_endDate_day | 30 |
+            | report_endDate_month | 12 |
+            | report_endDate_year | 2015 |    
+        And I press "report_save"
+        Then the form should not contain an error
+        # check values
+        And I click on "report-edit-2015"
+        Then the following fields should have the corresponding values:
+            | report_startDate_day | 02 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2015 |
+            | report_endDate_day | 30 |
+            | report_endDate_month | 12 |
+            | report_endDate_year | 2015 |
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report

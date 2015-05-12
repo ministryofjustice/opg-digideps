@@ -30,7 +30,7 @@
                       <dt class="visuallyhidden">{{ 'reportDataList.editReportingPeriod' | trans }}</dt>
                       <dd class="data-item-fields-description data-item-fields-description--header">
                           <a href="{{ linkEditReportingPeriod }}"
-                             class="js-data-item-edit-link data-item-edit-link">{{ 'reportDataList.edit'| trans }}</a>
+                             class="js-data-item-edit-link data-item-edit-link behat-link-report-edit-{{report.getPeriod()}}">{{ 'reportDataList.edit'| trans }}</a>
                       </dd>
                   </div>
                   {% if report.isDue() %}
