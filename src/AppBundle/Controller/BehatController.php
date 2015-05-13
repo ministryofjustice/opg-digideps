@@ -64,7 +64,7 @@ class BehatController extends Controller
     {
         $this->checkIsBehatBrowser();
         $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
-            'cotId' => $cot
+            'cot_id' => $cot
         ]));
         
         return new Response('done');
@@ -90,7 +90,7 @@ class BehatController extends Controller
     public function accountChangeReportDate($reportId, $dateYmd)
     {
         $this->get('apiclient')->putC('report/' . $reportId, json_encode([
-            'endDate' => $dateYmd
+            'end_date' => $dateYmd
         ]));
         
         return new Response('done');

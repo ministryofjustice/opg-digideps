@@ -7,6 +7,18 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ReportType extends AbstractType
 {
+    /**
+     * @var string 
+     */
+    private $name;
+     
+    /**
+     * @param string $name formName report or report_edit
+     */
+    public function __construct($name = 'report')
+    {
+        $this->name = $name;
+    }
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -38,6 +50,6 @@ class ReportType extends AbstractType
     
     public function getName()
     {
-        return 'report';
+        return  $this->name;
     }
 }
