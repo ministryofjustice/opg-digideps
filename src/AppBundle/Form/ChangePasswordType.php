@@ -5,18 +5,27 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
-use AppBundle\Form\DataTransformer\ChangePasswordTransformer;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class ChangePasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('current_password','password', [ 'constraints' => new SecurityAssert\UserPassword()])
-                ->add('new_password', 'repeated', [
+        $builder->add('current_password','password', ['constraints' => new SecurityAssert\UserPassword([ 'message' => 'Please enter your correct current password', 
+                                                                                                         'groups' => ['user_details_full']])
+                                                     ])
+                
+                ->add('plain_password', 'repeated', [
                         'type' => 'password',
-                        'invalid_message' => 'Password does not match' ])
-                ->addModelTransformer(new ChangePasswordTransformer()); 
+                        'invalid_message' => 'Password does not match',
+                        'constraints' => [
+                            new Assert\Length(['min'=> 8, 'max'=>50, 'minMessage'=>"user.password.minLength", 'maxMessage' =>"user.password.maxLength", 'groups' => ['user_details_full']]),
+                            new Assert\Regex(['pattern' => "/[a-z]/", 'message' => 'user.password.noLowerCaseChars', 'groups' => 'user_details_full' ]),
+                            new Assert\Regex(['pattern' => "/[A-Z]/", 'message' => 'user.password.noUpperCaseChars', 'groups' => 'user_details_full' ]),
+                            new Assert\Regex(['pattern' => "/[0-9]/", 'message' => 'user.password.noNumber', 'groups' => 'user_details_full' ]),
+                        ]
+                    ]);
     }
     
     public function getParent() 
@@ -27,7 +36,7 @@ class ChangePasswordType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-              'translation_domain' => 'user-activate'
+              'translation_domain' => 'user-details'
         ]);
     }
     
