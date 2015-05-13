@@ -38,7 +38,8 @@ class ClientController extends Controller
         $clientForm = $this->createForm(new ClientType($util), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
         
         $clientForm->handleRequest($request);
-
+        
+        // edit client form
         if ($clientForm->isValid()) {
             $clientUpdated = $clientForm->getData();
             $apiClient->putC('update_client', $clientUpdated);
@@ -46,14 +47,15 @@ class ClientController extends Controller
             return $this->redirect($this->generateUrl('client_home'));
         }
         
-        $reportEditDatesForm = null;
+        // edit report dates
+        $editReportDatesForm = null;
         if ($action == 'edit-report' && $reportId) {
             $report = $util->getReport($reportId, $this->getUser()->getId());
-            $reportEditDatesForm = $this->createForm(new ReportType('report_edit'), $report, [
+            $editReportDatesForm = $this->createForm(new ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates'
             ]);
-            $reportEditDatesForm->handleRequest($request);
-            if ($reportEditDatesForm->isValid()) {
+            $editReportDatesForm->handleRequest($request);
+            if ($editReportDatesForm->isValid()) {
                 $apiClient->putC('report/' . $reportId, $report, [
                      'deserialise_group' => 'startEndDates',
                 ]);
@@ -66,7 +68,7 @@ class ClientController extends Controller
             'reports' => $reports,
             'action' => $action,
             'reportId' => $reportId,
-            'reportEditDatesForm' => $reportEditDatesForm ? $reportEditDatesForm->createView() : null,
+            'editReportDatesForm' => $editReportDatesForm ? $editReportDatesForm->createView() : null,
             'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),

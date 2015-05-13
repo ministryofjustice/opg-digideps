@@ -22,7 +22,7 @@
                 {% if action =='edit-report' and report.id == reportId %} 
                   <div class="data-item-fields-row">
                     {% include 'AppBundle:Report:_edit-dates.html.twig' with {
-                      'form' : reportEditDatesForm
+                      'form' : editReportDatesForm
                     } %}
                   </div>
                 {%else %}
