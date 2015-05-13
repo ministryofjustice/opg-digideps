@@ -12,13 +12,12 @@ use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
 use AppBundle\Form\ChangePasswordType;
-use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Form\UserDetailsBasicType;
 use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AppBundle\Model\Email;
 
 /**
 * @Route("user")
@@ -91,6 +90,7 @@ class UserController extends Controller
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
@@ -114,6 +114,7 @@ class UserController extends Controller
         
         return [
             'form' => $form->createView(),
+            'notification' => $notification
         ];
         
     }
@@ -126,6 +127,7 @@ class UserController extends Controller
     {
         $request = $this->getRequest();
         $user = $this->getUser();
+        $notification = null;
         
         $formEditDetails = $this->createForm(new UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
@@ -150,14 +152,26 @@ class UserController extends Controller
                         ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
                     $formData->setPassword($encodedPassword);
                     
-                    //$apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+                    //lets send an email to confirm password change
+                    $emailConfig = $this->container->getParameter('email_send');
+                    $translator = $this->get('translator');
                     
-                    //return $this->redirect($this->generateUrl('logout'));
+                    $email = new Email();
+                    $email->setFromEmail($emailConfig['from_email']);
+                    $email->setFromName($translator->trans('changePassword.fromName',[], 'email'));
+                    $email->setToEmail($user->getEmail());
+                    $email->setToName($user->getFirstname());
+                    $email->setSubject($translator->trans('changePassword.subject',[], 'email'));
+                    $email->setBodyHtml($this->renderView('AppBundle:User:_change-password.email.html.twig'));
+                    
+                    $this->get('mailSender')->send($email,[ 'html']);
+                    
+                    $notification = 'You have changed your password. We have sent you an email to confirm this change.';
                 }
                 
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
                 
-                return $this->redirect($this->generateUrl('user_view'));
+                return $this->redirect($this->generateUrl('user_view', [ 'notification' => $notification ]));
             }
             
         }

@@ -56,3 +56,6 @@ activation:
         <p>PO Box 16185, Birmingham B2 2WH</p>
 
         <p>This email was automatically generated. Please don’t reply to this email address. </p>
+changePassword:
+    subject: Change to your Complete a deputy report service password
+    fromName: Complete a deputy report service
