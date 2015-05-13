@@ -26,7 +26,7 @@ services:
             - { name: twig.extension }
     mailSender:
         class: AppBundle\Service\MailSender
-        arguments: [ @apiclient, @translator, @router ]
+        arguments: [ @apiclient, @translator, @router,@validator ]
         calls:
             - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
     redirectorService:
