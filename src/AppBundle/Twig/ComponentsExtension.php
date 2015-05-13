@@ -63,6 +63,13 @@ class ComponentsExtension extends \Twig_Extension
                    ]);
                }
             }),
+            'pad_day_month' => new \Twig_SimpleFilter('pad_day_month', function($value) {
+               if ($value && (int)$value >= 1 &&  (int)$value <=9) {
+                   return "0" . (int)$value;
+               }
+               
+               return $value;
+            }),
         ];
     }
     

@@ -27,6 +27,7 @@ class AssetType extends AbstractType
                                                  'format' => 'dd-MM-yyyy',
                                                  'invalid_message' => 'invalid date'
                                               ])
+                ->add('id', 'hidden')
             ->add('save', 'submit');
     }
 

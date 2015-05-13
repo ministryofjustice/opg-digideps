@@ -96,4 +96,35 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         m::close();
     }
     
+    public static function pad_day_monthProvider()
+    {
+        return [
+            ['a', 'a'],
+            [null, null],
+            [0, 0],
+            ['0', '0'],
+            
+            [1, '01'],
+            ['1', '01'],
+            ['01', '01'],
+            ['00000001', '01'],
+            [9, '09'],
+            ['09', '09'],
+            
+            ['10', '10'],
+            ['31', '31']
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider pad_day_monthProvider
+     */
+    public function pad_day_month($input, $expected)
+    {
+        $f = $this->object->getFilters()['pad_day_month']->getCallable();
+        
+        $this->assertSame($expected, $f($input));
+    }
+    
 }

@@ -48,8 +48,8 @@ Feature: add client and report
         Then the URL should match "report/create/\d+"
         And I save the page as "deputy-step4"
         Then the following fields should have the corresponding values:
-            | report_startDate_day | 1 |
-            | report_startDate_month | 1 |
+            | report_startDate_day | 01 |
+            | report_startDate_month | 01 |
             | report_startDate_year | 2015 |
         # missing D,M,Y
         When I fill in the following:

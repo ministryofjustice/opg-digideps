@@ -2,6 +2,9 @@ save:
     label: Save
 cancel:
     label: Cancel
+delete:
+    label: Delete
+    message: "Are you sure that you want to delete this contact?"
 contactName:
     label: Contact name
     hint: ''
@@ -24,13 +27,15 @@ postcode:
     label: Postcode
     hint: ''
 country:
-    label: Country
+    label: Country (Optional)
     hint: ''
     defaultOption: Please select ...
 contact_form:
     pageSectionTitle: Contacts
     pageSectionDescription: Give the names and addresses of the significant people you contacted as deputy, such as GP, solicitor, accountant, family members, care workers.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
-    subSectionTitle : Add a new contact
+    pageSectionEditInfo: "You can update the details of a contact or delete a contact by using the 'Edit this contact' link below."
+    subSectionTitleAdd : Add a new contact
+    subSectionTitleEdit : Edit this contact
     addContactButton:
       label: Add a contact
 no_contact:
