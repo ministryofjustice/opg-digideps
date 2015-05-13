@@ -160,4 +160,20 @@ asset:
 common:
   genericPhone:
     minLength: The phone number must be at least {{ limit }} characters long
-    maxLength: The phone number cannot be longer than {{ limit }} characters long        
+    maxLength: The phone number cannot be longer than {{ limit }} characters long
+sendEmail:
+    toEmail:
+        notBlank: Please supply receipent's email (toEmail)
+    toName:
+        notBlank: Please supply receipent's name (toName)
+    fromEmail:
+        notBlank: Please supply sender's email (fromEmail)
+    fromName:
+        notBlank: Please supply sender's name (fromName)
+    subject:
+        notBlank: Please supply email subject
+    bodyText:
+        notBlank: Please supply message for your email
+    bodyHtml:
+        notBlank: Please supply message for your email
+    

@@ -150,9 +150,9 @@ class UserController extends Controller
                         ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
                     $formData->setPassword($encodedPassword);
                     
-                    $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+                    //$apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
                     
-                    return $this->redirect($this->generateUrl('logout'));
+                    //return $this->redirect($this->generateUrl('logout'));
                 }
                 
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);

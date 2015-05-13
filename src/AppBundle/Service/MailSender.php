@@ -4,6 +4,7 @@ namespace AppBundle\Service;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use AppBundle\Model\Email;
 
 class MailSender
 {
@@ -21,6 +22,8 @@ class MailSender
      * @var \Symfony\Bundle\FrameworkBundle\Routing\Router 
      */
     protected $router;
+    
+    protected $validator;
     
     
     protected $fromEmail;
@@ -69,5 +72,14 @@ class MailSender
         $ret = $this->apiClient->postC('email/send', json_encode($data));
        
         return $ret;
+    }
+    
+    public function send(Email $email, array $groups)
+    {
+        //validate change password object
+        $errors = $this->validator->validate($email, null,$groups);
+        
+        if(count($errors) > 0){   
+        }
     }
 }
