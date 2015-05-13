@@ -12,6 +12,7 @@ use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
 use AppBundle\Form\ChangePasswordType;
+use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Form\UserDetailsBasicType;
 use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -130,15 +131,30 @@ class UserController extends Controller
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
         
-        $formEditDetails->add('password', new ChangePasswordType(), [ 'error_bubbling' => false ]);
+        $formEditDetails->add('password', new ChangePasswordType(), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
-            
             $apiClient = $this->get('apiclient');
-            
+           
             if($formEditDetails->isValid()){
                 $formData = $formEditDetails->getData();
+                $formRawData = $request->request->get('user_details');
+                
+                /**
+                 * if new password has been set then we need to encode this using the encoder and pass it to
+                 * the api
+                 */
+                if(!empty($formRawData['password']['plain_password']['first'])){
+                    $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
+                        ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
+                    $formData->setPassword($encodedPassword);
+                    
+                    $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+                    
+                    return $this->redirect($this->generateUrl('logout'));
+                }
+                
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
                 
                 return $this->redirect($this->generateUrl('user_view'));
