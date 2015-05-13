@@ -157,12 +157,12 @@ class UserController extends Controller
                     $translator = $this->get('translator');
                     
                     $email = new Email();
-                    $email->setFromEmail($emailConfig['from_email']);
-                    $email->setFromName($translator->trans('changePassword.fromName',[], 'email'));
-                    $email->setToEmail($user->getEmail());
-                    $email->setToName($user->getFirstname());
-                    $email->setSubject($translator->trans('changePassword.subject',[], 'email'));
-                    $email->setBodyHtml($this->renderView('AppBundle:User:_change-password.email.html.twig'));
+                    $email->setFromEmail($emailConfig['from_email'])
+                        ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
+                        ->setToEmail($user->getEmail())
+                        ->setToName($user->getFirstname())
+                        ->setSubject($translator->trans('changePassword.subject',[], 'email'))
+                        ->setBodyHtml($this->renderView('AppBundle:User:_change-password.email.html.twig'));
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
