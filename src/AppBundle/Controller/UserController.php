@@ -162,7 +162,7 @@ class UserController extends Controller
                         ->setToEmail($user->getEmail())
                         ->setToName($user->getFirstname())
                         ->setSubject($translator->trans('changePassword.subject',[], 'email'))
-                        ->setBodyHtml($this->renderView('AppBundle:User:_change-password.email.html.twig'));
+                        ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
