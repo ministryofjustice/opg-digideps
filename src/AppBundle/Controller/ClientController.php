@@ -48,7 +48,6 @@ class ClientController extends Controller
         }
         
         // edit report dates
-        $editReportDatesForm = null;
         if ($action == 'edit-report' && $reportId) {
             $report = $util->getReport($reportId, $this->getUser()->getId());
             $editReportDatesForm = $this->createForm(new ReportType('report_edit'), $report, [
@@ -68,7 +67,7 @@ class ClientController extends Controller
             'reports' => $reports,
             'action' => $action,
             'reportId' => $reportId,
-            'editReportDatesForm' => $editReportDatesForm ? $editReportDatesForm->createView() : null,
+            'editReportDatesForm' => ($action == 'edit-report') ? $editReportDatesForm->createView() : null,
             'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),

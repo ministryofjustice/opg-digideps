@@ -7,12 +7,10 @@
         {% set linkEditReportingPeriod = path('client_home', {'action': 'edit-report', 'reportId': report.id}) %}
         <li class="data-item">
 
-          {% if action =='edit-report' and report.id == reportId %}
-
+          {% if action =='edit-report' %}
               {% include 'AppBundle:Report:_edit-dates.html.twig' with {
                 'form' : editReportDatesForm
               } %}
-
           {%else %}
 
             <dl class="data-item-fields">
