@@ -30,7 +30,7 @@
     </target>
     
     <target name="phpunit">
-        <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c app/" checkreturn="true"></exec>
+        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c app/" checkreturn="true"></exec>
     </target>
     
     <target name="optimise">
@@ -56,7 +56,7 @@
     </target>
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
-        <exec command="vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
+        <exec command="php vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
     </target>
     
     <target name="behat-log" description="Run all the behat journeys and create HTML output (note: no return code)" depends="behat-init">
