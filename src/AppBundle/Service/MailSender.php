@@ -76,7 +76,13 @@ class MailSender
         return $ret;
     }
     
-    
+    /**
+     * 
+     * @param Email $email
+     * @param array $groups
+     * @return type
+     * @throws \Exception
+     */
     public function send(Email $email, array $groups = ['text'])
     {
         //validate change password object
