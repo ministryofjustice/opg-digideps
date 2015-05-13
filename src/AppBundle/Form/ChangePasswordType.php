@@ -4,15 +4,15 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Validator\Constraints\DUserPassword;
 
 
 class ChangePasswordType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder->add('current_password','password', ['constraints' => new SecurityAssert\UserPassword([ 'message' => 'Please enter your correct current password', 
+    {   
+        $builder->add('current_password','password', ['constraints' => new DUserPassword([ 'message' => 'Please enter your correct current password', 
                                                                                                          'groups' => ['user_details_full']])
                                                      ])
                 

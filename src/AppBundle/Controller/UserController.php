@@ -168,7 +168,6 @@ class UserController extends Controller
                     
                     $notification = 'You have changed your password. We have sent you an email to confirm this change.';
                 }
-                
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
                 
                 return $this->redirect($this->generateUrl('user_view', [ 'notification' => $notification ]));

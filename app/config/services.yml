@@ -3,6 +3,11 @@ imports:
     - { resource: twig.yml }
     
 services:
+    security.validator.d_user_password:
+        class: AppBundle\Validator\Constraints\DUserPasswordValidator
+        arguments: [ @security.context, @security.encoder_factory ]
+        tags:
+            - { name: validator.constraint_validator, alias: security.validator.d_user_password }
     apiclient:
         class:  AppBundle\Service\ApiClient
         arguments: [ @jms_serializer, {format: "json", base_url: "%api_base_url%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
