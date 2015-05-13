@@ -6,33 +6,28 @@
     {{ form_errors_list(form) }}
 {% endblock %}
 
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form'  }}) }}
 
-{% block pageBody %}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-      transDomain: translationDomain,
-      subSectionTitle: 'form.subSectionTitle'
+        transDomain: translationDomain,
+        subSectionTitle: 'form.subSectionTitle'
     } %}
-  
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form'  }}) }}
 
-      {{ form_known_date(form.startDate, 'form.controls.startDate') }}
+    {{ form_known_date(form.startDate, 'form.controls.startDate') }}
 
-      {{ form_known_date(form.endDate, 'form.controls.endDate') }}
+    {{ form_known_date(form.endDate, 'form.controls.endDate') }}
 
-      {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-          
-        {{ form_submit(form.save,'form.controls.save') }}
-      
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-          transDomain: translationDomain,
-          linkButtonLabel: 'form.controls.cancel.label',
-          linkClass: 'button-link',
-          linkHref: path('client_home')
-        } %}
-        
-      {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-      
-  {{ form_end(form) }}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
+    {{ form_submit(form.save,'form.controls.save') }}
 
-{% endblock %}
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('client_home')
+    } %}
+
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{{ form_end(form) }}

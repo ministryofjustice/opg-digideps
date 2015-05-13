@@ -2001,6 +2001,8 @@ form {
       margin-top: 40px; }
     .report-list__item form.in-page-form {
       margin-bottom: 20px; }
+    .data-item form.in-page-form {
+      margin-bottom: 10px; }
 
 .form--client-add-report {
   margin: 40px 0 20px 0; }
