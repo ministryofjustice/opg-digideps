@@ -10,6 +10,8 @@ class Email
      * @JMS\Type("string")
      * @JMS\SerializedName("toEmail")
      * @Assert\NotBlank(message="sendEmail.toEmail.notBlank", groups={"html","text"})
+     * @Assert\Email(message="sendEmail.toEmail.invalid", groups={"html","text"})
+     * 
      */
     private $toEmail;
     
@@ -17,6 +19,7 @@ class Email
      * @JMS\Type("string")
      * @JMS\SerializedName("toName")
      * @Assert\NotBlank(message="sendEmail.toName.notBlank", groups={"html","text"})
+     * @Assert\Type(type="string", message="sendEmail.toName.invalid", groups={"html","text"})
      */
     private $toName;
     
@@ -24,6 +27,7 @@ class Email
      * @JMS\Type("string")
      * @JMS\SerializedName("fromEmail")
      * @Assert\NotBlank(message="sendEmail.fromEmail.notBlank", groups={"html","text"})
+     * @Assert\Email(message="sendEmail.fromEmail.invalid", groups={"html","text"})
      */
     private $fromEmail;
     
@@ -31,6 +35,7 @@ class Email
      * @JMS\Type("string")
      * @JMS\SerializedName("fromName")
      * @Assert\NotBlank(message="sendEmail.fromName.notBlank", groups={"html","text"})
+     * @Assert\Type(type="string", message="sendEmail.fromName.invalid", groups={"html","text"})
      */
     private $fromName;
     

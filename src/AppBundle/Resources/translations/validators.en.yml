@@ -164,12 +164,16 @@ common:
 sendEmail:
     toEmail:
         notBlank: Please supply receipent's email (toEmail)
+        invalid:  Receipent email address is invalid
     toName:
         notBlank: Please supply receipent's name (toName)
+        invalid: Receipent name is invalid
     fromEmail:
         notBlank: Please supply sender's email (fromEmail)
+        invalid:  Sender email address is invalid
     fromName:
         notBlank: Please supply sender's name (fromName)
+        invalid: Sender name is invalid
     subject:
         notBlank: Please supply email subject
     bodyText:
