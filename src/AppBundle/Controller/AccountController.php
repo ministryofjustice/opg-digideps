@@ -33,12 +33,14 @@ class AccountController extends Controller
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
-        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
+        
+        $reportSubmitter = $this->get('reportSubmitter');
+        if ($reportSubmitter->isReportSubmitted($report)) {
+            return $reportSubmitter->getRedirectResponse($report);
+        }
         
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
-            
             if($form->get('save')->isClicked()){
                 if ($form->isValid()) {
                     $account = $form->getData();
@@ -49,13 +51,6 @@ class AccountController extends Controller
                         $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
                     );
                 }
-            }else{
-         
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
             }
         }
 
@@ -65,7 +60,7 @@ class AccountController extends Controller
             'action' => $action,
             'form' => $form->createView(),
             'accounts' => $accounts,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $reportSubmitter->getForm()->createView()
         ];
     }
 
@@ -113,9 +108,9 @@ class AccountController extends Controller
         }
         
         // report submit logic
-        list($reportSubmit, $reportSubmitValid) = $this->handleReportSubmitForm($report);
-        if ($reportSubmitValid) {
-            return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+        $reportSubmitter = $this->get('reportSubmitter');
+        if ($reportSubmitter->isReportSubmitted($report)) {
+            return $reportSubmitter->getRedirectResponse($report);
         }
         
         // edit/delete logic
@@ -149,7 +144,7 @@ class AccountController extends Controller
             'showDeleteConfirmation' => $action == 'delete',
             'account' => $account,
             'actionParam' => $action,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $reportSubmitter->getForm()->createView()
         ];
     }
     

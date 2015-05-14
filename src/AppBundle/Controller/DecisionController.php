@@ -59,11 +59,14 @@ class DecisionController extends Controller
         $decision->setReportId($reportId);
         $decision->setReport($report);
         
-        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
+        // report submit logic
+        $reportSubmitter = $this->get('reportSubmitter');
+        if ($reportSubmitter->isReportSubmitted($report)) {
+            return $reportSubmitter->getRedirectResponse($report);
+        }
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
            
             if($form->get('save')->isClicked()){
                 if ($form->isValid()) {
@@ -77,12 +80,6 @@ class DecisionController extends Controller
                     }
                     return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
                 }
-            }else{
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
             }
         }
         
@@ -92,7 +89,7 @@ class DecisionController extends Controller
             'report' => $report,
             'client' => $util->getClient($report->getClient()),
             'action' => $action,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $reportSubmitter->getForm()->createView()
         ];
     }
 }

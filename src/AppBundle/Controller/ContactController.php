@@ -54,8 +54,11 @@ class ContactController extends Controller{
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts',[ 'reportId' => $reportId, 'action' => 'add' ]) ]);
         }
         
-        //set up report submit form
-        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
+        // report submit logic
+        $reportSubmitter = $this->get('reportSubmitter');
+        if ($reportSubmitter->isReportSubmitted($report)) {
+            return $reportSubmitter->getRedirectResponse($report);
+        }
         
         //set up add reason for no contact form
         $noContact = $this->createForm(new FormDir\ReasonForNoContactType());
@@ -63,7 +66,6 @@ class ContactController extends Controller{
         
         if($request->getMethod() == 'POST'){
             $forms = [ 'contactForm' => $form,
-                       'reportSubmit' => $reportSubmit,
                        'noContact' => $noContact ];
             
             $processedForms = $this->handleContactsFormSubmit($forms,$reportId,$action);
@@ -72,7 +74,6 @@ class ContactController extends Controller{
                 return $processedForms;
             }
             $form = $processedForms['contactForm'];
-            $reportSubmit = $processedForms['reportSubmit'];
             $noContact = $processedForms['noContact'];
         }
         
@@ -82,7 +83,7 @@ class ContactController extends Controller{
             'action' => $action,
             'report' => $report,
             'client' => $client,
-            'report_form_submit' => $reportSubmit->createView(),
+            'report_form_submit' => $reportSubmitter->getForm()->createView(),
             'no_contact' => $noContact->createView() ];
     }
     
@@ -98,11 +99,9 @@ class ContactController extends Controller{
         $apiClient = $this->get('apiclient');
         
         $form = $forms['contactForm'];
-        $reportSubmit = $forms['reportSubmit'];
         $noContact    = $forms['noContact'];
         
         $form->handleRequest($request);
-        $reportSubmit->handleRequest($request);
         $noContact->handleRequest($request);
 
         $report = $util->getReport($reportId, $this->getUser()->getId());
@@ -135,15 +134,8 @@ class ContactController extends Controller{
             }
 
         //the above 2 forms test false then submission was for the overall report submit
-        }else{
-            if($reportSubmit->isValid()){
-                if($report->readyToSubmit()){
-                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                }
-            }
         }
         $forms['contactForm'] = $form;
-        $forms['reportSubmit'] = $reportSubmit;
         $forms['noContact'] = $noContact;
         
         return $forms;

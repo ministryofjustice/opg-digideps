@@ -65,14 +65,17 @@ class AssetController extends Controller
             $asset = new EntityDir\Asset();
             $form = $this->createForm(new FormDir\AssetType($titles),$asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'add'])]);
         }
-        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
+        
+        // report submit logic
+        $reportSubmitter = $this->get('reportSubmitter');
+        if ($reportSubmitter->isReportSubmitted($report)) {
+            return $reportSubmitter->getRedirectResponse($report);
+        }
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
         
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
-
             if($form->get('save')->isClicked()){
                 if($form->isValid()){
                     $asset = $form->getData();
@@ -85,13 +88,6 @@ class AssetController extends Controller
                     }
                     return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
                 }
-            }else{
-         
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
             }
         }
 
@@ -101,7 +97,7 @@ class AssetController extends Controller
             'action' => $action,
             'form'   => $form->createView(),
             'assets' => $assets,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $reportSubmitter->getForm()->createView()
         ];
     }
 }

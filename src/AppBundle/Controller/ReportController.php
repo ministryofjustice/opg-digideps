@@ -66,24 +66,17 @@ class ReportController extends Controller
         $report = $this->getReport($reportId);
         
         $client = $this->getClient($report->getClient());
-        $request = $this->getRequest();
         
-        $form = $this->createForm($this->get('form.reportSubmit'));
-        
-        if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
-            
-            if($form->isValid()){
-                if($report->readyToSubmit()){
-                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                }
-            }
+        // report submit logic
+        $reportSubmitter = $this->get('reportSubmitter');
+        if ($reportSubmitter->isReportSubmitted($report)) {
+            return $reportSubmitter->getRedirectResponse($report);
         }
         
         return [
             'report' => $report,
             'client' => $client,
-            'report_form_submit' => $form->createView()
+            'report_form_submit' => $reportSubmitter->getForm()->createView()
         ];
     }
     

@@ -52,3 +52,6 @@ services:
     form.reportSubmit: 
         class: AppBundle\Form\ReportSubmitType
         arguments:  [@translator]
+    reportSubmitter:
+        class: AppBundle\Service\ReportSubmitter
+        arguments: [@form.factory, @form.reportSubmit, @router, @service_container]
