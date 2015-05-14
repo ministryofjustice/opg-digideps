@@ -16,25 +16,19 @@ use AppBundle\Entity as EntityDir;
 class ClientController extends Controller
 {
     /**
-     * @Route("/show/{action}", name="client_home", defaults={ "action" = ""})
+     * @Route("/show/{action}/{reportId}", name="client_home", defaults={ "action" = "show", "reportId" = " "})
      * @Template()
      */
-    public function indexAction($action)
+    public function indexAction($action, $reportId)
     {
-        $util = $this->get('util');
+        $util = $this->get('util');  /* @var $util \AppBundle\Service\Util */
+        $apiClient = $this->get('apiclient');
         $clients = $this->getUser()->getClients();
         $request = $this->getRequest();
        
         $client = !empty($clients)? $clients[0]: null;
         
-        $reportIds = $client->getReports();
-        $reports = [];
-        
-        if(!empty($reportIds)){
-            foreach($reportIds as $id){
-                $reports[$id] = $util->getReport($id,$this->getUser()->getId(),[ 'basic' ]);
-            }
-        }
+        $reports = $client ? $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']) : [];
 
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
@@ -43,15 +37,27 @@ class ClientController extends Controller
         $formClientEditReportPeriod = $this->createForm(new ReportType(), $report);
         $clientForm = $this->createForm(new ClientType($util), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
         
-        if($request->getMethod() == "POST"){
-            $clientForm->handleRequest($request);
-            
-            if($clientForm->isValid()){
-                $apiClient = $this->get('apiclient');
-                $clientUpdated = $clientForm->getData();
-                
-                $apiClient->putC('update_client', $clientUpdated);
-                
+        $clientForm->handleRequest($request);
+        
+        // edit client form
+        if ($clientForm->isValid()) {
+            $clientUpdated = $clientForm->getData();
+            $apiClient->putC('update_client', $clientUpdated);
+
+            return $this->redirect($this->generateUrl('client_home'));
+        }
+        
+        // edit report dates
+        if ($action == 'edit-report' && $reportId) {
+            $report = $util->getReport($reportId, $this->getUser()->getId());
+            $editReportDatesForm = $this->createForm(new ReportType('report_edit'), $report, [
+                'translation_domain' => 'report-edit-dates'
+            ]);
+            $editReportDatesForm->handleRequest($request);
+            if ($editReportDatesForm->isValid()) {
+                $apiClient->putC('report/' . $reportId, $report, [
+                     'deserialise_group' => 'startEndDates',
+                ]);
                 return $this->redirect($this->generateUrl('client_home'));
             }
         }
@@ -60,6 +66,8 @@ class ClientController extends Controller
             'client' => $client,
             'reports' => $reports,
             'action' => $action,
+            'reportId' => $reportId,
+            'editReportDatesForm' => ($action == 'edit-report') ? $editReportDatesForm->createView() : null,
             'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
@@ -84,14 +92,10 @@ class ClientController extends Controller
         $form = $this->createForm(new ClientType($util), $client);
         
         $form->handleRequest($request);
-        
-        
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $response = $apiClient->postC('add_client', $form->getData());
-               
-                return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id'] ]));
-            }
+        if ($form->isValid()) {
+            $response = $apiClient->postC('add_client', $form->getData());
+
+            return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id'] ]));
         }
         return [ 'form' => $form->createView() ];
     }

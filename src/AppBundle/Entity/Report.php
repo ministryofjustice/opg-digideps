@@ -23,12 +23,14 @@ class Report
      * @Assert\NotBlank( message="report.startDate.notBlank")
      * @Assert\Date( message="report.startDate.invalidMessage" )
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"startEndDates"})
      * @var \DateTime $startDate
      */
     private $startDate;
     
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"startEndDates"})
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      * @var \DateTime $endDate
