@@ -2,9 +2,14 @@ page:
     htmlTitle: Report Decisions
     pageSectionTitle: Decisions made over the reporting period
     pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying and selling property, making gifts or changing the client's care home.
+    pageSectionEditInfo: "You can update the details of a decision or delete a decision by using the 'Edit this decision' link below."
     addDecisionButton: Add a decision
-    subSectionTitle: Add a decision
-
+    subSectionTitleAdd: Add a decision
+    subSectionTitleEdit: Edit this decision
+form:
+  controls:
+    addButton:
+      label: "Add a decision"
 # form
 title:
   label: Title
@@ -26,6 +31,9 @@ save:
   label: Save
 cancel:
   label: Cancel
+delete:
+    label: Delete
+    message: "Are you sure that you want to delete this decision?"
 listing:
   edit-link: Edit this decision
   description: Description

@@ -10,8 +10,8 @@ Feature: edit client details
             | client_firstname | Peter |
             | client_lastname | White |
             | client_caseNumber | 123456ABC |
-            | client_courtDate_day | 1 |
-            | client_courtDate_month | 1 |
+            | client_courtDate_day | 01 |
+            | client_courtDate_month | 01 |
             | client_courtDate_year | 2015 |
             | client_allowedCourtOrderTypes_1 | 1 |
             | client_address |  1 South Parade |

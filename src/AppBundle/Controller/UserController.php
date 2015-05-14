@@ -157,12 +157,12 @@ class UserController extends Controller
                     $translator = $this->get('translator');
                     
                     $email = new Email();
-                    $email->setFromEmail($emailConfig['from_email']);
-                    $email->setFromName($translator->trans('changePassword.fromName',[], 'email'));
-                    $email->setToEmail($user->getEmail());
-                    $email->setToName($user->getFirstname());
-                    $email->setSubject($translator->trans('changePassword.subject',[], 'email'));
-                    $email->setBodyHtml($this->renderView('AppBundle:User:_change-password.email.html.twig'));
+                    $email->setFromEmail($emailConfig['from_email'])
+                        ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
+                        ->setToEmail($user->getEmail())
+                        ->setToName($user->getFirstname())
+                        ->setSubject($translator->trans('changePassword.subject',[], 'email'))
+                        ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
@@ -170,7 +170,12 @@ class UserController extends Controller
                 }
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
                 
-                return $this->redirect($this->generateUrl('user_view', [ 'notification' => $notification ]));
+                $request->getSession()->getFlashBag()->add(
+                    'notice', 
+                    $notification
+                );
+                
+                return $this->redirect($this->generateUrl('user_view'));
             }
             
         }
