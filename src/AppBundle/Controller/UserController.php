@@ -170,7 +170,12 @@ class UserController extends Controller
                 }
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
                 
-                return $this->redirect($this->generateUrl('user_view', [ 'notification' => $notification ]));
+                $request->getSession()->getFlashBag()->add(
+                    'notice', 
+                    $notification
+                );
+                
+                return $this->redirect($this->generateUrl('user_view'));
             }
             
         }

@@ -26,10 +26,6 @@ class MailSender
     
     protected $validator;
     
-    
-    protected $fromEmail;
-    protected $fromName;
-    
     /**
      * @param \AppBundle\Mailer\MailerService $apiClient
      * @param Translator $translator
@@ -41,16 +37,9 @@ class MailSender
         $this->router = $router;
         $this->validator = $validator;
     }
-    
-    public function setFrom($fromEmail, $fromName)
-    {
-        $this->fromEmail = $fromEmail;
-        $this->fromName = $fromName;
-    }
 
     
     /**
-     * 
      * @param Email $email
      * @param array $groups
      * @return type
