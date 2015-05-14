@@ -1,0 +1,19 @@
+{{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
+{% set checkboxClass = 'reviewed_n_checked' %}
+{% set buttonClass = '' %}
+{% if not report.readyToSubmit() %}
+  {% set checkboxClass = 'visuallyhidden' %}
+  {% set buttonClass = 'disabled' %}
+  <div class="page-report-message">
+    {{ 'report.header.form.readyMessage' | trans }}
+  </div>
+{% endif %}
+
+{{ form_checkbox(report_form_submit.reviewed_n_checked, 'report.header.form.controls.reviewed_n_checked',
+            {
+            'formGroupClass': checkboxClass
+            }) }}
+
+{{ form_submit(report_form_submit.submitReport, 'report.header.form.controls.submit', {'buttonClass': buttonClass }) }}
+
+{{ form_end(report_form_submit) }}
