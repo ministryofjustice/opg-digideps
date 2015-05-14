@@ -65,7 +65,7 @@ class AssetController extends Controller
             $asset = new EntityDir\Asset();
             $form = $this->createForm(new FormDir\AssetType($titles),$asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'add'])]);
         }
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
         

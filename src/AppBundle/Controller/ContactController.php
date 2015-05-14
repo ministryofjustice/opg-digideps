@@ -55,7 +55,7 @@ class ContactController extends Controller{
         }
         
         //set up report submit form
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
         
         //set up add reason for no contact form
         $noContact = $this->createForm(new FormDir\ReasonForNoContactType());
@@ -105,6 +105,8 @@ class ContactController extends Controller{
         $reportSubmit->handleRequest($request);
         $noContact->handleRequest($request);
 
+        $report = $util->getReport($reportId, $this->getUser()->getId());
+        
         //check if contacts form was submitted
         if($form->get('save')->isClicked()){
             if($form->isValid()){
@@ -124,8 +126,6 @@ class ContactController extends Controller{
         }elseif($noContact->get('saveReason')->isClicked()){
             if($noContact->isValid()){
                  $formData = $noContact->getData();
-                 
-                 $report = $util->getReport($reportId, $this->getUser()->getId());
 
                  $report->setReasonForNoContacts($formData['reason']);
 

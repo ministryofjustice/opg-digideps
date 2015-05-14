@@ -59,7 +59,7 @@ class DecisionController extends Controller
         $decision->setReportId($reportId);
         $decision->setReport($report);
         
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
 
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);

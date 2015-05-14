@@ -33,7 +33,7 @@ class AccountController extends Controller
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
         
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
@@ -87,7 +87,6 @@ class AccountController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient());
         
-       
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
@@ -114,7 +113,7 @@ class AccountController extends Controller
         }
         
         // report submit logic
-        list($reportSubmit, $reportSubmitValid) = $this->handleAccountsubmitForm($report);
+        list($reportSubmit, $reportSubmitValid) = $this->handleReportSubmitForm($report);
         if ($reportSubmitValid) {
             return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
         }
@@ -158,11 +157,11 @@ class AccountController extends Controller
     /**
      * @param EntityDir\Account $report
      * 
-     * @return [FormDir\AccountTransactionsType, boolean]
+     * @return [FormDir\ReportSubmitType, boolean]
      */
-    private function handleAccountsubmitForm(EntityDir\Report $report)
+    private function handleReportSubmitForm(EntityDir\Report $report)
     {
-       $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+       $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
        $reportSubmit->handleRequest($this->getRequest());
        $valid = $reportSubmit->get('submitReport')->isClicked() 
                 && $reportSubmit->isValid() 
