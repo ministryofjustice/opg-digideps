@@ -14,6 +14,54 @@ Feature: report
     @deputy
     Scenario: change report type to "Property and Affairs"
         Given I change the report "1" court order type to "Property and Affairs"
+        
+    @deputy
+    Scenario: edit report
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
+        And I click on "report-edit-2015"
+        Then the following fields should have the corresponding values:
+            | report_edit_startDate_day | 01 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2015 |
+            | report_edit_endDate_day | 31 |
+            | report_edit_endDate_month | 12 |
+            | report_edit_endDate_year | 2015 |
+        # check validations
+        When I fill in the following:
+            | report_edit_startDate_day | aa |
+            | report_edit_startDate_month | bb |
+            | report_edit_startDate_year | c |
+            | report_edit_endDate_day |  |
+            | report_edit_endDate_month |  |
+            | report_edit_endDate_year |  |
+        And I press "report_edit_save"
+        Then the following fields should have an error:
+           | report_edit_startDate_day |
+            | report_edit_startDate_month |
+            | report_edit_startDate_year |
+            | report_edit_endDate_day |
+            | report_edit_endDate_month |
+            | report_edit_endDate_year |
+        # valid values
+        When I fill in the following:
+            | report_edit_startDate_day | 01 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2015 |
+            | report_edit_endDate_day | 31 |
+            | report_edit_endDate_month | 12 |
+            | report_edit_endDate_year | 2015 |    
+        And I press "report_edit_save"
+        Then the form should not contain an error
+        # check values
+        And I click on "report-edit-2015"
+        Then the following fields should have the corresponding values:
+            | report_edit_startDate_day | 01 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2015 |
+            | report_edit_endDate_day | 31 |
+            | report_edit_endDate_month | 12 |
+            | report_edit_endDate_year | 2015 |
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
@@ -125,7 +173,7 @@ Feature: report
         And I fill in the following:
             | decision_description | 2 beds |
             | decision_decisionDate_day | 1 |
-            | decision_decisionDate_month | 1 |
+            | decision_decisionDate_month | 2 |
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
@@ -138,8 +186,8 @@ Feature: report
          And I fill in the following:
             #| decision_title | Sold house in Sw18 |
             | decision_description | 3 beds |
-            | decision_decisionDate_day | 2 |
-            | decision_decisionDate_month | 1 |
+            | decision_decisionDate_day | 4 |
+            | decision_decisionDate_month | 3 |
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
@@ -339,7 +387,7 @@ Feature: report
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
             | account_openingDate_day   | 1 |
-            | account_openingDate_month | 1 |
+            | account_openingDate_month | 2 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,150.00 |
         And I press "account_save"
@@ -355,7 +403,7 @@ Feature: report
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
             | account_openingDate_day   | 01 |
-            | account_openingDate_month | 01 |
+            | account_openingDate_month | 02 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,150.00 | 
         And I save the page as "report-account-edit-reloaded"
@@ -494,7 +542,7 @@ Feature: report
             | accountBalance_closingBalance    |
         # right values  
         When I fill in the following:
-            | accountBalance_closingDate_day   | 30 | 
+            | accountBalance_closingDate_day   | 28 | 
             | accountBalance_closingDate_month | 12 | 
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | 3,105.50 | 
@@ -504,7 +552,7 @@ Feature: report
         And I should see "£-3,100.50" in the "money-totals" region
         When I follow "tab-accounts"
         Then I should see "3,105.50" in the "account-1-closing-balance" region
-        And I should see "30/12/2015" in the "account-1-closing-date" region
+        And I should see "28/12/2015" in the "account-1-closing-date" region
 
 
     @deputy
@@ -514,7 +562,7 @@ Feature: report
         And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
         Then the following fields should have the corresponding values:
-            | account_closingDate_day   | 30 | 
+            | account_closingDate_day   | 28 | 
             | account_closingDate_month | 12 | 
             | account_closingDate_year  | 2015 | 
             | account_closingBalance    | 3,105.50 | 
@@ -541,6 +589,7 @@ Feature: report
         Then the form should not contain any error
         And I should see "31/12/2015" in the "account-closing-balance-date" region
         And I should see "£3,100.00" in the "account-closing-balance" region
+
 
     @deputy
     Scenario: submit report
