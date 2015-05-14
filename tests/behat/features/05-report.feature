@@ -568,6 +568,36 @@ Feature: report
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from contacts page
+        When I follow "tab-contacts"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from decisions page
+        When I follow "tab-decisions"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from accounts page
+        When I follow "tab-accounts"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from account page
+        When I am on the account "1234" page of the first report
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from assets page
+        When I follow "tab-assets"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
         # preview page: submit without ticking "agree"
         When I press "report_declaration_save"
         Then the following fields should have an error:
