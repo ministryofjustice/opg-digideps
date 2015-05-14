@@ -32,8 +32,6 @@ services:
     mailSender:
         class: AppBundle\Service\MailSender
         arguments: [ @apiclient, @translator, @router,@validator ]
-        calls:
-            - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
     redirectorService:
         class: AppBundle\Service\Redirector
         arguments: [ @security.context, @router, @session ]
