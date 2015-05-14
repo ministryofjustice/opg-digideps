@@ -1434,7 +1434,8 @@ input[type=number] {
 .visuallyhidden + .account__edit {
   margin: 30px 0; }
 .account__edit .sub-section-title + .sub-section-description {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  margin-top: -20px; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -2247,6 +2248,13 @@ form {
   .tabs-panel.tabs-panel-selected {
     display: block; }
 
+.notification-summary__container {
+  width: 85%;
+  padding: 0;
+  margin: 40px 0 0 0; }
+.notification-summary .page-section-warning {
+  width: 100%; }
+
 .page-body {
   margin-top: 0;
   overflow: hidden;
@@ -2727,7 +2735,8 @@ ol.progress {
 
 .sub-section-description {
   margin-bottom: 40px;
-  width: 65%; }
+  width: 65%;
+  float: left; }
   .report-overview .sub-section-description {
     margin-bottom: 20px; }
   form .sub-section-description {
@@ -2752,8 +2761,7 @@ ol.progress {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 20px;
-    margin-bottom: 10px; }
+    margin-top: 20px; }
   .report-overview .sub-section-title {
     margin-bottom: 10px; }
 

@@ -81,6 +81,8 @@ class UserController extends Controller
     
     
     /**
+     * Registration steps
+     *
      * @Route("/details", name="user_details")
      * @Template()
      */
@@ -90,7 +92,6 @@ class UserController extends Controller
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
-        $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
@@ -113,8 +114,7 @@ class UserController extends Controller
         }
         
         return [
-            'form' => $form->createView(),
-            'notification' => $notification
+            'form' => $form->createView()
         ];
         
     }
@@ -127,7 +127,6 @@ class UserController extends Controller
     {
         $request = $this->getRequest();
         $user = $this->getUser();
-        $notification = null;
         
         $formEditDetails = $this->createForm(new UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
@@ -166,19 +165,22 @@ class UserController extends Controller
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
-                    $notification = 'You have changed your password. We have sent you an email to confirm this change.';
                 }
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
-                
+
                 $request->getSession()->getFlashBag()->add(
-                    'notice', 
-                    $notification
+                    'notification',
+                    'page.passwordChangedNotification'
                 );
-                
+
                 return $this->redirect($this->generateUrl('user_view'));
             }
             
         }
+        $request->getSession()->getFlashBag()->add(
+            'notification',
+            'page.passwordChangedNotification'
+        );
 
         return [
             'action' => $action,
