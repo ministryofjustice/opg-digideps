@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
 use AppBundle\Service\ApiClient;
@@ -68,15 +69,14 @@ class ReportController extends Controller
         $client = $this->getClient($report->getClient());
         
         // report submit logic
-        $reportSubmitter = $this->get('reportSubmitter');
-        if ($reportSubmitter->isReportSubmitted($report)) {
-            return $reportSubmitter->getRedirectResponse($report);
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
         
         return [
             'report' => $report,
             'client' => $client,
-            'report_form_submit' => $reportSubmitter->getForm()->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
     

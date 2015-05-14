@@ -55,9 +55,8 @@ class ContactController extends Controller{
         }
         
         // report submit logic
-        $reportSubmitter = $this->get('reportSubmitter');
-        if ($reportSubmitter->isReportSubmitted($report)) {
-            return $reportSubmitter->getRedirectResponse($report);
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
         
         //set up add reason for no contact form
@@ -83,7 +82,7 @@ class ContactController extends Controller{
             'action' => $action,
             'report' => $report,
             'client' => $client,
-            'report_form_submit' => $reportSubmitter->getForm()->createView(),
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView(),
             'no_contact' => $noContact->createView() ];
     }
     

@@ -34,9 +34,9 @@ class AccountController extends Controller
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
         
-        $reportSubmitter = $this->get('reportSubmitter');
-        if ($reportSubmitter->isReportSubmitted($report)) {
-            return $reportSubmitter->getRedirectResponse($report);
+        // report submit logic
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
         
         if ($request->getMethod() == 'POST') {
@@ -60,7 +60,7 @@ class AccountController extends Controller
             'action' => $action,
             'form' => $form->createView(),
             'accounts' => $accounts,
-            'report_form_submit' => $reportSubmitter->getForm()->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -108,9 +108,8 @@ class AccountController extends Controller
         }
         
         // report submit logic
-        $reportSubmitter = $this->get('reportSubmitter');
-        if ($reportSubmitter->isReportSubmitted($report)) {
-            return $reportSubmitter->getRedirectResponse($report);
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
         
         // edit/delete logic
@@ -144,25 +143,8 @@ class AccountController extends Controller
             'showDeleteConfirmation' => $action == 'delete',
             'account' => $account,
             'actionParam' => $action,
-            'report_form_submit' => $reportSubmitter->getForm()->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
-    }
-    
-    
-    /**
-     * @param EntityDir\Account $report
-     * 
-     * @return [FormDir\ReportSubmitType, boolean]
-     */
-    private function handleReportSubmitForm(EntityDir\Report $report)
-    {
-       $reportSubmit = $this->createForm($this->get('form.reportSubmit'));
-       $reportSubmit->handleRequest($this->getRequest());
-       $valid = $reportSubmit->get('submitReport')->isClicked() 
-                && $reportSubmit->isValid() 
-                && $report->readyToSubmit();
-            
-        return [$reportSubmit, $valid];    
     }
     
     /**

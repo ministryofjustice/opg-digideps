@@ -9,12 +9,14 @@ use AppBundle\Entity\Report;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormView;
 
 /**
  * Logic to handle report submit form from each report page tab
  */
 class ReportSubmitter
 {
+
     /**
      * @var FormFactory 
      */
@@ -41,39 +43,29 @@ class ReportSubmitter
         $this->form = $formFactory->create($type);
         $this->router = $router;
         $this->request = $container->get('request');
-        
     }
 
     /**
      * @param Report $report
      * 
-     * @return boolean
+     * @return RedirectResponse|null
      */
     public function isReportSubmitted(Report $report)
     {
         $this->form->handleRequest($this->request);
-        
-        return $this->form->get('submitReport')->isClicked() 
-               && $this->form->isValid() 
-               && $report->readyToSubmit();
+
+        if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $report->readyToSubmit()) {
+            return new RedirectResponse($this->router->generate('report_declaration', ['reportId' => $report->getId()]));
+        }
+        return null;
     }
-    
+
     /**
-     * @param Report $report
-     * 
-     * @return RedirectResponse
+     * @return FormView
      */
-    public function getRedirectResponse(Report $report)
+    public function getFormView()
     {
-        return new RedirectResponse($this->router->generate('report_declaration', [ 'reportId' => $report->getId()]));
-    }
-    
-    /**
-     * @return Form
-     */
-    public function getForm()
-    {
-        return $this->form;
+        return $this->form->createView();
     }
 
 }

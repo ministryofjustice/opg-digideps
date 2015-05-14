@@ -60,9 +60,8 @@ class DecisionController extends Controller
         $decision->setReport($report);
         
         // report submit logic
-        $reportSubmitter = $this->get('reportSubmitter');
-        if ($reportSubmitter->isReportSubmitted($report)) {
-            return $reportSubmitter->getRedirectResponse($report);
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
 
         if ($request->isMethod('POST')) {
@@ -89,7 +88,7 @@ class DecisionController extends Controller
             'report' => $report,
             'client' => $util->getClient($report->getClient()),
             'action' => $action,
-            'report_form_submit' => $reportSubmitter->getForm()->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 }

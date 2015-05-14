@@ -67,9 +67,8 @@ class AssetController extends Controller
         }
         
         // report submit logic
-        $reportSubmitter = $this->get('reportSubmitter');
-        if ($reportSubmitter->isReportSubmitted($report)) {
-            return $reportSubmitter->getRedirectResponse($report);
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
@@ -97,7 +96,7 @@ class AssetController extends Controller
             'action' => $action,
             'form'   => $form->createView(),
             'assets' => $assets,
-            'report_form_submit' => $reportSubmitter->getForm()->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 }
