@@ -2,7 +2,7 @@
 
 .form-sort-code {
 
-  .separator{
+  .separator {
     float: left;
     margin: 7px 13px;
   }
@@ -17,12 +17,12 @@
       float: left;
       width: 50px;
       margin-right: 5px;
+      text-align: center;
 
-      &::after{
+      &::after {
         content: "-";
         display: inline;
       }
-
 
     }
 

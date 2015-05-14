@@ -41,7 +41,7 @@ form {
 
     }
 
-    .report-list__item & {
+    .data-item, .report-list__item & {
 
       .form-date {
         .form-group {
@@ -73,7 +73,7 @@ form {
       margin-top: 40px;
     }
 
-    .report-list__item & {
+    .data-item, .report-list__item & {
       margin-bottom: 20px;
     }
 
