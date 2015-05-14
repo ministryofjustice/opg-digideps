@@ -11,7 +11,7 @@ form {
 
   &.in-page-form {
     border-left: 3px solid $grey-2;
-    padding-left: 10px;
+    padding-left: 15px;
 
     .form-date {
       .form-group {
@@ -78,7 +78,8 @@ form {
     }
 
     .data-item & {
-      margin-bottom: 10px;
+      padding-top: 6px;
+      padding-bottom: 3px;
     }
 
   }
