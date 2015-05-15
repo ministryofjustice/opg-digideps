@@ -22,14 +22,22 @@ class SendGridTransport implements Swift_Transport
     private $sendGrid;
     
     /**
+     * Needed to put attachment content into in order to be picked up by sendgrid, 
+     * currently the only way to add attachments
+     * @var string 
+     */
+    private $temporaryAttachment;
+    
+    /**
      * @var array 
      */
     private $emailFileWriters = [];
     
     
-    public function __construct(SendGrid $sendGrid)
+    public function __construct(SendGrid $sendGrid, $temporaryAttachment)
     {
         $this->sendGrid = $sendGrid;
+        $this->temporaryAttachment = $temporaryAttachment;
         $this->emailFileWriters = [];
     }
 
@@ -135,6 +143,12 @@ class SendGridTransport implements Swift_Transport
         
         if ($html = $this->getHtmlPart($message)) {
             $email->setHtml($html);
+        }
+        
+        // add attachments
+        foreach ($message->getChildren() as $children) { /* @var $children \Swift_Mime_MimeEntity */
+            file_put_contents($this->temporaryAttachment, $children->getBody());
+            $email->addAttachment($this->temporaryAttachment);
         }
         
         return $email;
