@@ -105,7 +105,7 @@ class ReportController extends Controller
                 'deserialise_group' => 'submit',
             ]);
             // send report by email
-            $this->sendByEmail($report);
+            //$this->sendByEmail($report);
             
             return $this->redirect($this->generateUrl('report_submitted', ['reportId'=>$reportId]));
         }

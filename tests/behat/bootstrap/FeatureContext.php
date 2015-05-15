@@ -329,15 +329,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @When the report is submitted
-     */
-    public function theReportIsSubmitted()
-    {
-        //TODO check db
-        $this->assertPageContainsText('The report has been submitted');
-    }
-    
-    /**
      * @Then I expire the session
      */
     public function iExpireTheSession()
