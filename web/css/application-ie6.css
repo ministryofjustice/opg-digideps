@@ -2717,32 +2717,42 @@ ol.progress {
 .user-list {
   margin-top: 60px; }
 
-.external-report header.page-header {
-  margin: 40px 0 40px 0; }
-  .external-report header.page-header .page-header-titles .report-title {
-    display: block;
-    float: none;
-    font-weight: normal;
-    margin: 0 0 20px 0; }
-  .external-report header.page-header .page-header-titles .client-name {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 48px;
-    line-height: 1.04167;
-    font-weight: 700;
-    text-transform: none;
-    margin-top: 10px;
-    margin-bottom: 0px; }
-    @media (max-width: 640px) {
-      .external-report header.page-header .page-header-titles .client-name {
-        font-size: 32px;
-        line-height: 1.09375; } }
-  .external-report header.page-header .data-item-fields-description {
-    margin-left: 160px; }
-.external-report .data-item {
-  padding: 0 0 40px 0;
+.external-report header.page-header .page-header-titles .report-title {
+  display: block;
+  float: none;
+  font-weight: normal;
+  margin: 0 0 20px 0; }
+.external-report header.page-header .page-header-titles .client-name {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 48px;
+  line-height: 1.04167;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 10px;
+  margin-bottom: 0px; }
+  @media (max-width: 640px) {
+    .external-report header.page-header .page-header-titles .client-name {
+      font-size: 32px;
+      line-height: 1.09375; } }
+.external-report header.page-header .data-item-fields-description {
+  margin-left: 160px; }
+.external-report .external-report-section, .external-report header.page-header {
+  padding: 40px 0 40px 0;
   border-bottom: 1px solid #dee0e2; }
-.external-report .data-item--declaration .data-item-fields-description {
+.external-report .external-report-section-declaration .data-item-fields-description {
   margin-left: 140px; }
+.external-report .report-list.report-list--contacts {
+  border-top: 0;
+  border-bottom: 0; }
+.external-report .report-list {
+  padding-left: 0;
+  margin-top: 0; }
+  .external-report .report-list .report-list__item:first-child {
+    padding-top: 0; }
+  .external-report .report-list .report-list__item:last-child {
+    padding-bottom: 0; }
+  .external-report .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row:last-child {
+    margin-bottom: 0; }
 
 span.icon {
   /*
