@@ -36,7 +36,7 @@
                 {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
             </a>
 
-        {% elseif report.isDue() %}
+        {% elseif report.isDue() and report_form_submit is defined %}
              {% include 'AppBundle:Components/PageHeader:_report-submit-form.html.twig' %}
         {% endif %}
     </div>

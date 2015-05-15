@@ -39,6 +39,7 @@ class Report
      * @var \DateTime $submitDate
      * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"submit"})
      */
     private $submitDate;
     
@@ -107,6 +108,7 @@ class Report
     
     /**
      * @JMS\Type("boolean")
+     * @JMS\Groups({"submit"})
      * @var boolean
      */
     private $submitted;

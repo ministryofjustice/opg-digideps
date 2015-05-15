@@ -6,10 +6,13 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Client;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Model\Email;
+use AppBundle\Model\EmailAttachment;
 
 
 class ReportController extends Controller
@@ -86,8 +89,7 @@ class ReportController extends Controller
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
         if (!$report->isDue()) {
             throw new \RuntimeException("Report not ready for submission.");
         }
@@ -96,27 +98,98 @@ class ReportController extends Controller
         
         $form = $this->createForm(new FormDir\ReportDeclarationType());
         $form->handleRequest($request);
-        if($form->isValid()){
+        if ($form->isValid()) {
+            // set report submitted with date
+            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+                'deserialise_group' => 'submit',
+            ]);
+            // send report by email
+            $this->sendByEmail($report);
             
-            /**
-             * //TODO
-             * 
-             * ADD REAL SUBMISSION OR SENDIN HERE
-             * 
-             */
-            
-            $request->getSession()->getFlashBag()->add(
-                'notice', 
-                $this->get('translator')->trans('page.reportSubmittedFlashMessage', [], 'report-declaration')
-            );
-            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+            return $this->redirect($this->generateUrl('report_submitted', ['reportId'=>$reportId]));
         }
-        
         
         return [
             'report' => $report,
             'client' => $client,
             'form' => $form->createView(),
+        ];
+    }
+    
+    /**
+     * @param EntityDir\Report$report
+     */
+    private function sendByEmail(EntityDir\Report $report)
+    {
+        //lets send an email to confirm password change
+        $emailConfig = $this->container->getParameter('email_report_submit');
+        $translator = $this->get('translator');
+
+        $email = new Email();
+        $email->setFromEmail($emailConfig['from_email'])
+            ->setFromName($translator->trans('reportSubmission.fromName',[], 'email'))
+            ->setToEmail($emailConfig['to_email'])
+            ->setToName($translator->trans('reportSubmission.toName',[], 'email'))
+            ->setSubject($translator->trans('reportSubmission.subject',[], 'email'))
+            ->setBodyHtml($this->renderView('AppBundle:Email:report-submission.html.twig'))
+            ->setAttachments([new EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
+
+        $this->get('mailSender')->send($email,[ 'html']);
+    }
+    
+    /**
+     * @return string
+     */
+    private function getReportContent(EntityDir\Report $report)
+    {
+        return $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId()])->getContent();
+    }
+    
+    /**
+     * @Route("/report/{reportId}/download", name="report_download")
+     * @Template()
+     */
+    public function downloadAction($reportId)
+    {
+        $util = $this->get('util');
+        $report = $util->getReport($reportId, $this->getUser()->getId());
+        
+        // Generate response
+        $response = new Response();
+
+        $content = $this->getReportContent($report);
+        
+        // Set headers
+        $response->headers->set('Cache-Control', 'private');
+        $response->headers->set('Content-type', 'text/html');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . 'report.html' . '";');
+        $response->headers->set('Content-length', strlen($content));
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+
+        $response->setContent($content);
+        
+        return $response;
+    }
+    
+    /**
+     * Page displaying the report has been submitted
+     * @Route("/report/{reportId}/submitted", name="report_submitted")
+     * @Template()
+     */
+    public function submittedAction($reportId)
+    {
+        $report = $this->getReport($reportId);
+        if (!$report->getSubmitted()) {
+            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+        }
+        $client = $this->getClient($report->getClient());
+        
+        return [
+            'report' => $report,
+            'client' => $client,
         ];
     }
     

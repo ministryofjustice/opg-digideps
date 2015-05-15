@@ -4,3 +4,7 @@ activation:
 changePassword:
     subject: Change to your Complete a deputy report service password
     fromName: Complete a deputy report service
+reportSubmission:
+    subject: Report submission from Digital Deputy
+    fromName: Digital deputy secure email service
+    toName: Deputyship Service
