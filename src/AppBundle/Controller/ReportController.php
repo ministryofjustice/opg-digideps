@@ -197,7 +197,7 @@ class ReportController extends Controller
      * @Route("/report/{reportId}/display", name="report_display")
      * @Template()
      */
-    public function displayAction(Request $request, $reportId)
+    public function displayAction($reportId)
     {
         $apiClient = $this->get('apiclient');
         
@@ -207,12 +207,14 @@ class ReportController extends Controller
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
+        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
         
         return [
             'report' => $report,
             'client' => $client,
             'assets' => $assets,
             'contacts' => $contacts,
+            'decisions' => $decisions,
             'deputy' => $this->getUser(),
         ];
     }
