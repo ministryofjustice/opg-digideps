@@ -1,3 +1,10 @@
+{% set page = 'reportPeriod' %}
+{% set translationDomain = "report-overview" %}
+{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
+    {% set reportType = "propertyAndAffairs" %}
+{% else %}
+    {% set reportType = "healthAndWelfare" %}
+{% endif %}
 <html>
     <head>
         <!--[if gt IE 8]><!--><link href="{{ asset('stylesheets/govuk-template.css') }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
@@ -69,20 +76,11 @@
                 </p>
             </div>
 
-
-            {% set page = 'reportPeriod' %}
-            {% set translationDomain = "report-overview" %}
-            {% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
-                {% set reportType = "propertyAndAffairs" %}
-            {% else %}
-                {% set reportType = "healthAndWelfare" %}
-            {% endif %}
-
             <div class="container external-report">
 
                 {% include 'AppBundle:Components/PageHeader:_report-header-email.html.twig' %}
 
-                <div class="data-item data-item--declaration">
+                <div class="external-report-section external-report-section-declaration">
 
                     {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
                         transDomain: "report-declaration",
@@ -95,21 +93,32 @@
                         transOptions: {'%separator%': '<br/><br/>'}
                     } %}
 
+                    <div class="data-item">
+                        <dl class="data-item-fields">
+                            <div class="data-item-fields-row">
+                                <dt class="data-item-fields-term">Status</dt>
+                                <dd class="data-item-fields-description">Deputy Agreed</dd>
+                            </div>
+                            <div class="data-item-fields-row">
+                                <dt class="data-item-fields-term">Declation time</dt>
+                                <dd class="data-item-fields-description">11:54 13/01/2015</dd>
+                            </div>
+                            <div class="data-item-fields-row">
+                                <dt class="data-item-fields-term">Deputy name</dt>
+                                <dd class="data-item-fields-description">{{ deputy.fullname }}</dd>
+                            </div>
+                        </dl>
+                    </div>
+                </div>
 
-                    <dl class="data-item-fields">
-                        <div class="data-item-fields-row">
-                            <dt class="data-item-fields-term">Status</dt>
-                            <dd class="data-item-fields-description">Deputy Agreed</dd>
-                        </div>
-                        <div class="data-item-fields-row">
-                            <dt class="data-item-fields-term">Declation time</dt>
-                            <dd class="data-item-fields-description">11:54 13/01/2015</dd>
-                        </div>
-                        <div class="data-item-fields-row">
-                            <dt class="data-item-fields-term">Deputy name</dt>
-                            <dd class="data-item-fields-description">{{ deputy.fullname }}</dd>
-                        </div>
-                    </dl>
+                <div class="external-report-section external-report-section-contacts">
+                    {% include 'AppBundle:Contact:_listContact.html.twig' with {
+                    'showListData': true,
+                    'showEditForm': false,
+                    'showEditLink': false,
+                    'showDeleteConfirm': false,
+                    'title': 'Contacts'
+                    } %}
                 </div>
 
             </div>
