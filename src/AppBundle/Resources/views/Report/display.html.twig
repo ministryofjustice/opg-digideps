@@ -121,6 +121,16 @@
                     } %}
                 </div>
 
+                <div class="external-report-section external-report-section-contacts">
+                    {% include 'AppBundle:Decision:_listDecision.html.twig' with {
+                    'showListData': true,
+                    'showEditForm': false,
+                    'showEditLink': false,
+                    'showDeleteConfirm': false,
+                    'title': 'Decisions made as deputy'
+                    } %}
+                </div>
+
             </div>
         </section>
 
