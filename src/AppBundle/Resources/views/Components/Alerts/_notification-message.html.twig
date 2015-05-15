@@ -1,0 +1,8 @@
+{% if notification is defined and error is defined%}
+    <div class="error-summary-container validation-summary-container">
+        <div aria-labelledby="error-heading" class="validation-summary group" id="error-summary" role="alert"
+             tabindex="-1">
+            <h2 id="error-heading" class="behat-region-header-errors">{{ error|trans }}</h2>
+        </div>
+    </div>
+{% endif %}

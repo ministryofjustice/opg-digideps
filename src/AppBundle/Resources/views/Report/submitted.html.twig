@@ -1,0 +1,37 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+activeTab: "tab-overview"
+} %}
+    {% set translationDomain = "report-submitted" %}
+    {% trans_default_domain translationDomain %}
+
+    {% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
+        {% set reportType = "propertyAndAffairs" %}
+    {% else %}
+        {% set reportType = "healthAndWelfare" %}
+    {% endif %}
+    
+    {% block pageNavigation %}
+    {% endblock %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+    {% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
+
+    {% block pageBody %}
+        <p>{{ 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
+       
+        <p>{{ 'page.yourReportWillBeSaved' | trans }}</p>
+        
+        <p>
+          {{ 'page.youCanDownloadCopy' | trans }}
+        </p>
+        
+        <p>
+          <a href="{{ path('report_download', {'reportId': report.id}) }}">{{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}</a>
+        </p>
+        
+        <a href="{{ path('client_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>
+
+
+    {% endblock %}
+
+{% endembed %}
