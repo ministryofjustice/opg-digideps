@@ -60,6 +60,11 @@ class Email
     private $bodyHtml;
     
     /**
+     * @JMS\Type("array<AppBundle\Model\EmailAttachment>") 
+     */
+    private $attachments;
+    
+    /**
      * @return string $email
      */
     public function getToEmail()
@@ -192,4 +197,10 @@ class Email
         $this->bodyHtml = $bodyHtml;
         return $this;
     }
+    
+    public function setAttachments(array $attachments)
+    {
+        $this->attachments = $attachments;
+    }
+
 }
