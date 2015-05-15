@@ -2820,6 +2820,33 @@ ol.progress {
 .user-list {
   margin-top: 60px; }
 
+.external-report header.page-header {
+  margin: 40px 0 40px 0; }
+  .external-report header.page-header .page-header-titles .report-title {
+    display: block;
+    float: none;
+    font-weight: normal;
+    margin: 0 0 20px 0; }
+  .external-report header.page-header .page-header-titles .client-name {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 48px;
+    line-height: 1.04167;
+    font-weight: 700;
+    text-transform: none;
+    margin-top: 10px;
+    margin-bottom: 0px; }
+    @media (max-width: 640px) {
+      .external-report header.page-header .page-header-titles .client-name {
+        font-size: 32px;
+        line-height: 1.09375; } }
+  .external-report header.page-header .data-item-fields-description {
+    margin-left: 160px; }
+.external-report .data-item {
+  padding: 0 0 40px 0;
+  border-bottom: 1px solid #dee0e2; }
+.external-report .data-item--declaration .data-item-fields-description {
+  margin-left: 140px; }
+
 span.icon {
   /*
   I'm purposefully forcing icons to be used with span tags, some

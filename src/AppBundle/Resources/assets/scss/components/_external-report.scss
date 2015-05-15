@@ -1,0 +1,38 @@
+.external-report {
+
+    header.page-header {
+
+        margin: 40px 0 40px 0;
+
+        .page-header-titles {
+
+            .report-title {
+                display: block;
+                float: none;
+                font-weight: normal;
+                margin: 0 0 20px 0;
+            }
+            .client-name {
+                @include bold-48();
+                margin-top: 10px;
+                margin-bottom: 0px;
+            }
+        }
+
+        .data-item-fields-description {
+            margin-left: 160px;
+        }
+
+    }
+
+
+    .data-item {
+        padding: 0 0 40px 0;
+        border-bottom: 1px solid $grey-3;
+    }
+
+    .data-item--declaration .data-item-fields-description {
+        margin-left: 140px;
+    }
+
+}
