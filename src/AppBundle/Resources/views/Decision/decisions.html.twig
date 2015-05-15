@@ -10,6 +10,8 @@ activeTab: "tab-decisions"
     {% set showAddForm = false %}
     {% set showEditForm = false %}
     {% set showDeleteConfirm = false %}
+    {% set showNoDecisionForm = false %}
+    {% set showDeleteReasonConfirm = false %}
 
     {% if decisions is not empty %}
         {% set showListData = true %}
@@ -25,9 +27,45 @@ activeTab: "tab-decisions"
         {% set showDeleteConfirm = true %}
     {% endif %}
 
-    {% if (action == 'add') or ( (action == 'list') and (decisions is empty) ) %}
-        {% set showAddForm = true %}
+    {% if action == 'edit-reason' %}
+        {% set showNoDecisionForm = true %}
     {% endif %}
+    
+    {% if action == 'delete-reason-confirm' %}
+        {% set showNoDecisionForm = true %}
+        {% set showDeleteReasonConfirm = true %}
+    {% endif %}
+    
+    {#{% if (action == 'add') or ( (action == 'list') and (decisions is empty) ) %}
+        {% set showAddForm = true %}
+    {% endif %}#}
+    
+    
+    {% if (decisions is empty) %}
+        {% if (report.isDue() ) %}
+
+            {% if ((action == 'list') and (report.reasonForNoDecisions() is empty)) %}
+                {% set showNoDecisionForm = true %}
+            {% elseif (action == 'add') %}
+                {% set showAddForm = true %}
+            {% endif %}
+
+        {% else %}
+
+            {% if ( (action == 'list') ) %}
+                {% set showAddForm = true %}
+            {% elseif (action == 'add') %}
+                {% set showAddForm = true %}
+            {% endif %}
+
+        {% endif %}
+    {% else %}
+        {% if (action == 'add') %}
+            {% set showAddForm = true %}
+        {% endif %}
+    {% endif %}
+    
+    
     {#  ***************************************** #}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -41,6 +79,17 @@ activeTab: "tab-decisions"
         pageSectionTitle: 'page.pageSectionTitle'
         } %}
 
+        {% include 'AppBundle:Decision:_no_decision_form.html.twig' with {
+           'showNoDecisionForm': showNoDecisionForm
+         } %}
+         
+         {% if not showNoDecisionForm and (report.reasonForNoDecisions is not empty) %}
+              <div>
+                {{report.reasonForNoDecisions}}
+                <a href="{{url('decisions', { 'reportId': report.id, 'action': 'edit-reason' })}}">Edit this reason</a>
+              </div>
+         {% endif %}
+        
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
@@ -48,17 +97,17 @@ activeTab: "tab-decisions"
 
         {% if (showEditHelpInfo) %}
 
-            {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+          {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
             transDomain: translationDomain,
             pageSectionDescription: 'page.pageSectionEditInfo'
-            } %}
+            } %} 
 
         {% endif %}
 
         {% block validationSummary %}
             {{ form_errors_list(form) }}
         {% endblock %}
-
+        
         {% include 'AppBundle:Decision:_add_button_bar.html.twig' with {
         'showAddForm': showAddForm
         } %}
@@ -68,7 +117,7 @@ activeTab: "tab-decisions"
         'showAddForm': showAddForm,
         'form': form
         } %}
-
+        
         {% include 'AppBundle:Decision:_listDecision.html.twig' with {
         'showListData': showListData
         } %}
