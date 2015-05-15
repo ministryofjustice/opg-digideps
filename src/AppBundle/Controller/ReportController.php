@@ -240,6 +240,14 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
         }
         
+        if (array_key_exists('submitted', $data)) {
+            $report->setSubmitted((boolean)$data['submitted']);
+        }
+        
+        if (array_key_exists('submit_date', $data)) {
+            $report->setSubmitDate(new \DateTime($data['submit_date']));
+        }
+        
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
         }
