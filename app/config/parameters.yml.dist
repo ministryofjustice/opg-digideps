@@ -22,3 +22,22 @@ parameters:
     session_memcached_host:     localhost
     session_memcached_port:     11211
     session_memcached_prefix:   dd
+    dynamodb:
+        client:
+            profile: default
+            region: frankfurt
+            endpoint: http://localhost:8000
+            credentials:
+                key: 
+                secret:
+        session:
+            table_name: dd_sessions
+            #hash_key: id # The name of the hash key in the DynamoDB sessions table. This defaults to id
+            session_lifetime: %session_expire_seconds%
+            #consistent_read: true # Whether or not the session handler should use consistent reads for the GetItem operation
+            #locking_strategy:  # The strategy used for doing session locking
+            automatic_gc: 0
+            #gc_batch_size: 25 # The batch size used for removing expired sessions during garbage collection
+            #gc_operation_delay: 0 # The delay (in seconds) between service operations performed during garbage collection
+            #max_lock_wait_time: 10 # Maximum time (in seconds) that the session handler should wait to acquire a lock before giving up
+            #min_lock_retry_microtime: 10000 # Minimum time (in microseconds) that the session handler should wait between attempts to acquire a lock
