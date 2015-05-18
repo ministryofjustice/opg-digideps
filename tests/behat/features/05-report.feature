@@ -543,7 +543,7 @@ Feature: report
         And I should see "£3,100.00" in the "account-closing-balance" region
 
     @deputy
-    Scenario: submit report
+    Scenario: report declaration page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the first report overview page
         # check there are no notifications
@@ -555,11 +555,17 @@ Feature: report
         Given I set the report 1 due
         And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
-        # submit without ticking
+        # assert I cannot access the declaration page
+        Then The URL "/report/1/declaration" should not be accessible
+        # assert I cannot access the submit page
+        Then The URL "/report/1/submitted" should not be accessible
+        # wrong declaration form
+        When I go to the first report overview page
         When I press "report_submit_submitReport"
         Then the following fields should have an error:
             | report_submit_reviewed_n_checked   |
-        # tick and submit
+        # correct declaration form
+        When I am on the first report overview page
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/declaration"
@@ -598,17 +604,25 @@ Feature: report
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/declaration"
-        # preview page: submit without ticking "agree"
-        When I press "report_declaration_save"
+        
+
+    @deputy
+    Scenario: report submission
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # assert I cannot access the sumbmitted page directly
+        Then the URL "/report/1/submitted" should not be accessible
+        # assert I cannot access the submit page from declaration page
+        When I go to "/report/1/declaration"
+        Then the URL "/report/1/submitted" should not be accessible
+        And I go to the first report overview page
+        # submit without ticking "agree"
+        When I go to "/report/1/declaration"
+        And I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
-        # right values  
+        # tick agree and submit
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the form should not contain an error
         And the URL should match "/report/\d+/submitted"
-        #And I should not see "Ready to submit"
-        
-
-        
         
