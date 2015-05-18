@@ -606,8 +606,7 @@ Feature: report
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the form should not contain an error
-        And the report is submitted
-        And the URL should match "/report/\d+/overview"
+        And the URL should match "/report/\d+/submitted"
         #And I should not see "Ready to submit"
         
 
