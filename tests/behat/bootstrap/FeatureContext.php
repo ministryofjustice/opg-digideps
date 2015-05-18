@@ -379,4 +379,28 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->clickOnBehatLink('account-' . $accountNumber);
     }
     
+    
+    /**
+     * @Given The response header :header should contain :value
+     */
+    public function theResponseHeaderShouldContain($header, $value)
+    {
+        $responseHeaders = $this->getSession()->getDriver()->getResponseHeaders();
+        
+        if (!isset($responseHeaders[$header])) {
+             throw new \Exception("Header $header not found in response. Headers found: " . implode(', ', array_keys($responseHeaders)));
+        }
+        
+        // search in 
+        $found = false;
+        foreach ((array)$responseHeaders[$header] as $currentValue) {
+            if (strpos($currentValue, $value) !== false) {
+                $found = true;
+            }
+        }
+        if (!$found) {
+            throw new \Exception("Header $header not found in response. Values: " . implode(', ', $responseHeaders[$header]));
+        }
+    }
+    
 }
