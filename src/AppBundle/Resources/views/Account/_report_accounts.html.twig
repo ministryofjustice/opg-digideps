@@ -1,0 +1,35 @@
+{% set translationDomain = "report-account" %}
+{% trans_default_domain translationDomain %}
+
+<h2 class="page-section-title heading-medium-large">{{ title }}</h2>
+
+{% for account in accounts %}
+    <div class="report-account">
+        {% include 'AppBundle:Account:_account-header.html.twig' with {
+            transDomain: translationDomain,
+            showEditForm: false,
+            hideComponent: false,
+            showEditLink: false
+        } %}
+
+        {% include 'AppBundle:Components/Listing:_account_transactions.html.twig' with {
+            transactions: account.moneyIn,
+            title: 'moneyInTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Listing:_account_transactions.html.twig' with {
+            transactions: account.moneyOut,
+            title: 'moneyOutTitle'
+        } %}
+
+        <div class="account-transactions__footer">
+            <dl class="account-transactions__total-balance">
+                <dt class="account-transactions__total-balance-label">{{ 'page.totalBalance' | trans }}</dt>
+                <dd class="account-transactions__total-balance-total">
+                    {{ 'page.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
+            </dl>
+        </div>
+
+
+    </div>
+{% endfor %}

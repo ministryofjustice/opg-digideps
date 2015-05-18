@@ -23,6 +23,13 @@
 
     }
 
+
+    .report-list--contacts .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
+    .report-list--decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block
+    {
+        margin-right: 100px;
+    }
+
     .external-report-section, header.page-header  {
         padding: 40px 0 40px 0;
         border-bottom: 1px solid $grey-3;
@@ -59,5 +66,57 @@
             }
         }
     }
+
+
+    .report-account {
+
+        .account-header {
+            margin-bottom: 0;
+            background: #f4f4f4;
+        }
+
+        .transactions-title {
+            background: $grey-3;
+        }
+
+        .transactions {
+            background: $grey-4;
+
+            .transactions-title {
+                padding: 15px 20px 15px 20px;
+                margin: 0;
+            }
+
+            .transaction-list {
+                padding: 0;
+            }
+
+            .transaction {
+
+                padding: 20px;
+                border-bottom: 1px solid $grey-2;
+                display: block;
+
+                .transaction-label {
+                    font-size: 19px;
+                    width: 85%;
+                    float: left;
+                }
+                .transaction-value {
+                    font-size: 19px;
+                    display: inline-block;
+                    width: 15%;
+                }
+            }
+
+
+        }
+
+
+
+    }
+
+
+
 
 }

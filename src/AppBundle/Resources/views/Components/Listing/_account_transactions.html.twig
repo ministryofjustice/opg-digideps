@@ -1,0 +1,13 @@
+{% set translationDomain = "accounts" %}
+{% trans_default_domain translationDomain %}
+
+<div class="transactions">
+    <h3 class="transactions-title heading-medium-large">{{ title | trans }}</h3>
+    <ul class="transaction-list">
+    {% for transaction in transactions %}
+        {% include 'AppBundle:Components/Listing:_money_transaction.html.twig' with {
+            transaction: transaction
+        } %}
+    {% endfor %}
+    </ul>
+</div>

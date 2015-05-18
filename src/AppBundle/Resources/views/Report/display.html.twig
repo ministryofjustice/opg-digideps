@@ -121,7 +121,7 @@
                     } %}
                 </div>
 
-                <div class="external-report-section external-report-section-contacts">
+                <div class="external-report-section external-report-section-decisions">
                     {% include 'AppBundle:Decision:_listDecision.html.twig' with {
                     'showListData': true,
                     'showEditForm': false,
@@ -131,22 +131,27 @@
                     } %}
                 </div>
 
+                {% if reportType is sameas("propertyAndAffairs") %}
+
+
+                    <div class="external-report-section external-report-section-accounts">
+                        {% include 'AppBundle:Account:_report_accounts.html.twig' with {
+                            'accounts': report.accounts,
+                            'title': 'Accounts'
+                        } %}
+                    </div>
+
+
+
+                {% else %}
+                 show everything except accounts and assets
+                {% endif %}
             </div>
         </section>
 
 
-        {% if reportType is sameas("propertyAndAffairs") %}
-            <div>
-                show everything <br/>
-                assets: {{ dump(assets) }}
-
-                report accounts : iterate through accounts
-            </div>
 
 
-        {% else %}
-         show everything except accounts and assets
-        {% endif %}
 
     </body>
 </html>

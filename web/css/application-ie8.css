@@ -2754,6 +2754,9 @@ ol.progress {
       line-height: 1.09375; } }
 .external-report header.page-header .data-item-fields-description {
   margin-left: 160px; }
+.external-report .report-list--contacts .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
+.external-report .report-list--decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
+  margin-right: 100px; }
 .external-report .external-report-section, .external-report header.page-header {
   padding: 40px 0 40px 0;
   border-bottom: 1px solid #dee0e2; }
@@ -2771,6 +2774,30 @@ ol.progress {
     padding-bottom: 0; }
   .external-report .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row:last-child {
     margin-bottom: 0; }
+.external-report .report-account .account-header {
+  margin-bottom: 0;
+  background: #f4f4f4; }
+.external-report .report-account .transactions-title {
+  background: #dee0e2; }
+.external-report .report-account .transactions {
+  background: #f8f8f8; }
+  .external-report .report-account .transactions .transactions-title {
+    padding: 15px 20px 15px 20px;
+    margin: 0; }
+  .external-report .report-account .transactions .transaction-list {
+    padding: 0; }
+  .external-report .report-account .transactions .transaction {
+    padding: 20px;
+    border-bottom: 1px solid #bfc1c3;
+    display: block; }
+    .external-report .report-account .transactions .transaction .transaction-label {
+      font-size: 19px;
+      width: 85%;
+      float: left; }
+    .external-report .report-account .transactions .transaction .transaction-value {
+      font-size: 19px;
+      display: inline-block;
+      width: 15%; }
 
 span.icon {
   /*
