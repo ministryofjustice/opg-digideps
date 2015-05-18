@@ -15,9 +15,9 @@ trait RegionTrait
     /**
      * @Then I should not see the :region :type
      */
-    public function iShouldNotSeeTheBehatElement($region, $type)
+    public function iShouldNotSeeTheBehatElement($element, $type)
     {
-        $regionCss = self::behatElementToCssSelector($region, $type);
+        $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         $count = count($linksElementsFound);
         if ($count > 0) {
@@ -28,9 +28,9 @@ trait RegionTrait
     /**
      * @Then I should see the :region :type
      */
-    public function iShouldSeeTheBehatElement($region, $type)
+    public function iShouldSeeTheBehatElement($element, $type)
     {
-        $regionCss = self::behatElementToCssSelector($region, $type);
+        $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element $regionCss not found");
@@ -119,8 +119,8 @@ trait RegionTrait
     }
     
     
-    protected static function behatElementToCssSelector($region, $type)
+    protected static function behatElementToCssSelector($element, $type)
     {
-        return '.behat-'.$type.'-' . preg_replace('/\s+/', '-', $region);
+        return '.behat-'.$type.'-' . preg_replace('/\s+/', '-', $element);
     }
 }

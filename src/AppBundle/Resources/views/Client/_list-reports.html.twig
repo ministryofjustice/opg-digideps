@@ -24,7 +24,15 @@
                         <a href="{{ linkEditReportingPeriod }}"
                            class="js-data-item-edit-link data-item-edit-link">{{ 'reportDataList.edit'| trans }}</a>
                     </dd>
+                    {% if report.submitted %}
+                      <dd class="data-item-fields-description data-item-fields-description--header">
+                          <a href="{{ path('report_download', {'reportId': report.id}) }}" class="js-data-item-edit-link data-item-edit-link behat-link-download-{{ report.getPeriod() }}-report">
+                            {{ 'reportDataList.downloadThisReportLink' | trans() }}
+                          </a>
+                      </dd>
+                    {% endif %}
                 </div>
+                    
                 {% if report.isDue() %}
                     <div class="data-item-fields-row">
                         <dt class="data-item-fields-term">{{ 'reportDataList.status' | trans }}</dt>

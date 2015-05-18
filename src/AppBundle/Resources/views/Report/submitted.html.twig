@@ -26,7 +26,9 @@ activeTab: "tab-overview"
         </p>
         
         <p>
-          <a href="{{ path('report_download', {'reportId': report.id}) }}">{{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}</a>
+          <a href="{{ path('report_download', {'reportId': report.id}) }}" class="behat-link-download-report">
+            {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
+          </a>
         </p>
         
         <a href="{{ path('client_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>

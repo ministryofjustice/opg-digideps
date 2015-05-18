@@ -237,7 +237,7 @@ class ReportController extends Controller
      * 
      * @return EntityDir/Report
      */
-    protected function getReport($reportId,array $groups = [ 'transactions'])
+    protected function getReport($reportId,array $groups = [ 'transactions', 'basic'])
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
     }
