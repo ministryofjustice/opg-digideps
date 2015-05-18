@@ -354,6 +354,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * @Given I am on the first report overview page
+     * @Given I go to the first report overview page
      */
     public function iAmOnTheReport1Page()
     {
@@ -362,7 +363,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given I am on the accounts page of the first report
+     * @Given I (am on|go to) the accounts page of the first report
      */
     public function iAmOnTheReport1AccountsPage()
     {
@@ -377,6 +378,15 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $this->iAmOnTheReport1AccountsPage();
         $this->clickOnBehatLink('account-' . $accountNumber);
+    }
+    
+    /**
+     * @Then the URL :url should not be accessible
+     */
+    public function theUrlShouldNotBeAccessible($url)
+    {
+        $this->visit($url);
+        $this->assertResponseStatus(500);
     }
     
 }
