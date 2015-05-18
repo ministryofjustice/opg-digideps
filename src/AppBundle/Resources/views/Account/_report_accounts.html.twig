@@ -2,9 +2,9 @@
 {% trans_default_domain translationDomain %}
 
 <h2 class="page-section-title heading-medium-large">{{ title }}</h2>
-
+<ul class="report-accounts">
 {% for account in accounts %}
-    <div class="report-account">
+    <li class="report-account">
         {% include 'AppBundle:Account:_account-header.html.twig' with {
             transDomain: translationDomain,
             showEditForm: false,
@@ -12,7 +12,7 @@
             showEditLink: false
         } %}
 
-        {% include 'AppBundle:Components/Listing:_account_transactions.html.twig' with {
+        {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
             transactions: account.moneyIn,
             total: account.moneyInTotal,
             title: 'moneyInTitle',
@@ -20,7 +20,7 @@
             footerTotalPrefix: 'moneyInPrefix'
         } %}
 
-        {% include 'AppBundle:Components/Listing:_account_transactions.html.twig' with {
+        {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
             transactions: account.moneyOut,
             total: account.moneyOutTotal,
             title: 'moneyOutTitle',
@@ -28,14 +28,10 @@
             footerTotalPrefix: 'moneyOutPrefix'
         } %}
 
-        <div class="account-transactions__footer">
-            <dl class="account-transactions__total-balance">
-                <dt class="account-transactions__total-balance-label">{{ 'page.totalBalance' | trans }}</dt>
-                <dd class="account-transactions__total-balance-total">
-                    {{ 'page.currencySymbol' | trans }}{{ account.moneyTotal | number_format(2, '.', ',') }}</dd>
-            </dl>
-        </div>
+        {% include 'AppBundle:Components/Listing:_financial_transactions_balance.html.twig' with {
+            balance: account.moneyTotal
+        } %}
 
-
-    </div>
+    </li>
 {% endfor %}
+</ul>

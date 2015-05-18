@@ -62,7 +62,6 @@
         margin-left: 140px;
     }
 
-
     .external-report-section-accounts {
 
         padding-bottom: 20px;
@@ -81,85 +80,6 @@
             }
 
         }
-
-        .account-transactions {
-
-            background: $grey-4;
-
-            .account-transactions-title {
-                background: $grey-3;
-                padding: 15px 20px 15px 20px;
-                margin: 0;
-            }
-
-            .account-transactions-list {
-                padding: 0;
-            }
-
-            .transaction {
-                margin: 0;
-                padding: 20px;
-                border-bottom: 1px solid $grey-2;
-                display: block;
-
-                .transaction-label {
-                    font-size: 19px;
-                    width: 80%;
-                    float: left;
-                }
-                .transaction-value {
-                    font-size: 19px;
-                    display: inline-block;
-                    width: 20%;
-                }
-            }
-
-            .account-transactions-total-balance {
-
-                margin: 0;
-                padding: 20px;
-                border-bottom: 1px solid $grey-2;
-                display: block;
-                overflow: hidden;
-
-                .account-transactions-total-balance-label {
-                    width: 78%;
-                    float: left;
-                    font-size: 24px;
-                    font-weight: bold;
-                }
-
-                .account-transactions-total-balance-total {
-                    display: inline-block;
-                    width: 22%;
-                    font-size: 24px;
-                }
-
-            }
-
-        }
-
-        .account-transactions__footer {
-
-            margin: 0;
-            padding: 40px 20px 20px 20px;
-            background: $white;
-            border-bottom: none;
-            display: block;
-            overflow: hidden;
-
-            .account-transactions__total-balance-label {
-                width: 77%;
-                font-weight: bold;
-                font-size: 27px;
-            }
-
-            .account-transactions__total-balance-total {
-                width: 23%;
-            }
-
-        }
-
 
     }
 

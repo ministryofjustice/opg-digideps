@@ -2735,6 +2735,57 @@ ol.progress {
 .user-list {
   margin-top: 60px; }
 
+.financial-transactions {
+  background: #f8f8f8; }
+  .financial-transactions .financial-transactions-title {
+    background: #dee0e2;
+    padding: 15px 20px 15px 20px;
+    margin: 0; }
+  .financial-transactions .financial-transactions-list {
+    padding: 0; }
+  .financial-transactions .transaction {
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid #bfc1c3;
+    display: block;
+    font-size: 19px; }
+    .financial-transactions .transaction .transaction-label {
+      width: 80%;
+      float: left; }
+    .financial-transactions .transaction .transaction-value {
+      display: inline-block;
+      width: 20%; }
+  .financial-transactions .financial-transactions-total {
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid #bfc1c3;
+    display: block;
+    overflow: hidden;
+    font-size: 24px; }
+    .financial-transactions .financial-transactions-total .financial-transactions-total-label {
+      width: 78%;
+      float: left;
+      font-weight: bold; }
+    .financial-transactions .financial-transactions-total .financial-transactions-total-total {
+      display: inline-block;
+      width: 22%; }
+
+.financial-transactions-balance {
+  margin: 0;
+  padding: 40px 20px 20px 20px;
+  background: #fff;
+  border-bottom: none;
+  display: block;
+  overflow: hidden;
+  font-size: 27px; }
+  .financial-transactions-balance .financial-transactions-balance-label {
+    float: left;
+    width: 77%;
+    font-weight: bold; }
+  .financial-transactions-balance .financial-transactions-balance-value {
+    width: 23%;
+    display: inline-block; }
+
 .external-report header.page-header .page-header-titles .report-title {
   display: block;
   float: none;
@@ -2782,55 +2833,6 @@ ol.progress {
       width: 75%; }
     .external-report .external-report-section-accounts .account-header .account-header__item-fields-set--left {
       width: 25%; }
-  .external-report .external-report-section-accounts .account-transactions {
-    background: #f8f8f8; }
-    .external-report .external-report-section-accounts .account-transactions .account-transactions-title {
-      background: #dee0e2;
-      padding: 15px 20px 15px 20px;
-      margin: 0; }
-    .external-report .external-report-section-accounts .account-transactions .account-transactions-list {
-      padding: 0; }
-    .external-report .external-report-section-accounts .account-transactions .transaction {
-      margin: 0;
-      padding: 20px;
-      border-bottom: 1px solid #bfc1c3;
-      display: block; }
-      .external-report .external-report-section-accounts .account-transactions .transaction .transaction-label {
-        font-size: 19px;
-        width: 80%;
-        float: left; }
-      .external-report .external-report-section-accounts .account-transactions .transaction .transaction-value {
-        font-size: 19px;
-        display: inline-block;
-        width: 20%; }
-    .external-report .external-report-section-accounts .account-transactions .account-transactions-total-balance {
-      margin: 0;
-      padding: 20px;
-      border-bottom: 1px solid #bfc1c3;
-      display: block;
-      overflow: hidden; }
-      .external-report .external-report-section-accounts .account-transactions .account-transactions-total-balance .account-transactions-total-balance-label {
-        width: 78%;
-        float: left;
-        font-size: 24px;
-        font-weight: bold; }
-      .external-report .external-report-section-accounts .account-transactions .account-transactions-total-balance .account-transactions-total-balance-total {
-        display: inline-block;
-        width: 22%;
-        font-size: 24px; }
-  .external-report .external-report-section-accounts .account-transactions__footer {
-    margin: 0;
-    padding: 40px 20px 20px 20px;
-    background: #fff;
-    border-bottom: none;
-    display: block;
-    overflow: hidden; }
-    .external-report .external-report-section-accounts .account-transactions__footer .account-transactions__total-balance-label {
-      width: 77%;
-      font-weight: bold;
-      font-size: 27px; }
-    .external-report .external-report-section-accounts .account-transactions__footer .account-transactions__total-balance-total {
-      width: 23%; }
 
 span.icon {
   /*
