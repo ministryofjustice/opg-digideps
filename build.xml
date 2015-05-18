@@ -49,7 +49,7 @@
 
 
     <target name="phpunit">
-        <exec passthru="true" command="vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
+        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
     </target>
 
     <target name="optimise">
@@ -57,7 +57,7 @@
     </target>
     
     <target name="bootstrap-build">
-        <exec passthru="true" command="php ./vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php"></exec>
+        <exec passthru="true" command="php vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php"></exec>
     </target>
 
     

@@ -227,13 +227,25 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent();
         
-        if (array_key_exists('cotId', $data)) {
-            $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
+        if (array_key_exists('cot_id', $data)) {
+            $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
             $report->setCourtOrderType($cot);
         }
         
-        if (array_key_exists('endDate', $data)) {
-            $report->setEndDate(new \DateTime($data['endDate']));
+        if (array_key_exists('start_date', $data)) {
+            $report->setStartDate(new \DateTime($data['start_date']));
+        }
+        
+        if (array_key_exists('end_date', $data)) {
+            $report->setEndDate(new \DateTime($data['end_date']));
+        }
+        
+        if (array_key_exists('submitted', $data)) {
+            $report->setSubmitted((boolean)$data['submitted']);
+        }
+        
+        if (array_key_exists('submit_date', $data)) {
+            $report->setSubmitDate(new \DateTime($data['submit_date']));
         }
         
         if (array_key_exists('reason_for_no_contacts', $data)) {

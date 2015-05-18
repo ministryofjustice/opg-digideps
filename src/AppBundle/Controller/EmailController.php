@@ -26,19 +26,25 @@ class EmailController extends RestController
         
         array_map(function($k) use ($data) {
             if (!array_key_exists($k, $data)) {
-                throw new \InvalidArgumentException("Missing paramter $k");
+                throw new \InvalidArgumentException("Missing parameter $k");
             }
         }, ['toEmail', 'toName', 'fromEmail', 'fromName', 'subject', 'bodyText', 'bodyHtml']);
         
-        $mailerService = $this->container->get('mailer.service');
+        $mailerService = $this->container->get('mailer.service'); /* @var $mailerService \Swift_Mailer */
         
-        $message = $mailerService->createMessage();
+        $message = $mailerService->createMessage(); /* @var $message \Swift_Message */
         $message->setTo($data['toEmail'], $data['toName']);
         $message->setFrom($data['fromEmail'], $data['fromName']);
         
         $message->setSubject($data['subject']);
         $message->setBody($data['bodyText']);
         $message->addPart($data['bodyHtml'], 'text/html');
+        
+        if (!empty($data['attachments'])) {
+            foreach ($data['attachments'] as $attachment) {
+                $message->attach(new \Swift_Attachment($attachment['content'], $attachment['filename'], $attachment['contentType']));
+            }
+        }
         
         $result = $mailerService->send($message);
         
