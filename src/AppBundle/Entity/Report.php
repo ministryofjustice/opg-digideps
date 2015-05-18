@@ -179,7 +179,14 @@ class Report
      */
     private $submitted;
     
-
+    /**
+     * @var boolean
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="reviewed", type="boolean", nullable=true)
+     */
+    private $reviewed;
+    
      /**
      * Constructor
      */
@@ -361,6 +368,23 @@ class Report
     public function getSubmitted()
     {
         return $this->submitted;
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function getReviewed()
+    {
+        return $this->reviewed;
+    }
+
+    /**
+     * @param boolean $reviewed
+     */
+    public function setReviewed($reviewed)
+    {
+        $this->reviewed = $reviewed;
+        return $this;
     }
 
     /**
