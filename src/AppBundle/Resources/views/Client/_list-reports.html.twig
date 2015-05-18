@@ -26,7 +26,7 @@
                     </dd>
                     {% if report.submitted %}
                       <dd class="data-item-fields-description data-item-fields-description--header">
-                          <a href="{{ path('report_download', {'reportId': report.id}) }}" class="js-data-item-edit-link data-item-edit-link">
+                          <a href="{{ path('report_download', {'reportId': report.id}) }}" class="js-data-item-edit-link data-item-edit-link behat-link-download-{{ report.getPeriod() }}-report">
                             {{ 'reportDataList.downloadThisReportLink' | trans() }}
                           </a>
                       </dd>

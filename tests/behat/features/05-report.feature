@@ -545,7 +545,9 @@ Feature: report
     @deputy
     Scenario: submit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        And I click on "client-home"
+        Then I should not see the "download-2015-report" link
+        When I click on "report-n1"
         # check there are no notifications
         Then I should not see the "tab-contacts-warning" region
         Then I should not see the "tab-decisions-warning" region
@@ -607,7 +609,18 @@ Feature: report
         And I press "report_declaration_save"
         And the form should not contain an error
         And the URL should match "/report/\d+/submitted"
-        #And I should not see "Ready to submit"
+        # download report from confirmation page
+        When I click on "download-report"
+        Then The response header "Content-Disposition" should contain "attachment"
+        And the response should contain "123456ABC"
+        And the response should contain "Paul Jamie"
+        # download report from client page
+        When I go to the homepage
+        And I click on "download-2015-report"
+        Then The response header "Content-Disposition" should contain "attachment"
+        And the response should contain "123456ABC"
+        And the response should contain "Paul Jamie"
+        
         
 
         
