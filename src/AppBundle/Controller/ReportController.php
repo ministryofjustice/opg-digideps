@@ -251,6 +251,11 @@ class ReportController extends RestController
         if (array_key_exists('reason_for_no_contacts', $data)) {
             $report->setReasonForNoContacts($data['reason_for_no_contacts']);
         }
+        
+        if (array_key_exists('no_asset_to_add', $data)) {
+            $report->setNoAssetToAdd($data['no_asset_to_add']);
+        }
+        
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
