@@ -93,6 +93,9 @@ class ReportController extends Controller
         if (!$report->isDue()) {
             throw new \RuntimeException("Report not ready for submission.");
         }
+        if (!$report->getReviewed()) {
+            throw new \RuntimeException("You must review and check this report before submitting.");
+        }
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
@@ -182,8 +185,8 @@ class ReportController extends Controller
     public function submittedAction($reportId)
     {
         $report = $this->getReport($reportId);
-        if (!$report->getSubmitted()) {
-            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+        if (!$report->getReviewed() || !$report->getSubmitted()) {
+            throw new \RuntimeException("Report not reviewed and submitted.");
         }
         $client = $this->getClient($report->getClient());
         
@@ -232,7 +235,7 @@ class ReportController extends Controller
     /**
      * @param integer $reportId
      * 
-     * @return Report
+     * @return EntityDir/Report
      */
     protected function getReport($reportId,array $groups = [ 'transactions'])
     {
