@@ -14,12 +14,18 @@
 
         {% include 'AppBundle:Components/Listing:_account_transactions.html.twig' with {
             transactions: account.moneyIn,
-            title: 'moneyInTitle'
+            total: account.moneyInTotal,
+            title: 'moneyInTitle',
+            footerTitle: 'moneyInFooter',
+            footerTotalPrefix: 'moneyInPrefix'
         } %}
 
         {% include 'AppBundle:Components/Listing:_account_transactions.html.twig' with {
             transactions: account.moneyOut,
-            title: 'moneyOutTitle'
+            total: account.moneyOutTotal,
+            title: 'moneyOutTitle',
+            footerTitle: 'moneyOutFooter',
+            footerTotalPrefix: 'moneyOutPrefix'
         } %}
 
         <div class="account-transactions__footer">

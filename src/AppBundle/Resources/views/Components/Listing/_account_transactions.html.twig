@@ -1,13 +1,25 @@
 {% set translationDomain = "accounts" %}
 {% trans_default_domain translationDomain %}
 
-<div class="transactions">
-    <h3 class="transactions-title heading-medium-large">{{ title | trans }}</h3>
-    <ul class="transaction-list">
+<div class="account-transactions">
+
+    <h3 class="account-transactions-title heading-medium-large">{{ title | trans }}</h3>
+    <ul class="account-transactions-list">
     {% for transaction in transactions %}
         {% include 'AppBundle:Components/Listing:_money_transaction.html.twig' with {
             transaction: transaction
         } %}
     {% endfor %}
     </ul>
+
+    <dl class="account-transactions-total-balance">
+        <dt class="account-transactions-total-balance-label">
+            {{ footerTitle | trans }}
+        </dt>
+        <dd class="account-transactions-total-balance-total">
+            {{ footerTotalPrefix | trans }}
+            {{ 'currencySymbol' | trans }}
+            {{ total | number_format(2, '.', ',') }}</dd>
+    </dl>
+
 </div>

@@ -23,29 +23,20 @@
 
     }
 
-
-    .report-list--contacts .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
-    .report-list--decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block
-    {
-        margin-right: 100px;
-    }
-
     .external-report-section, header.page-header  {
         padding: 40px 0 40px 0;
         border-bottom: 1px solid $grey-3;
     }
 
-    .external-report-section-declaration .data-item-fields-description {
-        margin-left: 140px;
-    }
-
-    .report-list.report-list {
-        border-top: 0;
-        border-bottom: 0;
+    .external-report-section-contacts .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
+    .external-report-section-decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block
+    {
+        margin-right: 100px;
     }
 
     .report-list {
-
+        border-top: 0;
+        border-bottom: 0;
         padding-left: 0;
         margin-top: 0;
 
@@ -67,56 +58,110 @@
         }
     }
 
+    .external-report-section-declaration .data-item-fields-description {
+        margin-left: 140px;
+    }
 
-    .report-account {
+
+    .external-report-section-accounts {
+
+        padding-bottom: 20px;
 
         .account-header {
+
             margin-bottom: 0;
             background: #f4f4f4;
+
+            .account-header__item-fields-set {
+                width: 75%;
+            }
+
+            .account-header__item-fields-set--left {
+                width: 25%;
+            }
+
         }
 
-        .transactions-title {
-            background: $grey-3;
-        }
+        .account-transactions {
 
-        .transactions {
             background: $grey-4;
 
-            .transactions-title {
+            .account-transactions-title {
+                background: $grey-3;
                 padding: 15px 20px 15px 20px;
                 margin: 0;
             }
 
-            .transaction-list {
+            .account-transactions-list {
                 padding: 0;
             }
 
             .transaction {
-
+                margin: 0;
                 padding: 20px;
                 border-bottom: 1px solid $grey-2;
                 display: block;
 
                 .transaction-label {
                     font-size: 19px;
-                    width: 85%;
+                    width: 80%;
                     float: left;
                 }
                 .transaction-value {
                     font-size: 19px;
                     display: inline-block;
-                    width: 15%;
+                    width: 20%;
                 }
             }
 
+            .account-transactions-total-balance {
+
+                margin: 0;
+                padding: 20px;
+                border-bottom: 1px solid $grey-2;
+                display: block;
+                overflow: hidden;
+
+                .account-transactions-total-balance-label {
+                    width: 78%;
+                    float: left;
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+
+                .account-transactions-total-balance-total {
+                    display: inline-block;
+                    width: 22%;
+                    font-size: 24px;
+                }
+
+            }
+
+        }
+
+        .account-transactions__footer {
+
+            margin: 0;
+            padding: 40px 20px 20px 20px;
+            background: $white;
+            border-bottom: none;
+            display: block;
+            overflow: hidden;
+
+            .account-transactions__total-balance-label {
+                width: 77%;
+                font-weight: bold;
+                font-size: 27px;
+            }
+
+            .account-transactions__total-balance-total {
+                width: 23%;
+            }
 
         }
 
 
-
     }
-
-
 
 
 }

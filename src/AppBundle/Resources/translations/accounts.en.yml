@@ -2,7 +2,7 @@ totalBalance: Total Balance
 currencySymbol: £
 bankBuildingSociety: Bank or Building Society name
 moneyInPrefix: "+"
-mountOutPrefix: "-"
+moneyOutPrefix: "-"
 
 accounNumber: Account no.
 openingBalanceDate: Opening balance date
