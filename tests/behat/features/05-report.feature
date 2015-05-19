@@ -629,6 +629,19 @@ Feature: report
         And the URL should match "/report/\d+/submitted"
 
     @deputy
+    Scenario: assert report is not editable after submission
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should not see the "edit-report-period-2015-report" link
+        And I should not see the "report-n1" link
+        And I should see the "report-2015-submitted-on" region
+        And the URL "/report/1/overview" should not be accessible
+        And the URL "/report/1/contacts" should not be accessible
+        And the URL "/report/1/decisions" should not be accessible
+        And the URL "/report/1/accounts" should not be accessible
+        And the URL "/report/1/account/1" should not be accessible
+        And the URL "/report/1/assets" should not be accessible
+        
+    @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # download report from confirmation page

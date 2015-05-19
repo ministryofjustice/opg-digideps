@@ -68,7 +68,9 @@ class ReportController extends Controller
     public function overviewAction($reportId)
     {
         $report = $this->getReport($reportId);
-        
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
         $client = $this->getClient($report->getClient());
         
         // report submit logic

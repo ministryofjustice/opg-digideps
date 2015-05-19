@@ -40,7 +40,10 @@ class DecisionController extends Controller
         
         // just needed for title etc,
         $report = $util->getReport($reportId, $this->getUser()->getId());
-       
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+        
         if(in_array($action, [ 'edit', 'delete-confirm']) && in_array($id,$report->getDecisions())){
             $decision = $apiClient->getEntity('Decision','get_report_decision', [ 'parameters' => ['id' => $id ] ]);
             
