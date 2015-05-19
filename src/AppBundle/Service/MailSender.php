@@ -45,7 +45,7 @@ class MailSender
      * @return type
      * @throws \Exception
      */
-    public function send(Email $email, array $groups = ['text'])
+    public function send(Email $email, array $groups = ['text'], $transport = 'sendgrid')
     {
         //validate change password object
         $errors = $this->validator->validate($email,$groups);
@@ -54,7 +54,7 @@ class MailSender
             $errorsString = (string) $errors;
             throw new \Exception($errorsString);
         }
-        $ret = $this->apiClient->postC('email/send',$email);
+        $ret = $this->apiClient->postC('email/send/' . $transport, $email);
         
         return $ret;
     }

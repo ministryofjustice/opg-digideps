@@ -181,6 +181,18 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
     }
     
+     /**
+     * @Then an email with subject :subject should have been sent
+     */
+    public function anEmailWithSubjectShouldHaveBeenSent($subject)
+    {
+        $mail = $this->getLatestEmailMockFromApi();
+        
+        if ($mail['subject'] != $subject) {
+            throw new \RuntimeException("Subject '" . $mail['subject'] . "' does not match the expected '" . $subject . "'");
+        }
+    }
+    
 
     /**
      * @When I open the first link on the email
