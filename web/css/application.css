@@ -2890,12 +2890,18 @@ ol.progress {
       line-height: 1.09375; } }
 .external-report header.page-header .data-item-fields-description {
   margin-left: 160px; }
-.external-report .external-report-section, .external-report header.page-header {
+.external-report header.page-header {
+  padding: 0 0 40px 0;
+  border-bottom: 1px solid #dee0e2; }
+.external-report .external-report-section {
   padding: 40px 0 40px 0;
   border-bottom: 1px solid #dee0e2; }
+.external-report .page-section-description, .external-report .report-list {
+  width: auto;
+  max-width: 535px; }
 .external-report .external-report-section-contacts .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
 .external-report .external-report-section-decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
-  margin-right: 100px; }
+  margin-right: 0; }
 .external-report .report-list {
   border-top: 0;
   border-bottom: 0;
@@ -2915,9 +2921,11 @@ ol.progress {
     margin-bottom: 0;
     background: #f4f4f4; }
     .external-report .external-report-section-accounts .account-header .account-header__item-fields-set {
-      width: 75%; }
+      width: 65%; }
     .external-report .external-report-section-accounts .account-header .account-header__item-fields-set--left {
-      width: 25%; }
+      width: 35%; }
+    .external-report .external-report-section-accounts .account-header .account-header__item-fields-description--balance {
+      margin-left: 135px; }
 
 span.icon {
   /*
