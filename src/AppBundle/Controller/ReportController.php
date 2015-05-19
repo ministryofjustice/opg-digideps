@@ -96,6 +96,9 @@ class ReportController extends Controller
         if (!$report->getReviewed()) {
             throw new \RuntimeException("You must review and check this report before submitting.");
         }
+        if (!$report->readyToSubmit()) {
+            throw new \RuntimeException("Report not ready to be submitted.");
+        }
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
@@ -110,7 +113,7 @@ class ReportController extends Controller
             // send report by email
             //$this->sendByEmail($report);
             
-            return $this->redirect($this->generateUrl('report_submitted', ['reportId'=>$reportId]));
+            return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
         }
         
         return [
@@ -179,10 +182,10 @@ class ReportController extends Controller
     
     /**
      * Page displaying the report has been submitted
-     * @Route("/report/{reportId}/submitted", name="report_submitted")
+     * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
      * @Template()
      */
-    public function submittedAction($reportId)
+    public function submitConfirmationAction($reportId)
     {
         $report = $this->getReport($reportId);
         if (!$report->getReviewed() || !$report->getSubmitted()) {
