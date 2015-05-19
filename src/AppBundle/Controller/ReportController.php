@@ -90,15 +90,17 @@ class ReportController extends Controller
     public function declarationAction(Request $request, $reportId)
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        // check status
         if (!$report->isDue()) {
             throw new \RuntimeException("Report not ready for submission.");
-        }
-        if (!$report->getReviewed()) {
-            throw new \RuntimeException("You must review and check this report before submitting.");
         }
         if (!$report->readyToSubmit()) {
             throw new \RuntimeException("Report not ready to be submitted.");
         }
+        if (!$report->getReviewed()) {
+            throw new \RuntimeException("You must review and check this report before submitting.");
+        }
+        
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
@@ -188,8 +190,18 @@ class ReportController extends Controller
     public function submitConfirmationAction($reportId)
     {
         $report = $this->getReport($reportId);
-        if (!$report->getReviewed() || !$report->getSubmitted()) {
-            throw new \RuntimeException("Report not reviewed and submitted.");
+        // check status
+        if (!$report->isDue()) {
+            throw new \RuntimeException("Report not due.");
+        }
+        if (!$report->readyToSubmit()) {
+            throw new \RuntimeException("Report not ready to be submitted.");
+        }
+        if (!$report->getReviewed()) {
+            throw new \RuntimeException("You must review and check this report before submitting.");
+        }
+        if (!$report->getSubmitted()) {
+            throw new \RuntimeException("Report not submitted.");
         }
         $client = $this->getClient($report->getClient());
         
