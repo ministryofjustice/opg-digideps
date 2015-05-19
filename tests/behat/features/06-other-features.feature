@@ -28,9 +28,7 @@ Feature: login and logout functionalities
     Scenario: no cache
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I go to the homepage
-      Given I am on client home "client-home" and I click first report "report-n1"
-      And I follow "tab-accounts"
-      And I follow "tab-decisions"
+      And I click on "my-details"
       Then the response should have the "Cache-Control" header containing "no-cache"
       Then the response should have the "Cache-Control" header containing "no-store"
       Then the response should have the "Cache-Control" header containing "must-revalidate"
