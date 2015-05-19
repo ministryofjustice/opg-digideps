@@ -17,13 +17,13 @@ use Swift_Message;
 class EmailController extends RestController
 {
     /**
-     * @Route("/send")
+     * @Route("/send/{transport}",defaults={ "transport" = "sendgrid"})
      * @Method({"POST"})
      * "", ""
      * 
       curl -v -H "Accept: application/json" -H "Content-type: application/json" -X POST -d '{"toEmail":"elvisciotti@gmail.com", "toName":"Elvis", "fromEmail":"admin@digideps.service.dsd.io", "fromName":"Digital deputyship service", "subject": "subject!", "bodyText":"PLAIN BODY", "bodyHtml":"HTML <b>BODY</b>"}'  http://digideps-api.local/email/send
      */
-    public function sendEmail()
+    public function sendEmail($transport)
     {
         $data = $this->deserializeBodyContent();
 
@@ -34,7 +34,7 @@ class EmailController extends RestController
         }, ['toEmail', 'toName', 'fromEmail', 'fromName', 'subject', 'bodyText', 'bodyHtml']);
 
         $mailTransport = 'mailer.transport.sendgrid';
-        if (isset($data['transport']) && $data['transport'] == 'secureSmtp') {
+        if ($transport == 'secure-smtp') {
             $mailTransport = 'mailer.transport.secureSmtp';
         }
 
