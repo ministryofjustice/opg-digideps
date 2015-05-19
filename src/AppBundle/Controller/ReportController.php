@@ -92,7 +92,7 @@ class ReportController extends Controller
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
         // check status
         if (!$report->isDue()) {
-            throw new \RuntimeException("Report not ready for submission.");
+            throw new \RuntimeException("Report not due.");
         }
         if (!$report->readyToSubmit()) {
             throw new \RuntimeException("Report not ready to be submitted.");
