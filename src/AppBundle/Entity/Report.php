@@ -114,6 +114,13 @@ class Report
     private $submitted;
     
     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"reviewed"})
+     * @var boolean
+     */
+    private $reviewed;
+    
+    /**
      * 
      * @return integer $id
      */
@@ -547,6 +554,22 @@ class Report
         return $this;
     }
     
+    /**
+     * @return boolean
+     */
+    public function getReviewed()
+    {
+        return $this->reviewed;
+    }
+
+    /**
+     * @param boolean $reviewed
+     */
+    public function setReviewed($reviewed)
+    {
+        $this->reviewed = $reviewed;
+    }
+        
     /**
      * @return string $status | null
      */
