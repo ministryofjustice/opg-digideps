@@ -132,7 +132,7 @@ class UserController extends Controller
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
         
-        $formEditDetails->add('password', new ChangePasswordType(), [ 'error_bubbling' => false, 'mapped' => false ]);
+        $formEditDetails->add('password', new ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
@@ -165,22 +165,21 @@ class UserController extends Controller
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
+                    $request->getSession()->getFlashBag()->add(
+                                'notification',
+                                'page.passwordChangedNotification'
+                            );
+                    
                 }
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
 
-                $request->getSession()->getFlashBag()->add(
-                    'notification',
-                    'page.passwordChangedNotification'
-                );
-
                 return $this->redirect($this->generateUrl('user_view'));
             }
-            
         }
-        $request->getSession()->getFlashBag()->add(
+        /*$request->getSession()->getFlashBag()->add(
             'notification',
             'page.passwordChangedNotification'
-        );
+        );*/
 
         return [
             'action' => $action,
