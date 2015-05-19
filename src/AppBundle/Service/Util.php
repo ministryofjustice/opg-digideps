@@ -55,7 +55,7 @@ class Util
         return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ], 'query' => ['groups' => $groups] ]);
     }
     
-    public function getReport($reportId,$userId, $groups = [ "transactions"])
+    public function getReport($reportId,$userId, $groups = [ "transactions", "basic"])
     {
         return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $userId ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
     }

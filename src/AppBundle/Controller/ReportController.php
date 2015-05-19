@@ -90,9 +90,17 @@ class ReportController extends Controller
     public function declarationAction(Request $request, $reportId)
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        // check status
         if (!$report->isDue()) {
             throw new \RuntimeException("Report not ready for submission.");
         }
+        if (!$report->readyToSubmit()) {
+            throw new \RuntimeException("Report not ready to be submitted.");
+        }
+        if (!$report->getReviewed()) {
+            throw new \RuntimeException("You must review and check this report before submitting.");
+        }
+        
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
@@ -107,7 +115,7 @@ class ReportController extends Controller
             // send report by email
             //$this->sendByEmail($report);
             
-            return $this->redirect($this->generateUrl('report_submitted', ['reportId'=>$reportId]));
+            return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
         }
         
         return [
@@ -176,14 +184,24 @@ class ReportController extends Controller
     
     /**
      * Page displaying the report has been submitted
-     * @Route("/report/{reportId}/submitted", name="report_submitted")
+     * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
      * @Template()
      */
-    public function submittedAction($reportId)
+    public function submitConfirmationAction($reportId)
     {
         $report = $this->getReport($reportId);
+        // check status
+        if (!$report->isDue()) {
+            throw new \RuntimeException("Report not due.");
+        }
+        if (!$report->readyToSubmit()) {
+            throw new \RuntimeException("Report not ready to be submitted.");
+        }
+        if (!$report->getReviewed()) {
+            throw new \RuntimeException("You must review and check this report before submitting.");
+        }
         if (!$report->getSubmitted()) {
-            return $this->redirect($this->generateUrl('report_overview', ['reportId'=>$reportId]));
+            throw new \RuntimeException("Report not submitted.");
         }
         $client = $this->getClient($report->getClient());
         
@@ -232,9 +250,9 @@ class ReportController extends Controller
     /**
      * @param integer $reportId
      * 
-     * @return Report
+     * @return EntityDir/Report
      */
-    protected function getReport($reportId,array $groups = [ 'transactions'])
+    protected function getReport($reportId,array $groups = [ 'transactions', 'basic'])
     {
         return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
     }

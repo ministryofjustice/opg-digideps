@@ -10,17 +10,17 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\DependencyInjection\Container;
 
 /**
  * Logic to handle report submit form from each report page tab
  */
 class ReportSubmitter
 {
-
     /**
-     * @var FormFactory 
+     * @var Container
      */
-    protected $formFactory;
+    protected $container;
 
     /**
      * @var ReportSubmitType
@@ -28,21 +28,13 @@ class ReportSubmitter
     protected $form;
 
     /**
-     * @var RouterInterface
+     * @param Container $container
+     * @param ReportSubmitType $type
      */
-    protected $router;
-
-    /**
-     * @var Request
-     */
-    protected $request;
-
-
-    public function __construct(FormFactory $formFactory, ReportSubmitType $type, RouterInterface $router, $container)
+    public function __construct(Container $container, ReportSubmitType $type)
     {
-        $this->form = $formFactory->create($type);
-        $this->router = $router;
-        $this->request = $container->get('request');
+        $this->container = $container;
+        $this->form = $this->container->get('form.factory')->create($type);
     }
 
     /**
@@ -52,10 +44,14 @@ class ReportSubmitter
      */
     public function isReportSubmitted(Report $report)
     {
-        $this->form->handleRequest($this->request);
+        $this->form->handleRequest($this->container->get('request'));
 
         if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $report->readyToSubmit()) {
-            return new RedirectResponse($this->router->generate('report_declaration', ['reportId' => $report->getId()]));
+            $report->setReviewed(true);
+            $this->container->get('apiclient')->putC('report/' . $report->getId(), $report, [
+                'deserialise_group' => 'reviewed',
+            ]);
+            return new RedirectResponse($this->container->get('router')->generate('report_declaration', ['reportId' => $report->getId()]));
         }
         return null;
     }
