@@ -656,4 +656,9 @@ Feature: report
         Then The response header "Content-Disposition" should contain "attachment"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
-        
+
+
+    @deputy
+    Scenario: change report to "not submitted" 
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I change the report "1" submitted to "false"

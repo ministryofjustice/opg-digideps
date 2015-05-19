@@ -414,4 +414,12 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
     }
     
+    /**
+     * @Given I change the report :reportId submitted to :value
+     */
+    public function iChangeTheReportToNotSubmitted($reportId, $value)
+    {
+        $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
+    }
+    
 }
