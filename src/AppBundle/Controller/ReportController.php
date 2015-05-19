@@ -68,7 +68,9 @@ class ReportController extends Controller
     public function overviewAction($reportId)
     {
         $report = $this->getReport($reportId);
-        
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
         $client = $this->getClient($report->getClient());
         
         // report submit logic
@@ -92,7 +94,7 @@ class ReportController extends Controller
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
         // check status
         if (!$report->isDue()) {
-            throw new \RuntimeException("Report not ready for submission.");
+            throw new \RuntimeException("Report not due.");
         }
         if (!$report->readyToSubmit()) {
             throw new \RuntimeException("Report not ready to be submitted.");

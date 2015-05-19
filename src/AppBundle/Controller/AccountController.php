@@ -25,6 +25,9 @@ class AccountController extends Controller
         $request = $this->getRequest();
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
         $client = $util->getClient($report->getClient());
 
         $accounts = $report->getAccounts();
@@ -80,8 +83,10 @@ class AccountController extends Controller
         $util = $this->get('util');
 
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
         $client = $util->getClient($report->getClient());
-        
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
