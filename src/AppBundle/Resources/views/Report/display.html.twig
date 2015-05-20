@@ -17,48 +17,78 @@
         <a href="{{ path('client_home') }}">< Back to my client</a>
     </div>
     <!-- set class to external-report -->
-    {% include 'AppBundle:Components/PageHeader:_report-header-email.html.twig' %}
-
+    {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
     {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
 
     <div class="external-report-section external-report-section-contacts">
-        {% include 'AppBundle:Contact:_listContact.html.twig' with {
-        'showListData': true,
-        'showEditForm': false,
-        'showEditLink': false,
-        'showDeleteConfirm': false,
-        'title': 'Contacts'
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionTitle: 'pages.reportPeriod.healthAndWelfare.contacts.subSectionTitle'
         } %}
+
+        {% if report.contacts | length == 0 %}
+            <p class="page-section-description">{{ report.reasonForNoContacts }}</p>
+        {% else %}
+            {% include 'AppBundle:Contact:_listContact.html.twig' with {
+                'showListData': true,
+                'showEditForm': false,
+                'showEditLink': false,
+                'showDeleteConfirm': false
+            } %}
+        {% endif %}
     </div>
 
     <div class="external-report-section external-report-section-decisions">
-        {% include 'AppBundle:Decision:_listDecision.html.twig' with {
-        'showListData': true,
-        'showEditForm': false,
-        'showEditLink': false,
-        'showDeleteConfirm': false,
-        'title': 'Decisions made as deputy'
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionTitle: 'decisionsMadeAsDeputy'
         } %}
+
+        {% if report.decisions | length == 0 %}
+            <p class="page-section-description">{{ report.reasonForNoDecisions }}</p>
+        {% else %}
+            {% include 'AppBundle:Decision:_listDecision.html.twig' with {
+            'showListData': true,
+            'showEditForm': false,
+            'showEditLink': false,
+            'showDeleteConfirm': false
+            } %}
+        {% endif %}
     </div>
 
     {% if reportType is sameas("propertyAndAffairs") %}
 
-
         <div class="external-report-section external-report-section-accounts">
-            {% include 'AppBundle:Account:_report_accounts.html.twig' with {
-                'accounts': report.accounts,
-                'title': 'Accounts'
+            {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+                transDomain: translationDomain,
+                pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.accounts.subSectionTitle'
             } %}
+
+            {% if report.accounts | length == 0 %}
+                <p class="page-section-description">{{ report.reasonForNoAccounts }}</p>
+            {% else %}
+                {% include 'AppBundle:Account:_report_accounts.html.twig' with {
+                    'accounts': report.accounts
+                } %}
+            {% endif %}
         </div>
 
         <div class="external-report-section external-report-section-assets">
-            {% include 'AppBundle:Asset:_listAsset.html.twig' with {
-                'showEditForm': false,
-                'showDeleteConfirm': false,
-                'form': report.assets,
-                'showEditLink': false,
-                'title': 'Contacts'
+            {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+                transDomain: translationDomain,
+                pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.assets.subSectionTitle'
             } %}
+
+            {% if report.assets | length == 0 %}
+                <p class="page-section-description">{{ report.reasonForNoAssets }}</p>
+            {% else %}
+                {% include 'AppBundle:Asset:_listAsset.html.twig' with {
+                    'showEditForm': false,
+                    'showDeleteConfirm': false,
+                    'form': report.assets,
+                    'showEditLink': false
+                } %}
+            {% endif %}
         </div>
 
     {% endif %}

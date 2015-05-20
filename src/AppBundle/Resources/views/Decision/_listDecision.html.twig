@@ -6,7 +6,6 @@ showListData (true/false)
 showEditForm (true/false)
 showDeleteConfirm (true/false)
 showEditLink (true/false)
-title
 form
 #}
 
@@ -16,13 +15,6 @@ form
     {% trans_default_domain translationDomain %}
     {% if (showEditLink is not defined) %}
     {%     set showEditLink = true %}
-    {% endif %}
-
-    {% if (title is defined) %}
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionTitle: title
-        } %}
     {% endif %}
 
     <ul class="behat-region-list-decisions report-list report-list--decisions">
