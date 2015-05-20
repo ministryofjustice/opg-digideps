@@ -128,12 +128,12 @@ consistently of your email. Use this approach instead of setting attributes on t
     <tr>
         <td width="62" class="email-margin">&nbsp;</td>
         <td>
-            <table cellpadding="0" cellspacing="0" border="{{ turnOnTableBorders }}" align="left" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left;">
+            <table cellpadding="6" cellspacing="0" border="{{ turnOnTableBorders }}" align="left" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left;">
                 <tr>
-                    <td width="35" valign="middle" style="position: relative; border-left: 2px solid #0b0c0c;"><span style="font-size: 30px">&nbsp;</span><img src="https://staging.digideps.dsd.io/images/crests/org_crest_27px.png"
-                                                                                                                                width="24" height="20" alt="CROWN" title="{{ webPath }}/images/crests/org_crest_27px.png" style="position: relative; top: 2px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 24px; height: 20px;"></td>
+                    <td valign="middle" style="position: relative; border-left: 2px solid #0b0c0c;">
+                        <img src="https://staging.digideps.dsd.io/images/crests/org_crest_27px.png" width="24" height="20" alt="CROWN" title="{{ webPath }}/images/crests/org_crest_27px.png" style="position: relative; top: 2px; outline: none; text-decoration: none; -ms-interpolation-mode: bicubic; width: 24px; height: 20px;"></td>
                     <td width="545" valign="middle" style="position: relative; color: #0b0c0c; height: 24px; font-family: Helvetica, Arial, sans-serif; font-weight: normal; font-size: 19px; text-decoration: none;">
-                        <span style="font-size: 30px">&nbsp;</span>Office of the Public Guardian
+                        Office of the Public Guardian
                         <!--img src="{{ webPath }}/images/crests/org_crest_27px.png" width="36" height="30" alt="CROWN"
                                     title="{{ webPath }}/images/crests/org_crest_27px.png" -->
                     </td>
@@ -150,7 +150,7 @@ consistently of your email. Use this approach instead of setting attributes on t
         <td valign="top">
             <table width="100%" cellpadding="0" cellspacing="0" border="{{ turnOnTableBorders }}" align="left" style="border-collapse: collapse; mso-table-lspace: 0pt; mso-table-rspace: 0pt; text-align: left; width: 100%;">
                 <tr>
-                    <td valign="top" style="font-size: 16px; line-height: 16px;">
+                    <td valign="top" style="font-family: Helvetica, Arial, sans-serif; font-size: 16px; line-height: 16px;">
                         {% block emailHTMLMessage %}
                         {% endblock %}
                     </td>
@@ -168,13 +168,13 @@ consistently of your email. Use this approach instead of setting attributes on t
                         <td>&nbsp;</td>
                     </tr>                    <tr>
                         <td valign="top">
-                            <p style="margin-top: 0; margin-right: 0; margin-bottom: 1em; margin-left: 0">This is an automated email so please don't reply to this address.
-                                If you need to contact us please email <a href="mailto:deputyshipfeedback@publicguardian.gsi.gov.uk">deputyshipfeedback@publicguardian.gsi.gov.uk</a>
+                            <p style="font-family: Helvetica, Arial, sans-serif; margin-top: 0; margin-right: 0; margin-bottom: 1em; margin-left: 0">This is an automated email so please don't reply to this address.
+                                If you need to contact us please email <a href="mailto:deputyshipfeedback@publicguardian.gsi.gov.uk" style="font-family: Helvetica, Arial, sans-serif;">deputyshipfeedback@publicguardian.gsi.gov.uk</a>
                             </p>
 
-                            <div style="margin-top: 1em; margin-right: 0; margin-bottom: 0; margin-left: 0">This email has been sent to you by the Office of the Public Guardian</div>
-                            <div>PO Box 16185 Birmingham B2 2WH</div>
-                            <div><a href="https://www.completeadeputyreport.gov.uk">https://www.completeadeputyreport.gov.uk</a></div>
+                            <div style="font-family: Helvetica, Arial, sans-serif; margin-top: 1em; margin-right: 0; margin-bottom: 0; margin-left: 0">This email has been sent to you by the Office of the Public Guardian</div>
+                            <div style="font-family: Helvetica, Arial, sans-serif;">PO Box 16185 Birmingham B2 2WH</div>
+                            <div style="font-family: Helvetica, Arial, sans-serif;"><a href="https://www.completeadeputyreport.gov.uk">https://www.completeadeputyreport.gov.uk</a></div>
                         </td>
                     </tr>
                 </table>
