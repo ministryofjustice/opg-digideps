@@ -1,0 +1,30 @@
+{% if (showNoDecisionReason) %}
+
+    {% trans_default_domain translationDomain %}
+
+    <div class="data-item data-item--no-reason">
+
+        <dl class="data-item-fields">
+
+            <div class="data-item-fields-row data-item-fields-row--header">
+                <dt class="visuallyhidden">{{ 'no_decision.fields.noDecisionReason.label' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <h2 class="data-item-header-title behat-region-client-name">{{ 'no_decision.fields.noDecisionReason.value' | trans }}</h2>
+                </dd>
+            </div>
+            <div class="data-item-fields-row data-item-fields-row--header float-right">
+                <dt class="visuallyhidden">{{ 'no_decision.fields.editReason.label' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <a href="{{ url('decisions', { 'reportId': report.id, 'action': 'edit-reason' }) }}"
+                       class="js-data-item-edit-link data-item-edit-link">{{ 'no_decision.fields.editReason.value' | trans }}</a>
+                </dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="visuallyhidden">{{ 'no_decision.fields.noDecisionReason.value' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--noReason data-item-fields-description--normal">{{ report.reasonForNoDecisions }}</dd>
+            </div>
+
+        </dl>
+    </div>
+
+{% endif %}

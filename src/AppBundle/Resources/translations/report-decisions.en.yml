@@ -8,6 +8,13 @@ page:
     subSectionTitleEdit: Edit this decision
 no_decision:
     subSectionDescription: "If you did not make any significant decisions, please tell us why here."
+    fields:
+      noDecisionReason:
+        label: "Information type"
+        value: "Reason for not adding decisions"
+      editReason:
+        label: "Edit Reason link"
+        value: "Edit this reason"
     controls:
       reason:
         label: "Reason for no decisions"

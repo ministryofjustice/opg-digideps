@@ -5,7 +5,7 @@
     {% endblock %}
 
 
-    {{ form_start(no_decision, {attr: {novalidate: 'novalidate', class: 'no-contact-form in-page-form' } }) }}
+    {{ form_start(no_decision, {attr: {novalidate: 'novalidate', class: 'no-data-form in-page-form' } }) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
     transDomain: translationDomain,
@@ -17,41 +17,41 @@
     'labelClass': 'visuallyhidden'
     }) }}
 
-    
+
     {% if (showDeleteReasonConfirm) %}
         {% include 'AppBundle:Components/Alerts:_delete-confirmation.html.twig' with
-            {
-            'translationDomain': translationDomain,
-            componentID: 'delete-reason-confirm',
-            deleteMessageText: 'delete-reason.message' | trans({}, translationDomain),
-            deleteButtonType: path('delete_reason_decisions', {'reportId': report.id }),
-            deleteButtonText: 'delete-reason.label' | trans({}, translationDomain),
-            deleteButtonClass: 'button-warning behat-link-delete-reason',
-            cancelButtonLink: url('decisions', {'reportId': report.id, 'action': 'edit-reason' }) ~ "#edit-reason",
-            cancelButtonText: 'cancel.label' | trans({}, translationDomain),
-            cancelButtonClass: 'behat-link-delete-reason-confirm-cancel' | trans
-            } %}
+        {
+        'translationDomain': translationDomain,
+        componentID: 'delete-reason-confirm',
+        deleteMessageText: 'delete-reason.message' | trans({}, translationDomain),
+        deleteButtonType: path('delete_reason_decisions', {'reportId': report.id }),
+        deleteButtonText: 'delete-reason.label' | trans({}, translationDomain),
+        deleteButtonClass: 'button-warning behat-link-delete-reason',
+        cancelButtonLink: url('decisions', {'reportId': report.id, 'action': 'edit-reason' }) ~ "#edit-reason",
+        cancelButtonText: 'cancel.label' | trans({}, translationDomain),
+        cancelButtonClass: 'behat-link-delete-reason-confirm-cancel' | trans
+        } %}
 
-            {{ form_submit(no_decision.saveReason,'save', { 'buttonClass': 'visuallyhidden' }) }}
+        {{ form_submit(no_decision.saveReason,'save', { 'buttonClass': 'visuallyhidden' }) }}
     {% else %}
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-                {{ form_submit(no_decision.saveReason,'save') }}
+        {{ form_submit(no_decision.saveReason,'save') }}
 
-                {% if action == 'edit-reason' %}
-                    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: translationDomain,
-                    linkButtonLabel: 'cancel.label',
-                    linkClass: 'button-link behat-link-cancel-edit-reason',
-                    linkHref: path('decisions', {'reportId': report.id})
-                    } %}
+        {% if action == 'edit-reason' %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+            transDomain: translationDomain,
+            linkButtonLabel: 'cancel.label',
+            linkClass: 'button-link behat-link-cancel-edit-reason',
+            linkHref: path('decisions', {'reportId': report.id})
+            } %}
 
-                    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: translationDomain,
-                    linkButtonLabel: 'delete.label',
-                    linkClass: 'button-warning behat-link-delete-confirm',
-                    linkHref: path('decisions', {'reportId': report.id, 'action': 'delete-reason-confirm', 'id': app.request.get('id') }) ~ '#delete-reason-confirm'
-                    } %}
-                {% endif %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+            transDomain: translationDomain,
+            linkButtonLabel: 'delete.label',
+            linkClass: 'button-warning behat-link-delete-confirm',
+            linkHref: path('decisions', {'reportId': report.id, 'action': 'delete-reason-confirm', 'id': app.request.get('id') }) ~ '#delete-reason-confirm'
+            } %}
+        {% endif %}
 
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
     {% endif %}
