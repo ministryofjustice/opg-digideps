@@ -1828,8 +1828,7 @@ header.page-header {
     .data-item--your-details dd.data-item-fields-description--header .data-item-edit-link {
       margin-left: 353px; }
   .data-list--client-list-reports .data-item {
-    padding: 20px 0 10px 0;
-    border-bottom: 1px solid #dee0e2; }
+    padding: 20px 0 20px 0; }
     .data-list--client-list-reports .data-item dd.data-item-fields-description--header .data-item-edit-link {
       margin-right: 110px; }
     .data-list--client-list-reports .data-item .data-item-fields-row {
@@ -1953,7 +1952,7 @@ form {
     padding-left: 10px; }
   form.in-page-form {
     border-left: 3px solid #bfc1c3;
-    padding-left: 10px; }
+    padding-left: 15px; }
     form.in-page-form .form-date .form-group input {
       width: 100%; }
     form.in-page-form .form-group .form-control {
@@ -1976,6 +1975,9 @@ form {
       margin-top: 40px; }
     form.in-page-form .data-item, .report-list__item form.in-page-form {
       margin-bottom: 20px; }
+    .data-item form.in-page-form {
+      padding-top: 6px;
+      padding-bottom: 3px; }
 
 .form--client-add-report {
   margin: 40px 0 20px 0; }

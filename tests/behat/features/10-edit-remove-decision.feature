@@ -12,7 +12,7 @@ Feature: edit/remove decision
         Then the following fields should have the corresponding values:
             | decision_description | 2 beds |
             | decision_decisionDate_day | 01 |
-            | decision_decisionDate_month | 01 |
+            | decision_decisionDate_month | 02 |
             | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |

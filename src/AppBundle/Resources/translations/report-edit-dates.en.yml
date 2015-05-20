@@ -1,0 +1,15 @@
+form:
+  subSectionTitle: Edit reporting period
+  controls:
+    createNewReportLink:
+      label: "Create new report"
+    startDate:
+      legend: "Start date"
+      hint: "(DD/MM/YYYY)"
+    endDate:
+      legend: "End date"
+      hint: "(DD/MM/YYYY)"
+    save:
+      label: "Save"
+    cancel:
+      label: "Cancel"
