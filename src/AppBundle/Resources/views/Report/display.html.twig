@@ -12,6 +12,10 @@
 {% endif %}
 
 {% block pageContent %}
+
+    <div class="navigation-back report-back">
+        <a href="{{ path('client_home') }}">< Back to my client</a>
+    </div>
     <!-- set class to external-report -->
     {% include 'AppBundle:Components/PageHeader:_report-header-email.html.twig' %}
 

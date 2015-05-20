@@ -1805,6 +1805,9 @@ header.page-header {
         content: "";
         margin: 0; }
 
+.navigation-back {
+  margin-top: 40px; }
+
 .button-bar {
   margin-top: 10px;
   margin-bottom: 10px; }
