@@ -1440,7 +1440,8 @@ input[type=number] {
   margin: 30px 0; }
 .account__edit .sub-section-title + .sub-section-description {
   margin-bottom: 20px;
-  margin-top: -20px; }
+  margin-top: -20px;
+  float: left; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -2742,8 +2743,7 @@ ol.progress {
 
 .sub-section-description {
   margin-bottom: 40px;
-  width: 65%;
-  float: left; }
+  width: 65%; }
   .report-overview .sub-section-description {
     margin-bottom: 20px; }
   form .sub-section-description {
