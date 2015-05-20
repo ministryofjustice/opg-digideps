@@ -4,9 +4,17 @@
     {% for report in reports %}
         {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
         {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
-        {% set linkEditReportingPeriod = path('client_home', {'reportId': report.id, 'action': 'edit-reporting-period' })~'#edit-reporting-period' %}
+        {% set linkEditReportingPeriod = path('client_home', {'action': 'edit-report', 'reportId': report.id}) %}
         <li class="data-item">
+
+          {% if action =='edit-report' %}
+              {% include 'AppBundle:Report:_edit-dates.html.twig' with {
+                'form' : editReportDatesForm
+              } %}
+          {%else %}
+
             <dl class="data-item-fields">
+
                 <div class="data-item-fields-row data-item-fields-row--header">
                     <dt class="visuallyhidden">{{ 'reportDataList.name' | trans }}</dt>
                     <dd class="data-item-fields-description data-item-fields-description--header">
@@ -22,6 +30,7 @@
                         </h3>
                     </dd>
                 </div>
+
                 <div class="data-item-fields-row data-item-fields-row--header float-right">
                     <dt class="visuallyhidden">{{ 'reportDataList.editReportingPeriod' | trans }}</dt>
                     {% if report.submitted %}
@@ -37,6 +46,7 @@
                       </dd>
                     {% endif %}
                 </div>
+                
                     
                 {% if report.submitted %}
                     <div class="data-item-fields-row">
@@ -65,8 +75,9 @@
                         <dd class="data-item-fields-description data-item-fields-description--normal">{{ report.dueDate | date(" d F Y") }}</dd>
                     </div>
                 {% endif %}
-
             </dl>
+
+          {% endif %}
 
         </li>
     {% endfor %}
