@@ -6,6 +6,9 @@ parameters:
     env: develop
     session_expire_seconds: 1500
     session_popup_show_after: 1200
+    email_send:
+      from_email: no-reply@digideps.service.dsd.io
+      from_name: Digital Deputyship Service
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"

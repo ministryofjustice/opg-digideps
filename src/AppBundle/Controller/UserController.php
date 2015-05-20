@@ -11,11 +11,13 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use AppBundle\Form\ChangePasswordType;
 use AppBundle\Form\UserDetailsBasicType;
 use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use AppBundle\Model\Email;
 
 /**
 * @Route("user")
@@ -79,6 +81,8 @@ class UserController extends Controller
     
     
     /**
+     * Registration steps
+     *
      * @Route("/details", name="user_details")
      * @Template()
      */
@@ -97,7 +101,6 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                
                 $apiClient->putC('user/' . $user->getId(), $form->getData(), [
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
@@ -111,7 +114,7 @@ class UserController extends Controller
         }
         
         return [
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
         
     }
@@ -119,25 +122,57 @@ class UserController extends Controller
     /**
      * @Route("/{action}", name="user_view", defaults={ "action" = ""})
      * @Template()
-     */
+     **/
     public function indexAction($action)
     {
         $request = $this->getRequest();
         $user = $this->getUser();
-
+        
         $formEditDetails = $this->createForm(new UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
-
+        
+        $formEditDetails->add('password', new ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
+        
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
-            
             $apiClient = $this->get('apiclient');
-            
+           
             if($formEditDetails->isValid()){
                 $formData = $formEditDetails->getData();
-                $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+                $formRawData = $request->request->get('user_details');
                 
+                /**
+                 * if new password has been set then we need to encode this using the encoder and pass it to
+                 * the api
+                 */
+                if(!empty($formRawData['password']['plain_password']['first'])){
+                    $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
+                        ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
+                    $formData->setPassword($encodedPassword);
+                    
+                    //lets send an email to confirm password change
+                    $emailConfig = $this->container->getParameter('email_send');
+                    $translator = $this->get('translator');
+                    
+                    $email = new Email();
+                    $email->setFromEmail($emailConfig['from_email'])
+                        ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
+                        ->setToEmail($user->getEmail())
+                        ->setToName($user->getFirstname())
+                        ->setSubject($translator->trans('changePassword.subject',[], 'email'))
+                        ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
+                    
+                    $this->get('mailSender')->send($email,[ 'html']);
+                    
+                    $request->getSession()->getFlashBag()->add(
+                                'notification',
+                                'page.passwordChangedNotification'
+                            );
+                    
+                }
+                $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+
                 return $this->redirect($this->generateUrl('user_view'));
             }
         }

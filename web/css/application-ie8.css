@@ -1,3 +1,8 @@
+/*
+***************************************************************
+    Do not import application specific code into this file.
+***************************************************************
+*/
 @-ms-viewport {
   width: device-width; }
 @-o-viewport {
@@ -98,23 +103,29 @@
   width: device-width; }
 details {
   display: block; }
-  details summary {
-    display: inline-block;
-    color: #005ea5;
-    cursor: pointer;
-    position: relative;
-    margin-bottom: em(5); }
-    details summary:hover {
-      color: #2e8aca; }
-    details summary:focus {
-      outline: 3px solid #ffbf47; }
-  details .summary {
-    text-decoration: underline; }
-  details .arrow {
-    margin-right: .35em;
-    font-style: normal; }
-  details .panel-indent {
-    margin-top: 0; }
+
+details summary {
+  display: inline-block;
+  color: #005ea5;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: em(5); }
+
+details summary:hover {
+  color: #2e8aca; }
+
+details summary:focus {
+  outline: 3px solid #ffbf47; }
+
+details .summary {
+  text-decoration: underline; }
+
+details .arrow {
+  margin-right: 0.35em;
+  font-style: normal; }
+
+details .panel-indent {
+  margin-top: 0; }
 
 @font-face {
   font-family: GDS-Logo;
@@ -513,15 +524,15 @@ fieldset {
   margin-top: 8px; }
 
 .form-control {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   font-family: "nta", Arial, sans-serif;
   font-size: 19px;
   line-height: 1.31579;
   font-weight: 400;
   text-transform: none;
   width: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   padding: 4px;
   background-color: #fff;
   border: 1px solid #bfc1c3;
@@ -550,16 +561,18 @@ fieldset {
 .form-radio {
   display: block;
   margin: 10px 0; }
-  .form-radio input {
-    vertical-align: middle;
-    margin: -4px 5px 0 0; }
+
+.form-radio input {
+  vertical-align: middle;
+  margin: -4px 5px 0 0; }
 
 .form-checkbox {
   display: block;
   margin: 15px 0; }
-  .form-checkbox input {
-    vertical-align: middle;
-    margin: -2px 5px 0 0; }
+
+.form-checkbox input {
+  vertical-align: middle;
+  margin: -2px 5px 0 0; }
 
 @-ms-viewport {
   width: device-width; }
@@ -573,39 +586,44 @@ fieldset {
 @-o-viewport {
   width: device-width; }
 .validation-summary {
-  border: 3px solid #af1324;
+  border: 3px solid #df3034;
   padding: 15px 30px;
   margin-bottom: 30px; }
-  .validation-summary ul {
-    margin-top: 10px; }
-  .validation-summary li,
-  .validation-summary p {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none; }
-    @media (max-width: 640px) {
-      .validation-summary li,
-      .validation-summary p {
-        font-size: 14px;
-        line-height: 1.14286; } }
-  .validation-summary p {
-    margin-top: 15px;
-    margin-bottom: 5px; }
-  .validation-summary a {
-    color: #af1324; }
-  .validation-summary .heading-small {
-    margin-top: 15px; }
+
+.validation-summary ul {
+  margin-top: 10px; }
+
+.validation-summary li,
+.validation-summary p {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .validation-summary li,
+    .validation-summary p {
+      font-size: 14px;
+      line-height: 1.14286; } }
+
+.validation-summary p {
+  margin-top: 15px;
+  margin-bottom: 5px; }
+
+.validation-summary a {
+  color: #df3034; }
+
+.validation-summary .heading-small {
+  margin-top: 15px; }
 
 .validation-message {
+  display: block;
   font-family: "nta", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.25;
   font-weight: 400;
   text-transform: none;
-  display: block;
-  color: #af1324; }
+  color: #df3034; }
   @media (max-width: 640px) {
     .validation-message {
       font-size: 14px;
@@ -718,191 +736,191 @@ input[type=number] {
   background-repeat: no-repeat; }
 
 .icon-calendar {
+  background-image: image-url("icons/icon-calendar.png");
   width: 27px;
-  height: 27px;
-  background-image: image-url("icons/icon-calendar.png"); }
+  height: 27px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-calendar {
       background-image: image-url("icons/icon-calendar-2x.png");
       background-size: 100%; } }
 
 .icon-download {
+  background-image: image-url("icons/icon-file-download.png");
   width: 30px;
-  height: 39px;
-  background-image: image-url("icons/icon-file-download.png"); }
+  height: 39px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-download {
       background-image: image-url("icons/icon-file-download-2x.png");
       background-size: 100%; } }
 
 .icon-important {
+  background-image: image-url("icons/icon-important.png");
   width: 34px;
-  height: 34px;
-  background-image: image-url("icons/icon-important.png"); }
+  height: 34px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-important {
       background-image: image-url("icons/icon-important-2x.png");
       background-size: 100%; } }
 
 .icon-information {
+  background-image: image-url("icons/icon-information.png");
   width: 27px;
-  height: 27px;
-  background-image: image-url("icons/icon-information.png"); }
+  height: 27px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-information {
       background-image: image-url("icons/icon-information-2x.png");
       background-size: 100%; } }
 
 .icon-locator {
+  background-image: image-url("icons/icon-locator.png");
   width: 26px;
-  height: 36px;
-  background-image: image-url("icons/icon-locator.png"); }
+  height: 36px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-locator {
       background-image: image-url("icons/icon-locator-2x.png");
       background-size: 100%; } }
 
 .icon-search {
+  background-image: image-url("icons/icon-search.png");
   width: 30px;
   height: 22px;
-  background-color: #0b0c0c;
-  background-image: image-url("icons/icon-search.png"); }
+  background-color: black; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-search {
       background-image: image-url("icons/icon-search-2x.png");
       background-size: 100%; } }
 
 .icon-pointer {
+  background-image: image-url("icons/icon-pointer.png");
   width: 30px;
   height: 19px;
-  background-color: #0b0c0c;
-  background-image: image-url("icons/icon-pointer.png"); }
+  background-color: black; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-pointer {
       background-image: image-url("icons/icon-pointer-2x.png");
       background-size: 100%; } }
 
 .icon-pointer-black {
+  background-image: image-url("icons/icon-pointer-black.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-pointer-black.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-pointer-black {
       background-image: image-url("icons/icon-pointer-black-2x.png");
       background-size: 100%; } }
 
 .icon-step-1 {
+  background-image: image-url("icons/icon-steps/icon-step-1.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-1.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-1 {
       background-image: image-url("icons/icon-steps/icon-step-1-2x.png");
       background-size: 100%; } }
 
 .icon-step-2 {
+  background-image: image-url("icons/icon-steps/icon-step-2.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-2.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-2 {
       background-image: image-url("icons/icon-steps/icon-step-2-2x.png");
       background-size: 100%; } }
 
 .icon-step-3 {
+  background-image: image-url("icons/icon-steps/icon-step-3.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-3.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-3 {
       background-image: image-url("icons/icon-steps/icon-step-3-2x.png");
       background-size: 100%; } }
 
 .icon-step-4 {
+  background-image: image-url("icons/icon-steps/icon-step-4.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-4.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-4 {
       background-image: image-url("icons/icon-steps/icon-step-4-2x.png");
       background-size: 100%; } }
 
 .icon-step-5 {
+  background-image: image-url("icons/icon-steps/icon-step-5.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-5.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-5 {
       background-image: image-url("icons/icon-steps/icon-step-5-2x.png");
       background-size: 100%; } }
 
 .icon-step-6 {
+  background-image: image-url("icons/icon-steps/icon-step-6.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-6.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-6 {
       background-image: image-url("icons/icon-steps/icon-step-6-2x.png");
       background-size: 100%; } }
 
 .icon-step-7 {
+  background-image: image-url("icons/icon-steps/icon-step-7.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-7.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-7 {
       background-image: image-url("icons/icon-steps/icon-step-7-2x.png");
       background-size: 100%; } }
 
 .icon-step-8 {
+  background-image: image-url("icons/icon-steps/icon-step-8.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-8.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-8 {
       background-image: image-url("icons/icon-steps/icon-step-8-2x.png");
       background-size: 100%; } }
 
 .icon-step-9 {
+  background-image: image-url("icons/icon-steps/icon-step-9.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-9.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-9 {
       background-image: image-url("icons/icon-steps/icon-step-9-2x.png");
       background-size: 100%; } }
 
 .icon-step-10 {
+  background-image: image-url("icons/icon-steps/icon-step-10.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-10.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-10 {
       background-image: image-url("icons/icon-steps/icon-step-10-2x.png");
       background-size: 100%; } }
 
 .icon-step-11 {
+  background-image: image-url("icons/icon-steps/icon-step-11.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-11.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-11 {
       background-image: image-url("icons/icon-steps/icon-step-11-2x.png");
       background-size: 100%; } }
 
 .icon-step-12 {
+  background-image: image-url("icons/icon-steps/icon-step-12.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-12.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-12 {
       background-image: image-url("icons/icon-steps/icon-step-12-2x.png");
       background-size: 100%; } }
 
 .icon-step-13 {
+  background-image: image-url("icons/icon-steps/icon-step-13.png");
   width: 23px;
-  height: 23px;
-  background-image: image-url("icons/icon-steps/icon-step-13.png"); }
+  height: 23px; }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-13 {
       background-image: image-url("icons/icon-steps/icon-step-13-2x.png");
@@ -1162,13 +1180,16 @@ ol {
   border-left: 4px solid #bfc1c3;
   padding: 10px 0 10px 15px;
   margin: 30px 15px 45px 0; }
-  .panel-indent legend {
-    margin-top: 0; }
-  .panel-indent p:only-child,
-  .panel-indent p:last-child {
-    margin-bottom: 0; }
-  .panel-indent .form-group:last-child {
-    margin-bottom: 0; }
+
+.panel-indent legend {
+  margin-top: 0; }
+
+.panel-indent p:only-child,
+.panel-indent p:last-child {
+  margin-bottom: 0; }
+
+.panel-indent .form-group:last-child {
+  margin-bottom: 0; }
 
 /* Borrowed from http://meyerweb.com/eric/tools/css/reset/ */
 div, span,
@@ -1209,37 +1230,41 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%; }
-  table th,
-  table td {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    padding: 0.75em 1.25em 0.5625em 0;
-    text-align: left;
-    color: #0b0c0c;
-    border-bottom: 1px solid #bfc1c3; }
-    @media (max-width: 640px) {
-      table th,
-      table td {
-        font-size: 14px;
-        line-height: 1.14286; } }
-  table th {
-    font-weight: 700; }
-    table th.numeric {
-      text-align: right; }
-  table td.numeric {
-    font-family: "ntatabularnumbers", "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none;
-    text-align: right; }
-    @media (max-width: 640px) {
-      table td.numeric {
-        font-size: 14px;
-        line-height: 1.14286; } }
+
+table th,
+table td {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none;
+  padding: 0.75em 1.25em 0.5625em 0;
+  text-align: left;
+  color: #0b0c0c;
+  border-bottom: 1px solid #bfc1c3; }
+  @media (max-width: 640px) {
+    table th,
+    table td {
+      font-size: 14px;
+      line-height: 1.14286; } }
+
+table th {
+  font-weight: 700; }
+
+table th.numeric {
+  text-align: right; }
+
+table td.numeric {
+  font-family: "ntatabularnumbers", "nta", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none;
+  text-align: right; }
+  @media (max-width: 640px) {
+    table td.numeric {
+      font-size: 14px;
+      line-height: 1.14286; } }
 
 @-ms-viewport {
   width: device-width; }
@@ -1315,39 +1340,44 @@ input[type=number] {
 @-o-viewport {
   width: device-width; }
 .validation-summary {
-  border: 3px solid #af1324;
+  border: 3px solid #df3034;
   padding: 15px 30px;
   margin-bottom: 30px; }
-  .validation-summary ul {
-    margin-top: 10px; }
-  .validation-summary li,
-  .validation-summary p {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 16px;
-    line-height: 1.25;
-    font-weight: 400;
-    text-transform: none; }
-    @media (max-width: 640px) {
-      .validation-summary li,
-      .validation-summary p {
-        font-size: 14px;
-        line-height: 1.14286; } }
-  .validation-summary p {
-    margin-top: 15px;
-    margin-bottom: 5px; }
-  .validation-summary a {
-    color: #af1324; }
-  .validation-summary .heading-small {
-    margin-top: 15px; }
+
+.validation-summary ul {
+  margin-top: 10px; }
+
+.validation-summary li,
+.validation-summary p {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .validation-summary li,
+    .validation-summary p {
+      font-size: 14px;
+      line-height: 1.14286; } }
+
+.validation-summary p {
+  margin-top: 15px;
+  margin-bottom: 5px; }
+
+.validation-summary a {
+  color: #df3034; }
+
+.validation-summary .heading-small {
+  margin-top: 15px; }
 
 .validation-message {
+  display: block;
   font-family: "nta", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.25;
   font-weight: 400;
   text-transform: none;
-  display: block;
-  color: #af1324; }
+  color: #df3034; }
   @media (max-width: 640px) {
     .validation-message {
       font-size: 14px;
@@ -1355,7 +1385,7 @@ input[type=number] {
 
 /*
 ***************************************************************
-    Do need import application specific code into this file.
+    END - Do not import application specific code into this file.
 ***************************************************************
 */
 .session-timeout {
@@ -1409,7 +1439,8 @@ input[type=number] {
 .visuallyhidden + .account__edit {
   margin: 30px 0; }
 .account__edit .sub-section-title + .sub-section-description {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  margin-top: -20px; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -1927,18 +1958,18 @@ header.page-header {
   display: none; }
 
 .field-combo-with-errors, .field-with-errors {
-  border-left: 3px solid #af1324;
+  border-left: 3px solid #df3034;
   padding: 0 0 0 15px; }
   fieldset .field-combo-with-errors, fieldset .field-with-errors {
     border-left: 0; }
 
 .field-with-errors input, .field-with-errors select, .field-with-errors textarea {
-  border: 2px solid #af1324; }
+  border: 2px solid #df3034; }
 
 .field-with-errors ul {
   width: auto; }
 .field-with-errors li {
-  color: #af1324;
+  color: #df3034;
   width: auto; }
 
 .button-link {
@@ -2223,6 +2254,13 @@ form {
   display: none; }
   .tabs-panel.tabs-panel-selected {
     display: block; }
+
+.notification-summary__container {
+  width: 85%;
+  padding: 0;
+  margin: 40px 0 0 0; }
+.notification-summary .page-section-warning {
+  width: 100%; }
 
 .page-body {
   margin-top: 0;
@@ -2704,7 +2742,8 @@ ol.progress {
 
 .sub-section-description {
   margin-bottom: 40px;
-  width: 65%; }
+  width: 65%;
+  float: left; }
   .report-overview .sub-section-description {
     margin-bottom: 20px; }
   form .sub-section-description {
@@ -2729,8 +2768,7 @@ ol.progress {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 20px;
-    margin-bottom: 10px; }
+    margin-top: 20px; }
   .report-overview .sub-section-title {
     margin-bottom: 10px; }
 

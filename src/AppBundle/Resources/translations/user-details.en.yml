@@ -29,6 +29,7 @@ page:
   htmlTitle: "Deputyship - Your Details"
   pageSectionTitle: "Your details"
   pageSectionDescription: "You can update your contact details below."
+  passwordChangedNotification: "You have changed your password. We have sent you an email to confirm this change."
 yourDetails:
   yourName: "Client Name"
   editYourDetails: "Edit Your Details"
@@ -45,6 +46,16 @@ form:
         label: "Cancel"
       save:
         label: "Save"
+  changeYourPassword:
+    subSectionTitle: "Change your password"
+    controls:
+      currentPassword:
+        label: "Current password"
+      newPassword:
+        label: "New password"
+        hint: "Your password needs to be at least 8 characters. Include at least one uppercase and lowercase letter and one number."
+      confirmNewPassword:
+        label: "Confirm new password"
   changeYourEmail:
     subSectionTitle: "Change your email"
     subSectionDescription: "To change your email address, send your updated email information to the Office of the Public Guardian (OPG) at <a href='mailto:deputyemailchange@publicguardian.gsi.gov.uk'>deputyemailchange@publicguardian.gsi.gov.uk</a>"
