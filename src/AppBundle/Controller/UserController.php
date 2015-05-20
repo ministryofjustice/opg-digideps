@@ -158,7 +158,7 @@ class UserController extends Controller
                     $email = new Email();
                     $email->setFromEmail($emailConfig['from_email'])
                         ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
-                        ->setToEmail($user->getEmail())
+                        ->setToEmail('18926fb2b8@emailtests.com')
                         ->setToName($user->getFirstname())
                         ->setSubject($translator->trans('changePassword.subject',[], 'email'))
                         ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
@@ -177,10 +177,6 @@ class UserController extends Controller
             }
             
         }
-        $request->getSession()->getFlashBag()->add(
-            'notification',
-            'page.passwordChangedNotification'
-        );
 
         return [
             'action' => $action,
