@@ -19,7 +19,7 @@ Feature: report
     Scenario: edit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I click on "client-home"
-        And I click on "report-edit-2015"
+        And I click on "edit-report-period-2015-report"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 01 |
@@ -54,7 +54,7 @@ Feature: report
         And I press "report_edit_save"
         Then the form should not contain an error
         # check values
-        And I click on "report-edit-2015"
+        And I click on "edit-report-period-2015-report"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 01 |
