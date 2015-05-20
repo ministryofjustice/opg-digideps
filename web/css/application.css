@@ -13,7 +13,7 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -35,7 +35,7 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -58,7 +58,7 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -71,7 +71,7 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -93,7 +93,7 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -427,7 +427,7 @@ code {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -717,7 +717,7 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -960,7 +960,7 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -982,7 +982,7 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -1029,7 +1029,7 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -1042,7 +1042,7 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -1183,7 +1183,7 @@ ol {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+.grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
   content: "";
   display: block;
   clear: both; }
@@ -1484,66 +1484,104 @@ input[type=number] {
   position: relative;
   background-color: #f8f8f8;
   padding: 20px;
-  overflow: hidden;
   margin-bottom: 30px; }
-  .account-header__item-fields {
+  .account-header .account-name {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 27px;
+    line-height: 1.11111;
+    font-weight: 700;
+    text-transform: none;
+    margin-bottom: 10px; }
+    @media (max-width: 640px) {
+      .account-header .account-name {
+        font-size: 20px;
+        line-height: 1.11111; } }
+  .account-header .edit-account-details {
+    float: none;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    width: auto;
     font-family: "nta", Arial, sans-serif;
     font-size: 19px;
     line-height: 1.31579;
     font-weight: 400;
     text-transform: none; }
     @media (max-width: 640px) {
-      .account-header__item-fields {
+      .account-header .edit-account-details {
         font-size: 16px;
         line-height: 1.25; } }
-  .account-header__item-fields-set {
-    float: left;
-    width: 56%;
-    overflow: hidden; }
-    .account-header__item-fields-set--left {
-      width: 40%; }
-    .account-header__item-fields-set--opening-date {
-      position: absolute;
-      top: 53px; }
-    .account-header__item-fields-set--closing-date {
-      position: absolute;
-      top: 78px;
-      margin-top: 5px; }
-    .account-header__item-fields-set--closing-balance {
-      margin-top: 5px; }
-    .account-header__item-fields-set--edit-link {
-      float: none;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: auto; }
-  .account-header__item-fields-term {
-    display: inline;
-    margin-right: 20px;
-    color: #6f777b; }
-  .account-header__item-fields-description {
-    display: inline;
-    font-weight: 700; }
-    .account-header__item-fields-description--balance {
-      margin-left: 150px; }
-    .account-header__item-fields-description--opening-date {
-      margin: 0 0 0 175px;
-      font-weight: 400; }
-    .account-header__item-fields-description--sort-code {
-      margin-left: 20px; }
-    .account-header__item-fields-description--edit-link {
-      font-weight: 400; }
-  .account-header__title {
+  .account-header .account-details {
+    width: 40%;
+    max-width: 315px;
+    float: right;
     font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 700;
-    text-transform: none;
-    font-size: 27px; }
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
     @media (max-width: 640px) {
-      .account-header__title {
-        font-size: 18px;
-        line-height: 1.2; } }
+      .account-header .account-details {
+        font-size: 16px;
+        line-height: 1.25; } }
+    .account-header .account-details .account-detail {
+      text-align: right; }
+    .account-header .account-details .label {
+      width: 50%;
+      max-width: 115px;
+      color: #6f777b;
+      float: left;
+      white-space: nowrap; }
+    .account-header .account-details .value {
+      font-family: "nta", Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.31579;
+      font-weight: 700;
+      text-transform: none;
+      white-space: nowrap;
+      max-width: 100px;
+      width: 50%;
+      float: left; }
+      @media (max-width: 640px) {
+        .account-header .account-details .value {
+          font-size: 16px;
+          line-height: 1.25; } }
+  .account-header .account-balance {
+    width: 60%;
+    float: left;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .account-header .account-balance {
+        font-size: 16px;
+        line-height: 1.25; } }
+    .account-header .account-balance .label {
+      width: 38%;
+      margin: 0;
+      padding: 0;
+      color: #6f777b;
+      white-space: nowrap;
+      float: left; }
+    .account-header .account-balance .date {
+      float: left;
+      width: 27%;
+      white-space: nowrap; }
+    .account-header .account-balance .value {
+      float: left;
+      width: 35%;
+      white-space: nowrap;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.31579;
+      font-weight: 700;
+      text-transform: none; }
+      @media (max-width: 640px) {
+        .account-header .account-balance .value {
+          font-size: 16px;
+          line-height: 1.25; } }
 
 .account-transactions {
   overflow: hidden; }
@@ -1791,6 +1829,9 @@ header.page-header {
       .bread-crumb .bread-crumbs:first-of-type:before {
         content: "";
         margin: 0; }
+
+.navigation-back {
+  margin-top: 40px; }
 
 .button-bar {
   margin-top: 10px;
@@ -2835,7 +2876,15 @@ ol.progress {
     padding: 20px;
     border-bottom: 1px solid #bfc1c3;
     display: block;
-    font-size: 19px; }
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .financial-transactions .transaction {
+        font-size: 16px;
+        line-height: 1.25; } }
     .financial-transactions .transaction .transaction-label {
       width: 80%;
       float: left; }
@@ -2848,7 +2897,15 @@ ol.progress {
     border-bottom: 1px solid #bfc1c3;
     display: block;
     overflow: hidden;
-    font-size: 24px; }
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .financial-transactions .financial-transactions-total {
+        font-size: 18px;
+        line-height: 1.2; } }
     .financial-transactions .financial-transactions-total .financial-transactions-total-label {
       width: 78%;
       float: left;
@@ -2864,7 +2921,15 @@ ol.progress {
   border-bottom: none;
   display: block;
   overflow: hidden;
-  font-size: 27px; }
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .financial-transactions-balance {
+      font-size: 20px;
+      line-height: 1.11111; } }
   .financial-transactions-balance .financial-transactions-balance-label {
     float: left;
     width: 77%;
