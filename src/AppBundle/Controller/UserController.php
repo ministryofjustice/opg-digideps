@@ -132,7 +132,7 @@ class UserController extends Controller
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
         
-        $formEditDetails->add('password', new ChangePasswordType(), [ 'error_bubbling' => false, 'mapped' => false ]);
+        $formEditDetails->add('password', new ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
@@ -158,24 +158,23 @@ class UserController extends Controller
                     $email = new Email();
                     $email->setFromEmail($emailConfig['from_email'])
                         ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
-                        ->setToEmail('18926fb2b8@emailtests.com')
+                        ->setToEmail($user->getEmail())
                         ->setToName($user->getFirstname())
                         ->setSubject($translator->trans('changePassword.subject',[], 'email'))
                         ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
+                    $request->getSession()->getFlashBag()->add(
+                                'notification',
+                                'page.passwordChangedNotification'
+                            );
+                    
                 }
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
 
-                $request->getSession()->getFlashBag()->add(
-                    'notification',
-                    'page.passwordChangedNotification'
-                );
-
                 return $this->redirect($this->generateUrl('user_view'));
             }
-            
         }
 
         return [
