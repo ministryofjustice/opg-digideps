@@ -22,23 +22,19 @@ class SendGridTransport implements Swift_Transport
     private $sendGrid;
     
     /**
-     * Needed to put attachment content into in order to be picked up by sendgrid, 
-     * currently the only way to add attachments
      * @var string 
      */
     private $temporaryAttachment;
     
     /**
-     * @var array 
+     * 
+     * @param SendGrid $sendGrid
+     * @param string $temporaryAttachment path to temp file used for attaching files
      */
-    private $emailFileWriters = [];
-    
-    
     public function __construct(SendGrid $sendGrid, $temporaryAttachment)
     {
         $this->sendGrid = $sendGrid;
         $this->temporaryAttachment = $temporaryAttachment;
-        $this->emailFileWriters = [];
     }
 
     
@@ -78,44 +74,8 @@ class SendGridTransport implements Swift_Transport
      */
     public function send(Swift_Mime_Message $swiftMessage, &$failedRecipients = null)
     {
-        if ($path = $this->getPathFileWriterIfExists($swiftMessage)) {
-            $this->writeMessageIntoFile($swiftMessage, $path);
-            return;
-        } 
-        
         $sendGridMessage = $this->createSendGridMessageFromSwiftMessage($swiftMessage);
         $this->sendGrid->send($sendGridMessage);
-    }
-    
-    /**
-     * @param Swift_Mime_Message $swiftMessage
-     * @return string|null
-     */
-    private function getPathFileWriterIfExists(Swift_Mime_Message $swiftMessage)
-    {
-        $to = $swiftMessage->getTo();
-        reset($to);
-        $emailAddress = key($to);
-        foreach ($this->emailFileWriters as $emailRegexpr => $path) {
-            if (preg_match($emailRegexpr, $emailAddress)) {
-                return $path;
-            }
-        }
-        
-        return null;
-    }
-    
-    
-    /**
-     * @param Swift_Mime_Message $swiftMessage
-     */
-    private function writeMessageIntoFile(Swift_Mime_Message $swiftMessage, $path)
-    {
-         $data = MessageUtils::messageToArray($swiftMessage);
-         $ret = file_put_contents($path, json_encode($data));
-         if (false === $ret) {
-             throw new \RuntimeException("Cannot write email into $path");
-         }
     }
     
     /**
@@ -147,6 +107,7 @@ class SendGridTransport implements Swift_Transport
         
         // add attachments
         foreach ($message->getChildren() as $children) { /* @var $children \Swift_Mime_MimeEntity */
+            // sendgrid only supports adding attachments from a file.
             file_put_contents($this->temporaryAttachment, $children->getBody());
             $email->addAttachment($this->temporaryAttachment);
         }
@@ -164,23 +125,9 @@ class SendGridTransport implements Swift_Transport
     */
     public function stop()
     {
+        // clear temporary attachments if any
+        if (file_exists($this->temporaryAttachment)){ 
+            unlink($this->temporaryAttachment);
+        }
     }
-
-    /**
-     * @param string $email
-     * @param string $path
-     */
-    public function addEmailFileWriter($email, $path)
-    {
-        $this->emailFileWriters[$email] = $path;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getEmailFileWriters()
-    {
-        return $this->emailFileWriters;
-    }
-
 }

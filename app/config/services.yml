@@ -8,12 +8,10 @@ services:
         class: AppBundle\Mailer\Transport\FileWriter
         arguments: [ "/tmp/dd_mail_mock" ]
         
+    mailer.transport.secureSmtp:
+        class: Swift_SmtpTransport
+        arguments: [ "%smtp_hostname%", "%smtp_port%" ]
+    
     mailer.transport.sendgrid:
         class: AppBundle\Mailer\Transport\SendGridTransport
-        arguments: [ @sendgrid, "/tmp/dd_mail_attachment"]
-        calls:
-            - [addEmailFileWriter, ["/^behat-/i", "/tmp/dd_mail_mock"]]
-    
-    mailer.service:
-        class: Swift_Mailer
-        arguments: [@mailer.transport.sendgrid]
+        arguments: [ @sendgrid, "/tmp/dd_sendgrid_current_attachment.tmp"]
