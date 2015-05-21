@@ -32,8 +32,8 @@
     {% if report.isDue() and account.closingBalance is not null %}
         <dl class="account-balance closing-balance">
             <dt class="label">{{ 'page.header.closingBalanceDate.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="date">{{ account.closingDate | date("d/m/Y") }}</td>
-            <dd class="value">£{{ account.closingBalance | number_format(2, '.', ',') }}</td>
+            <dd class="date  behat-region-account-closing-balance-date">{{ account.closingDate | date("d/m/Y") }}</td>
+            <dd class="value behat-region-account-closing-balance">£{{ account.closingBalance | number_format(2, '.', ',') }}</td>
         </dl>
     {% endif %}
 
