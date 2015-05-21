@@ -1,3 +1,6 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+
 {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
 {% set checkboxClass = 'reviewed_n_checked' %}
 {% set buttonClass = '' %}

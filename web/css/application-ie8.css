@@ -2545,6 +2545,36 @@ ol.progress {
 .report-declaration .tab-content .tab-pane {
   border-top: 0; }
 
+.report-submission .tab-content .tab-pane {
+  border-top: 0;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #bfc1c3; }
+.report-submission .flash {
+  border-left: 3px solid #bfc1c3;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  width: 65%;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden; }
+#content .report-submission p.page-section-description {
+  max-width: 540px;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 700;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    #content .report-submission p.page-section-description {
+      font-size: 16px;
+      line-height: 1.25; } }
+.report-submission .link {
+  margin-bottom: 20px; }
+
+.page-report-content.report-submission .page-body {
+  margin-top: 30px; }
+
 .report-list {
   border-top: 1px solid #dee0e2;
   border-bottom: 1px solid #dee0e2;

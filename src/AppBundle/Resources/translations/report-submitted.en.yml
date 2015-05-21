@@ -1,7 +1,7 @@
 page:
   htmlTitle: Report submitted
   thankYouForsubmitting: Thank you for submitting your %reportName% report
-  yourReportWillBeSaved: "Your report will be saved and stored here in your desputy service online account for you to view  whenever you want."
+  yourReportWillBeSaved: "Your report will be saved and stored here in your deputyship service online account for you to view  whenever you want."
   youCanDownloadCopy: "You can also download a copy of this report to your computer by clicking the link below:"
   downloadLink: Download %reportName% report
   returnToCliendPage: Return to your client page

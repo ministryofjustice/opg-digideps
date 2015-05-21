@@ -1,39 +1,31 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
-activeTab: "tab-overview"
-} %}
-    {% set translationDomain = "report-submitted" %}
-    {% trans_default_domain translationDomain %}
+{% embed 'AppBundle:Components/Page:page-report.html.twig' %}
+{% set translationDomain = "report-submitted" %}
+{% trans_default_domain translationDomain %}
 
-    {% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
-        {% set reportType = "propertyAndAffairs" %}
-    {% else %}
-        {% set reportType = "healthAndWelfare" %}
-    {% endif %}
-    
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
+
     {% block pageNavigation %}
+        {# no navigation bar for declaration #}
     {% endblock %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-    {% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
-
     {% block pageBody %}
-        <p>{{ 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
-       
-        <p>{{ 'page.yourReportWillBeSaved' | trans }}</p>
-        
-        <p>
-          {{ 'page.youCanDownloadCopy' | trans }}
-        </p>
-        
-        <p>
-          <a href="{{ path('report_download', {'reportId': report.id}) }}" class="behat-link-download-report">
-            {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
-          </a>
-        </p>
-        
-        <a href="{{ path('client_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>
 
+        <p class="flash">{{ 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
 
+        <p class="page-section-description">{{ 'page.yourReportWillBeSaved' | trans }}</p>
+
+        <p class="page-section-description">{{ 'page.youCanDownloadCopy' | trans }}</p>
+
+        <div class="link">
+            <a href="{{ path('report_download', {'reportId': report.id}) }}" class="behat-link-download-report">
+                {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
+            </a>
+        </div>
+        <div class="link">
+            <a href="{{ path('client_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>
+        </div>
     {% endblock %}
 
 {% endembed %}
