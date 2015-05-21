@@ -125,7 +125,7 @@ class Report
      * 
      * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getSubmitDate")
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
     private $submitDate;
