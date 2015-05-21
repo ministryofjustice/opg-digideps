@@ -93,14 +93,9 @@ class ReportController extends Controller
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
         // check status
-        if (!$report->isDue()) {
-            throw new \RuntimeException("Report not due.");
-        }
-        if (!$report->readyToSubmit()) {
-            throw new \RuntimeException("Report not ready to be submitted.");
-        }
-        if (!$report->getReviewed()) {
-            throw new \RuntimeException("You must review and check this report before submitting.");
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
         
         $clients = $this->getUser()->getClients();
@@ -164,7 +159,10 @@ class ReportController extends Controller
     {
         $util = $this->get('util');
         $report = $util->getReport($reportId, $this->getUser()->getId());
-        
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
         // Generate response
         $response = new Response();
 
@@ -193,17 +191,9 @@ class ReportController extends Controller
     {
         $report = $this->getReport($reportId);
         // check status
-        if (!$report->isDue()) {
-            throw new \RuntimeException("Report not due.");
-        }
-        if (!$report->readyToSubmit()) {
-            throw new \RuntimeException("Report not ready to be submitted.");
-        }
-        if (!$report->getReviewed()) {
-            throw new \RuntimeException("You must review and check this report before submitting.");
-        }
-        if (!$report->getSubmitted()) {
-            throw new \RuntimeException("Report not submitted.");
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
         $client = $this->getClient($report->getClient());
         
@@ -222,7 +212,10 @@ class ReportController extends Controller
         $apiClient = $this->get('apiclient');
         
         $report = $this->getReport($reportId);
-        
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
         $client = $this->getClient($report->getClient());
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);

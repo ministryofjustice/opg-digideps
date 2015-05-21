@@ -65,6 +65,12 @@ report:
         greaterThan12Months: Report period can't cover more than 12 months
     courtOrderType:
         notBlank: Please select a report type
+    submissionExceptions:
+        due: Report not due
+        submitted: Report not submitted
+        reviewedAndChecked: Report not reviewed and checked
+        readyForSubmission: Report not ready for submission
+        
 report-declaration:
     agree:
         notBlank: You must agree to the statement to proceed
