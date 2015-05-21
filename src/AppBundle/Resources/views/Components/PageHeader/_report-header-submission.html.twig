@@ -1,0 +1,28 @@
+{% set translationDomain = "report-common" %}
+{% trans_default_domain translationDomain %}
+
+<header class="page-report-header page-header">
+    <div class="page-header-titles">
+        <h1 class="heading-large report-title">{{ report.period }} {{ 'report.header.report' | trans }}
+            <div class="heading-large client-name">{{ client.fullname }}</div>
+        </h1>
+    </div>
+    <div class="data-item">
+        <dl class="data-item-fields">
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ 'report.header.reportingPeriod' | trans }}</dt>
+                <dd class="data-item-fields-description">{{ report.startDate | date("d F Y") }}
+                    {{ 'report.header.to' | trans }} {{ report.endDate | date("d F Y") }}</dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ "report.header.dueDate" | trans }}</dt>
+                <dd class="data-item-fields-description">{{ report.dueDate | date("d F Y") }}</dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="data-item-fields-term">{{ "report.header.caseNumber" | trans }}</dt>
+                <dd class="data-item-fields-description">{{ client.getCaseNumber }}</dd>
+            </div>
+        </dl>
+    </div>
+
+</header>

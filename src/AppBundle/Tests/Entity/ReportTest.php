@@ -82,16 +82,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
     }
     
-    public function testReadyToSubmitIsFalse()
+    public function testisReadyToSubmitIsFalse()
     {
         $this->report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
-        $this->assertFalse($this->report->readyToSubmit());
+        $this->assertFalse($this->report->isReadyToSubmit());
         
         $this->report->setCourtOrderType(1);
-        $this->assertFalse($this->report->readyToSubmit());
+        $this->assertFalse($this->report->isReadyToSubmit());
     }
     
-    public function testReadyToSubmitIsTrue()
+    public function testisReadyToSubmitIsTrue()
     {
        $this->report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
        
@@ -105,6 +105,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
        $this->report->setDecisions([ $decision ]);
        $this->report->setAssets([ $asset ]);
        
-       $this->assertTrue($this->report->readyToSubmit());
+       $this->assertTrue($this->report->isReadyToSubmit());
     }
 }

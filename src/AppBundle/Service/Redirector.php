@@ -32,6 +32,7 @@ class Redirector
      */
     private $redirectableRoutes = [
         'user_details',
+        'user_view',
         'report_overview',
         'account',
         'accounts',
@@ -39,7 +40,9 @@ class Redirector
         'decisions',
         'assets',
         'report_declaration',
-        'client_home'
+        'report_declaration',
+        'report_submit_confirmation',
+        'client_home',
     ];
     
     /**

@@ -1,80 +1,89 @@
 .account-header {
-  position: relative;
-  background-color: $grey-4;
-  padding: 20px;
-  overflow: hidden;
-  margin-bottom: 30px;
+    @extend %contain-floats;
+    position: relative;
+    background-color: $grey-4;
+    padding: 20px;
+    margin-bottom: 30px;
 
-  &__item-fields {
-    @include core-19();
-  }
-
-  &__item-fields-set {
-    float: left;
-    width: 56%;
-    overflow: hidden;
-
-    &--left {
-      width: 40%;
+    .account-name {
+        @include bold-27();
+        margin-bottom: 10px;
     }
 
-    &--opening-date {
-      position: absolute;
-      top: 53px;
+    .edit-account-details {
+        float: none;
+        position: absolute;
+        top: 20px;
+        right: 10px;
+        width: auto;
+        @include core-19();
     }
 
-    &--closing-date {
-      position: absolute;
-      top: 78px;
-      margin-top: 5px;
+    .account-details {
+        @extend %contain-floats;
+
+        width: 40%;
+        max-width: 315px;
+        float: right;
+        @include core-19();
+
+
+        .account-detail {
+            @extend %contain-floats;
+            text-align: right;
+        }
+
+        .label {
+            width: 50%;
+            max-width: 115px;
+            color: $grey-1;
+            float: left;
+            white-space: nowrap;
+        }
+
+        .value {
+            @include bold-19();
+            white-space: nowrap;
+            max-width: 100px;
+            width: 50%;
+            float: left;
+        }
+
+
+
     }
 
-    &--closing-balance {
-      margin-top: 5px;
+    .account-balance {
+        @extend %contain-floats;
+
+        width: 60%;
+        float: left;
+
+        @include core-19();
+
+        .label {
+
+            width: 38%;
+            margin: 0;
+            padding: 0;
+            color: $grey-1;
+            white-space: nowrap;
+            float: left;
+        }
+
+        .date {
+            float: left;
+            width: 27%;
+            white-space: nowrap;
+        }
+
+        .value {
+            float: left;
+            width: 35%;
+            white-space: nowrap;
+            @include bold-19();
+        }
+
     }
-
-    &--edit-link {
-      float: none;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: auto;
-    }
-
-  }
-
-  &__item-fields-term {
-    display: inline;
-    margin-right: 20px;
-    color: $grey-1;
-  }
-
-  &__item-fields-description {
-    display: inline;
-    font-weight: 700;
-
-    &--balance {
-      margin-left: 150px;
-    }
-
-    &--opening-date {
-      margin: 0 0 0 175px;
-      font-weight: 400;
-    }
-
-    &--sort-code {
-      margin-left: 20px;
-    }
-
-    &--edit-link {
-      font-weight: 400;
-    }
-  }
-
-  &__title {
-    @include bold-24();
-    font-size: 27px;
-
-  }
 
 }

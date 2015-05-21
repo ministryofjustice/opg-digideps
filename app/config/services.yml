@@ -52,3 +52,9 @@ services:
        class:   AppBundle\EventListener\ResponseNoCacheListener
        tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    form.reportSubmit: 
+        class: AppBundle\Form\ReportSubmitType
+        arguments:  [@translator]
+    reportSubmitter:
+        class: AppBundle\Service\ReportSubmitter
+        arguments: [@service_container, @form.reportSubmit]

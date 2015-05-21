@@ -92,6 +92,7 @@ class UserController extends Controller
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
         $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
@@ -175,6 +176,7 @@ class UserController extends Controller
 
                 return $this->redirect($this->generateUrl('user_view'));
             }
+            
         }
 
         return [

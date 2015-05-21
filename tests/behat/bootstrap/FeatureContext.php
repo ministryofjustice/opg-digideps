@@ -177,6 +177,18 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         }
     }
     
+     /**
+     * @Then an email with subject :subject should have been sent
+     */
+    public function anEmailWithSubjectShouldHaveBeenSent($subject)
+    {
+        $mail = $this->getLatestEmailMockFromApi();
+        
+        if ($mail['subject'] != $subject) {
+            throw new \RuntimeException("Subject '" . $mail['subject'] . "' does not match the expected '" . $subject . "'");
+        }
+    }
+    
 
     /**
      * @When I open the first link on the email
@@ -325,15 +337,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @When the report is submitted
-     */
-    public function theReportIsSubmitted()
-    {
-        //TODO check db
-        $this->assertPageContainsText('The report has been submitted');
-    }
-    
-    /**
      * @Then I expire the session
      */
     public function iExpireTheSession()
@@ -359,6 +362,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * @Given I am on the first report overview page
+     * @Given I go to the first report overview page
      */
     public function iAmOnTheReport1Page()
     {
@@ -368,6 +372,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * @Given I am on the accounts page of the first report
+     * @Given I go to the accounts page of the first report
      */
     public function iAmOnTheReport1AccountsPage()
     {
@@ -377,11 +382,52 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     /**
      * @Given I am on the account :accountNumber page of the first report
+     * @Given I go to the account :accountNumber page of the first report
      */
     public function iAmOnTheReport1AccountPageByAccNumber($accountNumber)
     {
         $this->iAmOnTheReport1AccountsPage();
         $this->clickOnBehatLink('account-' . $accountNumber);
+    }
+    
+    /**
+     * @Then the URL :url should not be accessible
+     */
+    public function theUrlShouldNotBeAccessible($url)
+    {
+        $this->visit($url);
+        $this->assertResponseStatus(500);
+    }
+    
+    /**
+     * @Given The response header :header should contain :value
+     */
+    public function theResponseHeaderShouldContain($header, $value)
+    {
+        $responseHeaders = $this->getSession()->getDriver()->getResponseHeaders();
+        
+        if (!isset($responseHeaders[$header])) {
+             throw new \Exception("Header $header not found in response. Headers found: " . implode(', ', array_keys($responseHeaders)));
+        }
+        
+        // search in 
+        $found = false;
+        foreach ((array)$responseHeaders[$header] as $currentValue) {
+            if (strpos($currentValue, $value) !== false) {
+                $found = true;
+            }
+        }
+        if (!$found) {
+            throw new \Exception("Header $header not found in response. Values: " . implode(', ', $responseHeaders[$header]));
+        }
+    }
+    
+    /**
+     * @Given I change the report :reportId submitted to :value
+     */
+    public function iChangeTheReportToNotSubmitted($reportId, $value)
+    {
+        $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
     }
     
 }
