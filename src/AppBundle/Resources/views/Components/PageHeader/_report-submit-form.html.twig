@@ -1,7 +1,7 @@
 {{ form_start(report_form_submit, {attr: {novalidate: 'novalidate', class: 'page-report-submission-form' } }) }}
 {% set checkboxClass = 'reviewed_n_checked' %}
 {% set buttonClass = '' %}
-{% if not report.readyToSubmit() %}
+{% if not report.isReadyToSubmit() %}
   {% set checkboxClass = 'visuallyhidden' %}
   {% set buttonClass = 'disabled' %}
   <div class="page-report-message">
