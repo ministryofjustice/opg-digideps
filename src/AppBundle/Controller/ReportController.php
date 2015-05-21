@@ -152,37 +152,6 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/report/{reportId}/download", name="report_download")
-     * @Template()
-     */
-    public function downloadAction($reportId)
-    {
-        $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
-        }
-        // Generate response
-        $response = new Response();
-
-        $content = $this->getReportContent($report);
-        
-        // Set headers
-        $response->headers->set('Cache-Control', 'private');
-        $response->headers->set('Content-type', 'text/html');
-        $response->headers->set('Content-Disposition', 'attachment; filename="' . 'report.html' . '";');
-        $response->headers->set('Content-length', strlen($content));
-
-        // Send headers before outputting anything
-        $response->sendHeaders();
-
-        $response->setContent($content);
-        
-        return $response;
-    }
-    
-    /**
      * Page displaying the report has been submitted
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
      * @Template()
