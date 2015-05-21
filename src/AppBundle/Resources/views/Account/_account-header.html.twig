@@ -1,49 +1,40 @@
-<div id="account-headers" class="{% if hideComponent %}visuallyhidden{% endif %} account-header">
+{% if (showEditLink is not defined) %}
+{%     set showEditLink = true %}
+{% endif %}
 
-    <dl class="account-header__item-fields">
-        <div class="account-header__item-fields-set">
-            <dt class="account-header__item-fields-term visuallyhidden">{{ 'page.header.bankBuildingSociety.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="account-header__item-fields-description"><h2
-                        class="account-header__title">{{ account.bank }}</h2></dd>
-        </div>
-        <div class="account-header__item-fields-set account-header__item-fields-set--left">
-            <dt class="account-header__item-fields-term">{{ 'page.header.accounNumber.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="account-header__item-fields-description">****{{ account.accountNumber }}</dd>
-        </div>
-        <div class="account-header__item-fields-set account-header__item-fields-set--opening-date">
-            <dt class="account-header__item-fields-term visuallyhidden">{{ 'page.header.openingBalanceDate.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="account-header__item-fields-description account-header__item-fields-description--opening-date">{{ account.openingDate | date("d/m/Y") }}</dd>
-        </div>
-        <div class="account-header__item-fields-set">
-            <dt class="account-header__item-fields-term">{{ 'page.header.openingBalance.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="account-header__item-fields-description account-header__item-fields-description--balance">
-                £{{ account.openingBalance | number_format(2, '.', ',') }}</dd>
-        </div>
-        <div class="account-header__item-fields-set account-header__item-fields-set--left">
-            <dt class="account-header__item-fields-term">{{ 'page.header.sortCode.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="account-header__item-fields-description account-header__item-fields-description--sort-code">{{ account.sortCode | split('', 2) | join('-') }}</dd>
-        </div>
-        <div class="account-header__item-fields-set account-header__item-fields-set--edit-link">
-            <dt class="account-header__item-fields-term visuallyhidden">{{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}</dt>
-            <dd class="account-header__item-fields-description account-header__item-fields-description--edit-link">
-              {% if not showEditForm %}
-              <a href="{{ path('account', {'action': 'edit', 'reportId': report.id, 'accountId': account.id }) }}" class="behat-link-edit-account-details">
-                {{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}
-              </a>
-              {% endif %}
-            </dd>
-        </div>
-        {% if report.isDue() and account.closingBalance is not null %}
-            <div class="account-header__item-fields-set account-header__item-fields-set--closing-date">
-                <dt class="account-header__item-fields-term visuallyhidden">{{ 'page.header.closingBalanceDate.label' |trans({}, transDomain)|raw }}</dt>
-                <dd class="account-header__item-fields-description account-header__item-fields-description--opening-date behat-region-account-closing-balance-date">{{ account.closingDate | date("d/m/Y") }}</dd>
-            </div>
-            <div class="account-header__item-fields-set account-header__item-fields-set--closing-balance">
-                <dt class="account-header__item-fields-term">{{ 'page.header.closingBalance.label' |trans({}, transDomain)|raw }}</dt>
-                <dd class="account-header__item-fields-description account-header__item-fields-description--balance behat-region-account-closing-balance">
-                    £{{ account.closingBalance | number_format(2, '.', ',') }}</dd>
-            </div>
-        {% endif %}
+<div class="{% if hideComponent %}visuallyhidden{% endif %} account-header">
+
+    <h2 class="account-name">{{ account.bank }}</h2>
+
+    {% if not showEditForm and showEditLink == true %}
+        <a href="{{ path('account', {'action': 'edit', 'reportId': report.id, 'accountId': account.id }) }}" class="behat-link-edit-account-details edit-account-details">
+          {{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}
+        </a>
+    {% endif %}
+
+    <div class="account-details">
+        <dl class="account-detail account-number">
+            <dt class="label">{{ 'page.header.accounNumber.label' |trans({}, transDomain)|raw }}</dt>
+            <dd class="value">****{{ account.accountNumber }}</dd>
+        </dl>
+        <dl class="account-detail account-sort">
+            <dt class="label">{{ 'page.header.sortCode.label' |trans({}, transDomain)|raw }}</dt>
+            <dd class="value">{{ account.sortCode | split('', 2) | join('-') }}</dd>
+        </dl>
+    </div>
+
+    <dl class="account-balance opening-balance">
+        <dt class="label">{{ 'page.header.openingBalance.label' |trans({}, transDomain)|raw }}</dt>
+        <dd class="date">{{ account.openingDate | date("d/m/Y") }}</td>
+        <dd class="value">£{{ account.openingBalance | number_format(2, '.', ',') }}</td>
     </dl>
+
+    {% if report.isDue() and account.closingBalance is not null %}
+        <dl class="account-balance closing-balance">
+            <dt class="label">{{ 'page.header.closingBalanceDate.label' |trans({}, transDomain)|raw }}</dt>
+            <dd class="date  behat-region-account-closing-balance-date">{{ account.closingDate | date("d/m/Y") }}</td>
+            <dd class="value behat-region-account-closing-balance">£{{ account.closingBalance | number_format(2, '.', ',') }}</td>
+        </dl>
+    {% endif %}
 
 </div>

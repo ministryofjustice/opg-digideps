@@ -6,9 +6,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Routing\RouterInterface;
 
 class ReportSubmitType extends AbstractType
 {  
+    /**
+     * @var Translator 
+     */
     private $translator;
     
     public function __construct(Translator $translator) 

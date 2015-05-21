@@ -19,7 +19,7 @@ Feature: report
     Scenario: edit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I click on "client-home"
-        And I click on "report-edit-2015"
+        And I click on "edit-report-period-2015-report"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 01 |
@@ -54,7 +54,7 @@ Feature: report
         And I press "report_edit_save"
         Then the form should not contain an error
         # check values
-        And I click on "report-edit-2015"
+        And I click on "edit-report-period-2015-report"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 01 |
@@ -592,9 +592,11 @@ Feature: report
 
 
     @deputy
-    Scenario: submit report
+    Scenario: report declaration page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        And I click on "client-home"
+        Then I should not see the "download-2015-report" link
+        When I click on "report-n1"
         # check there are no notifications
         Then I should not see the "tab-contacts-warning" region
         Then I should not see the "tab-decisions-warning" region
@@ -604,11 +606,17 @@ Feature: report
         Given I set the report 1 due
         And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
-        # submit without ticking
+        # assert I cannot access the declaration page
+        Then The URL "/report/1/declaration" should not be accessible
+        # assert I cannot access the submit page
+        Then The URL "/report/1/submitted" should not be accessible
+        # wrong declaration form
+        When I go to the first report overview page
         When I press "report_submit_submitReport"
         Then the following fields should have an error:
             | report_submit_reviewed_n_checked   |
-        # tick and submit
+        # correct declaration form
+        When I am on the first report overview page
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/declaration"
@@ -617,18 +625,91 @@ Feature: report
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/declaration"
-        # preview page: submit without ticking "agree"
-        When I press "report_declaration_save"
+        And I click on "report-preview-go-back"
+        # test submit from contacts page
+        When I follow "tab-contacts"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from decisions page
+        When I follow "tab-decisions"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from accounts page
+        When I follow "tab-accounts"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from account page
+        When I am on the account "1234" page of the first report
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        And I click on "report-preview-go-back"
+        # test submit from assets page
+        When I follow "tab-assets"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        
+
+    @deputy
+    Scenario: report submission
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # assert I cannot access the sumbmitted page directly
+        Then the URL "/report/1/submitted" should not be accessible
+        # assert I cannot access the submit page from declaration page
+        When I go to "/report/1/declaration"
+        Then the URL "/report/1/submitted" should not be accessible
+        And I go to the first report overview page
+        # submit without ticking "agree"
+        When I go to "/report/1/declaration"
+        And I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
-        # right values  
+        # tick agree and submit
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the form should not contain an error
-        And the report is submitted
-        And the URL should match "/report/\d+/overview"
-        #And I should not see "Ready to submit"
-        
+        And the URL should match "/report/\d+/submitted"
+        #And an email with subject "Report submission from Digital Deputy" should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
+    @deputy
+    Scenario: assert report is not editable after submission
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I should not see the "edit-report-period-2015-report" link
+        And I should not see the "report-n1" link
+        And I should see the "report-2015-submitted-on" region
+        And the URL "/report/1/overview" should not be accessible
+        And the URL "/report/1/contacts" should not be accessible
+        And the URL "/report/1/decisions" should not be accessible
+        And the URL "/report/1/accounts" should not be accessible
+        And the URL "/report/1/account/1" should not be accessible
+        And the URL "/report/1/assets" should not be accessible
         
-        
+    @deputy
+    Scenario: report download
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # download report from confirmation page
+        When I go to "/report/1/submitted"
+        When I click on "download-report"
+        And the response should contain "123456ABC"
+        And the response should contain "Peter White"
+        # download report from client page
+        When I go to the homepage
+        And I click on "download-2015-report"
+        And the response should contain "123456ABC"
+        And the response should contain "Peter White"
+        # test go back link
+        When I click on "back-to-client"
+        Then I should be on "/client/show"
+
+
+    @deputy
+    Scenario: change report to "not submitted" 
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I change the report "1" submitted to "false"

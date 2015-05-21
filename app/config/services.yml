@@ -3,6 +3,11 @@ imports:
     - { resource: twig.yml }
     
 services:
+    security.validator.d_user_password:
+        class: AppBundle\Validator\Constraints\DUserPasswordValidator
+        arguments: [ @security.context, @security.encoder_factory ]
+        tags:
+            - { name: validator.constraint_validator, alias: security.validator.d_user_password }
     apiclient:
         class:  AppBundle\Service\ApiClient
         arguments: [ @jms_serializer, {format: "json", base_url: "%api_base_url%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
@@ -26,9 +31,7 @@ services:
             - { name: twig.extension }
     mailSender:
         class: AppBundle\Service\MailSender
-        arguments: [ @apiclient, @translator, @router ]
-        calls:
-            - [setFrom, ["admin@digideps.service.dsd.io", "Digital deputyship service"]]
+        arguments: [ @apiclient, @translator, @router,@validator ]
     redirectorService:
         class: AppBundle\Service\Redirector
         arguments: [ @security.context, @router, @session ]
@@ -49,3 +52,9 @@ services:
        class:   AppBundle\EventListener\ResponseNoCacheListener
        tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse }
+    form.reportSubmit: 
+        class: AppBundle\Form\ReportSubmitType
+        arguments:  [@translator]
+    reportSubmitter:
+        class: AppBundle\Service\ReportSubmitter
+        arguments: [@service_container, @form.reportSubmit]

@@ -18,6 +18,7 @@
 @import "components/helpers";
 @import "components/layout";
 @import "components/nav-tabs";
+@import "components/notification-summary";
 @import "components/page-body";
 @import "components/page-report-content";
 @import "components/page-report-header";
@@ -28,12 +29,15 @@
 @import "components/page-service-content";
 @import "components/progress_indicator";
 @import "components/report-declaration";
+@import "components/report-submission";
 @import "components/report-list";
 @import "components/report-meta-data";
 @import "components/report-overview";
 @import "components/sub-section-description";
 @import "components/sub-section-title";
 @import "components/user-list";
+@import "components/financial-transactions";
+@import "components/external-report";
 
 @import "elements/icon";
 @import "elements/forms/form-date";
