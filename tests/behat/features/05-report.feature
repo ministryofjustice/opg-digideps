@@ -697,15 +697,16 @@ Feature: report
         # download report from confirmation page
         When I go to "/report/1/submitted"
         When I click on "download-report"
-        Then The response header "Content-Disposition" should contain "attachment"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
         # download report from client page
         When I go to the homepage
         And I click on "download-2015-report"
-        Then The response header "Content-Disposition" should contain "attachment"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
+        # test go back link
+        When I click on "back-to-client"
+        Then I should be on "/client/show"
 
 
     @deputy
