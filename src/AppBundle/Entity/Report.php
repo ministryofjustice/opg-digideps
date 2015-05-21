@@ -40,7 +40,7 @@ class Report
     /**
      * @var \DateTime $submitDate
      * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
     private $submitDate;
