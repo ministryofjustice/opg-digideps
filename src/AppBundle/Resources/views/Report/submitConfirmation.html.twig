@@ -19,7 +19,7 @@
         <p class="page-section-description">{{ 'page.youCanDownloadCopy' | trans }}</p>
 
         <div class="link">
-            <a href="{{ path('report_download', {'reportId': report.id}) }}" class="behat-link-download-report">
+            <a href="{{ path('report_display', {'reportId': report.id}) }}" class="behat-link-download-report">
                 {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
             </a>
         </div>
