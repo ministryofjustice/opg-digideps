@@ -81,6 +81,8 @@ class UserController extends Controller
     
     
     /**
+     * Registration steps
+     *
      * @Route("/details", name="user_details")
      * @Template()
      */
@@ -113,8 +115,7 @@ class UserController extends Controller
         }
         
         return [
-            'form' => $form->createView(),
-            'notification' => $notification
+            'form' => $form->createView()
         ];
         
     }
@@ -127,13 +128,12 @@ class UserController extends Controller
     {
         $request = $this->getRequest();
         $user = $this->getUser();
-        $notification = null;
         
         $formEditDetails = $this->createForm(new UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
         
-        $formEditDetails->add('password', new ChangePasswordType(), [ 'error_bubbling' => false, 'mapped' => false ]);
+        $formEditDetails->add('password', new ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
@@ -166,15 +166,14 @@ class UserController extends Controller
                     
                     $this->get('mailSender')->send($email,[ 'html']);
                     
-                    $notification = 'You have changed your password. We have sent you an email to confirm this change.';
+                    $request->getSession()->getFlashBag()->add(
+                                'notification',
+                                'page.passwordChangedNotification'
+                            );
+                    
                 }
                 $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
-                
-                $request->getSession()->getFlashBag()->add(
-                    'notice', 
-                    $notification
-                );
-                
+
                 return $this->redirect($this->generateUrl('user_view'));
             }
             

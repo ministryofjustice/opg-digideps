@@ -65,6 +65,7 @@ Feature: edit user details
         And I press "user_details_save"
         Then the following fields should have an error:
               | user_details_password_current_password |
+              | user_details_password_plain_password_first |
         # invalid new password
         When I fill in the following:
           | user_details_password_current_password | Abcd1234 |
@@ -80,7 +81,15 @@ Feature: edit user details
           | user_details_password_plain_password_second | Abcd12345 |
         And I press "user_details_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |  
+              | user_details_password_plain_password_first |
+        #empty password
+        When I fill in the following:
+          | user_details_password_current_password | Abcd1234 |
+          | user_details_password_plain_password_first | |
+          | user_details_password_plain_password_second | |
+        And I press "user_details_save"
+        Then the following fields should have an error:
+              | user_details_password_plain_password_first |
         # valid new password
         When I fill in the following:
           | user_details_password_current_password | Abcd1234 |

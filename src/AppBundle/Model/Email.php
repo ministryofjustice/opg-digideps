@@ -202,5 +202,4 @@ class Email
     {
         $this->attachments = $attachments;
     }
-
 }

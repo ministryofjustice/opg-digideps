@@ -1,3 +1,8 @@
+/*
+***************************************************************
+    Do not import application specific code into this file.
+***************************************************************
+*/
 @-ms-viewport {
   width: device-width; }
 @-o-viewport {
@@ -1355,7 +1360,7 @@ input[type=number] {
 
 /*
 ***************************************************************
-    Do need import application specific code into this file.
+    END - Do not import application specific code into this file.
 ***************************************************************
 */
 .session-timeout {
@@ -1409,7 +1414,9 @@ input[type=number] {
 .visuallyhidden + .account__edit {
   margin: 30px 0; }
 .account__edit .sub-section-title + .sub-section-description {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  margin-top: -20px;
+  float: left; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -2265,6 +2272,13 @@ form {
   .tabs-panel.tabs-panel-selected {
     display: block; }
 
+.notification-summary__container {
+  width: 85%;
+  padding: 0;
+  margin: 40px 0 0 0; }
+.notification-summary .page-section-warning {
+  width: 100%; }
+
 .page-body {
   margin-top: 0;
   overflow: hidden;
@@ -2770,8 +2784,7 @@ ol.progress {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 20px;
-    margin-bottom: 10px; }
+    margin-top: 20px; }
   .report-overview .sub-section-title {
     margin-bottom: 10px; }
 
@@ -3012,9 +3025,8 @@ span.icon {
 @-o-viewport {
   width: device-width; }
 .validation-summary-container {
-  width: 50%;
   padding: 0;
-  margin: 40px 0 0 0; }
+  margin: 40px 0 40px 0; }
   .page-report-content .validation-summary-container {
     margin-bottom: 20px; }
 
