@@ -2854,7 +2854,8 @@ span.icon {
   width: device-width; }
 .validation-summary-container {
   padding: 0;
-  margin: 40px 0 40px 0; }
+  margin: 40px 0 40px 0;
+  max-width: 540px; }
   .page-report-content .validation-summary-container {
     margin-bottom: 20px; }
 
