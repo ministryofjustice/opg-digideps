@@ -129,6 +129,26 @@
 
   }
 
+  &--no-reason {
+
+    border-bottom: 1px solid $grey-3;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+
+    dd.data-item-fields-description {
+      &--noReason{
+        margin-right: 425px;
+      }
+
+      &--header {
+        .data-item-edit-link {
+          margin-right: 297px;
+        }
+      }
+
+    }
+  }
+
   .data-list--client-list-reports & {
     padding: 20px 0 20px 0;
 

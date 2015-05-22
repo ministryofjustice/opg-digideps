@@ -10,44 +10,44 @@ use AppBundle\Form as FormDir;
 use AppBundle\Entity as EntityDir;
 
 class ContactController extends Controller{
-   
+
     /**
      * @Route("/report/{reportId}/contacts/delete/{id}", name="delete_contact")
      */
     public function deleteAction($reportId,$id)
     {
         $util = $this->get('util');
-        
+
         //just do some checks to make sure user is allowed to delete this contact
         $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
-        
+
         if(!empty($report) && in_array($id, $report->getContacts())){
             $this->get('apiclient')->delete('delete_report_contact', [ 'parameters' => [ 'id' => $id ]]);
         }
         return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
     }
-    
+
     /**
      * --action[ list, add, edit, delete-confirm, delete ] #default is list
-     * 
+     *
      * @Route("/report/{reportId}/contacts/{action}/{id}", name="contacts", defaults={ "action" = "list", "id" = " "})
      * @Template()
      */
     public function indexAction($reportId,$action,$id)
     {
         $util = $this->get('util');
-       
+
         $report = $util->getReport($reportId, $this->getUser()->getId(),['transactions']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         $client = $util->getClient($report->getClient());
-        
+
         $request = $this->getRequest();
-        
+
         $apiClient = $this->get('apiclient');
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
-        
+
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             $contact = $apiClient->getEntity('Contact','get_report_contact', [ 'parameters' => ['id' => $id ]]);
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
@@ -63,22 +63,23 @@ class ContactController extends Controller{
         }
         
         //set up add reason for no contact form
-        $noContact = $this->createForm(new FormDir\ReasonForNoContactType());
+        $noContact = $this->createForm(new FormDir\ReasonForNoContactType(), null, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId])."#pageBody" ]);
+
         $noContact->setData([ 'reason' => $report->getReasonForNoContacts() ]);
-        
+
         if($request->getMethod() == 'POST'){
             $forms = [ 'contactForm' => $form,
                        'noContact' => $noContact ];
-            
+
             $processedForms = $this->handleContactsFormSubmit($forms,$reportId,$action);
-            
+
             if($processedForms instanceof RedirectResponse){
                 return $processedForms;
             }
             $form = $processedForms['contactForm'];
             $noContact = $processedForms['noContact'];
         }
-        
+
         return [
             'form' => $form->createView(),
             'contacts' => $contacts,
@@ -88,7 +89,7 @@ class ContactController extends Controller{
             'report_form_submit' => $this->get('reportSubmitter')->getFormView(),
             'no_contact' => $noContact->createView() ];
     }
-    
+
     /**
     * @param array $forms
     * @return array $forms
@@ -96,13 +97,13 @@ class ContactController extends Controller{
     private function handleContactsFormSubmit(array $forms, $reportId, $action='add')
     {
         $util = $this->get('util');
-        
+
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
-        
+
         $form = $forms['contactForm'];
         $noContact    = $forms['noContact'];
-        
+
         $form->handleRequest($request);
         $noContact->handleRequest($request);
 
@@ -113,7 +114,7 @@ class ContactController extends Controller{
             if($form->isValid()){
                 $contact = $form->getData();
                 $contact->setReport($reportId);
-                
+
                 if($action == 'add'){
                     $apiClient->postC('add_report_contact', $contact);
                 }else{
@@ -122,7 +123,7 @@ class ContactController extends Controller{
 
                 return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
             }
-            
+
          //check if add reason for no contact form was submitted
         }elseif($noContact->get('saveReason')->isClicked()){
             if($noContact->isValid()){
@@ -139,7 +140,7 @@ class ContactController extends Controller{
         }
         $forms['contactForm'] = $form;
         $forms['noContact'] = $noContact;
-        
+
         return $forms;
     }
 }
