@@ -30,6 +30,13 @@ module.exports = function (grunt) {
                         src: ['*.scss'],
                         dest: 'web/css',
                         ext: '.css'
+                    },
+                    {
+                        expand: true,
+                        cwd: scssPath + '/email-template',
+                        src: ['*.scss'],
+                        dest: 'src/AppBundle/Resources/views/Email/css',
+                        ext: '.html.twig'
                     }
                 ],
                 options: {

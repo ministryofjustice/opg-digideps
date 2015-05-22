@@ -6,16 +6,20 @@
 
 {% block stylesheets %}
     <!--[if gt IE 8]><!-->
-    <link href="/css/application.css" media="screen" rel="stylesheet" type="text/css"/><!--<![endif]-->
+    <link href="/css/application.css" rel="stylesheet" type="text/css"/><!--<![endif]-->
     <!--[if IE 6]>
-    <link href="/css/application-ie6.css" media="screen" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="/css/application-ie6.css" rel="stylesheet" type="text/css"/><![endif]-->
     <!--[if IE 7]>
-    <link href="/css/application-ie7.css" media="screen" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="/css/application-ie7.css" rel="stylesheet" type="text/css"/><![endif]-->
     <!--[if IE 8]>
-    <link href="/css/application-ie8.css" media="screen" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="/css/application-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->
+
+    <link href="/css/application-print.css" media="print" rel="stylesheet" type="text/css" />
 {% endblock %}
 
-{% block head %}{% endblock %}
+{% block head %}
+    <meta name="format-detection" content="telephone=no">
+{% endblock %}
 
 {% block pageTitle %}Digideps Page Title{% endblock %}
 
@@ -37,20 +41,20 @@
         <a href="/" id="proposition-name">{% block proposition_title %}Complete the Deputy Report{% endblock %}</a>
         <ul id="proposition-links">
             {% if app.user %}
-                
+
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
                 {% endif %}
-                
+
                 {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('client_home')}}" class="behat-link-client-home"  >{% trans %}clientHome{% endtrans %} </a></li>
                 {% endif %}
-                
+
                 {% if is_granted('ROLE_ADMIN') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('user_view')}}" class="behat-link-my-details" >{% trans %}userDetails{% endtrans %} </a></li>
                     <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
                 {% endif %}
-                
+
             {% endif %}
         </ul>
     </nav>
@@ -100,7 +104,7 @@
 {% endblock %}
 
 {% block bodyEnd %}
-    
+
     {% block popups %}
         {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
     {% endblock %}

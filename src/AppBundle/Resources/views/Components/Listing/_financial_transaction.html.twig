@@ -1,0 +1,12 @@
+{% set translationDomain = "accounts" %}
+{% trans_default_domain translationDomain %}
+
+<li class="transaction">
+    <dl>
+        <dt class="transaction-label">{{ transaction.type | trans }}</dt>
+        <dd class="transaction-value">
+            <span class="currency">{{ 'currencySymbol' | trans }}</span>
+            <span class="amount">{{ transaction.amount | number_format(2, '.', ',') }}</span>
+        </dd>
+    </dl>
+</li>

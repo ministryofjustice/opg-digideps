@@ -12,7 +12,7 @@ user:
     minLength: Your last name must be at least {{ limit }} characters long
     maxLength: Your last name cannot be longer than {{ limit }} characters long
   password:
-      notBlank: The password cannot be blank 
+      notBlank: Password cannot be blank 
       minLength: The password must be at least {{ limit }} characters long
       maxLength: The password cannot be longer than {{ limit }} characters long
       noLowerCaseChars: The password must contain at least one lowercase character
@@ -65,6 +65,12 @@ report:
         greaterThan12Months: Report period can't cover more than 12 months
     courtOrderType:
         notBlank: Please select a report type
+    submissionExceptions:
+        due: Report not due
+        submitted: Report not submitted
+        reviewedAndChecked: Report not reviewed and checked
+        readyForSubmission: Report not ready for submission
+        
 report-declaration:
     agree:
         notBlank: You must agree to the statement to proceed
@@ -162,4 +168,24 @@ asset:
 common:
   genericPhone:
     minLength: The phone number must be at least {{ limit }} characters long
-    maxLength: The phone number cannot be longer than {{ limit }} characters long        
+    maxLength: The phone number cannot be longer than {{ limit }} characters long
+sendEmail:
+    toEmail:
+        notBlank: Please supply receipent's email (toEmail)
+        invalid:  Receipent email address is invalid
+    toName:
+        notBlank: Please supply receipent's name (toName)
+        invalid: Receipent name is invalid
+    fromEmail:
+        notBlank: Please supply sender's email (fromEmail)
+        invalid:  Sender email address is invalid
+    fromName:
+        notBlank: Please supply sender's name (fromName)
+        invalid: Sender name is invalid
+    subject:
+        notBlank: Please supply email subject
+    bodyText:
+        notBlank: Please supply message for your email
+    bodyHtml:
+        notBlank: Please supply message for your email
+    

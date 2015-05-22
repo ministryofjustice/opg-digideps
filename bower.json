@@ -13,6 +13,7 @@
     "moj_template": "https://github.com/ministryofjustice/moj_template.git#master",
     "jquery": "1.11.x",
     "html5shiv": "",
-    "jquery-validation": "~1.13.1"
+    "jquery-validation": "~1.13.1",
+    "email-boilerplate": "https://github.com/seanpowell/Email-Boilerplate.git#master"
   }
 }

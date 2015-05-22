@@ -57,7 +57,10 @@ class DecisionController extends Controller
 
         // just needed for title etc,
         $report = $util->getReport($reportId, $this->getUser()->getId());
-
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+        
         if(in_array($action, [ 'edit', 'delete-confirm']) && in_array($id,$report->getDecisions())){
             $decision = $apiClient->getEntity('Decision','get_report_decision', [ 'parameters' => ['id' => $id ] ]);
 
@@ -75,8 +78,11 @@ class DecisionController extends Controller
 
         $decision->setReportId($reportId);
         $decision->setReport($report);
-
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
+        // report submit logic
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
+        }
 
         $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
         $noDecision->setData([ 'reason' => $report->getReasonForNoDecisions() ]);
@@ -84,9 +90,7 @@ class DecisionController extends Controller
         if ($request->isMethod('POST')) {
 
             $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
-            $noDecision->handleRequest($request);
-
+           
             if($form->get('save')->isClicked()){
 
                 if ($form->isValid()) {
@@ -94,20 +98,6 @@ class DecisionController extends Controller
                     $this->handleAddEditDecision($action,$form,$report);
 
                     return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
-                }
-            }elseif($noDecision->get('saveReason')->isClicked()){
-
-                if($noDecision->isValid()){
-
-                    $this->handleReasonForNoDecision($action, $noDecision, $reportId);
-                    return $this->redirect($this->generateUrl('decisions',[ 'reportId' => $report->getId()]));
-                }
-            }else{
-                if($reportSubmit->isValid()){
-
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
                 }
             }
         }
@@ -119,7 +109,7 @@ class DecisionController extends Controller
             'report' => $report,
             'client' => $util->getClient($report->getClient()),
             'action' => $action,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 

@@ -68,7 +68,7 @@ moneyIn:
     any_other_money_paid_in_and_not_listed_above:
       label: Any other money paid in and not listed above
       further_guidance: Please give more details
-moneyOut:  
+moneyOut:
   panelTitle: Money paid out
   panelFooter: Money out total
   totalPrefix: "-"

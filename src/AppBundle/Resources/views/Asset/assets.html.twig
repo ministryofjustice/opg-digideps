@@ -28,6 +28,13 @@ activeTab: "tab-assets"
     {% if (action == 'add') or ( (action == 'list') and (assets is empty) ) %}
         {% set showAddForm = true %}
     {% endif %}
+
+    {% if (showEditLink is not defined) %}
+    {%     set showEditLink = true %}
+    {% endif %}
+
+
+
     {#  ***************************************** #}
 
 
@@ -72,6 +79,7 @@ activeTab: "tab-assets"
             {% include 'AppBundle:Asset:_listAsset.html.twig' with {
             'showEditForm': showEditForm,
             'showDeleteConfirm': showDeleteConfirm,
+            'showEditLink': showEditLink,
             'form': form
             } %}
         {% endif %}
