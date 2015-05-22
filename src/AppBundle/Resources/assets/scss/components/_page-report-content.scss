@@ -24,7 +24,7 @@
     }
   }
 
-  .no-contact-form {
+  .no-data-form {
     padding: 20px 0 10px 65px;
     margin-bottom: 30px;
 
@@ -33,6 +33,7 @@
       margin-left: -50px;
       margin-bottom: 20px;
       overflow: hidden;
+      width: 100%;
 
       .icon {
         float: left;
@@ -42,12 +43,18 @@
       p {
         float: left;
         margin-top: 6px;
+        width: 50%;
       }
     }
 
-    .form-control{
+    .form-control {
       width: 60%;
       height: 100px;
+    }
+
+    .alert__delete-confirmation {
+      width: 52%;
+      padding-right: 15px;
     }
 
   }
