@@ -41,7 +41,6 @@ twig:
         session_popup_show_after: %session_popup_show_after%
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    exception_controller:  AppBundle:Exception:showException
     form:
         resources:
             - 'AppBundle:Form:fields.html.twig'
