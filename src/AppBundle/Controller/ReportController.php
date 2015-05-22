@@ -244,6 +244,10 @@ class ReportController extends RestController
             $report->setSubmitted((boolean)$data['submitted']);
         }
         
+        if (array_key_exists('reviewed', $data)) {
+            $report->setReviewed((boolean)$data['reviewed']);
+        }
+        
         if (array_key_exists('submit_date', $data)) {
             $report->setSubmitDate(new \DateTime($data['submit_date']));
         }

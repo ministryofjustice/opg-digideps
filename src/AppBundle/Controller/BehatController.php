@@ -68,6 +68,6 @@ class BehatController extends RestController
     
     private function getBehatMailFilePath()
     {
-        return current($this->get('mailer.transport.sendgrid')->getEmailFileWriters());
+        return $this->container->getParameter('email_mock_path');
     }
 }
