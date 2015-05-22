@@ -16,12 +16,12 @@
                 <dt class="visuallyhidden">{{ 'no_decision.fields.editReason.label' | trans }}</dt>
                 <dd class="data-item-fields-description data-item-fields-description--header">
                     <a href="{{ url('decisions', { 'reportId': report.id, 'action': 'edit-reason' }) }}"
-                       class="js-data-item-edit-link data-item-edit-link behat-link-edit-reason-no-contact">{{ 'no_decision.fields.editReason.value' | trans }}</a>
+                       class="js-data-item-edit-link data-item-edit-link behat-link-edit-reason-no-decisions">{{ 'no_decision.fields.editReason.value' | trans }}</a>
                 </dd>
             </div>
             <div class="data-item-fields-row">
                 <dt class="visuallyhidden">{{ 'no_decision.fields.noDecisionReason.value' | trans }}</dt>
-                <dd class="data-item-fields-description data-item-fields-description--noReason data-item-fields-description--normal behat-region-reason-no-contact">{{ report.reasonForNoDecisions }}</dd>
+                <dd class="data-item-fields-description data-item-fields-description--noReason data-item-fields-description--normal behat-region-reason-no-decisions">{{ report.reasonForNoDecisions }}</dd>
             </div>
 
         </dl>
