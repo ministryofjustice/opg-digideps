@@ -17,9 +17,9 @@ services:
     session.handler.memcached:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler
         arguments: [@session.memcached, { prefix: %session_memcached_prefix%, expiretime: %session_expire_seconds% } ]
-    session.handler.dynamodb:
-        class:     AppBundle\SessionHandler\DynamoDbSessionHandler
-        arguments: [ %dynamodb% ]
+    #session.handler.dynamodb:
+        #class:     AppBundle\SessionHandler\DynamoDbSessionHandler
+        #arguments: [ %dynamodb% ]
     apiclient:
         class:  AppBundle\Service\ApiClient
         arguments: [ @jms_serializer, {format: "json", base_url: "%api_base_url%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
