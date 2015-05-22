@@ -109,7 +109,7 @@ class SendGridTransport implements Swift_Transport
         foreach ($message->getChildren() as $children) { /* @var $children \Swift_Mime_MimeEntity */
             // sendgrid only supports adding attachments from a file.
             file_put_contents($this->temporaryAttachment, $children->getBody());
-            $email->addAttachment($this->temporaryAttachment);
+            //$email->addAttachment($this->temporaryAttachment);
         }
         
         return $email;
