@@ -163,12 +163,13 @@ class Report
     private $reasonForNoContacts;
     
     /**
-     * @var boolean
+     * @var string
      *
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="no_decision_to_add", type="boolean", options={ "default": false})
-     */
-    private $noDecisionToAdd;
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions","basic"})
+     * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
+     **/
+    private $reasonForNoDecisions;
 
     /**
      * @var boolean
@@ -682,26 +683,26 @@ class Report
     }
 
     /**
-     * Set noDecisionToAdd
+     * Set reasonForNoDecisions
      *
-     * @param boolean $noDecisionToAdd
+     * @param string $reasonForNoDecisions
      * @return Report
-     */
-    public function setNoDecisionToAdd($noDecisionToAdd)
+     **/
+    public function setReasonForNoDecisions($reasonForNoDecisions)
     {
-        $this->noDecisionToAdd = $noDecisionToAdd;
+        $this->reasonForNoDecisions = $reasonForNoDecisions;
 
         return $this;
     }
 
     /**
-     * Get noDecisionToAdd
+     * Get ReasonForNoDecisions
      *
-     * @return boolean 
+     * @return string
      */
-    public function getNoDecisionToAdd()
+    public function getReasonForNoDecisions()
     {
-        return $this->noDecisionToAdd;
+        return $this->reasonForNoDecisions;
     }
     
 
