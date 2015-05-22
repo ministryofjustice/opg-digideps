@@ -10,6 +10,9 @@ activeTab: "tab-decisions"
     {% set showAddForm = false %}
     {% set showEditForm = false %}
     {% set showDeleteConfirm = false %}
+    {% set showNoDecisionForm = false %}
+    {% set showDeleteReasonConfirm = false %}
+    {% set showNoDecisionReason = false %}
 
     {% if decisions is not empty %}
         {% set showListData = true %}
@@ -25,9 +28,49 @@ activeTab: "tab-decisions"
         {% set showDeleteConfirm = true %}
     {% endif %}
 
-    {% if (action == 'add') or ( (action == 'list') and (decisions is empty) ) %}
-        {% set showAddForm = true %}
+    {% if action == 'edit-reason' %}
+        {% set showNoDecisionForm = true %}
+    {% else %}
+
+        {% if (report.reasonForNoDecisions is not empty) %}
+            {% set showNoDecisionReason = true %}
+        {% endif %}
+
     {% endif %}
+
+    {% if action == 'delete-reason-confirm' %}
+        {% set showNoDecisionForm = true %}
+        {% set showDeleteReasonConfirm = true %}
+
+        {% set showNoDecisionReason = false %}
+    {% endif %}
+
+
+    {% if (decisions is empty) %}
+        {% if (report.isDue() ) %}
+
+            {% if ((action == 'list') and (report.reasonForNoDecisions() is empty)) %}
+                {% set showNoDecisionForm = true %}
+            {% elseif (action == 'add') %}
+                {% set showAddForm = true %}
+            {% endif %}
+
+        {% else %}
+
+            {% if ( (action == 'list') ) %}
+                {% set showAddForm = true %}
+            {% elseif (action == 'add') %}
+                {% set showAddForm = true %}
+            {% endif %}
+
+        {% endif %}
+    {% else %}
+        {% if (action == 'add') %}
+            {% set showAddForm = true %}
+        {% endif %}
+    {% endif %}
+
+
     {#  ***************************************** #}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -35,10 +78,18 @@ activeTab: "tab-decisions"
     {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
         transDomain: translationDomain,
         pageSectionTitle: 'page.pageSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Decision:_no_decision_form.html.twig' with {
+        'showNoDecisionForm': showNoDecisionForm
+        } %}
+
+        {% include 'AppBundle:Decision:_no_decision_reason.html.twig' with {
+        translationDomain: translationDomain,
+        'showNoDecisionReason': showNoDecisionReason
         } %}
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {

@@ -117,6 +117,8 @@ decision:
     clientInvolvedDetails:
         notBlank: Please write how much the client was involved in this decision
         length: The text must be at least {{ limit }} characters
+    no-decision-reason:
+        notBlank: Please enter a reason
 account:
     openingDate:
         invalidMessage: Opening Date is not valid
