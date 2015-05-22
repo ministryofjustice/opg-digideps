@@ -1,28 +1,13 @@
-{# displayed when a non-404 exception is thrown.
-Available variables: status_code, status_text, exception, logger,currentContent #}
-
-{% extends 'application.html.twig' %}
-
 {% trans_default_domain "error" %}
 
+{# displayable exception display the exact message thrown from the controller#}
 {% if exception is defined and exception.code == constant('\\AppBundle\\Exception\\DisplayableException::EXCEPTION_CODE') %}
     {% set message =  'generic.titleForDisplayableException' | trans({'%message%': exception.message}) | capitalize %}
  {% else %}
     {% set message = 'generic.title' | trans %}
  {% endif %}
-
-{% block pageTitle %} {{ message }} {% endblock %}
-
-{% block content %}
-     
-  {% include 'AppBundle:Partials:_service-header.html.twig' with {
-      serviceName: '',
-      title: message
-    }%}
-
-     <div style="margin:30px 0px">
-      <p class="page-section-description">{{ 'generic.description' | trans }}</p>
-      <a href="{{path('homepage')}}">{{ 'returnToHomePage' | trans }}</a>
-    </div>
-      
-{% endblock %}
+ 
+ {% include 'TwigBundle:Exception:template.html.twig' with {
+    message: message,
+    description: 'generic.description' | trans
+ } %}
