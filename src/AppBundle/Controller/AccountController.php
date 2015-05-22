@@ -25,6 +25,9 @@ class AccountController extends Controller
         $request = $this->getRequest();
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
         $client = $util->getClient($report->getClient());
 
         $accounts = $report->getAccounts();
@@ -33,12 +36,14 @@ class AccountController extends Controller
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
-        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        
+        // report submit logic
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
+        }
         
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
-            $reportSubmit->handleRequest($request);
-            
             if($form->get('save')->isClicked()){
                 if ($form->isValid()) {
                     $account = $form->getData();
@@ -49,13 +54,6 @@ class AccountController extends Controller
                         $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
                     );
                 }
-            }else{
-         
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
             }
         }
 
@@ -65,7 +63,7 @@ class AccountController extends Controller
             'action' => $action,
             'form' => $form->createView(),
             'accounts' => $accounts,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -85,9 +83,10 @@ class AccountController extends Controller
         $util = $this->get('util');
 
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
         $client = $util->getClient($report->getClient());
-        
-       
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
@@ -114,9 +113,8 @@ class AccountController extends Controller
         }
         
         // report submit logic
-        list($reportSubmit, $reportSubmitValid) = $this->handleAccountsubmitForm($report);
-        if ($reportSubmitValid) {
-            return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+            return $redirectResponse;
         }
         
         // edit/delete logic
@@ -150,25 +148,8 @@ class AccountController extends Controller
             'showDeleteConfirmation' => $action == 'delete',
             'account' => $account,
             'actionParam' => $action,
-            'report_form_submit' => $reportSubmit->createView()
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
-    }
-    
-    
-    /**
-     * @param EntityDir\Account $report
-     * 
-     * @return [FormDir\AccountTransactionsType, boolean]
-     */
-    private function handleAccountsubmitForm(EntityDir\Report $report)
-    {
-       $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
-       $reportSubmit->handleRequest($this->getRequest());
-       $valid = $reportSubmit->get('submitReport')->isClicked() 
-                && $reportSubmit->isValid() 
-                && $report->readyToSubmit();
-            
-        return [$reportSubmit, $valid];    
     }
     
     /**

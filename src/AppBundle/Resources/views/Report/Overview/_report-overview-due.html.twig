@@ -6,7 +6,7 @@ transDomain: translationDomain,
 pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
 } %}
 
-{% if report.readyToSubmit() %}
+{% if report.isReadyToSubmit() %}
 
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
     transDomain: translationDomain,

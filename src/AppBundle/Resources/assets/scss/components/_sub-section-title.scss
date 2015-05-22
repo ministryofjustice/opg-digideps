@@ -4,7 +4,7 @@
   .icon {
     float: left;
 
-    &+h3{
+    & + h3 {
       float: left;
       margin-top: 5px;
       margin-left: 10px;
@@ -17,7 +17,6 @@
 
   .form-group + & {
     margin-top: 20px;
-    margin-bottom: 10px;
   }
 
   .report-overview & {

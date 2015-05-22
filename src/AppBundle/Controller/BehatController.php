@@ -60,7 +60,7 @@ class BehatController extends Controller
      * @Route("/{secret}/report/{reportId}/change-report-cot/{cot}")
      * @Method({"GET"})
      */
-    public function changeReportCot($reportId, $cot)
+    public function reportChangeReportCot($reportId, $cot)
     {
         $this->checkIsBehatBrowser();
         $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
@@ -69,6 +69,21 @@ class BehatController extends Controller
         
         return new Response('done');
     }
+    
+    /**
+     * @Route("/{secret}/report/{reportId}/set-sumbmitted/{value}")
+     * @Method({"GET"})
+     */
+    public function reportChangeSubmitted($reportId, $value)
+    {
+        $this->checkIsBehatBrowser();
+        $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
+            'submitted' => ($value == 'true' || $value == 1)
+        ]));
+        
+        return new Response('done');
+    }
+    
     
     /**
      * @Route("/{secret}/delete-behat-users")

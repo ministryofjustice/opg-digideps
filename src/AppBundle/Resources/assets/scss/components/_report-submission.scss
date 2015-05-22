@@ -1,0 +1,34 @@
+.report-submission {
+
+  .tab-content .tab-pane{
+    border-top: 0;
+    padding-bottom: 40px;
+    border-bottom: 1px solid $grey-2;
+  }
+
+
+  .flash {
+      border-left: 3px solid $grey-2;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      width: 65%;
+      margin-bottom: 40px;
+      position: relative;
+      overflow: hidden;
+  }
+
+  #content  & p.page-section-description {
+      max-width: 540px;
+      @include bold-19();
+  }
+
+  .link {
+      margin-bottom: 20px;
+  }
+
+}
+
+.page-report-content.report-submission .page-body {
+    margin-top: 30px;
+}

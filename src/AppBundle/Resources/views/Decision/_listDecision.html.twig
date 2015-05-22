@@ -5,6 +5,7 @@ Component parameters
 showListData (true/false)
 showEditForm (true/false)
 showDeleteConfirm (true/false)
+showEditLink (true/false)
 form
 #}
 
@@ -12,6 +13,9 @@ form
 
     {% set translationDomain = "report-decisions" %}
     {% trans_default_domain translationDomain %}
+    {% if (showEditLink is not defined) %}
+    {%     set showEditLink = true %}
+    {% endif %}
 
     <ul class="behat-region-list-decisions report-list report-list--decisions">
         {% for decision in decisions %}
@@ -27,8 +31,10 @@ form
 
                 {% else %}
                     <div class="report-list__item-header"><h3>&nbsp;</h3>
-                        <a href="{{ url('decisions', {'reportId': report.id, 'action': 'edit', 'id': decision.id }) ~ "#edit-" ~ decision.id }}"
-                           class="js-report-list__item-edit-link report-list__item-edit-link behat-link-decision-n{{loop.index}}">{{ 'listing.edit-link'| trans }}</a>
+                        {% if (showEditLink == true) %}
+                            <a href="{{ url('decisions', {'reportId': report.id, 'action': 'edit', 'id': decision.id }) ~ "#edit-" ~ decision.id }}"
+                               class="js-report-list__item-edit-link report-list__item-edit-link behat-link-decision-n{{loop.index}}">{{ 'listing.edit-link'| trans }}</a>
+                       {% endif %}
                     </div>
                     <dl class="report-list__item-fields">
                         <div class="report-list__item-fields-row">

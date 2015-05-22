@@ -3,6 +3,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Service\ApiClient;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report;
 
 class Util
 {
@@ -55,8 +56,28 @@ class Util
         return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ], 'query' => ['groups' => $groups] ]);
     }
     
-    public function getReport($reportId,$userId, $groups = [ "transactions"])
+    public function getReport($reportId,$userId, $groups = [ "transactions", "basic"])
     {
         return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $userId ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
+    }
+    
+    /**
+     * @param Client $client
+     * @return Report[]
+     */
+    public function getReportsIndexedById($userId, Client $client, $groups)
+    {
+        $reportIds = $client->getReports();
+        
+        if(empty($reportIds)){
+            return [];
+        }
+        
+        $ret = [];
+        foreach($reportIds as $id){
+            $ret[$id] = $this->getReport($id, $userId, $groups);
+        }
+        
+        return $ret;
     }
 }

@@ -12,6 +12,7 @@ clientDetails:
 reportDataList:
   editReportingPeriod: "Edit Report dates"
   edit: "Edit reporting period"
+  downloadThisReportLink: Download this report  
   name: "Report Name"
   nameSuffix: " report"
   status: "Status:"

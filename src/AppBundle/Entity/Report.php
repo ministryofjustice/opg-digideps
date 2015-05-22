@@ -23,12 +23,14 @@ class Report
      * @Assert\NotBlank( message="report.startDate.notBlank")
      * @Assert\Date( message="report.startDate.invalidMessage" )
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"startEndDates"})
      * @var \DateTime $startDate
      */
     private $startDate;
     
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Groups({"startEndDates"})
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
      * @var \DateTime $endDate
@@ -38,7 +40,8 @@ class Report
     /**
      * @var \DateTime $submitDate
      * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
-     * @JMS\Type("DateTime<'Y-m-d'>")
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"submit"})
      */
     private $submitDate;
     
@@ -107,9 +110,22 @@ class Report
     
     /**
      * @JMS\Type("boolean")
+     * @JMS\Groups({"submit"})
+     * @Assert\True(message="report.submissionExceptions.submitted", groups={"submitted"})
+     * @Assert\False(message="report.submissionExceptions.notSubmitted", groups={"notSubmitted"})
+     * 
      * @var boolean
      */
     private $submitted;
+    
+    /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"reviewed"})
+     * @Assert\True(message="report.submissionExceptions.reviewedAndChecked", groups={"reviewedAndChecked"})
+     * 
+     * @var boolean
+     */
+    private $reviewed;
     
     /**
      * 
@@ -444,10 +460,10 @@ class Report
     }
     
     /**
-     * 
      * @return boolean
+     * @Assert\True(message="report.submissionExceptions.readyForSubmission", groups={"readyforSubmission"})
      */
-    public function readyToSubmit()
+    public function isReadyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
             if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions()){
@@ -492,6 +508,7 @@ class Report
     /**
      * Return true when the report is Due (today's date => report end date)
      * @return boolean
+     * @Assert\True(message="report.submissionExceptions.due", groups={"due"})
      */
     public function isDue()
     {
@@ -545,6 +562,22 @@ class Report
         return $this;
     }
     
+    /**
+     * @return boolean
+     */
+    public function getReviewed()
+    {
+        return $this->reviewed;
+    }
+
+    /**
+     * @param boolean $reviewed
+     */
+    public function setReviewed($reviewed)
+    {
+        $this->reviewed = $reviewed;
+    }
+        
     /**
      * @return string $status | null
      */

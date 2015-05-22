@@ -1,3 +1,8 @@
+/*
+***************************************************************
+    Do not import application specific code into this file.
+***************************************************************
+*/
 @-ms-viewport {
   width: device-width; }
 @-o-viewport {
@@ -13,9 +18,9 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -34,9 +39,9 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -59,9 +64,9 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -74,9 +79,9 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -95,9 +100,9 @@
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -108,29 +113,23 @@
   width: device-width; }
 details {
   display: block; }
-
-details summary {
-  display: inline-block;
-  color: #005ea5;
-  cursor: pointer;
-  position: relative;
-  margin-bottom: em(5); }
-
-details summary:hover {
-  color: #2e8aca; }
-
-details summary:focus {
-  outline: 3px solid #ffbf47; }
-
-details .summary {
-  text-decoration: underline; }
-
-details .arrow {
-  margin-right: 0.35em;
-  font-style: normal; }
-
-details .panel-indent {
-  margin-top: 0; }
+  details summary {
+    display: inline-block;
+    color: #005ea5;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: em(5); }
+    details summary:hover {
+      color: #2e8aca; }
+    details summary:focus {
+      outline: 3px solid #ffbf47; }
+  details .summary {
+    text-decoration: underline; }
+  details .arrow {
+    margin-right: .35em;
+    font-style: normal; }
+  details .panel-indent {
+    margin-top: 0; }
 
 @font-face {
   font-family: GDS-Logo;
@@ -423,9 +422,9 @@ code {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -533,15 +532,15 @@ fieldset {
   margin-top: 8px; }
 
 .form-control {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   font-family: "nta", Arial, sans-serif;
   font-size: 19px;
   line-height: 1.31579;
   font-weight: 400;
   text-transform: none;
   width: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   padding: 4px;
   background-color: #fff;
   border: 1px solid #bfc1c3;
@@ -570,18 +569,16 @@ fieldset {
 .form-radio {
   display: block;
   margin: 10px 0; }
-
-.form-radio input {
-  vertical-align: middle;
-  margin: -4px 5px 0 0; }
+  .form-radio input {
+    vertical-align: middle;
+    margin: -4px 5px 0 0; }
 
 .form-checkbox {
   display: block;
   margin: 15px 0; }
-
-.form-checkbox input {
-  vertical-align: middle;
-  margin: -2px 5px 0 0; }
+  .form-checkbox input {
+    vertical-align: middle;
+    margin: -2px 5px 0 0; }
 
 @-ms-viewport {
   width: device-width; }
@@ -595,44 +592,39 @@ fieldset {
 @-o-viewport {
   width: device-width; }
 .validation-summary {
-  border: 3px solid #df3034;
+  border: 3px solid #af1324;
   padding: 15px 30px;
   margin-bottom: 30px; }
-
-.validation-summary ul {
-  margin-top: 10px; }
-
-.validation-summary li,
-.validation-summary p {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.25;
-  font-weight: 400;
-  text-transform: none; }
-  @media (max-width: 640px) {
-    .validation-summary li,
-    .validation-summary p {
-      font-size: 14px;
-      line-height: 1.14286; } }
-
-.validation-summary p {
-  margin-top: 15px;
-  margin-bottom: 5px; }
-
-.validation-summary a {
-  color: #df3034; }
-
-.validation-summary .heading-small {
-  margin-top: 15px; }
+  .validation-summary ul {
+    margin-top: 10px; }
+  .validation-summary li,
+  .validation-summary p {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .validation-summary li,
+      .validation-summary p {
+        font-size: 14px;
+        line-height: 1.14286; } }
+  .validation-summary p {
+    margin-top: 15px;
+    margin-bottom: 5px; }
+  .validation-summary a {
+    color: #af1324; }
+  .validation-summary .heading-small {
+    margin-top: 15px; }
 
 .validation-message {
-  display: block;
   font-family: "nta", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.25;
   font-weight: 400;
   text-transform: none;
-  color: #df3034; }
+  display: block;
+  color: #af1324; }
   @media (max-width: 640px) {
     .validation-message {
       font-size: 14px;
@@ -704,9 +696,9 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -749,191 +741,191 @@ input[type=number] {
   background-repeat: no-repeat; }
 
 .icon-calendar {
-  background-image: image-url("icons/icon-calendar.png");
   width: 27px;
-  height: 27px; }
+  height: 27px;
+  background-image: image-url("icons/icon-calendar.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-calendar {
       background-image: image-url("icons/icon-calendar-2x.png");
       background-size: 100%; } }
 
 .icon-download {
-  background-image: image-url("icons/icon-file-download.png");
   width: 30px;
-  height: 39px; }
+  height: 39px;
+  background-image: image-url("icons/icon-file-download.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-download {
       background-image: image-url("icons/icon-file-download-2x.png");
       background-size: 100%; } }
 
 .icon-important {
-  background-image: image-url("icons/icon-important.png");
   width: 34px;
-  height: 34px; }
+  height: 34px;
+  background-image: image-url("icons/icon-important.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-important {
       background-image: image-url("icons/icon-important-2x.png");
       background-size: 100%; } }
 
 .icon-information {
-  background-image: image-url("icons/icon-information.png");
   width: 27px;
-  height: 27px; }
+  height: 27px;
+  background-image: image-url("icons/icon-information.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-information {
       background-image: image-url("icons/icon-information-2x.png");
       background-size: 100%; } }
 
 .icon-locator {
-  background-image: image-url("icons/icon-locator.png");
   width: 26px;
-  height: 36px; }
+  height: 36px;
+  background-image: image-url("icons/icon-locator.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-locator {
       background-image: image-url("icons/icon-locator-2x.png");
       background-size: 100%; } }
 
 .icon-search {
-  background-image: image-url("icons/icon-search.png");
   width: 30px;
   height: 22px;
-  background-color: black; }
+  background-color: #0b0c0c;
+  background-image: image-url("icons/icon-search.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-search {
       background-image: image-url("icons/icon-search-2x.png");
       background-size: 100%; } }
 
 .icon-pointer {
-  background-image: image-url("icons/icon-pointer.png");
   width: 30px;
   height: 19px;
-  background-color: black; }
+  background-color: #0b0c0c;
+  background-image: image-url("icons/icon-pointer.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-pointer {
       background-image: image-url("icons/icon-pointer-2x.png");
       background-size: 100%; } }
 
 .icon-pointer-black {
-  background-image: image-url("icons/icon-pointer-black.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-pointer-black.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-pointer-black {
       background-image: image-url("icons/icon-pointer-black-2x.png");
       background-size: 100%; } }
 
 .icon-step-1 {
-  background-image: image-url("icons/icon-steps/icon-step-1.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-1.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-1 {
       background-image: image-url("icons/icon-steps/icon-step-1-2x.png");
       background-size: 100%; } }
 
 .icon-step-2 {
-  background-image: image-url("icons/icon-steps/icon-step-2.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-2.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-2 {
       background-image: image-url("icons/icon-steps/icon-step-2-2x.png");
       background-size: 100%; } }
 
 .icon-step-3 {
-  background-image: image-url("icons/icon-steps/icon-step-3.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-3.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-3 {
       background-image: image-url("icons/icon-steps/icon-step-3-2x.png");
       background-size: 100%; } }
 
 .icon-step-4 {
-  background-image: image-url("icons/icon-steps/icon-step-4.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-4.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-4 {
       background-image: image-url("icons/icon-steps/icon-step-4-2x.png");
       background-size: 100%; } }
 
 .icon-step-5 {
-  background-image: image-url("icons/icon-steps/icon-step-5.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-5.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-5 {
       background-image: image-url("icons/icon-steps/icon-step-5-2x.png");
       background-size: 100%; } }
 
 .icon-step-6 {
-  background-image: image-url("icons/icon-steps/icon-step-6.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-6.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-6 {
       background-image: image-url("icons/icon-steps/icon-step-6-2x.png");
       background-size: 100%; } }
 
 .icon-step-7 {
-  background-image: image-url("icons/icon-steps/icon-step-7.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-7.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-7 {
       background-image: image-url("icons/icon-steps/icon-step-7-2x.png");
       background-size: 100%; } }
 
 .icon-step-8 {
-  background-image: image-url("icons/icon-steps/icon-step-8.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-8.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-8 {
       background-image: image-url("icons/icon-steps/icon-step-8-2x.png");
       background-size: 100%; } }
 
 .icon-step-9 {
-  background-image: image-url("icons/icon-steps/icon-step-9.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-9.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-9 {
       background-image: image-url("icons/icon-steps/icon-step-9-2x.png");
       background-size: 100%; } }
 
 .icon-step-10 {
-  background-image: image-url("icons/icon-steps/icon-step-10.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-10.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-10 {
       background-image: image-url("icons/icon-steps/icon-step-10-2x.png");
       background-size: 100%; } }
 
 .icon-step-11 {
-  background-image: image-url("icons/icon-steps/icon-step-11.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-11.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-11 {
       background-image: image-url("icons/icon-steps/icon-step-11-2x.png");
       background-size: 100%; } }
 
 .icon-step-12 {
-  background-image: image-url("icons/icon-steps/icon-step-12.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-12.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-12 {
       background-image: image-url("icons/icon-steps/icon-step-12-2x.png");
       background-size: 100%; } }
 
 .icon-step-13 {
-  background-image: image-url("icons/icon-steps/icon-step-13.png");
   width: 23px;
-  height: 23px; }
+  height: 23px;
+  background-image: image-url("icons/icon-steps/icon-step-13.png"); }
   @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
     .icon-step-13 {
       background-image: image-url("icons/icon-steps/icon-step-13-2x.png");
@@ -951,9 +943,9 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -972,9 +964,9 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -1023,9 +1015,9 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -1038,9 +1030,9 @@ input[type=number] {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -1171,9 +1163,9 @@ ol {
   width: device-width; }
 @-o-viewport {
   width: device-width; }
-.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent {
+.grid-row, fieldset, .form-group, .form-block, #content, .panel-indent, .account-header, .account-header .account-details, .account-header .account-details .account-detail, .account-header .account-balance {
   zoom: 1; }
-  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after {
+  .grid-row:after, fieldset:after, .form-group:after, .form-block:after, #content:after, .panel-indent:after, .account-header:after, .account-header .account-details:after, .account-header .account-details .account-detail:after, .account-header .account-balance:after {
     content: "";
     display: block;
     clear: both; }
@@ -1216,16 +1208,13 @@ ol {
   border-left: 4px solid #bfc1c3;
   padding: 10px 0 10px 15px;
   margin: 30px 15px 45px 0; }
-
-.panel-indent legend {
-  margin-top: 0; }
-
-.panel-indent p:only-child,
-.panel-indent p:last-child {
-  margin-bottom: 0; }
-
-.panel-indent .form-group:last-child {
-  margin-bottom: 0; }
+  .panel-indent legend {
+    margin-top: 0; }
+  .panel-indent p:only-child,
+  .panel-indent p:last-child {
+    margin-bottom: 0; }
+  .panel-indent .form-group:last-child {
+    margin-bottom: 0; }
 
 /* Borrowed from http://meyerweb.com/eric/tools/css/reset/ */
 div, span,
@@ -1266,41 +1255,37 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
   width: 100%; }
-
-table th,
-table td {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.25;
-  font-weight: 400;
-  text-transform: none;
-  padding: 0.75em 1.25em 0.5625em 0;
-  text-align: left;
-  color: #0b0c0c;
-  border-bottom: 1px solid #bfc1c3; }
-  @media (max-width: 640px) {
-    table th,
-    table td {
-      font-size: 14px;
-      line-height: 1.14286; } }
-
-table th {
-  font-weight: 700; }
-
-table th.numeric {
-  text-align: right; }
-
-table td.numeric {
-  font-family: "ntatabularnumbers", "nta", Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.25;
-  font-weight: 400;
-  text-transform: none;
-  text-align: right; }
-  @media (max-width: 640px) {
-    table td.numeric {
-      font-size: 14px;
-      line-height: 1.14286; } }
+  table th,
+  table td {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    padding: 0.75em 1.25em 0.5625em 0;
+    text-align: left;
+    color: #0b0c0c;
+    border-bottom: 1px solid #bfc1c3; }
+    @media (max-width: 640px) {
+      table th,
+      table td {
+        font-size: 14px;
+        line-height: 1.14286; } }
+  table th {
+    font-weight: 700; }
+    table th.numeric {
+      text-align: right; }
+  table td.numeric {
+    font-family: "ntatabularnumbers", "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none;
+    text-align: right; }
+    @media (max-width: 640px) {
+      table td.numeric {
+        font-size: 14px;
+        line-height: 1.14286; } }
 
 @-ms-viewport {
   width: device-width; }
@@ -1376,44 +1361,39 @@ input[type=number] {
 @-o-viewport {
   width: device-width; }
 .validation-summary {
-  border: 3px solid #df3034;
+  border: 3px solid #af1324;
   padding: 15px 30px;
   margin-bottom: 30px; }
-
-.validation-summary ul {
-  margin-top: 10px; }
-
-.validation-summary li,
-.validation-summary p {
-  font-family: "nta", Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.25;
-  font-weight: 400;
-  text-transform: none; }
-  @media (max-width: 640px) {
-    .validation-summary li,
-    .validation-summary p {
-      font-size: 14px;
-      line-height: 1.14286; } }
-
-.validation-summary p {
-  margin-top: 15px;
-  margin-bottom: 5px; }
-
-.validation-summary a {
-  color: #df3034; }
-
-.validation-summary .heading-small {
-  margin-top: 15px; }
+  .validation-summary ul {
+    margin-top: 10px; }
+  .validation-summary li,
+  .validation-summary p {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .validation-summary li,
+      .validation-summary p {
+        font-size: 14px;
+        line-height: 1.14286; } }
+  .validation-summary p {
+    margin-top: 15px;
+    margin-bottom: 5px; }
+  .validation-summary a {
+    color: #af1324; }
+  .validation-summary .heading-small {
+    margin-top: 15px; }
 
 .validation-message {
-  display: block;
   font-family: "nta", Arial, sans-serif;
   font-size: 16px;
   line-height: 1.25;
   font-weight: 400;
   text-transform: none;
-  color: #df3034; }
+  display: block;
+  color: #af1324; }
   @media (max-width: 640px) {
     .validation-message {
       font-size: 14px;
@@ -1421,7 +1401,7 @@ input[type=number] {
 
 /*
 ***************************************************************
-    Do need import application specific code into this file.
+    END - Do not import application specific code into this file.
 ***************************************************************
 */
 .session-timeout {
@@ -1475,7 +1455,9 @@ input[type=number] {
 .visuallyhidden + .account__edit {
   margin: 30px 0; }
 .account__edit .sub-section-title + .sub-section-description {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  margin-top: -20px;
+  float: left; }
 
 .account-closing-balance-form {
   margin-bottom: 30px;
@@ -1486,66 +1468,104 @@ input[type=number] {
   position: relative;
   background-color: #f8f8f8;
   padding: 20px;
-  overflow: hidden;
   margin-bottom: 30px; }
-  .account-header__item-fields {
+  .account-header .account-name {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 27px;
+    line-height: 1.11111;
+    font-weight: 700;
+    text-transform: none;
+    margin-bottom: 10px; }
+    @media (max-width: 640px) {
+      .account-header .account-name {
+        font-size: 20px;
+        line-height: 1.11111; } }
+  .account-header .edit-account-details {
+    float: none;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    width: auto;
     font-family: "nta", Arial, sans-serif;
     font-size: 19px;
     line-height: 1.31579;
     font-weight: 400;
     text-transform: none; }
     @media (max-width: 640px) {
-      .account-header__item-fields {
+      .account-header .edit-account-details {
         font-size: 16px;
         line-height: 1.25; } }
-  .account-header__item-fields-set {
-    float: left;
-    width: 56%;
-    overflow: hidden; }
-    .account-header__item-fields-set--left {
-      width: 40%; }
-    .account-header__item-fields-set--opening-date {
-      position: absolute;
-      top: 53px; }
-    .account-header__item-fields-set--closing-date {
-      position: absolute;
-      top: 78px;
-      margin-top: 5px; }
-    .account-header__item-fields-set--closing-balance {
-      margin-top: 5px; }
-    .account-header__item-fields-set--edit-link {
-      float: none;
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      width: auto; }
-  .account-header__item-fields-term {
-    display: inline;
-    margin-right: 20px;
-    color: #6f777b; }
-  .account-header__item-fields-description {
-    display: inline;
-    font-weight: 700; }
-    .account-header__item-fields-description--balance {
-      margin-left: 150px; }
-    .account-header__item-fields-description--opening-date {
-      margin: 0 0 0 175px;
-      font-weight: 400; }
-    .account-header__item-fields-description--sort-code {
-      margin-left: 20px; }
-    .account-header__item-fields-description--edit-link {
-      font-weight: 400; }
-  .account-header__title {
+  .account-header .account-details {
+    width: 40%;
+    max-width: 315px;
+    float: right;
     font-family: "nta", Arial, sans-serif;
-    font-size: 24px;
-    line-height: 1.25;
-    font-weight: 700;
-    text-transform: none;
-    font-size: 27px; }
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
     @media (max-width: 640px) {
-      .account-header__title {
-        font-size: 18px;
-        line-height: 1.2; } }
+      .account-header .account-details {
+        font-size: 16px;
+        line-height: 1.25; } }
+    .account-header .account-details .account-detail {
+      text-align: right; }
+    .account-header .account-details .label {
+      width: 50%;
+      max-width: 115px;
+      color: #6f777b;
+      float: left;
+      white-space: nowrap; }
+    .account-header .account-details .value {
+      font-family: "nta", Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.31579;
+      font-weight: 700;
+      text-transform: none;
+      white-space: nowrap;
+      max-width: 100px;
+      width: 50%;
+      float: left; }
+      @media (max-width: 640px) {
+        .account-header .account-details .value {
+          font-size: 16px;
+          line-height: 1.25; } }
+  .account-header .account-balance {
+    width: 60%;
+    float: left;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .account-header .account-balance {
+        font-size: 16px;
+        line-height: 1.25; } }
+    .account-header .account-balance .label {
+      width: 38%;
+      margin: 0;
+      padding: 0;
+      color: #6f777b;
+      white-space: nowrap;
+      float: left; }
+    .account-header .account-balance .date {
+      float: left;
+      width: 27%;
+      white-space: nowrap; }
+    .account-header .account-balance .value {
+      float: left;
+      width: 35%;
+      white-space: nowrap;
+      font-family: "nta", Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.31579;
+      font-weight: 700;
+      text-transform: none; }
+      @media (max-width: 640px) {
+        .account-header .account-balance .value {
+          font-size: 16px;
+          line-height: 1.25; } }
 
 .account-transactions {
   overflow: hidden; }
@@ -1792,6 +1812,9 @@ header.page-header {
         content: "";
         margin: 0; }
 
+.navigation-back {
+  margin-top: 40px; }
+
 .button-bar {
   margin-top: 10px;
   margin-bottom: 10px; }
@@ -1898,8 +1921,7 @@ header.page-header {
     .data-item--your-details dd.data-item-fields-description--header .data-item-edit-link {
       margin-left: 353px; }
   .data-list--client-list-reports .data-item {
-    padding: 20px 0 10px 0;
-    border-bottom: 1px solid #dee0e2; }
+    padding: 20px 0 20px 0; }
     .data-list--client-list-reports .data-item dd.data-item-fields-description--header .data-item-edit-link {
       margin-right: 110px; }
     .data-list--client-list-reports .data-item .data-item-fields-row {
@@ -1994,18 +2016,18 @@ header.page-header {
   display: none; }
 
 .field-combo-with-errors, .field-with-errors {
-  border-left: 3px solid #df3034;
+  border-left: 3px solid #af1324;
   padding: 0 0 0 15px; }
   fieldset .field-combo-with-errors, fieldset .field-with-errors {
     border-left: 0; }
 
 .field-with-errors input, .field-with-errors select, .field-with-errors textarea {
-  border: 2px solid #df3034; }
+  border: 2px solid #af1324; }
 
 .field-with-errors ul {
   width: auto; }
 .field-with-errors li {
-  color: #df3034;
+  color: #af1324;
   width: auto; }
 
 .button-link {
@@ -2023,7 +2045,7 @@ form {
     padding-left: 10px; }
   form.in-page-form {
     border-left: 3px solid #bfc1c3;
-    padding-left: 10px; }
+    padding-left: 15px; }
     form.in-page-form .form-date .form-group input {
       width: 100%; }
     form.in-page-form .form-group .form-control {
@@ -2046,6 +2068,9 @@ form {
       margin-top: 40px; }
     form.in-page-form .data-item, .report-list__item form.in-page-form {
       margin-bottom: 20px; }
+    .data-item form.in-page-form {
+      padding-top: 6px;
+      padding-bottom: 3px; }
 
 .form--client-add-report {
   margin: 40px 0 20px 0; }
@@ -2288,6 +2313,13 @@ form {
   display: none; }
   .tabs-panel.tabs-panel-selected {
     display: block; }
+
+.notification-summary__container {
+  width: 85%;
+  padding: 0;
+  margin: 40px 0 0 0; }
+.notification-summary .page-section-warning {
+  width: 100%; }
 
 .page-body {
   margin-top: 0;
@@ -2552,6 +2584,36 @@ ol.progress {
 .report-declaration .tab-content .tab-pane {
   border-top: 0; }
 
+.report-submission .tab-content .tab-pane {
+  border-top: 0;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #bfc1c3; }
+.report-submission .flash {
+  border-left: 3px solid #bfc1c3;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  width: 65%;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden; }
+#content .report-submission p.page-section-description {
+  max-width: 540px;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 700;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    #content .report-submission p.page-section-description {
+      font-size: 16px;
+      line-height: 1.25; } }
+.report-submission .link {
+  margin-bottom: 20px; }
+
+.page-report-content.report-submission .page-body {
+  margin-top: 30px; }
+
 .report-list {
   border-top: 1px solid #dee0e2;
   border-bottom: 1px solid #dee0e2;
@@ -2791,13 +2853,143 @@ ol.progress {
         font-size: 18px;
         line-height: 1.2; } }
   .form-group + .sub-section-title {
-    margin-top: 20px;
-    margin-bottom: 10px; }
+    margin-top: 20px; }
   .report-overview .sub-section-title {
     margin-bottom: 10px; }
 
 .user-list {
   margin-top: 60px; }
+
+.financial-transactions {
+  background: #f8f8f8; }
+  .financial-transactions .financial-transactions-title {
+    background: #dee0e2;
+    padding: 15px 20px 15px 20px;
+    margin: 0; }
+  .financial-transactions .financial-transactions-list {
+    padding: 0; }
+  .financial-transactions .transaction {
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid #bfc1c3;
+    display: block;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 19px;
+    line-height: 1.31579;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .financial-transactions .transaction {
+        font-size: 16px;
+        line-height: 1.25; } }
+    .financial-transactions .transaction .transaction-label {
+      width: 80%;
+      float: left; }
+    .financial-transactions .transaction .transaction-value {
+      display: inline-block;
+      width: 20%; }
+  .financial-transactions .financial-transactions-total {
+    margin: 0;
+    padding: 20px;
+    border-bottom: 1px solid #bfc1c3;
+    display: block;
+    overflow: hidden;
+    font-family: "nta", Arial, sans-serif;
+    font-size: 24px;
+    line-height: 1.25;
+    font-weight: 400;
+    text-transform: none; }
+    @media (max-width: 640px) {
+      .financial-transactions .financial-transactions-total {
+        font-size: 18px;
+        line-height: 1.2; } }
+    .financial-transactions .financial-transactions-total .financial-transactions-total-label {
+      width: 78%;
+      float: left;
+      font-weight: bold; }
+    .financial-transactions .financial-transactions-total .financial-transactions-total-total {
+      display: inline-block;
+      width: 22%; }
+
+.financial-transactions-balance {
+  margin: 0;
+  padding: 40px 20px 20px 20px;
+  background: #fff;
+  border-bottom: none;
+  display: block;
+  overflow: hidden;
+  font-family: "nta", Arial, sans-serif;
+  font-size: 27px;
+  line-height: 1.11111;
+  font-weight: 400;
+  text-transform: none; }
+  @media (max-width: 640px) {
+    .financial-transactions-balance {
+      font-size: 20px;
+      line-height: 1.11111; } }
+  .financial-transactions-balance .financial-transactions-balance-label {
+    float: left;
+    width: 77%;
+    font-weight: bold; }
+  .financial-transactions-balance .financial-transactions-balance-value {
+    width: 23%;
+    display: inline-block; }
+
+.external-report header.page-header .page-header-titles .report-title {
+  display: block;
+  float: none;
+  font-weight: normal;
+  margin: 0 0 20px 0; }
+.external-report header.page-header .page-header-titles .client-name {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 48px;
+  line-height: 1.04167;
+  font-weight: 700;
+  text-transform: none;
+  margin-top: 10px;
+  margin-bottom: 0px; }
+  @media (max-width: 640px) {
+    .external-report header.page-header .page-header-titles .client-name {
+      font-size: 32px;
+      line-height: 1.09375; } }
+.external-report header.page-header .data-item-fields-description {
+  margin-left: 160px; }
+.external-report header.page-header {
+  padding: 0 0 40px 0;
+  border-bottom: 1px solid #dee0e2; }
+.external-report .external-report-section {
+  padding: 40px 0 40px 0;
+  border-bottom: 1px solid #dee0e2; }
+.external-report .page-section-description, .external-report .report-list {
+  width: auto;
+  max-width: 535px; }
+.external-report .external-report-section-contacts .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
+.external-report .external-report-section-decisions .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
+  margin-right: 0; }
+.external-report .report-list {
+  border-top: 0;
+  border-bottom: 0;
+  padding-left: 0;
+  margin-top: 0; }
+  .external-report .report-list .report-list__item:first-child {
+    padding-top: 0; }
+  .external-report .report-list .report-list__item:last-child {
+    padding-bottom: 0; }
+  .external-report .report-list .report-list__item .report-list__item-fields .report-list__item-fields-row:last-child {
+    margin-bottom: 0; }
+.external-report .external-report-section-declaration .data-item-fields-description {
+  margin-left: 160px; }
+.external-report .external-report-section-accounts {
+  padding-bottom: 20px; }
+  .external-report .external-report-section-accounts .account-header {
+    margin-bottom: 0;
+    background: #f4f4f4; }
+    .external-report .external-report-section-accounts .account-header .account-header__item-fields-set {
+      width: 65%; }
+    .external-report .external-report-section-accounts .account-header .account-header__item-fields-set--left {
+      width: 35%; }
+    .external-report .external-report-section-accounts .account-header .account-header__item-fields-description--balance {
+      margin-left: 135px; }
 
 span.icon {
   /*
@@ -2902,9 +3094,9 @@ span.icon {
 @-o-viewport {
   width: device-width; }
 .validation-summary-container {
-  width: 50%;
   padding: 0;
-  margin: 40px 0 0 0; }
+  margin: 40px 0 40px 0;
+  max-width: 540px; }
   .page-report-content .validation-summary-container {
     margin-bottom: 20px; }
 
