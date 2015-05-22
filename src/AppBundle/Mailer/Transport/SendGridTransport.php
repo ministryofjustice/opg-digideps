@@ -4,6 +4,7 @@ namespace AppBundle\Mailer\Transport;
 use Swift_Transport;
 use Swift_Events_EventListener;
 use Swift_Mime_Message;
+use Swift_Attachment;
 use SendGrid\Email;
 use AppBundle\Mailer\Utils\MessageUtils;
 use SendGrid;
@@ -107,9 +108,11 @@ class SendGridTransport implements Swift_Transport
         
         // add attachments
         foreach ($message->getChildren() as $children) { /* @var $children \Swift_Mime_MimeEntity */
-            // sendgrid only supports adding attachments from a file.
-            file_put_contents($this->temporaryAttachment, $children->getBody());
-            //$email->addAttachment($this->temporaryAttachment);
+            if ($children instanceof Swift_Attachment) {
+                // add attachment via file (the only method supported by sendgrid)
+                file_put_contents($this->temporaryAttachment, $children->getBody());
+                $email->addAttachment($this->temporaryAttachment, $children->getFilename());
+            }
         }
         
         return $email;
