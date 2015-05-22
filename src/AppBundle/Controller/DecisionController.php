@@ -60,7 +60,7 @@ class DecisionController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        
+
         if(in_array($action, [ 'edit', 'delete-confirm']) && in_array($id,$report->getDecisions())){
             $decision = $apiClient->getEntity('Decision','get_report_decision', [ 'parameters' => ['id' => $id ] ]);
 
@@ -78,7 +78,7 @@ class DecisionController extends Controller
 
         $decision->setReportId($reportId);
         $decision->setReport($report);
-        
+
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
             return $redirectResponse;
@@ -90,7 +90,8 @@ class DecisionController extends Controller
         if ($request->isMethod('POST')) {
 
             $form->handleRequest($request);
-           
+            $noDecision->handleRequest($request);
+
             if($form->get('save')->isClicked()){
 
                 if ($form->isValid()) {
@@ -99,6 +100,19 @@ class DecisionController extends Controller
 
                     return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
                 }
+            } elseif ($noDecision->get('saveReason')->isClicked()){
+
+                if($noDecision->isValid()){
+                    $this->handleReasonForNoDecision($action, $noDecision, $reportId);
+                    return $this->redirect($this->generateUrl('decisions',[ 'reportId' => $report->getId()]));
+                }
+            }else{
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
+                }
+
             }
         }
 
