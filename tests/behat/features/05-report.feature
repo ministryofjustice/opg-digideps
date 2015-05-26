@@ -676,6 +676,7 @@ Feature: report
         And I press "report_declaration_save"
         And the form should not contain an error
         And the URL should match "/report/\d+/submitted"
+        And I should not see the "application-error" region
         #And an email with subject "Report submission from Digital Deputy" should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
     @deputy

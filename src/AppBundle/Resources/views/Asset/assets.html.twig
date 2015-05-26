@@ -10,6 +10,7 @@ activeTab: "tab-assets"
     {% set showAddForm = false %}
     {% set showEditForm = false %}
     {% set showDeleteConfirm = false %}
+    {% set showNoAssetToAddForm = false %}
 
     {% if assets is not empty %}
         {% set showListData = true %}
@@ -25,7 +26,7 @@ activeTab: "tab-assets"
         {% set showDeleteConfirm = true %}
     {% endif %}
 
-    {% if (action == 'add') or ( (action == 'list') and (assets is empty) ) %}
+    {% if (action == 'add') or ( (action == 'list') and (assets is empty) and (not report.isDue())) %}
         {% set showAddForm = true %}
     {% endif %}
 
@@ -34,7 +35,9 @@ activeTab: "tab-assets"
     {% endif %}
 
 
-
+    {% if (assets is empty) and report.isDue() and (report.noAssetToAdd is empty) %}
+        {% set showNoAssetToAddForm = true %}
+    {% endif %}
     {#  ***************************************** #}
 
 
@@ -47,6 +50,16 @@ activeTab: "tab-assets"
         transDomain: translationDomain,
         pageSectionTitle: 'page.pageSectionTitle'
         } %}
+        
+        
+        {% if report.noAssetToAdd is not empty %}
+          <span class="behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</span>
+        {% else %}
+            {% include 'AppBundle:Asset:_no_asset_form.html.twig' with {
+                'showNoAssetToAddForm': showNoAssetToAddForm
+            } %}
+        {% endif %}
+        
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
