@@ -105,6 +105,6 @@ module.exports = function (grunt) {
     });
 
     // Register Grunt Tasks
-    grunt.registerTask('default', ['copy', 'sass', 'watch']);
+    grunt.registerTask('default', ['copy']);
 
 };
