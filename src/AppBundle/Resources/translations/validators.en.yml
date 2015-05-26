@@ -164,6 +164,8 @@ asset:
     date:
         notBlank: Please enter asset valuation date
         date: Please enter a valid asset valuation date
+    no_assets:
+        notBlank: Please tell us if you have no assets to add
 # validation messages for common elements (e.g. phone fields)        
 common:
   genericPhone:
