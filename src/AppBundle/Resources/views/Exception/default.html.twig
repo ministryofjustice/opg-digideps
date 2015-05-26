@@ -5,7 +5,7 @@
 {% block pageTitle %} {% trans %}Application error{% endtrans %} {% endblock %}
 
 {% block content %}
-    
+    <div class="application-error">
      {% if displayable %}
         {% set message =  exception.message %}
      {% else %}
@@ -22,5 +22,5 @@
         <pre>
             {{ dump(exception) }}
         </pre>#}
-   
+   </div>
 {% endblock %}

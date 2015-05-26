@@ -2280,6 +2280,19 @@ form {
   .tabs-panel.tabs-panel-selected {
     display: block; }
 
+#content p.nothing-selected {
+  font-family: "nta", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.31579;
+  font-weight: 700;
+  text-transform: none;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #dee0e2; }
+  @media (max-width: 640px) {
+    #content p.nothing-selected {
+      font-size: 16px;
+      line-height: 1.25; } }
+
 .notification-summary__container {
   width: 85%;
   padding: 0;
@@ -2319,7 +2332,7 @@ form {
     text-decoration: underline;
     color: inherit; }
 .page-report-content .no-data-form {
-  padding: 20px 0 10px 65px;
+  padding: 20px 0 10px 20px;
   margin-bottom: 30px; }
   .page-report-content .no-data-form .sub-section-description {
     position: relative;
@@ -2334,6 +2347,8 @@ form {
       float: left;
       margin-top: 6px;
       width: 50%; }
+  .page-report-content .no-data-form .sub-section-description.sub-section-description-with-icon {
+    margin-left: 0px; }
   .page-report-content .no-data-form .form-control {
     width: 60%;
     height: 100px; }

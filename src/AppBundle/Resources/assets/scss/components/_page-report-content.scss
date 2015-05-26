@@ -25,7 +25,7 @@
   }
 
   .no-data-form {
-    padding: 20px 0 10px 65px;
+    padding: 20px 0 10px 20px;
     margin-bottom: 30px;
 
     .sub-section-description {
@@ -45,6 +45,10 @@
         margin-top: 6px;
         width: 50%;
       }
+    }
+    
+    .sub-section-description.sub-section-description-with-icon {
+        margin-left: 0px;
     }
 
     .form-control {

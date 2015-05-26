@@ -116,6 +116,12 @@ class Report
     
     /**
      * @JMS\Type("boolean")
+     * @var boolean $noAssetToAdd
+     */
+    private $noAssetToAdd;
+    
+    /**
+     * @JMS\Type("boolean")
      * @JMS\Groups({"submit"})
      * @Assert\True(message="report.submissionExceptions.submitted", groups={"submitted"})
      * @Assert\False(message="report.submissionExceptions.notSubmitted", groups={"notSubmitted"})
@@ -459,7 +465,7 @@ class Report
             return false;
         }
         
-        if(empty($this->assets)){
+        if(empty($this->assets) && (!$this->noAssetToAdd)){
             return true;
         }
         return false;
@@ -566,6 +572,25 @@ class Report
     public function getReasonForNoDecisions()
     {
         return $this->reasonForNoDecisions;
+    }
+    
+    /**
+     * @return boolean $noAssetToAdd
+     */
+    public function getNoAssetToAdd()
+    {
+        return $this->noAssetToAdd;
+    }
+    
+    /**
+     * 
+     * @param boolean $noAssetToAdd
+     * @return \AppBundle\Entity\Report
+     */
+    public function setNoAssetToAdd($noAssetToAdd)
+    {
+        $this->noAssetToAdd = $noAssetToAdd;
+        return $this;
     }
     
     /**
