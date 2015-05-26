@@ -149,6 +149,7 @@ class Report
     /**
      * @var boolean
      * @JMS\Type("boolean")
+     * @JMS\Groups({"transactions","basic"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false})
      */
     private $noAssetToAdd;
