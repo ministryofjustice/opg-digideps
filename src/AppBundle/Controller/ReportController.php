@@ -110,7 +110,7 @@ class ReportController extends Controller
                 'deserialise_group' => 'submit',
             ]);
             // send report by email
-            //$this->sendByEmail($report);
+            $this->sendByEmail($report);
             
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
         }
@@ -137,8 +137,8 @@ class ReportController extends Controller
             ->setToEmail($emailConfig['to_email'])
             ->setToName($translator->trans('reportSubmission.toName',[], 'email'))
             ->setSubject($translator->trans('reportSubmission.subject',[], 'email'))
-            ->setBodyHtml($this->renderView('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
+            ->setBodyHtml($this->renderView('AppBundle:Email:report-submission.html.twig'));
+            //->setAttachments([new EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
 
         $this->get('mailSender')->send($email,[ 'html'], 'secure-smtp');
     }
