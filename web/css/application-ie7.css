@@ -2361,7 +2361,7 @@ form {
     text-decoration: underline;
     color: inherit; }
 .page-report-content .no-data-form {
-  padding: 20px 0 10px 65px;
+  padding: 20px 0 10px 20px;
   margin-bottom: 30px; }
   .page-report-content .no-data-form .sub-section-description {
     position: relative;
