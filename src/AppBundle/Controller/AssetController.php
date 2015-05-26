@@ -56,6 +56,7 @@ class AssetController extends Controller
         $titles['Other assets'] = $other;
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -105,10 +106,9 @@ class AssetController extends Controller
                     return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
                 }
             }elseif($noAssetsToAdd->get('saveNoAsset')->isClicked()){
-
+                
                 if($noAssetsToAdd->isValid()){
-
-                    $report->setNoAssetToAdd(1);
+                    $report->setNoAssetToAdd(true);
                     $apiClient->putC('report/'.$report->getId(),$report);
                     return $this->redirect($this->generateUrl('assets',[ 'reportId' => $report->getId()]));
                 }
