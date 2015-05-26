@@ -53,7 +53,7 @@ activeTab: "tab-assets"
         
         
         {% if report.noAssetToAdd is not empty %}
-          <span class="behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</span>
+          <p class="no-assets-selected nothing-selected page-section-description behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</p>
         {% else %}
             {% include 'AppBundle:Asset:_no_asset_form.html.twig' with {
                 'showNoAssetToAddForm': showNoAssetToAddForm
