@@ -1,11 +1,5 @@
 "use strict";
 
-/*
- TODO: Fix auto copy of JS files
- TODO: Implement a watch on the scss folder and auto insert files to the application.scss
- */
-
-
 module.exports = function (grunt) {
 
     var scssPath = 'src/AppBundle/Resources/assets/scss';
@@ -21,6 +15,8 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        clean: ["web/images", "web/javascripts", "web/js", "web/css", "web/stylesheets", "src/AppBundle/Resources/views/Email/css",],
+
         sass: {
             dist: {
                 files: [
@@ -29,6 +25,13 @@ module.exports = function (grunt) {
                         cwd: scssPath,
                         src: ['*.scss'],
                         dest: 'web/css',
+                        ext: '.css'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'bower_downloads/moj_template/source/assets/stylesheets',
+                        src: ['*.scss'],
+                        dest: 'web/stylesheets',
                         ext: '.css'
                     },
                     {
@@ -64,22 +67,40 @@ module.exports = function (grunt) {
         },
 
         copy: {
-            copyMoJImages: {
+            copyGDSElementsImages: {
+                cwd: 'bower_downloads/govuk_elements/govuk/public/images',
+                src: ['**/*'],
+                dest: 'web/images',
+                expand: true
+            },
+            copyGDSToolkitImages: {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/images',
                 src: ['**/*'],
                 dest: 'web/images',
                 expand: true
             },
-            copyGDSImages: {
-                cwd: 'bower_downloads/govuk_frontend_toolkit/images',
+            copyGDSElementsJS: {
+                cwd: 'bower_downloads/govuk_elements/govuk/public/javascripts',
                 src: ['**/*'],
-                dest: 'web/images',
+                dest: 'web/javascripts',
                 expand: true
             },
-            copyGDSJS: {
+            copyGDSToolkitJS: {
                 cwd: 'bower_downloads/govuk_frontend_toolkit/javascripts',
                 src: ['**/*'],
                 dest: 'web/javascripts',
+                expand: true
+            },
+            copyMojJS: {
+                cwd: 'bower_downloads/moj_template/source/assets/javascripts',
+                src: ['**/*'],
+                dest: 'web/javascripts',
+                expand: true
+            },
+            copyGDSStylesheets: {
+                cwd: 'bower_downloads/govuk_elements/govuk/public/stylesheets',
+                src: ['**/*'],
+                dest: 'web/stylesheets',
                 expand: true
             },
             copyPlugins: {
@@ -94,6 +115,12 @@ module.exports = function (grunt) {
                 dest: 'web/js',
                 expand: true
             },
+            copyImages: {
+                cwd: 'src/AppBundle/Resources/assets/images',
+                src: ['**/*' ],
+                dest: 'web/images',
+                expand: true
+            },
             copyHTML5shiv: {
                 cwd: 'bower_downloads/html5shiv/dist',
                 src: ['**/*'],
@@ -102,9 +129,11 @@ module.exports = function (grunt) {
             }
         }
 
+
     });
 
     // Register Grunt Tasks
-    grunt.registerTask('default', ['copy', 'sass', 'watch']);
+    grunt.registerTask('default', ['clean', 'copy', 'sass']);
+    
 
 };
