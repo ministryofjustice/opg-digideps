@@ -44,7 +44,7 @@ module.exports = function (grunt) {
                 ],
                 options: {
                     loadPath: [
-                        'bower_downloads/govuk_frontend_toolkit/stylesheets',
+                        'bower_downloads/govuk_elements/govuk/public/sass',
                         'bower_downloads/govuk_elements/public/sass/elements'
                     ]
                 }
