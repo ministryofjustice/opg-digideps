@@ -56,6 +56,7 @@ class AssetController extends Controller
         $titles['Other assets'] = $other;
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -75,20 +76,48 @@ class AssetController extends Controller
         }
 
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
+
+        $reportSubmit = $this->createForm(new FormDir\ReportSubmitType($this->get('translator')));
+        $noAssetsToAdd = $this->createForm(new FormDir\NoAssetToAddType());
         
         if($request->getMethod() == 'POST'){
+            
             $form->handleRequest($request);
+            
+            $reportSubmit->handleRequest($request);
+            $noAssetsToAdd->handleRequest($request);
+            
             if($form->get('save')->isClicked()){
                 if($form->isValid()){
                     $asset = $form->getData();
                     
                     if($action == 'add'){
+                        
                         $asset->setReport($reportId);
                         $apiClient->postC('add_report_asset', $asset);
+                    
+                        //lets clear no assets selected if the previously selected this
+                        $report->setNoAssetToAdd(0);
+                        $apiClient->putC('report/'.$report->getId(),$report);
+                    
                     }else{
                         $apiClient->putC('update_report_asset', $asset);
                     }
                     return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId ]));
+                }
+            }elseif($noAssetsToAdd->get('saveNoAsset')->isClicked()){
+                
+                if($noAssetsToAdd->isValid()){
+                    $report->setNoAssetToAdd(true);
+                    $apiClient->putC('report/'.$report->getId(),$report);
+                    return $this->redirect($this->generateUrl('assets',[ 'reportId' => $report->getId()]));
+                }
+            }else{
+
+                if($reportSubmit->isValid()){
+                    if($report->readyToSubmit()){
+                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
+                    }
                 }
             }
         }
@@ -98,6 +127,7 @@ class AssetController extends Controller
             'client' => $client,
             'action' => $action,
             'form'   => $form->createView(),
+            'no_assets_to_add' => $noAssetsToAdd->createView(),
             'assets' => $assets,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
