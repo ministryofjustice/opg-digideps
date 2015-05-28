@@ -134,6 +134,6 @@ module.exports = function (grunt) {
 
     // Register Grunt Tasks
     grunt.registerTask('default', ['clean', 'copy', 'sass']);
-    
+    grunt.registerTask('build', ['clean', 'copy', 'sass']);
 
 };

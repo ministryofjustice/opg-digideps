@@ -3,8 +3,9 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
+        "all": "grunt clean && bower install && grunt build",
         "clean": "grunt clean",
-        "build" : "grunt ",
+        "build" : "grunt build",
         "build-css": "grunt sass",
         "watch":"grunt watch",
         "dependencies":"bower install"
