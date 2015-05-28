@@ -265,6 +265,10 @@ class ReportController extends RestController
             $report->setReasonForNoDecisions($data['reason_for_no_decisions']);
         }
         
+        if (array_key_exists('no_asset_to_add', $data)) {
+            $report->setNoAssetToAdd($data['no_asset_to_add']);
+        }
+        
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
