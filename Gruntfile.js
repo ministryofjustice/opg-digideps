@@ -70,28 +70,22 @@ module.exports = function (grunt) {
         },
 
         copy: {
-            copyGDSElementsImages: {
+            copyGovUkImages: {
                 cwd: 'bower_downloads/govuk_elements/govuk/public/images',
                 src: ['**/*'],
                 dest: 'web/images',
                 expand: true
             },
-            copyGDSToolkitImages: {
-                cwd: 'bower_downloads/govuk_frontend_toolkit/images',
-                src: ['**/*'],
-                dest: 'web/images',
-                expand: true
-            },
-            copyGDSElementsJS: {
+            copyGovUkJS: {
                 cwd: 'bower_downloads/govuk_elements/govuk/public/javascripts',
                 src: ['**/*'],
                 dest: 'web/javascripts',
                 expand: true
             },
-            copyGDSToolkitJS: {
-                cwd: 'bower_downloads/govuk_frontend_toolkit/javascripts',
+            copyGovUkStylesheets: {
+                cwd: 'bower_downloads/govuk_elements/govuk/public/stylesheets',
                 src: ['**/*'],
-                dest: 'web/javascripts',
+                dest: 'web/stylesheets',
                 expand: true
             },
             copyMojJS: {
@@ -100,12 +94,7 @@ module.exports = function (grunt) {
                 dest: 'web/javascripts',
                 expand: true
             },
-            copyGDSStylesheets: {
-                cwd: 'bower_downloads/govuk_elements/govuk/public/stylesheets',
-                src: ['**/*'],
-                dest: 'web/stylesheets',
-                expand: true
-            },
+
             copyPlugins: {
                 cwd: 'bower_downloads',
                 src: ['jquery/dist/**/*', 'jquery-validation/dist/**/*' ],
