@@ -3,7 +3,7 @@
 module.exports = function (grunt) {
 
     var scssPath = 'src/AppBundle/Resources/assets/scss';
-    var jsPath = 'src/AppBundle/Resources/assets/js';
+    var jsPath = 'src/AppBundle/Resources/assets/javascripts';
 
     console.log("Grunt Starting up" + scssPath);
 
@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
-        clean: ["web/images", "web/javascripts", "web/js", "web/css", "web/stylesheets", "src/AppBundle/Resources/views/Email/css",],
+        clean: ["web/images", "web/javascripts", "web/stylesheets", "src/AppBundle/Resources/views/Email/css",],
 
         sass: {
             dist: {
@@ -24,7 +24,7 @@ module.exports = function (grunt) {
                         expand: true,
                         cwd: scssPath,
                         src: ['*.scss'],
-                        dest: 'web/css',
+                        dest: 'web/stylesheets',
                         ext: '.css'
                     },
                     {
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
             },
             js: {
                 files: [jsPath + '/**/*.js'],
-                task: ['sass']
+                task: ['copy:copyJS']
             }
         },
 
@@ -113,9 +113,9 @@ module.exports = function (grunt) {
                 expand: true
             },
             copyJS: {
-                cwd: 'src/AppBundle/Resources/assets/js',
+                cwd: 'src/AppBundle/Resources/assets/javascripts',
                 src: ['**/*' ],
-                dest: 'web/js',
+                dest: 'web/javascripts',
                 expand: true
             },
             copyImages: {
