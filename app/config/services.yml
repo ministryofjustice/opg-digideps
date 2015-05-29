@@ -15,3 +15,11 @@ services:
     mailer.transport.sendgrid:
         class: AppBundle\Mailer\Transport\SendGridTransport
         arguments: [ @sendgrid, "/tmp/dd_sendgrid_current_attachment.tmp"]
+    userprovider:
+        class: AppBundle\UserProvider\UserProvider
+        arguments: [@doctrine.orm.entity_manager]
+    granttype.apikey:
+        class: AppBundle\OAuth\ApiKeyGrantExtension
+        arguments: [ @doctrine.orm.entity_manager ]
+        tags:
+            - { name: fos_oauth_server.grant_extension, uri: http://digideps.local }
