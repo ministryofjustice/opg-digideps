@@ -3,12 +3,12 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-        "all": "bower install && grunt build",
+        "all": "bower install --config.interactive=false && grunt build",
         "clean": "grunt clean",
         "build" : "grunt build",
         "build-css": "grunt sass",
         "watch":"grunt watch",
-        "dependencies":"bower install"
+        "dependencies":"bower install --config.interactive=false"
     },
     "devDependencies": {
         "bower": "1.3.12",
