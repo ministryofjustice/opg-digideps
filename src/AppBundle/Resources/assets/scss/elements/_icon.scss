@@ -21,11 +21,11 @@ span.icon {
   text-indent: -9999em; /* In case we have used some text as well */
 
   &__accordion {
-    background-image: url('/images/accordian-arrow.png');
+    background-image: url('/images/icons/accordian-arrow.png');
 
     /*
         @include device-pixel-ratio() {
-          background-image: url("/images/accordian-arrow-2x.png");
+          background-image: url("/images/isonsaccordian-arrow-2x.png");
           background-size: 100%;
         }
     */
@@ -36,7 +36,7 @@ span.icon {
   }
 
   &__notification {
-    background-image: url('/images/icon-notification.png');
+    background-image: url('/images/icons/icon-notification.png');
 
     /*
         @include device-pixel-ratio() {

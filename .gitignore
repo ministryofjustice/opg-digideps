@@ -12,6 +12,11 @@ node_modules/*
 app/config/parameters.yml
 bower_downloads/*
 web/bundles/*
+web/images
+web/js
+web/javascripts
+web/css
+web/stylesheets
 web/elb_healthcheck.html
 behat.yml
 misc/tmp/*
