@@ -70,19 +70,19 @@ module.exports = function (grunt) {
         },
 
         copy: {
-            copyGovUkImages: {
+            copyGovUkTemplateImages: {
                 cwd: 'bower_downloads/govuk_elements/govuk/public/images',
                 src: ['**/*'],
                 dest: 'web/images',
                 expand: true
             },
-            copyGovUkJS: {
+            copyGovUkTemplateJS: {
                 cwd: 'bower_downloads/govuk_elements/govuk/public/javascripts',
                 src: ['**/*'],
                 dest: 'web/javascripts',
                 expand: true
             },
-            copyGovUkStylesheets: {
+            copyGovUkTemplateStylesheets: {
                 cwd: 'bower_downloads/govuk_elements/govuk/public/stylesheets',
                 src: ['**/*'],
                 dest: 'web/stylesheets',
@@ -97,10 +97,18 @@ module.exports = function (grunt) {
 
             copyPlugins: {
                 cwd: 'bower_downloads',
-                src: ['jquery/dist/**/*', 'jquery-validation/dist/**/*' ],
+                src: ['jquery/dist/**/*'],
                 dest: 'web/javascripts/vendor',
                 expand: true
             },
+            copyHTML5shiv: {
+                cwd: 'bower_downloads/html5shiv/dist',
+                src: ['**/*'],
+                dest: 'web/javascripts/vendor/html5shiv',
+                expand: true
+            },
+            
+            
             copyJS: {
                 cwd: 'src/AppBundle/Resources/assets/javascripts',
                 src: ['**/*' ],
@@ -112,13 +120,9 @@ module.exports = function (grunt) {
                 src: ['**/*' ],
                 dest: 'web/images',
                 expand: true
-            },
-            copyHTML5shiv: {
-                cwd: 'bower_downloads/html5shiv/dist',
-                src: ['**/*'],
-                dest: 'web/javascripts/vendor/html5shiv',
-                expand: true
             }
+            
+
         }
 
 

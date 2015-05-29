@@ -8,7 +8,7 @@
     "components"
   ],
   "dependencies": {
-    "govuk_elements": "https://github.com/alphagov/govuk_elements.git#master",
+    "govuk_elements": "https://github.com/ztolley/govuk_elements.git",
     "moj_template": "https://github.com/ministryofjustice/moj_template.git#master",
     "jquery": "1.11.x",
     "html5shiv": "",
