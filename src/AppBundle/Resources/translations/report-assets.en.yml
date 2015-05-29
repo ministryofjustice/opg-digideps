@@ -38,6 +38,12 @@ listing:
   date: "Valuation date"
   currencySymbol: "£"
   editLink: "Edit this asset"
+no_assets:
+    label: My client has no assets
+    description: If your client has no assets, please click the checkbox below.
+    selected: You have selected that your client has no assets
+save:
+    label: Save
 defaultDropDownOption:
     option: Please select ...  
 dropdown:

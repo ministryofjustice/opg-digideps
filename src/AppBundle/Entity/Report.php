@@ -109,6 +109,18 @@ class Report
     private $reasonForNoContacts;
     
     /**
+     * @JMS\Type("string")
+     * @var string $reasonForNoDecisions
+     */
+    private $reasonForNoDecisions;
+    
+    /**
+     * @JMS\Type("boolean")
+     * @var boolean $noAssetToAdd
+     */
+    private $noAssetToAdd;
+    
+    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"submit"})
      * @Assert\True(message="report.submissionExceptions.submitted", groups={"submitted"})
@@ -418,7 +430,7 @@ class Report
      */
     public function missingDecisions()
     {
-        if(empty($this->decisions)){
+        if(empty($this->decisions) && empty($this->reasonForNoDecisions)){
             return true;
         }
         return false;
@@ -453,7 +465,7 @@ class Report
             return false;
         }
         
-        if(empty($this->assets)){
+        if(empty($this->assets) && (!$this->noAssetToAdd)){
             return true;
         }
         return false;
@@ -542,6 +554,43 @@ class Report
     public function getReasonForNoContacts()
     {
         return $this->reasonForNoContacts;
+    }
+    
+    /**
+     * @param string $reasonForNoDecisions
+     * @return \AppBundle\Entity\Report
+     */
+    public function setReasonForNoDecisions($reasonForNoDecisions)
+    {
+        $this->reasonForNoDecisions = $reasonForNoDecisions;
+        return $this;
+    }
+    
+    /**
+     * @return string $reasonForNoDecisions
+     */
+    public function getReasonForNoDecisions()
+    {
+        return $this->reasonForNoDecisions;
+    }
+    
+    /**
+     * @return boolean $noAssetToAdd
+     */
+    public function getNoAssetToAdd()
+    {
+        return $this->noAssetToAdd;
+    }
+    
+    /**
+     * 
+     * @param boolean $noAssetToAdd
+     * @return \AppBundle\Entity\Report
+     */
+    public function setNoAssetToAdd($noAssetToAdd)
+    {
+        $this->noAssetToAdd = $noAssetToAdd;
+        return $this;
     }
     
     /**

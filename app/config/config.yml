@@ -20,7 +20,8 @@ framework:
         #assets_version: SomeVersionScheme
     default_locale:  "%locale%"
     trusted_proxies: ~
-    session: 
+    session:
+      handler_id: session.handler.memcached
       name: digideps
       # force session usage, no cookie (we want to logout when the browser closes)
       cookie_lifetime: 0
@@ -32,7 +33,7 @@ framework:
       cookie_httponly: true
     fragments:       ~
     http_method_override: true
-
+    
 # Twig Configuration
 twig:
     globals:

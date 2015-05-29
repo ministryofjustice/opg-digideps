@@ -49,7 +49,7 @@ class IndexController extends Controller
 
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
-               
+                
                 $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
                 // exception if credentials not valid
@@ -67,6 +67,7 @@ class IndexController extends Controller
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
             $session->set('loggedOutFrom', null);   
+            
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
             
@@ -85,6 +86,7 @@ class IndexController extends Controller
         
         // different page version for timeout and manual logout
         $session = $this->getRequest()->getSession();
+        
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
@@ -93,7 +95,6 @@ class IndexController extends Controller
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
         }
             
-        
         return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
 
