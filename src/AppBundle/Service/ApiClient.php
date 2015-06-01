@@ -34,11 +34,6 @@ class ApiClient extends GuzzleClient
      */
     private $debug;
     
-    /**
-     *
-     * @var type 
-     */
-    private $securityContext;
     
      /**
      * @var string
@@ -46,7 +41,7 @@ class ApiClient extends GuzzleClient
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
     
     
-    public function __construct(SerializerInterface $serialiser, array $options)
+    public function __construct(SerializerInterface $serialiser, $oauth2Client,$session, array $options)
     {
         // check arguments
         array_map(function($k) use ($options) {
@@ -66,11 +61,18 @@ class ApiClient extends GuzzleClient
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         
+        
+        if($session->has('userApiKey')){
+            $oauth2Client->setUserApiKey($session->get('userApiKey'));
+        }
+        
         // construct parent (GuzzleClient)
         parent::__construct([ 
             'base_url' =>  $options['base_url'],
             'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                           'verify' => false
+                           'verify' => false,
+                           'auth' => 'oauth2',
+                           'subscribers' => [ $oauth2Client->getSubscriber() ]
                           ]]);
     }
    
@@ -127,7 +129,7 @@ class ApiClient extends GuzzleClient
         try {
             return parent::send($request);
         } catch (\Exception $e) {
-          
+            
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
                 $debugData = $this->getDebugRequestExceptionData($e);
@@ -141,6 +143,12 @@ class ApiClient extends GuzzleClient
                 }
                 
                 // regognise specific error codes and launche specific exception classes
+                
+                if(!isset($responseArray['code'])){
+                   $responseArray['code'] = 401;
+                   $responseArray['message'] = $responseArray['error_description'];
+                }
+                
                 switch ($responseArray['code']) {
                     case 404:
                         throw new DisplayableException('Record not found.' . $debugData);

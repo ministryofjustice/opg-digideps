@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "66b10d8596a564193f6f45fb58267c79",
+    "hash": "1b1c73c301f80bb2eaf9826f24a2341c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -660,6 +660,51 @@
             "time": "2014-05-15 22:08:22"
         },
         {
+            "name": "commerceguys/guzzle-oauth2-plugin",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/commerceguys/guzzle-oauth2-plugin.git",
+                "reference": "c852abd1abbe3d72319dc236250a558f20528e5e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/commerceguys/guzzle-oauth2-plugin/zipball/c852abd1abbe3d72319dc236250a558f20528e5e",
+                "reference": "c852abd1abbe3d72319dc236250a558f20528e5e",
+                "shasum": ""
+            },
+            "require": {
+                "firebase/php-jwt": "^2.0",
+                "guzzlehttp/guzzle": "~5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CommerceGuys\\Guzzle\\Oauth2\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bojan Zivanovic"
+                },
+                {
+                    "name": "Damien Tournoud"
+                },
+                {
+                    "name": "Patrick Dawkins"
+                }
+            ],
+            "description": "An OAuth2 plugin (subscriber) for Guzzle",
+            "time": "2015-05-27 10:40:06"
+        },
+        {
             "name": "doctrine/annotations",
             "version": "v1.2.3",
             "source": {
@@ -1166,6 +1211,50 @@
                 "scraper"
             ],
             "time": "2014-11-28 09:48:17"
+        },
+        {
+            "name": "firebase/php-jwt",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/firebase/php-jwt.git",
+                "reference": "fb219727e199dd80a72d5274ebb5c8b24d58dd9b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/firebase/php-jwt/zipball/fb219727e199dd80a72d5274ebb5c8b24d58dd9b",
+                "reference": "fb219727e199dd80a72d5274ebb5c8b24d58dd9b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Authentication/",
+                    "Exceptions/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Neuman Vong",
+                    "email": "neuman+pear@twilio.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Anant Narayanan",
+                    "email": "anant@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+            "homepage": "https://github.com/firebase/php-jwt",
+            "time": "2015-05-20 19:16:04"
         },
         {
             "name": "guzzle/guzzle",

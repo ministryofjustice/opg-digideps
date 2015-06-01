@@ -66,7 +66,9 @@ class IndexController extends Controller
             
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
-            $session->set('loggedOutFrom', null);   
+            $session->set('loggedOutFrom', null);
+            
+            $session->set('userApiKey',$user->getPassword());
             
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();

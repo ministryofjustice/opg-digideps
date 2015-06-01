@@ -62,6 +62,7 @@ class UserController extends Controller
                 $this->get("security.context")->setToken($token); //now the user is logged in
                 
                  $this->get('session')->set('_security_secured_area', serialize($token));
+                 $this->get('session')->set('userApiKey', $encodedPassword);
                  
                  $request = $this->get("request");
                  $event = new InteractiveLoginEvent($request, $token);
@@ -165,6 +166,9 @@ class UserController extends Controller
                         ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
                     
                     $this->get('mailSender')->send($email,[ 'html']);
+                    
+                    //reset user api key
+                    $this->get('session')->set('userApiKey', $encodedPassword);
                     
                     $request->getSession()->getFlashBag()->add(
                                 'notification',
