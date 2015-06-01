@@ -93,3 +93,10 @@
 
     {% endif %}
 {% endblock %}
+  
+{% block popups %}
+  {% if isEmailAttachment is not defined or not isEmailAttachment%}
+      {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
+  {% endif %}
+{% endblock %}
+

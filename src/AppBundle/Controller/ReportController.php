@@ -148,7 +148,7 @@ class ReportController extends Controller
      */
     private function getReportContent(EntityDir\Report $report)
     {
-        return $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId()])->getContent();
+        return $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
     }
     
     /**
@@ -176,7 +176,7 @@ class ReportController extends Controller
      * @Route("/report/{reportId}/display", name="report_display")
      * @Template()
      */
-    public function displayAction($reportId)
+    public function displayAction($reportId, $isEmailAttachment = false)
     {
         $apiClient = $this->get('apiclient');
         
@@ -197,6 +197,7 @@ class ReportController extends Controller
             'assets' => $assets,
             'contacts' => $contacts,
             'decisions' => $decisions,
+            'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
         ];
     }
