@@ -80,7 +80,7 @@
             } %}
 
             {% if report.assets | length == 0 %}
-                <p class="page-section-description">{{ report.reasonForNoAssets }}</p>
+                <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
             {% else %}
                 {% include 'AppBundle:Asset:_listAsset.html.twig' with {
                     'showEditForm': false,
@@ -93,3 +93,10 @@
 
     {% endif %}
 {% endblock %}
+  
+{% block popups %}
+  {% if isEmailAttachment is not defined or not isEmailAttachment%}
+      {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
+  {% endif %}
+{% endblock %}
+
