@@ -32,7 +32,7 @@ security:
             pattern: ^/
             fos_oauth: true
             stateless: true
-            anonymous: true
+            anonymous: false
             
         default:
             anonymous: ~
