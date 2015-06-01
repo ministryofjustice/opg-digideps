@@ -5,9 +5,6 @@ module.exports = function (grunt) {
     var scssPath = 'src/AppBundle/Resources/assets/scss';
     var jsPath = 'src/AppBundle/Resources/assets/javascripts';
 
-    console.log("Grunt Starting up" + scssPath);
-
-
     // Load NPM Tasks
     require('load-grunt-tasks')(grunt);
 
