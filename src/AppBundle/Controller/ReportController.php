@@ -140,7 +140,7 @@ class ReportController extends Controller
             ->setBodyHtml($this->renderView('AppBundle:Email:report-submission.html.twig'))
             ->setAttachments([new EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
 
-        //$this->get('mailSender')->send($email,[ 'html'], 'secure-smtp');
+        $this->get('mailSender')->send($email,[ 'html'], 'secure-smtp');
     }
     
     /**
