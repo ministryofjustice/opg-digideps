@@ -40,6 +40,7 @@ pages:
         subSectionTitle: "Assets"
         subSectionDescription: "Add details of the client's assets and saving, such as:"
         subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
+        noAssets: The client has not assets
   duePeriod:
     pageSectionTitle: "Reviewing and submitting your report"
     pageSectionWarning: "Your report is now due"
