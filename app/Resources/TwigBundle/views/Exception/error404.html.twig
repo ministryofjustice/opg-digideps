@@ -1,0 +1,6 @@
+{% trans_default_domain "error" %}
+
+{% include 'TwigBundle:Exception:template.html.twig' with {
+    message: '404.title' | trans,
+    description: '404.description' | trans
+ } %}
