@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Form\FormError;
 use AppBundle\EventListener\SessionListener;
 use AppBundle\Service\ApiClient;
+use AppBundle\Entity\AuditLogEntry;
 
 class IndexController extends Controller
 {
@@ -82,6 +83,8 @@ class IndexController extends Controller
             $apiClient->putC('user/' .  $user->getId(), $user, [
                 'deserialise_group' => 'lastLoggedIn',
             ]);
+            
+            $this->get('auditLogger')->log(AuditLogEntry::ACTION_LOGIN);
         }
         
         // different page version for timeout and manual logout

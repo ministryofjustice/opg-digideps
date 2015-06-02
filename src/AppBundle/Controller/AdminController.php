@@ -13,6 +13,7 @@ use AppBundle\Service\MailSender;
 use AppBundle\Form\AddUserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Model\Email;
+use AppBundle\Entity\AuditLogEntry;
 
 /**
 * @Route("/admin")
@@ -47,6 +48,8 @@ class AdminController extends Controller
                     'notice', 
                     'An activation email has been sent to the user.'
                 );
+                
+                $this->get('auditLogger')->log(AuditLogEntry::ACTION_USER_ADD, $user);
                 
                 return $this->redirect($this->generateUrl('admin_homepage'));
             } 
@@ -137,6 +140,11 @@ class AdminController extends Controller
     public function deleteAction($id)
     {
         $apiClient = $this->get('apiclient');
+        
+        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]); 
+        
+        $this->get('auditLogger')->log(AuditLogEntry::ACTION_USER_ADD, $user);
+        
         $apiClient->delete('delete_user_by_id',[ 'parameters' => ['adminId' => $this->getUser()->getId(), 'id' => $id ]]);
         
         return $this->redirect($this->generateUrl('admin_homepage'));
