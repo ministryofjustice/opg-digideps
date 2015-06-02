@@ -18,6 +18,7 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"user_details_full", "user_details_basic", "admin_add_user","audit_log_save"})
      * @var integer $id
      */
     private $id;
