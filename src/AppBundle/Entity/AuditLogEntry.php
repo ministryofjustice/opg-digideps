@@ -26,41 +26,69 @@ class AuditLogEntry
 
     /**
      * @var integer
-     * @JMS\Groups({"audit_log"});
+     * @JMS\Groups({"audit_log"})
+     * @JMS\Type("integer")
      */
     private $id;
 
     /**
      * @var User
-     * @JMS\Groups({"audit_log","audit_log_save"});
+     * @JMS\Groups({"audit_log","audit_log_save"})
+     * @JMS\Type("AppBundle\Entity\User")
      */
     private $performedByUser;
 
     /**
+     * @JMS\Groups({"audit_log"})
      * @JMS\Type("string")
-     * @JMS\Groups({"audit_log","audit_log_save"});
+     */
+    private $performedByUserName;
+    
+    /**
+     * @JMS\Groups({"audit_log"})
+     * @JMS\Type("string")
+     */
+    private $performedByUserEmail;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"audit_log","audit_log_save"})
      */
     private $ipAddress;
 
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"audit_log","audit_log_save"});
+     * @JMS\Groups({"audit_log","audit_log_save"})
+     * @JMS\Type("DateTime")
      */
     private $createdAt;
 
     /**
      * @var string
-     * @JMS\Groups({"audit_log","audit_log_save"});
+     * @JMS\Groups({"audit_log","audit_log_save"})
+     * @JMS\Type("string")
      */
     private $action;
 
     /**
      * @var User
-     * @JMS\Groups({"audit_log","audit_log_save"});
+     * @JMS\Groups({"audit_log","audit_log_save"})
+     * @JMS\Type("AppBundle\Entity\User")
      */
     private $userEdited;
 
+     /**
+     * @JMS\Groups({"audit_log"})
+     * @JMS\Type("string")
+     */
+    private $userEditedName;
+    
+    /**
+     * @JMS\Groups({"audit_log"})
+     * @JMS\Type("string")
+     */
+    private $userEditedEmail;
 
     public function __construct(User $performedBy, $ipAddress, \DateTime $createdAt, $action)
     {
@@ -120,6 +148,54 @@ class AuditLogEntry
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+    
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPerformedByUserName()
+    {
+        return $this->performedByUserName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPerformedByUserEmail()
+    {
+        return $this->performedByUserEmail;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserEditedName()
+    {
+        return $this->userEditedName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserEditedEmail()
+    {
+        return $this->userEditedEmail;
     }
 
 }
