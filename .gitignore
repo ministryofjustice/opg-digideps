@@ -21,3 +21,4 @@ web/elb_healthcheck.html
 behat.yml
 misc/tmp/*
 app/bootstrap.php.cache
+src/AppBundle/Resources/views/Email/css
