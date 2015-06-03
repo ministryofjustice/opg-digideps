@@ -69,8 +69,8 @@ class EmailController extends RestController
      */
     private function isEmailToMock(Swift_Message $message)
     {
-        $addressToMockRegexp = $this->container->getParameter('email_mock_address');
-        $path = $this->container->getParameter('email_mock_path');
+        $addressToMockRegexp = $this->container->hasParameter('email_mock_address') ? $this->container->getParameter('email_mock_address') : null;
+        $path = $this->container->hasParameter('email_mock_path') ? $this->container->getParameter('email_mock_path') : null;
         if (!$addressToMockRegexp || !$path) {
             return false;
         }
