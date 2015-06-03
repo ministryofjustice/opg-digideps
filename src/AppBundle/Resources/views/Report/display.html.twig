@@ -13,9 +13,12 @@
 
 {% block pageContent %}
 
-    <div class="navigation-back report-back">
-        <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to my client</a>
-    </div>
+    {% if not isEmailAttachment%}
+      <div class="navigation-back report-back">
+          <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to my client</a>
+      </div>
+    {% endif %}
+    
     <!-- set class to external-report -->
     {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
     {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
@@ -95,7 +98,7 @@
 {% endblock %}
   
 {% block popups %}
-  {% if isEmailAttachment is not defined or not isEmailAttachment%}
+  {% if not isEmailAttachment%}
       {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
   {% endif %}
 {% endblock %}
