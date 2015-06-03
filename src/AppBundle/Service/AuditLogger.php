@@ -41,10 +41,14 @@ class AuditLogger
             return;
         }
         
-        $performedBy = $this->securityContext->getToken()->getUser();
+        $performedByUser = $this->securityContext->getToken()->getUser();
 
-        $entry = new AuditLogEntry($performedBy, $this->request->getClientIp(), new \DateTime(), $action);
-        $entry->setUserEdited($userEdited);
+        $entry = new AuditLogEntry();
+        $entry
+            ->setPerformedByUser($performedByUser)
+            ->setIpAddress($this->request->getClientIp())
+            ->setAction($action)
+            ->setUserEdited($userEdited);
 
         $ret = $this->apiClient->postC('audit-log', $entry, [
             'deserialise_group' => 'audit_log_save'

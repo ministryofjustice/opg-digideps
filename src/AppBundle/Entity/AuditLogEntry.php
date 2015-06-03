@@ -10,11 +10,13 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AuditLogEntry
 {
+
     const ACTION_LOGIN = 'login';
     const ACTION_LOGOUT = 'logout';
     const ACTION_USER_ADD = 'user_add';
     const ACTION_USER_EDIT = 'user_edit';
     const ACTION_USER_DELETE = 'user_delete';
+
 
     /**
      * @JMS\Exclude
@@ -43,13 +45,13 @@ class AuditLogEntry
      * @JMS\Type("string")
      */
     private $performedByUserName;
-    
+
     /**
      * @JMS\Groups({"audit_log"})
      * @JMS\Type("string")
      */
     private $performedByUserEmail;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"audit_log","audit_log_save"})
@@ -78,25 +80,52 @@ class AuditLogEntry
      */
     private $userEdited;
 
-     /**
+    /**
      * @JMS\Groups({"audit_log"})
      * @JMS\Type("string")
      */
     private $userEditedName;
-    
+
     /**
      * @JMS\Groups({"audit_log"})
      * @JMS\Type("string")
      */
     private $userEditedEmail;
 
-    public function __construct(User $performedBy, $ipAddress, \DateTime $createdAt, $action)
+
+    public function __construct()
     {
-        $this->performedByUser = $performedBy;
+        $this->createdAt = new \DateTime();
+    }
+
+    /**
+     * @param User $performedByUser
+     */
+    public function setPerformedByUser(User $performedByUser)
+    {
+        $this->performedByUser = $performedByUser;
+
+        return $this;
+    }
+
+    /**
+     * @param string $ipAddress e.g. 123.124.125.126
+     */
+    public function setIpAddress($ipAddress)
+    {
         $this->ipAddress = $ipAddress;
+
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
         $this->createdAt = $createdAt;
-        $this->setAction($action);
-        $this->userEdited = null;
+
+        return $this;
     }
 
     /**
@@ -119,13 +148,13 @@ class AuditLogEntry
 
         return $this;
     }
-    
-    public function setUserEdited(User $userEdited= null)
+
+    public function setUserEdited(User $userEdited = null)
     {
         $this->userEdited = $userEdited;
         return $this;
     }
-    
+
     /**
      * @return User
      */
@@ -133,7 +162,7 @@ class AuditLogEntry
     {
         return $this->userEdited;
     }
-    
+
     /**
      * @return User
      */
@@ -149,7 +178,7 @@ class AuditLogEntry
     {
         return $this->createdAt;
     }
-    
+
     /**
      * @return integer
      */
@@ -165,7 +194,7 @@ class AuditLogEntry
     {
         return $this->action;
     }
-    
+
     /**
      * @return string
      */
