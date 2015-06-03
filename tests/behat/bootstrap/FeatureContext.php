@@ -395,8 +395,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function theUrlShouldNotBeAccessible($url)
     {
+        $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($url);
         $this->assertResponseStatus(500);
+        $this->visit($previousUrl);
     }
     
     /**
