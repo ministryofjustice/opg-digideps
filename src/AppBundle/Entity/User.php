@@ -17,7 +17,7 @@ class User implements AdvancedUserInterface
     /**
      * @var integer
      * @JMS\Type("integer")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic","audit_log"})
      * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -37,7 +37,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      * @JMS\Type("string")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic", "audit_log"})
      * 
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
@@ -48,7 +48,7 @@ class User implements AdvancedUserInterface
      *
      * @ORM\Column(name="lastname", type="string", length=100, nullable=true)
      * @JMS\Type("string")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic", "audit_log"})
      */
     private $lastname;
     
@@ -123,7 +123,7 @@ class User implements AdvancedUserInterface
     /**
      * @var integer
      * 
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic","audit_log"})
      * @JMS\Type("AppBundle\Entity\Role")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
      * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
