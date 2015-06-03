@@ -1,6 +1,3 @@
-console.log('copy me to web');
-
-
 function mojDateString(localDate) {
     if (!localDate) {
         return;
@@ -25,8 +22,6 @@ var dateNow = new Date();
 
 //debugger;
 var output = mojDateString(dateNow);
-
-console.log(output);
 
 if ($('.registration-client-add')) {
     new GOVUK.SelectionButtons(":checkbox");
