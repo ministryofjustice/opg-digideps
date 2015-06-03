@@ -224,9 +224,6 @@ class Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
     {
-        if ($submitDate instanceof \DateTime) {
-            $submitDate->setTime(23, 59, 59);
-        }
         $this->submitDate = $submitDate;
 
         return $this;
