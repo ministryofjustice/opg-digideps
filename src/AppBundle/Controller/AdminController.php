@@ -143,7 +143,7 @@ class AdminController extends Controller
         
         $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]); 
         
-        $this->get('auditLogger')->log(AuditLogEntry::ACTION_USER_ADD, $user);
+        $this->get('auditLogger')->log(AuditLogEntry::ACTION_USER_DELETE, $user);
         
         $apiClient->delete('delete_user_by_id',[ 'parameters' => ['adminId' => $this->getUser()->getId(), 'id' => $id ]]);
         
