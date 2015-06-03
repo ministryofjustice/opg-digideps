@@ -1,0 +1,30 @@
+{# displayed when a non-404 exception is thrown.
+Available variables: status_code, status_text, exception, logger,currentContent #}
+
+{% extends 'application.html.twig' %}
+
+{% trans_default_domain "error" %}
+{% block bodyClasses %}error-page{% endblock %}
+
+{% block pageTitle %} {{ message }} {% endblock %}
+
+{% block content %}
+    <div class="phase-banner">
+        <p>
+            <strong class="phase-tag">ALPHA</strong>
+            <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+
+    <header class="page-header group">
+        <div class="hgroup">
+            <h1>{{ message }}</h1>
+        </div>
+    </header>
+
+    <p class="page-section-description">{{ description }}</p>
+
+    <a class="home-link" href="{{path('homepage')}}">{{ 'returnToHomePage' | trans }}</a>
+
+
+{% endblock %}
