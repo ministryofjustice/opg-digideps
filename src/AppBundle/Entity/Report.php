@@ -241,7 +241,7 @@ class Report
      * @param \DateTime $startDate
      * @return Report
      */
-    public function setStartDate($startDate)
+    public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = new \DateTime($startDate->format('Y-m-d'));
         
@@ -264,7 +264,7 @@ class Report
      * @param \DateTime $endDate
      * @return Report
      */
-    public function setEndDate($endDate)
+    public function setEndDate(\DateTime $endDate)
     {
         $this->endDate = new \DateTime($endDate->format('Y-m-d'));
 
@@ -284,12 +284,12 @@ class Report
     /**
      * Set submitDate
      *
-     * @param \DateTime $submitDate
+     * @param string $submitDate
      * @return Report
      */
-    public function setSubmitDate($submitDate)
+    public function setSubmitDate(\DateTime $submitDate = null)
     {
-        $this->submitDate = new \DateTime($submitDate->format('Y-m-d'));
+        $this->submitDate = $submitDate;
 
         return $this;
     }
@@ -310,7 +310,7 @@ class Report
      * @param \DateTime $lastedit
      * @return Report
      */
-    public function setLastedit($lastedit)
+    public function setLastedit(\DateTime $lastedit)
     {
         $this->lastedit = new \DateTime($lastedit->format('Y-m-d'));
 
