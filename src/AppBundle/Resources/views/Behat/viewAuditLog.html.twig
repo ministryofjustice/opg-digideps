@@ -1,0 +1,11 @@
+{% for entry in entries %}
+  <div class="behat-region-entry-{{ loop.index }}">
+    ID: {{ entry.id }} created at {{ entry.createdAt | date}}<br/>
+  From:  {{ entry.performedByUserName }} [{{ entry.performedByUserEmail }}] ({{ entry.performedByUser ? "ID=" ~ entry.performedByUser.id : "user deleted" }}) {{ entry.ipAddress }}<br/>
+  Action" {{ entry.action }}<br/>
+  {% if entry.userEditedEmail %}
+    Affected user {{ entry.userEditedName }} [{{ entry.userEditedEmail }}] ({{ entry.userEdited ? "ID=" ~ entry.userEdited.id : "user deleted" }}) {{ entry.ipAddress }}<br/>
+  {% endif %}
+  </div>
+  <hr/>
+{% endfor%}

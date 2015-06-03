@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Service\ApiClient;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * @Route("/behat")
@@ -145,5 +146,19 @@ class BehatController extends Controller
 //        ]));
 //       
 //       return new Response('done');
+    }
+    
+    /**
+     * @Route("/{secret}/view-audit-log")
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function viewAuditLogAction()
+    {
+        $this->checkIsBehatBrowser();
+        
+        $entities = $this->get('apiclient')->getEntities('AuditLogEntry', 'audit-log');
+        
+        return ['entries' => $entities];
     }
 }
