@@ -34,13 +34,16 @@ class AuditLogController extends RestController
             throw new \InvalidArgumentException("Missing parameter performed_by_user.id");
         }
 
-        $auditLogEntry = new EntityDir\AuditLogEntry(
-            $this->findEntityBy('User', $data['performed_by_user']['id']), // perfomed by
-            $data['ip_address'], 
-            new \DateTime($data['created_at']), 
-            $data['action'],
-            isset($data['user_edited']['id']) ? $this->findEntityBy('User', $data['user_edited']['id']) : null
-        );
+        $auditLogEntry = new EntityDir\AuditLogEntry();
+        $auditLogEntry
+            ->setPerformedByUser($this->findEntityBy('User', $data['performed_by_user']['id']))
+            ->setIpAddress($data['ip_address'])
+            ->setCreatedAt(new \DateTime($data['created_at']))
+            ->setAction($data['action']);
+        
+        if (isset($data['user_edited']['id'])) {
+           $auditLogEntry->setUserEdited($this->findEntityBy('User', $data['user_edited']['id']));
+        }
 
         $this->getEntityManager()->persist($auditLogEntry);
         $this->getEntityManager()->flush();

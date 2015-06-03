@@ -21,6 +21,7 @@ class AuditLogEntry
     const ACTION_USER_EDIT = 'user_edit';
     const ACTION_USER_DELETE = 'user_delete';
 
+
     /**
      * @JMS\Exclude
      */
@@ -47,8 +48,7 @@ class AuditLogEntry
      * @JMS\Groups({"audit_log"})
      */
     private $performedByUser;
-    
-    
+
     /**
      * @ORM\Column(name="performed_by_user_name", type="string", length=150, nullable=false)
      * @var string
@@ -56,7 +56,7 @@ class AuditLogEntry
      * @JMS\Type("string")
      */
     private $performedByUserName;
-    
+
     /**
      * @var string
      * @ORM\Column(name="performed_by_user_email", type="string", length=150, nullable=false)
@@ -104,7 +104,7 @@ class AuditLogEntry
      * @JMS\Type("string")
      */
     private $userEditedName;
-    
+
     /**
      * @var string
      * @ORM\Column(name="user_edited_email", type="string", length=150, nullable=true)
@@ -112,23 +112,48 @@ class AuditLogEntry
      * @JMS\Type("string")
      */
     private $userEditedEmail;
-    
 
-    public function __construct(User $performedBy, $ipAddress, \DateTime $createdAt, $action, User $userEdited = null)
+
+    /**
+     * @param User $user
+     */
+    public function setPerformedByUser(User $user)
     {
-        $this->performedByUser = $performedBy;
-        $this->performedByUserName = $performedBy->getFullName();
-        $this->performedByUserEmail = $performedBy->getEmail();
-        
+        $this->performedByUser = $user;
+        $this->performedByUserName = $user->getFullName();
+        $this->performedByUserEmail = $user->getEmail();
+
+        return $this;
+    }
+
+    /**
+     * @param string $ipAddress
+     */
+    public function setIpAddress($ipAddress)
+    {
         $this->ipAddress = $ipAddress;
+        return $this;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt(\DateTime $createdAt)
+    {
         $this->createdAt = $createdAt;
-        $this->setAction($action);
-        
-        if ($userEdited) {
-            $this->userEdited = $userEdited;
-            $this->userEditedName = $userEdited->getFullName();
-            $this->userEditedEmail = $userEdited->getEmail();
-        }
+        return $this;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUserEdited(User $user)
+    {
+        $this->userEdited = $user;
+        $this->userEditedName = $user->getFullName();
+        $this->userEditedEmail = $user->getEmail();
+
+        return $this;
     }
 
     /**
@@ -143,4 +168,5 @@ class AuditLogEntry
 
         return $this;
     }
+
 }
