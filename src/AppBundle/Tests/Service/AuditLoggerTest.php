@@ -53,6 +53,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
         $entryChecker = function(EntityDir\AuditLogEntry $entry){
             if ($entry->getIpAddress() != '123.124.125.126')  throw new \Exception('$entry->getIpAddress() expected to return 123.124.125.126');
             if ($entry->getPerformedByUser()->getId() != 1) throw new \Exception('$entry->getPerformedByUser()->getId() expected to return 1');
+            if ($entry->getAction() != EntityDir\AuditLogEntry::ACTION_LOGIN) throw new \Exception('$entry->getAction() expected to return login');
             return true;
         };
         $this->user->shouldReceive('getId')->andReturn(1);
@@ -70,6 +71,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
             if ($entry->getIpAddress() != '123.124.125.126') throw new \Exception('$entry->getIpAddress() expected to return 123.124.125.126');
             if ($entry->getPerformedByUser()->getId() != 1) throw new \Exception('$entry->getPerformedByUser()->getId() expected to return 1');
             if ($entry->getUserEdited()->getId() != 2) throw new \Exception('$entry->getUserEdited()->getId() expected to return 2');
+            if ($entry->getAction() != EntityDir\AuditLogEntry::ACTION_USER_ADD) throw new \Exception('$entry->getAction() expected to return user add');
             return true;
         };
         $userEdited = m::mock('AppBundle\Entity\User')
