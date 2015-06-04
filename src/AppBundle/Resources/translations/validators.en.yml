@@ -136,6 +136,7 @@ account:
         length: Please enter last 4 digits of your account number
     openingDate:
         notBlank: Please enter opening balance date
+        notSameAsReport: The start date of the report and the date here is different
         date: Please enter a valid date
     closingDate:
         notBlank: Please enter closing balance date
@@ -143,8 +144,8 @@ account:
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
-    openingBalanceExplanation:
-        notBlank: Please enter a value
+    openingDateExplanation:
+        notBlankOnDateMismatch: Please enter a value
     closingBalance:
         notBlank: Value is required and can't be empty
         type: Please enter a valid closing balance

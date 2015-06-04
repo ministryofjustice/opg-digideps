@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isOpeningDateBetweenReportDates"}, groups={"basic"})
+ * @Assert\Callback(methods={"isOpeningDateValid"}, groups={"basic"})
  */
 class Account
 {
@@ -61,8 +61,6 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
-     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var decimal
@@ -73,7 +71,7 @@ class Account
      * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic", "edit_details", "add"})
      */
-    private $openingBalanceExplanation;
+    private $openingDateExplanation;
     
     /**
      * @JMS\Type("string")
@@ -210,14 +208,14 @@ class Account
         return $this->openingBalance;
     }
     
-    public function getOpeningBalanceExplanation()
+    public function getOpeningDateExplanation()
     {
-        return $this->openingBalanceExplanation;
+        return $this->openingDateExplanation;
     }
 
-    public function setOpeningBalanceExplanation($openingBalanceExplanation)
+    public function setOpeningDateExplanation($openingDateExplanation)
     {
-        $this->openingBalanceExplanation = $openingBalanceExplanation;
+        $this->openingDateExplanation = $openingDateExplanation;
     }
         
     /**
@@ -328,6 +326,29 @@ class Account
         
         if(($reportStartDate > $this->openingDate) || ($reportEndDate < $this->openingDate)){
              $context->addViolationAt('openingDate','Opening balance date must be between '.$reportStartDate->format('d/m/Y').' and '.$reportEndDate->format('d/m/Y'));
+        }
+    }
+    
+    /**
+     * Add violation if Opening date is not the same as the report start date and there is not explanation
+     */
+    public function isOpeningDateValid(ExecutionContextInterface $context)
+    {
+        $openedOnTheDayWhenTheReportStarted = $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
+        
+        // trigger error in case of date mismatch (report start date different from account opening date) and explanation is empty
+        if (!$openedOnTheDayWhenTheReportStarted && !$this->getOpeningDateExplanation()) {
+            $context->addViolationAt('openingDate', 'account.openingDate.notSameAsReport');
+            $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
+        }
+        
+        // check opening balance (only if dates match)
+        if ($openedOnTheDayWhenTheReportStarted) {
+            if (!$this->getOpeningBalance()) {
+                $context->addViolationAt('openingBalance', 'account.openingBalance.notBlank');
+            } else  if (!is_numeric($this->getOpeningBalance())) {
+                $context->addViolationAt('openingBalance', 'account.openingBalance.type');
+            }
         }
     }
     
