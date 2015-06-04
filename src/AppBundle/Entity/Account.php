@@ -20,7 +20,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic"})
      * @Assert\Type(type="string", message="account.bank.type", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $bank
      */
@@ -31,7 +31,7 @@ class Account
      * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic"})
      * @Assert\Length(min=6, minMessage = "account.sortCode.length", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $sortCode
      */
@@ -43,7 +43,7 @@ class Account
      * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic"})
      * @Assert\Length(minMessage="account.accountNumber.length",min=4, groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $accountNumber
      */
@@ -53,7 +53,7 @@ class Account
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"basic"})
      * @Assert\Date(message="account.openingDate.date", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var \DateTime 
      */
@@ -63,7 +63,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var decimal
      */
@@ -102,6 +102,7 @@ class Account
     
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"add"})
      */
     private $report;
     

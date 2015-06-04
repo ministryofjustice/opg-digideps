@@ -49,7 +49,9 @@ class AccountController extends Controller
                     $account = $form->getData();
                     $account->setReport($reportId);
 
-                    $response = $apiClient->postC('add_report_account', $account);
+                    $response = $apiClient->postC('add_report_account', $account, [
+                        'deserialise_group' => 'add'
+                    ]);
                     return $this->redirect(
                         $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
                     );
