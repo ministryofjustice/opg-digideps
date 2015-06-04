@@ -70,6 +70,14 @@ class Account
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
+    
+    /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="opening_balance_explanation", type="text", nullable=true)
+     */
+    private $openingBalanceExplanation;
 
     /**
      * @var string
@@ -306,7 +314,26 @@ class Account
     {
         return $this->openingBalance;
     }
+    
+    /**
+     * @return string
+     */
+    public function getOpeningBalanceExplanation()
+    {
+        return $this->openingBalanceExplanation;
+    }
 
+    
+    /**
+     * @param string $openingBalanceExplanation
+     */
+    public function setOpeningBalanceExplanation($openingBalanceExplanation)
+    {
+        $this->openingBalanceExplanation = $openingBalanceExplanation;
+        return $this;
+    }
+
+    
     /**
      * Set closingBalance
      *
