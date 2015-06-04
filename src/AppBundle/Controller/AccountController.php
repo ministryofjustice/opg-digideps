@@ -38,7 +38,7 @@ class AccountController extends Controller
         $form = $this->createForm(new FormDir\AccountType(), $account);
         
         // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
         
@@ -111,7 +111,7 @@ class AccountController extends Controller
         }
         
         // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
         
