@@ -42,21 +42,17 @@ class AccountController extends Controller
             return $redirectResponse;
         }
         
-        if ($request->getMethod() == 'POST') {
-            $form->handleRequest($request);
-            if($form->get('save')->isClicked()){
-                if ($form->isValid()) {
-                    $account = $form->getData();
-                    $account->setReport($reportId);
+        $form->handleRequest($request);
+        if ($form->get('save')->isClicked() && $form->isValid()) {
+            $account = $form->getData();
+            $account->setReport($reportId);
 
-                    $response = $apiClient->postC('add_report_account', $account, [
-                        'deserialise_group' => 'add'
-                    ]);
-                    return $this->redirect(
-                        $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
-                    );
-                }
-            }
+            $response = $apiClient->postC('add_report_account', $account, [
+                'deserialise_group' => 'add'
+            ]);
+            return $this->redirect(
+                $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
+            );
         }
 
         return [
