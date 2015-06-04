@@ -68,7 +68,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     logout_listener:
       class:   AppBundle\EventListener\LogoutListener
-      arguments:  [@security.context, @router, @oauth.memcached]
+      arguments:  [@security.context, @router, @auditLogger, @oauth.memcached]
     response_nocache_listener:
        class:   AppBundle\EventListener\ResponseNoCacheListener
        tags:
@@ -79,3 +79,6 @@ services:
     reportSubmitter:
         class: AppBundle\Service\ReportSubmitter
         arguments: [@service_container, @form.reportSubmit]
+    auditLogger:
+        class: AppBundle\Service\AuditLogger
+        arguments: [@apiclient, @security.context, @service_container]

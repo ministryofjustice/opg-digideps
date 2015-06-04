@@ -395,8 +395,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
      */
     public function theUrlShouldNotBeAccessible($url)
     {
+        $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($url);
         $this->assertResponseStatus(500);
+        $this->visit($previousUrl);
     }
     
     /**
@@ -428,6 +430,19 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     public function iChangeTheReportToNotSubmitted($reportId, $value)
     {
         $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
+    }
+    
+    /**
+     * @Then the last audit log entry should contain:
+     */
+    public function theLastAuditLogEntryShouldContain(TableNode $fields)
+    {
+        $this->visitBehatLink('view-audit-log');
+        
+        foreach ($fields->getRowsHash() as $field => $value) {
+            $this->iShouldSeeInTheRegion($value, 'entry-1');
+        }
+        
     }
     
 }

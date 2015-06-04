@@ -675,8 +675,12 @@ Feature: report
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the form should not contain an error
-        #And the URL should match "/report/\d+/submitted"
-        #And an email with subject "Report submission from Digital Deputy" should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
+        And the URL should match "/report/\d+/submitted"
+        # assert report display page is not broken
+        When I go to "/report/1/display"
+        Then the response status code should be 200
+        # assert email has been sent/wrote into the disk (only works if client `parameters.email_report_submit.to_email` is wqual to behat-deputyshipservice@publicguardian.gsi.gov.uk)
+        And an email with subject "Report submission from Digital Deputy" should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
     @deputy
     Scenario: assert report is not editable after submission

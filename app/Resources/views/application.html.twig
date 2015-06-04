@@ -6,15 +6,15 @@
 
 {% block stylesheets %}
     <!--[if gt IE 8]><!-->
-    <link href="/css/application.css" rel="stylesheet" type="text/css"/><!--<![endif]-->
+    <link href="{{ asset('stylesheets/application.css') }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
     <!--[if IE 6]>
-    <link href="/css/application-ie6.css" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ asset('stylesheets/application-ie6.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
     <!--[if IE 7]>
-    <link href="/css/application-ie7.css" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ asset('stylesheets/application-ie7.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
     <!--[if IE 8]>
-    <link href="/css/application-ie8.css" rel="stylesheet" type="text/css"/><![endif]-->
+    <link href="{{ asset('stylesheets/application-ie8.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
 
-    <link href="/css/application-print.css" media="print" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('stylesheets/application-print.css') }}" media="print" rel="stylesheet" type="text/css" />
 {% endblock %}
 
 {% block head %}
@@ -97,10 +97,13 @@
 
 
 {% block javascripts %}
-    <script type="text/javascript"
-            src="{{ asset('javascripts/vendor/jquery-validation/dist/jquery.validate.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('javascripts/govuk/selection-buttons.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('js/application.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('javascripts/application.js') }}"></script>
+    
+    {% if (app.environment == 'dev') %}
+        <script src="http://digideps-client.local:35729/livereload.js"></script>
+    {% endif %}
+    
 {% endblock %}
 
 {% block bodyEnd %}

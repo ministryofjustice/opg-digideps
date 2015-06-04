@@ -3,17 +3,16 @@
 # top-most EditorConfig file
 root = true
 
-# Unix-style newlines with a newline ending every file
 [*]
 end_of_line = lf
 insert_final_newline = true
-trim_trailing_whitespace = true
+trim_trailing_whitespace = false
+indent_style = space
+indent_size = 4
+charset = utf-8
 
-# Tab indentation (no size specified)
-[*.{js,html,twig,php,yml}]
+[*.{scss}]
 indent_style = space
 indent_size = 2
 charset = utf-8
 
-[*.md]
-trim_trailing_whitespace = false
