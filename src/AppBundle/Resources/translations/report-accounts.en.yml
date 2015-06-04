@@ -60,6 +60,11 @@ form:
         label: £
       openBalanceMessage:
         label: If you cannot give an opening balance at the start date of the report or the balance is for a different date, tell us why. Tell us the actual dates you are using below.
+      openingBalanceExplanation:
+        label: |
+              If you cannot give a starting balance at the date of the report 
+              or the balance is for a different date, tell us why.
+              Tell us the actual dates you are using below.
       save:
         label: Continue
       cancel:

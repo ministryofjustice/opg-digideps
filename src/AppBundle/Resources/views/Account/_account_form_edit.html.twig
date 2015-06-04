@@ -30,6 +30,9 @@
     'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
     'inputClass' : 'form-control__number'
     } ) }}
+    
+    {{ form_input(form.openingBalanceExplanation, 'form.openingBalance.controls.openingBalanceExplanation', { 'labelClass': 'required' }) }}
+    
 
     {# closing balance part #}
     {% if form.closingDate is defined and form.closingBalance is defined %}

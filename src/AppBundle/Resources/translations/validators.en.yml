@@ -143,6 +143,8 @@ account:
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
+    openingBalanceExplanation:
+        notBlank: Please enter a value
     closingBalance:
         notBlank: Value is required and can't be empty
         type: Please enter a valid closing balance

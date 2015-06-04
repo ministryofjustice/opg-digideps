@@ -71,6 +71,12 @@ class Account
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "edit_details", "add"})
+     */
+    private $openingBalanceExplanation;
+    
+    /**
+     * @JMS\Type("string")
      * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"closing_balance"})
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance"})
      * @JMS\Groups({"balance", "edit_details_report_due"})
@@ -204,6 +210,16 @@ class Account
         return $this->openingBalance;
     }
     
+    public function getOpeningBalanceExplanation()
+    {
+        return $this->openingBalanceExplanation;
+    }
+
+    public function setOpeningBalanceExplanation($openingBalanceExplanation)
+    {
+        $this->openingBalanceExplanation = $openingBalanceExplanation;
+    }
+        
     /**
      * @param type $closingBalance
      * @return type
