@@ -54,8 +54,11 @@ Feature: admin
         
         
     @admin
-    Scenario: login and add admin user
+    Scenario: login and add admin user, check audit log
         Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then the last audit log entry should contain:
+          | from | admin@publicguardian.gsi.gov.uk |
+          | action | login |
         When I go to "/admin"
         And I fill in the following:
             | admin_email | behat-admin-user@publicguardian.gsi.gov.uk | 
@@ -68,4 +71,13 @@ Feature: admin
         And I should see "OPG Administrator" in the "users" region
         And I save the page as "admin-admin-added"
         And an email with subject "Digideps - activation email" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
+        And the last audit log entry should contain:
+          | from | admin@publicguardian.gsi.gov.uk |
+          | action | user_add |
+          | user_affected | behat-admin-user@publicguardian.gsi.gov.uk |
+        When I go to "/logout"
+        Then the last audit log entry should contain:
+          | from | admin@publicguardian.gsi.gov.uk |
+          | action | logout |
+        
         

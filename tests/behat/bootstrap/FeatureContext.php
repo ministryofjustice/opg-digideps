@@ -432,4 +432,17 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
     }
     
+    /**
+     * @Then the last audit log entry should contain:
+     */
+    public function theLastAuditLogEntryShouldContain(TableNode $fields)
+    {
+        $this->visitBehatLink('view-audit-log');
+        
+        foreach ($fields->getRowsHash() as $field => $value) {
+            $this->iShouldSeeInTheRegion($value, 'entry-1');
+        }
+        
+    }
+    
 }
