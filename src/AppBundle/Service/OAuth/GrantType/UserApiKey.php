@@ -16,6 +16,7 @@ class UserApiKey extends GrantTypeBase
         return array_merge(parent::getRequired(), ['password_hash']);
     }
     
+    
     public function getToken() 
     {
         $config = $this->config->toArray();
@@ -36,7 +37,7 @@ class UserApiKey extends GrantTypeBase
         if ($additionalOptions = $this->getAdditionalOptions()) {
             $requestOptions = array_merge_recursive($requestOptions, $additionalOptions);
         }
-       
+        
         $response = $this->client->get($config['token_url'], $requestOptions);
         $data = $response->json();
         

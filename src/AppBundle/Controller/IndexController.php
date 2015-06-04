@@ -68,10 +68,17 @@ class IndexController extends Controller
             $session->set('_security_secured_area', serialize($token));
             $session->set('loggedOutFrom', null);
             
-            $session->set('userApiKey',$user->getPassword());
-            
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
+            
+            $memcached = $this->get('oauth.memcached');
+            $userApiKey = $memcached->get($session->getId().'_user_api_key');
+            
+            if(!$userApiKey){
+                $memcached->add($session->getId().'_user_api_key',$user->getEmail().'_'.$user->getPassword(),3600);
+            }else{
+                $memcached->replace($session->getId().'_user_api_key',$user->getEmail().'_'.$user->getPassword(),3600);
+            }
             
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
@@ -140,7 +147,8 @@ class IndexController extends Controller
     {
         throw new AccessDeniedException();
     }
-
+    
+    
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;

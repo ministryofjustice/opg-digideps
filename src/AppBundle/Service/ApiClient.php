@@ -7,7 +7,6 @@ use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;
 use AppBundle\Exception\DisplayableException;
 use RuntimeException;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class ApiClient extends GuzzleClient
 {
@@ -34,6 +33,10 @@ class ApiClient extends GuzzleClient
      */
     private $debug;
     
+    private $session;
+    
+    private $memcached;
+    
     
      /**
      * @var string
@@ -41,7 +44,7 @@ class ApiClient extends GuzzleClient
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
     
     
-    public function __construct(SerializerInterface $serialiser, $oauth2Client,$session, array $options)
+    public function __construct(SerializerInterface $serialiser, $oauth2Client,$memcached,$session,array $options)
     {
         // check arguments
         array_map(function($k) use ($options) {
@@ -61,10 +64,25 @@ class ApiClient extends GuzzleClient
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         
+        $this->session = $session;
+        $this->memcached = $memcached;
         
-        if($session->has('userApiKey')){
-            $oauth2Client->setUserApiKey($session->get('userApiKey'));
+        //lets get session id
+        $sessionId = $this->session->getId();
+        
+        //if session has not started then start it
+        if(empty($sessionId)){
+            $this->session->start();
+            $sessionId = $this->session->getId();
         }
+        
+        //check if we already have user api key
+        $userApiKey = $this->memcached->get($sessionId.'_user_api_key');
+         
+        if($userApiKey){
+            $oauth2Client->setUserApiKey($userApiKey);
+        }
+        
         
         // construct parent (GuzzleClient)
         parent::__construct([ 
@@ -85,6 +103,12 @@ class ApiClient extends GuzzleClient
      */
     public function getEntity($class, $endpoint, array $options = [])
     {
+        
+        /*if($endpoint == 'find_report_by_id'){
+             print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
+        }*/
+        
+      
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
         
@@ -280,6 +304,7 @@ class ApiClient extends GuzzleClient
      */
     public function createRequest($method, $url = null, array $options = array()) 
     {
+        
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             
             $url = $this->endpoints[$url];
@@ -294,6 +319,7 @@ class ApiClient extends GuzzleClient
                 unset($options['parameters']); 
             }
         }
+        
         return parent::createRequest($method, $url, $options);
     }
    

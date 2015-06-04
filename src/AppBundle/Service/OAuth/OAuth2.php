@@ -26,6 +26,7 @@ class OAuth2
      */
     private $config;
     
+    
     /**
      * 
      * @param integer $clientId
@@ -75,4 +76,5 @@ class OAuth2
     {
         return $this->oauth2Subscriber;
     }
+    
 }
