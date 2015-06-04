@@ -22,3 +22,4 @@ behat.yml
 misc/tmp/*
 app/bootstrap.php.cache
 src/AppBundle/Resources/views/Email/css
+npm-debug.log
