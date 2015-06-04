@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isValidOpeningDate"}, groups={"basic"})
+ * @Assert\Callback(methods={"isOpeningDateBetweenReportDates"}, groups={"basic"})
  */
 class Account
 {
@@ -318,7 +318,7 @@ class Account
     /**
      * Add violation if Opening date is not between report start and end date
      */
-    public function isValidOpeningDate(ExecutionContextInterface $context)
+    public function isOpeningDateBetweenReportDates(ExecutionContextInterface $context)
     {
         $reportStartDate = clone $this->reportObject->getStartDate();
         $reportEndDate = clone $this->reportObject->getEndDate();
