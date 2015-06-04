@@ -1,0 +1,10 @@
+page:
+  htmlTitle: "Feedback"
+pageTitle: Feedback
+header: Sign in to the admin area
+email:
+    subject: User Feedback
+
+#_security:
+#    403_error:
+#    last_error: sec last error
