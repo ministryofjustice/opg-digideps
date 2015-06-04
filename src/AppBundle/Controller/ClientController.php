@@ -82,6 +82,7 @@ class ClientController extends RestController
     public function findByIdAction($id)
     {
         $request = $this->getRequest();
+        //$currentUser = $request->getSession()->get('currentUser');
         
         $serialisedGroups = null;
         
@@ -106,7 +107,8 @@ class ClientController extends RestController
      */
     public function getByUserId($userId)
     {
-        $user = $this->findEntityBy('User', $userId, "User not found");
+        //$user = $this->findEntityBy('User', $userId, "User not found");
+        $user = $request->getSession()->get('currentUser');
         
         if (count($user->getClients()) === 0) {
             throw new NotFound("User has no clients");

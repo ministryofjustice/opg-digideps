@@ -21,7 +21,9 @@ class AccountController extends RestController
         
         $this->setJmsSerialiserGroup($serialiseGroups);
         
-        $report = $this->findEntityBy('Report', $id);
+        $currentUser = $request->getSession()->get('currentUser');
+        
+        $report = $this->getRepository('Report')->findByIdAndUser($id,$currentUser->getId());
         
         $accounts = $this->getRepository('Account')->findByReport($report, [
             'id' => 'DESC'

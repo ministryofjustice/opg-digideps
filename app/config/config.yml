@@ -36,6 +36,13 @@ doctrine:
             #sslmode: require
 
     orm:
+        filters:
+            user_filter:
+                class: AppBundle\Filter\UserFilter
+                enabled: false
+            manytomany_relation_filter:
+                class: AppBundle\Filter\ManyToManyRelationFilter
+                enabled: false
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         
@@ -64,6 +71,9 @@ fos_oauth_server:
         user_provider: userprovider
         options:
             supported_scopes: user
+            #access_token_lifetime: 5
+            #refresh_token_lifetime: 10
+            #auth_code_lifetime: 5
         
         
 #jms_serializer:

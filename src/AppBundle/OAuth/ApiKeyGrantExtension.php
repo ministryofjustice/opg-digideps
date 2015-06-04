@@ -18,7 +18,7 @@ class ApiKeyGrantExtension implements GrantExtensionInterface
         $user = $this->userRepository->findOneByPassword($inputData['password_hash']);
         
         if($user){
-            return true;
+            return array( 'data' => $user );
         }
         return false;
     }

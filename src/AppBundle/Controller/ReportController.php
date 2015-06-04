@@ -40,19 +40,20 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/report/find-by-id/{userId}/{id}")
+     * @Route("/report/find-by-id/{id}")
      * @Method({"GET"})
      */
-    public function get($userId,$id)
+    public function get($id)
     {   
         $request = $this->getRequest();
+        $user = $request->getSession()->get('currentUser');
         
         $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
         
         $this->setJmsSerialiserGroup($serialiseGroups);
         
-        $ret = $this->getRepository('Report')->findByIdAndUser($id,$userId);
-   
+        $ret = $this->getRepository('Report')->findByIdAndUser($id,$user->getId());
+        
         if(empty($ret)){
             throw new \Exception("Report not found");
         }
@@ -68,8 +69,9 @@ class ReportController extends RestController
     {
         $contactData = $this->deserializeBodyContent();
         $request = $this->getRequest();
+        $user = $request->getSession()->get('currentUser');
         
-        $report = $this->findEntityBy('Report', $contactData['report']);
+        $report = $this->getRepository('Report')->findByIdAndUser($contactData['report'],$user->getId());
         
         if(empty($report)){
             throw new \Exception("Report id: ".$contactData['report']." does not exists");
