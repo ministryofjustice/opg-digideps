@@ -15,7 +15,7 @@ class Version032 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE account ADD opening_balance_explanation TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE account ADD opening_date_explanation TEXT DEFAULT NULL');
     }
 
     public function down(Schema $schema)
@@ -23,6 +23,6 @@ class Version032 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE account DROP opening_balance_explanation');
+        $this->addSql('ALTER TABLE account DROP opening_date_explanation');
     }
 }

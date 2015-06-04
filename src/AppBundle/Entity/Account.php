@@ -75,9 +75,9 @@ class Account
      * @var string
      * @JMS\Groups({"transactions", "basic"})
      * 
-     * @ORM\Column(name="opening_balance_explanation", type="text", nullable=true)
+     * @ORM\Column(name="opening_date_explanation", type="text", nullable=true)
      */
-    private $openingBalanceExplanation;
+    private $openingDateExplanation;
 
     /**
      * @var string
@@ -318,18 +318,18 @@ class Account
     /**
      * @return string
      */
-    public function getOpeningBalanceExplanation()
+    public function getOpeningDateExplanation()
     {
-        return $this->openingBalanceExplanation;
+        return $this->openingDateExplanation;
     }
 
     
     /**
-     * @param string $openingBalanceExplanation
+     * @param string $openingDateExplanation
      */
-    public function setOpeningBalanceExplanation($openingBalanceExplanation)
+    public function setOpeningDateExplanation($openingDateExplanation)
     {
-        $this->openingBalanceExplanation = $openingBalanceExplanation;
+        $this->openingDateExplanation = $openingDateExplanation;
         return $this;
     }
 
