@@ -1,9 +1,19 @@
-page:
-  htmlTitle: "Feedback"
-pageTitle: Feedback
-header: Sign in to the admin area
+pageTitle: Deputyship service - Your feedback
+htmlTitle: Your feedback
+
+difficulty.label: Did you have any difficulty with this service?
+ideas.label: Do you have any ideas for how it could be improved?
+
+satisfactionLevel.legend: Overall, how did you feel about the service you received today?
+help.legend: Did you have any help filling in this form?
+
+send.label: Send feedback
+
+
 email:
     subject: User Feedback
+
+
 
 #_security:
 #    403_error:

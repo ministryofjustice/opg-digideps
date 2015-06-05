@@ -20,7 +20,15 @@ class FeedbackType extends AbstractType
                     'expanded' => true,
                     'multiple' => false
                   ))
-                 ->add('send', 'submit');
+                  ->add('help', 'choice', array(
+                     'choices' => [ 'No, I fill in this form myself'=>'No, I fill in this form myself', 
+                                    'I have difficulty using computers so someone filled in this form for me' =>'I have difficulty using computers so someone filled in this form for me', 
+                                    'I used an accessibility tool such as a screen reader' => 'I used an accessibility tool such as a screen reader',
+                                    'I had some other kind of help' => 'I had some other kind of help'],
+                     'expanded' => true,
+                     'multiple' => false
+                   ))
+                   ->add('save', 'submit');
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)

@@ -21,6 +21,11 @@ class Feedback
      */
     private $satisfactionLevel;
     
+    /**
+     * @JMS\Type("string")
+     */
+    private $help;
+
 
     public function getDifficulty()
     {
@@ -52,6 +57,17 @@ class Feedback
     public function setSatisfactionLevel($satisfactionLevel)
     {
         $this->satisfactionLevel = $satisfactionLevel;
+        return $this;
+    }
+
+    public function getHelp()
+    {
+        return $this->help;
+    }
+    
+    public function setHelp($help)
+    {
+        $this->help = $help;
         return $this;
     }
 }
