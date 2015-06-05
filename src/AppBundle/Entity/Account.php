@@ -334,7 +334,7 @@ class Account
      */
     public function isOpeningDateValid(ExecutionContextInterface $context)
     {
-        $openedOnTheDayWhenTheReportStarted = $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
+        $openedOnTheDayWhenTheReportStarted = $this->isOpeningDateEqualToReportStartDate();
         
         // trigger error in case of date mismatch (report start date different from account opening date) and explanation is empty
         if (!$openedOnTheDayWhenTheReportStarted && !$this->getOpeningDateExplanation()) {
@@ -350,6 +350,17 @@ class Account
                 $context->addViolationAt('openingBalance', 'account.openingBalance.type');
             }
         }
+    }
+    
+    /**
+     * @return boolean
+     */
+    private function isOpeningDateEqualToReportStartDate()
+    {
+        if (!$this->getOpeningDate()) {
+            return false;
+        }
+        return $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
     }
     
     public function getMoneyIn()

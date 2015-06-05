@@ -273,7 +273,7 @@ Feature: report
             | account_openingDate_day |
             | account_openingDate_month |
             | account_openingDate_year |
-            | account_openingBalance |
+            | account_openingDateExplanation |
         # test validators
         When I fill in the following:
             | account_bank    | HSBC - main account | 
@@ -303,7 +303,8 @@ Feature: report
             | account_openingDate_day |
             | account_openingDate_month |
             | account_openingDate_year |
-        # right values
+            | account_openingDateExplanation |
+        # missing validation for date mismatch and explanation not given
         And I fill in the following:
             | account_bank    | HSBC - main account | 
             | account_accountNumber_part_1 | 8 | 
@@ -317,6 +318,14 @@ Feature: report
             | account_openingDate_month | 4 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,155.00 |
+        And I press "account_save"
+        Then the following fields should have an error:
+          | account_openingDate_day |
+          | account_openingDate_month |
+          | account_openingDate_year |
+          | account_openingDateExplanation |
+        # correct values (opening balance explanation added)
+        When I fill in "account_openingDateExplanation" with "earlier transaction made with other account"
         And I press "account_save"
         And I save the page as "report-account-list"
         Then the response status code should be 200
