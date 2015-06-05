@@ -88,6 +88,14 @@ class Account
     private $closingBalance;
 
     /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="closing_balance_explanation", type="text", nullable=true)
+     */
+    private $closingBalanceExplanation;
+    
+    /**
      * @var \Date
      * @JMS\Groups({"transactions", "basic"})
      * 
@@ -103,6 +111,14 @@ class Account
      */
     private $closingDate;
 
+    /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="closing_date_explanation", type="text", nullable=true)
+     */
+    private $closingDateExplanation;
+    
     /**
      * @var integer
      *
@@ -356,7 +372,25 @@ class Account
     {
         return $this->closingBalance;
     }
+    
+    /**
+     * @return string
+     */
+    public function getClosingBalanceExplanation()
+    {
+        return $this->closingBalanceExplanation;
+    }
 
+    /**
+     * @param string $closingBalanceExplanation
+     */
+    public function setClosingBalanceExplanation($closingBalanceExplanation)
+    {
+        $this->closingBalanceExplanation = $closingBalanceExplanation;
+        return $this;
+    }
+
+    
     /**
      * Set openingDate
      *
@@ -401,6 +435,23 @@ class Account
     public function getClosingDate()
     {
         return $this->closingDate;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getClosingDateExplanation()
+    {
+        return $this->closingDateExplanation;
+    }
+
+    /**
+     * @param string $closingDateExplanation
+     */
+    public function setClosingDateExplanation($closingDateExplanation)
+    {
+        $this->closingDateExplanation = $closingDateExplanation;
+        return $this;
     }
 
     /**
