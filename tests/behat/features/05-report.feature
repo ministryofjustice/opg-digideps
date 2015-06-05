@@ -383,7 +383,6 @@ Feature: report
             | account_openingDate_day |
             | account_openingDate_month |
             | account_openingDate_year |
-            | account_openingBalance |
         And I save the page as "report-account-edit-errors"
         # right values
         When I fill in the following:
@@ -436,7 +435,10 @@ Feature: report
             | account_openingDate_month | 4 |
             | account_openingDate_year  | 2015 |
             | account_openingBalance  | 1,300.00 |
+            | account_openingDateExplanation | just a test |
         And I press "account_save"
+        Then the form should not contain an error
+        
 
 
     @deputy
