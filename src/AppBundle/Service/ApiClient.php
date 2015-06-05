@@ -85,7 +85,6 @@ class ApiClient extends GuzzleClient
         
         
         // construct parent (GuzzleClient)
-        
         if($options['use_oauth2']){
             parent::__construct([ 
                 'base_url' =>  $options['base_url'],
