@@ -1,5 +1,5 @@
-pageTitle: Deputyship service - Your feedback
-htmlTitle: Your feedback
+pageTitle: Your feedback
+htmlTitle: Deputyship service - Your feedback
 
 difficulty.label: Did you have any difficulty with this service?
 ideas.label: Do you have any ideas for how it could be improved?
@@ -12,6 +12,8 @@ send.label: Send feedback
 
 email:
     subject: User Feedback
+    
+thankYou: Thank you for sending your feedback
 
 
 

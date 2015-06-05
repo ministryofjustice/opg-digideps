@@ -1,7 +1,7 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
 {% trans_default_domain "feedback" %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 
 {% block title %}{{ 'pageTitle' | trans }}{% endblock %}
 {% block pageHeader %}
@@ -17,5 +17,5 @@
 
 
 {% block pageBody %}
-       Thank you for sending us feedback
+       {{ 'thankYou' | trans }}
 {% endblock %}

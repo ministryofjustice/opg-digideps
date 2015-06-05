@@ -1,10 +1,9 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% set translationDomain = "feeback" %}
-{% set trans_default_domain = translationDomain %}
+{% trans_default_domain "feedback" %}
 
-{% block pageTitle %}Deputyship service - Your feedback{% endblock %}
+{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 
-{% block title %}Your feedback{% endblock %}
+{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
 
 
 
