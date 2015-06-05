@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isOpeningDateValid"}, groups={"basic"})
+ * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"basic"})
  */
 class Account
 {
@@ -62,6 +62,8 @@ class Account
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
+     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
+     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
      * 
      * @var decimal
      */
@@ -332,7 +334,7 @@ class Account
     /**
      * Add violation if Opening date is not the same as the report start date and there is not explanation
      */
-    public function isOpeningDateValid(ExecutionContextInterface $context)
+    public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
     {
         $openedOnTheDayWhenTheReportStarted = $this->isOpeningDateEqualToReportStartDate();
         
@@ -340,15 +342,6 @@ class Account
         if (!$openedOnTheDayWhenTheReportStarted && !$this->getOpeningDateExplanation()) {
             $context->addViolationAt('openingDate', 'account.openingDate.notSameAsReport');
             $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
-        }
-        
-        // check opening balance (only if dates match)
-        if ($openedOnTheDayWhenTheReportStarted) {
-            if (!$this->getOpeningBalance()) {
-                $context->addViolationAt('openingBalance', 'account.openingBalance.notBlank');
-            } else  if (!is_numeric($this->getOpeningBalance())) {
-                $context->addViolationAt('openingBalance', 'account.openingBalance.type');
-            }
         }
     }
     

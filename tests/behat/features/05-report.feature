@@ -274,6 +274,7 @@ Feature: report
             | account_openingDate_month |
             | account_openingDate_year |
             | account_openingDateExplanation |
+            | account_openingBalance |
         # test validators
         When I fill in the following:
             | account_bank    | HSBC - main account | 
@@ -383,6 +384,7 @@ Feature: report
             | account_openingDate_day |
             | account_openingDate_month |
             | account_openingDate_year |
+            | account_openingBalance |
         And I save the page as "report-account-edit-errors"
         # right values
         When I fill in the following:
