@@ -101,12 +101,11 @@
             }
         
         }
-        .sub-section-description {
-            width: 100%;
-        }
         
         #content & p.sub-section-description {
             margin-bottom: 0;
+            width: 90%;
+            max-width: 700px;
         }
     }
     
