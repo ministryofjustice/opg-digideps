@@ -185,4 +185,34 @@ class IndexController extends Controller
         return $progressSteps_arr;
     }
 
+    /**
+     * @Route("/feedback", name="feedback")
+     */
+    public function feedbackAction()
+    {
+        $form = $this->createForm(new FeedbackType(), new ModelDir\Feedback());
+        $request = $this->getRequest();
+        
+        if($request->getMethod() == 'POST'){
+            $form->handleRequest($request);
+            
+            if($form->isValid()){
+                $emailConfig = $this->container->getParameter('email_send');
+                
+                $email = new ModelDir\Email();
+                $email->setToEmail($emailConfig['to_email']);
+                $email->setToName($emailConfig['from_name']);
+                $email->setFromEmail($emailConfig['from_email']);
+                $email->setFromName($emailConfig['from_name']);
+                $email->setSubject($this->container->get('translator')->trans('email.subject',[],'feedback'));
+                $email->setBodyHtml($this->renderView('AppBundle:Email:feedback.html.twig', [ 'response' => $form->getData() ]));
+                
+                $this->get('mailSender')->send($email,[ 'html']);
+                
+                return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
+            }
+        }
+        return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
+    }
+
 }
