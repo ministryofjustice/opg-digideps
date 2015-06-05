@@ -77,10 +77,10 @@ class ApiClient extends GuzzleClient
         }
         
         //check if we already have user api key
-        $userApiKey = $this->memcached->get($sessionId.'_user_api_key');
+        $credentials = $this->memcached->get($sessionId.'_user_credentials');
          
-        if($userApiKey){
-            $oauth2Client->setUserApiKey($userApiKey);
+        if($credentials){
+            $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
         }
         
         

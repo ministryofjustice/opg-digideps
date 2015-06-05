@@ -66,12 +66,12 @@ class UserController extends Controller
                  
                  //cache hashed password to use in oauth2 calls
                 $memcached = $this->get('oauth.memcached');
-                $userApiKey = $memcached->get($session->getId().'_user_api_key');
-
+                $userApiKey = $memcached->get($session->getId().'_user_credentials');
+                
                 if(!$userApiKey){
-                    $memcached->add($session->getId().'_user_api_key',md5($user->getEmail().$user->getPassword()),3600);
+                    $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
                 }else{
-                    $memcached->replace($session->getId().'_user_api_key',md5($user->getEmail().$user->getPassword()),3600);
+                    $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
                 }
                  
                  $request = $this->get("request");
@@ -182,12 +182,12 @@ class UserController extends Controller
                      
                      //cache hashed password to use in oauth2 calls
                     $memcached = $this->get('oauth.memcached');
-                    $userApiKey = $memcached->get($session->getId().'_user_api_key');
+                    $userApiKey = $memcached->get($session->getId().'_user_credentials');
 
                     if(!$userApiKey){
-                        $memcached->add($session->getId().'_user_api_key',md5($user->getEmail().$user->getPassword()),3600);
+                        $memcached->add($session->getId().'_user_credentials',['email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
                     }else{
-                        $memcached->replace($session->getId().'_user_api_key',md5($user->getEmail().$user->getPassword()),3600);
+                        $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
                     }
                     
                     $request->getSession()->getFlashBag()->add(

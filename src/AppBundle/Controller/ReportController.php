@@ -73,7 +73,7 @@ class ReportController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $this->getClient($report->getClient());
+        $client = $util->getClient($report->getClient());
         
         // report submit logic
         $redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report);

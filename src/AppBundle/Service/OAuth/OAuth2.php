@@ -53,12 +53,14 @@ class OAuth2
     /**
      * Authenticate based on api key
      * 
-     * @param string $userApiKey
+     * @param string $email
+     * @params string $password
      * @return \AppBundle\Service\OAuth\OAuth2
      */
-    public function setUserApiKey($userApiKey)
+    public function setUserCredentials($email,$password)
     {
-       $this->config['password_hash'] = $userApiKey;
+       $this->config['password_hash'] = $password;
+       $this->config['email'] = $email;
 
         $token = new GrantTypeDir\UserApiKey($this->oauth2Client, $this->config);
         $refreshToken = new RefreshToken($this->oauth2Client, $this->config);

@@ -43,11 +43,14 @@ class IndexController extends Controller
         $vars = [
             'form' => $form->createView(),
         ];
-        
+       
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
-
+            
+            $memcached = $this->get('oauth.memcached');
+            $memcached->flush();
+            
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
                 
@@ -72,13 +75,12 @@ class IndexController extends Controller
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
             
-            $memcached = $this->get('oauth.memcached');
-            $userApiKey = $memcached->get($session->getId().'_user_api_key');
+            $credentials = $memcached->get($session->getId().'_user_credentials');
             
-            if(!$userApiKey){
-                $memcached->add($session->getId().'_user_api_key',$user->getEmail().'_'.$user->getPassword(),3600);
+            if(!$credentials){
+                $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
             }else{
-                $memcached->replace($session->getId().'_user_api_key',$user->getEmail().'_'.$user->getPassword(),3600);
+                $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
             }
             
             $request = $this->get("request");

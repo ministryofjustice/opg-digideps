@@ -13,7 +13,7 @@ class UserApiKey extends GrantTypeBase
      */
     protected function getRequired()
     {
-        return array_merge(parent::getRequired(), ['password_hash']);
+        return array_merge(parent::getRequired(), ['password_hash', 'email']);
     }
     
     
