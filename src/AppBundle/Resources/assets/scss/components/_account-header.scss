@@ -85,5 +85,30 @@
         }
 
     }
+    
+    .sub-section {
+        
+        clear: both;
+        padding-top: 20px;
+        
+        .sub-section-title {
+            
+            margin-bottom: 0;
+            
+            h3 {
+                @include bold-19();
+                margin: 5px 0;
+            }
+        
+        }
+        .sub-section-description {
+            width: 100%;
+        }
+        
+        #content & p.sub-section-description {
+            margin-bottom: 0;
+        }
+    }
+    
 
 }
