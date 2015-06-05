@@ -85,13 +85,23 @@ class ApiClient extends GuzzleClient
         
         
         // construct parent (GuzzleClient)
-        parent::__construct([ 
-            'base_url' =>  $options['base_url'],
-            'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                           'verify' => false,
-                           'auth' => 'oauth2',
-                           'subscribers' => [ $oauth2Client->getSubscriber() ]
-                          ]]);
+        
+        if($options['use_oauth2']){
+            parent::__construct([ 
+                'base_url' =>  $options['base_url'],
+                'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                               'verify' => false,
+                               'auth' => 'oauth2',
+                               'subscribers' => [ $oauth2Client->getSubscriber() ]
+                              ]]);
+        }else{
+           parent::__construct([ 
+                'base_url' =>  $options['base_url'],
+                'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                               'verify' => false
+                              ]]);
+        }
+        
     }
    
     /**

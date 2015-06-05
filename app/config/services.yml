@@ -31,7 +31,7 @@ services:
         arguments: [ "%api_base_url%", %oauth2_client_id%, %oauth2_client_secret%]
     apiclient:
         class:  AppBundle\Service\ApiClient
-        arguments: [ @jms_serializer,@oauth2client,@oauth.memcached,@session,{format: "json", base_url: "%api_base_url%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
+        arguments: [ @jms_serializer,@oauth2client,@oauth.memcached,@session,{format: "json", base_url: "%api_base_url%", use_oauth2: "%oauth2_enabled%",endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @apiclient, @jms_serializer ]
