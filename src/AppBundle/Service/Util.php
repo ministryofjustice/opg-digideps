@@ -56,9 +56,9 @@ class Util
         return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ], 'query' => ['groups' => $groups] ]);
     }
     
-    public function getReport($reportId,$userId, $groups = [ "transactions", "basic"])
+    public function getReport($reportId,$groups = [ "transactions", "basic"])
     {
-        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $userId ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
+        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
     }
     
     /**
@@ -66,7 +66,7 @@ class Util
      * @return Report[]
      */
     public function getReportsIndexedById($userId, Client $client, $groups)
-    {
+    {   
         $reportIds = $client->getReports();
         
         if(empty($reportIds)){
@@ -75,7 +75,7 @@ class Util
         
         $ret = [];
         foreach($reportIds as $id){
-            $ret[$id] = $this->getReport($id, $userId, $groups);
+            $ret[$id] = $this->getReport($id,$groups);
         }
         
         return $ret;

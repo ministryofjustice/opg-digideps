@@ -45,11 +45,14 @@ class IndexController extends Controller
         $vars = [
             'form' => $form->createView(),
         ];
-        
+       
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
-
+            
+            $memcached = $this->get('oauth.memcached');
+            $memcached->flush();
+            
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
                 
@@ -69,10 +72,18 @@ class IndexController extends Controller
             
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
-            $session->set('loggedOutFrom', null);   
+            $session->set('loggedOutFrom', null);
             
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
+            
+            $credentials = $memcached->get($session->getId().'_user_credentials');
+            
+            if(!$credentials){
+                $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
+            }else{
+                $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+            }
             
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
@@ -144,36 +155,7 @@ class IndexController extends Controller
         throw new AccessDeniedException();
     }
     
-    /**
-     * @Route("/feedback", name="feedback")
-     */
-    public function feedbackAction()
-    {
-        $form = $this->createForm(new FeedbackType(), new ModelDir\Feedback());
-        $request = $this->getRequest();
-        
-        if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
-            
-            if($form->isValid()){
-                $emailConfig = $this->container->getParameter('email_send');
-                
-                $email = new ModelDir\Email();
-                $email->setToEmail($emailConfig['to_email']);
-                $email->setToName($emailConfig['from_name']);
-                $email->setFromEmail($emailConfig['from_email']);
-                $email->setFromName($emailConfig['from_name']);
-                $email->setSubject($this->container->get('translator')->trans('email.subject',[],'feedback'));
-                $email->setBodyHtml($this->renderView('AppBundle:Email:feedback.html.twig', [ 'response' => $form->getData() ]));
-                
-                $this->get('mailSender')->send($email,[ 'html']);
-                
-                return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
-            }
-        }
-        return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
-    }
-
+    
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;

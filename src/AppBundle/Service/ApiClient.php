@@ -7,7 +7,6 @@ use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;
 use AppBundle\Exception\DisplayableException;
 use RuntimeException;
 use GuzzleHttp\Exception\RequestException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 
 class ApiClient extends GuzzleClient
 {
@@ -34,11 +33,10 @@ class ApiClient extends GuzzleClient
      */
     private $debug;
     
-    /**
-     *
-     * @var type 
-     */
-    private $securityContext;
+    private $session;
+    
+    private $memcached;
+    
     
      /**
      * @var string
@@ -46,7 +44,7 @@ class ApiClient extends GuzzleClient
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
     
     
-    public function __construct(SerializerInterface $serialiser, array $options)
+    public function __construct(SerializerInterface $serialiser, $oauth2Client,$memcached,$session,array $options)
     {
         // check arguments
         array_map(function($k) use ($options) {
@@ -66,12 +64,44 @@ class ApiClient extends GuzzleClient
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         
+        $this->session = $session;
+        $this->memcached = $memcached;
+        
+        //lets get session id
+        $sessionId = $this->session->getId();
+        
+        //if session has not started then start it
+        if(empty($sessionId)){
+            $this->session->start();
+            $sessionId = $this->session->getId();
+        }
+        
+        //check if we already have user api key
+        $credentials = $this->memcached->get($sessionId.'_user_credentials');
+         
+        if($credentials){
+            $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
+        }
+        
+        
         // construct parent (GuzzleClient)
-        parent::__construct([ 
-            'base_url' =>  $options['base_url'],
-            'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                           'verify' => false
-                          ]]);
+        
+        if($options['use_oauth2']){
+            parent::__construct([ 
+                'base_url' =>  $options['base_url'],
+                'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                               'verify' => false,
+                               'auth' => 'oauth2',
+                               'subscribers' => [ $oauth2Client->getSubscriber() ]
+                              ]]);
+        }else{
+           parent::__construct([ 
+                'base_url' =>  $options['base_url'],
+                'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                               'verify' => false
+                              ]]);
+        }
+        
     }
    
     /**
@@ -83,6 +113,12 @@ class ApiClient extends GuzzleClient
      */
     public function getEntity($class, $endpoint, array $options = [])
     {
+        
+        /*if($endpoint == 'find_report_by_id'){
+             print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
+        }*/
+        
+      
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
         
@@ -127,7 +163,7 @@ class ApiClient extends GuzzleClient
         try {
             return parent::send($request);
         } catch (\Exception $e) {
-          
+            
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
                 $debugData = $this->getDebugRequestExceptionData($e);
@@ -141,6 +177,12 @@ class ApiClient extends GuzzleClient
                 }
                 
                 // regognise specific error codes and launche specific exception classes
+                
+                if(!isset($responseArray['code'])){
+                   $responseArray['code'] = 401;
+                   $responseArray['message'] = $responseArray['error_description'];
+                }
+                
                 switch ($responseArray['code']) {
                     case 404:
                         throw new DisplayableException('Record not found.' . $debugData);
@@ -272,6 +314,7 @@ class ApiClient extends GuzzleClient
      */
     public function createRequest($method, $url = null, array $options = array()) 
     {
+        
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
             
             $url = $this->endpoints[$url];
@@ -286,6 +329,7 @@ class ApiClient extends GuzzleClient
                 unset($options['parameters']); 
             }
         }
+        
         return parent::createRequest($method, $url, $options);
     }
    
