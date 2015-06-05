@@ -1,8 +1,11 @@
 <?php
 // auth check
-if (strpos($_SERVER['SERVER_NAME'], '.local') === false) {
+$isLocalBox = strpos($_SERVER['SERVER_NAME'], '.local') !== false;
+$isJenkinsBox = $_SERVER['SERVER_NAME'] === 'ci.digideps.dsd.io';
+if (!$isLocalBox && !$isJenkinsBox) {
     http_response_code(404);
-    header("HTTP/1.1 404 Not Found");die;
+    header("HTTP/1.1 404 Not Found");
+    die;
 }
 
 switch ($_GET['frame']) {
