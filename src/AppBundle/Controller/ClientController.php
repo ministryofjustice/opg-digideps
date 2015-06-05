@@ -107,8 +107,8 @@ class ClientController extends RestController
      */
     public function getByUserId($userId)
     {
-        //$user = $this->findEntityBy('User', $userId, "User not found");
-        $user = $request->getSession()->get('currentUser');
+        $user = $this->findEntityBy('User', $userId, "User not found");
+        //$user = $request->getSession()->get('currentUser');
         
         if (count($user->getClients()) === 0) {
             throw new NotFound("User has no clients");

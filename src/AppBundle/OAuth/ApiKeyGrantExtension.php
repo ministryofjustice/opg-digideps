@@ -15,7 +15,7 @@ class ApiKeyGrantExtension implements GrantExtensionInterface
     
     public function checkGrantExtension(IOAuth2Client $client, array $inputData, array $authHeaders) 
     {
-        $user = $this->userRepository->findOneByPassword($inputData['password_hash']);
+        $user = $this->userRepository->findOneBy(['password' => $inputData['password_hash'], 'email' => $inputData['email'] ]);
         
         if($user){
             return array( 'data' => $user );
