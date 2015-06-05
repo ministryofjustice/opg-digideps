@@ -43,11 +43,14 @@ class IndexController extends Controller
         $vars = [
             'form' => $form->createView(),
         ];
-        
+       
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
-
+            
+            $memcached = $this->get('oauth.memcached');
+            $memcached->flush();
+            
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
                 
@@ -67,10 +70,18 @@ class IndexController extends Controller
             
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
-            $session->set('loggedOutFrom', null);   
+            $session->set('loggedOutFrom', null);
             
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
+            
+            $credentials = $memcached->get($session->getId().'_user_credentials');
+            
+            if(!$credentials){
+                $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
+            }else{
+                $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+            }
             
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
@@ -141,7 +152,8 @@ class IndexController extends Controller
     {
         throw new AccessDeniedException();
     }
-
+    
+    
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;

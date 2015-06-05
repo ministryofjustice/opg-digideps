@@ -61,7 +61,18 @@ class UserController extends Controller
                 $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
                 $this->get("security.context")->setToken($token); //now the user is logged in
                 
-                 $this->get('session')->set('_security_secured_area', serialize($token));
+                $session = $this->get('session');
+                $session->set('_security_secured_area', serialize($token));
+                 
+                 //cache hashed password to use in oauth2 calls
+                $memcached = $this->get('oauth.memcached');
+                $userApiKey = $memcached->get($session->getId().'_user_credentials');
+                
+                if(!$userApiKey){
+                    $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                }else{
+                    $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                }
                  
                  $request = $this->get("request");
                  $event = new InteractiveLoginEvent($request, $token);
@@ -165,6 +176,19 @@ class UserController extends Controller
                         ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
                     
                     $this->get('mailSender')->send($email,[ 'html']);
+                    
+                    //reset user api key
+                     $session = $this->get('session');
+                     
+                     //cache hashed password to use in oauth2 calls
+                    $memcached = $this->get('oauth.memcached');
+                    $userApiKey = $memcached->get($session->getId().'_user_credentials');
+
+                    if(!$userApiKey){
+                        $memcached->add($session->getId().'_user_credentials',['email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                    }else{
+                        $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                    }
                     
                     $request->getSession()->getFlashBag()->add(
                                 'notification',

@@ -20,16 +20,17 @@ class ClientController extends Controller
      * @Template()
      */
     public function indexAction($action, $reportId)
-    {
+    {   
         $util = $this->get('util');  /* @var $util \AppBundle\Service\Util */
         $apiClient = $this->get('apiclient');
-        $clients = $this->getUser()->getClients();
+        
+        $clients = $this->getUser()->getClients(); 
         $request = $this->getRequest();
-       
+        
         $client = !empty($clients)? $clients[0]: null;
         
         $reports = $client ? $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']) : [];
-
+       
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
 
