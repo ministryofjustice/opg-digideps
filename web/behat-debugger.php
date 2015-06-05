@@ -7,7 +7,7 @@ if (strpos($_SERVER['SERVER_NAME'], '.local') === false) {
 
 switch ($_GET['frame']) {
     case 'page':
-        if (strpos($_GET['f'], 'behat-') !== false) {
+        if (isset($_GET['f']) && strpos($_GET['f'], 'behat-') !== false) {
             include  __DIR__ . '/../misc/tmp/' . $_GET['f'];
         } else {
             echo "click on a link at the top";
