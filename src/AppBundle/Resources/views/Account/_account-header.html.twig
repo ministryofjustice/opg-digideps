@@ -36,5 +36,15 @@
             <dd class="value behat-region-account-closing-balance">£{{ account.closingBalance | number_format(2, '.', ',') }}</td>
         </dl>
     {% endif %}
-
+    
+    {% if account.openingDateExplanation %}
+      {# @ztolley need styling  #}
+      <div style="clear:both; padding-top: 5px;">
+        <h2 style="font-weight: bold; margin: 5px 0px; font-size: 1.2em">
+          {{ 'page.header.pleaseTellUsWhy.datesMismatch' | trans({}, transDomain) }}
+        </h2>
+        <p>{{ account.openingDateExplanation }}</p>
+      </div>
+    {% endif %}
+    
 </div>

@@ -336,7 +336,7 @@ class Account
      */
     public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
     {
-        $openedOnTheDayWhenTheReportStarted = $this->isOpeningDateEqualToReportStartDate();
+        $openedOnTheDayWhenTheReportStarted = $this->isOpeningDateValid();
         
         // trigger error in case of date mismatch (report start date different from account opening date) and explanation is empty
         if (!$openedOnTheDayWhenTheReportStarted && !$this->getOpeningDateExplanation()) {
@@ -348,9 +348,14 @@ class Account
     /**
      * @return boolean
      */
-    private function isOpeningDateEqualToReportStartDate()
+    public function isOpeningDateValid()
     {
         if (!$this->getOpeningDate()) {
+            return false;
+        }
+        if (!$this->reportObject) {
+            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
+            error_log(__METHOD__ . ' : account reportObject not available', E_WARNING);
             return false;
         }
         return $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
