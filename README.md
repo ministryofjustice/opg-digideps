@@ -10,5 +10,9 @@ https://github.com/ministryofjustice/opg-digi-deps-provisioning
     php phing.phar build
     # list other tasks
     php phing.phar -l
+    
+### Thank You
+
+With special thanks to [BrowserStack](https://www.browserstack.com) for providing cross browser testing.
 
     
