@@ -15,6 +15,8 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
+        $this->memcached = m::mock('\Memcached');
+        $this->memcached->shouldReceive('flush')->andReturn(null);
     }
     
     
@@ -24,7 +26,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoMasterWrongCtor()
     {
-       new SessionListener($this->router, ['idleTimeout' => 0]);
+       new SessionListener($this->router, ['idleTimeout' => 0], $this->memcached);
     }
     
     /**
@@ -32,7 +34,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoMasterReq()
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>600], $this->memcached);
         
         
         $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::SUB_REQUEST);
@@ -45,7 +47,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoSession()
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>600], $this->memcached);
         
         $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
@@ -59,7 +61,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoLastUsed()
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>600], $this->memcached);
         
         $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         
@@ -90,7 +92,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $callsToManualExpire)
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>$idleTimeout]);
+        $object = new SessionListener($this->router, ['idleTimeout'=>$idleTimeout], $this->memcached);
         
         $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
         $this->event->shouldReceive('getRequest->hasSession')->andReturn(true);
