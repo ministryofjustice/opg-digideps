@@ -141,6 +141,9 @@ account:
     closingDate:
         notBlank: Please enter closing balance date
         date: Please enter a valid date
+        mismatch: The end date of the report and the date here is different. Please tell us why below.
+    closingDateExplanation:
+        notBlankOnDateMismatch: Please enter a value
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
@@ -149,6 +152,9 @@ account:
     closingBalance:
         notBlank: Value is required and can't be empty
         type: Please enter a valid closing balance
+        mismatch: The final balance from your statement (£ %moneyTotal%) is differerent from the balance in the accounts section.
+    closingBalanceExplanation:
+        notBlankOnDateMismatch: Please enter a value
     moneyInOut:
         account:
           notNumeric: Please enter a total amount

@@ -72,7 +72,7 @@ class AccountController extends Controller
      * 
      * @Route("/report/{reportId}/account/{accountId}/{action}", name="account", requirements={
      *   "accountId" = "\d+",
-     *   "action" = "[\w-]*"
+     *   "action" = "edit|delete|money-in|money-out|money-both|list"
      * }, defaults={ "action" = "list"})
      * @Template()
      */
@@ -94,7 +94,7 @@ class AccountController extends Controller
         $edifFormHasClosingBalance = $report->isDue() && $account->getClosingBalance() > 0;
         
         // closing balance logic
-        list($formBalance, $validFormBalance) = $this->handleClosingBalanceForm($account);
+        list($formBalance, $formBalanceIsSubmitted, $validFormBalance) = $this->handleClosingBalanceForm($account);
         if ($validFormBalance) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
                 'deserialise_group' => 'balance',
@@ -131,16 +131,27 @@ class AccountController extends Controller
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
+        $refreshedAccount = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
+        $refreshedAccount->setReportObject($report);
+        
         // refresh account data after forms have altered the account's data
         if ($validFormBalance || $formMoneyValid || $isEdit) {
-            $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
+            $account = $refreshedAccount;
         }
+        
+        $formBalanceShow = $action == 'list' && $report->isDue() && !$refreshedAccount->isClosingBalanceAndDateValid();
         
         return [
             'report' => $report,
             'client' => $client,
             'form' => $formMoneyInOut->createView(),
             'formBalance' => $formBalance->createView(),
+            // if report is due and the closing balance is not set, show the closing balance form
+            'formBalanceOptions' => [
+                'showForm' => $formBalanceShow,
+                'closingDateExplanation' => ['show' => $formBalanceIsSubmitted && !$account->isClosingDateValid()],
+                'closingBalanceExplanation' => ['show' => $formBalanceIsSubmitted && !$account->isClosingBalanceValid()],
+            ],
             'formEdit' => $formEdit ? $formEdit->createView() : null,
             'showEditForm' => $action == 'edit' || $action == 'delete',
             'showDeleteConfirmation' => $action == 'delete',
@@ -169,7 +180,7 @@ class AccountController extends Controller
     /**
      * @param EntityDir\Account $account
      * 
-     * @return [FormDir\AccountTransactionsType, boolean]
+     * @return [FormDir\AccountTransactionsType, boolean, boolean]
      */
     private function handleClosingBalanceForm(EntityDir\Account $account)
     {
@@ -178,7 +189,7 @@ class AccountController extends Controller
         $isClicked = $form->get('save')->isClicked();
         $valid = $isClicked && $form->isValid();
         
-        return [$form, $valid];
+        return [$form, $isClicked, $valid];
     }
     
     

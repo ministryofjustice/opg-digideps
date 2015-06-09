@@ -1,3 +1,4 @@
+{# form to edit closing balance only #}
 {% set translationDomain = "report-account-balance" %}
 {% trans_default_domain translationDomain %}
 
@@ -16,16 +17,30 @@
     pageSectionDescription: 'form.closing.subSectionDescription'
     } %}
 
-    {{ form_known_date(formBalance.closingDate, 'form.closing.controls.closingDate') }}
-
     {{ form_widget(formBalance.id) }}
-
+    
+    {# Closing date + explanation box #}
+    {{ form_known_date(formBalance.closingDate, 'form.closing.controls.closingDate') }}
+    {# account.closingBalance is null or account.isClosingBalanceMatchingTransactionSum #}
+    {% if formBalanceOptions.closingDateExplanation.show %}
+       {{ form_input(formBalance.closingDateExplanation, 'form.closing.controls.closingDateExplanation', { 'labelClass': 'required' }) }}
+    {% else %}
+      {% do formBalance.closingDateExplanation.setRendered() %}
+    {% endif %}
+   
+    {# Closing balance + explanation box #}
     {{ form_input(formBalance.closingBalance, 'form.closing.controls.closingBalance', {
-    'inputPrefix' : 'form.closing.currencySymbol',
-    'inputClass' : 'form-control__number'
+      'inputPrefix' : 'form.closing.currencySymbol',
+      'inputClass' : 'form-control__number'
     } ) }}
+    {#  account.closingBalance is null or account.isClosingBalanceMatchingTransactionSum #}
+    {% if formBalanceOptions.closingBalanceExplanation.show %}
+      {{ form_input(formBalance.closingBalanceExplanation, 'form.closing.controls.closingBalanceExplanation', { 'labelClass': 'required' }) }}
+    {% else %}
+      {% do formBalance.closingBalanceExplanation.setRendered() %}
+    {% endif %}
 
-
+    
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(formBalance.save, 'save', {
     'labelText': ( 'form.closing.controls.save.label') | trans,

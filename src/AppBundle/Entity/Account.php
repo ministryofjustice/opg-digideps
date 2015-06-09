@@ -7,6 +7,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"basic"})
+ * @Assert\Callback(methods={"isClosingDateValidOrExplanationIsGiven"}, groups={"closing_balance"})
+ * @Assert\Callback(methods={"isClosingBalanceMatchingTransactionsSum"}, groups={"closing_balance"})
  */
 class Account
 {
@@ -86,6 +88,12 @@ class Account
     private $closingBalance;
     
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic", "balance"})
+     */
+    private $closingBalanceExplanation;
+    
+    /**
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
      * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
@@ -93,6 +101,12 @@ class Account
      * @var \DateTime  
      */
     private $closingDate;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic", "balance"})
+     */
+    private $closingDateExplanation;
     
     /**
      * @JMS\Type("DateTime")
@@ -112,6 +126,9 @@ class Account
      */
     private $report;
     
+    /**
+     * @var Report
+     */
     private $reportObject;
     
     /**
@@ -239,6 +256,22 @@ class Account
     }
     
     /**
+     * @return string
+     */
+    public function getClosingBalanceExplanation()
+    {
+        return $this->closingBalanceExplanation;
+    }
+
+    /**
+     * @param string $closingBalanceExplanation
+     */
+    public function setClosingBalanceExplanation($closingBalanceExplanation)
+    {
+        $this->closingBalanceExplanation = $closingBalanceExplanation;
+    }
+
+    /**
      * @return boolean
      */
     public function hasClosingBalance()
@@ -280,7 +313,23 @@ class Account
     {
         $this->closingDate = $closingDate;
     }
+    
+    /**
+     * @return string
+     */
+    public function getClosingDateExplanation()
+    {
+        return $this->closingDateExplanation;
+    }
 
+    /**
+     * @param string $closingDateExplanation
+     */
+    public function setClosingDateExplanation($closingDateExplanation)
+    {
+        $this->closingDateExplanation = $closingDateExplanation;
+    }
+    
     /**
      * @param \DateTime $createdAt
      */
@@ -316,22 +365,6 @@ class Account
     }
     
     /**
-     * Add violation if Opening date is not between report start and end date
-     */
-    public function isOpeningDateBetweenReportDates(ExecutionContextInterface $context)
-    {
-        $reportStartDate = clone $this->reportObject->getStartDate();
-        $reportEndDate = clone $this->reportObject->getEndDate();
-        
-        $reportStartDate->setTime(0, 0, 0);
-        $reportEndDate->setTime(23, 59, 59);
-        
-        if(($reportStartDate > $this->openingDate) || ($reportEndDate < $this->openingDate)){
-             $context->addViolationAt('openingDate','Opening balance date must be between '.$reportStartDate->format('d/m/Y').' and '.$reportEndDate->format('d/m/Y'));
-        }
-    }
-    
-    /**
      * Add violation if Opening date is not the same as the report start date and there is not explanation
      */
     public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
@@ -344,6 +377,33 @@ class Account
             $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
         }
     }
+    
+    /**
+     * Add violation if closing date is not the same as the report end date and there is not explanation
+     */
+    public function isClosingDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
+    {
+        // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
+        if (!$this->isClosingDateEqualToReportEndDate() && !$this->getClosingDateExplanation()) {
+            $context->addViolationAt('closingDate', 'account.closingDate.mismatch');
+            $context->addViolationAt('closingDateExplanation', 'account.closingDateExplanation.notBlankOnDateMismatch');
+        }
+    }
+    
+    /**
+     * Add violation if closing balance does not match sum of transactions
+     */
+    public function isClosingBalanceMatchingTransactionsSum(ExecutionContextInterface $context)
+    {
+        // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
+        if (!$this->isClosingBalanceMatchingTransactionSum() && !$this->getClosingBalanceExplanation()) {
+            $context->addViolationAt('closingBalance', 'account.closingBalance.mismatch', [
+                '%moneyTotal%' => $this->getMoneyTotal()
+            ]);
+            $context->addViolationAt('closingBalanceExplanation', 'account.closingBalanceExplanation.notBlankOnDateMismatch');
+        }
+    }
+    
     
     /**
      * @return boolean
@@ -360,6 +420,48 @@ class Account
         }
         return $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
     }
+    
+    /**
+     * @return boolean
+     */
+    public function isClosingDateEqualToReportEndDate()
+    {
+        if (!$this->getClosingDate()) {
+            return false;
+        }
+        if (!$this->reportObject) {
+            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
+            error_log(__METHOD__ . ' : account reportObject not available', E_WARNING);
+            return false;
+        }
+        return $this->reportObject->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isClosingBalanceMatchingTransactionSum()
+    {
+        return $this->getClosingBalance() == $this->getMoneyTotal();
+    }
+
+    
+    public function isClosingDateValid()
+    {
+        return $this->isClosingDateEqualToReportEndDate() || $this->getClosingDateExplanation();
+    }
+    
+    
+    public function isClosingBalanceValid()
+    {
+        return $this->isClosingBalanceMatchingTransactionSum() || $this->getClosingBalanceExplanation();
+    }
+    
+    public function isClosingBalanceAndDateValid()
+    {
+        return $this->isClosingDateValid() && $this->isClosingBalanceValid();
+    }
+    
     
     public function getMoneyIn()
     {
