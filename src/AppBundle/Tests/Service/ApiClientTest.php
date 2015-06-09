@@ -4,23 +4,38 @@ namespace AppBundle\Tests\Service;
 //use AppBundle\Service\ApiClient;
 use Mockery as m;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Service\OAuth\OAuth2;
+use GuzzleHttp\Client;
 
 
 class ApiClientTest extends \PHPUnit_Framework_TestCase
 {
     private $jsonSerializer;
     private $apiClientMock;
+    private $memcached;
+    private $oauth2ClientMock;
+    private $session;
+    private $options;
     
     public function setUp()
     {
         $this->jsonSerializer = m::mock('JMS\Serializer\Serializer');
         
-        $options = [ 'base_url' => 'https://digideps.api/',
-                     'endpoints' => [ 'find_user_by_email' => 'find-user-by-email'],
-                     'format' => 'json',
-                     'debug' => null ];
-        //mock api client 
-        $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $this->jsonSerializer, $options ]);
+        $this->options = [ 'base_url' => 'https://digideps.api/',
+                            'endpoints' => [ 'find_user_by_email' => 'find-user-by-email'],
+                            'format' => 'json',
+                            'debug' => null,
+                            'use_oauth2' => false ];
+        
+        $this->oauth2ClientMock = m::mock('AppBundle\Service\OAuth\OAuth2', ['https://digideps.api/app_dev.php', 'sfsfsdfdsfds', 'fsfsfsdfs']);
+        $this->oauth2ClientMock->shouldReceive('setUserCredentials')->with(m::any(),m::any())->andReturn(null);
+        
+        $this->session = m::mock('session', [ 'start' => 1, 'getId' => 'test_session_id']);
+        
+        $this->memcached = m::mock('\Memcached');
+        $this->memcached->shouldReceive('get')->andReturn([ 'email' => 'paul.oforduru@digital.justice.gov.uk', 'password' => 'dfdsfdsfsdfsffs']);
+        
+        $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $this->jsonSerializer, $this->oauth2ClientMock,$this->memcached,$this->session,$this->options ]);
     }
     
     public function tearDown()
@@ -142,7 +157,6 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         
         $this->assertInternalType('array', $this->apiClientMock->putC('find_user_by_email', $userObject));
     }
-    
     
     /*public function testCreateRequest()
     {

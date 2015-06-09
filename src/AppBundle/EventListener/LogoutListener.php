@@ -22,17 +22,21 @@ class LogoutListener implements LogoutSuccessHandlerInterface
      */
     private $router;
     
+    private $memcached;
+
+    
     /**
      * @var AuditLogger 
      */
     private $auditLogger;
 
 
-    public function __construct(SecurityContext $security, Router $router, AuditLogger $auditLogger)
+    public function __construct(SecurityContext $security, Router $router, AuditLogger $auditLogger, \Memcached $memcached)
     {
         $this->security = $security;
         $this->router = $router;
         $this->auditLogger = $auditLogger;
+        $this->memcached = $memcached;
     }
 
     public function onLogoutSuccess(Request $request)
@@ -40,6 +44,7 @@ class LogoutListener implements LogoutSuccessHandlerInterface
         $this->auditLogger->log(AuditLogEntry::ACTION_LOGOUT);
         
         $request->getSession()->set('loggedOutFrom', 'logoutPage');
+        $this->memcached->flush();
         
         $response = new RedirectResponse($this->router->generate('login'));
 
