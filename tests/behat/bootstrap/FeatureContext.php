@@ -100,6 +100,21 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitPath('/logout');
     }
 
+    /**
+     * @Given I am on the login page
+     */
+    public function iAmAtLogin()
+    {
+        $this->visitPath('/login');
+    }
+    
+    /**
+     * @And I select the feedback link
+     */
+    public function iPressFeedback()
+    {
+        $this->visitPath('/feedback');
+    }
     
     /**
      * @Then the page title should be :text
@@ -209,6 +224,21 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
 
         // visit the link
         $this->visit($link);
+    }
+    
+    /**
+     * @Then the email should contain :text
+     */
+    public function mailContainsText($text)
+    {
+        
+        $mailContent = $this->getLatestEmailMockFromApi()['parts'][0]['body'];
+        
+        if (strpos($mailContent, $text) === FALSE) {
+            throw new \Exception("Text: $text not found in email. Body: \n $mailContent");
+        }
+        
+        
     }
 
     /**
@@ -443,6 +473,36 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             $this->iShouldSeeInTheRegion($value, 'entry-1');
         }
         
+    }
+    
+    /**
+     * @Then the ":text" link url should contain ":expectedLink"
+     */
+    public function linkWithTextContains($text, $expectedLink)
+    {
+    
+        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//a[text()="' . $text . '"]');
+        $count = count($linksElementsFound);
+        
+        if (count($linksElementsFound) === 0) {
+            throw new \RuntimeException("Element $regionCss not found");
+        }
+        
+        $href = $linksElementsFound[0].getAttribute('href');
+        
+        if (strpos($href, $expectedLink) === FALSE) {
+            throw new \Exception("Link: $href does not contain $expectedLink");
+        }
+
+    }
+    
+    /**
+     * @Given I am on the feedback page
+     * @Given I goto the feedback page
+     */
+    public function feedbackPage()
+    {
+        $this->visit('/feedback');
     }
     
 }

@@ -5,7 +5,7 @@
 
 {% block pageNavigation %}
     <div class="back-navigation">
-        <a href="{{ app.request.headers.get('referer') }}" class="behat-link-back-to-client">{{ 'back.previousPage' | trans }}</a>
+        <a href="{{ app.request.headers.get('referer') }}" class="behat-link-back">{{ 'back.previousPage' | trans }}</a>
     </div>
 {% endblock %}
 
