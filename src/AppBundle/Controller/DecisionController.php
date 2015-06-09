@@ -51,8 +51,13 @@ class DecisionController extends RestController
      */
     public function findByReportIdAction($reportId)
     {
-        $report = $this->findEntityBy('Report', $reportId);
-
+        if(!$this->container->getParameter('anonymous')){
+            $currentUser = $this->getRequest()->getSession()->get('currentUser');
+            $report = $this->getRepository('Report')->findByIdAndUser($reportId,$currentUser->getId());
+        }else{
+            $report = $this->findEntityBy('Report', $reportId); 
+        }
+        
         return $this->getRepository('Decision')->findBy(['report'=>$report]);
     }
     

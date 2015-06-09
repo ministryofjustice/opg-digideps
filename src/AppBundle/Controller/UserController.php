@@ -126,7 +126,7 @@ class UserController extends RestController
     public function getByEmail($email)
     {
         $request = $this->getRequest();
-        
+       
         $serialisedGroups = ['basic'];
         
         if($request->query->has('groups')){

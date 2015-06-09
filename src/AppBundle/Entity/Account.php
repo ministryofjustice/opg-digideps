@@ -607,4 +607,14 @@ class Account
     {
         return $this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
     }
+
+    /**
+     * Remove transactions
+     *
+     * @param \AppBundle\Entity\AccountTransaction $transactions
+     */
+    public function removeTransaction(\AppBundle\Entity\AccountTransaction $transactions)
+    {
+        $this->transactions->removeElement($transactions);
+    }
 }

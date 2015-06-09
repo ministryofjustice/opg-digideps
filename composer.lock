@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "aa444616668ae1e794856d809836765a",
+    "hash": "f902e28d4e6df52a4d9f8784456cd460",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -669,7 +669,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/migrations/zipball/058a4635ac9b80a5b1997df28a754e64b1425a1d",
+                "url": "https://api.github.com/repos/doctrine/migrations/zipball/a4f14d3a3d397104e557ec65d1a4e43bb86e4ddf",
                 "reference": "058a4635ac9b80a5b1997df28a754e64b1425a1d",
                 "shasum": ""
             },
@@ -789,6 +789,129 @@
                 "orm"
             ],
             "time": "2014-12-16 13:45:01"
+        },
+        {
+            "name": "friendsofsymfony/oauth-server-bundle",
+            "version": "dev-master",
+            "target-dir": "FOS/OAuthServerBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/FOSOAuthServerBundle.git",
+                "reference": "0c72d8baf707dce59c59a4daa1549c06e510bbed"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/FOSOAuthServerBundle/zipball/0c72d8baf707dce59c59a4daa1549c06e510bbed",
+                "reference": "0c72d8baf707dce59c59a4daa1549c06e510bbed",
+                "shasum": ""
+            },
+            "require": {
+                "friendsofsymfony/oauth2-php": "~1.1.0",
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "~2.2",
+                "symfony/security-bundle": "~2.1"
+            },
+            "require-dev": {
+                "doctrine/doctrine-bundle": "~1.0",
+                "doctrine/mongodb-odm": "1.0.*@dev",
+                "doctrine/orm": ">=2.2,<2.5-dev",
+                "symfony/class-loader": "~2.1",
+                "symfony/yaml": "~2.1",
+                "willdurand/propel-typehintable-behavior": "~1.0,>1.0.4"
+            },
+            "suggest": {
+                "doctrine/doctrine-bundle": "*",
+                "doctrine/mongodb-odm-bundle": "*",
+                "propel/propel-bundle": "If you want to use Propel with Symfony2, then you will have to install the PropelBundle",
+                "willdurand/propel-typehintable-behavior": "The Typehintable behavior is useful to add type hints on generated methods, to be compliant with interfaces"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "FOS\\OAuthServerBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Le Blanc",
+                    "email": "arnaud.lb@gmail.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/FriendsOfSymfony/FOSOAuthServerBundle/contributors"
+                }
+            ],
+            "description": "Symfony2 OAuth Server Bundle",
+            "homepage": "http://friendsofsymfony.github.com",
+            "keywords": [
+                "oauth",
+                "oauth2",
+                "server"
+            ],
+            "time": "2015-05-01 22:00:52"
+        },
+        {
+            "name": "friendsofsymfony/oauth2-php",
+            "version": "1.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfSymfony/oauth2-php.git",
+                "reference": "23e76537c4a02e666ab4ba5abe67a69a886a0310"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfSymfony/oauth2-php/zipball/23e76537c4a02e666ab4ba5abe67a69a886a0310",
+                "reference": "23e76537c4a02e666ab4ba5abe67a69a886a0310",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/http-foundation": "~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OAuth2\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Le Blanc",
+                    "email": "arnaud.lb@gmail.com"
+                },
+                {
+                    "name": "FriendsOfSymfony Community",
+                    "homepage": "https://github.com/FriendsOfSymfony/oauth2-php/contributors"
+                }
+            ],
+            "description": "OAuth2 library",
+            "homepage": "https://github.com/FriendsOfSymfony/oauth2-php",
+            "keywords": [
+                "oauth",
+                "oauth2"
+            ],
+            "time": "2014-11-03 10:21:20"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -3061,7 +3184,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "doctrine/migrations": 20,
-        "doctrine/doctrine-migrations-bundle": 20
+        "doctrine/doctrine-migrations-bundle": 20,
+        "friendsofsymfony/oauth-server-bundle": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
