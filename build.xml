@@ -38,6 +38,7 @@
     </target>
     
     <target name="cache-clear" description="">
+        <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
         <echo msg="Permission on cache and logs set"></echo>
         
