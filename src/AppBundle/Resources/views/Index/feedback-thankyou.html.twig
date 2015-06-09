@@ -9,6 +9,9 @@
 {% endblock %}
 
 {% block pageNavigation %}
+    <div class="back-navigation">
+        <a href="{{ path('client_home') }}" class="behat-link-back-to-client">{{ 'back.client' | trans }}</a>
+    </div>
 {% endblock %}
 
 {% block validationSummary %}
