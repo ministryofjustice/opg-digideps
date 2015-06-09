@@ -20,6 +20,9 @@ page:
       label: "Closing balance date"
     closingBalance:
       label: "Closing balance"
+    pleaseTellUsWhy:
+      datesMismatch: "Please tell us why the dates do not match:"
+      balancesMismatch: "Please tell us why the balances do not match:"
 moneyIn:
   panelTitle: Money paid in
   panelFooter: Money in total

@@ -76,9 +76,7 @@ class ReportController extends Controller
         $client = $util->getClient($report->getClient());
         
         // report submit logic
-        $redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report);
-        
-        if($redirectResponse){
+        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
         
