@@ -4,7 +4,7 @@ namespace AppBundle\Tests\Service;
 //use AppBundle\Service\ApiClient;
 use Mockery as m;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Service\OAuth;
+use AppBundle\Service\OAuth\OAuth2;
 use GuzzleHttp\Client;
 
 
@@ -27,7 +27,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
                             'debug' => null,
                             'use_oauth2' => false ];
         
-        $this->oauth2ClientMock = m::mock('AppBundle\Service\OAuth', ['https://digideps.api/app_dev.php', 'sfsfsdfdsfds', 'fsfsfsdfs']);
+        $this->oauth2ClientMock = m::mock('AppBundle\Service\OAuth\OAuth2', ['https://digideps.api/app_dev.php', 'sfsfsdfdsfds', 'fsfsfsdfs']);
         $this->oauth2ClientMock->shouldReceive('setUserCredentials')->with(m::any(),m::any())->andReturn(null);
         
         $this->session = m::mock('session', [ 'start' => 1, 'getId' => 'test_session_id']);
@@ -158,19 +158,6 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $this->apiClientMock->putC('find_user_by_email', $userObject));
     }
     
-    
-    /*public function testGetEntityOAuth2Fail()
-    {
-        $oauth2Client = new OAuth('https://ci-api.digideps.dsd.io',null,null);
-        $oaut
-        $config = [ 
-                    'base_url' =>  $options['base_url'],
-                    'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                                   'verify' => false,
-                                   'auth' => 'oauth2',
-                                   'subscribers' => [ $oauth2Client->getSubscriber() ]
-                                   ]];
-    }*/
     /*public function testCreateRequest()
     {
         $this->assertInstanceOf('GuzzleHttp\Message\Request', $this->apiClientMock->createRequest('GET','find_user_by_email', [ 'query' => [ 'test']]));

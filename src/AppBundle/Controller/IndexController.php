@@ -35,6 +35,7 @@ class IndexController extends Controller
     public function loginAction()
     {
         $request = $this->getRequest();
+        $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
 
         $form = $this->createForm(new LoginType(), null, [
             'action' => $this->generateUrl('login'),
@@ -48,8 +49,10 @@ class IndexController extends Controller
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
             
-            $memcached = $this->get('oauth.memcached');
-            $memcached->flush();
+            if($oauth2Enabled){
+                $memcached = $this->get('oauth.memcached');
+                $memcached->flush();
+            }
             
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
@@ -75,12 +78,14 @@ class IndexController extends Controller
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
             
-            $credentials = $memcached->get($session->getId().'_user_credentials');
-            
-            if(!$credentials){
-                $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
-            }else{
-                $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+            if($oauth2Enabled){
+                $credentials = $memcached->get($session->getId().'_user_credentials');
+
+                if(!$credentials){
+                    $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
+                }else{
+                    $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                }
             }
             
             $request = $this->get("request");
