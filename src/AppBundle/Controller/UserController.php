@@ -32,6 +32,7 @@ class UserController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $translator = $this->get('translator');
+        $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
@@ -64,14 +65,16 @@ class UserController extends Controller
                 $session = $this->get('session');
                 $session->set('_security_secured_area', serialize($token));
                  
-                 //cache hashed password to use in oauth2 calls
-                $memcached = $this->get('oauth.memcached');
-                $userApiKey = $memcached->get($session->getId().'_user_credentials');
-                
-                if(!$userApiKey){
-                    $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
-                }else{
-                    $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                if($oauth2Enabled){
+                    //cache hashed password to use in oauth2 calls
+                   $memcached = $this->get('oauth.memcached');
+                   $userApiKey = $memcached->get($session->getId().'_user_credentials');
+
+                   if(!$userApiKey){
+                       $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                   }else{
+                       $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                   }
                 }
                  
                  $request = $this->get("request");
@@ -139,6 +142,7 @@ class UserController extends Controller
     {
         $request = $this->getRequest();
         $user = $this->getUser();
+        $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
         $formEditDetails = $this->createForm(new UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
@@ -178,16 +182,18 @@ class UserController extends Controller
                     $this->get('mailSender')->send($email,[ 'html']);
                     
                     //reset user api key
-                     $session = $this->get('session');
-                     
-                     //cache hashed password to use in oauth2 calls
-                    $memcached = $this->get('oauth.memcached');
-                    $userApiKey = $memcached->get($session->getId().'_user_credentials');
+                    $session = $this->get('session');
+                    
+                    if($oauth2Enabled){
+                        //cache hashed password to use in oauth2 calls
+                       $memcached = $this->get('oauth.memcached');
+                       $userApiKey = $memcached->get($session->getId().'_user_credentials');
 
-                    if(!$userApiKey){
-                        $memcached->add($session->getId().'_user_credentials',['email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
-                    }else{
-                        $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                       if(!$userApiKey){
+                           $memcached->add($session->getId().'_user_credentials',['email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                       }else{
+                           $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                       }
                     }
                     
                     $request->getSession()->getFlashBag()->add(

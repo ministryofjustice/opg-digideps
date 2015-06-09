@@ -76,17 +76,16 @@ class ApiClient extends GuzzleClient
             $sessionId = $this->session->getId();
         }
         
-        //check if we already have user api key
-        $credentials = $this->memcached->get($sessionId.'_user_credentials');
-         
-        if($credentials){
-            $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
-        }
-        
         
         // construct parent (GuzzleClient)
-        
         if($options['use_oauth2']){
+            //check if we already have user api key
+            $credentials = $this->memcached->get($sessionId.'_user_credentials');
+
+            if($credentials){
+                $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
+            }
+        
             parent::__construct([ 
                 'base_url' =>  $options['base_url'],
                 'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
