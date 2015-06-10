@@ -536,12 +536,14 @@ Feature: report
         And I am on the accounts page of the first report
         Then I should see the "account-1234-warning" region
         When I click on "account-1234"
+        Then I should not see a "accountBalance_closingDateExplanation" element
+        Then I should not see a "accountBalance_closingBalanceExplanation" element
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 
             | accountBalance_closingDate_month | | 
             | accountBalance_closingDate_year  | | 
             | accountBalance_closingBalance    | | 
-        # wrong values
+        # invalid values
         When I fill in the following:
             | accountBalance_closingDate_day   | 99 | 
             | accountBalance_closingDate_month | 99 | 
@@ -553,19 +555,89 @@ Feature: report
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
             | accountBalance_closingBalance    |
-        # right values  
+        # only date mismatch (30/6/2015) instead of 7/6/2015)
         When I fill in the following:
-            | accountBalance_closingDate_day   | 28 | 
-            | accountBalance_closingDate_month | 12 | 
+            | accountBalance_closingDate_day   | 30 | 
+            | accountBalance_closingDate_month | 06 | 
             | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 3,105.50 | 
+            | accountBalance_closingBalance    | -3100.50 | 
         And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingDateExplanation | 
+        And I should not see a "accountBalance_closingBalanceExplanation" element
+        # only balance mismatch (3000 instead of -3,100.50)
+         When I fill in the following:
+            | accountBalance_closingDate_day   | 07 | 
+            | accountBalance_closingDate_month | 06 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | -3000 | 
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        And I should not see a "accountBalance_closingDateExplanation" element
+        # both date and balance mismatch: assert submit fails
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 30 | 
+            | accountBalance_closingDate_month | 07 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | -3000 | 
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingDateExplanation | 
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        # fix date, assert only balance failes and date explanation disappear
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 07 | 
+            | accountBalance_closingDate_month | 06 | 
+            | accountBalance_closingDate_year  | 2015 | 
+        And I press "accountBalance_save"
+        Then I should not see a "accountBalance_closingDateExplanation" element
+        And the following fields should have an error:
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        # make date invalid, fix balance. assert only date fails and balance explanation disappear
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 30 | 
+            | accountBalance_closingDate_month | 07 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance | -3100.50 | 
+        And I press "accountBalance_save"
+        Then I should not see a "accountBalance_closingBalanceExplanation" element
+        And the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingDateExplanation | 
+        # save with both date and balance mismatch
+        # both date and balance mismatch: add explanations
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 30 | 
+            | accountBalance_closingDate_month | 07 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | -3000 | 
+        And I press "accountBalance_save"
+        Then the form should contain an error
+        When I fill in the following:
+            | accountBalance_closingDateExplanation| not possible to login to homebanking before |
+            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
+        And I press "accountBalance_save"
+        Then the form should not contain any error
+        # assert the form disappeared
         Then I should not see the "account-closing-balance-form" region
         # assert transactions are not changed due to the form in the same page
         And I should see "£-3,100.50" in the "money-totals" region
+        # refresh page and check values
         When I follow "tab-accounts"
-        Then I should see "3,105.50" in the "account-1-closing-balance" region
-        And I should see "28/12/2015" in the "account-1-closing-date" region
+        Then I should see "3,000.00" in the "account-1-closing-balance" region
+        And I should see "30/07/2015" in the "account-1-closing-date" region
 
 
     @deputy
