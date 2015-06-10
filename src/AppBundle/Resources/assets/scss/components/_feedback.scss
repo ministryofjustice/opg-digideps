@@ -1,0 +1,36 @@
+form.in-page-form.feedback-form {
+    
+    border-left: none;
+    padding-left: 0;
+    
+    .form-group {
+        float: none;
+    }
+    
+    .form-label {
+        width: 100%;
+        max-width: 560px;
+        margin-bottom: 5px;
+    }
+    
+    .form-group__checkbox-group {
+        
+        width: 100%;
+        max-width: 560px;
+        
+        .block-label {
+            float: none;
+            @include core-19();
+        }
+    
+    }
+    
+    .button-bar {
+        margin-top: 60px;
+
+        .button {
+            @include core-19();
+        }
+    }
+    
+}
