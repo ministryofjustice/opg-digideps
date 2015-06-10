@@ -9,6 +9,7 @@ parameters:
     email_send:
       from_email: no-reply@digideps.service.dsd.io
       from_name: Digital Deputyship Service
+      to_email: deputyshipservice@publicguardian.gsi.gov.uk
     email_report_submit:
       from_email: deputyshipservice@publicguardian.gsi.gov.uk 
       to_email: deputyshipservice@publicguardian.gsi.gov.uk 

@@ -1,0 +1,24 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "feedback" %}
+
+{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+
+{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageHeader %}
+    {{ parent() }}
+{% endblock %}
+
+{% block pageNavigation %}
+    <div class="back-navigation">
+        <a href="{{ path('client_home') }}" class="behat-link-back">{{ 'back.label' | trans }}</a>
+    </div>
+{% endblock %}
+
+{% block validationSummary %}
+    
+{% endblock %}
+
+
+{% block pageBody %}
+       {{ 'thankYou' | trans }}
+{% endblock %}
