@@ -149,14 +149,14 @@ class AccountController extends Controller
             // closing balance form: show closing balance/date explanation only in case of mismatch
             'closingBalanceForm' => $formClosingBalance->createView(),
             'closingBalanceFormShow' => $action == 'list' && $report->isDue() && $account->needsClosingBalanceData(),
-            'closingBalanceFormDateExplanationShow' => $closingBalanceFormIsSubmitted && !$account->isClosingDateValid(),
-            'closingBalanceFormBalanceExplanationShow' => $closingBalanceFormIsSubmitted && !$account->isClosingBalanceValid(),
+            'closingBalanceFormDateExplanationShow' => $account->getClosingDate() && $closingBalanceFormIsSubmitted && !$account->isClosingDateValid(),
+            'closingBalanceFormBalanceExplanationShow' => $account->getClosingBalance() !== null && $closingBalanceFormIsSubmitted && !$account->isClosingBalanceValid(),
             // edit form: show closing balance/date explanation only in case of mismatch
             'formEdit' => $formEdit ? $formEdit->createView() : null,
             'formEditShow' => $action == 'edit' || $action == 'delete',
             // edit form: show closing date explanation is submitted with a value, or it's just not valid 
-            'formEditClosingDateExplanationShow' => !$account->isClosingDateEqualToReportEndDate(),
-            'formEditClosingBalanceExplanationShow' => !$account->isClosingBalanceMatchingTransactionSum(),
+            'formEditClosingDateExplanationShow' => $account->getClosingDate() && !$account->isClosingDateEqualToReportEndDate(),
+            'formEditClosingBalanceExplanationShow' => $account->getClosingBalance() && !$account->isClosingBalanceMatchingTransactionSum(),
             // delete forms
             'showDeleteConfirmation' => $action == 'delete',
             // other date needed for the view (list action mainly)
