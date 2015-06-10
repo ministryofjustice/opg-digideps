@@ -42,7 +42,7 @@ class ReportSubmitter
      * 
      * @return RedirectResponse|null
      */
-    public function isReportSubmitted(Report $report)
+    public function submit(Report $report)
     {
         $this->form->handleRequest($this->container->get('request'));
 

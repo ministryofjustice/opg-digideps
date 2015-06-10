@@ -9,7 +9,7 @@ form:
     accountDetails:
       subSectionTitle: Edit account details
     openingBalance:
-      subSectionTitle: The opening balance of the account
+      subSectionTitle: Edit the starting balance
     closingBalance:
       subSectionTitle: The closing balance of the account
       subSectionDescription: The closing balance is the sum of money in the account on the end date of your reporting period.
@@ -48,18 +48,18 @@ form:
         label: Branch sort code
         hint: ""
   openingBalance:
-    subSectionTitle: Add the opening balance of the account
-    subSectionDescription: The opening balance is the sum of money in the account on the start date of your reporting period.
+    subSectionTitle: Add the starting balance
+    subSectionDescription: The starting balance is the sum of money in the account at the start of your reporting period.
     controls:
       openingDate:
-        legend: Start date
+        legend: Start date of reporting period
         hint: (DD/MM/YYYY)
       openingBalance:
-        label: Opening balance
+        label: Starting balance
       openingBalancePrefix:
         label: £
-      openBalanceMessage:
-        label: If you cannot give an opening balance at the start date of the report or the balance is for a different date, tell us why. Tell us the actual dates you are using below.
+      openingDateExplanation:
+        label: If the balance is for a different date, tell us why.
       save:
         label: Continue
       cancel:

@@ -25,8 +25,9 @@ class ReportController extends Controller
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
+        $util = $this->get('util');
        
-        $client = $this->getClient($clientId);
+        $client = $util->getClient($clientId);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
@@ -67,14 +68,15 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId);
+        $util = $this->get('util');
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $this->getClient($report->getClient());
+        $client = $util->getClient($report->getClient());
         
         // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->isReportSubmitted($report)) {
+        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
         
@@ -158,13 +160,14 @@ class ReportController extends Controller
      */
     public function submitConfirmationAction($reportId)
     {
-        $report = $this->getReport($reportId);
+        $util = $this->get('util');
+        $report = $util->getReport($reportId);
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
         if (count($violations)) {
             throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
-        $client = $this->getClient($report->getClient());
+        $client = $util->getClient($report->getClient());
         
         return [
             'report' => $report,
@@ -179,13 +182,14 @@ class ReportController extends Controller
     public function displayAction($reportId, $isEmailAttachment = false)
     {
         $apiClient = $this->get('apiclient');
+        $util = $this->get('util');
         
-        $report = $this->getReport($reportId);
+        $report = $util->getReport($reportId);
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
         if (count($violations)) {
             throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
-        $client = $this->getClient($report->getClient());
+        $client = $util->getClient($report->getClient());
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
@@ -202,23 +206,4 @@ class ReportController extends Controller
         ];
     }
     
-    /**
-     * @param integer $clientId
-     *
-     * @return Client
-     */
-    protected function getClient($clientId)
-    {
-        return $this->get('apiclient')->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ]]);
-    }
-    
-    /**
-     * @param integer $reportId
-     * 
-     * @return EntityDir/Report
-     */
-    protected function getReport($reportId,array $groups = [ 'transactions', 'basic'])
-    {
-        return $this->get('apiclient')->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'userId' => $this->getUser()->getId() ,'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
-    }
 }

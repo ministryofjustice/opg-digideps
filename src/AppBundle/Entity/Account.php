@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isValidOpeningDate"}, groups={"basic"})
+ * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"basic"})
  */
 class Account
 {
@@ -20,7 +20,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic"})
      * @Assert\Type(type="string", message="account.bank.type", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $bank
      */
@@ -31,7 +31,7 @@ class Account
      * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic"})
      * @Assert\Length(min=6, minMessage = "account.sortCode.length", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $sortCode
      */
@@ -43,7 +43,7 @@ class Account
      * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic"})
      * @Assert\Length(minMessage="account.accountNumber.length",min=4, groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $accountNumber
      */
@@ -53,7 +53,7 @@ class Account
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"basic"})
      * @Assert\Date(message="account.openingDate.date", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var \DateTime 
      */
@@ -61,13 +61,19 @@ class Account
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due"})
      * 
      * @var decimal
      */
     private $openingBalance;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "edit_details", "add"})
+     */
+    private $openingDateExplanation;
     
     /**
      * @JMS\Type("string")
@@ -102,6 +108,7 @@ class Account
     
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"add"})
      */
     private $report;
     
@@ -203,6 +210,16 @@ class Account
         return $this->openingBalance;
     }
     
+    public function getOpeningDateExplanation()
+    {
+        return $this->openingDateExplanation;
+    }
+
+    public function setOpeningDateExplanation($openingDateExplanation)
+    {
+        $this->openingDateExplanation = $openingDateExplanation;
+    }
+        
     /**
      * @param type $closingBalance
      * @return type
@@ -301,7 +318,7 @@ class Account
     /**
      * Add violation if Opening date is not between report start and end date
      */
-    public function isValidOpeningDate(ExecutionContextInterface $context)
+    public function isOpeningDateBetweenReportDates(ExecutionContextInterface $context)
     {
         $reportStartDate = clone $this->reportObject->getStartDate();
         $reportEndDate = clone $this->reportObject->getEndDate();
@@ -312,6 +329,36 @@ class Account
         if(($reportStartDate > $this->openingDate) || ($reportEndDate < $this->openingDate)){
              $context->addViolationAt('openingDate','Opening balance date must be between '.$reportStartDate->format('d/m/Y').' and '.$reportEndDate->format('d/m/Y'));
         }
+    }
+    
+    /**
+     * Add violation if Opening date is not the same as the report start date and there is not explanation
+     */
+    public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
+    {
+        $openedOnTheDayWhenTheReportStarted = $this->isOpeningDateValid();
+        
+        // trigger error in case of date mismatch (report start date different from account opening date) and explanation is empty
+        if (!$openedOnTheDayWhenTheReportStarted && !$this->getOpeningDateExplanation()) {
+            $context->addViolationAt('openingDate', 'account.openingDate.notSameAsReport');
+            $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
+        }
+    }
+    
+    /**
+     * @return boolean
+     */
+    public function isOpeningDateValid()
+    {
+        if (!$this->getOpeningDate()) {
+            return false;
+        }
+        if (!$this->reportObject) {
+            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
+            error_log(__METHOD__ . ' : account reportObject not available', E_WARNING);
+            return false;
+        }
+        return $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
     }
     
     public function getMoneyIn()

@@ -15,7 +15,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $this->object = new Account; 
     }
     
-    public static function ValidOpeningDate()
+    public static function provider()
     {
         return [
             // near the limits
@@ -35,9 +35,9 @@ class AccountTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * @dataProvider validOpeningDate
+     * @dataProvider provider
      */
-    public function testIsValidOpeningDate($reportStartDate, $reportEndDate, $accountOpeningDate, $numberOfViolations)
+    public function testIsOpeningDateBetweenReportDates($reportStartDate, $reportEndDate, $accountOpeningDate, $numberOfViolations)
     {
         // report mock with start/end dates
         $report = m::mock('AppBundle\Entity\Report');
@@ -51,7 +51,7 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $context = m::mock('Symfony\Component\Validator\ExecutionContextInterface');
         $context->shouldReceive('addViolationAt')->with('openingDate',m::any())->times($numberOfViolations);
         
-        $this->object->isValidOpeningDate($context);
+        $this->object->isOpeningDateBetweenReportDates($context);
         
         m::close();
     }
