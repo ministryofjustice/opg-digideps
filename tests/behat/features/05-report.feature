@@ -647,15 +647,17 @@ Feature: report
         And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
         Then the following fields should have the corresponding values:
-            | account_closingDate_day   | 28 | 
-            | account_closingDate_month | 12 | 
+            | account_closingDate_day   | 30 | 
+            | account_closingDate_month | 07 | 
             | account_closingDate_year  | 2015 | 
-            | account_closingBalance    | 3,105.50 | 
-        # wrong values
+            | account_closingDateExplanation  | not possible to login to homebanking before | 
+            | account_closingBalance    | -3,000.00 | 
+            | account_closingBalanceExplanation | £ 100.50 moved to other account | 
+        # invalid values
         When I fill in the following:
             | account_closingDate_day   |  | 
-            | account_closingDate_month | 13 | 
-            | account_closingDate_year  | string | 
+            | account_closingDate_month |  | 
+            | account_closingDate_year  |  | 
             | account_closingBalance    |  | 
         And I press "account_save"
         Then the following fields should have an error:
@@ -663,17 +665,48 @@ Feature: report
             | account_closingDate_month |
             | account_closingDate_year  |
             | account_closingBalance    |
+        And I should not see the "account_closingDateExplanation" element
+        And I should not see the "account_closingBalanceExplanation" element
         And I save the page as "report-account-edit-after-closing-errors"
-        # right values
-        When I fill in the following:
-            | account_closingDate_day   | 31  | 
-            | account_closingDate_month | 12 | 
+        # assert explanations disappear when values are ok (bank empties to avoid submissions)
+        When go to "/report/1/account/1/edit"
+        And I fill in the following:
+            | account_bank | |
+            | account_closingDate_day   | 07 | 
+            | account_closingDate_month | 06 | 
             | account_closingDate_year  | 2015 | 
-            | account_closingBalance    | 3,100.00 | 
+            | account_closingBalance    | -3100.50 |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_bank   | 
+        And I should not see the "account_closingDateExplanation" element
+        And I should not see the "account_closingBalanceExplanation" element
+        # assert explanations are required
+        When go to "/report/1/account/1/edit"
+        And I fill in the following:
+            | account_closingDateExplanation | |
+            | account_closingBalanceExplanation |  | 
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_closingDate_day   | 
+            | account_closingDate_month |
+            | account_closingDate_year  |
+            | account_closingDateExplanation | 
+            | account_closingBalance    | 
+            | account_closingBalanceExplanation | 
+        # simple save
+        When go to "/report/1/account/1/edit"
+        And I fill in the following:
+            | account_closingDate_day   | 28 |
+            | account_closingDate_month | 07 |
+            | account_closingDate_year  | 2015 |
+            | account_closingDateExplanation | not possible to login to homebanking before the 28th |
+            | account_closingBalance | -3,000.50 | 
+            | account_closingBalanceExplanation | £ 100 moved to other account | 
         And I press "account_save"
         Then the form should not contain any error
-        And I should see "31/12/2015" in the "account-closing-balance-date" region
-        And I should see "£3,100.00" in the "account-closing-balance" region
+        And I should see "28/07/2015" in the "account-closing-balance-date" region
+        And I should see "£-3,000.50" in the "account-closing-balance" region
 
 
     @deputy
