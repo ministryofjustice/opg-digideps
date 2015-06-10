@@ -109,14 +109,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @And I select the feedback link
-     */
-    public function iPressFeedback()
-    {
-        $this->visitPath('/feedback');
-    }
-    
-    /**
      * @Then the page title should be :text
      */
     public function thePageTitleShouldBe($text)
@@ -503,6 +495,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     /**
      * @Given I am on the feedback page
      * @Given I goto the feedback page
+     * @And I select the feedback link
      */
     public function feedbackPage()
     {

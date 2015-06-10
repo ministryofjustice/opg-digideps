@@ -28,7 +28,7 @@ default:
                     maxNestingLevel: 200
                     
       feedback:
-        description: End to end journey for Admin user
+        description: Tests related to user feedback
         paths:    [ %paths.base%/tests/behat/features ]
         filters:
             tags: @feedback
@@ -38,16 +38,6 @@ default:
                     session:   '@session'
                     maxNestingLevel: 200
                     
-      wip:
-        description: End to end journey for Admin user
-        paths:    [ %paths.base%/tests/behat/features ]
-        filters:
-            tags: @wip
-        contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:
