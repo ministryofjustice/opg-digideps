@@ -128,20 +128,6 @@ class Account
     private $report;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="date_justification", type="text", nullable=true)
-     */
-    private $dateJustification;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="balance_justification", type="text", nullable=true)
-     */
-    private $balanceJustification;
-
-    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -455,52 +441,6 @@ class Account
     }
 
     /**
-     * Set dateJustification
-     *
-     * @param string $dateJustification
-     * @return Account
-     */
-    public function setDateJustification($dateJustification)
-    {
-        $this->dateJustification = $dateJustification;
-
-        return $this;
-    }
-
-    /**
-     * Get dateJustification
-     *
-     * @return string 
-     */
-    public function getDateJustification()
-    {
-        return $this->dateJustification;
-    }
-
-    /**
-     * Set balanceJustification
-     *
-     * @param string $balanceJustification
-     * @return Account
-     */
-    public function setBalanceJustification($balanceJustification)
-    {
-        $this->balanceJustification = $balanceJustification;
-
-        return $this;
-    }
-
-    /**
-     * Get balanceJustification
-     *
-     * @return string 
-     */
-    public function getBalanceJustification()
-    {
-        return $this->balanceJustification;
-    }
-
-    /**
      * Set report
      *
      * @param \AppBundle\Entity\Report $report
@@ -521,35 +461,6 @@ class Account
     public function getReport()
     {
         return $this->report;
-    }
-    
-    public function isDateJustifiable()
-    {
-        if(empty($this->openingDate) || empty($this->closingDate)){
-            return true;
-        }
-        
-        if(($this->openingDate == $this->report->getStartDate()) && ($this->closingDate == $this->report->getEndDate())){
-            return true;
-        } 
-        return false;
-    }
-    
-    /**
-     * Checks if account balance is justifiable
-     * 
-     * @return boolean
-     */
-    public function isBalanceJustifiable()
-    {
-        $balanceOffset = $this->getBalanceOffset();
-        $openingBalance = $this->openingBalance;
-        $closingBalance = $this->closingBalance;
-        
-        if(isset($balanceOffset) && ($balanceOffset != 0) && isset($openingBalance) && isset($closingBalance)){
-            return false;
-        }
-        return true;
     }
     
     /**
