@@ -88,12 +88,11 @@ class AccountController extends Controller
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
-        
         $account->setReportObject($report);
         
         // closing balance logic
-        list($formClosingBalance, $closingBalanceFormIsSubmitted, $validFormBalance) = $this->handleClosingBalanceForm($account);
-        if ($validFormBalance) {
+        list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
+        if ($formBalanceIsValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
                 'deserialise_group' => 'balance',
             ]);
@@ -101,8 +100,8 @@ class AccountController extends Controller
         }
         
         // money in/out logic
-        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOutForm($account);
-        if ($formMoneyValid) {
+        list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
+        if ($formMoneyIsValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
@@ -115,17 +114,17 @@ class AccountController extends Controller
         
         // edit/delete logic
         $editFormHasClosingBalance = $report->isDue()/* && $account->getClosingBalance() > 0 not clear this after dd-588 changes */;
-        list($formEdit, $isEditSubmitted, $formEditEditedSuccess, $formEditDeletedSuccess) = $this->handleAccountEditDeleteForm($account, [
+        list($formEdit, $formEditIsValid, $formDeleteIsValid) = $this->handleAccountEditDeleteForm($account, [
             'showClosingBalance' => $editFormHasClosingBalance,
             'showSubmitButton' => $action != 'delete',
             'showDeleteButton' => $action == 'delete'
         ]);
-        if ($formEditEditedSuccess) {
+        if ($formEditIsValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
                 'deserialise_group' => $editFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
-        } else if ($formEditDeletedSuccess) {
+        } else if ($formDeleteIsValid) {
             $this->get('apiclient')->delete('account/' .  $account->getId());
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
@@ -135,11 +134,10 @@ class AccountController extends Controller
         $refreshedAccount->setReportObject($report);
         
         // refresh account data after forms have altered the account's data
-        if ($validFormBalance || $formMoneyValid || $formEditEditedSuccess) {
+        if ($formBalanceIsValid || $formMoneyIsValid || $formEditIsValid) {
             //TODO try tests without this
             $account = $refreshedAccount;
         }
-        
         
         return [
             'report' => $report,
@@ -188,7 +186,7 @@ class AccountController extends Controller
             $account->setClosingBalanceExplanation(null);
         }
         
-        return [$form, $isEditSubmitted, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];
+        return [$form, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];
     }
     
     
