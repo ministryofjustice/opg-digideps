@@ -26,6 +26,18 @@ default:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
+                    
+      feedback:
+        description: Tests related to user feedback
+        paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: @feedback
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+                    
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:

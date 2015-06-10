@@ -1,0 +1,22 @@
+pageTitle: Your feedback
+htmlTitle: Deputyship service - Your feedback
+
+difficulty.label: Did you have any difficulty with this service?
+ideas.label: Do you have any ideas for how it could be improved?
+
+satisfactionLevel.legend: Overall, how did you feel about the service you received today?
+help.legend: Did you have any help filling in this form?
+back.label: Back to deputy report
+send.label: Send feedback
+
+
+email:
+    subject: User Feedback
+    
+thankYou: Thank you for sending your feedback
+
+
+
+#_security:
+#    403_error:
+#    last_error: sec last error
