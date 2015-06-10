@@ -90,6 +90,8 @@ class ApiClient extends GuzzleClient
                 'base_url' =>  $options['base_url'],
                 'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
                                'verify' => false,
+                               'timeout' => 60,
+                               'connect_timeout' => 30,
                                'auth' => 'oauth2',
                                'subscribers' => [ $oauth2Client->getSubscriber() ]
                               ]]);
@@ -97,7 +99,9 @@ class ApiClient extends GuzzleClient
            parent::__construct([ 
                 'base_url' =>  $options['base_url'],
                 'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                               'verify' => false
+                               'verify' => false,
+                               'timeout' => 60,
+                               'connect_timeout' => 30
                               ]]);
         }
         
