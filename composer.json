@@ -26,7 +26,8 @@
         "doctrine/doctrine-migrations-bundle": "2.1.*@dev",
         "phpunit/phpunit": "4.4.*",
         "mockery/mockery": "*",
-        "sendgrid/sendgrid": "2.2.1"
+        "sendgrid/sendgrid": "2.2.1",
+        "friendsofsymfony/oauth-server-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [

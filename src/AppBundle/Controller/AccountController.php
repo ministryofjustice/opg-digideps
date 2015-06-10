@@ -21,7 +21,14 @@ class AccountController extends RestController
         
         $this->setJmsSerialiserGroup($serialiseGroups);
         
-        $report = $this->findEntityBy('Report', $id);
+        if(!$this->container->getParameter('anonymous')){
+            $session = $request->getSession();
+            $currentUser = $session->get('currentUser');
+            
+            $report = $this->getRepository('Report')->findByIdAndUser($id,$currentUser->getId());
+        }else{
+            $report = $this->findEntityBy('Report', $id);
+        }
         
         $accounts = $this->getRepository('Account')->findByReport($report, [
             'id' => 'DESC'
@@ -39,21 +46,24 @@ class AccountController extends RestController
      */
     public function addAccountAction()
     {
-        $accountData = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent();
    
-        $report = $this->findEntityBy('Report', $accountData['report']);
+         // assert mandatory params
+        foreach (['bank', 'sort_code', 'opening_date', 'opening_balance'] as $k) {
+            if (!array_key_exists($k, $data)) {
+                throw new \InvalidArgumentException("Bank account creation: parameter '$k' missing");
+            }
+        }
         
-        if(empty($report)){
-            throw new \Exception("Report id: ".$accountData['report']." does not exists");
+        $report = $this->findEntityBy('Report', $data['report']);
+        if (empty($report)) {
+            throw new \Exception("Report id: " . $data['report'] . " does not exists");
         }
         
         $account = new EntityDir\Account();
-        $account->setBank($accountData['bank'])
-            ->setSortCode($accountData['sort_code'])
-            ->setAccountNumber($accountData['account_number'])
-            ->setOpeningDate(new \DateTime($accountData['opening_date']))
-            ->setOpeningBalance($accountData['opening_balance'])
-            ->setReport($report);
+        $account->setReport($report);
+        
+        $this->fillAccountData($account, $data);
         
         $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
@@ -90,16 +100,7 @@ class AccountController extends RestController
         
         $data = $this->deserializeBodyContent();
         
-        //basicdata
-        if (array_key_exists('bank', $data)) {
-           $account->setBank($data['bank']);
-        }
-        if (array_key_exists('sort_code', $data)) {
-           $account->setSortCode($data['sort_code']);
-        }
-        if (array_key_exists('account_number', $data)) {
-           $account->setAccountNumber($data['account_number']);
-        }
+        $this->fillAccountData($account, $data);
         
         // edit transactions
         if (isset($data['money_in']) && isset($data['money_out'])) {
@@ -112,19 +113,7 @@ class AccountController extends RestController
             $this->setJmsSerialiserGroup('transactions');
         }
         
-        if (array_key_exists('opening_date', $data)) {
-           $account->setOpeningDate(new \DateTime($data['opening_date']));
-        }
-        if (array_key_exists('opening_balance', $data)) {
-           $account->setOpeningBalance($data['opening_balance']);
-        }
         
-        if (array_key_exists('closing_date', $data)) {
-           $account->setClosingDate(new \DateTime($data['closing_date']));
-        }
-        if (array_key_exists('closing_balance', $data)) {
-           $account->setClosingBalance($data['closing_balance']);
-        }
         
         $account->setLastEdit(new \DateTime());
         
@@ -150,6 +139,42 @@ class AccountController extends RestController
         $this->getEntityManager()->flush();
         
         return [];
+    }
+    
+    private function fillAccountData(EntityDir\Account $account, array $data)
+    {
+         //basicdata
+        if (array_key_exists('bank', $data)) {
+           $account->setBank($data['bank']);
+        }
+        
+        if (array_key_exists('sort_code', $data)) {
+           $account->setSortCode($data['sort_code']);
+        }
+        
+        if (array_key_exists('account_number', $data)) {
+           $account->setAccountNumber($data['account_number']);
+        }
+        
+        if (array_key_exists('opening_date', $data)) {
+           $account->setOpeningDate(new \DateTime($data['opening_date']));
+        }
+        
+        if (array_key_exists('opening_balance', $data)) {
+           $account->setOpeningBalance($data['opening_balance']);
+        }
+        
+        if (array_key_exists('opening_date_explanation', $data)) {
+           $account->setOpeningDateExplanation($data['opening_date_explanation']);
+        }
+        
+        if (array_key_exists('closing_date', $data)) {
+           $account->setClosingDate(new \DateTime($data['closing_date']));
+        }
+        
+        if (array_key_exists('closing_balance', $data)) {
+           $account->setClosingBalance($data['closing_balance']);
+        }
     }
     
 }

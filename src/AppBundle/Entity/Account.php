@@ -70,6 +70,14 @@ class Account
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
+    
+    /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="opening_date_explanation", type="text", nullable=true)
+     */
+    private $openingDateExplanation;
 
     /**
      * @var string
@@ -306,7 +314,26 @@ class Account
     {
         return $this->openingBalance;
     }
+    
+    /**
+     * @return string
+     */
+    public function getOpeningDateExplanation()
+    {
+        return $this->openingDateExplanation;
+    }
 
+    
+    /**
+     * @param string $openingDateExplanation
+     */
+    public function setOpeningDateExplanation($openingDateExplanation)
+    {
+        $this->openingDateExplanation = $openingDateExplanation;
+        return $this;
+    }
+
+    
     /**
      * Set closingBalance
      *
@@ -579,5 +606,15 @@ class Account
     public function getMoneyTotal()
     {
         return $this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
+    }
+
+    /**
+     * Remove transactions
+     *
+     * @param \AppBundle\Entity\AccountTransaction $transactions
+     */
+    public function removeTransaction(\AppBundle\Entity\AccountTransaction $transactions)
+    {
+        $this->transactions->removeElement($transactions);
     }
 }
