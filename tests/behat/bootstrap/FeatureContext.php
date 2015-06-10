@@ -476,7 +476,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Then the ":text" link url should contain ":expectedLink"
+     * @Then the :text link url should contain ":expectedLink"
      */
     public function linkWithTextContains($text, $expectedLink)
     {
@@ -485,10 +485,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $count = count($linksElementsFound);
         
         if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element $regionCss not found");
+            throw new \RuntimeException("Element not found");
         }
         
-        $href = $linksElementsFound[0].getAttribute('href');
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Returned multiple elements");
+        }
+    
+        $href = $linksElementsFound->getAttribute('href');
         
         if (strpos($href, $expectedLink) === FALSE) {
             throw new \Exception("Link: $href does not contain $expectedLink");

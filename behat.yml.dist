@@ -37,6 +37,17 @@ default:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
+                    
+      wip:
+        description: End to end journey for Admin user
+        paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: @wip
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:

@@ -6,8 +6,7 @@ ideas.label: Do you have any ideas for how it could be improved?
 
 satisfactionLevel.legend: Overall, how did you feel about the service you received today?
 help.legend: Did you have any help filling in this form?
-back.previousPage: Back to previous page
-back.client: Return to your 'client details' page. 
+back.label: Back to deputy report
 send.label: Send feedback
 
 
