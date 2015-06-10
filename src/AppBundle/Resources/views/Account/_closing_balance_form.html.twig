@@ -4,7 +4,7 @@
 
 
 <div id="closing-balance" class="behat-region-account-closing-balance-form account-closing-balance-form {% if hideForm %}visuallyhidden{% endif %}">
-    {{ form_start(formBalance, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_start(closingBalanceForm, {attr: {novalidate: 'novalidate' }}) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
@@ -17,36 +17,36 @@
     pageSectionDescription: 'form.closing.subSectionDescription'
     } %}
 
-    {{ form_widget(formBalance.id) }}
+    {{ form_widget(closingBalanceForm.id) }}
     
     {# Closing date + explanation box #}
-    {{ form_known_date(formBalance.closingDate, 'form.closing.controls.closingDate') }}
+    {{ form_known_date(closingBalanceForm.closingDate, 'form.closing.controls.closingDate') }}
     {# account.closingBalance is null or account.isClosingBalanceMatchingTransactionSum #}
-    {% if formBalanceOptions.closingDateExplanation.show %}
-       {{ form_input(formBalance.closingDateExplanation, 'form.closing.controls.closingDateExplanation', { 'labelClass': 'required' }) }}
+    {% if closingBalanceFormDateExplanationShow %}
+       {{ form_input(closingBalanceForm.closingDateExplanation, 'form.closing.controls.closingDateExplanation', { 'labelClass': 'required' }) }}
     {% else %}
-      {% do formBalance.closingDateExplanation.setRendered() %}
+      {% do closingBalanceForm.closingDateExplanation.setRendered() %}
     {% endif %}
    
     {# Closing balance + explanation box #}
-    {{ form_input(formBalance.closingBalance, 'form.closing.controls.closingBalance', {
+    {{ form_input(closingBalanceForm.closingBalance, 'form.closing.controls.closingBalance', {
       'inputPrefix' : 'form.closing.currencySymbol',
       'inputClass' : 'form-control__number'
     } ) }}
     {#  account.closingBalance is null or account.isClosingBalanceMatchingTransactionSum #}
-    {% if formBalanceOptions.closingBalanceExplanation.show %}
-      {{ form_input(formBalance.closingBalanceExplanation, 'form.closing.controls.closingBalanceExplanation', { 'labelClass': 'required' }) }}
+    {% if closingBalanceFormBalanceExplanationShow %}
+      {{ form_input(closingBalanceForm.closingBalanceExplanation, 'form.closing.controls.closingBalanceExplanation', { 'labelClass': 'required' }) }}
     {% else %}
-      {% do formBalance.closingBalanceExplanation.setRendered() %}
+      {% do closingBalanceForm.closingBalanceExplanation.setRendered() %}
     {% endif %}
 
     
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(formBalance.save, 'save', {
+    {{ form_submit(closingBalanceForm.save, 'save', {
     'labelText': ( 'form.closing.controls.save.label') | trans,
     'buttonClass': 'behat-link-save'
     }) }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-    {{ form_end(formBalance) }}
+    {{ form_end(closingBalanceForm) }}
 </div>

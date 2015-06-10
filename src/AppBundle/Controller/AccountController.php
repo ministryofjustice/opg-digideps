@@ -91,12 +91,10 @@ class AccountController extends Controller
         
         $account->setReportObject($report);
         
-        $edifFormHasClosingBalance = $report->isDue() && $account->getClosingBalance() > 0;
-        
         // closing balance logic
-        list($formBalance, $formBalanceIsSubmitted, $validFormBalance) = $this->handleClosingBalanceForm($account);
+        list($formClosingBalance, $closingBalanceFormIsSubmitted, $validFormBalance) = $this->handleClosingBalanceForm($account);
         if ($validFormBalance) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
                 'deserialise_group' => 'balance',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
@@ -116,45 +114,52 @@ class AccountController extends Controller
         }
         
         // edit/delete logic
-        list($formEdit, $isEdit, $isDelete) = $this->handleAccountEditDeleteForm($account, [
-            'showClosingBalance' => $edifFormHasClosingBalance,
+        $editFormHasClosingBalance = $report->isDue()/* && $account->getClosingBalance() > 0 not clear this after dd-588 changes */;
+        list($formEdit, $isEditSubmitted, $formEditEditedSuccess, $formEditDeletedSuccess) = $this->handleAccountEditDeleteForm($account, [
+            'showClosingBalance' => $editFormHasClosingBalance,
             'showSubmitButton' => $action != 'delete',
             'showDeleteButton' => $action == 'delete'
         ]);
-        if ($isEdit) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
-                'deserialise_group' => $edifFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
+        if ($formEditEditedSuccess) {
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
+                'deserialise_group' => $editFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
-        } else if ($isDelete) {
+        } else if ($formEditDeletedSuccess) {
             $this->get('apiclient')->delete('account/' .  $account->getId());
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
+        // get account from db
         $refreshedAccount = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
         $refreshedAccount->setReportObject($report);
         
         // refresh account data after forms have altered the account's data
-        if ($validFormBalance || $formMoneyValid || $isEdit) {
+        if ($validFormBalance || $formMoneyValid || $formEditEditedSuccess) {
+            //TODO try tests without this
             $account = $refreshedAccount;
         }
         
-        $formBalanceShow = $action == 'list' && $report->isDue() && !$refreshedAccount->isClosingBalanceAndDateValid();
         
         return [
             'report' => $report,
             'client' => $client,
+            // moneyIn/Out form
             'form' => $formMoneyInOut->createView(),
-            'formBalance' => $formBalance->createView(),
-            // if report is due and the closing balance is not set, show the closing balance form
-            'formBalanceOptions' => [
-                'showForm' => $formBalanceShow,
-                'closingDateExplanation' => ['show' => $formBalanceIsSubmitted && !$account->isClosingDateValid()],
-                'closingBalanceExplanation' => ['show' => $formBalanceIsSubmitted && !$account->isClosingBalanceValid()],
-            ],
+            // closing balance form: show closing balance/date explanation only in case of mismatch
+            'closingBalanceForm' => $formClosingBalance->createView(),
+            'closingBalanceFormShow' => $action == 'list' && $report->isDue() && $account->needsClosingBalanceData(),
+            'closingBalanceFormDateExplanationShow' => $closingBalanceFormIsSubmitted && !$account->isClosingDateValid(),
+            'closingBalanceFormBalanceExplanationShow' => $closingBalanceFormIsSubmitted && !$account->isClosingBalanceValid(),
+            // edit form: show closing balance/date explanation only in case of mismatch
             'formEdit' => $formEdit ? $formEdit->createView() : null,
-            'showEditForm' => $action == 'edit' || $action == 'delete',
+            'formEditShow' => $action == 'edit' || $action == 'delete',
+            // edit form: show closing date explanation is submitted with a value, or it's just not valid 
+            'formEditClosingDateExplanationShow' => !$account->isClosingDateEqualToReportEndDate(),
+            'formEditClosingBalanceExplanationShow' => !$account->isClosingBalanceMatchingTransactionSum(),
+            // delete forms
             'showDeleteConfirmation' => $action == 'delete',
+            // other date needed for the view (list action mainly)
             'account' => $account,
             'actionParam' => $action,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
@@ -170,10 +175,20 @@ class AccountController extends Controller
     {
         $form = $this->createForm(new FormDir\AccountType($options), $account);
         $form->handleRequest($this->getRequest());
-        $isEdit = $form->has('save') && $form->get('save')->isClicked() && $form->isValid();
-        $isDelete = $form->has('delete') && $form->get('delete')->isClicked();
+        $isEditSubmitted = $form->has('save') && $form->get('save')->isClicked();
+        $isEditSubmittedAndValid = $isEditSubmitted && $form->isValid();
+        $isDeleteSubmittedAndValid = $form->has('delete') && $form->get('delete')->isClicked();
         
-        return [$form, $isEdit, $isDelete];
+        // if closing date is valid, reset the explanation
+        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingDateEqualToReportEndDate()) {
+            $account->setClosingDateExplanation(null);
+        }
+        // if closing balance is valid, reset the explanation
+        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingBalanceMatchingTransactionSum()) {
+            $account->setClosingBalanceExplanation(null);
+        }
+        
+        return [$form, $isEditSubmitted, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];
     }
     
     

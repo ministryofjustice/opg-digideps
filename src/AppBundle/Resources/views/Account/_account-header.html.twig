@@ -6,7 +6,7 @@
 
     <h2 class="account-name">{{ account.bank }}</h2>
 
-    {% if not showEditForm and showEditLink == true %}
+    {% if not formEditShow and showEditLink == true %}
         <a href="{{ path('account', {'action': 'edit', 'reportId': report.id, 'accountId': account.id }) }}" class="behat-link-edit-account-details edit-account-details">
           {{ 'page.header.accountEditLink.label' |trans({}, transDomain)|raw }}
         </a>

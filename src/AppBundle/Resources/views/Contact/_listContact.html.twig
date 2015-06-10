@@ -3,7 +3,7 @@ Component parameters
 --------------------
 
 showListData (true/false)
-showEditForm (true/false)
+formEditShow (true/false)
 showDeleteConfirm (true/false)
 showEditLink (true/false)
 form
@@ -21,7 +21,7 @@ form
     <ul class="behat-region-list-contacts report-list report-list--contacts">
         {% for contact in contacts %}
             <li itemscope itemtype="http://schema.org/Person" class="report-list__item" id="edit-{{ contact.id }}">
-                {% if (contact.id == app.request.get('id')) and (showEditForm) %}
+                {% if (contact.id == app.request.get('id')) and (formEditShow) %}
 
                     {% include 'AppBundle:Contact:_contact_edit_form.html.twig' with {
                     'translationDomain': translationDomain,

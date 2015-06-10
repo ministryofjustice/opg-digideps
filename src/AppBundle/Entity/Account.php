@@ -89,7 +89,7 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "balance"})
+     * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
     private $closingBalanceExplanation;
     
@@ -104,7 +104,7 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "balance"})
+     * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
     private $closingDateExplanation;
     
@@ -460,6 +460,11 @@ class Account
     public function isClosingBalanceAndDateValid()
     {
         return $this->isClosingDateValid() && $this->isClosingBalanceValid();
+    }
+    
+    public function needsClosingBalanceData()
+    {
+        return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
     }
     
     
