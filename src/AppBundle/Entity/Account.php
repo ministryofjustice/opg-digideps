@@ -369,10 +369,8 @@ class Account
      */
     public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
     {
-        $openedOnTheDayWhenTheReportStarted = $this->isOpeningDateValid();
-        
         // trigger error in case of date mismatch (report start date different from account opening date) and explanation is empty
-        if (!$openedOnTheDayWhenTheReportStarted && !$this->getOpeningDateExplanation()) {
+        if (!$this->isOpeningDateValid() && !$this->getOpeningDateExplanation()) {
             $context->addViolationAt('openingDate', 'account.openingDate.notSameAsReport');
             $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
         }
@@ -384,7 +382,7 @@ class Account
     public function isClosingDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
     {
         // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
-        if (!$this->isClosingDateEqualToReportEndDate() && !$this->getClosingDateExplanation()) {
+        if ($this->getClosingDate() !== null && !$this->isClosingDateValid()) {
             $context->addViolationAt('closingDate', 'account.closingDate.mismatch');
             $context->addViolationAt('closingDateExplanation', 'account.closingDateExplanation.notBlankOnDateMismatch');
         }
@@ -396,7 +394,7 @@ class Account
     public function isClosingBalanceMatchingTransactionsSum(ExecutionContextInterface $context)
     {
         // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
-        if (!$this->isClosingBalanceMatchingTransactionSum() && !$this->getClosingBalanceExplanation()) {
+        if ($this->getClosingBalance() !== null && !$this->isClosingBalanceValid()) {
             $context->addViolationAt('closingBalance', 'account.closingBalance.mismatch', [
                 '%moneyTotal%' => $this->getMoneyTotal()
             ]);
@@ -445,23 +443,34 @@ class Account
         return $this->getClosingBalance() == $this->getMoneyTotal();
     }
 
-    
+    /**
+     * @return boolean
+     */
     public function isClosingDateValid()
     {
         return $this->isClosingDateEqualToReportEndDate() || $this->getClosingDateExplanation();
     }
     
     
+    /**
+     * @return boolean
+     */
     public function isClosingBalanceValid()
     {
         return $this->isClosingBalanceMatchingTransactionSum() || $this->getClosingBalanceExplanation();
     }
     
+    /**
+     * @return boolean
+     */
     public function isClosingBalanceAndDateValid()
     {
         return $this->isClosingDateValid() && $this->isClosingBalanceValid();
     }
     
+    /**
+     * @return boolean
+     */
     public function needsClosingBalanceData()
     {
         return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
