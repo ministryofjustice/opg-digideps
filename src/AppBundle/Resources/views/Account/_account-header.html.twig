@@ -36,5 +36,13 @@
             <dd class="value behat-region-account-closing-balance">£{{ account.closingBalance | number_format(2, '.', ',') }}</td>
         </dl>
     {% endif %}
-
+    
+    {% if account.openingDateExplanation %}
+        {% include 'AppBundle:Components/Page:_sub-section.html.twig' with {
+            transDomain: transDomain,
+            title: 'page.header.pleaseTellUsWhy.datesMismatch',
+            description: account.openingDateExplanation
+        } %}
+    {% endif %}
+    
 </div>
