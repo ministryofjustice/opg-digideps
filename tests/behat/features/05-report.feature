@@ -332,6 +332,8 @@ Feature: report
         Then the response status code should be 200
         And the form should not contain an error
         And the URL should match "/report/\d+/account/\d+"
+        And I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
+        # refresh page and check values
         When I follow "tab-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
         And I should see "8765" in the "list-accounts" region
@@ -634,6 +636,8 @@ Feature: report
         Then I should not see the "account-closing-balance-form" region
         # assert transactions are not changed due to the form in the same page
         And I should see "£-3,100.50" in the "money-totals" region
+        And I should see "not possible to login to homebanking before" in the "closing-date-explanation" region
+        And I should see "100.50 moved to other account" in the "closing-balance-explanation" region
         # refresh page and check values
         When I follow "tab-accounts"
         Then I should see "3,000.00" in the "account-1-closing-balance" region
