@@ -36,26 +36,26 @@ activeTab: "tab-accounts"
 
         {% include 'AppBundle:Account:_account-header.html.twig' with {
         transDomain: translationDomain,
-        hideComponent: (showEditForm)
+        hideComponent: (formEditShow)
         } %}
 
         {% block validationSummary %}
             {{ form_errors_list(form) }}
-            {{ form_errors_list(formBalance) }}
+            {{ form_errors_list(closingBalanceForm) }}
             {{ form_errors_list(formEdit) }}
         {% endblock %}
 
-        {% if report.isDue and account.closingBalance is null %}
+        {% if closingBalanceFormShow  %}
             {% include 'AppBundle:Account:_closing_balance_form.html.twig' with {
-            formBalance: formBalance,
-            hideForm: (showEditForm)
+            closingBalanceForm: closingBalanceForm,
+            hideForm: (formEditShow)
             } %}
         {% endif %}
 
         {% include 'AppBundle:Account:_account_form_edit.html.twig' with {
         form: formEdit,
         formClass: 'report-form',
-        hideForm: (not showEditForm)
+        hideForm: (not formEditShow)
         } %}
 
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {

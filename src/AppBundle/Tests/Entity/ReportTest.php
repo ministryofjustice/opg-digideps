@@ -12,6 +12,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $this->report = new Report;
         $this->account = m::mock('AppBundle\Entity\Account');
+        $this->account->shouldIgnoreMissing();
     }
     
     public function tearDown()

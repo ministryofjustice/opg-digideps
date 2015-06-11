@@ -72,7 +72,7 @@ class AccountController extends Controller
      * 
      * @Route("/report/{reportId}/account/{accountId}/{action}", name="account", requirements={
      *   "accountId" = "\d+",
-     *   "action" = "[\w-]*"
+     *   "action" = "edit|delete|money-in|money-out|money-both|list"
      * }, defaults={ "action" = "list"})
      * @Template()
      */
@@ -88,23 +88,20 @@ class AccountController extends Controller
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
-        
         $account->setReportObject($report);
         
-        $edifFormHasClosingBalance = $report->isDue() && $account->getClosingBalance() > 0;
-        
         // closing balance logic
-        list($formBalance, $validFormBalance) = $this->handleClosingBalanceForm($account);
-        if ($validFormBalance) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
+        list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
+        if ($formBalanceIsValid) {
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
                 'deserialise_group' => 'balance',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
         }
         
         // money in/out logic
-        list($formMoneyInOut, $formMoneyValid) = $this->handleMoneyInOutForm($account);
-        if ($formMoneyValid) {
+        list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
+        if ($formMoneyIsValid) {
             $this->get('apiclient')->putC('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
@@ -116,34 +113,51 @@ class AccountController extends Controller
         }
         
         // edit/delete logic
-        list($formEdit, $isEdit, $isDelete) = $this->handleAccountEditDeleteForm($account, [
-            'showClosingBalance' => $edifFormHasClosingBalance,
+        $editFormHasClosingBalance = $report->isDue()/* && $account->getClosingBalance() > 0 not clear this after dd-588 changes */;
+        list($formEdit, $formEditIsValid, $formDeleteIsValid) = $this->handleAccountEditDeleteForm($account, [
+            'showClosingBalance' => $editFormHasClosingBalance,
             'showSubmitButton' => $action != 'delete',
             'showDeleteButton' => $action == 'delete'
         ]);
-        if ($isEdit) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formBalance->getData(), [
-                'deserialise_group' => $edifFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
+        if ($formEditIsValid) {
+            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
+                'deserialise_group' => $editFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
-        } else if ($isDelete) {
+        } else if ($formDeleteIsValid) {
             $this->get('apiclient')->delete('account/' .  $account->getId());
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
+        // get account from db
+        $refreshedAccount = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
+        $refreshedAccount->setReportObject($report);
+        
         // refresh account data after forms have altered the account's data
-        if ($validFormBalance || $formMoneyValid || $isEdit) {
-            $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
+        if ($formBalanceIsValid || $formMoneyIsValid || $formEditIsValid) {
+            //TODO try tests without this
+            $account = $refreshedAccount;
         }
         
         return [
             'report' => $report,
             'client' => $client,
+            // moneyIn/Out form
             'form' => $formMoneyInOut->createView(),
-            'formBalance' => $formBalance->createView(),
+            // closing balance form: show closing balance/date explanation only in case of mismatch
+            'closingBalanceForm' => $formClosingBalance->createView(),
+            'closingBalanceFormShow' => $action == 'list' && $report->isDue() && $account->needsClosingBalanceData(),
+            'closingBalanceFormDateExplanationShow' => $account->getClosingDate() && $closingBalanceFormIsSubmitted && !$account->isClosingDateValid(),
+            'closingBalanceFormBalanceExplanationShow' => $account->getClosingBalance() !== null && $closingBalanceFormIsSubmitted && !$account->isClosingBalanceValid(),
+            // edit form: show closing balance/date explanation only in case of mismatch
             'formEdit' => $formEdit ? $formEdit->createView() : null,
-            'showEditForm' => $action == 'edit' || $action == 'delete',
+            'formEditShow' => $action == 'edit' || $action == 'delete',
+            // edit form: show closing date explanation is submitted with a value, or it's just not valid 
+            'formEditClosingDateExplanationShow' => $account->getClosingDate() && !$account->isClosingDateEqualToReportEndDate(),
+            'formEditClosingBalanceExplanationShow' => $account->getClosingBalance() && !$account->isClosingBalanceMatchingTransactionSum(),
+            // delete forms
             'showDeleteConfirmation' => $action == 'delete',
+            // other date needed for the view (list action mainly)
             'account' => $account,
             'actionParam' => $action,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
@@ -159,17 +173,27 @@ class AccountController extends Controller
     {
         $form = $this->createForm(new FormDir\AccountType($options), $account);
         $form->handleRequest($this->getRequest());
-        $isEdit = $form->has('save') && $form->get('save')->isClicked() && $form->isValid();
-        $isDelete = $form->has('delete') && $form->get('delete')->isClicked();
+        $isEditSubmitted = $form->has('save') && $form->get('save')->isClicked();
+        $isEditSubmittedAndValid = $isEditSubmitted && $form->isValid();
+        $isDeleteSubmittedAndValid = $form->has('delete') && $form->get('delete')->isClicked();
         
-        return [$form, $isEdit, $isDelete];
+        // if closing date is valid, reset the explanation
+        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingDateEqualToReportEndDate()) {
+            $account->setClosingDateExplanation(null);
+        }
+        // if closing balance is valid, reset the explanation
+        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingBalanceMatchingTransactionSum()) {
+            $account->setClosingBalanceExplanation(null);
+        }
+        
+        return [$form, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];
     }
     
     
     /**
      * @param EntityDir\Account $account
      * 
-     * @return [FormDir\AccountTransactionsType, boolean]
+     * @return [FormDir\AccountTransactionsType, boolean, boolean]
      */
     private function handleClosingBalanceForm(EntityDir\Account $account)
     {
@@ -178,7 +202,7 @@ class AccountController extends Controller
         $isClicked = $form->get('save')->isClicked();
         $valid = $isClicked && $form->isValid();
         
-        return [$form, $valid];
+        return [$form, $isClicked, $valid];
     }
     
     
