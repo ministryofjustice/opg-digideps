@@ -115,7 +115,7 @@ trait LinksTrait
     private function findRegion($region)
     {
         // find region
-        $regionSelector = self::behatElementToCssSelector($region, 'region');
+        $regionSelector = '#' . $region . ', ' . self::behatElementToCssSelector($region, 'region');
         $regionsFound = $this->getSession()->getPage()->findAll('css', $regionSelector);
         if (count($regionsFound) > 1) {
             throw new \RuntimeException("Found more than one $regionSelector");
