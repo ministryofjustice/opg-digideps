@@ -63,64 +63,58 @@ trait RegionTrait
         }
     }
     
+    public static function behatElementToCssSelector($element, $type)
+    {
+        return '#' . $element . ', .behat-'.$type.'-' . preg_replace('/\s+/', '-', $element);
+    }
     
     /**
-     * Click on element with attribute [behat-link=:link]
-     * 
-     * @When I click on :link
+     * @Then I should see the cookie warning banner
      */
-    public function clickOnBehatLink($link)
+    public function seeCookieBanner()
     {
-        // find link inside the region
-        $linkSelector = self::behatElementToCssSelector($link, 'link');
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
-        if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Found more than a $linkSelector element in the page. Interrupted");
-        }
-        if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element $linkSelector not found. Interrupted");
-        }
+        $driver = $this->getSession()->getDriver();
         
-        // click on the found link
-        $linksElementsFound[0]->click();
+        if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
+        
+            $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
+            if (count($elementsFound) === 0) {
+                throw new \RuntimeException("Cookie banner not found");
+            }
+            
+            foreach ($elementsFound as $node) {
+                // Note: getText() will return an empty string when using Selenium2D. This
+                // is ok since it will cause a failed step.
+                if ($node->getText() != '' && $node->isVisible()) {
+                    return;
+                }
+            }
+        }
     }
-    
     
     /**
-     * Click on element with attribute [behat-link=:link] inside the element with attribute [behat-region=:region]
-     * 
-     * @When I click on :link in the :region region
+     * @Then I should not see the cookie warning banner
      */
-    public function clickLinkInsideElement($link, $region)
+    public function dontSeeCookieBanner()
     {
-        // find region
-        $regionSelector = self::behatElementToCssSelector($region, 'region');
-        $regionsFound = $this->getSession()->getPage()->findAll('css', $regionSelector);
-        if (count($regionsFound) > 1) {
-            throw new \RuntimeException("Found more than one $regionSelector");
-        }
-        if (count($regionsFound) === 0) {
-            throw new \RuntimeException("Region $regionSelector not found.");
-        }
+        $driver = $this->getSession()->getDriver();
         
-        // find link inside the region
-        $linkSelector = self::behatElementToCssSelector($link, 'link');
-        $linksElementsFound = $regionsFound[0]->findAll('css', $linkSelector);
-        if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Found more than a $linkSelector element inside $regionSelector . Interrupted");
-        }
-        if (count($linksElementsFound) === 0) {
-           throw new \RuntimeException("Element $linkSelector not found inside $regionSelector . Interrupted");
-        }
+        if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
+            $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
         
-        
-        // click on the found link
-        $linksElementsFound[0]->click();
+            if (count($elementsFound) === 0) {
+                return;
+            }
+
+            foreach ($elementsFound as $node) {
+                // Note: getText() will return an empty string when using Selenium2D. This
+                // is ok since it will cause a failed step.
+                if ($node->getText() != '' && $node->isVisible()) {
+                    throw new \RuntimeException("Cookie banner Visible");
+                }
+            }
+        }
     }
+
     
-    
-    protected static function behatElementToCssSelector($element, $type)
-    {
-        return '.behat-'.$type.'-' . preg_replace('/\s+/', '-', $element);
-    }
 }
