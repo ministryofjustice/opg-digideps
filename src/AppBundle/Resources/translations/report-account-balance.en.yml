@@ -7,8 +7,12 @@ form:
       closingDate:
         legend: "End date of reporting period"
         hint: "(DD/MM/YYYY)"
+      closingDateExplanation:
+        label: Please tell us why the dates do not match
       closingBalance:
         label: "Closing Balance"
+      closingBalanceExplanation:
+        label: Please tell us why the balance does not match
       save:
         label: Save
       cancel:

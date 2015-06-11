@@ -34,7 +34,7 @@
         {% else %}
             {% include 'AppBundle:Contact:_listContact.html.twig' with {
                 'showListData': true,
-                'showEditForm': false,
+                'formEditShow': false,
                 'showEditLink': false,
                 'showDeleteConfirm': false
             } %}
@@ -52,7 +52,7 @@
         {% else %}
             {% include 'AppBundle:Decision:_listDecision.html.twig' with {
             'showListData': true,
-            'showEditForm': false,
+            'formEditShow': false,
             'showEditLink': false,
             'showDeleteConfirm': false
             } %}
@@ -86,7 +86,7 @@
                 <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
             {% else %}
                 {% include 'AppBundle:Asset:_listAsset.html.twig' with {
-                    'showEditForm': false,
+                    'formEditShow': false,
                     'showDeleteConfirm': false,
                     'form': report.assets,
                     'showEditLink': false

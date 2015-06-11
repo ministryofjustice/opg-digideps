@@ -8,7 +8,7 @@ activeTab: "tab-assets"
     {% set showListData = false %}
     {% set showEditHelpInfo = false %}
     {% set showAddForm = false %}
-    {% set showEditForm = false %}
+    {% set formEditShow = false %}
     {% set showDeleteConfirm = false %}
     {% set showNoAssetToAddForm = false %}
 
@@ -18,11 +18,11 @@ activeTab: "tab-assets"
     {% endif %}
 
     {% if (action == 'edit') %}
-        {% set showEditForm = true %}
+        {% set formEditShow = true %}
     {% endif %}
 
     {% if (action == 'delete-confirm') %}
-        {% set showEditForm = true %}
+        {% set formEditShow = true %}
         {% set showDeleteConfirm = true %}
     {% endif %}
 
@@ -90,7 +90,7 @@ activeTab: "tab-assets"
 
         {% if showListData %}
             {% include 'AppBundle:Asset:_listAsset.html.twig' with {
-            'showEditForm': showEditForm,
+            'formEditShow': formEditShow,
             'showDeleteConfirm': showDeleteConfirm,
             'showEditLink': showEditLink,
             'form': form

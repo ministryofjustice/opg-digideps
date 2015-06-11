@@ -321,6 +321,10 @@ class Report
      */
     public function setAccounts($accounts)
     {
+        foreach ($accounts as $account) {
+            $account->setReportObject($this);
+        }
+        
         $this->accounts = $accounts;
         return $this;
     }
