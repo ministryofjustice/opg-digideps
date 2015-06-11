@@ -17,6 +17,9 @@ services:
     session.handler.memcached:
         class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler
         arguments: [@session.memcached, { prefix: %session_memcached_prefix%, expiretime: %session_expire_seconds% } ]
+    dd_session.handler.memcached:
+        class: AppBundle\Service\MemcachedSessionHandler
+        arguments: [ %session_memcached_host%,%session_memcached_port% ]
     oauth.memcached:
         class: Memcached
         arguments:
