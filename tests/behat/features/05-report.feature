@@ -572,7 +572,7 @@ Feature: report
         And I should not see a "accountBalance_closingBalanceExplanation" element
         # only balance mismatch (3000 instead of -3,100.50)
          When I fill in the following:
-            | accountBalance_closingDate_day   | 07 | 
+            | accountBalance_closingDate_day   | 08 | 
             | accountBalance_closingDate_month | 06 | 
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | -3000 | 
@@ -597,7 +597,7 @@ Feature: report
             | accountBalance_closingBalanceExplanation    |
         # fix date, assert only balance failes and date explanation disappear
         When I fill in the following:
-            | accountBalance_closingDate_day   | 07 | 
+            | accountBalance_closingDate_day   | 08 | 
             | accountBalance_closingDate_month | 06 | 
             | accountBalance_closingDate_year  | 2015 | 
         And I press "accountBalance_save"
