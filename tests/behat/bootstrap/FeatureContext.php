@@ -141,4 +141,27 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         
     }
     
+    /**
+     * @When I fill in :field with the value of :expression
+     * Example of expressions:
+     *  3 days ago, DD
+     *  10 days ahead, month
+     *  1 day ahead, year
+     * 
+     */
+    public function fillFieldWithExpression($field, $expression)
+    {
+        if (preg_match('/^(?P<days>\d+) days? (?P<direction>ahead|ago), (?P<format>DD|MM|YYYY)$/', $expression, $matches)) {
+            $today = new \DateTime();
+            $plusOrMinus = $matches['direction'] === 'ahead' ? '+' : '-';
+            $today->modify($plusOrMinus . $matches['days'] . ' days');
+            $formatToDateFormat = ['DD'=>'d', 'MM'=>'m', 'YYYY'=>'y'];
+            $value = $today->format($formatToDateFormat[$matches['format']]);
+        } else {
+            throw new \RuntimeException("Expression '$expression' not recognised");
+        }
+        
+        $this->fillField($field, $value);
+    }
+    
 }

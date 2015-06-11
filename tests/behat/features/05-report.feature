@@ -76,7 +76,7 @@ Feature: report
     @deputy
     Scenario: Check report notification and submission warnings
         # set report due
-        Given I set the report 1 due
+        Given I set the report 1 end date to 3 days ago
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the first report overview page
         Then I should see the "tab-contacts-warning" region
@@ -86,7 +86,7 @@ Feature: report
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
         # set back report not to be due
-        And I set the report 1 not due
+        And I set the report 1 end date to 3 days ahead
 
     @deputy
     Scenario: add contact
@@ -522,7 +522,7 @@ Feature: report
 
     @deputy
     Scenario: edit bank account, check edit account does not show closing balance
-        Given I set the report 1 not due
+        Given I set the report 1 end date to 3 days ahead
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
@@ -530,11 +530,11 @@ Feature: report
 
     @deputy
     Scenario: add closing balance to account
-        Given I set the report 1 not due
+        Given I set the report 1 end date to 3 days ahead
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the accounts page of the first report
         Then I should not see the "account-1-add-closing-balance" link
-        When I set the report 1 due
+        When I set the report 1 end date to 3 days ago
         And I am on the accounts page of the first report
         Then I should see the "account-1234-warning" region
         When I click on "account-1234"
@@ -571,22 +571,20 @@ Feature: report
             | accountBalance_closingDateExplanation | 
         And I should not see a "accountBalance_closingBalanceExplanation" element
         # only balance mismatch (3000 instead of -3,100.50)
-         When I fill in the following:
-            | accountBalance_closingDate_day   | 08 | 
-            | accountBalance_closingDate_month | 06 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | -3000 | 
+        When I fill in "accountBalance_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "3 days ago, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "3 days ago, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3000"
         And I press "accountBalance_save"
         Then the following fields should have an error:
             | accountBalance_closingBalance    |
             | accountBalance_closingBalanceExplanation    |
         And I should not see a "accountBalance_closingDateExplanation" element
         # both date and balance mismatch: assert submit fails
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 30 | 
-            | accountBalance_closingDate_month | 07 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | -3000 | 
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3000"
         And I press "accountBalance_save"
         Then the following fields should have an error:
             | accountBalance_closingDate_day   |
@@ -596,21 +594,19 @@ Feature: report
             | accountBalance_closingBalance    |
             | accountBalance_closingBalanceExplanation    |
         # fix date, assert only balance failes and date explanation disappear
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 08 | 
-            | accountBalance_closingDate_month | 06 | 
-            | accountBalance_closingDate_year  | 2015 | 
+        When I fill in "accountBalance_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "3 days ago, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "3 days ago, YYYY"
         And I press "accountBalance_save"
         Then I should not see a "accountBalance_closingDateExplanation" element
         And the following fields should have an error:
             | accountBalance_closingBalance    |
             | accountBalance_closingBalanceExplanation    |
         # make date invalid, fix balance. assert only date fails and balance explanation disappear
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 30 | 
-            | accountBalance_closingDate_month | 07 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance | -3100.50 | 
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3100.50"
         And I press "accountBalance_save"
         Then I should not see a "accountBalance_closingBalanceExplanation" element
         And the following fields should have an error:
@@ -620,11 +616,10 @@ Feature: report
             | accountBalance_closingDateExplanation | 
         # save with both date and balance mismatch
         # both date and balance mismatch: add explanations
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 30 | 
-            | accountBalance_closingDate_month | 07 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | -3000 | 
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3000"
         And I press "accountBalance_save"
         Then the form should contain an error
         When I fill in the following:
@@ -641,7 +636,8 @@ Feature: report
         # refresh page and check values
         When I follow "tab-accounts"
         Then I should see "3,000.00" in the "account-1-closing-balance" region
-        And I should see "30/07/2015" in the "account-1-closing-date" region
+        # step to implement
+        #And I should see the value of "30 days ago, DD/MM/YYYY" in the "account-1-closing-date" region
 
 
     @deputy
@@ -650,10 +646,10 @@ Feature: report
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
+        #todo check account_closingDate_day has value of today+3 days
+        #todo check account_closingDate_month has value of today+3 days
+        #todo check account_closingDate_year has value of today+3 days
         Then the following fields should have the corresponding values:
-            | account_closingDate_day   | 30 | 
-            | account_closingDate_month | 07 | 
-            | account_closingDate_year  | 2015 | 
             | account_closingDateExplanation  | not possible to login to homebanking before | 
             | account_closingBalance    | -3,000.00 | 
             | account_closingBalanceExplanation | £ 100.50 moved to other account | 
@@ -674,11 +670,14 @@ Feature: report
         And I save the page as "report-account-edit-after-closing-errors"
         # assert explanations disappear when values are ok (bank empties to avoid submissions)
         When go to "/report/1/account/1/edit"
+        And I fill in "account_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "account_closingDate_month" with the value of "3 days ahead, MM"
+        And I fill in "account_closingDate_year" with the value of "3 days ahead, YYYY"
         And I fill in the following:
             | account_bank | |
-            | account_closingDate_day   | 07 | 
-            | account_closingDate_month | 06 | 
-            | account_closingDate_year  | 2015 | 
+#            | account_closingDate_day   | 07 | 
+#            | account_closingDate_month | 06 | 
+#            | account_closingDate_year  | 2015 | 
             | account_closingBalance    | -3100.50 |
         And I press "account_save"
         Then the following fields should have an error:
@@ -701,15 +700,15 @@ Feature: report
         # simple save
         When go to "/report/1/account/1/edit"
         And I fill in the following:
-            | account_closingDate_day   | 28 |
-            | account_closingDate_month | 07 |
+            | account_closingDate_day   | 1 |
+            | account_closingDate_month | 5 |
             | account_closingDate_year  | 2015 |
-            | account_closingDateExplanation | not possible to login to homebanking before the 28th |
+            | account_closingDateExplanation | not possible to login to homebanking  |
             | account_closingBalance | -3,000.50 | 
             | account_closingBalanceExplanation | £ 100 moved to other account | 
         And I press "account_save"
         Then the form should not contain any error
-        And I should see "28/07/2015" in the "account-closing-balance-date" region
+        And I should see "01/05/2015" in the "account-closing-balance-date" region
         And I should see "£-3,000.50" in the "account-closing-balance" region
 
 
@@ -725,7 +724,7 @@ Feature: report
         Then I should not see the "tab-accounts-warning" region
         Then I should not see the "tab-assets-warning" region
         # set report due
-        Given I set the report 1 due
+        Given I set the report 1 end date to 3 days ago
         And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
         # assert I cannot access the declaration page
