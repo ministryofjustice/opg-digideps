@@ -9,12 +9,12 @@
 {% set tabNotificationClass = {} %}
 {% if report.isDue() %}
 
-    {% if report.missingContacts() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-contacts': 'icon icon__notification behat-region-tab-contacts-warning'}) %}
-    {% endif %}
-
     {% if report.missingDecisions() %}
         {% set tabNotificationClass = tabNotificationClass| merge({'tab-decisions': 'icon icon__notification behat-region-tab-decisions-warning'}) %}
+    {% endif %}
+    
+    {% if report.missingContacts() %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-contacts': 'icon icon__notification behat-region-tab-contacts-warning'}) %}
     {% endif %}
 
     {% if report.missingAccounts() or report.hasOutstandingAccounts() %}

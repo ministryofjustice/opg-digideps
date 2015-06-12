@@ -53,12 +53,11 @@ trait StatusSnapshotTrait
             return;
         }
         
-        $sqlFile = basename( $scope->getFeature()->getFile()) 
+        $snapshotName = basename( $scope->getFeature()->getFile()) 
                    . '-' 
-                   . $scope->getScenario()->getLine() 
-                   . '.sql';
+                   . str_pad($scope->getScenario()->getLine(), 4, '0', STR_PAD_LEFT);
         
-        self::iSaveTheApplicationStatusInto($sqlFile);
+        self::iSaveTheApplicationStatusInto($snapshotName);
     }
 
 }
