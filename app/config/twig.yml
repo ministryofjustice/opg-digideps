@@ -7,10 +7,10 @@ parameters:
       report-paa: 
         tab-overview:
           path: "report_overview"
-        tab-contacts:
-          path: "contacts"
         tab-decisions:
           path: "decisions"
+        tab-contacts:
+          path: "contacts"
         tab-accounts:
           path: "accounts"
         tab-assets:
@@ -18,7 +18,7 @@ parameters:
       report-pw:
           tab-overview:
               path: "report_overview"
-          tab-contacts:
-              path: "contacts"
           tab-decisions:
               path: "decisions"
+          tab-contacts:
+              path: "contacts"
