@@ -88,6 +88,14 @@ class Account
     private $closingBalance;
 
     /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="closing_balance_explanation", type="text", nullable=true)
+     */
+    private $closingBalanceExplanation;
+    
+    /**
      * @var \Date
      * @JMS\Groups({"transactions", "basic"})
      * 
@@ -104,26 +112,20 @@ class Account
     private $closingDate;
 
     /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
+     * 
+     * @ORM\Column(name="closing_date_explanation", type="text", nullable=true)
+     */
+    private $closingDateExplanation;
+    
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="accounts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="date_justification", type="text", nullable=true)
-     */
-    private $dateJustification;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="balance_justification", type="text", nullable=true)
-     */
-    private $balanceJustification;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account", cascade={"persist"})
@@ -356,7 +358,25 @@ class Account
     {
         return $this->closingBalance;
     }
+    
+    /**
+     * @return string
+     */
+    public function getClosingBalanceExplanation()
+    {
+        return $this->closingBalanceExplanation;
+    }
 
+    /**
+     * @param string $closingBalanceExplanation
+     */
+    public function setClosingBalanceExplanation($closingBalanceExplanation)
+    {
+        $this->closingBalanceExplanation = $closingBalanceExplanation;
+        return $this;
+    }
+
+    
     /**
      * Set openingDate
      *
@@ -402,51 +422,22 @@ class Account
     {
         return $this->closingDate;
     }
+    
+    /**
+     * @return string
+     */
+    public function getClosingDateExplanation()
+    {
+        return $this->closingDateExplanation;
+    }
 
     /**
-     * Set dateJustification
-     *
-     * @param string $dateJustification
-     * @return Account
+     * @param string $closingDateExplanation
      */
-    public function setDateJustification($dateJustification)
+    public function setClosingDateExplanation($closingDateExplanation)
     {
-        $this->dateJustification = $dateJustification;
-
+        $this->closingDateExplanation = $closingDateExplanation;
         return $this;
-    }
-
-    /**
-     * Get dateJustification
-     *
-     * @return string 
-     */
-    public function getDateJustification()
-    {
-        return $this->dateJustification;
-    }
-
-    /**
-     * Set balanceJustification
-     *
-     * @param string $balanceJustification
-     * @return Account
-     */
-    public function setBalanceJustification($balanceJustification)
-    {
-        $this->balanceJustification = $balanceJustification;
-
-        return $this;
-    }
-
-    /**
-     * Get balanceJustification
-     *
-     * @return string 
-     */
-    public function getBalanceJustification()
-    {
-        return $this->balanceJustification;
     }
 
     /**
@@ -470,35 +461,6 @@ class Account
     public function getReport()
     {
         return $this->report;
-    }
-    
-    public function isDateJustifiable()
-    {
-        if(empty($this->openingDate) || empty($this->closingDate)){
-            return true;
-        }
-        
-        if(($this->openingDate == $this->report->getStartDate()) && ($this->closingDate == $this->report->getEndDate())){
-            return true;
-        } 
-        return false;
-    }
-    
-    /**
-     * Checks if account balance is justifiable
-     * 
-     * @return boolean
-     */
-    public function isBalanceJustifiable()
-    {
-        $balanceOffset = $this->getBalanceOffset();
-        $openingBalance = $this->openingBalance;
-        $closingBalance = $this->closingBalance;
-        
-        if(isset($balanceOffset) && ($balanceOffset != 0) && isset($openingBalance) && isset($closingBalance)){
-            return false;
-        }
-        return true;
     }
     
     /**

@@ -172,8 +172,16 @@ class AccountController extends RestController
            $account->setClosingDate(new \DateTime($data['closing_date']));
         }
         
+        if (array_key_exists('closing_date_explanation', $data)) {
+           $account->setClosingDateExplanation($data['closing_date_explanation']);
+        }
+        
         if (array_key_exists('closing_balance', $data)) {
            $account->setClosingBalance($data['closing_balance']);
+        }
+        
+        if (array_key_exists('closing_balance_explanation', $data)) {
+           $account->setClosingBalanceExplanation($data['closing_balance_explanation']);
         }
     }
     
