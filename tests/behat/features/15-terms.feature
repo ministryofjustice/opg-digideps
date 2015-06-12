@@ -1,0 +1,18 @@
+Feature: Tems and Conditions
+    
+    @terms
+    Scenario: The footer provides a link to terms and conditions in the login page
+        Given I am on login page
+        Then the Terms and Conditions link, in the footer, link url should contain "/terms"
+    
+    @terms
+    Scenario: The footer provides a link to the terms and conditions when logged in
+        Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then The Terms and Conditions link, in the footer, link url should contain "/terms"
+        
+    @terms
+    Scenario: The terms and conditions page contains a back link
+        Given I am on the login page
+        And I goto the terms page
+        Then the "Back to deputy report" link url should contain "/login"
+    
