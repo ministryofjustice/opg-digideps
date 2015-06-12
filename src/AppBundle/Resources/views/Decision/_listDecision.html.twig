@@ -3,7 +3,7 @@ Component parameters
 --------------------
 
 showListData (true/false)
-showEditForm (true/false)
+formEditShow (true/false)
 showDeleteConfirm (true/false)
 showEditLink (true/false)
 form
@@ -21,7 +21,7 @@ form
         {% for decision in decisions %}
             <li class="report-list__item" id="edit-{{ decision.id }}">
 
-                {% if (decision.id == app.request.get('id')) and (showEditForm) %}
+                {% if (decision.id == app.request.get('id')) and (formEditShow) %}
 
                     {% include 'AppBundle:Decision:_decision_edit_form.html.twig' with {
                     'translationDomain': translationDomain,

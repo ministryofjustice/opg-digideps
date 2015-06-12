@@ -57,7 +57,7 @@
                         </div>
                     {% endif %}
                 </div>
-                {% if report.isDue() and account.closingBalance is null %}
+                {% if report.isDue() and account.needsClosingBalanceData() %}
                     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
                     transDomain: translationDomain,
                     pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,

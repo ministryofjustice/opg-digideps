@@ -54,7 +54,9 @@ class AccountType extends AbstractType
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Value or character is not valid'
                 ])
-                ->add('closingBalance', 'number', [ 'grouping' => true, 'precision' => 2]);
+                ->add('closingDateExplanation', 'textarea')
+                ->add('closingBalance', 'number', [ 'grouping' => true, 'precision' => 2])
+                ->add('closingBalanceExplanation', 'textarea');
         }
 
         if ($this->options['showSubmitButton']) {

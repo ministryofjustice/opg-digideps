@@ -8,7 +8,7 @@ activeTab: "tab-decisions"
     {% set showListData = false %}
     {% set showEditHelpInfo = false %}
     {% set showAddForm = false %}
-    {% set showEditForm = false %}
+    {% set formEditShow = false %}
     {% set showDeleteConfirm = false %}
     {% set showNoDecisionForm = false %}
     {% set showDeleteReasonConfirm = false %}
@@ -20,11 +20,11 @@ activeTab: "tab-decisions"
     {% endif %}
 
     {% if (action == 'edit') %}
-        {% set showEditForm = true %}
+        {% set formEditShow = true %}
     {% endif %}
 
     {% if (action == 'delete-confirm') %}
-        {% set showEditForm = true %}
+        {% set formEditShow = true %}
         {% set showDeleteConfirm = true %}
     {% endif %}
 

@@ -39,6 +39,8 @@ class AccountTest extends \PHPUnit_Framework_TestCase
      */
     public function testIsOpeningDateBetweenReportDates($reportStartDate, $reportEndDate, $accountOpeningDate, $numberOfViolations)
     {
+        $this->markTestIncomplete("method removed. Use similar logic for other new methods");
+        
         // report mock with start/end dates
         $report = m::mock('AppBundle\Entity\Report');
         $report->shouldReceive('getStartDate')->andReturn(new \DateTime($reportStartDate));
