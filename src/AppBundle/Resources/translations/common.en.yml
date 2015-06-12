@@ -4,4 +4,4 @@ lastLoggedIn:
   hoursAgo: "{1} about one hour ago | ]1,Inf] about %count% hours ago"
   exactDate: "%date%"
   
-    
+back.label: Back to deputy report

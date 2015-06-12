@@ -92,7 +92,11 @@
 
 {% block footerTop %}{% endblock %}
 
-{% block footerSupportLinks %}{% endblock %}
+{% block footerSupportLinks %}
+    <li>
+        <a href="{{path('terms')}}">{% trans %}Terms and Conditions{% endtrans %}</a>
+    </li>
+{% endblock %}
 
 
 
