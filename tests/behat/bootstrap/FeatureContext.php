@@ -30,6 +30,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         KernelDictionary;
     
     private static $dbName;
+    private static $saveSnaphotBeforeEachScenario;
     
     public function __construct(array $options)
     {
@@ -38,6 +39,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
         $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? null : $options['dbName'];
+        self::$saveSnaphotBeforeEachScenario = !empty($options['saveSnaphotBeforeEachScenario']);
     }
         
     
@@ -163,5 +165,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         
         $this->fillField($field, $value);
     }
+    
     
 }
