@@ -32,9 +32,6 @@ class DecisionController extends RestController
             'client_involved_boolean' => 'setClientInvolvedBoolean',
             'client_involved_details' => 'setClientInvolvedDetails',
         ]);
-        if (array_key_exists('decision_date', $data)) {
-            $decision->setDecisionDate(new \DateTime($data['decision_date']));
-        }
 
         $this->getEntityManager()->persist($decision);
         $this->getEntityManager()->flush();
