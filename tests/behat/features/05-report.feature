@@ -616,7 +616,7 @@ Feature: report
             | accountBalance_closingDateExplanation | 
         # save with both date and balance mismatch
         # both date and balance mismatch: add explanations
-        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ahead, DD"
         And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
         And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
         And I fill in "accountBalance_closingBalance" with "-3000"
@@ -636,19 +636,19 @@ Feature: report
         # refresh page and check values
         When I follow "tab-accounts"
         Then I should see "3,000.00" in the "account-1-closing-balance" region
-        # step to implement
-        #And I should see the value of "30 days ago, DD/MM/YYYY" in the "account-1-closing-date" region
+        And I should see the value of "30 days ahead, DD/MM/YYYY" in the "account-1-closing-date" region
 
 
     @deputy
       Scenario: edit closing balance
+        Given I load the application status from "05-report.feature-"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
-        #todo check account_closingDate_day has value of today+3 days
-        #todo check account_closingDate_month has value of today+3 days
-        #todo check account_closingDate_year has value of today+3 days
+        Then the field "account_closingDate_day" has value of "30 days ahead, DD"
+        And the field "account_closingDate_month" has value of "30 days ahead, MM"
+        And the field "account_closingDate_year" has value of "30 days ahead, YYYY"
         Then the following fields should have the corresponding values:
             | account_closingDateExplanation  | not possible to login to homebanking before | 
             | account_closingBalance    | -3,000.00 | 
@@ -675,9 +675,6 @@ Feature: report
         And I fill in "account_closingDate_year" with the value of "3 days ahead, YYYY"
         And I fill in the following:
             | account_bank | |
-#            | account_closingDate_day   | 07 | 
-#            | account_closingDate_month | 06 | 
-#            | account_closingDate_year  | 2015 | 
             | account_closingBalance    | -3100.50 |
         And I press "account_save"
         Then the following fields should have an error:
@@ -796,6 +793,7 @@ Feature: report
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the form should not contain an error
+        And the response status code should be 200
         And the URL should match "/report/\d+/submitted"
         # assert report display page is not broken
         When I go to "/report/1/display"
