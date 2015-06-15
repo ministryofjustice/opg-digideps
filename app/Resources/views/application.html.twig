@@ -27,7 +27,12 @@
 
 {% block bodyClasses %}{% endblock %}
 
-{% block cookieMessage %}{% endblock %}
+{% block cookieMessage %}
+    <p>
+        GOV.UK uses cookies to make the site simpler. 
+        <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a>
+    </p>
+{% endblock %}
 
 
 
@@ -95,6 +100,7 @@
 {% block footerSupportLinks %}
     <li>
         <a href="{{path('terms')}}">{% trans %}Terms and Conditions{% endtrans %}</a>
+        <a href="https://www.gov.uk/help/cookies">{{'Cookies' | trans()}}</a>
     </li>
 {% endblock %}
 

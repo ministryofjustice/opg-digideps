@@ -3,3 +3,7 @@ $ie-version: 8;
 
 @import "application";
 @import "application-ie";
+
+#footer .footer-meta .footer-meta-inner ul li:first-child + li {
+    float: left;
+}

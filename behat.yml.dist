@@ -8,7 +8,7 @@ default:
         description: End to end journey for Lay deputy user
         paths:    [ %paths.base%/tests/behat/features ]
         filters:
-            tags: @deputy
+            tags: "@deputy&&~@javascript"
         contexts: 
             - DigidepsBehat\FeatureContext:
                 -
@@ -21,7 +21,7 @@ default:
         description: End to end journey for Admin user
         paths:    [ %paths.base%/tests/behat/features ]
         filters:
-            tags: @admin
+            tags: "@admin&&~@javascript"
         contexts: 
             - DigidepsBehat\FeatureContext:
                 -
@@ -32,7 +32,20 @@ default:
         description: Tests related to user feedback
         paths:    [ %paths.base%/tests/behat/features ]
         filters:
-            tags: @feedback
+            tags: "@feedback&&~@javascript"
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+                    
+      cookies:
+        description: Tests related to user feedback
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        mink_javascript_session: selenium2
+        filters:
+            tags: "@cookie&&~@javascript"
         contexts: 
             - DigidepsBehat\FeatureContext:
                 -
@@ -46,6 +59,8 @@ default:
             sessions:
               default:
                 goutte: ~
+              selenium2:
+                selenium2: ~
                 #   guzzle_parameters:
                 #      # http://guzzle3.readthedocs.org/http-client/client.html
                 #      ssl.certificate_authority: false
