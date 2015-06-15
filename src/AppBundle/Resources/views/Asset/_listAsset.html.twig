@@ -5,7 +5,7 @@
 Component parameters
 --------------------
 
-showEditForm (true/false)
+formEditShow (true/false)
 showDeleteConfirm (true/false)
 form
 #}
@@ -17,7 +17,7 @@ form
     {% for asset in assets %}
         <li id="asset-edit-{{ asset.id }}" class="report-list__item">
 
-            {% if (asset.id == app.request.get('id')) and (showEditForm) %}
+            {% if (asset.id == app.request.get('id')) and (formEditShow) %}
 
                 {% include 'AppBundle:Asset:_asset_edit_form.html.twig' with {
                 'showDeleteConfirm': showDeleteConfirm,

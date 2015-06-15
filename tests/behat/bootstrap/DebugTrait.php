@@ -79,5 +79,13 @@ trait DebugTrait
     {
         throw new \RuntimeException('manual fail');
     }
+    
+    /**
+     * @Given I clear my cookies
+     */
+    public function clearCookies()
+    {
+        $this->getSession()->restart();
+    }
 
 }

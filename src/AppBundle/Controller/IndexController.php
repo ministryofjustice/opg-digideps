@@ -219,5 +219,13 @@ class IndexController extends Controller
         }
         return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
     }
+    
+    /**
+     * @Route("/terms", name="terms")
+     */
+    public function termsAction()
+    {
+        return $this->render('AppBundle:Index:terms.html.twig');
+    }
 
 }

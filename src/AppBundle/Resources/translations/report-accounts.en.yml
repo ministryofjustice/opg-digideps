@@ -9,17 +9,21 @@ form:
     accountDetails:
       subSectionTitle: Edit account details
     openingBalance:
-      subSectionTitle: Edit the starting balance
+      subSectionTitle: Edit the opening balance
     closingBalance:
       subSectionTitle: The closing balance of the account
-      subSectionDescription: The closing balance is the sum of money in the account on the end date of your reporting period.
+      subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period.
     controls:
       # other controls are taken from the other sections in this file
       closingDate:
         legend: "End date of reporting period"
         hint: "(DD/MM/YYYY)"
+      closingDateExplanation:
+        label: Please tell us why the closing dates do not match    
       closingBalance:
         label: "Closing Balance"
+      closingBalanceExplanation:
+        label: Please tell us why the balance does not match
       cancel:
         label: Cancel
       save:
@@ -48,18 +52,18 @@ form:
         label: Branch sort code
         hint: ""
   openingBalance:
-    subSectionTitle: Add the starting balance
-    subSectionDescription: The starting balance is the sum of money in the account at the start of your reporting period.
+    subSectionTitle: Add the opening balance
+    subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period.
     controls:
       openingDate:
-        legend: Start date of reporting period
+        legend: Add the opening balance date for this account
         hint: (DD/MM/YYYY)
-      openingBalance:
-        label: Starting balance
       openingBalancePrefix:
         label: £
       openingDateExplanation:
-        label: If the balance is for a different date, tell us why.
+        label: Is the start date of your reporting period and the opening balance date the same? If not, tell us why the dates are different.
+      openingBalance:
+        label: Opening balance
       save:
         label: Continue
       cancel:

@@ -38,7 +38,7 @@
 
     {# closing balance part #}
     {% if form.closingDate is defined and form.closingBalance is defined %}
-
+        
         {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
         transDomain: translationDomain,
         subSectionTitle: 'form.edit.closingBalance.subSectionTitle'
@@ -49,14 +49,27 @@
         subSectionDescription: 'form.edit.closingBalance.subSectionDescription'
         } %}
 
+         {# Closing date + explanation box #}
         {{ form_known_date(form.closingDate, 'form.edit.controls.closingDate') }}
-
+        {% if formEditClosingDateExplanationShow %}
+          {{ form_input(form.closingDateExplanation, 'form.edit.controls.closingDateExplanation', { 'labelClass': 'required' }) }}
+        {% else %}
+          {% do form.closingDateExplanation.setRendered() %}
+        {% endif %}
+      
+      
+        {# Closing balance + explanation box #}
         {{ form_input(form.closingBalance, 'form.edit.controls.closingBalance', {
         'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
         'inputClass' : 'form-control__number'
         } ) }}
+        {% if formEditClosingBalanceExplanationShow %}
+          {{ form_input(form.closingBalanceExplanation, 'form.edit.controls.closingBalanceExplanation', { 'labelClass': 'required' }) }}
+        {% else %}
+          {% do form.closingBalanceExplanation.setRendered() %}
+        {% endif %} 
 
-    {% endif %}
+      {% endif %}
 
 
     {% if showDeleteConfirmation == 'delete' %}

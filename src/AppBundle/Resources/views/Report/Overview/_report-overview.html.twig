@@ -17,6 +17,24 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     pageSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.pageSectionInfo'
     } %}
 
+    
+    {# Decisions #}
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionDescription'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionList'
+    } %}
+    <a href="{{ path('decisions', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}</a>
+
 
     {# Contacts #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
@@ -39,24 +57,6 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionInfo'
     } %}
     <a href="{{ path('contacts', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}</a>
-
-    {# Decisions #}
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionTitle'
-    } %}
-
-    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-    transDomain: translationDomain,
-    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionDescription'
-    } %}
-
-    {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionList'
-    } %}
-    <a href="{{ path('decisions', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}</a>
-
 
 {% else %} {#  Property & Affairs Overview  #}
 
@@ -75,6 +75,24 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     pageSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.pageSectionInfo'
     } %}
 
+    
+    {# Decisions #}
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionDescription'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionList'
+    } %}
+    <a href="{{ path('decisions', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}</a>
+
 
     {# Contacts #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
@@ -97,23 +115,6 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionInfo'
     } %}
     <a href="{{ path('contacts', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}</a>
-
-    {# Decisions #}
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionTitle'
-    } %}
-
-    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-    transDomain: translationDomain,
-    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionDescription'
-    } %}
-
-    {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionList'
-    } %}
-    <a href="{{ path('decisions', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}</a>
 
     {# Accounts #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {

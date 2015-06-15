@@ -108,10 +108,6 @@ decision:
     description:
         notBlank: Please enter a description for the decision
         length: The description must be at least {{ limit }} characters   
-    decisionDate:
-        notBlank: Please enter a date for the decision
-        invalidMessage: Invalid decision date
-        notInReportRange: The decision date must be in the report date range ({{from}} to {{to}})
     clientInvolvedBoolean:
         notBlank: Please specify if the client was involved or not
     clientInvolvedDetails:
@@ -141,6 +137,9 @@ account:
     closingDate:
         notBlank: Please enter closing balance date
         date: Please enter a valid date
+        mismatch: The end date of the report and the date here is different. Please tell us why below.
+    closingDateExplanation:
+        notBlankOnDateMismatch: Please enter a value
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
@@ -149,6 +148,10 @@ account:
     closingBalance:
         notBlank: Value is required and can't be empty
         type: Please enter a valid closing balance
+        #mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
+        mismatch: The final balance from your statement s different from the balance in the accounts section.
+    closingBalanceExplanation:
+        notBlankOnDateMismatch: Please enter a value
     moneyInOut:
         account:
           notNumeric: Please enter a total amount

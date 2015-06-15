@@ -10,7 +10,7 @@ activeTab : "tab-contacts"
     {% set showListData = false %}
     {% set showEditHelpInfo = false %}
     {% set showAddForm = false %}
-    {% set showEditForm = false %}
+    {% set formEditShow = false %}
     {% set showDeleteConfirm = false %}
 
 
@@ -20,11 +20,11 @@ activeTab : "tab-contacts"
     {% endif %}
 
     {% if (action == 'edit') %}
-        {% set showEditForm = true %}
+        {% set formEditShow = true %}
     {% endif %}
 
     {% if (action == 'delete-confirm') %}
-        {% set showEditForm = true %}
+        {% set formEditShow = true %}
         {% set showDeleteConfirm = true %}
     {% endif %}
 
@@ -102,7 +102,7 @@ activeTab : "tab-contacts"
 
         {% include 'AppBundle:Contact:_listContact.html.twig' with {
         'showListData': showListData,
-        'showEditForm': showEditForm,
+        'formEditShow': formEditShow,
         'showDeleteConfirm': showDeleteConfirm,
         'form': form
         } %}

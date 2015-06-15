@@ -12,11 +12,6 @@ class DecisionType extends AbstractType
     {
         $builder /*->add('title', 'text')*/
                  ->add('description', 'textarea')
-                ->add('decisionDate', 'date', [ 'widget' => 'text',
-                                              'input' => 'datetime',
-                                              'format' => 'yyyy-MM-dd',
-                                              'invalid_message' => 'decision.decisionDate.invalidMessage'
-                                            ])
                  ->add('clientInvolvedBoolean', 'choice', array(
                     'choices' => [1=>'Yes', 0=>'No'],
                     'expanded' => true

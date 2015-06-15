@@ -76,7 +76,7 @@ Feature: report
     @deputy
     Scenario: Check report notification and submission warnings
         # set report due
-        Given I set the report 1 due
+        Given I set the report 1 end date to 3 days ago
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the first report overview page
         Then I should see the "tab-contacts-warning" region
@@ -86,7 +86,7 @@ Feature: report
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
         # set back report not to be due
-        And I set the report 1 not due
+        And I set the report 1 end date to 3 days ahead
 
     @deputy
     Scenario: add contact
@@ -133,48 +133,18 @@ Feature: report
         Then the following fields should have an error:
             | decision_description |
             | decision_clientInvolvedDetails |
-            | decision_decisionDate_day |
-            | decision_decisionDate_month |
-            | decision_decisionDate_year |
             | decision_clientInvolvedBoolean_0 |
             | decision_clientInvolvedBoolean_1 |
-        # wrong date
-        And I fill in the following:
-            | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 02 |
-            | decision_decisionDate_year | 9999 |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I press "decision_save"
-        And the form should contain an error
-        # date not in report range
-        And I fill in the following:
-            #| decision_title | Bought house in Sw18 |
-            | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2002 |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I press "decision_save"
-        And the form should contain an error
         # missing involvement details
         And I fill in the following:
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails |  |
         And I press "decision_save"
         And the form should contain an error
-        # add decision on 1/1/2015
+        # add decision 
         And I fill in the following:
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 1 |
-            | decision_decisionDate_month | 2 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I press "decision_save"
@@ -182,13 +152,10 @@ Feature: report
         Then the response status code should be 200
         And the form should not contain an error
         When I click on "add-a-decision"
-        # add another decision on 31/12/2015
+        # add another decision
          And I fill in the following:
             #| decision_title | Sold house in Sw18 |
             | decision_description | 3 beds |
-            | decision_decisionDate_day | 4 |
-            | decision_decisionDate_month | 3 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
         And I press "decision_save"
@@ -332,6 +299,8 @@ Feature: report
         Then the response status code should be 200
         And the form should not contain an error
         And the URL should match "/report/\d+/account/\d+"
+        And I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
+        # refresh page and check values
         When I follow "tab-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
         And I should see "8765" in the "list-accounts" region
@@ -520,7 +489,7 @@ Feature: report
 
     @deputy
     Scenario: edit bank account, check edit account does not show closing balance
-        Given I set the report 1 not due
+        Given I set the report 1 end date to 3 days ahead
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
@@ -528,20 +497,22 @@ Feature: report
 
     @deputy
     Scenario: add closing balance to account
-        Given I set the report 1 not due
+        Given I set the report 1 end date to 3 days ahead
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the accounts page of the first report
         Then I should not see the "account-1-add-closing-balance" link
-        When I set the report 1 due
+        When I set the report 1 end date to 3 days ago
         And I am on the accounts page of the first report
         Then I should see the "account-1234-warning" region
         When I click on "account-1234"
+        Then I should not see a "accountBalance_closingDateExplanation" element
+        Then I should not see a "accountBalance_closingBalanceExplanation" element
         Then the following fields should have the corresponding values:
             | accountBalance_closingDate_day   | | 
             | accountBalance_closingDate_month | | 
             | accountBalance_closingDate_year  | | 
             | accountBalance_closingBalance    | | 
-        # wrong values
+        # invalid values
         When I fill in the following:
             | accountBalance_closingDate_day   | 99 | 
             | accountBalance_closingDate_month | 99 | 
@@ -553,19 +524,86 @@ Feature: report
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
             | accountBalance_closingBalance    |
-        # right values  
+        # only date mismatch (30/6/2015) instead of 7/6/2015)
         When I fill in the following:
-            | accountBalance_closingDate_day   | 28 | 
-            | accountBalance_closingDate_month | 12 | 
+            | accountBalance_closingDate_day   | 30 | 
+            | accountBalance_closingDate_month | 06 | 
             | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 3,105.50 | 
+            | accountBalance_closingBalance    | -3100.50 | 
         And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingDateExplanation | 
+        And I should not see a "accountBalance_closingBalanceExplanation" element
+        # only balance mismatch (3000 instead of -3,100.50)
+        When I fill in "accountBalance_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "3 days ago, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "3 days ago, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3000"
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        And I should not see a "accountBalance_closingDateExplanation" element
+        # both date and balance mismatch: assert submit fails
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3000"
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingDateExplanation | 
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        # fix date, assert only balance failes and date explanation disappear
+        When I fill in "accountBalance_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "3 days ago, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "3 days ago, YYYY"
+        And I press "accountBalance_save"
+        Then I should not see a "accountBalance_closingDateExplanation" element
+        And the following fields should have an error:
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        # make date invalid, fix balance. assert only date fails and balance explanation disappear
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3100.50"
+        And I press "accountBalance_save"
+        Then I should not see a "accountBalance_closingBalanceExplanation" element
+        And the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingDateExplanation | 
+        # save with both date and balance mismatch
+        # both date and balance mismatch: add explanations
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ahead, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3000"
+        And I press "accountBalance_save"
+        Then the form should contain an error
+        When I fill in the following:
+            | accountBalance_closingDateExplanation| not possible to login to homebanking before |
+            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
+        And I press "accountBalance_save"
+        Then the form should not contain any error
+        # assert the form disappeared
         Then I should not see the "account-closing-balance-form" region
         # assert transactions are not changed due to the form in the same page
         And I should see "£-3,100.50" in the "money-totals" region
+        And I should see "not possible to login to homebanking before" in the "closing-date-explanation" region
+        And I should see "100.50 moved to other account" in the "closing-balance-explanation" region
+        # refresh page and check values
         When I follow "tab-accounts"
-        Then I should see "3,105.50" in the "account-1-closing-balance" region
-        And I should see "28/12/2015" in the "account-1-closing-date" region
+        Then I should see "3,000.00" in the "account-1-closing-balance" region
+        And I should see the value of "30 days ahead, DD/MM/YYYY" in the "account-1-closing-date" region
 
 
     @deputy
@@ -574,16 +612,18 @@ Feature: report
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
+        Then the field "account_closingDate_day" has value of "30 days ahead, DD"
+        And the field "account_closingDate_month" has value of "30 days ahead, MM"
+        And the field "account_closingDate_year" has value of "30 days ahead, YYYY"
         Then the following fields should have the corresponding values:
-            | account_closingDate_day   | 28 | 
-            | account_closingDate_month | 12 | 
-            | account_closingDate_year  | 2015 | 
-            | account_closingBalance    | 3,105.50 | 
-        # wrong values
+            | account_closingDateExplanation  | not possible to login to homebanking before | 
+            | account_closingBalance    | -3,000.00 | 
+            | account_closingBalanceExplanation | £ 100.50 moved to other account | 
+        # invalid values
         When I fill in the following:
             | account_closingDate_day   |  | 
-            | account_closingDate_month | 13 | 
-            | account_closingDate_year  | string | 
+            | account_closingDate_month |  | 
+            | account_closingDate_year  |  | 
             | account_closingBalance    |  | 
         And I press "account_save"
         Then the following fields should have an error:
@@ -591,17 +631,48 @@ Feature: report
             | account_closingDate_month |
             | account_closingDate_year  |
             | account_closingBalance    |
+        And I should not see the "account_closingDateExplanation" element
+        And I should not see the "account_closingBalanceExplanation" element
         And I save the page as "report-account-edit-after-closing-errors"
-        # right values
-        When I fill in the following:
-            | account_closingDate_day   | 31  | 
-            | account_closingDate_month | 12 | 
-            | account_closingDate_year  | 2015 | 
-            | account_closingBalance    | 3,100.00 | 
+        # assert explanations disappear when values are ok (bank empties to avoid submissions)
+        When go to "/report/1/account/1/edit"
+        And I fill in "account_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "account_closingDate_month" with the value of "3 days ahead, MM"
+        And I fill in "account_closingDate_year" with the value of "3 days ahead, YYYY"
+        And I fill in the following:
+            | account_bank | |
+            | account_closingBalance    | -3100.50 |
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_bank   | 
+        And I should not see the "account_closingDateExplanation" element
+        And I should not see the "account_closingBalanceExplanation" element
+        # assert explanations are required
+        When go to "/report/1/account/1/edit"
+        And I fill in the following:
+            | account_closingDateExplanation | |
+            | account_closingBalanceExplanation |  | 
+        And I press "account_save"
+        Then the following fields should have an error:
+            | account_closingDate_day   | 
+            | account_closingDate_month |
+            | account_closingDate_year  |
+            | account_closingDateExplanation | 
+            | account_closingBalance    | 
+            | account_closingBalanceExplanation | 
+        # simple save
+        When go to "/report/1/account/1/edit"
+        And I fill in the following:
+            | account_closingDate_day   | 1 |
+            | account_closingDate_month | 5 |
+            | account_closingDate_year  | 2015 |
+            | account_closingDateExplanation | not possible to login to homebanking  |
+            | account_closingBalance | -3,000.50 | 
+            | account_closingBalanceExplanation | £ 100 moved to other account | 
         And I press "account_save"
         Then the form should not contain any error
-        And I should see "31/12/2015" in the "account-closing-balance-date" region
-        And I should see "£3,100.00" in the "account-closing-balance" region
+        And I should see "01/05/2015" in the "account-closing-balance-date" region
+        And I should see "£-3,000.50" in the "account-closing-balance" region
 
 
     @deputy
@@ -616,7 +687,7 @@ Feature: report
         Then I should not see the "tab-accounts-warning" region
         Then I should not see the "tab-assets-warning" region
         # set report due
-        Given I set the report 1 due
+        Given I set the report 1 end date to 3 days ago
         And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
         # assert I cannot access the declaration page
@@ -688,6 +759,7 @@ Feature: report
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the form should not contain an error
+        And the response status code should be 200
         And the URL should match "/report/\d+/submitted"
         # assert report display page is not broken
         When I go to "/report/1/display"

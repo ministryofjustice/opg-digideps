@@ -15,24 +15,24 @@ trait ReportTrait
     }
     
     /**
-     * @Given I set the report :reportId due
+     * @Given I set the report :reportId end date to :days days ago
      */
-    public function iSetTheReportDue($reportId)
+    public function iSetTheReportDue($reportId, $days)
     {
        $endDate = new \DateTime;
-       $endDate->modify('-3 days');
+       $endDate->modify("-{$days} days");
        
        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
        $this->visit("/");
     }
     
     /**
-     * @Given I set the report :reportId not due
+     * @Given I set the report :reportId end date to :days days ahead
      */
-    public function iSetTheReportNotDue($reportId)
+    public function iSetTheReportNotDue($reportId, $days)
     {
        $endDate = new \DateTime;
-       $endDate->modify('+3 days');
+       $endDate->modify("+{$days} days");
        
        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
        $this->visit("/");
