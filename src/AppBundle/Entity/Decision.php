@@ -47,15 +47,6 @@ class Decision
      */
     private $clientInvolvedDetails;
     
-
-    /**
-     * @var \DateTime
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @JMS\Groups({"related","basic"})
-     * @ORM\Column(name="decision_date", type="date", nullable=true)
-     */
-    private $decisionDate;
-
     /**
      * @var integer
      * @JMS\Groups({"related"})
@@ -136,29 +127,6 @@ class Decision
         $this->lastedit = $lastedit;
 
         return $this;
-    }
-
-    /**
-     * Set ddate
-     *
-     * @param \DateTime $ddate
-     * @return Decision
-     */
-    public function setDecisionDate($ddate)
-    {
-        $this->decisionDate = $ddate;
-
-        return $this;
-    }
-
-    /**
-     * Get decision date
-     *
-     * @return \DateTime 
-     */
-    public function getDecisionDate()
-    {
-        return $this->decisionDate;
     }
 
     /**
