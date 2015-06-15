@@ -11,9 +11,6 @@ Feature: edit/remove decision
         And I click on "decision-n1"
         Then the following fields should have the corresponding values:
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 01 |
-            | decision_decisionDate_month | 02 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I click on "cancel-edit"
@@ -21,22 +18,13 @@ Feature: edit/remove decision
         And I click on "decision-n1"
         When I fill in the following:
             | decision_description |  |
-            | decision_decisionDate_day |  |
-            | decision_decisionDate_month |  |
-            | decision_decisionDate_year |  |
             | decision_clientInvolvedDetails |  |
         And I press "decision_save"
         Then the following fields should have an error:
             | decision_description |
-            | decision_decisionDate_day |
-            | decision_decisionDate_month |
-            | decision_decisionDate_year |
             | decision_clientInvolvedDetails |
         When I fill in the following:
             | decision_description | 5 beds |
-            | decision_decisionDate_day | 2 |
-            | decision_decisionDate_month | 2 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 100% |
         And I press "decision_save"
