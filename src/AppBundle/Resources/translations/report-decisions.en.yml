@@ -29,9 +29,6 @@ title:
 description:
   label: Description
   hint: Give details of the decision here.
-decisionDate:
-  legend: Date
-  hint: (DD/MM/YYYY)
 clientInvolvedBoolean:
   legend: Client involvement
   hint: Did you involve your client in this decision ?

@@ -7,7 +7,6 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @JMS\XmlRoot("decision")
- * @Assert\Callback(methods={"isValidDateRange"})
  */
 class Decision
 {
@@ -37,14 +36,6 @@ class Decision
      * @var string
      */
     private $description;
-
-    /**
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     * @Assert\NotBlank( message="decision.decisionDate.notBlank")
-     * @Assert\Date( message="decision.decisionDate.invalidMessage" )
-     * @var \DateTime
-     */
-    private $decisionDate;
 
     /**
      * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank")
@@ -111,16 +102,6 @@ class Decision
     {
         $this->description = $description;
     }
-
-    public function setDecisionDate(\DateTime $date = null)
-    {
-        $this->decisionDate = $date;
-    }
-
-    public function getDecisionDate()
-    {
-        return $this->decisionDate;
-    }
     
     /**
      * @return Report
@@ -138,30 +119,4 @@ class Decision
         $this->report = $report;
     }
     
-    /**
-     * @param ExecutionContextInterface $context
-     * @return boolean
-     */
-    public function isValidDateRange(ExecutionContextInterface $context)
-    {
-        if (empty($this->decisionDate)) {
-            return; // the notEmpty validator will take care of that
-        }
-        
-        $reportStartDate = clone $this->report->getStartDate();
-        $reportEndDate = clone $this->report->getEndDate();
-        
-        $reportStartDate->setTime(0,0,0);
-        $reportEndDate->setTime(23, 59, 59);
-        
-        if ($this->decisionDate->getTimestamp() > $reportEndDate->getTimestamp() ||
-            $this->decisionDate->getTimestamp() < $reportStartDate->getTimestamp()
-        ) {
-            $context->addViolationAt('decisionDate','decision.decisionDate.notInReportRange', [
-                '{{from}}' => $reportStartDate->format('d/m/Y'),
-                '{{to}}' => $reportEndDate->format('d/m/Y'),
-            ]);
-        }
-    }
-
 }
