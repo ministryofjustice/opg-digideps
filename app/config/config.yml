@@ -61,6 +61,17 @@ services:
     em:
         alias: doctrine.orm.entity_manager
         
+parameters:
+    dd_entitie_filters:
+        - AppBundle\Entity\Account
+        - AppBundle\Entity\AccountTransaction
+        - AppBundle\Entity\Asset
+        - AppBundle\Entity\Client
+        - AppBundle\Entity\Contact
+        - AppBundle\Entity\CourtOrderType
+        - AppBundle\Entity\Decision
+        - AppBundle\Entity\Report
+        
 fos_oauth_server:
     db_driver: orm       # Driver availables: orm, mongodb, or propel
     client_class:        AppBundle\Entity\OAuth2Client
