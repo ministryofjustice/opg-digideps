@@ -608,7 +608,6 @@ Feature: report
 
     @deputy
       Scenario: edit closing balance
-        Given I load the application status from "05-report.feature-"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
