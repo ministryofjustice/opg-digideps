@@ -52,6 +52,19 @@ default:
                     session:   '@session'
                     maxNestingLevel: 200
                     
+      terms:
+        description: Tests related to user feedback
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        mink_javascript_session: selenium2
+        filters:
+            tags: "@terms&&~@javascript"
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+                    
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension:
