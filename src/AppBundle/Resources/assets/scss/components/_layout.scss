@@ -41,3 +41,11 @@
   //@include phase-banner(beta);
 }
 
+.back-navigation {
+    @include core-19();
+    margin-top: 35px;
+}
+
+#footer .footer-meta .footer-meta-inner ul li:last-child {
+    float: left;
+}
