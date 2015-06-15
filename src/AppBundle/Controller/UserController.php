@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use AppBundle\Form\PasswordForgottenType;
 use AppBundle\Form\ChangePasswordType;
 use AppBundle\Form\UserDetailsBasicType;
 use AppBundle\Form\UserDetailsFullType;
@@ -214,6 +215,106 @@ class UserController extends Controller
             'user' => $user,
             'formEditDetails' => $formEditDetails->createView()
         ];
+    }
+    
+     /**
+     * @Route("/password/forgotten", name="password_forgotten")
+     * @Template()
+     **/
+    public function passwordForgottenAction(Request $request)
+    {
+        $user = new User;
+        $form = $this->createForm(new PasswordForgottenType(), $user);
+        
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            try {
+                $apiClient = $this->get('apiclient');
+                /* @var $user User */
+                $user = $apiClient->getEntity('User', 'find_user_by_email', [ 
+                    'parameters' => [ 'email' => $user->getEmail() ] 
+                ]);
+                $user->setRecreateRegistrationToken(true);
+                $apiClient->putC('user/' .  $user->getId(), $user, [
+                    'deserialise_group' => 'recreateRegistrationToken',
+                ]);
+                $user = $apiClient->getEntity('User', 'user/' . $user->getId());
+                
+                // send email !
+                $this->sendResetPasswordEmail($user);
+                
+            } catch (\Exception $e) {
+                $this->get('logger')->warning($e->getMessage());
+            }
+
+            // after details are added, admin users to go their homepage, deputies go to next step
+            return $this->redirect($this->generateUrl('password_sent'));
+        }
+        
+        return [
+            'form' => $form->createView()
+        ];
+    }
+    
+    /**
+     * @Route("/password/sent", name="password_sent")
+     * @Template()
+     **/
+    public function passwordSentAction()
+    {
+        return [];
+    }
+    
+    
+    /**
+     * @Route("/password/reset/{token}", name="password_reset")
+     * @Template()
+     **/
+    public function passwordResetAction($token)
+    {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        
+        // check $token is correct
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
+        
+        if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
+            throw new \RuntimeException("token expired, require new link");
+        }
+        
+        //form here
+        
+        return [];
+    }
+    
+    /**
+     * @param User $user
+     */
+    private function sendResetPasswordEmail(User $user)
+    {
+        // send activation link
+        $emailConfig = $this->container->getParameter('email_send');
+        $translator = $this->get('translator');
+        $router = $this->get('router');
+
+        $email = new Email();
+        $viewParams = [
+            'name' => $user->getFullName(),
+            'domain' => $router->generate('homepage', [], true),
+            'link' => $router->generate('password_reset', ['token'=> $user->getRegistrationToken()], true)
+        ];
+        
+        $email->setFromEmail($emailConfig['from_email'])
+            ->setFromName($translator->trans('resetPassword.fromName',[], 'email'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFullName())
+            ->setSubject($translator->trans('resetPassword.subject',[], 'email'))
+            ->setBodyHtml($this->renderView('AppBundle:Email:password-forgotten.html.twig', $viewParams))
+            ->setBodyText($this->renderView('AppBundle:Email:password-forgotten.text.twig', $viewParams));
+
+        print_r($email);die;
+        
+        $mailSender = $this->get('mailSender'); /* @var $mailSender \AppBundle\Service\MailSender */
+        $mailSender->send($email,[ 'text', 'html']);
     }
     
 }
