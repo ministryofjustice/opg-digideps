@@ -27,30 +27,7 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     pageSectionDescription: 'pages.' ~ page ~ '.pageSectionDescription'
     } %}
 
-    {% if report.missingContacts() %}
-
-        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-        transDomain: translationDomain,
-        subSectionTitle: 'pages.' ~ page ~ '.contacts.subSectionTitle'
-        } %}
-
-        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionWarning: 'pages.' ~ page ~ '.contacts.subSectionWarning',
-        iconClass: 'icon icon__notification'
-        } %}
-
-        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-        transDomain: translationDomain,
-        subSectionDescription: 'pages.' ~ page ~ '.contacts.subSectionDescription',
-        transOptions: {
-            '%pageHref%': path('contacts', {'reportId': report.id})
-        }
-        } %}
-
-    {% endif %}
-
-
+    
     {% if report.missingDecisions() %}
 
         {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
@@ -69,6 +46,30 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
         subSectionDescription: 'pages.' ~ page ~ '.decisions.subSectionDescription',
         transOptions: {
         '%pageHref%': path('decisions', {'reportId': report.id})
+        }
+        } %}
+
+    {% endif %}
+    
+    
+    {% if report.missingContacts() %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: 'pages.' ~ page ~ '.contacts.subSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'pages.' ~ page ~ '.contacts.subSectionWarning',
+        iconClass: 'icon icon__notification'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+        transDomain: translationDomain,
+        subSectionDescription: 'pages.' ~ page ~ '.contacts.subSectionDescription',
+        transOptions: {
+            '%pageHref%': path('contacts', {'reportId': report.id})
         }
         } %}
 

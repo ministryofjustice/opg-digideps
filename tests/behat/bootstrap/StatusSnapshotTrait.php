@@ -3,6 +3,7 @@
 namespace DigidepsBehat;
 
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 trait StatusSnapshotTrait
 {
@@ -41,6 +42,22 @@ trait StatusSnapshotTrait
                 . '/misc/tmp/behat-snapshot-'
                 . strtolower(preg_replace('/[^\w]+/', '-', $name))
                 . '.sql';
+    }
+    
+    /**
+     * @BeforeScenario
+     */
+    public function dbSnapshotBeforeScenario(BeforeScenarioScope $scope)
+    {
+        if (!self::$saveSnaphotBeforeEachScenario) {
+            return;
+        }
+        
+        $snapshotName = basename( $scope->getFeature()->getFile()) 
+                   . '-' 
+                   . str_pad($scope->getScenario()->getLine(), 4, '0', STR_PAD_LEFT);
+        
+        self::iSaveTheApplicationStatusInto($snapshotName);
     }
 
 }

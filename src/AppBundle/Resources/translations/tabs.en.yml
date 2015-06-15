@@ -1,10 +1,10 @@
 report-paa:
     tab-overview:
         label: Overview
-    tab-contacts:
-        label: Contacts
     tab-decisions:
         label: Decisions
+    tab-contacts:
+        label: Contacts
     tab-accounts:
         label: Accounts
     tab-assets:
@@ -12,7 +12,8 @@ report-paa:
 report-pw:
     tab-overview:
         label: Overview
-    tab-contacts:
-        label: Contacts
     tab-decisions:
         label: Decisions
+    tab-contacts:
+        label: Contacts
+    
