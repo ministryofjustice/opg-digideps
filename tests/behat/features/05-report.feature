@@ -133,48 +133,18 @@ Feature: report
         Then the following fields should have an error:
             | decision_description |
             | decision_clientInvolvedDetails |
-            | decision_decisionDate_day |
-            | decision_decisionDate_month |
-            | decision_decisionDate_year |
             | decision_clientInvolvedBoolean_0 |
             | decision_clientInvolvedBoolean_1 |
-        # wrong date
-        And I fill in the following:
-            | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 02 |
-            | decision_decisionDate_year | 9999 |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I press "decision_save"
-        And the form should contain an error
-        # date not in report range
-        And I fill in the following:
-            #| decision_title | Bought house in Sw18 |
-            | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2002 |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I press "decision_save"
-        And the form should contain an error
         # missing involvement details
         And I fill in the following:
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 30 |
-            | decision_decisionDate_month | 12 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails |  |
         And I press "decision_save"
         And the form should contain an error
-        # add decision on 1/1/2015
+        # add decision 
         And I fill in the following:
             | decision_description | 2 beds |
-            | decision_decisionDate_day | 1 |
-            | decision_decisionDate_month | 2 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I press "decision_save"
@@ -182,13 +152,10 @@ Feature: report
         Then the response status code should be 200
         And the form should not contain an error
         When I click on "add-a-decision"
-        # add another decision on 31/12/2015
+        # add another decision
          And I fill in the following:
             #| decision_title | Sold house in Sw18 |
             | decision_description | 3 beds |
-            | decision_decisionDate_day | 4 |
-            | decision_decisionDate_month | 3 |
-            | decision_decisionDate_year | 2015 |
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
         And I press "decision_save"
@@ -641,7 +608,6 @@ Feature: report
 
     @deputy
       Scenario: edit closing balance
-        Given I load the application status from "05-report.feature-"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"

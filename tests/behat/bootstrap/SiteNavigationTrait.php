@@ -64,4 +64,12 @@ trait SiteNavigationTrait
         $this->clickOnBehatLink('account-' . $accountNumber);
     }
     
+    /**
+     * @Given I goto the terms page
+     */
+    public function iGotoTheTermsPage()
+    {
+        $this->visit('/terms');
+    }
+    
 }

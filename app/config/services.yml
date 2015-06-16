@@ -8,15 +8,6 @@ services:
         arguments: [ @security.context, @security.encoder_factory ]
         tags:
             - { name: validator.constraint_validator, alias: security.validator.d_user_password }
-    session.memcached:
-        class: Memcached
-        arguments:
-            persistent_id: %session_memcached_prefix%
-        calls:
-            - [ addServer, [ %session_memcached_host%, %session_memcached_port% ] ]
-    session.handler.memcached:
-        class:     Symfony\Component\HttpFoundation\Session\Storage\Handler\MemcachedSessionHandler
-        arguments: [@session.memcached, { prefix: %session_memcached_prefix%, expiretime: %session_expire_seconds% } ]
     dd_session.handler.memcached:
         class: AppBundle\Service\MemcachedSessionHandler
         arguments: [ %session_memcached_host%,%session_memcached_port% ]
