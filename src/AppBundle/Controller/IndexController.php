@@ -53,7 +53,7 @@ class IndexController extends Controller
             
             if($oauth2Enabled){
                 $memcached = $this->get('oauth.memcached');
-                $memcached->flush();
+                $memcached->flush(5);
             }
             
             try{

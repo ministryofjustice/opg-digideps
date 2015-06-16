@@ -77,7 +77,7 @@ class SessionListener
         $session = $event->getRequest()->getSession();
         //Invalidate the current session and throw an exception
         $session->invalidate();
-        $this->memcached->flush();
+        $this->memcached->flush(5);
         $response = new RedirectResponse($this->router->generate('login'));
         $event->setResponse($response);
         $event->stopPropagation();
