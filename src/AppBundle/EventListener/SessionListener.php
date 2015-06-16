@@ -25,7 +25,6 @@ class SessionListener
      */
     private $router;
     
-    private $memcached;
 
     /**
      * @param array $options keys: idleTimeout (seconds)
