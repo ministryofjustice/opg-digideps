@@ -29,7 +29,7 @@ Feature: provide feedback
       And I click on "return-to-login"
       And an email with subject "Reset your password" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
       # open password reset page
-      When I open the first link on the email
+      When I open the "/user/password-reset/" link from the email
       # empty
       When I fill in the following: 
           | reset_password_password_first   |  |
@@ -54,6 +54,6 @@ Feature: provide feedback
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd12345"
       Then I should be on "client/show"
       # assert set password link is not accessible
-      When I open the first link on the email
+      When I open the "/user/password-reset/" link from the email
       Then the response status code should be 500
        

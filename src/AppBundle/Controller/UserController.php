@@ -262,7 +262,7 @@ class UserController extends Controller
                 
             } catch (\Exception $e) {
                 // if the user it not found, the user must not be told, 
-                $this->get('logger')->warning($e->getMessage());
+                $this->get('logger')->debug($e->getMessage());
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step
