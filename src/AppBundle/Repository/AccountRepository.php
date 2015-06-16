@@ -1,9 +1,12 @@
 <?php
-namespace AppBundle\Entity;
+namespace AppBundle\Repository;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Account;
+use AppBundle\Entity\AccountTransaction;
 
-class AccountRepository extends \Doctrine\ORM\EntityRepository
+class AccountRepository extends EntityRepository
 {
     /**
      * @param Account $account
