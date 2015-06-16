@@ -10,8 +10,8 @@ class MemcachedSessionHandler extends NativeSessionHandler
         ini_set('session.save_handler', 'memcached');
          
         if (null === $host) {
-            ini_set('session.save_path', 'localhost:11211');
+            ini_set('session.save_path', 'localhost:11211?persistent=1');
         }
-        ini_set('session.save_path', $host.':'.$port);
+        ini_set('session.save_path', $host.':'.$port.'?persistent=1');
     }
 }

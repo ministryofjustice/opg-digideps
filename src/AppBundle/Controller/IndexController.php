@@ -53,7 +53,6 @@ class IndexController extends Controller
             
             if($oauth2Enabled){
                 $memcached = $this->get('oauth.memcached');
-                $memcached->flush();
             }
             
             try{
@@ -218,6 +217,14 @@ class IndexController extends Controller
             }
         }
         return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
+    }
+    
+    /**
+     * @Route("/terms", name="terms")
+     */
+    public function termsAction()
+    {
+        return $this->render('AppBundle:Index:terms.html.twig');
     }
 
 }

@@ -183,7 +183,7 @@ class ApiClient extends GuzzleClient
                 
                 if(!isset($responseArray['code'])){
                    $responseArray['code'] = 401;
-                   $responseArray['message'] = $responseArray['error_description'];
+                   $responseArray['message'] = isset($responseArray['error_description']) ? $responseArray['error_description']: $responseArray['message'];
                 }
                 
                 switch ($responseArray['code']) {

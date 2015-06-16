@@ -25,17 +25,15 @@ class SessionListener
      */
     private $router;
     
-    private $memcached;
 
     /**
      * @param array $options keys: idleTimeout (seconds)
      * @throws \InvalidArgumentException
      */
-    public function __construct(Router $router, array $options, $memcached)
+    public function __construct(Router $router, array $options)
     {
         $this->router = $router;
         $this->idleTimeout = (int)$options['idleTimeout'];
-        $this->memcached = $memcached;
         
         if ($this->idleTimeout < 5) {
             throw new \InvalidArgumentException(__CLASS__ . " :session timeout cannot be lower than 5 seconds");
@@ -77,7 +75,6 @@ class SessionListener
         $session = $event->getRequest()->getSession();
         //Invalidate the current session and throw an exception
         $session->invalidate();
-        $this->memcached->flush();
         $response = new RedirectResponse($this->router->generate('login'));
         $event->setResponse($response);
         $event->stopPropagation();
