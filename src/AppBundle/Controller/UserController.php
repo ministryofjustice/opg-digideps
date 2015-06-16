@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Service\ApiClient;
 use AppBundle\Form\SetPasswordType;
+use AppBundle\Form\ResetPasswordType;
 use AppBundle\Form\PasswordForgottenType;
 use AppBundle\Form\ChangePasswordType;
 use AppBundle\Form\UserDetailsBasicType;
@@ -26,10 +27,14 @@ use AppBundle\Model\Email;
 class UserController extends Controller
 {
     /**
-     * @Route("/activate/{token}", name="user_activate")
+     * Used for both user activation (Step1) or password reset. The controller logic is very similar
+     * 
+     * @Route("/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
+     *   "action" = "(activate|password-reset)"
+     * })
      * @Template()
      */
-    public function activateAction(Request $request, $token)
+    public function setPasswordAndLoginAction(Request $request, $action, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $translator = $this->get('translator');
@@ -42,9 +47,21 @@ class UserController extends Controller
             throw new \RuntimeException("token expired, require new link");
         }
         
-        $formType = new SetPasswordType([
-            'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
-        ]);
+        // define form and template that differs depending on the action (activate or password-reset)
+        if ($action == 'activate') {
+            $formType = new SetPasswordType([
+                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+            ]);
+            $template = 'AppBundle:User:activate.html.twig';
+        } else if ($action === 'password-reset') {
+            $formType = new ResetPasswordType([
+                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+            ]);
+            $template = 'AppBundle:User:passwordReset.html.twig';
+        } else {
+            return $this->createNotFoundException("action $action not defined ");
+        }
+        
         $form = $this->createForm($formType, $user);
         
         if ($request->isMethod('POST')) {
@@ -87,11 +104,11 @@ class UserController extends Controller
             }
         } 
 
-        return [
+        return $this->render($template, [
             'token'=>$token, 
             'form' => $form->createView(),
             'isAdmin' => $user->getRole()['role'] === 'ROLE_ADMIN'
-        ];
+        ]);
     }
     
     
@@ -244,6 +261,7 @@ class UserController extends Controller
                 $this->sendResetPasswordEmail($user);
                 
             } catch (\Exception $e) {
+                // if the user it not found, the user must not be told, 
                 $this->get('logger')->warning($e->getMessage());
             }
 
@@ -265,27 +283,6 @@ class UserController extends Controller
         return [];
     }
     
-    
-    /**
-     * @Route("/password/reset/{token}", name="password_reset")
-     * @Template()
-     **/
-    public function passwordResetAction($token)
-    {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        
-        // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
-        
-        if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
-            throw new \RuntimeException("token expired, require new link");
-        }
-        
-        //form here
-        
-        return [];
-    }
-    
     /**
      * @param User $user
      */
@@ -300,7 +297,10 @@ class UserController extends Controller
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $router->generate('homepage', [], true),
-            'link' => $router->generate('password_reset', ['token'=> $user->getRegistrationToken()], true)
+            'link' => $router->generate('user_activate', [
+                'action'=>'password-reset', 
+                'token'=> $user->getRegistrationToken()
+                ], true)
         ];
         
         $email->setFromEmail($emailConfig['from_email'])
@@ -311,8 +311,6 @@ class UserController extends Controller
             ->setBodyHtml($this->renderView('AppBundle:Email:password-forgotten.html.twig', $viewParams))
             ->setBodyText($this->renderView('AppBundle:Email:password-forgotten.text.twig', $viewParams));
 
-        print_r($email);die;
-        
         $mailSender = $this->get('mailSender'); /* @var $mailSender \AppBundle\Service\MailSender */
         $mailSender->send($email,[ 'text', 'html']);
     }
