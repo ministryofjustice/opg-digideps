@@ -103,13 +103,9 @@ trait EmailTrait
     {
         list($links, $mailContent) = $this->getLinksFromEmailHtmlBody();
         
-        if ($linkPattern == 'first') {
-            $filteredLinks = $links;
-        } else {
-            $filteredLinks = array_filter($links, function ($element) use ($linkPattern) {
-                return strpos($element, $linkPattern) !== false;
-            });
-        }
+        $filteredLinks = array_filter($links, function ($element) use ($linkPattern) {
+            return strpos($element, $linkPattern) !== false;
+        });
         
         if (empty($filteredLinks)) {
             throw new \Exception("no link in the email's body. Filter: $linkPattern . Body:\n $mailContent");
