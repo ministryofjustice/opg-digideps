@@ -5,7 +5,9 @@ Feature: provide feedback
       Given I reset the email log
       And I go to "/logout"
       And I go to "/"
+      And I save the page as "forgotten-password-login"
       When I click on "forgotten-password"
+      And I save the page as "forgotten-password"
       # empty form]
       And I fill in "password_forgotten_email" with ""
       And I press "password_forgotten_submit"
@@ -26,10 +28,12 @@ Feature: provide feedback
       And I fill in "password_forgotten_email" with "behat-user@publicguardian.gsi.gov.uk"
       And I press "password_forgotten_submit"
       Then the form should not contain an error
+      And I save the page as "forgotten-password-sent"
       And I click on "return-to-login"
       And an email with subject "Reset your password" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
       # open password reset page
       When I open the "/user/password-reset/" link from the email
+      And I save the page as "forgotten-password-reset"
       # empty
       When I fill in the following: 
           | reset_password_password_first   |  |
@@ -50,6 +54,7 @@ Feature: provide feedback
       And I press "reset_password_save"
       Then the form should not contain an error
       And I should be on "client/show"
+      And I save the page as "forgotten-password-logged"
       # test login
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd12345"
       Then I should be on "client/show"
