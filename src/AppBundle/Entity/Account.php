@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
  * Account
  *
  * @ORM\Table(name="account")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AccountRepository")
  */
 class Account
 {

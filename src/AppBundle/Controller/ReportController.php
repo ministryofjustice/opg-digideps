@@ -53,7 +53,13 @@ class ReportController extends RestController
         
         if(!$this->container->getParameter('anonymous')){
             $user = $request->getSession()->get('currentUser');
-            $ret = $this->getRepository('Report')->findByIdAndUser($id,$user->getId());
+            
+            //temporary fix, remove once user query filtering is implemented
+            if(!empty($user)){
+                $ret = $this->getRepository('Report')->findByIdAndUser($id,$user->getId());
+            }else{
+                $ret = $this->findEntityBy('Report',$id); 
+            }
         }else{
             $ret = $this->findEntityBy('Report',$id);
         }

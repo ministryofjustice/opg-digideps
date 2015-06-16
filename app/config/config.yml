@@ -71,8 +71,8 @@ fos_oauth_server:
         user_provider: userprovider
         options:
             supported_scopes: user
-            #access_token_lifetime: 5
-            #refresh_token_lifetime: 10
+            access_token_lifetime: 300
+            refresh_token_lifetime: 600
             #auth_code_lifetime: 5
         
         
