@@ -1,13 +1,11 @@
 <?php
 namespace AppBundle\Controller;
 
-use AppBundle\Form\ReportType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Form\ClientType;
-use AppBundle\Entity\Client;
-use AppBundle\Entity as EntityDir;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
 /**
@@ -34,9 +32,9 @@ class ClientController extends Controller
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
 
-        $formClientNewReport = $this->createForm(new ReportType(), $report);
-        $formClientEditReportPeriod = $this->createForm(new ReportType(), $report);
-        $clientForm = $this->createForm(new ClientType($util), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
+        $formClientNewReport = $this->createForm(new FormDir\ReportType(), $report);
+        $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
+        $clientForm = $this->createForm(new FormDir\ClientType($util), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
         
         $clientForm->handleRequest($request);
         
@@ -51,7 +49,7 @@ class ClientController extends Controller
         // edit report dates
         if ($action == 'edit-report' && $reportId) {
             $report = $util->getReport($reportId, $this->getUser()->getId());
-            $editReportDatesForm = $this->createForm(new ReportType('report_edit'), $report, [
+            $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates'
             ]);
             $editReportDatesForm->handleRequest($request);
@@ -87,10 +85,10 @@ class ClientController extends Controller
         $util = $this->get('util');
         $apiClient = $this->get('apiclient');
         
-        $client = new Client();
+        $client = new EntityDir\Client();
         $client->addUser($this->getUser()->getId());
   
-        $form = $this->createForm(new ClientType($util), $client);
+        $form = $this->createForm(new FormDir\ClientType($util), $client);
         
         $form->handleRequest($request);
         if ($form->isValid()) {

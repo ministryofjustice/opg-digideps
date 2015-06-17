@@ -1,19 +1,13 @@
 <?php
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
+use AppBundle\Model as ModelDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\Client;
-use AppBundle\Service\ApiClient;
-use AppBundle\Form as FormDir;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Model\Email;
-use AppBundle\Model\EmailAttachment;
-
 
 class ReportController extends Controller
 {
@@ -133,14 +127,14 @@ class ReportController extends Controller
         $emailConfig = $this->container->getParameter('email_report_submit');
         $translator = $this->get('translator');
 
-        $email = new Email();
+        $email = new ModelDir\Email();
         $email->setFromEmail($emailConfig['from_email'])
             ->setFromName($translator->trans('reportSubmission.fromName',[], 'email'))
             ->setToEmail($emailConfig['to_email'])
             ->setToName($translator->trans('reportSubmission.toName',[], 'email'))
             ->setSubject($translator->trans('reportSubmission.subject',[], 'email'))
             ->setBodyHtml($this->renderView('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
+            ->setAttachments([new ModelDir\EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
 
         $this->get('mailSender')->send($email,[ 'html'], 'secure-smtp');
     }

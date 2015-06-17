@@ -1,11 +1,11 @@
 <?php
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Form as FormDir;
-use AppBundle\Entity as EntityDir;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AssetController extends Controller
 {

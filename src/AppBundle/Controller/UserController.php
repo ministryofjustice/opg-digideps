@@ -1,25 +1,16 @@
 <?php
 namespace AppBundle\Controller;
 
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
+use AppBundle\Model\Email;
+use AppBundle\Service\ApiClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
-use AppBundle\Service\ApiClient;
-use AppBundle\Form\SetPasswordType;
-use AppBundle\Form\ResetPasswordType;
-use AppBundle\Form\PasswordForgottenType;
-use AppBundle\Form\ChangePasswordType;
-use AppBundle\Form\UserDetailsBasicType;
-use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AppBundle\Model\Email;
 
 /**
 * @Route("user")
@@ -41,20 +32,20 @@ class UserController extends Controller
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
-        if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
+        if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             throw new \RuntimeException("token expired, require new link");
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
         if ($action == 'activate') {
-            $formType = new SetPasswordType([
+            $formType = new FormDir\SetPasswordType([
                 'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
             ]);
             $template = 'AppBundle:User:activate.html.twig';
         } else if ($action === 'password-reset') {
-            $formType = new ResetPasswordType([
+            $formType = new FormDir\ResetPasswordType([
                 'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
             ]);
             $template = 'AppBundle:User:passwordReset.html.twig';
@@ -122,11 +113,11 @@ class UserController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
+        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user EntityDir\User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
         $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
-        $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
+        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
         ]);
         $form = $this->createForm($formType, $user);
@@ -162,11 +153,11 @@ class UserController extends Controller
         $user = $this->getUser();
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
-        $formEditDetails = $this->createForm(new UserDetailsFullType([
+        $formEditDetails = $this->createForm(new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
         
-        $formEditDetails->add('password', new ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
+        $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
@@ -240,14 +231,14 @@ class UserController extends Controller
      **/
     public function passwordForgottenAction(Request $request)
     {
-        $user = new User;
-        $form = $this->createForm(new PasswordForgottenType(), $user);
+        $user = new EntityDir\User;
+        $form = $this->createForm(new FormDir\PasswordForgottenType(), $user);
         
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
                 $apiClient = $this->get('apiclient');
-                /* @var $user User */
+                /* @var $user EntityDir\User */
                 $user = $apiClient->getEntity('User', 'find_user_by_email', [ 
                     'parameters' => [ 'email' => $user->getEmail() ] 
                 ]);
@@ -284,9 +275,9 @@ class UserController extends Controller
     }
     
     /**
-     * @param User $user
+     * @param EntityDir\User $user
      */
-    private function sendResetPasswordEmail(User $user)
+    private function sendResetPasswordEmail(EntityDir\User $user)
     {
         // send activation link
         $emailConfig = $this->container->getParameter('email_send');
