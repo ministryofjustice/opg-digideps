@@ -77,13 +77,6 @@ class Report
     private $assets;
     
     /**
-     * @JMS\Accessor(getter="getPdfTokenIds")
-     * @JMS\Type("array")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\PdfToken", mappedBy="report", cascade={"persist"})
-     */
-    private $pdfTokens;
-    
-    /**
      * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
@@ -199,7 +192,6 @@ class Report
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->pdfTokens = new \Doctrine\Common\Collections\ArrayCollection();
     }
     
     /**
@@ -593,49 +585,6 @@ class Report
             }
         }
         return $assets;
-    }
-    /**
-     * Add pdfTokens
-     *
-     * @param \AppBundle\Entity\PdfToken $pdfTokens
-     * @return Report
-     */
-    public function addPdfToken(\AppBundle\Entity\PdfToken $pdfTokens)
-    {
-        $this->pdfTokens[] = $pdfTokens;
-
-        return $this;
-    }
-
-    /**
-     * Remove pdfTokens
-     *
-     * @param \AppBundle\Entity\PdfToken $pdfTokens
-     */
-    public function removePdfToken(\AppBundle\Entity\PdfToken $pdfTokens)
-    {
-        $this->pdfTokens->removeElement($pdfTokens);
-    }
-
-    /**
-     * Get pdfTokens
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getPdfTokens()
-    {
-        return $this->pdfTokens;
-    }
- 
-    public function getPdfTokenIds()
-    {
-        $pdfTokens = [];
-        if(!empty($this->pdfTokens)){
-            foreach($this->pdfTokens as $pdfToken){
-                $pdfTokens[] = $pdfToken->getId();
-            }
-        }
-        return $pdfTokens;
     }
     
     /**
