@@ -87,5 +87,54 @@ trait DebugTrait
     {
         $this->getSession()->restart();
     }
+    
+    /**
+    * @Given I am on the textarea test page
+     */
+    public function testAreaPage()
+    {
+        $this->visit('/behat/textarea');
+    }
+    
+    /**
+     * @Then the :elementId element has a height between :minSize px and :maxSize px
+     */
+    public function theElementHasAHeightBetweenPxAndPx($elementId, $minSize, $maxSize)
+    {
+        $element = $this->getSession()->getPage()->find('css', '#' . $elementId);
+                
+        if($element) {
+            $javascipt = "return $('#" . $elementId . "').height()";
+            $height =  $this->getSession()->evaluateScript($javascipt);
+    
+            if ($height < $minSize || $height > $maxSize) {
+                throw new \RuntimeException("Element height out of range: " . $height);
+            }
+    
+        } else {
+            throw new \RuntimeException("Element not found");
+        }
+    
+    }
+
+    /**
+     * @Then the :elementPath element has a height greater than :minSize px
+     */
+    public function theElementHasAHeightGreaterThanPx($elementId, $minSize)
+    {
+        $element = $this->getSession()->getPage()->find('css', '#' . $elementId);
+    
+        if($element) {
+            $javascipt = "return $('#" . $elementId . "').height()";
+            $height =  $this->getSession()->evaluateScript($javascipt);
+            
+            if ($height < $minSize) {
+                throw new \RuntimeException("Element height out of range: " . $height);
+            }
+    
+        } else {
+            throw new \RuntimeException("Element not found");
+        }
+    }
 
 }

@@ -4,7 +4,7 @@
 
 
 <div id="closing-balance" class="behat-region-account-closing-balance-form account-closing-balance-form {% if hideForm %}visuallyhidden{% endif %}">
-    {{ form_start(closingBalanceForm, {attr: {novalidate: 'novalidate' }}) }}
+    {{ form_start(closingBalanceForm, {attr: {novalidate: 'novalidate',class: 'report-form in-page-form' }}) }}
 
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
@@ -23,7 +23,7 @@
     {{ form_known_date(closingBalanceForm.closingDate, 'form.closing.controls.closingDate') }}
     {# account.closingBalance is null or account.isClosingBalanceMatchingTransactionSum #}
     {% if closingBalanceFormDateExplanationShow %}
-       {{ form_input(closingBalanceForm.closingDateExplanation, 'form.closing.controls.closingDateExplanation', { 'labelClass': 'required' }) }}
+       {{ form_input(closingBalanceForm.closingDateExplanation, 'form.closing.controls.closingDateExplanation', { 'labelClass': 'required','inputClass': 'expanding' }) }}
     {% else %}
       {% do closingBalanceForm.closingDateExplanation.setRendered() %}
     {% endif %}
@@ -35,7 +35,7 @@
     } ) }}
     {#  account.closingBalance is null or account.isClosingBalanceMatchingTransactionSum #}
     {% if closingBalanceFormBalanceExplanationShow %}
-      {{ form_input(closingBalanceForm.closingBalanceExplanation, 'form.closing.controls.closingBalanceExplanation', { 'labelClass': 'required' }) }}
+      {{ form_input(closingBalanceForm.closingBalanceExplanation, 'form.closing.controls.closingBalanceExplanation', { 'labelClass': 'required', 'inputClass': 'expanding'}) }}
     {% else %}
       {% do closingBalanceForm.closingBalanceExplanation.setRendered() %}
     {% endif %}

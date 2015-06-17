@@ -42,7 +42,8 @@
             transDomain: transDomain,
             title: 'page.header.pleaseTellUsWhy.openingDatesMismatch',
             description: account.openingDateExplanation,
-            wrapperClass: 'behat-region-opening-balance-explanation'
+            wrapperClass: 'behat-region-opening-balance-explanation',
+            inputClass: 'expanding'
         } %}
     {% endif %}
     {% if account.closingDateExplanation %}
@@ -50,7 +51,8 @@
             transDomain: transDomain,
             title: 'page.header.pleaseTellUsWhy.closingDatesMismatch',
             description: account.closingDateExplanation,
-            wrapperClass: 'behat-region-closing-date-explanation'
+            wrapperClass: 'behat-region-closing-date-explanation',
+            inputClass: 'expanding'
         } %}
     {% endif %}
     {% if account.closingBalanceExplanation %}
@@ -58,7 +60,8 @@
             transDomain: transDomain,
             title: 'page.header.pleaseTellUsWhy.closingBalancesMismatch',
             description: account.closingBalanceExplanation,
-            wrapperClass: 'behat-region-closing-balance-explanation'
+            wrapperClass: 'behat-region-closing-balance-explanation',
+            inputClass: 'expanding'
         } %}
     {% endif %}
     

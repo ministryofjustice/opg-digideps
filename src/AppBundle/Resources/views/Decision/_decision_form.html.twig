@@ -29,7 +29,7 @@ form
         } %}
 
         {# form block start #}
-        {{ form_input(form.description,'description', { 'labelClass': 'required' }) }}
+        {{ form_input(form.description,'description', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
 
         {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
         'fieldSetClass' : 'inline',
@@ -40,7 +40,7 @@ form
         ]
         }) }}
 
-        {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required' }) }}
+        {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
         {# form block end #}
 
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}

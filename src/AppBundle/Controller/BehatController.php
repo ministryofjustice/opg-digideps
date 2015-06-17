@@ -211,4 +211,12 @@ class BehatController extends Controller
         }
         return new JsonResponse();
     }
+    
+    /**
+     * @Route("/textarea")
+     */
+    public function textAreaTestPage()
+    {
+        return $this->render('AppBundle:Behat:textarea.html.twig');    
+    }
 }

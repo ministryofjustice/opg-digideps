@@ -36,7 +36,7 @@ form
         'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
         'inputClass' : 'form-control__number'
         } ) }}
-        {{ form_input(form.description, 'form.newAsset.controls.description') }}
+        {{ form_input(form.description, 'form.newAsset.controls.description', {inputClass: 'expanding'}) }}
         {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
 
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
