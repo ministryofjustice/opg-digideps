@@ -51,12 +51,7 @@ class ReportController extends RestController
         
         $this->setJmsSerialiserGroup($serialiseGroups);
         
-        if(!$this->container->getParameter('anonymous')){
-            $user = $request->getSession()->get('currentUser');
-            $ret = $this->getRepository('Report')->findByIdAndUser($id,$user->getId());
-        }else{
-            $ret = $this->findEntityBy('Report',$id);
-        }
+        $ret = $this->getRepository('Report')->find($id);
         
         if(empty($ret)){
             throw new \Exception("Report not found");
@@ -73,13 +68,8 @@ class ReportController extends RestController
     {
         $contactData = $this->deserializeBodyContent();
         $request = $this->getRequest();
-        
-        if(!$this->container->getParameter('anonymous')){
-             $user = $request->getSession()->get('currentUser');
-             $report = $this->getRepository('Report')->findByIdAndUser($contactData['report'],$user->getId());
-        }else{
-            $report = $this->findEntityBy('Report',$contactData['report']);
-        }
+       
+        $report = $this->findEntityBy('Report',$contactData['report']);
         
         if(empty($report)){
             throw new \Exception("Report id: ".$contactData['report']." does not exists");

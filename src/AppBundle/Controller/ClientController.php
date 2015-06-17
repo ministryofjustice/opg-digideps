@@ -82,7 +82,6 @@ class ClientController extends RestController
     public function findByIdAction($id)
     {
         $request = $this->getRequest();
-        //$currentUser = $request->getSession()->get('currentUser');
         
         $serialisedGroups = null;
         
@@ -92,7 +91,7 @@ class ClientController extends RestController
         
         $this->setJmsSerialiserGroup($serialisedGroups);
         
-        $client = $this->getDoctrine()->getRepository('AppBundle:Client')->find($id);
+        $client = $this->getRepository('Client')->find($id);
         
         //if client does not exist
         if(empty($client)){
@@ -108,7 +107,6 @@ class ClientController extends RestController
     public function getByUserId($userId)
     {
         $user = $this->findEntityBy('User', $userId, "User not found");
-        //$user = $request->getSession()->get('currentUser');
         
         if (count($user->getClients()) === 0) {
             throw new NotFound("User has no clients");

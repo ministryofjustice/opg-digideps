@@ -36,13 +36,6 @@ doctrine:
             #sslmode: require
 
     orm:
-        filters:
-            user_filter:
-                class: AppBundle\Filter\UserFilter
-                enabled: false
-            manytomany_relation_filter:
-                class: AppBundle\Filter\ManyToManyRelationFilter
-                enabled: false
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         
@@ -60,17 +53,6 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
     em:
         alias: doctrine.orm.entity_manager
-        
-parameters:
-    dd_entitie_filters:
-        - AppBundle\Entity\Account
-        - AppBundle\Entity\AccountTransaction
-        - AppBundle\Entity\Asset
-        - AppBundle\Entity\Client
-        - AppBundle\Entity\Contact
-        - AppBundle\Entity\CourtOrderType
-        - AppBundle\Entity\Decision
-        - AppBundle\Entity\Report
         
 fos_oauth_server:
     db_driver: orm       # Driver availables: orm, mongodb, or propel

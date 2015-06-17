@@ -1,9 +1,7 @@
 <?php
-namespace AppBundle\Entity;
+namespace AppBundle\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-class AccountRepository extends \Doctrine\ORM\EntityRepository
+class AccountRepository extends DDBaseRepository
 {
     /**
      * @param Account $account
