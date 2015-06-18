@@ -104,6 +104,7 @@ Feature: report
             | contact_address |
             | contact_postcode |
         # right values
+        Then the "contact_explanation" field is expandable
         And I fill in the following:
             | contact_contactName | Andy White |
             | contact_relationship | brother  |
@@ -143,6 +144,8 @@ Feature: report
         And I press "decision_save"
         And the form should contain an error
         # add decision 
+        Then the "decision_description" field is expandable
+        And the "decision_clientInvolvedDetails" field is expandable
         And I fill in the following:
             | decision_description | 2 beds |
             | decision_clientInvolvedBoolean_0 | 1 |
@@ -191,6 +194,7 @@ Feature: report
             | asset_valuationDate_month |
             | asset_valuationDate_year |
         # first asset (empty date)
+        Then the "asset_description" field should be expandable
         When I fill in the following:
             | asset_title       | Property | 
             | asset_value       | 250000.00 | 
@@ -228,6 +232,7 @@ Feature: report
         # empty form
         And I press "account_save"
         And I save the page as "report-account-add-error"
+        Then the "account_openingDateExplanation" field is expandable
         Then the following fields should have an error:
             | account_bank |
             | account_accountNumber_part_1 |
@@ -553,6 +558,9 @@ Feature: report
         And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
         And I fill in "accountBalance_closingBalance" with "-3000"
         And I press "accountBalance_save"
+        Then the "accountBalance_closingDateExplanation" field should be expandable
+        Then the "accountBalance_closingDateExplanation" field should be expandable
+        And the "accountBalance_closingBalanceExplanation" field should be expandable
         Then the following fields should have an error:
             | accountBalance_closingDate_day   |
             | accountBalance_closingDate_month |
