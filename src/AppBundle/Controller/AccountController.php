@@ -2,12 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
+use AppBundle\Service\ApiClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Form as FormDir;
-use AppBundle\Entity as EntityDir;
-use AppBundle\Service\ApiClient;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class AccountController extends Controller
 {

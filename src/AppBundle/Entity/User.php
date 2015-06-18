@@ -46,8 +46,8 @@ class User implements AdvancedUserInterface
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"admin_add_user"})
-     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user"} )
-     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user"}, checkMX=false, checkHost=false )
+     * @Assert\NotBlank( message="user.email.notBlank", groups={"admin_add_user", "password_reset"} )
+     * @Assert\Email( message="user.email.invalid", groups={"admin_add_user", "password_reset"}, checkMX=false, checkHost=false )
      * @var string $email
      */
     private $email;
@@ -115,6 +115,13 @@ class User implements AdvancedUserInterface
      * @var string $registrationToken
      */
     private $registrationToken;
+    
+    /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"recreateRegistrationToken"})
+     * @var boolean $recreateRegistrationToken
+     */
+    private $recreateRegistrationToken;
     
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
@@ -198,6 +205,11 @@ class User implements AdvancedUserInterface
      * @var \DateTime $tokenDate
      */
     private $lastLoggedIn;
+    
+    public function __construct()
+    {
+        $this->recreateRegistrationToken = false;
+    }
     
     /**
      * @return integer $id
@@ -621,6 +633,17 @@ class User implements AdvancedUserInterface
         $this->lastLoggedIn = $lastLoggedIn;
     }
         
+    public function setRecreateRegistrationToken($recreateRegistrationToken)
+    {
+        $this->recreateRegistrationToken = $recreateRegistrationToken;
+    }
+
+    public function getRecreateRegistrationToken()
+    {
+        return $this->recreateRegistrationToken;
+    }
+
+    
     /**
      * @return boolean
      */

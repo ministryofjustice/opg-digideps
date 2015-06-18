@@ -8,3 +8,6 @@ reportSubmission:
     subject: Report submission from Digital Deputy
     fromName: Digital deputy secure email service
     toName: Deputyship Service
+resetPassword:
+    subject: Reset your password
+    fromName: Digital deputy secure email service

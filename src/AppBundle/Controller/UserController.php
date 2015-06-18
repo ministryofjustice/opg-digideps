@@ -1,23 +1,16 @@
 <?php
 namespace AppBundle\Controller;
 
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
+use AppBundle\Model\Email;
+use AppBundle\Service\ApiClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
-use AppBundle\Service\ApiClient;
-use AppBundle\Form\SetPasswordType;
-use AppBundle\Form\ChangePasswordType;
-use AppBundle\Form\UserDetailsBasicType;
-use AppBundle\Form\UserDetailsFullType;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use AppBundle\Model\Email;
 
 /**
 * @Route("user")
@@ -25,25 +18,41 @@ use AppBundle\Model\Email;
 class UserController extends Controller
 {
     /**
-     * @Route("/activate/{token}", name="user_activate")
+     * Used for both user activation (Step1) or password reset. The controller logic is very similar
+     * 
+     * @Route("/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
+     *   "action" = "(activate|password-reset)"
+     * })
      * @Template()
      */
-    public function activateAction(Request $request, $token)
+    public function setPasswordAndLoginAction(Request $request, $action, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $translator = $this->get('translator');
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user User*/
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
-        if (!$user->isTokenSentInTheLastHours(User::TOKEN_EXPIRE_HOURS)) {
+        if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             throw new \RuntimeException("token expired, require new link");
         }
         
-        $formType = new SetPasswordType([
-            'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
-        ]);
+        // define form and template that differs depending on the action (activate or password-reset)
+        if ($action == 'activate') {
+            $formType = new FormDir\SetPasswordType([
+                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+            ]);
+            $template = 'AppBundle:User:activate.html.twig';
+        } else if ($action === 'password-reset') {
+            $formType = new FormDir\ResetPasswordType([
+                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+            ]);
+            $template = 'AppBundle:User:passwordReset.html.twig';
+        } else {
+            return $this->createNotFoundException("action $action not defined ");
+        }
+        
         $form = $this->createForm($formType, $user);
         
         if ($request->isMethod('POST')) {
@@ -86,11 +95,11 @@ class UserController extends Controller
             }
         } 
 
-        return [
+        return $this->render($template, [
             'token'=>$token, 
             'form' => $form->createView(),
             'isAdmin' => $user->getRole()['role'] === 'ROLE_ADMIN'
-        ];
+        ]);
     }
     
     
@@ -104,11 +113,11 @@ class UserController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user User*/
+        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user EntityDir\User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
         $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
-        $formType = $basicFormOnly ? new UserDetailsBasicType() : new UserDetailsFullType([
+        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
         ]);
         $form = $this->createForm($formType, $user);
@@ -144,11 +153,11 @@ class UserController extends Controller
         $user = $this->getUser();
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
-        $formEditDetails = $this->createForm(new UserDetailsFullType([
+        $formEditDetails = $this->createForm(new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
         ]), $user);
         
-        $formEditDetails->add('password', new ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
+        $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
@@ -214,6 +223,87 @@ class UserController extends Controller
             'user' => $user,
             'formEditDetails' => $formEditDetails->createView()
         ];
+    }
+    
+     /**
+     * @Route("/password/forgotten", name="password_forgotten")
+     * @Template()
+     **/
+    public function passwordForgottenAction(Request $request)
+    {
+        $user = new EntityDir\User;
+        $form = $this->createForm(new FormDir\PasswordForgottenType(), $user);
+        
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            try {
+                $apiClient = $this->get('apiclient');
+                /* @var $user EntityDir\User */
+                $user = $apiClient->getEntity('User', 'find_user_by_email', [ 
+                    'parameters' => [ 'email' => $user->getEmail() ] 
+                ]);
+                $user->setRecreateRegistrationToken(true);
+                $apiClient->putC('user/' .  $user->getId(), $user, [
+                    'deserialise_group' => 'recreateRegistrationToken',
+                ]);
+                $user = $apiClient->getEntity('User', 'user/' . $user->getId());
+                
+                // send email !
+                $this->sendResetPasswordEmail($user);
+                
+            } catch (\Exception $e) {
+                // if the user it not found, the user must not be told, 
+                $this->get('logger')->debug($e->getMessage());
+            }
+
+            // after details are added, admin users to go their homepage, deputies go to next step
+            return $this->redirect($this->generateUrl('password_sent'));
+        }
+        
+        return [
+            'form' => $form->createView()
+        ];
+    }
+    
+    /**
+     * @Route("/password/sent", name="password_sent")
+     * @Template()
+     **/
+    public function passwordSentAction()
+    {
+        return [];
+    }
+    
+    /**
+     * @param EntityDir\User $user
+     */
+    private function sendResetPasswordEmail(EntityDir\User $user)
+    {
+        // send activation link
+        $emailConfig = $this->container->getParameter('email_send');
+        $translator = $this->get('translator');
+        $router = $this->get('router');
+
+        $email = new Email();
+        $viewParams = [
+            'name' => $user->getFullName(),
+            'domain' => $router->generate('homepage', [], true),
+            'link' => $router->generate('user_activate', [
+                'action'=>'password-reset', 
+                'token'=> $user->getRegistrationToken()
+                ], true)
+        ];
+        
+        $email->setFromEmail($emailConfig['from_email'])
+            ->setFromName($translator->trans('resetPassword.fromName',[], 'email'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFullName())
+            ->setSubject($translator->trans('resetPassword.subject',[], 'email'))
+            ->setBodyHtml($this->renderView('AppBundle:Email:password-forgotten.html.twig', $viewParams))
+            ->setBodyText($this->renderView('AppBundle:Email:password-forgotten.text.twig', $viewParams));
+
+        $mailSender = $this->get('mailSender'); /* @var $mailSender \AppBundle\Service\MailSender */
+        $mailSender->send($email,[ 'text', 'html']);
     }
     
 }

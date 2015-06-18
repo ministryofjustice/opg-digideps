@@ -3,7 +3,7 @@ Feature: set password
     @deputy
     Scenario: login and add user (deputy)
         Given I am on "/logout"
-        When I open the first link on the email
+        When I open the "/user/activate/" link from the email
         Then the response status code should be 200
         And I save the page as "deputy-step1"
         And the "set_password_email" field should contain "behat-user@publicguardian.gsi.gov.uk"
@@ -58,7 +58,7 @@ Feature: set password
     @admin
     Scenario: login and add user (admin)
         Given I am on "/logout"
-        When I open the first link on the email
+        When I open the "/user/activate/" link from the email
         Then the response status code should be 200
         And I save the page as "admin-step1"
         And the "set_password_email" field should contain "behat-admin-user@publicguardian.gsi.gov.uk"
