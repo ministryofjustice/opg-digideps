@@ -30,6 +30,6 @@
 
     {{ form_end(form) }}
     
-    <a class="below-form-link" href="{{ path('password_forgotten') }}" class="behat-link-forgotten-password">{{ 'forgottenPassword' | trans }}</a>
+    <a class="below-form-link behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
 
 {% endblock %}
