@@ -93,8 +93,8 @@ default:
             default_session: goutte
 
             browser_stack:
-                username: abisolafatokun3
-                access_key: ph3ibzbEeBX4H8qpAxSh
+                username: XXX
+                access_key: XXX
 
                 capabilities:
                     browserstack-tunnel: true
