@@ -2,19 +2,16 @@
 
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
-use Symfony\Component\Form\Form;
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
+use AppBundle\Model\Email;
 use AppBundle\Service\ApiClient;
 use AppBundle\Service\MailSender;
-use AppBundle\Form\AddUserType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Model\Email;
-use AppBundle\Entity\AuditLogEntry;
-
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 /**
 * @Route("/admin")
 */
@@ -28,10 +25,10 @@ class AdminController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
-        $form = $this->createForm(new AddUserType([
+        $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
-        ]), new User());
+        ]), new EntityDir\User());
         
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
@@ -49,7 +46,7 @@ class AdminController extends Controller
                     'An activation email has been sent to the user.'
                 );
                 
-                $this->get('auditLogger')->log(AuditLogEntry::ACTION_USER_ADD, $user);
+                $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $user);
                 
                 return $this->redirect($this->generateUrl('admin_homepage'));
             } 
@@ -64,7 +61,7 @@ class AdminController extends Controller
     /**
      * @param User $user
      */
-    private function sendActivationEmail(User $user)
+    private function sendActivationEmail(EntityDir\User $user)
     {
         // send activation link
         $emailConfig = $this->container->getParameter('email_send');
@@ -85,7 +82,7 @@ class AdminController extends Controller
             ->setBodyHtml($this->renderView('AppBundle:Email:user-activate.html.twig', $viewParams))
             ->setBodyText($this->renderView('AppBundle:Email:user-activate.text.twig', $viewParams));
 
-        $mailSender = $this->get('mailSender'); /* @var $mailSender \AppBundle\Service\MailSender */
+        $mailSender = $this->get('mailSender'); /* @var $mailSender MailSender */
         $mailSender->send($email,[ 'text', 'html']);
     }
     
@@ -106,7 +103,7 @@ class AdminController extends Controller
             throw new \Exception('User does not exists');
         }
         
-        $form = $this->createForm(new AddUserType([
+        $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), $user );
@@ -143,7 +140,7 @@ class AdminController extends Controller
         
         $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]); 
         
-        $this->get('auditLogger')->log(AuditLogEntry::ACTION_USER_DELETE, $user);
+        $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
         
         $apiClient->delete('delete_user_by_id',[ 'parameters' => ['adminId' => $this->getUser()->getId(), 'id' => $id ]]);
         

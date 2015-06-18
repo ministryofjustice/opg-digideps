@@ -1,24 +1,20 @@
 <?php
 namespace AppBundle\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use AppBundle\Form\LoginType;
-use AppBundle\Form\FeedbackType;
+use AppBundle\Entity as EntityDir;
+use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Form\FormError;
-use AppBundle\EventListener\SessionListener;
 use AppBundle\Service\ApiClient;
-use AppBundle\Entity\AuditLogEntry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
 class IndexController extends Controller
 {
@@ -39,7 +35,7 @@ class IndexController extends Controller
         $request = $this->getRequest();
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
 
-        $form = $this->createForm(new LoginType(), null, [
+        $form = $this->createForm(new FormDir\LoginType(), null, [
             'action' => $this->generateUrl('login'),
         ]);
         $form->handleRequest($request);
@@ -101,7 +97,7 @@ class IndexController extends Controller
                 'deserialise_group' => 'lastLoggedIn',
             ]);
             
-            $this->get('auditLogger')->log(AuditLogEntry::ACTION_LOGIN);
+            $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
         }
         
         // different page version for timeout and manual logout
@@ -194,7 +190,7 @@ class IndexController extends Controller
      */
     public function feedbackAction()
     {
-        $form = $this->createForm(new FeedbackType(), new ModelDir\Feedback());
+        $form = $this->createForm(new FormDir\FeedbackType(), new ModelDir\Feedback());
         $request = $this->getRequest();
         
         if($request->getMethod() == 'POST'){
