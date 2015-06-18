@@ -220,7 +220,8 @@ class User implements AdvancedUserInterface
     {
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
         
-        $this->registrationToken = sha1('sdfs'.rand(1, 100) . time().date('dmY'));
+        $this->recreateRegistrationToken();
+        
         $this->tokenDate = new \DateTime();
         $this->password = '';
     }
@@ -354,6 +355,18 @@ class User implements AdvancedUserInterface
         return $this->registrationDate;
     }
 
+    /**
+     * Set registrationToken
+     *
+     * @return User
+     */
+    public function recreateRegistrationToken()
+    {
+        $this->registrationToken = sha1('digideps'.rand(1, 100) . time().date('dmY'));
+        
+        return $this;
+    }
+    
     /**
      * Set registrationToken
      *
