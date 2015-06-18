@@ -1,6 +1,9 @@
 <?php
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Account;
+use AppBundle\Entity\AccountTransaction;
+
 class AccountRepository extends DDBaseRepository
 {
     /**
