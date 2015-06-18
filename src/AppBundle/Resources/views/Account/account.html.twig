@@ -54,7 +54,7 @@ activeTab: "tab-accounts"
 
         {% include 'AppBundle:Account:_account_form_edit.html.twig' with {
         form: formEdit,
-        formClass: 'report-form',
+        formClass: 'report-form in-page-form',
         hideForm: (not formEditShow)
         } %}
 
@@ -64,7 +64,7 @@ activeTab: "tab-accounts"
         } %}
 
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
 
         {{ form_row(form.id) }}
 

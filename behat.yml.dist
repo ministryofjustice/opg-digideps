@@ -42,8 +42,6 @@ default:
       cookies:
         description: Tests related to user feedback
         paths:    [ %paths.base%/tests/behat/features ]
-        mink_session: default
-        mink_javascript_session: selenium2
         filters:
             tags: "@cookie&&~@javascript"
         contexts: 
@@ -55,10 +53,32 @@ default:
       terms:
         description: Tests related to user feedback
         paths:    [ %paths.base%/tests/behat/features ]
-        mink_session: default
-        mink_javascript_session: selenium2
         filters:
             tags: "@terms&&~@javascript"
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+
+      textarea:
+        description: Tests related to user feedback
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        filters:
+            tags: "@textarea"
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+
+      javascript:
+        description: Tests related to user feedback
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        filters:
+            tags: "@javascript"
         contexts: 
             - DigidepsBehat\FeatureContext:
                 -
@@ -67,19 +87,112 @@ default:
                     
     extensions:
         Behat\Symfony2Extension: ~
-        Behat\MinkExtension:
-            base_url: 'http://digideps-client.local/'
-            sessions:
-              default:
-                goutte: ~
-              selenium2:
-                selenium2: ~
-                #   guzzle_parameters:
-                #      # http://guzzle3.readthedocs.org/http-client/client.html
-                #      ssl.certificate_authority: false
-                #      # curl.options: ~
-                #      command.request_options:
-                #        timeout: 5
-                #        connect_timeout: 5
-                # the following is faster but not behaving the same as the browser. Goutte better for now
-                #symfony2: ~  
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            goutte: ~
+            base_url: http://digideps-client.local/
+            default_session: goutte
+
+            browser_stack:
+                username: XXX
+                access_key: XXX
+
+                capabilities:
+                    browserstack-tunnel: true
+                    browserstack-debug: true
+                    
+chrome:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: Chrome
+                    browserVersion: 43.0
+                    os: Windows
+                    os_version: 7
+
+
+safari:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: Safari
+                    browserVersion: 8.0
+                    os: OS X
+                    os_version: Yosemite
+                    
+firefox:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: Firefox
+                    browserVersion: 37.0
+                    os: Windows
+                    os_version: 7
+
+ie7:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 7.0
+                    os: Windows
+                    os_version: XP
+
+ie8:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 8.0
+                    os: Windows
+                    os_version: 7
+                    
+ie9:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 9.0
+                    os: Windows
+                    os_version: 7
+
+ie10:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 10.0
+                    os: Windows
+                    os_version: 8
+
+ie11:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: browser_stack
+                
+            browser_stack:
+                capabilities:
+                    browser: IE
+                    browserVersion: 11.0
+                    os: Windows
+                    os_version: 8.1
