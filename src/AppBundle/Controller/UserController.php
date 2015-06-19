@@ -184,6 +184,10 @@ class UserController extends RestController
         if (array_key_exists('last_logged_in', $data)) {
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
         }
+        
+        if (!empty($data['recreate_registration_token'])) {
+            $user->recreateRegistrationToken();
+        }
     }
     
 }
