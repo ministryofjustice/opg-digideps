@@ -362,7 +362,7 @@ class User implements AdvancedUserInterface
      */
     public function recreateRegistrationToken()
     {
-        $this->registrationToken = sha1('digideps'.rand(1, 100) . time().date('dmY'));
+        $this->setRegistrationToken('digideps'.rand(1, 100) . time().date('dmY'));
         
         return $this;
     }
