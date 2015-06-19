@@ -1,0 +1,101 @@
+{% extends 'application.html.twig' %}
+{% block pageTitle %}Deputyship service{% endblock %}
+{% block contentClass %}external-report{% endblock %}
+{% set page = 'reportPeriod' %}
+
+{% set translationDomain = "report-overview" %}
+
+{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
+    {% set reportType = "propertyAndAffairs" %}
+{% else %}
+    {% set reportType = "healthAndWelfare" %}
+{% endif %}
+
+{% block pageContent %}
+
+    <h1>Formatted Report Test</h1>
+    
+    <!-- set class to external-report -->
+    {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
+    {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
+
+    <div class="external-report-section external-report-section-contacts">
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionTitle: 'pages.reportPeriod.healthAndWelfare.contacts.subSectionTitle'
+        } %}
+
+        {% if report.contacts | length == 0 %}
+            <p class="page-section-description">{{ report.reasonForNoContacts }}</p>
+        {% else %}
+            {% include 'AppBundle:Contact:_listContact.html.twig' with {
+                'showListData': true,
+                'formEditShow': false,
+                'showEditLink': false,
+                'showDeleteConfirm': false
+            } %}
+        {% endif %}
+    </div>
+
+    <div class="external-report-section external-report-section-decisions">
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionTitle: 'decisionsMadeAsDeputy'
+        } %}
+
+        {% if report.decisions | length == 0 %}
+            <p class="page-section-description">{{ report.reasonForNoDecisions }}</p>
+        {% else %}
+            {% include 'AppBundle:Decision:_listDecision.html.twig' with {
+            'showListData': true,
+            'formEditShow': false,
+            'showEditLink': false,
+            'showDeleteConfirm': false
+            } %}
+        {% endif %}
+    </div>
+
+    {% if reportType is sameas("propertyAndAffairs") %}
+
+        <div class="external-report-section external-report-section-accounts">
+            {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+                transDomain: translationDomain,
+                pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.accounts.subSectionTitle'
+            } %}
+
+            {% if report.accounts | length == 0 %}
+                <p class="page-section-description">{{ report.reasonForNoAccounts }}</p>
+            {% else %}
+                {% include 'AppBundle:Account:_report_accounts.html.twig' with {
+                    'accounts': report.accounts
+                } %}
+            {% endif %}
+        </div>
+
+        <div class="external-report-section external-report-section-assets">
+            {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+                transDomain: translationDomain,
+                pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.assets.subSectionTitle'
+            } %}
+
+            {% if report.assets | length == 0 %}
+                <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
+            {% else %}
+                {% include 'AppBundle:Asset:_listAsset.html.twig' with {
+                    'formEditShow': false,
+                    'showDeleteConfirm': false,
+                    'form': report.assets,
+                    'showEditLink': false
+                } %}
+            {% endif %}
+        </div>
+
+    {% endif %}
+{% endblock %}
+  
+{% block popups %}
+  {% if not isEmailAttachment%}
+      {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
+  {% endif %}
+{% endblock %}
+
