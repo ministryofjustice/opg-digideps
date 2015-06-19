@@ -23,11 +23,12 @@ services:
         arguments: [ @doctrine.orm.entity_manager ]
         tags:
             - { name: fos_oauth_server.grant_extension, uri: http://digideps.local }
+    user.query.filter:
+        class: AppBundle\Service\UserQueryFilter
     app.doctrine.filter.configurator:
         class: AppBundle\Filter\Configurator
         arguments:
             - "@doctrine.orm.entity_manager"
-            - "@annotation_reader"
             - "@fos_oauth_server.access_token_manager.default"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

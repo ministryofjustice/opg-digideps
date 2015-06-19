@@ -36,13 +36,6 @@ doctrine:
             #sslmode: require
 
     orm:
-        filters:
-            user_filter:
-                class: AppBundle\Filter\UserFilter
-                enabled: false
-            manytomany_relation_filter:
-                class: AppBundle\Filter\ManyToManyRelationFilter
-                enabled: false
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         

@@ -1,12 +1,10 @@
 <?php
 namespace AppBundle\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\Account;
 use AppBundle\Entity\AccountTransaction;
 
-class AccountRepository extends EntityRepository
+class AccountRepository extends DDBaseRepository
 {
     /**
      * @param Account $account
