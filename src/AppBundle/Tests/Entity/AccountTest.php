@@ -1,6 +1,8 @@
 <?php
 namespace AppBundle\Entity;
 
+use Mockery as m;
+
 class AccountTest extends \PHPUnit_Framework_TestCase
 {
 
@@ -55,5 +57,16 @@ class AccountTest extends \PHPUnit_Framework_TestCase
         $account->findTransactionByTypeId('in1')->setAmount(400.50); //edit (1)
         $this->assertEquals(10.0 + 400.50 + 150.0 - 50.0 - 30.0, $account->getMoneyTotal());
         
+    }
+    
+    public function testApplyUserFilter()
+    {
+        $mockQueryBuilder = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQueryBuilder->shouldReceive([ 'getRootAliases' => [ 0 => 'q'],
+                                           'andWhere' => $mockQueryBuilder,
+                                           'setParameter' => $mockQueryBuilder, 
+                                           'join' => $mockQueryBuilder ]);
+        
+        $this->assertInstanceOf('Doctrine\ORM\QueryBuilder',Account::applyUserFilter($mockQueryBuilder, 1));
     }
 }

@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Filter\UserFilterInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Account
@@ -11,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="account")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\AccountRepository")
  */
-class Account
+class Account implements UserFilterInterface
 {
     /**
      * @var integer
@@ -578,5 +580,21 @@ class Account
     public function removeTransaction(\AppBundle\Entity\AccountTransaction $transactions)
     {
         $this->transactions->removeElement($transactions);
+    }
+    
+    /**
+     * Filter every query run on account entity by user
+     * 
+     * @param QueryBuilder $qb
+     * @param integer $userId
+     * @return QueryBuilder
+     */
+    public static function applyUserFilter(QueryBuilder $qb,$userId)
+    {
+        $alias = $qb->getRootAliases()[0];
+        $qb->join($alias.'.report ', 'r')->join('r.client','c');
+        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
+        
+        return $qb;
     }
 }

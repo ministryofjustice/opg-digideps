@@ -3,7 +3,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Annotation\UserAware;
+use AppBundle\Filter\UserFilterInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Reports
@@ -12,7 +13,7 @@ use AppBundle\Annotation\UserAware;
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ReportRepository")
  */
-class Report
+class Report implements UserFilterInterface
 {
     /**
      * @var integer
@@ -684,5 +685,21 @@ class Report
     public function getCourtOrderTypeId()
     {
         return $this->courtOrderType->getId();
+    }
+    
+    /**
+     * Filter every query run on report entity by user
+     * 
+     * @param QueryBuilder $qb
+     * @param integer $userId
+     * @return QueryBuilder
+     */
+    public static function applyUserFilter(QueryBuilder $qb,$userId)
+    {
+        $alias = $qb->getRootAliases()[0];
+        $qb->join($alias.'.client ', 'c');
+        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
+        
+        return $qb;
     }
 }

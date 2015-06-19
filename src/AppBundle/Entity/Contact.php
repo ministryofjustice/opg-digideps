@@ -3,6 +3,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use AppBundle\Filter\UserFilterInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Contacts
@@ -10,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="contact")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ContactRepository")
  */
-class Contact
+class Contact implements UserFilterInterface
 {
     /**
      * @var integer
@@ -391,5 +393,21 @@ class Contact
     public function getCountry()
     {
         return $this->country;
+    }
+    
+    /**
+     * Filter every query run on contact entity by user
+     * 
+     * @param QueryBuilder $qb
+     * @param integer $userId
+     * @return QueryBuilder
+     */
+    public static function applyUserFilter(QueryBuilder $qb,$userId)
+    {
+        $alias = $qb->getRootAliases()[0];
+        $qb->join($alias.'.report ', 'r')->join('r.client','c');
+        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
+        
+        return $qb;
     }
 }

@@ -2,14 +2,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Filter\UserFilterInterface;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Asset
  *
  * @ORM\Table(name="asset")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetRepository")
  */
-class Asset
+class Asset implements UserFilterInterface
 {
     /**
      * @var integer
@@ -211,5 +213,21 @@ class Asset
     public function getReport()
     {
         return $this->report;
+    }
+    
+     /**
+     * Filter every query run on asset entity by user
+     * 
+     * @param QueryBuilder $qb
+     * @param integer $userId
+     * @return QueryBuilder
+     */
+    public static function applyUserFilter(QueryBuilder $qb,$userId)
+    {
+        $alias = $qb->getRootAliases()[0];
+        $qb->join($alias.'.report ', 'r')->join('r.client','c');
+        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
+        
+        return $qb;
     }
 }
