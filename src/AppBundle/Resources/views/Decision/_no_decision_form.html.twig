@@ -14,7 +14,8 @@
     } %}
 
     {{ form_input(no_decision.reason, 'no_decision.controls.reason', {
-    'labelClass': 'visuallyhidden'
+        'labelClass': 'visuallyhidden',
+        'inputClass': 'expanding'
     }) }}
 
 
@@ -57,5 +58,7 @@
     {% endif %}
 
     {{ form_end(no_decision) }}
-
+    
+    {% block javascripts %}{% endblock %}
+    
 {% endif %}

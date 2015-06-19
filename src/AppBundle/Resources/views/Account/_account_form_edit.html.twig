@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 
 <div class="account__edit{% if hideForm %} visuallyhidden{% endif %}">
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'report-form' } }) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'report-form in-page-form' } }) }}
 
     {# main form #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
@@ -27,7 +27,7 @@
 
     {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate') }}
     
-    {{ form_input(form.openingDateExplanation, 'form.openingBalance.controls.openingDateExplanation', { 'labelClass': 'required' }) }}
+    {{ form_input(form.openingDateExplanation, 'form.openingBalance.controls.openingDateExplanation', { 'labelClass': 'required','inputClass': 'expanding' }) }}
     
     {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance', {
     'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
@@ -52,7 +52,7 @@
          {# Closing date + explanation box #}
         {{ form_known_date(form.closingDate, 'form.edit.controls.closingDate') }}
         {% if formEditClosingDateExplanationShow %}
-          {{ form_input(form.closingDateExplanation, 'form.edit.controls.closingDateExplanation', { 'labelClass': 'required' }) }}
+          {{ form_input(form.closingDateExplanation, 'form.edit.controls.closingDateExplanation', { 'labelClass': 'required',inputClass: 'expanding' }) }}
         {% else %}
           {% do form.closingDateExplanation.setRendered() %}
         {% endif %}
@@ -64,7 +64,7 @@
         'inputClass' : 'form-control__number'
         } ) }}
         {% if formEditClosingBalanceExplanationShow %}
-          {{ form_input(form.closingBalanceExplanation, 'form.edit.controls.closingBalanceExplanation', { 'labelClass': 'required' }) }}
+          {{ form_input(form.closingBalanceExplanation, 'form.edit.controls.closingBalanceExplanation', { 'labelClass': 'required', inputClass: 'expanding' }) }}
         {% else %}
           {% do form.closingBalanceExplanation.setRendered() %}
         {% endif %} 

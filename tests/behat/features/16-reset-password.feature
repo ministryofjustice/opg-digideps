@@ -1,4 +1,4 @@
-Feature: provide feedback
+Feature: password reset
     
     @deputy
     Scenario: Password reset

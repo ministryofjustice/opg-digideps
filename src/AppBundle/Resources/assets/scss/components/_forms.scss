@@ -23,8 +23,9 @@ form {
 
     .form-group {
 
-      .form-control {
-        width: 55%;
+      .form-control, .expanding-wrapper {
+        width: 90%;
+        max-width: 540px;
       }
 
       textarea.form-control {
@@ -37,7 +38,7 @@ form {
 
       .form-control__postcode, .form-control__number {
         width: 22%;
-      }
+      }      
 
     }
 

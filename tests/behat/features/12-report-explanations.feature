@@ -5,6 +5,7 @@ Feature: report explanations
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I am on the first report overview page
       And I follow "tab-contacts"
+      Then the "reason_for_no_contact_reason" field is expandable
       # empty form throws error
       When I fill in "reason_for_no_contact_reason" with ""
       And I press "reason_for_no_contact_saveReason"
@@ -26,6 +27,7 @@ Feature: report explanations
       And I click on "delete-confirm"
       And I click on "delete"
       # add explanation
+      Then the reason_for_no_decision_reason field is expandable
       # empty form throws error
       When I fill in "reason_for_no_decision_reason" with ""
       And I press "reason_for_no_decision_saveReason"
