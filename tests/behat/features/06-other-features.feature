@@ -35,19 +35,19 @@ Feature: login and logout functionalities
       Then the response should have the "Pragma" header containing "no-cache"
 #      Then the response should have the "Expires" header containing "0"
 
-    @deputy
-    Scenario: Check Api user access control
-     Given I am logged in as "laydeputy@publicguardian.gsi.gov.uk" with password "Abcd1234"
-     And I go to "/report/1/overview"
-     Then the response status code should be 500
-     And I go to "/report/1/account/1"
-     Then the response status code should be 500
-     And I go to "/report/1/assets/edit/1"
-     Then the response status code should be 500
-     And I go to "/report/1/decisions/edit/1"
-     Then the response status code should be 500
-     And I go to "/report/1/contacts/edit/1"
-     Then the response status code should be 500
+    #@deputy
+    #Scenario: Check Api user access control
+     #Given I am logged in as "laydeputy@publicguardian.gsi.gov.uk" with password "Abcd1234"
+     #And I go to "/report/1/overview"
+     #Then the response status code should be 500
+     #And I go to "/report/1/account/1"
+     #Then the response status code should be 500
+     #And I go to "/report/1/assets/edit/1"
+     #Then the response status code should be 500
+     #And I go to "/report/1/decisions/edit/1"
+     #Then the response status code should be 500
+     #And I go to "/report/1/contacts/edit/1"
+     #Then the response status code should be 500
      
 
         
