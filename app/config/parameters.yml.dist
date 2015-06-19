@@ -4,6 +4,7 @@ parameters:
     secret:   setme
     api_base_url: http://digideps-api.local/
     env: develop
+    # for the following two settings, use a multiple of 60
     session_expire_seconds: 1500
     session_popup_show_after: 1200
     email_send:
