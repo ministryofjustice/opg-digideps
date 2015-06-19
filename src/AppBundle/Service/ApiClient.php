@@ -120,8 +120,6 @@ class ApiClient extends GuzzleClient
         /*if($endpoint == 'find_report_by_id'){
              print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
         }*/
-        
-      
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
         
