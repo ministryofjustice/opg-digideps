@@ -1,0 +1,59 @@
+.formatted-report {
+    
+    @extend %contain-floats;
+    
+    box-sizing: border-box;
+    overflow: hidden;
+    
+    h1 {
+        
+    }
+    
+    h2 {
+        
+        @include bold-27();
+        
+        .section-number {
+            display: block;
+            @include core-27();
+        }
+    
+    }
+    
+    h3 {
+        margin: 10px 0 10px 0;
+        @include bold-27();
+    }
+    fieldset {
+        background: $grey-3;
+        border: 0;
+        padding: 20px;
+        margin: 0;
+        min-width: 0;
+        margin: 20px 0 20px 0;
+        display: inline-block;
+    }
+    
+    .half-width {
+        width: 45%;
+        float: left;
+    }
+    
+    .half-width:last-child {
+        float: right;
+    }
+    
+
+    .form-group-vertical {
+        label {
+            display: block;
+        }
+        input {
+            width: 90%;
+            background: #fff;
+            border: 1px solid #000;
+        }
+    }
+
+        
+}
