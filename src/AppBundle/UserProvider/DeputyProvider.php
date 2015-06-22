@@ -14,10 +14,16 @@ class DeputyProvider implements UserProviderInterface
      */
     private $apiclient;
     
+    /**
+     * @var string $env
+     */
+    private $env;
     
-    public function __construct(ApiClient $apiclient)
+    
+    public function __construct(ApiClient $apiclient,$env)
     {
         $this->apiclient = $apiclient;
+        $this->env = $env;
     }
     
     /**
@@ -30,9 +36,12 @@ class DeputyProvider implements UserProviderInterface
     public function loadUserByUsername($email) 
     {
         try {
-            return $this->apiclient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+            if($this->env == 'admin'){
+                return $this->apiclient->getEntity('User', 'find_admin_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+            }else{
+                return $this->apiclient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+            }
         } catch (\Exception $e) {
-            //print_r($e->getMessage()); die;
             throw new UsernameNotFoundException("We can't log you in at this time.");
         }
         

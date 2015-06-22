@@ -2,6 +2,7 @@ parameters:
     api_endpoints:
         # user
         find_user_by_email: user/get-by-email
+        find_admin_by_email: user/get-admin-by-email
         add_user: user
         edit_user: user
         list_users: user
