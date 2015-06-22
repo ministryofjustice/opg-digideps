@@ -35,7 +35,7 @@ class UserController extends Controller
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            throw new \RuntimeException("token expired, require new link");
+            throw new \RuntimeException("Token expired, require new link");
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
