@@ -35,7 +35,10 @@ class UserController extends Controller
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            throw new \RuntimeException("Token expired, require new link");
+            return $this->render('AppBundle:User:tokenExpired.html.twig', [
+                'token'=>$token, 
+                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS
+            ]);
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
@@ -102,6 +105,31 @@ class UserController extends Controller
         ]);
     }
     
+    /**
+     * @Route("/activate/password/send/{token}", name="resend_activation_link")
+     * @Template()
+     */
+    public function sendActivationLinkAction(Request $request, $token)
+    {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        
+        // check $token is correct
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
+        
+        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
+        $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
+        
+        return $this->redirect($this->generateUrl('resend_password_confirmation', ['token'=>$token]));
+    }
+    
+     /**
+     * @Route("/activate/password/sent/{token}", name="resend_password_confirmation")
+     *  @Template()
+     */
+    public function sendActivationLinkConfirmationAction(Request $request, $token)
+    {
+        return ['token'=>$token];
+    }
     
     /**
      * Registration steps
@@ -246,10 +274,12 @@ class UserController extends Controller
                 $apiClient->putC('user/' .  $user->getId(), $user, [
                     'deserialise_group' => 'recreateRegistrationToken',
                 ]);
+                // get refreshed user
                 $user = $apiClient->getEntity('User', 'user/' . $user->getId());
                 
-                // send email !
-                $this->sendResetPasswordEmail($user);
+                // send reset password email
+                $resetPasswordEmail = $this->get('mailFactory')->createResetPasswordEmail($user);
+                $this->get('mailSender')->send($resetPasswordEmail, [ 'text', 'html']);
                 
             } catch (\Exception $e) {
                 // if the user it not found, the user must not be told, 
@@ -274,36 +304,6 @@ class UserController extends Controller
         return [];
     }
     
-    /**
-     * @param EntityDir\User $user
-     */
-    private function sendResetPasswordEmail(EntityDir\User $user)
-    {
-        // send activation link
-        $emailConfig = $this->container->getParameter('email_send');
-        $translator = $this->get('translator');
-        $router = $this->get('router');
-
-        $email = new Email();
-        $viewParams = [
-            'name' => $user->getFullName(),
-            'domain' => $router->generate('homepage', [], true),
-            'link' => $router->generate('user_activate', [
-                'action'=>'password-reset', 
-                'token'=> $user->getRegistrationToken()
-                ], true)
-        ];
-        
-        $email->setFromEmail($emailConfig['from_email'])
-            ->setFromName($translator->trans('resetPassword.fromName',[], 'email'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
-            ->setSubject($translator->trans('resetPassword.subject',[], 'email'))
-            ->setBodyHtml($this->renderView('AppBundle:Email:password-forgotten.html.twig', $viewParams))
-            ->setBodyText($this->renderView('AppBundle:Email:password-forgotten.text.twig', $viewParams));
-
-        $mailSender = $this->get('mailSender'); /* @var $mailSender \AppBundle\Service\MailSender */
-        $mailSender->send($email,[ 'text', 'html']);
-    }
+   
     
 }
