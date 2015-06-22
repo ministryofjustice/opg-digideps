@@ -4,9 +4,22 @@
     
     box-sizing: border-box;
     overflow: hidden;
+    color: #000000;
+    
+    #report-header {
+        background: url(/images/icons/crests/org_crest_27px.png) 10px 0 no-repeat;
+        padding: 45px 0 0 10px;
+        margin: 10px 0 40px 0;
+        @include bold-27();
+        width: 200px;
+        border-left: 3px solid #000000;
+    }
+    
     
     h1 {
-        
+        @include bold-36();
+        width: 50%;
+        margin: 0 0 40px 0;
     }
     
     h2 {
@@ -24,36 +37,87 @@
         margin: 10px 0 10px 0;
         @include bold-27();
     }
-    fieldset {
-        background: $grey-3;
-        border: 0;
-        padding: 20px;
-        margin: 0;
-        min-width: 0;
-        margin: 20px 0 20px 0;
+    
+    input, textarea {
+        background: #ffffff;
+        color: #454572;
+        padding: 4px 10px 2px 15px;
+        border: 1px solid #000;
+        font-size: 20px;
+        font-family: Helvetica, Arial;
+    }
+    
+    label {
+        font-size: 17px;
+    }
+        
+    .form-section.single-field-fieldset {
+    
+        padding: 15px 20px 15px 20px;
+    
+        label {
+            @include bold-27();
+        }
+    
+    }
+    
+    .form-section {
         display: inline-block;
+        box-sizing: border-box;
+        
+        width: 100%;
+        min-width: 0;
+        padding: 0 20px 0 20px;
+        margin: 40px 0 0 0;
+        border: 0;
+        background: #cdcfcd;            
+        
+        .left-label {
+            float: left;
+            padding-top: 4px;
+            margin-right: 20px;
+        }
+        
+    }
+
+    .three-quarter-width {
+        width: 75%;
     }
     
     .half-width {
-        width: 45%;
+        width: 49%;
         float: left;
     }
     
-    .half-width:last-child {
+    .half-width.right {
         float: right;
+        margin-left: 2%;
     }
     
+    .form-group {
+        margin-bottom: 15px;
+    }
 
     .form-group-vertical {
         label {
             display: block;
         }
-        input {
+        input, textarea {
             width: 90%;
-            background: #fff;
-            border: 1px solid #000;
         }
     }
 
+    .form-section.full-width-extension {
+        float: left;
+        margin-top: 0;
         
+        textarea {
+            width: 95%;
+        }
+    }
+    
+    
+    #deputy-details-section {
+        padding-bottom: 20px;
+    }
 }
