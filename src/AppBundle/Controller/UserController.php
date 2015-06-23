@@ -120,10 +120,10 @@ class UserController extends RestController
 
     
     /**
-     * @Route("/get-by-email/{email}")
+     * @Route("/get-user-by-email/{email}")
      * @Method({"GET"})
      */
-    public function getByEmail($email)
+    public function getUserByEmail($email)
     {
         $request = $this->getRequest();
        
@@ -135,7 +135,13 @@ class UserController extends RestController
         
         $this->setJmsSerialiserGroup($serialisedGroups);
         
-        return $this->getRepository('User')->getByEmail(strtolower($email));
+        $user = $this->getRepository('User')->getByEmail(strtolower($email));
+        
+        if(empty($user)){
+            throw new \Exception('User not found');
+        }
+        
+        return $user;
         //return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
     
@@ -155,7 +161,33 @@ class UserController extends RestController
         
         $this->setJmsSerialiserGroup($serialisedGroups);
         
-        return $this->getRepository('User')->getAdminByEmail(strtolower($email));
+        $user = $this->getRepository('User')->getAdminByEmail(strtolower($email));
+        
+        if(empty($user)){
+            throw new \Exception('User not found');
+        }
+        
+        return $user;
+    }
+    
+    
+    /**
+     * @Route("/get-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getByEmail($email)
+    {
+        $request = $this->getRequest();
+       
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
     
     
