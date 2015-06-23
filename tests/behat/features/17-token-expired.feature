@@ -25,7 +25,7 @@ Feature: Activation link resending
         And I click on "ask-us-to-send-new-link"
         Then I should be on "/user/activate/password/sent/behatuser123abc"
         And I save the page as "password-reset-token-expired-sent"
-        And an email with subject "Digideps - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        And an email with subject "Reset your password" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         When I open the "/user/password-reset/" link from the email
         And I save the page as "password-reset-token-expired-click-from-email"
         Then the response status code should be 200

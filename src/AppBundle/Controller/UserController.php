@@ -115,7 +115,7 @@ class UserController extends Controller
      * @Route("/activate/password/send/{from}/{token}", name="activation_link_send")
      * @Template()
      */
-    public function activationLinkResendAction(Request $request, $token, $from)
+    public function linkResendAction(Request $request, $token, $from)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
@@ -131,7 +131,13 @@ class UserController extends Controller
         // refresh user
         $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $user->getId() ] ]);
         
-        $activationEmail = $this->get('mailFactory')->createActivationEmail($user, $from);
+        if ($from == 'activate') {
+            $activationEmail = $this->get('mailFactory')->createActivationEmail($user, $from);
+        } else if ($from === 'password-reset') {
+            $activationEmail = $this->get('mailFactory')->createResetPasswordEmail($user, $from);
+        } else {
+            throw new \InvalidArgumentException(__METHOD__ . ' from parameter not recognised ');
+        }
         $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
         
         return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
@@ -141,7 +147,7 @@ class UserController extends Controller
      * @Route("/activate/password/sent/{token}", name="activation_link_sent")
      *  @Template()
      */
-    public function activationLinkSentAction(Request $request, $token)
+    public function linkSentAction(Request $request, $token)
     {
         return [
             'token'=>$token,
