@@ -128,7 +128,11 @@ class UserController extends Controller
      */
     public function sendActivationLinkConfirmationAction(Request $request, $token)
     {
-        return ['token'=>$token];
+        return [
+            'token'=>$token,
+            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'senderEmail'=> $this->container->getParameter('email_send')['from_email']
+        ];
     }
     
     /**
@@ -204,19 +208,8 @@ class UserController extends Controller
                         ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
                     $formData->setPassword($encodedPassword);
                     
-                    //lets send an email to confirm password change
-                    $emailConfig = $this->container->getParameter('email_send');
-                    $translator = $this->get('translator');
-                    
-                    $email = new Email();
-                    $email->setFromEmail($emailConfig['from_email'])
-                        ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
-                        ->setToEmail($user->getEmail())
-                        ->setToName($user->getFirstname())
-                        ->setSubject($translator->trans('changePassword.subject',[], 'email'))
-                        ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
-                    
-                    $this->get('mailSender')->send($email,[ 'html']);
+                    $changePasswordEmail = $this->get('mailFactory')->createChangePasswordEmail($user);
+                    $this->get('mailSender')->send($changePasswordEmail,[ 'html']);
                     
                     //reset user api key
                     $session = $this->get('session');

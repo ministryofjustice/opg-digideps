@@ -39,7 +39,7 @@ class AdminController extends Controller
                 ]);
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
-                $activationEmail = $this->get('mailFactory')->createResetPasswordEmail($user);
+                $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
                 $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
 
                 $request->getSession()->getFlashBag()->add(
@@ -57,34 +57,6 @@ class AdminController extends Controller
             'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
             'form'=>$form->createView()
         ];
-    }
-    
-    /**
-     * @param User $user
-     */
-    private function sendActivationEmail(EntityDir\User $user)
-    {
-        // send activation link
-        $emailConfig = $this->container->getParameter('email_send');
-        $translator = $this->get('translator');
-        $router = $this->get('router');
-
-        $email = new Email();
-        $viewParams = [
-            'name' => $user->getFullName(),
-            'domain' => $router->generate('homepage', [], true),
-            'link' => $router->generate('user_activate', ['token'=> $user->getRegistrationToken()], true)
-        ];
-        $email->setFromEmail($emailConfig['from_email'])
-            ->setFromName($translator->trans('activation.fromName',[], 'email'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
-            ->setSubject($translator->trans('activation.subject',[], 'email'))
-            ->setBodyHtml($this->renderView('AppBundle:Email:user-activate.html.twig', $viewParams))
-            ->setBodyText($this->renderView('AppBundle:Email:user-activate.text.twig', $viewParams));
-
-        $mailSender = $this->get('mailSender'); /* @var $mailSender MailSender */
-        $mailSender->send($email,[ 'text', 'html']);
     }
     
     /**

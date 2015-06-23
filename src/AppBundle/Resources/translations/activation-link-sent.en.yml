@@ -1,8 +1,8 @@
 page:
-  htmlTitle: "Activation link Sent"
-pageTitle: Activation link Sent
-subtitle: We have sent a new activation link to your email. Use the link to activate your account.
-didntReceive: Didn't receive the email ?
+  htmlTitle: We’ve sent you a new link
+pageTitle: We’ve sent you a new link
+subtitle: Check your email inbox, we’ve sent you an email with a new link. This link will expire within %tokenExpireHours% hours.
+didntReceive: If you can’t see an email from %senderEmail%, check your junk or spam folders, it may be there.
 returnToActivateUserPassword: Please return to 'user activation'
 stillHavingProblems: Still having problems ?
 contactOPG: Contact OPG

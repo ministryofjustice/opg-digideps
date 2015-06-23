@@ -1,87 +1,139 @@
 <?php
+
 namespace AppBundle\Service;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
-use Symfony\Component\Validator\Validator;
-use AppBundle\Model\Email;
+use AppBundle\Model as ModelDir;
 use Symfony\Component\DependencyInjection\Container;
 use AppBundle\Entity as EntityDir;
 
-
 class MailFactory
 {
+
     /**
      * @var Translator 
      */
     protected $translator;
-    
+
     /**
-     * @var \Symfony\Bundle\FrameworkBundle\Routing\Router 
+     * @var UrlGeneratorInterface
      */
     protected $router;
-    
-     /**
+
+    /**
      * @var Container
      */
     protected $container;
-
     
+    /**
+     * @var array
+     */
+    protected $emailConfig;
+
+
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->translator = $container->get('translator');
         $this->router = $container->get('router');
         $this->validator = $container->get('validator');
-        $this->templateing = $container->get('templating');
+        $this->templating = $container->get('templating');
+        $this->emailConfig =  $this->container->getParameter('email_send');
     }
-    
+
     public function createActivationEmail(EntityDir\User $user)
     {
-        // send activation link
-        $emailConfig = $this->container->getParameter('email_send');
-
-        $email = new Email();
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->router->generate('homepage', [], true),
-            'link' => $this->router->generate('user_activate', ['token'=> $user->getRegistrationToken()], true)
+            'link' => $this->router->generate('user_activate', ['token' => $user->getRegistrationToken()], true)
         ];
-        $email->setFromEmail($emailConfig['from_email'])
-            ->setFromName($this->translator->trans('activation.fromName',[], 'email'))
+        
+        $email = $this->createEmail()
+            ->setFromEmail($this->emailConfig['from_email'])
+            ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
-            ->setSubject($this->translator->trans('activation.subject',[], 'email'))
-            ->setBodyHtml($this->templateing->render('AppBundle:Email:user-activate.html.twig', $viewParams))
-            ->setBodyText($this->templateing->render('AppBundle:Email:user-activate.text.twig', $viewParams));
+            ->setSubject($this->translate('activation.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:user-activate.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:user-activate.text.twig', $viewParams));
 
         return $email;
     }
-    
+
     public function createResetPasswordEmail(EntityDir\User $user)
     {
-        // send activation link
-        $emailConfig = $this->container->getParameter('email_send');
-
-        $email = new Email();
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->router->generate('homepage', [], true),
             'link' => $this->router->generate('user_activate', [
-                'action'=>'password-reset', 
-                'token'=> $user->getRegistrationToken()
+                'action' => 'password-reset',
+                'token' => $user->getRegistrationToken()
                 ], true)
         ];
-        
-        $email->setFromEmail($emailConfig['from_email'])
-            ->setFromName($this->translator->trans('resetPassword.fromName',[], 'email'))
+
+        $email = $this->createEmail()
+            ->setFromEmail($this->emailConfig['from_email'])
+            ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
-            ->setSubject($this->translator->trans('resetPassword.subject',[], 'email'))
-            ->setBodyHtml($this->templateing->render('AppBundle:Email:password-forgotten.html.twig', $viewParams))
-            ->setBodyText($this->templateing->render('AppBundle:Email:password-forgotten.text.twig', $viewParams));
-        
+            ->setSubject($this->translate('resetPassword.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:password-forgotten.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:password-forgotten.text.twig', $viewParams));
+
         return $email;
     }
+
+    /**
+     * @param User $user
+     * 
+     * @return Email
+     */
+    public function createChangePasswordEmail(EntityDir\User $user)
+    {
+         $email = $this->createEmail()
+            ->setFromEmail($this->emailConfig['from_email'])
+            ->setFromName($this->translate('changePassword.fromName'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFirstname())
+            ->setSubject($this->translate('changePassword.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:change-password.html.twig'));
+
+        return $email;
+    }
+    
+    
+    /**
+     * @param \AppBundle\Entity\Report $report
+     * @return \AppBundle\Service\ModelDir\Email
+     */
+    public function createReportEmail(EntityDir\Report $report, $reportContent)
+    {
+        $email = $this->createEmail()
+            ->setFromEmail($this->emailConfig['from_email'])
+            ->setFromName($this->translate('reportSubmission.fromName'))
+            ->setToEmail($this->emailConfig['to_email'])
+            ->setToName($this->translate('reportSubmission.toName'))
+            ->setSubject($this->translate('reportSubmission.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
+            ->setAttachments([new ModelDir\EmailAttachment('report.html', 'application/xml', $reportContent)]);
+
+        return $email;
+    }
+    
+    /**
+     * @return \AppBundle\Service\ModelDir\Email
+     */
+    private function createEmail()
+    {
+        return new ModelDir\Email();
+    }
+    
+    private function translate($key, $vars = [])
+    {
+        return $this->translator->trans($key, $vars, 'email');
+    }
+
 }
