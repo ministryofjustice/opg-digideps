@@ -16,11 +16,11 @@
 {% block pageBody %}
 
     <p class="page-section-description">
-        {{ 'subtitle' | trans()}}
+        {{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}
     </p>
     
     <p class="page-section-description">
-      {{ 'didntReceive' | trans({'%senderEmail%': senderEmail, '%tokenExpireHours%': tokenExpireHours}) }} <a href="{{ path('user_activate', {'token': token}) }}">{{ 'returnToActivateUserPassword' | trans }}</a>
+      {{ 'didntReceive' | trans({'%senderEmail%': senderEmail }) }} <a href="{{ path('user_activate', {'token': token}) }}">{{ 'returnToActivateUserPassword' | trans }}</a>
     </p>
     
      <p class="page-section-description">

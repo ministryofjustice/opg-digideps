@@ -19,6 +19,6 @@
         {{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}
     </p>
     
-    <a href="{{ path('resend_activation_link', {'token': token}) }}" class="behat-send-link">{{ 'sendLink' | trans }}</a>
+    <a href="{{ path('activation_link_send', {'token': token}) }}" class="behat-send-link">{{ 'sendLink' | trans }}</a>
 
 {% endblock %}

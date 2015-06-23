@@ -25,7 +25,7 @@ class UserController extends Controller
      * })
      * @Template()
      */
-    public function setPasswordAndLoginAction(Request $request, $action, $token)
+    public function activateUserAction(Request $request, $action, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $translator = $this->get('translator');
@@ -106,10 +106,10 @@ class UserController extends Controller
     }
     
     /**
-     * @Route("/activate/password/send/{token}", name="resend_activation_link")
+     * @Route("/activate/password/send/{token}", name="activation_link_send")
      * @Template()
      */
-    public function sendActivationLinkAction(Request $request, $token)
+    public function activationLinkSendAction(Request $request, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
@@ -119,14 +119,14 @@ class UserController extends Controller
         $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
         $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
         
-        return $this->redirect($this->generateUrl('resend_password_confirmation', ['token'=>$token]));
+        return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
     }
     
      /**
-     * @Route("/activate/password/sent/{token}", name="resend_password_confirmation")
+     * @Route("/activate/password/sent/{token}", name="activation_link_sent")
      *  @Template()
      */
-    public function sendActivationLinkConfirmationAction(Request $request, $token)
+    public function activationLinkSentAction(Request $request, $token)
     {
         return [
             'token'=>$token,
