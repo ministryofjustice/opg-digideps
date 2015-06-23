@@ -43,12 +43,15 @@ class MailFactory
         $this->emailConfig =  $this->container->getParameter('email_send');
     }
 
-    public function createActivationEmail(EntityDir\User $user)
+    public function createActivationEmail(EntityDir\User $user, $fromAction)
     {
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->router->generate('homepage', [], true),
-            'link' => $this->router->generate('user_activate', ['token' => $user->getRegistrationToken()], true)
+            'link' => $this->router->generate('user_activate', [
+                'token' => $user->getRegistrationToken(), 
+                'action'=> $fromAction
+            ], true)
         ];
         
         $email = $this->createEmail()

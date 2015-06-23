@@ -39,7 +39,7 @@ class AdminController extends Controller
                 ]);
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
-                $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
+                $activationEmail = $this->get('mailFactory')->createActivationEmail($user, 'activate');
                 $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
 
                 $request->getSession()->getFlashBag()->add(

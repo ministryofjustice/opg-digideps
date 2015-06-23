@@ -37,7 +37,8 @@ class UserController extends Controller
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             return $this->render('AppBundle:User:tokenExpired.html.twig', [
                 'token'=>$token, 
-                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS
+                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                'from' => $action
             ]);
         }
         
@@ -55,7 +56,8 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
                 ]);
                 $template = 'AppBundle:User:passwordReset.html.twig';
-                
+                break;
+            
             default:
                 return $this->createNotFoundException("action $action not defined ");
         }
@@ -110,17 +112,26 @@ class UserController extends Controller
     }
     
     /**
-     * @Route("/activate/password/send/{token}", name="activation_link_send")
+     * @Route("/activate/password/send/{from}/{token}", name="activation_link_send")
      * @Template()
      */
-    public function activationLinkSendAction(Request $request, $token)
+    public function activationLinkResendAction(Request $request, $token, $from)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
-        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
+        // recreate token
+        $user->setRecreateRegistrationToken(true);
+        $apiClient->putC('user/' .  $user->getId(), $user, [
+            'deserialise_group' => 'recreateRegistrationToken',
+        ]);
+        
+        // refresh user
+        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $user->getId() ] ]);
+        
+        $activationEmail = $this->get('mailFactory')->createActivationEmail($user, $from);
         $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
         
         return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
