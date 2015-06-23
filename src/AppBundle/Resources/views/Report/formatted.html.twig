@@ -148,17 +148,28 @@
                 </div>
                 
                 <ul class="decisions box-list">
-                    {% for decision in decisions %}
-                    <li class="decision box-list-item">
-                        <div class="form-group form-group-vertical half-width">
-                            <div class="textarea address-value" rows="5" disabled>{{ decision.description }}</div>
-                        </div>
-                        
-                        <div class="form-group form-group-vertical half-width">
-                            <div class="textarea address-value" rows="5" disabled>{{ decision.clientInvolvedDetails | nl2br }}</div>
-                        </div>
-                    </li>
-                    {% endfor %}
+                
+                    {% if report.decisions | length == 0 %}
+                        <li class="decision box-list-item">
+                            <div class="form-group form-group-vertical half-width">
+                                <div class="textarea address-value">{{ report.reasonForNoDecisions }}</div>
+                            </div>
+                        </li>
+                    {% else %}
+                        {% for decision in decisions %}
+                        <li class="decision box-list-item">
+                            <div class="form-group form-group-vertical half-width">
+                                <div class="textarea address-value">{{ decision.description }}</div>
+                            </div>
+                            
+                            <div class="form-group form-group-vertical half-width">
+                                <div class="textarea address-value">{{ decision.clientInvolvedDetails | nl2br }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+
+                    {% endif %}
+
                 </ul>
             
             </fieldset>
