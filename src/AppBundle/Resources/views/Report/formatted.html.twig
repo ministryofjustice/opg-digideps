@@ -1,180 +1,248 @@
-{% extends 'moj_template.html.twig' %}
-{% block pageTitle %}Deputyship service{% endblock %}
-{% block contentClass %}external-report{% endblock %}
-{% set page = 'reportPeriod' %}
+<!DOCTYPE html>
+<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
+<!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-{% set translationDomain = "report-overview" %}
+        <title>OPG Report</title>
 
-{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
-    {% set reportType = "propertyAndAffairs" %}
-{% else %}
-    {% set reportType = "healthAndWelfare" %}
-{% endif %}
+        <script type="text/javascript">
+          (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
+        </script>
 
-{% block stylesheets %}
-    <!--[if gt IE 8]><!-->
-    <link href="{{ asset('stylesheets/application.css') }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
-    <!--[if IE 6]>
-    <link href="{{ asset('stylesheets/application-ie6.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
-    <!--[if IE 7]>
-    <link href="{{ asset('stylesheets/application-ie7.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
-    <!--[if IE 8]>
-    <link href="{{ asset('stylesheets/application-ie8.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
+        <!--[if gt IE 8]><!--><link href="{{ asset('stylesheets/govuk-template.css') }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
+        <!--[if IE 6]><link href="{{ asset('stylesheets/govuk-template-ie6.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if IE 7]><link href="{{ asset('stylesheets/govuk-template-ie7.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if IE 8]><link href="{{ asset('stylesheets/govuk-template-ie8.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
 
-    <link href="{{ asset('stylesheets/application-print.css') }}" media="print" rel="stylesheet" type="text/css" />
-{% endblock %}
+        <link href="{{ asset('stylesheets/govuk-template-print.css') }}" media="print" rel="stylesheet" type="text/css" />
 
+        <!--[if IE 8]>
+        <script type="text/javascript">
+          (function(){if(window.opera){return;}
+           setTimeout(function(){var a=document,g,b={families:(g=
+           ["nta"]),urls:["{ asset('stylesheets/fonts-ie8.css') }}"]},
+           c="{{ asset('javascripts/vendor/goog/webfont-debug.js') }}",d="script",
+           e=a.createElement(d),f=a.getElementsByTagName(d)[0],h=g.length;WebFontConfig
+           ={custom:b},e.src=c,f.parentNode.insertBefore(e,f);for(;h=h-1;a.documentElement
+           .className+=' wf-'+g[h].replace(/\s/g,'').toLowerCase()+'-n4-loading');},0)
+          })()
+        </script>
+        <![endif]-->
 
-{% block content %}
+        <!--[if gte IE 9]><!-->
+          <link href="{{ asset('stylesheets/fonts.css') }}" media="all" rel="stylesheet" type="text/css" />
+        <!--<![endif]-->
 
-    <div class="formatted-report">
-        
-        <div id="report-header">Office of the Public Guardian</div>
-        
-        <h1>Deputy report for property and financial decisions</h1>
+        <!--[if lt IE 9]>
+          <script src="{{ asset('javascripts/ie.js') }}" type="text/javascript"></script>
+        <![endif]-->
 
-        <div class="section">
+        <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon" />
 
-            <h2>
-                <span class="section-number">Section 1</span>
-                Deputy and client information
-            </h2>
-            
-            <div class="form-section single-field-fieldset three-quarter-width">
-                <div class="label left-label">Case number</div>
-                <div class="value right-value">{{ client.getCaseNumber }}</div>
+        <!-- Size for iPad and iPad mini (high resolution) -->
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset('images/apple-touch-icon-152x152.png') }}">
+        <!-- Size for iPhone and iPod touch (high resolution) -->
+        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{ asset('images/apple-touch-icon-120x120.png') }}">
+        <!-- Size for iPad 2 and iPad mini (standard resolution) -->
+        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{ asset('images/apple-touch-icon-76x76.png') }}">
+        <!-- Default non-defined size, also used for Android 2.1+ devices -->
+        <link rel="apple-touch-icon-precomposed" href="{{ asset('images/apple-touch-icon-60x60.png') }}">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:image" content="{{ asset('images/opengraph-image.png') }}">
+
+        <!--[if gt IE 8]><!--><link href="{{ asset('stylesheets/moj-template.css') }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
+        <!--[if IE 6]><link href="{{ asset('stylesheets/moj-template-ie6.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if IE 7]><link href="{{ asset('stylesheets/moj-template-ie7.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+        <!--[if IE 8]><link href="{{ asset('stylesheets/moj-template-ie8.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
+
+        <!--[if gt IE 8]><!-->
+        <link href="{{ asset('stylesheets/application.css') }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
+        <!--[if IE 6]>
+        <link href="{{ asset('stylesheets/application-ie6.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
+        <!--[if IE 7]>
+        <link href="{{ asset('stylesheets/application-ie7.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
+        <!--[if IE 8]>
+        <link href="{{ asset('stylesheets/application-ie8.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
+
+        <link href="{{ asset('stylesheets/application-print.css') }}" media="print" rel="stylesheet" type="text/css" />
+
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="content" class="formatted-report content">
+                <div id="report-header">Office of the Public Guardian</div>
+                <h1>Deputy report for property and financial decisions</h1>
+
+                <section id="deputy-client-information-section">
+                    <h2>
+                        <span class="section-number">Section 1</span>
+                        Deputy and client information
+                    </h2>            
+                    <fieldset class="single-field-fieldset three-quarter-width">
+                        <div class="label left-label">Case number</div>
+                        <div class="value right-value">{{ client.getCaseNumber }}</div>
+                    </fieldset>
+                    <fieldset class="case-number-subsection three-quarter-width">
+                        <h3>Reporting period</h3>
+                        
+                        <div class="form-group form-group-vertical half-width">
+                            <div class="label">Start date</div>
+                            <div class="value">{{ report.startDate | date("d / m / Y") }}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical half-width">
+                            <div class="label">End date</div>
+                            <div class="value">{{ report.endDate | date("d / m / Y") }}</div>
+                        </div>
+                    </fieldset>
+                    <fieldset id="deputy-details-subsection" class="extended-down half-width">
+                        <h3>Deputy details</h3>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">First names</div>
+                            <div class="value">{{deputy.firstname}}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Last name</div>
+                            <div class="value">{{deputy.lastname}}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Address</div>
+                            <div class="textarea address-value">
+                                {{ deputy.address1 }}<br/>
+                                {{ deputy.address2 }}<br/>
+                                {{ deputy.address3 }}<br/>
+                                {{ deputy.addressPostcode }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Telephone number</div>
+                            <div class="value">{{deputy.phoneMain}}</div>
+                        </div>        
+                    </fieldset>        
+                    <fieldset class="client-details-section half-width right">
+                        <h3>Client details</h3>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">First names</div>
+                            <div class="value">{{ client.firstname }}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Last name</div>
+                            <div class="value">{{ client.lastname }}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Address</div>
+                            <div class="textarea address-value">
+                                {{ client.address }}<br/>
+                                {{ client.address2 }}<br/>
+                                {{ client.county }}<br/>
+                                {{ client.postcode }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Telephone number</div>
+                            <div class="value">{{client.phone}}</div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="full-width-extension">
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Email (optional)</div>
+                            <div class="value">{{deputy.email}}</div>
+                        </div>
+                    </fieldset>
+                </section>
+                <section id="decisions-section">
+                    <h2>
+                        <span class="section-number">Section 2</span>
+                        Decisions made over the reporting period
+                    </h2>
+                    <fieldset>
+                        <div class="half-width">
+                            <div class="list-label">Deputy decision</div>
+                        </div>
+                        <div class="half-width">
+                            <div class="list-label">Client involvement</div>
+                        </div>
+                        <ul class="decisions-list box-list">
+                            {% if report.decisions | length == 0 %}
+                                <li class="decision-item box-list-item">
+                                    <div class="form-group form-group-vertical half-width">
+                                        <div class="textarea address-value">{{ report.reasonForNoDecisions }}</div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                {% for decision in decisions %}
+                                <li class="decision-item box-list-item">
+                                    <div class="form-group form-group-vertical half-width">
+                                        <div class="textarea address-value">{{ decision.description }}</div>
+                                    </div>
+                                    
+                                    <div class="form-group form-group-vertical half-width">
+                                        <div class="textarea address-value">{{ decision.clientInvolvedDetails | nl2br }}</div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </fieldset>
+                </section>
+                <section id="contacts-section">
+                    <h2>
+                        <span class="section-number">Section 3</span>
+                        People you consulted
+                    </h2>
+                    <ul class="contacts-list">                
+                        {% if report.contacts | length == 0 %}
+                            <li class="contact-item no-contact box-list-item">
+                                <div class="form-group form-group-vertical half-width">
+                                    <div class="textarea address-value">{{ report.reasonForNoDecisions }}</div>
+                                </div>
+                            </li>
+                        {% else %}
+                            {% for contact in contacts %}
+                                <li class="contact-item">
+                                    <fieldset>
+                                        <div class="half-width">
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Full name</div>
+                                                <div class="value">{{ contact.contactName }}</div>
+                                            </div>
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Address</div>
+                                                <div class="textarea address-value">
+                                                    {{ contact.address }}<br/>
+                                                    {{ contact.address2 }}<br/>
+                                                    {{ contact.county }}<br/>
+                                                    {{ contact.postcode }}<br/>
+                                                    {{ contact.country | country_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="half-width">
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Relationship to client</div>
+                                                <div class="value">{{ contact.relationship }}</div>
+                                            </div>
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Why did you consult them?</div>
+                                                <div class="textarea">{{ contact.explanation }}</div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                </div>
             </div>
-
-            <fieldset class="form-section case-number-section three-quarter-width">
-                <h3>Reporting period</h3>
-                
-                <div class="form-group form-group-vertical half-width">
-                    <div class="label">Start date</div>
-                    <div class="value">{{ report.startDate | date("d / m / Y") }}</div>
-                </div>
-                
-                <div class="form-group form-group-vertical half-width">
-                    <div class="label">End date</div>
-                    <div class="value">{{ report.endDate | date("d / m / Y") }}</div>
-                </div>
-            
-            </fieldset>
-            
-            
-            <fieldset id="deputy-details-section" class="form-section deputy-details-section half-width">
-                <h3>Deputy details</h3>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">First names</div>
-                    <div class="value">{{deputy.firstname}}</div>
-                </div>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">Last name</div>
-                    <div class="value">{{deputy.lastname}}</div>
-                </div>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">Address</div>
-                    <div class="textarea address-value">
-                        {{ deputy.address1 }}<br/>
-                        {{ deputy.address2 }}<br/>
-                        {{ deputy.address3 }}<br/>
-                        {{ deputy.addressPostcode }}
-                    </div>
-                </div>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">Telephone number</div>
-                    <div class="value">{{deputy.phoneMain}}</div>
-                </div>        
-            </fieldset>
-            
-
-            
-            <fieldset class="form-section client-details-section half-width right">
-                <h3>Client details</h3>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">First names</div>
-                    <div class="value">{{ client.firstname }}</div>
-                </div>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">Last name</div>
-                    <div class="value">{{ client.lastname }}</div>
-                </div>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">Address</div>
-                    <div class="textarea address-value">
-                        {{ client.address }}<br/>
-                        {{ client.address2 }}<br/>
-                        {{ client.county }}<br/>
-                        {{ client.postcode }}
-                    </div>
-                </div>
-                
-                <div class="form-group form-group-vertical">
-                    <div class="label">Telephone number</div>
-                    <div class="value">{{client.phone}}</div>
-                </div>
-            </fieldset>
-            
-            <fieldset class="form-section full-width-extension">
-                <div class="form-group form-group-vertical">
-                    <div class="label">Email (optional)</div>
-                    <div class="value">{{deputy.email}}</div>
-                </div>
-            </fieldset>
         </div>
-        
-        <div class="section">
-            <h2>
-                <span class="section-number">Section 2</span>
-                Decisions made over the reporting period
-            </h2>
-
-            <fieldset class="form-section">
-            
-                <p>List the significant decisions you made during the reporting period, such as buying or selling property, making gifts or changing the client’s care home.</p>
-                <p>Tell us how you involved the client in those decisions. If it has not been possible to involve the client, tell us under ‘client involvement’.</p>
-            
-                <div class="half-width">
-                    <div class="list-label">Deputy decision</div>
-                </div>
-                <div class="half-width">
-                    <div class="list-label">Client involvement</div>
-                </div>
-                
-                <ul class="decisions box-list">
-                
-                    {% if report.decisions | length == 0 %}
-                        <li class="decision box-list-item">
-                            <div class="form-group form-group-vertical half-width">
-                                <div class="textarea address-value">{{ report.reasonForNoDecisions }}</div>
-                            </div>
-                        </li>
-                    {% else %}
-                        {% for decision in decisions %}
-                        <li class="decision box-list-item">
-                            <div class="form-group form-group-vertical half-width">
-                                <div class="textarea address-value">{{ decision.description }}</div>
-                            </div>
-                            
-                            <div class="form-group form-group-vertical half-width">
-                                <div class="textarea address-value">{{ decision.clientInvolvedDetails | nl2br }}</div>
-                            </div>
-                        </li>
-                        {% endfor %}
-
-                    {% endif %}
-
-                </ul>
-            
-            </fieldset>
-        </div>
-        
-    </div>
-
-{% endblock %}
+    </body>
+</html>

@@ -20,7 +20,6 @@
         width: 50%;
         margin: 0 0 40px 0;
     }
-    
     h2 {
         
         @include bold-27();
@@ -31,7 +30,6 @@
         }
     
     }
-    
     h3 {
         margin: 10px 0 10px 0;
         @include bold-27();
@@ -45,38 +43,35 @@
         font-size: 20px;
         font-family: Helvetica, Arial;
     }
-    
     .label {
         font-size: 17px;
     }
-        
-    .form-section.single-field-fieldset {
-    
-        padding: 15px 20px 15px 20px;
-    
-        .label {
-            @include bold-27();
-        }
-        
-        .value {
-            float: left;
-            width: 50%;
-        }
-    
+
+    .three-quarter-width {
+        width: 75%;
+    }
+    .half-width {
+        width: 49%;
+        float: left;
+    }
+    .half-width.right {
+        float: right;
+        margin-left: 2%;
     }
     
-    .section {
+
+    section {
         @extend %contain-floats;
         margin-bottom: 80px;
     }
     
-    .form-section {
+    fieldset {
         display: inline-block;
         box-sizing: border-box;
         
         width: 100%;
         min-width: 0;
-        padding: 0 20px 0 20px;
+        padding: 10px 20px 0 20px;
         margin: 40px 0 0 0;
         border: 0;
         background: #cdcfcd;            
@@ -100,31 +95,36 @@
         }
         
         .half-width {
-            .value {
+            .value, .textarea {
                 width: 85%;
             }
         }
-
     }
-
-    .three-quarter-width {
-        width: 75%;
+    fieldset.single-field-fieldset {
+        padding: 15px 20px 15px 20px;
+        .label {
+            @include bold-27();
+        }
+        .value {
+            float: left;
+            width: 50%;
+        }
     }
-    
-    .half-width {
-        width: 49%;
+    fieldset.full-width-extension {
         float: left;
+        margin-top: 0;
+        
+        .textarea {
+            width: 95%;
+        }
     }
-    
-    .half-width.right {
-        float: right;
-        margin-left: 2%;
+    fieldset.extended-down {
+        padding-bottom: 20px;
     }
     
     .form-group {
         margin-bottom: 15px;
     }
-
     .form-group-vertical {
         .label {
             display: block;
@@ -134,20 +134,23 @@
         }
     }
 
-    .form-section.full-width-extension {
-        float: left;
-        margin-top: 0;
-        
-        .textarea {
-            width: 95%;
-        }
-    }
-    
     .box-list-item {
+        @extend %contain-floats;
         margin-bottom: 20px;
     }
     
-    #deputy-details-section {
-        padding-bottom: 20px;
+
+    ul li:first-childt {
+        &:first-child {
+            margin-top: 40px;
+        }
     }
+    
+    .decision-item {
+        border-bottom: 1px solid $grey-2;
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+    
 }
