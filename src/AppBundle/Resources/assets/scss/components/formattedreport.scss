@@ -61,6 +61,11 @@
     
     }
     
+    .section {
+        @extend %contain-floats;
+        margin-bottom: 80px;
+    }
+    
     .form-section {
         display: inline-block;
         box-sizing: border-box;
@@ -76,6 +81,19 @@
             float: left;
             padding-top: 4px;
             margin-right: 20px;
+        }
+        
+        .list-label {
+            @include bold-19();
+            margin-bottom: 10px;
+        }
+    
+        p {
+            margin-bottom: 20px;
+            
+            &:first-child {
+                margin-top: 20px;
+            }
         }
         
     }
@@ -116,6 +134,9 @@
         }
     }
     
+    .box-list-item {
+        margin-bottom: 20px;
+    }
     
     #deputy-details-section {
         padding-bottom: 20px;

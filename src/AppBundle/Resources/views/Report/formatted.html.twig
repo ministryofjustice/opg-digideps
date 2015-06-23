@@ -33,100 +33,137 @@
         
         <h1>Deputy report for property and financial decisions</h1>
 
-        <h2>
-            <span class="section-number">Section 1</span>
-            Deputy and client information
-        </h2>
-        
-        <div class="form-section single-field-fieldset three-quarter-width">
-            <label for="case-number" class="left-label">Case number</label>
-            <input id="case-number" class="right-value" value="{{ client.getCaseNumber }}" disabled/>
+        <div class="section">
+
+            <h2>
+                <span class="section-number">Section 1</span>
+                Deputy and client information
+            </h2>
+            
+            <div class="form-section single-field-fieldset three-quarter-width">
+                <label for="case-number" class="left-label">Case number</label>
+                <input id="case-number" class="right-value" value="{{ client.getCaseNumber }}" disabled/>
+            </div>
+
+            <fieldset class="form-section case-number-section three-quarter-width">
+                <h3>Reporting period</h3>
+                
+                <div class="form-group form-group-vertical half-width">
+                    <label for="startdate">Start date</label>
+                    <input id="startdate" value="{{ report.startDate | date("d / m / Y") }}" disabled/>
+                </div>
+                
+                <div class="form-group form-group-vertical half-width">
+                    <label for="enddate">End date</label>
+                    <input id="enddate" value="{{ report.endDate | date("d / m / Y") }}"disabled/>
+                </div>
+            
+            </fieldset>
+            
+            
+            <fieldset id="deputy-details-section" class="form-section deputy-details-section half-width">
+                <h3>Deputy details</h3>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="firstname">First names</label>
+                    <input id="firstname" value="{{deputy.firstname}}" disabled/>
+                </div>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="lastname">Last name</label>
+                    <input id="lastname" value="{{deputy.lastname}}" disabled/>
+                </div>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="Address">Address</label>
+                    <textarea class="address-value" rows="5" disabled>
+                        {{ deputy.address1 }}
+                        {{ deputy.address2 }}
+                        {{ deputy.address3 }}
+                        {{ deputy.addressPostcode }}
+                    </textarea>
+                </div>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="telephone">Telephone number</label>
+                    <input id="telephone" value="{{deputy.phoneMain}}" disabled/>
+                </div>        
+            </fieldset>
+            
+
+            
+            <fieldset class="form-section client-details-section half-width right">
+                <h3>Client details</h3>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="firstname">First names</label>
+                    <input id="firstname" value="{{ client.firstname }}" disabled/>
+                </div>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="lastname">Last name</label>
+                    <input id="lastname"/ value="{{ client.lastname }}" disabled>
+                </div>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="Address">Address</label>
+                    <textarea class="address-value" rows="5" disabled>
+                        {{ client.address }}
+                        {{ client.address2 }}
+                        {{ client.county }}
+                        {{ client.postcode }}
+                    </textarea>
+                </div>
+                
+                <div class="form-group form-group-vertical">
+                    <label for="telephone">Telephone number</label>
+                    <input id="telephone" value="{{client.phone}}"/>
+                </div>
+            </fieldset>
+            
+            <fieldset class="form-section full-width-extension">
+                <div class="form-group form-group-vertical">
+                    <label for="email">Email (optional)</label>
+                    <textarea id="email" disabled>{{deputy.email}}</textarea>
+                </div>
+            </fieldset>
         </div>
+        
+        <div class="section">
+            <h2>
+                <span class="section-number">Section 2</span>
+                Decisions made over the reporting period
+            </h2>
 
-        <fieldset class="form-section case-number-section three-quarter-width">
-            <h3>Reporting period</h3>
+            <fieldset class="form-section">
             
-            <div class="form-group form-group-vertical half-width">
-                <label for="startdate">Start date</label>
-                <input id="startdate" value="{{ report.startDate | date("d / m / Y") }}" disabled/>
-            </div>
+                <p>List the significant decisions you made during the reporting period, such as buying or selling property, making gifts or changing the client’s care home.</p>
+                <p>Tell us how you involved the client in those decisions. If it has not been possible to involve the client, tell us under ‘client involvement’.</p>
             
-            <div class="form-group form-group-vertical half-width">
-                <label for="enddate">End date</label>
-                <input id="enddate" value="{{ report.endDate | date("d / m / Y") }}"disabled/>
-            </div>
+                <div class="half-width">
+                    <div class="list-label">Deputy decision</div>
+                </div>
+                <div class="half-width">
+                    <div class="list-label">Client involvement</div>
+                </div>
+                
+                <ul class="decisions box-list">
+                    {% for decision in decisions %}
+                    <li class="decision box-list-item">
+                        <div class="form-group form-group-vertical half-width">
+                            <textarea class="address-value" rows="5" disabled>{{ decision.description }}</textarea>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical half-width">
+                            <textarea class="address-value" rows="5" disabled>{{ decision.clientInvolvedDetails | nl2br }}</textarea>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            
+            </fieldset>
+        </div>
         
-        </fieldset>
-        
-        
-        <fieldset id="deputy-details-section" class="form-section deputy-details-section half-width">
-            <h3>Deputy details</h3>
-            
-            <div class="form-group form-group-vertical">
-                <label for="firstname">First names</label>
-                <input id="firstname" value="{{deputy.firstname}}" disabled/>
-            </div>
-            
-            <div class="form-group form-group-vertical">
-                <label for="lastname">Last name</label>
-                <input id="lastname" value="{{deputy.lastname}}" disabled/>
-            </div>
-            
-            <div class="form-group form-group-vertical">
-                <label for="Address">Address</label>
-                <textarea class="address-value" rows="5" disabled>
-{{ deputy.address1 }}
-{{ deputy.address2 }}
-{{ deputy.address3 }}
-{{ deputy.addressPostcode }}
-                </textarea>
-            </div>
-            
-            <div class="form-group form-group-vertical">
-                <label for="telephone">Telephone number</label>
-                <input id="telephone" value="{{deputy.phoneMain}}" disabled/>
-            </div>        
-        </fieldset>
-        
-
-        
-        <fieldset class="form-section client-details-section half-width right">
-            <h3>Client details</h3>
-            
-            <div class="form-group form-group-vertical">
-                <label for="firstname">First names</label>
-                <input id="firstname" value="{{ client.firstname }}" disabled/>
-            </div>
-            
-            <div class="form-group form-group-vertical">
-                <label for="lastname">Last name</label>
-                <input id="lastname"/ value="{{ client.lastname }}" disabled>
-            </div>
-            
-            <div class="form-group form-group-vertical">
-                <label for="Address">Address</label>
-                <textarea class="address-value" rows="5" disabled>
-{{ client.address }}
-{{ client.address2 }}
-{{ client.county }}
-{{ client.postcode }}
-                </textarea>
-            </div>
-            
-            <div class="form-group form-group-vertical">
-                <label for="telephone">Telephone number</label>
-                <input id="telephone" value="{{client.phone}}"/>
-            </div>
-        </fieldset>
-        
-        <fieldset class="form-section full-width-extension">
-            <div class="form-group form-group-vertical">
-                <label for="email">Email (optional)</label>
-                <textarea id="email" disabled>{{deputy.email}}</textarea>
-            </div>
-        </fieldset>
-        
-    
     </div>
 
 {% endblock %}
