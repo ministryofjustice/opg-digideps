@@ -135,7 +135,27 @@ class UserController extends RestController
         
         $this->setJmsSerialiserGroup($serialisedGroups);
         
-        return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
+        return $this->getRepository('User')->getByEmail(strtolower($email));
+        //return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
+    }
+    
+    /**
+     * @Route("/get-admin-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getAdminByEmail($email)
+    {
+        $request = $this->getRequest();
+       
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        return $this->getRepository('User')->getAdminByEmail(strtolower($email));
     }
     
     
