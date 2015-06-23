@@ -42,18 +42,22 @@ class UserController extends Controller
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
-        if ($action == 'activate') {
-            $formType = new FormDir\SetPasswordType([
-                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
-            ]);
-            $template = 'AppBundle:User:activate.html.twig';
-        } else if ($action === 'password-reset') {
-            $formType = new FormDir\ResetPasswordType([
-                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
-            ]);
-            $template = 'AppBundle:User:passwordReset.html.twig';
-        } else {
-            return $this->createNotFoundException("action $action not defined ");
+        switch ($action) {
+            case 'activate':
+                $formType = new FormDir\SetPasswordType([
+                    'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+                ]);
+                $template = 'AppBundle:User:activate.html.twig';
+                break;
+            
+            case 'password-reset':
+                $formType = new FormDir\ResetPasswordType([
+                    'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+                ]);
+                $template = 'AppBundle:User:passwordReset.html.twig';
+                
+            default:
+                return $this->createNotFoundException("action $action not defined ");
         }
         
         $form = $this->createForm($formType, $user);
