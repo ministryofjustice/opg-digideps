@@ -41,21 +41,21 @@
             </h2>
             
             <div class="form-section single-field-fieldset three-quarter-width">
-                <label for="case-number" class="left-label">Case number</label>
-                <input id="case-number" class="right-value" value="{{ client.getCaseNumber }}" disabled/>
+                <div class="label left-label">Case number</div>
+                <div class="value right-value">{{ client.getCaseNumber }}</div>
             </div>
 
             <fieldset class="form-section case-number-section three-quarter-width">
                 <h3>Reporting period</h3>
                 
                 <div class="form-group form-group-vertical half-width">
-                    <label for="startdate">Start date</label>
-                    <input id="startdate" value="{{ report.startDate | date("d / m / Y") }}" disabled/>
+                    <div class="label">Start date</div>
+                    <div class="value">{{ report.startDate | date("d / m / Y") }}</div>
                 </div>
                 
                 <div class="form-group form-group-vertical half-width">
-                    <label for="enddate">End date</label>
-                    <input id="enddate" value="{{ report.endDate | date("d / m / Y") }}"disabled/>
+                    <div class="label">End date</div>
+                    <div class="value">{{ report.endDate | date("d / m / Y") }}</div>
                 </div>
             
             </fieldset>
@@ -65,28 +65,28 @@
                 <h3>Deputy details</h3>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="firstname">First names</label>
-                    <input id="firstname" value="{{deputy.firstname}}" disabled/>
+                    <div class="label">First names</div>
+                    <div class="value">{{deputy.firstname}}</div>
                 </div>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="lastname">Last name</label>
-                    <input id="lastname" value="{{deputy.lastname}}" disabled/>
+                    <div class="label">Last name</div>
+                    <div class="value">{{deputy.lastname}}</div>
                 </div>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="Address">Address</label>
-                    <textarea class="address-value" rows="5" disabled>
-                        {{ deputy.address1 }}
-                        {{ deputy.address2 }}
-                        {{ deputy.address3 }}
+                    <div class="label">Address</div>
+                    <div class="textarea address-value">
+                        {{ deputy.address1 }}<br/>
+                        {{ deputy.address2 }}<br/>
+                        {{ deputy.address3 }}<br/>
                         {{ deputy.addressPostcode }}
-                    </textarea>
+                    </div>
                 </div>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="telephone">Telephone number</label>
-                    <input id="telephone" value="{{deputy.phoneMain}}" disabled/>
+                    <div class="label">Telephone number</div>
+                    <div class="value">{{deputy.phoneMain}}</div>
                 </div>        
             </fieldset>
             
@@ -96,35 +96,35 @@
                 <h3>Client details</h3>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="firstname">First names</label>
-                    <input id="firstname" value="{{ client.firstname }}" disabled/>
+                    <div class="label">First names</div>
+                    <div class="value">{{ client.firstname }}</div>
                 </div>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="lastname">Last name</label>
-                    <input id="lastname"/ value="{{ client.lastname }}" disabled>
+                    <div class="label">Last name</div>
+                    <div class="value">{{ client.lastname }}</div>
                 </div>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="Address">Address</label>
-                    <textarea class="address-value" rows="5" disabled>
-                        {{ client.address }}
-                        {{ client.address2 }}
-                        {{ client.county }}
+                    <div class="label">Address</div>
+                    <div class="textarea address-value">
+                        {{ client.address }}<br/>
+                        {{ client.address2 }}<br/>
+                        {{ client.county }}<br/>
                         {{ client.postcode }}
-                    </textarea>
+                    </div>
                 </div>
                 
                 <div class="form-group form-group-vertical">
-                    <label for="telephone">Telephone number</label>
-                    <input id="telephone" value="{{client.phone}}"/>
+                    <div class="label">Telephone number</div>
+                    <div class="value">{{client.phone}}</div>
                 </div>
             </fieldset>
             
             <fieldset class="form-section full-width-extension">
                 <div class="form-group form-group-vertical">
-                    <label for="email">Email (optional)</label>
-                    <textarea id="email" disabled>{{deputy.email}}</textarea>
+                    <div class="label">Email (optional)</div>
+                    <div class="value">{{deputy.email}}</div>
                 </div>
             </fieldset>
         </div>
@@ -151,11 +151,11 @@
                     {% for decision in decisions %}
                     <li class="decision box-list-item">
                         <div class="form-group form-group-vertical half-width">
-                            <textarea class="address-value" rows="5" disabled>{{ decision.description }}</textarea>
+                            <div class="textarea address-value" rows="5" disabled>{{ decision.description }}</div>
                         </div>
                         
                         <div class="form-group form-group-vertical half-width">
-                            <textarea class="address-value" rows="5" disabled>{{ decision.clientInvolvedDetails | nl2br }}</textarea>
+                            <div class="textarea address-value" rows="5" disabled>{{ decision.clientInvolvedDetails | nl2br }}</div>
                         </div>
                     </li>
                     {% endfor %}

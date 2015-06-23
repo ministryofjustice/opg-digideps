@@ -14,8 +14,7 @@
         width: 200px;
         border-left: 3px solid #000000;
     }
-    
-    
+        
     h1 {
         @include bold-36();
         width: 50%;
@@ -38,7 +37,7 @@
         @include bold-27();
     }
     
-    input, textarea {
+    .value, .textarea {
         background: #ffffff;
         color: #454572;
         padding: 4px 10px 2px 15px;
@@ -47,7 +46,7 @@
         font-family: Helvetica, Arial;
     }
     
-    label {
+    .label {
         font-size: 17px;
     }
         
@@ -55,8 +54,13 @@
     
         padding: 15px 20px 15px 20px;
     
-        label {
+        .label {
             @include bold-27();
+        }
+        
+        .value {
+            float: left;
+            width: 50%;
         }
     
     }
@@ -82,7 +86,6 @@
             padding-top: 4px;
             margin-right: 20px;
         }
-        
         .list-label {
             @include bold-19();
             margin-bottom: 10px;
@@ -96,6 +99,12 @@
             }
         }
         
+        .half-width {
+            .value {
+                width: 85%;
+            }
+        }
+
     }
 
     .three-quarter-width {
@@ -117,10 +126,10 @@
     }
 
     .form-group-vertical {
-        label {
+        .label {
             display: block;
         }
-        input, textarea {
+        .value, .textarea {
             width: 90%;
         }
     }
@@ -129,7 +138,7 @@
         float: left;
         margin-top: 0;
         
-        textarea {
+        .textarea {
             width: 95%;
         }
     }
