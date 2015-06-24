@@ -14,7 +14,7 @@ trait StatusSnapshotTrait
     public static function iSaveTheApplicationStatusInto($status)
     {
         $sqlFile = self::getSnapshotPath($status);
-        exec("sudo -u postgres pg_dump -U postgres " . self::$dbName . " --clean > {$sqlFile}");
+        exec("pg_dump " . self::$dbName . " --clean > {$sqlFile}");
     }
 
     /**
@@ -28,7 +28,7 @@ trait StatusSnapshotTrait
             echo $error;
             //throw new \RuntimeException($error);
         }
-        exec("sudo -u postgres psql -U postgres  " . self::$dbName . " < {$sqlFile}");
+        exec("psql " . self::$dbName . " < {$sqlFile}");
     }
 
     /**

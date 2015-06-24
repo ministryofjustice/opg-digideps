@@ -46,6 +46,14 @@ trait RegionTrait
     }
     
     /**
+     * @Then I should see :text in :container
+     */
+    public function iShouldSeeInTheContainer($text, $container)
+    {
+        $this->assertSession()->elementTextContains('css', '#' . $container , $text);
+    }
+    
+    /**
      * @Then I should not see :text in the :region region
      */
     public function iShouldNotSeeInTheRegion($text, $region)
