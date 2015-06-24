@@ -7,6 +7,7 @@ parameters:
     # for the following two settings, use a multiple of 60
     session_expire_seconds: 1500
     session_popup_show_after: 1200
+    session_cookie_secure: false
     email_send:
       from_email: no-reply@digideps.service.dsd.io
       from_name: Digital Deputyship Service
