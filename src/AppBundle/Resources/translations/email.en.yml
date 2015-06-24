@@ -1,5 +1,5 @@
 activation:
-    subject: "Digideps - activation email"
+    subject: "Complete the Deputy Report - activation email"
     fromName: Complete a deputy report service
 changePassword:
     subject: Change to your Complete a deputy report service password
