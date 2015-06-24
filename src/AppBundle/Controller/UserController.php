@@ -35,11 +35,19 @@ class UserController extends Controller
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            return $this->render('AppBundle:User:tokenExpired.html.twig', [
-                'token'=>$token, 
-                'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                'from' => $action
-            ]);
+            switch ($action) {
+                case 'activate':
+                    return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
+                        'token'=>$token, 
+                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                    ]);
+                    
+                case 'password-reset':
+                    return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
+                        'token'=>$token, 
+                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                    ]);
+            }
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
@@ -112,10 +120,10 @@ class UserController extends Controller
     }
     
     /**
-     * @Route("/activate/password/send/{from}/{token}", name="activation_link_send")
+     * @Route("/activate/password/send/{token}", name="activation_link_send")
      * @Template()
      */
-    public function linkResendAction(Request $request, $token, $from)
+    public function activationLinkSendAction(Request $request, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
@@ -131,13 +139,7 @@ class UserController extends Controller
         // refresh user
         $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $user->getId() ] ]);
         
-        if ($from == 'activate') {
-            $activationEmail = $this->get('mailFactory')->createActivationEmail($user, $from);
-        } else if ($from === 'password-reset') {
-            $activationEmail = $this->get('mailFactory')->createResetPasswordEmail($user, $from);
-        } else {
-            throw new \InvalidArgumentException(__METHOD__ . ' from parameter not recognised ');
-        }
+        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
         $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
         
         return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
@@ -145,9 +147,9 @@ class UserController extends Controller
     
      /**
      * @Route("/activate/password/sent/{token}", name="activation_link_sent")
-     *  @Template()
+     * @Template()
      */
-    public function linkSentAction(Request $request, $token)
+    public function activationLinkSentAction(Request $request, $token)
     {
         return [
             'token'=>$token,

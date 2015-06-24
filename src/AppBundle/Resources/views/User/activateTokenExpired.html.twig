@@ -1,5 +1,5 @@
 {% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% set translationDomain = "token-expired" %}
+{% set translationDomain = "user-activate-expired" %}
 {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -19,6 +19,6 @@
         {{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}
     </p>
     
-    <a href="{{ path('activation_link_send', {'token': token, 'from': from}) }}" class="behat-link-ask-us-to-send-new-link">{{ 'sendLink' | trans }}</a>
+    <a href="{{ path('activation_link_send', {'token': token}) }}" class="behat-link-ask-us-to-send-new-link">{{ 'sendLink' | trans }}</a>
 
 {% endblock %}
