@@ -112,6 +112,7 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"registrationToken"})
      * @var string $registrationToken
      */
     private $registrationToken;
@@ -125,6 +126,7 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
+     * @JMS\Groups({"registrationToken"})
      * @var \DateTime $tokenDate
      */
     private $tokenDate;

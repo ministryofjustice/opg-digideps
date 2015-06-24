@@ -1,0 +1,31 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% set translationDomain = "activation-link-sent" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} sign-in-page js-sign-in-page{% endblock %}
+
+{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block pageHeader %}
+    {{ parent() }}
+{% endblock %}
+
+{% block pageNavigation %}
+{% endblock %}
+
+{% block pageBody %}
+
+    <p class="page-section-description">
+        {{ 'subtitle' | trans({'%tokenExpireHours%': tokenExpireHours})}}
+    </p>
+    
+    <p class="page-section-description">
+      {{ 'didntReceive' | trans({'%senderEmail%': senderEmail }) }}
+    </p>
+    
+     <p class="page-section-description">
+      {{ 'stillHavingProblems' | trans() }} 
+      <a href="https://www.gov.uk/government/organisations/office-of-the-public-guardian#org-contacts" target=_blank">{{ 'contactOPG' | trans }}</a>
+    </p>
+
+{% endblock %}

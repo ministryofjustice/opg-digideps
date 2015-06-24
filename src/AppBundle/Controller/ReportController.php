@@ -105,8 +105,11 @@ class ReportController extends Controller
             $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
                 'deserialise_group' => 'submit',
             ]);
+            
             // send report by email
-            $this->sendByEmail($report);
+            $reportContent = $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
+            $reportEmail = $this->get('mailFactory')->createReportEmail($report, $reportContent);
+            $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
             
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
         }
@@ -118,34 +121,6 @@ class ReportController extends Controller
         ];
     }
     
-    /**
-     * @param EntityDir\Report$report
-     */
-    private function sendByEmail(EntityDir\Report $report)
-    {
-        //lets send an email to confirm password change
-        $emailConfig = $this->container->getParameter('email_report_submit');
-        $translator = $this->get('translator');
-
-        $email = new ModelDir\Email();
-        $email->setFromEmail($emailConfig['from_email'])
-            ->setFromName($translator->trans('reportSubmission.fromName',[], 'email'))
-            ->setToEmail($emailConfig['to_email'])
-            ->setToName($translator->trans('reportSubmission.toName',[], 'email'))
-            ->setSubject($translator->trans('reportSubmission.subject',[], 'email'))
-            ->setBodyHtml($this->renderView('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new ModelDir\EmailAttachment('report.html', 'application/xml', $this->getReportContent($report))]);
-
-        $this->get('mailSender')->send($email,[ 'html'], 'secure-smtp');
-    }
-    
-    /**
-     * @return string
-     */
-    private function getReportContent(EntityDir\Report $report)
-    {
-        return $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
-    }
     
     /**
      * Page displaying the report has been submitted

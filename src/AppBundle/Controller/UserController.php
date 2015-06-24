@@ -25,7 +25,7 @@ class UserController extends Controller
      * })
      * @Template()
      */
-    public function setPasswordAndLoginAction(Request $request, $action, $token)
+    public function activateUserAction(Request $request, $action, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $translator = $this->get('translator');
@@ -35,22 +35,39 @@ class UserController extends Controller
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            throw new \RuntimeException("Token expired, require new link");
+            switch ($action) {
+                case 'activate':
+                    return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
+                        'token'=>$token, 
+                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                    ]);
+                    
+                case 'password-reset':
+                    return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
+                        'token'=>$token, 
+                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                    ]);
+            }
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
-        if ($action == 'activate') {
-            $formType = new FormDir\SetPasswordType([
-                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
-            ]);
-            $template = 'AppBundle:User:activate.html.twig';
-        } else if ($action === 'password-reset') {
-            $formType = new FormDir\ResetPasswordType([
-                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
-            ]);
-            $template = 'AppBundle:User:passwordReset.html.twig';
-        } else {
-            return $this->createNotFoundException("action $action not defined ");
+        switch ($action) {
+            case 'activate':
+                $formType = new FormDir\SetPasswordType([
+                    'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+                ]);
+                $template = 'AppBundle:User:activate.html.twig';
+                break;
+            
+            case 'password-reset':
+                $formType = new FormDir\ResetPasswordType([
+                    'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+                ]);
+                $template = 'AppBundle:User:passwordReset.html.twig';
+                break;
+            
+            default:
+                return $this->createNotFoundException("action $action not defined ");
         }
         
         $form = $this->createForm($formType, $user);
@@ -102,6 +119,44 @@ class UserController extends Controller
         ]);
     }
     
+    /**
+     * @Route("/activate/password/send/{token}", name="activation_link_send")
+     * @Template()
+     */
+    public function activateLinkSendAction(Request $request, $token)
+    {
+        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        
+        // check $token is correct
+        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
+        
+        // recreate token
+        $user->setRecreateRegistrationToken(true);
+        $apiClient->putC('user/' .  $user->getId(), $user, [
+            'deserialise_group' => 'recreateRegistrationToken',
+        ]);
+        
+        // refresh user
+        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $user->getId() ] ]);
+        
+        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
+        $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
+        
+        return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
+    }
+    
+     /**
+     * @Route("/activate/password/sent/{token}", name="activation_link_sent")
+     * @Template()
+     */
+    public function activateLinkSentAction(Request $request, $token)
+    {
+        return [
+            'token'=>$token,
+            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+            'senderEmail'=> $this->container->getParameter('email_send')['from_email']
+        ];
+    }
     
     /**
      * Registration steps
@@ -176,19 +231,8 @@ class UserController extends Controller
                         ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
                     $formData->setPassword($encodedPassword);
                     
-                    //lets send an email to confirm password change
-                    $emailConfig = $this->container->getParameter('email_send');
-                    $translator = $this->get('translator');
-                    
-                    $email = new Email();
-                    $email->setFromEmail($emailConfig['from_email'])
-                        ->setFromName($translator->trans('changePassword.fromName',[], 'email'))
-                        ->setToEmail($user->getEmail())
-                        ->setToName($user->getFirstname())
-                        ->setSubject($translator->trans('changePassword.subject',[], 'email'))
-                        ->setBodyHtml($this->renderView('AppBundle:Email:change-password.html.twig'));
-                    
-                    $this->get('mailSender')->send($email,[ 'html']);
+                    $changePasswordEmail = $this->get('mailFactory')->createChangePasswordEmail($user);
+                    $this->get('mailSender')->send($changePasswordEmail,[ 'html']);
                     
                     //reset user api key
                     $session = $this->get('session');
@@ -246,10 +290,12 @@ class UserController extends Controller
                 $apiClient->putC('user/' .  $user->getId(), $user, [
                     'deserialise_group' => 'recreateRegistrationToken',
                 ]);
+                // get refreshed user
                 $user = $apiClient->getEntity('User', 'user/' . $user->getId());
                 
-                // send email !
-                $this->sendResetPasswordEmail($user);
+                // send reset password email
+                $resetPasswordEmail = $this->get('mailFactory')->createResetPasswordEmail($user);
+                $this->get('mailSender')->send($resetPasswordEmail, [ 'text', 'html']);
                 
             } catch (\Exception $e) {
                 // if the user it not found, the user must not be told, 
@@ -274,36 +320,6 @@ class UserController extends Controller
         return [];
     }
     
-    /**
-     * @param EntityDir\User $user
-     */
-    private function sendResetPasswordEmail(EntityDir\User $user)
-    {
-        // send activation link
-        $emailConfig = $this->container->getParameter('email_send');
-        $translator = $this->get('translator');
-        $router = $this->get('router');
-
-        $email = new Email();
-        $viewParams = [
-            'name' => $user->getFullName(),
-            'domain' => $router->generate('homepage', [], true),
-            'link' => $router->generate('user_activate', [
-                'action'=>'password-reset', 
-                'token'=> $user->getRegistrationToken()
-                ], true)
-        ];
-        
-        $email->setFromEmail($emailConfig['from_email'])
-            ->setFromName($translator->trans('resetPassword.fromName',[], 'email'))
-            ->setToEmail($user->getEmail())
-            ->setToName($user->getFullName())
-            ->setSubject($translator->trans('resetPassword.subject',[], 'email'))
-            ->setBodyHtml($this->renderView('AppBundle:Email:password-forgotten.html.twig', $viewParams))
-            ->setBodyText($this->renderView('AppBundle:Email:password-forgotten.text.twig', $viewParams));
-
-        $mailSender = $this->get('mailSender'); /* @var $mailSender \AppBundle\Service\MailSender */
-        $mailSender->send($email,[ 'text', 'html']);
-    }
+   
     
 }
