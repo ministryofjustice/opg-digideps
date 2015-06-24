@@ -18,7 +18,7 @@ trait EmailTrait
       [cc] =>
       [replyTo] =>
       [returnPath] =>
-      [subject] => Digideps - activation email
+      [subject] => Complete the Deputy Report - activation email
       [body] => Hello test Test, click here http://link.com/activate/testtoken to activate your account
       [sender] =>
       [parts] => Array(
@@ -28,7 +28,7 @@ trait EmailTrait
       )
       )
       )
-     * 
+     *
      * @retun array
      */
     private function getLatestEmailMockFromApi($throwExceptionIfNotFound = true)
@@ -95,18 +95,18 @@ trait EmailTrait
             throw new \RuntimeException("Found unexpected email with subject '" . $content['subject'] . "'");
         }
     }
-    
+
     /**
      * @When I open the :linkPattern link from the email
      */
     public function iOpenTheSpecificLinkOnTheEmail($linkPattern)
     {
         list($links, $mailContent) = $this->getLinksFromEmailHtmlBody();
-        
+
         $filteredLinks = array_filter($links, function ($element) use ($linkPattern) {
             return strpos($element, $linkPattern) !== false;
         });
-        
+
         if (empty($filteredLinks)) {
             throw new \Exception("no link in the email's body. Filter: $linkPattern . Body:\n $mailContent");
         }
@@ -118,8 +118,8 @@ trait EmailTrait
         // visit the link
         $this->visit($linkToClick);
     }
-    
-    
+
+
     /**
      * @return array[array links, string mailContent]
      */
@@ -128,11 +128,11 @@ trait EmailTrait
         $mailContent = $this->getLatestEmailMockFromApi()['parts'][0]['body'];
 
         preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
-        
+
         return [$matches[0], $mailContent];
     }
 
-    
+
     /**
      * @Then the email should contain :text
      */

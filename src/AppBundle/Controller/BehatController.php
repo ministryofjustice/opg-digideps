@@ -189,4 +189,23 @@ class BehatController extends Controller
     {
         return $this->render('AppBundle:Behat:textarea.html.twig');    
     }
+    
+    /**
+     * @Route("/{secret}/user/{email}/token/{token}/token-date/{date}")
+     * @Method({"GET"})
+     */
+    public function userSetToken($email, $token, $date)
+    {
+        $this->checkIsBehatBrowser();
+        
+        $user = $this->get('apiclient')->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+        $user->setTokenDate(new \DateTime($date));
+        $user->setRegistrationToken($token);
+        
+        $this->get('apiclient')->putC('user/' . $user->getId(), $user, [
+            'deserialise_group' => 'registrationToken',
+        ]);
+        
+        return new Response('done');
+    }
 }
