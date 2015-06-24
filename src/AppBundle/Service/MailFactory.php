@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use AppBundle\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use AppBundle\Model as ModelDir;
 use Symfony\Component\DependencyInjection\Container;
@@ -50,7 +49,8 @@ class MailFactory
             'domain' => $this->router->generate('homepage', [], true),
             'link' => $this->router->generate('user_activate', [
                 'token' => $user->getRegistrationToken(), 
-            ], true)
+            ], true),
+            'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
         ];
         
         $email = $this->createEmail()
@@ -89,7 +89,7 @@ class MailFactory
     }
 
     /**
-     * @param User $user
+     * @param EntityDir\User $user
      * 
      * @return Email
      */
