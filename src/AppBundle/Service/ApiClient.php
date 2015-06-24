@@ -12,39 +12,41 @@ class ApiClient extends GuzzleClient
 {
     /**
      * endpoints map
-     * 
+     *
      * @var array
      */
     private $endpoints;
-    
+
     /**
      * @var SerializerInterface
      */
     private $serialiser;
-    
+
      /**
      * @var string
      */
     private $format;
-    
+
      /**
       * If true, prints more info on exception
      * @var boolean
      */
     private $debug;
-    
+
     private $session;
     
+    private $redis;
+    
     private $memcached;
-    
-    
+
+
      /**
      * @var string
      */
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
-    
-    
-    public function __construct(SerializerInterface $serialiser, $oauth2Client,$memcached,$session,array $options)
+
+
+    public function __construct(SerializerInterface $serialiser, $oauth2Client,$redis,$memcached,$session,array $options)
     {
         // check arguments
         array_map(function($k) use ($options) {
@@ -52,7 +54,7 @@ class ApiClient extends GuzzleClient
                 throw new \InvalidArgumentException(__METHOD__ . " missing value for $k");
             }
         }, ['base_url', 'endpoints', 'format', 'debug']);
-        
+
         // set internal properties
         $this->serialiser = $serialiser;
         $this->format = $options['format'];
@@ -63,30 +65,37 @@ class ApiClient extends GuzzleClient
         }
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
-        
+
         $this->session = $session;
+        $this->redis = $redis;
         $this->memcached = $memcached;
-        
+
         //lets get session id
         $sessionId = $this->session->getId();
-        
+
         //if session has not started then start it
         if(empty($sessionId)){
             $this->session->start();
             $sessionId = $this->session->getId();
         }
         
-        
         // construct parent (GuzzleClient)
-        if($options['use_oauth2']){
-            //check if we already have user api key
-            $credentials = $this->memcached->get($sessionId.'_user_credentials');
-
-            if($credentials){
+        if($options['use_oauth2'] && ($options['use_redis'] || $options['use_memcached'])){
+            
+            if($options['use_redis']){
+                //check if we already have user api key
+                $credentials['email'] = $this->redis->hget($sessionId.'_user_credentials','email');
+                $credentials['password'] = $this->redis->hget($sessionId.'_user_credentials','password');
+            }else{
+                //check if we already have user api key
+                $credentials = $this->memcached->get($sessionId.'_user_credentials');
+            }
+            
+            if(!empty($credentials['email']) && !empty($credentials['password'])){
                 $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
             }
-        
-            parent::__construct([ 
+            
+            parent::__construct([
                 'base_url' =>  $options['base_url'],
                 'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
                                'verify' => false,
@@ -96,7 +105,7 @@ class ApiClient extends GuzzleClient
                                'subscribers' => [ $oauth2Client->getSubscriber() ]
                               ]]);
         }else{
-           parent::__construct([ 
+           parent::__construct([
                 'base_url' =>  $options['base_url'],
                 'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
                                'verify' => false,
@@ -104,28 +113,28 @@ class ApiClient extends GuzzleClient
                                'connect_timeout' => 30*/
                               ]]);
         }
-        
+
     }
-   
+
     /**
      * @param string $class
      * @param string $endpoint
      * @param array $options
-     * 
+     *
      * @return stdClass entity object
      */
     public function getEntity($class, $endpoint, array $options = [])
     {
-        
+
         /*if($endpoint == 'find_report_by_id'){
              print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
         }*/
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
-        
+
         return $ret;
     }
-    
+
     /**
      * @param RequestException $e
      * @return string
@@ -135,28 +144,28 @@ class ApiClient extends GuzzleClient
         if (!$this->debug) {
             return '';
         }
-        
+
         $ret = [];
-        
+
         $url = $e->getRequest()->getUrl();
         $body = (string)$e->getResponse()->getBody();
-        
+
         $ret[] = "Url: $url";
         $ret[] = "Response body: $body";
         $ret[] = "Exception trace: " . $e->getTraceAsString();
         if ($e->getRequest()->getMethod() == 'POST') {
             $ret[] = 'Request: ' . $e->getRequest()->getBody();
         }
-        
+
         return 'Debug informations (only displayed when kernel.debug=true):' . implode(', ', $ret);
     }
-    
-    
+
+
     /**
      * Override send() to recognise and re-throw error messages in a more understandable format
-     * 
+     *
      * @param GuzzleRequestInterface $request
-     * 
+     *
      * @throws \RuntimeException
      */
     public function send(GuzzleRequestInterface $request)
@@ -164,26 +173,26 @@ class ApiClient extends GuzzleClient
         try {
             return parent::send($request);
         } catch (\Exception $e) {
-            
+
             if ($e instanceof RequestException) {
                 // add debug data dependign on kernely option
                 $debugData = $this->getDebugRequestExceptionData($e);
-                
+
                 // try to unserialize response
                 try {
                     $responseArray = $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', $this->format);
                 } catch (\Exception $e) {
-                    
+
                     throw new RuntimeException("Error from API: malformed message. " . $debugData);
                 }
-                
+
                 // regognise specific error codes and launche specific exception classes
                 
                 if(!isset($responseArray['code'])){
                    $responseArray['code'] = 401;
                    $responseArray['message'] = isset($responseArray['error_description']) ? $responseArray['error_description']: $responseArray['message'];
                 }
-                
+
                 switch ($responseArray['code']) {
                     case 404:
                         throw new DisplayableException('Record not found.' . $debugData);
@@ -191,15 +200,15 @@ class ApiClient extends GuzzleClient
                         throw new RuntimeException($responseArray['message'] . ' ' . $debugData);
                 }
             }
-            
+
             throw new RuntimeException($e->getMessage() ?: 'Generic error from API');
-        } 
-        
+        }
+
     }
-    
+
     /**
      * @param Response $response
-     * 
+     *
      * @return object result of deserialisation
      */
     private function deserialiseResponse($response)
@@ -212,79 +221,79 @@ class ApiClient extends GuzzleClient
                 $msg .= 'Body:' . $response->getBody();
             }
             throw new RuntimeException(
-                $e->getMessage() . '.' 
+                $e->getMessage() . '.'
                 . ($this->debug ? 'Body:' . $response->getBody() : '')
             );
         }
-        
+
         return $ret;
     }
-    
+
     /**
      * @param string $class
      * @param string $endpoint
      * @param array $options
-     * 
+     *
      * @return stdClass[] array of entity objects, indexed by PK
      */
     public function getEntities($class, $endpoint, $options = [])
     {
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
-   
+
         $ret = [];
-        
-        foreach ($responseArray['data'] as $row) { 
+
+        foreach ($responseArray['data'] as $row) {
             $entity = $this->serialiser->deserialize(json_encode($row), 'AppBundle\\Entity\\' . $class, 'json');
             $ret[$entity->getId()] = $entity;
         }
-        
+
         return $ret;
     }
-    
-    
+
+
     /**
      * @param string $endpoint
      * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
      * @param string $options serialise group (indicated by @Groups annotation in the client entity)
-     * 
+     *
      * @return array response
      */
     public function postC($endpoint, $bodyorEntity, array $options = [])
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
-        
+
         if(isset($options['deserialise_group'])){
             unset($options['deserialise_group']);
         }
         $options['body'] = $body;
-        
+
         $responseArray = $this->deserialiseResponse($this->post($endpoint, $options));
         return $responseArray['data'];
     }
-    
+
     /**
      * @param string $endpoint
      * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
-     * 
+     *
      * @return array response
      */
     public function putC($endpoint, $bodyorEntity, array $options = [])
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
-        
+
         if(isset($options['deserialise_group'])){
             unset($options['deserialise_group']);
         }
-        
+
         $options['body'] = $body;
-        
+
         $responseArray = $this->deserialiseResponse($this->put($endpoint, $options));
-       
+
         return $responseArray['data'];
     }
-    
+
     /**
-     * 
+     *
      * @param string $bodyorEntity json_encoded string or Doctrine Entity (it will be serialised before posting)
      * @param array $options
      * @return type
@@ -292,46 +301,45 @@ class ApiClient extends GuzzleClient
     private function serialiseBodyOrEntity($bodyorEntity, array $options)
     {
         if (is_object($bodyorEntity)) {
-            
+
             $context = \JMS\Serializer\SerializationContext::create()
                     ->setSerializeNull(true);
-            
+
             if (!empty($options['deserialise_group'])) {
                 $context->setGroups([$options['deserialise_group']]);
             }
             return $this->serialiser->serialize($bodyorEntity, 'json', $context);
         }
-        
+
         return $bodyorEntity;
     }
-    
+
     /**
      * Search through our route map and if this route exists then use that
-     * 
+     *
      * @param string $method
      * @param string $url
      * @param array $options
      * @return type
      */
-    public function createRequest($method, $url = null, array $options = array()) 
+    public function createRequest($method, $url = null, array $options = array())
     {
-        
+
         if (!empty($url) && array_key_exists($url, $this->endpoints)) {
-            
+
             $url = $this->endpoints[$url];
-        
+
             $methods = [ 'GET', 'DELETE', 'PUT', 'POST'];
-             
+
             if(in_array($method,$methods) && array_key_exists('parameters', $options)){
-                    
+
                 foreach($options['parameters'] as $param){
                     $url = $url.'/'.$param;
                 }
-                unset($options['parameters']); 
+                unset($options['parameters']);
             }
         }
-        
+
         return parent::createRequest($method, $url, $options);
     }
-   
 }

@@ -34,6 +34,8 @@ class IndexController extends Controller
     {
         $request = $this->getRequest();
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
+        $useMemcached = $this->container->getParameter('use_memcached');
+        $useRedis = $this->container->getParameter('use_redis');
 
         $form = $this->createForm(new FormDir\LoginType(), null, [
             'action' => $this->generateUrl('login'),
@@ -48,7 +50,13 @@ class IndexController extends Controller
             $data = $form->getData();
             
             if($oauth2Enabled){
-                $memcached = $this->get('oauth.memcached');
+                if($useRedis){
+                    $storage = $this->get('snc_redis.default');
+                }elseif($useMemcached){
+                    $storage = $this->get('oauth.memcached');
+                }else{
+                    $oauth2Enabled = false;
+                }
             }
             
             try{
@@ -76,12 +84,19 @@ class IndexController extends Controller
             $session->migrate();
             
             if($oauth2Enabled){
-                $credentials = $memcached->get($session->getId().'_user_credentials');
-
-                if(!$credentials){
-                    $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
-                }else{
-                    $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                if($useRedis){
+                    $storage->hset($session->getId().'_user_credentials','email', $user->getEmail());
+                    $storage->hset($session->getId().'_user_credentials','password', $user->getPassword());
+                    $storage->expire($session->getId().'_user_credentials',3600);
+                    
+                }elseif($useMemcached){
+                    $credentials = $storage->get($session->getId().'_user_credentials');
+                    
+                    if(!$credentials){
+                        $storage->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
+                    }else{
+                        $storage->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                    }
                 }
             }
             

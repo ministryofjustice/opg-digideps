@@ -1,5 +1,4 @@
 <?php
-
 ini_set("display_errors", "on");
 ini_set("date.timezone", "Europe/London");
 

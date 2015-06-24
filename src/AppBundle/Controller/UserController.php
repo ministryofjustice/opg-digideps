@@ -76,14 +76,10 @@ class UserController extends Controller
                  
                 if($oauth2Enabled){
                     //cache hashed password to use in oauth2 calls
-                   $memcached = $this->get('oauth.memcached');
-                   $userApiKey = $memcached->get($session->getId().'_user_credentials');
-
-                   if(!$userApiKey){
-                       $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
-                   }else{
-                       $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
-                   }
+                   $redis = $this->get('snc_redis.default');
+                   $redis->hset($session->getId().'_user_credentials','email',$user->getEmail());
+                   $redis->hset($session->getId().'_user_credentials','password', $encodedPassword);
+                   $redis->expire($session->getId().'_user_credentials',3600);
                 }
                  
                  $request = $this->get("request");
@@ -152,6 +148,8 @@ class UserController extends Controller
         $request = $this->getRequest();
         $user = $this->getUser();
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
+        $useMemcached = $this->container->getParameter('use_memcached');
+        $useRedis = $this->container->getParameter('use_redis');
         
         $formEditDetails = $this->createForm(new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
@@ -194,15 +192,21 @@ class UserController extends Controller
                     $session = $this->get('session');
                     
                     if($oauth2Enabled){
-                        //cache hashed password to use in oauth2 calls
-                       $memcached = $this->get('oauth.memcached');
-                       $userApiKey = $memcached->get($session->getId().'_user_credentials');
-
-                       if(!$userApiKey){
-                           $memcached->add($session->getId().'_user_credentials',['email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
-                       }else{
-                           $memcached->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
-                       }
+                        if($useRedis){
+                            $redis = $this->get('snc_redis.default');
+                            $redis->hset($session->getId().'_user_credentials','email',$user->getEmail());
+                            $redis->hset($session->getId().'_user_credentials','password', $user->getPassword());
+                            $redis->expire($session->getId().'_user_credentials',3600);
+                        }elseif($useMemcached){
+                             //cache hashed password to use in oauth2 calls
+                            $memcached = $this->get('oauth.memcached');
+                            $userApiKey = $memcached->get($session->getId().'_user_credentials');
+                            if(!$userApiKey){
+                                $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                            }else{
+                                $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
+                            }
+                        }
                     }
                     
                     $request->getSession()->getFlashBag()->add(
