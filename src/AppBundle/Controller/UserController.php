@@ -188,6 +188,15 @@ class UserController extends RestController
         if (!empty($data['recreate_registration_token'])) {
             $user->recreateRegistrationToken();
         }
+        
+        if (!empty($data['registration_token'])) {
+            $user->setRegistrationToken($data['registration_token']);
+        }
+        
+        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+            $user->setTokenDate(new \DateTime($data['token_date']));
+        }
+       
     }
     
 }
