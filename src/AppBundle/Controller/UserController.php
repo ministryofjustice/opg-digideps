@@ -123,7 +123,7 @@ class UserController extends Controller
      * @Route("/activate/password/send/{token}", name="activation_link_send")
      * @Template()
      */
-    public function activationLinkSendAction(Request $request, $token)
+    public function activateLinkSendAction(Request $request, $token)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
@@ -149,7 +149,7 @@ class UserController extends Controller
      * @Route("/activate/password/sent/{token}", name="activation_link_sent")
      * @Template()
      */
-    public function activationLinkSentAction(Request $request, $token)
+    public function activateLinkSentAction(Request $request, $token)
     {
         return [
             'token'=>$token,
