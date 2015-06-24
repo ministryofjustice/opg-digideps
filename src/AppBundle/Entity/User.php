@@ -213,6 +213,7 @@ class User implements AdvancedUserInterface
      */
     private $lastLoggedIn;
     
+    
     /**
      * Constructor
      */
