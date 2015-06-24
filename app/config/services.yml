@@ -47,6 +47,9 @@ services:
     mailSender:
         class: AppBundle\Service\MailSender
         arguments: [ @apiclient, @translator, @router,@validator ]
+    mailFactory:
+        class: AppBundle\Service\MailFactory
+        arguments: [ @service_container ]
     redirectorService:
         class: AppBundle\Service\Redirector
         arguments: [ @security.context, @router, @session ]

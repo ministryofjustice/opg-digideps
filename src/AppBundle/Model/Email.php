@@ -176,6 +176,7 @@ class Email
     public function setBodyText($bodyText)
     {
         $this->bodyText = $bodyText;
+        
         return $this;
     }
     
@@ -201,5 +202,7 @@ class Email
     public function setAttachments(array $attachments)
     {
         $this->attachments = $attachments;
+        
+        return $this;
     }
 }
