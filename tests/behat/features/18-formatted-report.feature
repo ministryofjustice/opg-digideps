@@ -1,6 +1,6 @@
 Feature: Formatted Report
     
-    @wip @formatted-report
+    @formatted-report
     Scenario: Setup the reporting user
         Given I am on "/login"
         When I fill in the following:
@@ -62,8 +62,7 @@ Feature: Formatted Report
         # assert you are on dashboard
         And the URL should match "report/\d+/overview"
         Then I save the application status into "reportuser"
-        
-    @wip
+
     @formatted-report
     Scenario: A report lists decisions
         When I load the application status from "reportuser"
@@ -303,9 +302,9 @@ Feature: Formatted Report
         Then I click on "add-a-decision"
         # add another decision
         And I fill in the following:
-            | decision_description | 3 beds |
+            | decision_description | 2 televisions |
             | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 85% |
+            | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
         Then I press "decision_save"
         And the form should not contain an error
         # Next, some contacts
@@ -401,9 +400,101 @@ Feature: Formatted Report
         And I should see "Deputy report for property and financial decisions"
         And I should see "Andy White" in "contacts-section"
         And I should see "Fred Smith" in "contacts-section"
+
+    @formatted-report
+    Scenario: A report describes why there are no contacts
+        When I load the application status from "reportuser"
+        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I go to "report/1/decisions"
+        And I follow "tab-decisions"
+        # Start by adding some decisions
+        When I click on "add-a-decision"
+        And I fill in the following:
+            | decision_description | 3 beds |
+            | decision_clientInvolvedBoolean_0 | 1 |
+            | decision_clientInvolvedDetails | the client was able to decide at 85% |
+        Then I press "decision_save"
+        And the form should not contain an error
+        Then I click on "add-a-decision"
+        # add another decision
+        And I fill in the following:
+            | decision_description | 2 televisions |
+            | decision_clientInvolvedBoolean_0 | 1 |
+            | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
+        Then I press "decision_save"
+        And the form should not contain an error
+        # Next, some contacts
+        Then I follow "tab-contacts"
+        When I fill in "reason_for_no_contact_reason" with "kept in the book"
+        And I press "reason_for_no_contact_saveReason"
+        Then the form should not contain an error
+        
+        # Bank account
+        Then I follow "tab-accounts"
+        And I fill in the following:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 1 |
+            | account_openingDate_year  | 2014 |
+            | account_openingBalance  | 155.00 |
+        And I press "account_save"
+        And the form should not contain an error
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 1 | 
+            | accountBalance_closingDate_month | 1 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | 155.00 |
+        And I press "accountBalance_save"
+        And the form should not contain an error
+        # Finally, Assets
+        Then I follow "tab-assets"
+        And I click on "add-an-asset"
+        When I fill in the following:
+            | asset_title       | Property | 
+            | asset_value       | 250000.00 | 
+            | asset_description | 2 beds flat in HA2 | 
+            | asset_valuationDate_day |  | 
+            | asset_valuationDate_month |  | 
+            | asset_valuationDate_year |  |
+        And I press "asset_save"
+        And I save the page as "report-assets-list-one"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And I should see "2 beds flat in HA2" in the "list-assets" region
+        And I should see "£250,000.00" in the "list-assets" region
+        When I click on "add-an-asset"
+        # 2nd asset (with date)
+        And I fill in the following:
+            | asset_title       | Vehicles | 
+            | asset_value       | 13000.00 | 
+            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_valuationDate_day | 10 | 
+            | asset_valuationDate_month | 11 | 
+            | asset_valuationDate_year | 2015 |
+        And I press "asset_save"
+        And I save the page as "report-assets-list-two"
+        Then I should see "Alfa Romeo 156 1.9 JTD" in the "list-assets" region
+        And I should see "£13,000.00" in the "list-assets" region
+        #Finally we are ready to submit the report
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        Then I check "report_declaration_agree"
+        And I press "report_declaration_save"
+        And the URL should match "/report/\d+/submitted"
+        # Now view the report
+        When I go to "/report/1/formatted"
+        Then the response status code should be 200
+        And I should see "Deputy report for property and financial decisions"
+        And I should see "kept in the book" in "contacts-section"
             
-            
-    #Scenario: A report shows no contacts
     #Scenario: A report shows accounts
     #Scenario: A report shows the reason for account date mismatch
     #Scenario: A report shows the reason for balance mismatch

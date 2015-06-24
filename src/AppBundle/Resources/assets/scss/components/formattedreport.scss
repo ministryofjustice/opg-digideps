@@ -99,6 +99,16 @@
                 width: 85%;
             }
         }
+        
+        .checkbox {
+            display: inline-block;
+            background: #fff;
+            padding: 0 10px 0 10px;
+            font-size: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            border: solid 1px #000;
+        }
     }
     fieldset.single-field-fieldset {
         padding: 15px 20px 15px 20px;

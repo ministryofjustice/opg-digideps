@@ -200,14 +200,19 @@
                         <span class="section-number">Section 3</span>
                         People you consulted
                     </h2>
-                    <ul class="contacts-list">                
-                        {% if report.contacts | length == 0 %}
-                            <li class="contact-item no-contact box-list-item">
-                                <div class="form-group form-group-vertical half-width">
-                                    <div class="textarea address-value">{{ report.reasonForNoDecisions }}</div>
-                                </div>
-                            </li>
-                        {% else %}
+                                    
+                    {% if report.contacts | length == 0 %}
+                        <fieldset class="contact-item no-contact">
+                            <div class="form-group right-label">
+                                <div class="checkbox">X</div>
+                                <label>Check this box if you did not consult anyone and use the box below to tell us why.</label>
+                            </div>
+                            <div class="form-group form-group-vertical">
+                                <div class="textarea address-value">{{ report.reasonForNoContacts }}</div>
+                            </div>
+                        </fieldset>
+                    {% else %}
+                        <ul class="contacts-list">
                             {% for contact in contacts %}
                                 <li class="contact-item">
                                     <fieldset>
@@ -240,7 +245,8 @@
                                     </fieldset>
                                 </li>
                             {% endfor %}
-                        {% endif %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
