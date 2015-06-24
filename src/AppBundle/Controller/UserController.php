@@ -120,6 +120,58 @@ class UserController extends RestController
 
     
     /**
+     * @Route("/get-user-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getUserByEmail($email)
+    {
+        $request = $this->getRequest();
+       
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        $user = $this->getRepository('User')->getByEmail(strtolower($email));
+        
+        if(empty($user)){
+            throw new \Exception('User not found');
+        }
+        
+        return $user;
+        //return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
+    }
+    
+    /**
+     * @Route("/get-admin-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getAdminByEmail($email)
+    {
+        $request = $this->getRequest();
+       
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        $user = $this->getRepository('User')->getAdminByEmail(strtolower($email));
+        
+        if(empty($user)){
+            throw new \Exception('User not found');
+        }
+        
+        return $user;
+    }
+    
+    
+    /**
      * @Route("/get-by-email/{email}")
      * @Method({"GET"})
      */
@@ -188,6 +240,15 @@ class UserController extends RestController
         if (!empty($data['recreate_registration_token'])) {
             $user->recreateRegistrationToken();
         }
+        
+        if (!empty($data['registration_token'])) {
+            $user->setRegistrationToken($data['registration_token']);
+        }
+        
+        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+            $user->setTokenDate(new \DateTime($data['token_date']));
+        }
+       
     }
     
 }
