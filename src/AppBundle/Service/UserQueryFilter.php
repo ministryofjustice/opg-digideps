@@ -33,7 +33,7 @@ class UserQueryFilter
         
         if(!in_array("AppBundle\Filter\UserFilterInterface", $interfacesImplemented)){
             throw new \Exception($targetEntity." must implement UserFilterInterface to appy user filter");
-        }
+        }        
         return $targetEntity::applyUserFilter($qb, $this->user->getId());
     }
 }
