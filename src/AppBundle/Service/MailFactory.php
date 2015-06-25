@@ -112,11 +112,10 @@ class MailFactory
     }
 
     /**
-     * @param string $reportContent
-     * 
+     * @param EntityDir\Client $client
      * @return ModelDir\Email
      */
-    public function createReportEmail($reportContent)
+    public function createReportEmail(EntityDir\Client $client, $reportContent)
     {
         $email = new ModelDir\Email();
         
@@ -127,7 +126,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new ModelDir\EmailAttachment('report.html', 'application/xml', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment('report-' . $client->getCaseNumber() . '.html', 'application/xml', $reportContent)]);
 
         return $email;
     }
