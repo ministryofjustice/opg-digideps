@@ -14,6 +14,8 @@ parameters:
     email_report_submit:
       from_email: deputyshipservice@publicguardian.gsi.gov.uk 
       to_email: deputyshipservice@publicguardian.gsi.gov.uk 
+    email_feedback_send:
+        to_email: deputyshipfeedback@publicguardian.gsi.gov.uk
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"

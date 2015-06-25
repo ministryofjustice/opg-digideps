@@ -16,7 +16,7 @@ Feature: provide feedback
             | feedback_satisfactionLevel_1 | satisfied |
         And I press "feedback_save"
         Then the form should not contain an error
-        And an email with subject "User Feedback" should have been sent 
+        And an email with subject "User Feedback" should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
         And the email should contain "I found it to be really easy"
         And the email should contain "I think it needs an iPhone app"
         And the email should contain "satisfied"
@@ -29,7 +29,7 @@ Feature: provide feedback
             | feedback_help_3 | No, I filled in this form myself |
         And I press "feedback_save"
         Then the form should not contain an error
-        And an email with subject "User Feedback" should have been sent 
+        And an email with subject "User Feedback" should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
         And the email should contain "No, I filled in this form myself"
     
     @feedback

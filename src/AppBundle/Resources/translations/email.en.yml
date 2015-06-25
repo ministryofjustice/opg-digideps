@@ -11,3 +11,6 @@ reportSubmission:
 resetPassword:
     subject: Reset your password
     fromName: Digital deputy secure email service
+feedbackForm:
+    subject: User Feedback
+    fromName: Complete a deputy report service - feedback form
