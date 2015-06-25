@@ -247,38 +247,137 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                </div>
+                </section>
                 <section id="accounts-section">
                 
                     <h2>
                         <span class="section-number">Section 6</span>
                         Bank accounts
-                    </h2>
-                    <h3>Summary of money paid in</h3>
-                
-                    <fieldset>
-                        <div class="half-width">
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Bank/building society name</div>
-                                <div class="value">{{ account.bank }}</div>
+                    </h2>                
+                    {% for account in report.accounts %}            
+                        <fieldset>
+                            <div class="half-width">
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Bank/building society name</div>
+                                    <div class="value">{{ account.bank }}</div>
+                                </div>
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Branch sort code</div>
+                                    <div class="value">{{ account.sortCode | split('', 2) | join('-') }}</div>
+                                </div>
                             </div>
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Branch sort code</div>
-                                <div class="value">{{ account.sortCode | split('', 2) | join('-') }}</div>
+                            <div class="half-width">
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Account Type</div>
+                                    <div class="value">Current account</div>
+                                </div>
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Last four digits of account number</div>
+                                    <div class="value">{{ account.accountNumber }}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="half-width">
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Account Type</div>
-                                <div class="value">Current account</div>
-                            </div>
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Last four digits of account number</div>
-                                <div class="value">{{ account.accountNumber }}</div>
-                            </div>
-                        </div>
-                    </fieldset>
+                        </fieldset>
+                        
+                        <h3>Summary of money paid in</h3>
+                        <fieldset id="money-in">
+                            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+                                transactions: account.moneyIn,
+                                total: account.moneyInTotal,
+                                footerTitle: 'moneyInFooter'
+                            } %}                        
+                        </fieldset>
+                        
+                        <h3>Summary of money paid out</h3>
+                        <fieldset id="money-out">
+                            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+                                transactions: account.moneyOut,
+                                total: account.moneyOutTotal,
+                                footerTitle: 'moneyOutFooter'
+                            } %}
+                        </fieldset>
 
+                        
+                        <h3>Balancing the account</h3>
+                        
+                        <ol id="balancing">
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Opening balance for reporting period
+                                        <span class="sub-label">(as shown on bank statement)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-opening-balance" class="amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 1</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Total money paid in
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-total-in" class="amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 2</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Sub-total 1
+                                        <span class="sub-label">(box 1 plus box 2)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-sub-total" class="amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 3</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Total money paid out
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-total-out" class="amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 4</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Sub-total 2
+                                        <span class="sub-label">(box 3 minus box 4)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-sub-total-2" class="amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 5</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Closing balance for reporting period
+                                        <span class="sub-label">(as shown on bank statement)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-closing-balance" class="amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 6</div>
+                            </li>
+                        </ol>
+                    {% endfor %}
                 </section>
             </div>
         </div>
