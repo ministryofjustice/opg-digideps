@@ -33,6 +33,9 @@ class UserController extends Controller
         
         // check $token is correct
         $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
+        // TODO: find_user_by_token
+        // TODO: find_admin_by_token
+        // TODO: find_user_by_token
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             switch ($action) {
