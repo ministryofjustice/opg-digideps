@@ -108,7 +108,7 @@ class ReportController extends Controller
             
             // send report by email
             $reportContent = $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
-            $reportEmail = $this->get('mailFactory')->createReportEmail($report, $reportContent);
+            $reportEmail = $this->get('mailFactory')->createReportEmail($client, $reportContent);
             $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
             
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
