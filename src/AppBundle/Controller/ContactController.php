@@ -11,6 +11,25 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class ContactController extends Controller{
 
     /**
+     * @Route("/report/{reportId}/contacts/delete-reason", name="delete_reason_contacts")
+     */
+    public function deleteReasonAction($reportId)
+    {
+        $util = $this->get('util');
+
+        //just do some checks to make sure user is allowed to update this report
+        $report = $util->getReport($reportId,['transactions']);
+
+        if(!empty($report)){
+            $report->setReasonForNoContacts(null);
+            $this->get('apiclient')->putC('report/'.$report->getId(),$report);
+        }
+        
+        return $this->redirect($this->generateUrl('contacts', ['reportId' => $report->getId()]));
+    }
+    
+    
+    /**
      * @Route("/report/{reportId}/contacts/delete/{id}", name="delete_contact")
      */
     public function deleteAction($reportId,$id)
@@ -18,7 +37,7 @@ class ContactController extends Controller{
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
+        $report = $util->getReport($reportId,['transactions']);
 
         if(!empty($report) && in_array($id, $report->getContacts())){
             $this->get('apiclient')->delete('delete_report_contact', [ 'parameters' => [ 'id' => $id ]]);
@@ -27,7 +46,7 @@ class ContactController extends Controller{
     }
 
     /**
-     * --action[ list, add, edit, delete-confirm, delete ] #default is list
+     * --action[ list, add, edit, delete-confirm, delete, delete-reason-confirm ] #default is list
      *
      * @Route("/report/{reportId}/contacts/{action}/{id}", name="contacts", defaults={ "action" = "list", "id" = " "})
      * @Template()
@@ -36,7 +55,7 @@ class ContactController extends Controller{
     {
         $util = $this->get('util');
 
-        $report = $util->getReport($reportId, $this->getUser()->getId(),['transactions']);
+        $report = $util->getReport($reportId,['transactions']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -63,7 +82,6 @@ class ContactController extends Controller{
         
         //set up add reason for no contact form
         $noContact = $this->createForm(new FormDir\ReasonForNoContactType(), null, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId])."#pageBody" ]);
-
         $noContact->setData([ 'reason' => $report->getReasonForNoContacts() ]);
 
         if($request->getMethod() == 'POST'){
@@ -106,7 +124,7 @@ class ContactController extends Controller{
         $form->handleRequest($request);
         $noContact->handleRequest($request);
 
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         
         //check if contacts form was submitted
         if($form->get('save')->isClicked()){
@@ -116,6 +134,11 @@ class ContactController extends Controller{
 
                 if($action == 'add'){
                     $apiClient->postC('add_report_contact', $contact);
+                    
+                    //lets clear any reason for no decisions they might have added previously
+                    $report->setReasonForNoContacts(null);
+                    $apiClient->putC('report/'.$report->getId(),$report);
+            
                 }else{
                     $apiClient->putC('update_report_contact', $contact);
                 }

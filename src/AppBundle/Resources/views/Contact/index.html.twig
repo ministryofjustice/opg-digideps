@@ -12,6 +12,8 @@ activeTab : "tab-contacts"
     {% set showAddForm = false %}
     {% set formEditShow = false %}
     {% set showDeleteConfirm = false %}
+    {% set showNoContactReason = false %}
+    {% set showDeleteReasonConfirm = false %}
 
 
     {% if contacts is not empty %}
@@ -27,12 +29,29 @@ activeTab : "tab-contacts"
         {% set formEditShow = true %}
         {% set showDeleteConfirm = true %}
     {% endif %}
+    
+    {% if action == 'edit-reason' %}
+        {% set showNoContactForm = true %}
+    {% else %}
+
+        {% if (report.reasonForNoContacts is not empty) %}
+            {% set showNoContactReason = true %}
+        {% endif %}
+
+    {% endif %}
+    
+    {% if action == 'delete-reason-confirm' %}
+        {% set showNoContactForm = true %}
+        {% set showDeleteReasonConfirm = true %}
+
+        {% set showNoContactReason = false %}
+    {% endif %}
 
     {% if (contacts is empty) %}
 
         {% if (report.isDue() ) %}
 
-            {% if (action == 'list') %}
+            {% if (action == 'list') and (report.reasonForNoContacts() is empty) %}
                 {% set showNoContactForm = true %}
             {% elseif (action == 'add') %}
                 {% set showAddForm = true %}
@@ -70,6 +89,11 @@ activeTab : "tab-contacts"
 
         {% include 'AppBundle:Contact:_no_contact_form.html.twig' with {
         'showNoContactForm': showNoContactForm
+        } %}
+        
+        {% include 'AppBundle:Contact:_no_contact_reason.html.twig' with {
+        translationDomain: translationDomain,
+        'showNoContactReason': showNoContactReason
         } %}
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
