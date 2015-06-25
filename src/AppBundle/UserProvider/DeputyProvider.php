@@ -38,9 +38,7 @@ class DeputyProvider implements UserProviderInterface
         try {
             if($this->env == 'admin'){
                 return $this->apiclient->getEntity('User', 'find_admin_by_email', [ 'parameters' => [ 'email' => $email ] ]);
-                
             }elseif(in_array($this->env,[ 'develop','staging','ci','prod'])){
-               
                 return $this->apiclient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
             }else{
                 return $this->apiclient->getEntity('User', 'find_by_email', [ 'parameters' => [ 'email' => $email ] ]);
