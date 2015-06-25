@@ -144,6 +144,7 @@ class MailFactory
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->container->getParameter('email_feedback_send')['to_email'])
+            ->setToName($this->translate('feedbackForm.toName'))
             ->setSubject($this->translate('feedbackForm.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:feedback.html.twig', [ 'response' => $response]));
 

@@ -14,3 +14,4 @@ resetPassword:
 feedbackForm:
     subject: User Feedback
     fromName: Complete a deputy report service - feedback form
+    toName: Deputyship Service
