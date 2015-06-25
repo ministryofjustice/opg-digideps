@@ -16,6 +16,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
     private $oauth2ClientMock;
     private $session;
     private $options;
+    private $redis;
     
     public function setUp()
     {
@@ -35,7 +36,10 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         $this->memcached = m::mock('\Memcached');
         $this->memcached->shouldReceive('get')->andReturn([ 'email' => 'paul.oforduru@digital.justice.gov.uk', 'password' => 'dfdsfdsfsdfsffs']);
         
-        $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $this->jsonSerializer, $this->oauth2ClientMock,$this->memcached,$this->session,$this->options ]);
+        $this->redis = m::mock('Predis\Client');
+        $this->redis->shouldReceive([ 'hget' => 'trash']);
+        
+        $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $this->jsonSerializer, $this->oauth2ClientMock,$this->redis,$this->memcached,$this->session,$this->options ]);
     }
     
     public function tearDown()

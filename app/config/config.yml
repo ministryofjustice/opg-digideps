@@ -80,6 +80,7 @@ snc_redis:
             dsn: %redis_dsn%
     session:
         client: default
+        prefix: %session_prefix%
         use_as_default: true
     
 parameters:

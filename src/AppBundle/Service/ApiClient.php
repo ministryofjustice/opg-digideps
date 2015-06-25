@@ -69,7 +69,7 @@ class ApiClient extends GuzzleClient
         $this->session = $session;
         $this->redis = $redis;
         $this->memcached = $memcached;
-
+       
         //lets get session id
         $sessionId = $this->session->getId();
 

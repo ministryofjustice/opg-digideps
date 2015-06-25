@@ -56,6 +56,7 @@
     </target>
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
+        <exec command="rm -rf app/cache/*"/>
         <exec command="php vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
     </target>
     
@@ -66,6 +67,7 @@
     </target>
     
     <target name="fixtures" description="add fixtures from paramters.yml">
+        <exec command="rm -rf app/cache/*"/>
         <exec command="php app/console digideps:fixtures" passthru="true" checkreturn="true"></exec>
     </target>
 
