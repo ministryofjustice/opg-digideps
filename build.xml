@@ -86,7 +86,10 @@
 
     <target name="build" depends="cache-clear,composer-install,check,fixtures,build-assets">
     </target>
-    
+   
+    <target name="build-admin" depends="cache-clear,composer-install,check,build-assets">
+    </target>
+ 
     <target name="release" depends="build">
     </target>
     
