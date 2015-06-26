@@ -144,6 +144,22 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         
     }
     
+    /**
+     * @Given I change the user :userId token to :token dated last week
+     */
+    public function iChangeTheUserToken($userId, $token)
+    {
+        $this->visitBehatLink("user/{$userId}/token/{$token}/token-date/-7days");
+    }
+    
+    /**
+     * @Given the application paramters.yml file is correct
+     */
+    public function iChecktheAppParameterFile()
+    {
+        $this->visitBehatLink("check-app-params");
+        $this->assertResponseStatus(200);
+    }
    
     
 }

@@ -10,6 +10,7 @@ parameters:
     session_memcached_host: localhost
     session_memcached_port: 11211
     use_memcached: false
+    session_cookie_secure: false
     email_send:
       from_email: no-reply@digideps.service.dsd.io
       from_name: Digital Deputyship Service
