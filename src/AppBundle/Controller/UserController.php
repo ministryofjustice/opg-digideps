@@ -12,6 +12,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
+use AppBundle\Exception\NotFound;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -192,12 +193,23 @@ class UserController extends RestController
     
     
     /**
-     * @Route("/get-by-token/{token}")
+     * @Route("/get-by-token/{domain}/{token}",defaults={ "domain" = "hybrid"}, requirements={"domain" = "(admin|deputy|hybrid)"})
      * @Method({"GET"})
      */
-    public function getByToken($token)
+    public function getByToken($token, $domain)
     {
-        return $this->findEntityBy('User', ['registrationToken'=>$token], "User not found");
+        $user = $this->findEntityBy('User', ['registrationToken'=>$token], "User not found"); /* @var $user User */
+        
+        $role = $user->getRole()->getRole();
+        
+        if ($domain ==='admin' && $role != 'ROLE_ADMIN') {
+            throw new NotFound('User not found');
+        }
+        if ($domain ==='deputy' && $role == 'ROLE_ADMIN') {
+            throw new NotFound('User not found');
+        }
+        
+        return $user;
     }
     
     /**
