@@ -88,7 +88,6 @@ class ApiClient extends GuzzleClient
         //if session has not started then start it
         if(empty($sessionId)){
             $this->session->start();
-            //$sessionId = $this->session->getId();
         }
         
         $config = $this->getGuzzleClientConfig($oauth2Client);
@@ -347,8 +346,7 @@ class ApiClient extends GuzzleClient
                 if(is_object($accessToken) && is_object($accessToken->getRefreshToken())){
                     $this->subscriber->setAccessToken($accessToken);
                 }else{
-                    $credentials['email'] = $this->redis->hget($sessionId.'_user_credentials','email');
-                    $credentials['password'] = $this->redis->hget($sessionId.'_user_credentials','password');
+                    $credentials = unserialize($this->redis->get($sessionId.'_user_credentials'));
                 }
             }else{
                 $accessToken = $this->memcached->get($sessionId.'_access_token');

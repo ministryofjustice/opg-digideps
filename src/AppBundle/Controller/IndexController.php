@@ -85,8 +85,9 @@ class IndexController extends Controller
             
             if($oauth2Enabled){
                 if($useRedis){
-                    $storage->hset($session->getId().'_user_credentials','email', $user->getEmail());
-                    $storage->hset($session->getId().'_user_credentials','password', $user->getPassword());
+                    $storage->set($session->getId().'_user_credentials', serialize([ 'email' => $user->getEmail(), 'password' => $user->getPassword() ]));
+                    //$storage->hset($session->getId().'_user_credentials','email', $user->getEmail());
+                    //$storage->hset($session->getId().'_user_credentials','password', $user->getPassword());
                     $storage->expire($session->getId().'_user_credentials',3600);
                     
                 }elseif($useMemcached){
