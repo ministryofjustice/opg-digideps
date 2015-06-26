@@ -8,6 +8,8 @@ parameters:
         edit_user: user
         list_users: user
         find_user_by_token: user/get-by-token
+        find_user_by_token_deputy: user/get-by-token/deputy
+        find_user_by_token_admin: user/get-by-token/admin
         list_roles: role
         find_user_by_id: user
         delete_user_by_id: user
