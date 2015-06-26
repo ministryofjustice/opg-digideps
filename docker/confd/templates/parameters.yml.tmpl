@@ -1,0 +1,45 @@
+# This file is auto-generated during the composer install
+parameters:
+    locale: en
+    secret: {{ getv "/secret" }}
+    api_base_url: {{ getv "/api/url" }}
+    env: 'production'
+    session_expire_seconds: 1500
+    session_popup_show_after: 1200
+    session_cookie_secure: true
+    session_redis_host: {{getv "/redis" }}
+    session_memcached_host: {{ getv "/memcache" }}
+    session_memcached_port: 11211
+    session_memcached_prefix: dd
+    smtp_hostname: ''
+    smtp_port: ''
+    email_send:
+        from_name: {{ getv "/email/from/name" }}
+        from_email: noreply-opgdeputyservice@{{ getv "/domain" }}
+        to_email: {{ getv "/email/to/email" }}
+    email_report_submit:
+        from_email: noreply-opgdeputyservice@{{ getv "/domain" }}
+        to_email: {{ getv "/email/report/to/email" }}
+    oauth2_client_id: {{ getv "/oauth2/client/id" }}
+    oauth2_client_secret: {{ getv "/oauth2/client/secret" }}
+    oauth2_enabled: {{ getv "/oauth2/enabled" }}
+{{/*    fixtures:
+        {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:admin:email', '') }}:
+            firstname: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:admin:firstname', '') }}
+            lastname: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:admin:lastname', '') }}
+            password: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:admin:password', '') }}
+            roleId: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:admin:roleId', '') }}
+            activated: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:admin:activated', '') }}
+        {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:lay_deputy:email', '') }}:
+            firstname: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:lay_deputy:firstname', '') }}
+            lastname: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:lay_deputy:lastname', '') }}
+            password: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:lay_deputy:password', '') }}
+            roleId: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:lay_deputy:roleId', '') }}
+            activated: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:lay_deputy:activated', '') }}
+        {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:test:email', '') }}:
+            firstname: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:test:firstname', '') }}
+            lastname: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:test:lastname', '') }}
+            password: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:test:password', '') }}
+            roleId: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:test:roleId', '') }}
+            activated: {{ salt['pillar.get']('apps:opg-digi-deps-client:fixtures:test:activated', '') }}
+*/}}

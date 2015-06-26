@@ -1,0 +1,7 @@
+[template]
+prefix = "/frontend"
+src = "parameters.yml.tmpl"
+dest = "/app/parameters.yml"
+keys = [
+    "/redis",
+]
