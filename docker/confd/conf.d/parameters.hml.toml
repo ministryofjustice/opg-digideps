@@ -3,5 +3,9 @@ prefix = "/frontend"
 src = "parameters.yml.tmpl"
 dest = "/app/parameters.yml"
 keys = [
-    "/redis",
+    "/session",
+    "/secret",
+    "/api",
+    "/email",
+    "/oauth2",
 ]
