@@ -47,7 +47,7 @@ class MailFactory
         /**
          * Email is sent from admin site. If this email is sent to a deputy, then
          * host url should for deputy site else for admin site
-         */
+         **/
         if($user->getRole()['role'] == 'ROLE_ADMIN'){
             $absoluteUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()],true);
         }else{
