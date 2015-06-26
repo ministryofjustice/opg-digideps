@@ -1,0 +1,8 @@
+[template]
+prefix = "/api"
+src = "parameters.yml.tmpl"
+dest = "/app/parameters.yml"
+keys = [
+    "/sendgrid",
+    "/database",
+]
