@@ -38,6 +38,15 @@ class ApiClient extends GuzzleClient
     private $redis;
     
     private $memcached;
+    
+    /**
+     * OAuth2 Subscriber
+     * 
+     * @var type 
+     */
+    private $subscriber;
+    
+    private $options;
 
 
      /**
@@ -48,6 +57,8 @@ class ApiClient extends GuzzleClient
 
     public function __construct(SerializerInterface $serialiser, $oauth2Client,$redis,$memcached,$session,array $options)
     {
+        $this->subscriber = $oauth2Client->getSubscriber();
+        
         // check arguments
         array_map(function($k) use ($options) {
             if (!array_key_exists($k, $options)) {
@@ -65,6 +76,7 @@ class ApiClient extends GuzzleClient
         }
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
+        $this->options = $options;
 
         $this->session = $session;
         $this->redis = $redis;
@@ -76,44 +88,12 @@ class ApiClient extends GuzzleClient
         //if session has not started then start it
         if(empty($sessionId)){
             $this->session->start();
-            $sessionId = $this->session->getId();
+            //$sessionId = $this->session->getId();
         }
         
-        // construct parent (GuzzleClient)
-        if($options['use_oauth2'] && ($options['use_redis'] || $options['use_memcached'])){
-            
-            if($options['use_redis']){
-                //check if we already have user api key
-                $credentials['email'] = $this->redis->hget($sessionId.'_user_credentials','email');
-                $credentials['password'] = $this->redis->hget($sessionId.'_user_credentials','password');
-            }else{
-                //check if we already have user api key
-                $credentials = $this->memcached->get($sessionId.'_user_credentials');
-            }
-            
-            if(!empty($credentials['email']) && !empty($credentials['password'])){
-                $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
-            }
-            
-            parent::__construct([
-                'base_url' =>  $options['base_url'],
-                'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                               'verify' => false,
-                               /*'timeout' => 60,
-                               'connect_timeout' => 30,*/
-                               'auth' => 'oauth2',
-                               'subscribers' => [ $oauth2Client->getSubscriber() ]
-                              ]]);
-        }else{
-           parent::__construct([
-                'base_url' =>  $options['base_url'],
-                'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                               'verify' => false,
-                               /*'timeout' => 60,
-                               'connect_timeout' => 30*/
-                              ]]);
-        }
-
+        $config = $this->getGuzzleClientConfig($oauth2Client);
+        
+        parent::__construct($config);
     }
 
     /**
@@ -171,7 +151,15 @@ class ApiClient extends GuzzleClient
     public function send(GuzzleRequestInterface $request)
     {
         try {
-            return parent::send($request);
+            $response = parent::send($request);
+            
+            if($this->options['use_redis']){
+                $this->redis->set($this->session->getId().'_access_token',serialize($this->subscriber->getAccessToken()));     
+            }elseif($this->options['use_memcached']){
+                $this->memcached->set($this->session->getId().'_access_token',$this->subscriber->getAccessToken());  
+            }
+            
+            return $response;
         } catch (\Exception $e) {
 
             if ($e instanceof RequestException) {
@@ -339,7 +327,58 @@ class ApiClient extends GuzzleClient
                 unset($options['parameters']);
             }
         }
-
         return parent::createRequest($method, $url, $options);
+    }
+    
+    /**
+     * @param type $oauth2Client
+     * @return array $config
+     */
+    private function getGuzzleClientConfig($oauth2Client)
+    {
+        // construct parent (GuzzleClient)
+        if($this->options['use_oauth2'] && ($this->options['use_redis'] || $this->options['use_memcached'])){
+            $sessionId = $this->session->getId();
+            
+            if($this->options['use_redis']){
+                $accessToken = unserialize($this->redis->get($sessionId.'_access_token'));
+                
+                //only do this if we are already authenticating oauth2 using username/password
+                if(is_object($accessToken) && is_object($accessToken->getRefreshToken())){
+                    $this->subscriber->setAccessToken($accessToken);
+                }else{
+                    $credentials['email'] = $this->redis->hget($sessionId.'_user_credentials','email');
+                    $credentials['password'] = $this->redis->hget($sessionId.'_user_credentials','password');
+                }
+            }else{
+                $accessToken = $this->memcached->get($sessionId.'_access_token');
+                
+                //only do this if we are already authenticating oauth2 using username/password
+                if(is_object($accessToken) && is_object($accessToken->getRefreshToken())){
+                    $this->subscriber->setAccessToken($accessToken);
+                }else{
+                    //check if we already have user api key
+                    $credentials = $this->memcached->get($sessionId.'_user_credentials');
+                }
+            }
+            
+            if(!empty($credentials['email']) && !empty($credentials['password'])){
+                $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
+                $this->subscriber = $oauth2Client->getSubscriber();
+            }
+            
+           $config = [ 'base_url' =>  $this->options['base_url'],
+                       'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                                      'verify' => false,
+                                      'auth' => 'oauth2',
+                                      'subscribers' => [ $this->subscriber ]
+                                      ]];
+        }else{
+           $config = [ 'base_url' =>  $this->options['base_url'],
+                       'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                                       'verify' => false
+                                      ]];
+        }
+        return $config;
     }
 }
