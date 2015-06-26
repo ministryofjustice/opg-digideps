@@ -1287,7 +1287,7 @@ Feature: Formatted Report
         When I go to "/report/1/formatted"
         And I should see "earlier transaction made with other account" in "account-date-explanation"
 
-    @wip @formatted-report    
+    @formatted-report    
     Scenario: A report explains why the closing date is off
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -1432,9 +1432,3 @@ Feature: Formatted Report
         # Now view the report
         When I go to "/report/1/formatted"
         And I should see "closing date explanation" in "account-date-explanation"
-
-    #Scenario: A report shows accounts
-    #Scenario: A report shows the reason for account date mismatch
-    #Scenario: A report shows the reason for balance mismatch
-    #Scanario: A report shows assets
-    #Scanario: A report shows when no assets
