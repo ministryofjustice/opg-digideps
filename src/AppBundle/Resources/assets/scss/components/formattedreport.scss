@@ -41,11 +41,14 @@
         border: 1px solid #000;
         font-size: 20px;
         font-family: Helvetica, Arial;
+        min-height: 30px;
     }
     .label {
         font-size: 17px;
     }
-
+    .intro {
+        margin-bottom: 10px;
+    }
     .three-quarter-width {
         width: 75%;
     }
@@ -99,6 +102,10 @@
             }
         }
         
+        .full-width {
+            clear: both;
+        }
+        
         .checkbox {
             display: inline-block;
             background: #fff;
@@ -139,7 +146,7 @@
             display: block;
         }
         .value, .textarea {
-            width: 90%;
+            width: 90.5%;
         }
     }
 
@@ -190,8 +197,7 @@
             margin: 40px 0 0 0;
         }
     }
-    
-    
+        
     #balancing {
         
         margin-top: 40px;
@@ -206,7 +212,7 @@
             right: 0;
             background: #565755;
             color: #fff;
-            padding: 12px 0 0 12px;
+            padding: 12px 0 0 0;
             display: inline;
             height:100%;
             width: 10%;

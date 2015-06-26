@@ -842,7 +842,7 @@ Feature: Formatted Report
         And I should see "£ 100.01" in "money-in"
         And I should see "more-details-in-15" in "money-in"
     
-    @wip @formatted-report
+    @formatted-report
     Scenario: A report lists total money in, out, the different and the actual
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -991,7 +991,7 @@ Feature: Formatted Report
         And I should see "4,855.19" in "balancing-closing-balance"
             
     @formatted-report
-    Scenario: A report explains why an account start and end dont match the report
+    Scenario: A report explains why the balance doesnt match the statement
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I go to "report/1/decisions"
@@ -1032,14 +1032,8 @@ Feature: Formatted Report
             | account_openingDate_month | 1 |
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
+            | account_openingDateExplanation | earlier transaction made with other account |
         And I press "account_save"
-        And the form should not contain an error
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 1 | 
-            | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
-        And I press "accountBalance_save"
         And the form should not contain an error
         # Add values into the money out fields.
         And I click on "moneyIn-tab"
@@ -1105,6 +1099,19 @@ Feature: Formatted Report
             | transactions_moneyOut_20_moreDetails | more-details-out-20 |
         And I save the page as "moneyoutentered"
         And I press "transactions_saveMoneyOut"
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 1 | 
+            | accountBalance_closingDate_month | 1 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | 155.00 |
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        Then I fill in the following:
+            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
+        And I press "accountBalance_save"
+        Then the form should not contain any error
         # Finally, Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -1130,11 +1137,10 @@ Feature: Formatted Report
         And the URL should match "/report/\d+/submitted"
         # Now view the report
         When I go to "/report/1/formatted"
-        Then I should see "Balancing the account"
-        And I should see "I have no idea" in "balancing-reason-for-difference"
+        And I should see "£ 100.50 moved to other account" in "accountBalance_closingBalanceExplanation"
         
-    @formatted-report
-    Scenario: A report explains why a balance does not match the total difference
+    @formatted-report    
+    Scenario: A report explains why the opening date is off
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I go to "report/1/decisions"
@@ -1172,17 +1178,11 @@ Feature: Formatted Report
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 66 |
             | account_openingDate_day   | 1 |
-            | account_openingDate_month | 1 |
+            | account_openingDate_month | 2 |
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
+            | account_openingDateExplanation | earlier transaction made with other account |
         And I press "account_save"
-        And the form should not contain an error
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 1 | 
-            | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
-        And I press "accountBalance_save"
         And the form should not contain an error
         # Add values into the money out fields.
         And I click on "moneyIn-tab"
@@ -1248,6 +1248,18 @@ Feature: Formatted Report
             | transactions_moneyOut_20_moreDetails | more-details-out-20 |
         And I save the page as "moneyoutentered"
         And I press "transactions_saveMoneyOut"
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 1 | 
+            | accountBalance_closingDate_month | 1 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | 155.00 |
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
+        Then I fill in the following:
+            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
+        And I press "accountBalance_save"
         # Finally, Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -1273,9 +1285,154 @@ Feature: Formatted Report
         And the URL should match "/report/\d+/submitted"
         # Now view the report
         When I go to "/report/1/formatted"
-        Then I should see "Balancing the account"
-        And I should see "We closed the account early." in "balancing-reason-for-date-difference"
-    
+        And I should see "earlier transaction made with other account" in "account-date-explanation"
+
+    @wip @formatted-report    
+    Scenario: A report explains why the closing date is off
+        When I load the application status from "reportuser"
+        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I go to "report/1/decisions"
+        And I follow "tab-decisions"
+        # Start by adding some decisions
+        When I click on "add-a-decision"
+        And I fill in the following:
+            | decision_description | 3 beds |
+            | decision_clientInvolvedBoolean_0 | 1 |
+            | decision_clientInvolvedDetails | the client was able to decide at 85% |
+        Then I press "decision_save"
+        And the form should not contain an error
+        Then I follow "tab-contacts"
+        And I click on "add-a-contact"
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship | brother  |
+            | contact_explanation | no explanation |
+            | contact_address | 45 Noth Road |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I press "contact_save"
+        And the form should not contain an error
+        # Bank account
+        Then I follow "tab-accounts"
+        And I fill in the following:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 2 |
+            | account_openingDate_year  | 2014 |
+            | account_openingBalance  | 155.00 |
+            | account_openingDateExplanation | open date reason |
+        And I press "account_save"
+        And the form should not contain an error
+        # Add values into the money out fields.
+        And I click on "moneyIn-tab"
+        When I fill in the following:
+            | transactions_moneyIn_0_amount       | 100.01 |
+            | transactions_moneyIn_1_amount       | 200.01 |
+            | transactions_moneyIn_2_amount       | 300.01 |
+            | transactions_moneyIn_3_amount       | 400.01 |
+            | transactions_moneyIn_4_amount       | 500.01 |
+            | transactions_moneyIn_5_amount       | 600.01 |
+            | transactions_moneyIn_6_amount       | 700.01 |
+            | transactions_moneyIn_7_amount       | 800.01 |
+            | transactions_moneyIn_8_amount       | 900.01 |
+            | transactions_moneyIn_9_amount       | 1000.01 |
+            | transactions_moneyIn_10_amount      | 1100.01 |
+            | transactions_moneyIn_11_amount      | 1,200.01 |
+            | transactions_moneyIn_12_amount      | 1,300.01 |
+            | transactions_moneyIn_13_amount      | 1,400.01 |
+            | transactions_moneyIn_14_amount      | 1,500.01 |
+            | transactions_moneyIn_15_amount      | 1,600.01 |
+            | transactions_moneyIn_16_amount      | 1,700.01 |
+            | transactions_moneyIn_17_amount      | 1,800.01 |
+            | transactions_moneyIn_18_amount      | 1,800.01 |
+            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
+            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
+            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
+            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
+        And I save the page as "moneyinentered"
+        And I press "transactions_saveMoneyIn"
+        And I save the page as "moneyinsaved"
+        And I click on "moneyOut-tab"
+        When I fill in the following:
+            | transactions_moneyOut_0_amount       | 100.00 |
+            | transactions_moneyOut_1_amount       | 200.00 |
+            | transactions_moneyOut_2_amount       | 300.00 |
+            | transactions_moneyOut_3_amount       | 400.00 |
+            | transactions_moneyOut_4_amount       | 500.00 |
+            | transactions_moneyOut_5_amount       | 600.00 |
+            | transactions_moneyOut_6_amount       | 700.00 |
+            | transactions_moneyOut_7_amount       | 800.00 |
+            | transactions_moneyOut_8_amount       | 900.00 |
+            | transactions_moneyOut_9_amount       | 1000.00 |
+            | transactions_moneyOut_10_amount      | 1100.00 |
+            | transactions_moneyOut_11_amount      | 1,200.00 |
+            | transactions_moneyOut_12_amount      | 1,300.00 |
+            | transactions_moneyOut_13_amount      | 1,400.00 |
+            | transactions_moneyOut_14_amount      | 1,500.00 |
+            | transactions_moneyOut_15_amount      | 1,600.00 |
+            | transactions_moneyOut_16_amount      | 1,700.00 |
+            | transactions_moneyOut_17_amount      | 1,800.00 |
+            | transactions_moneyOut_18_amount      | 1,900.00 |
+            | transactions_moneyOut_19_amount      | 2,000.00 |
+            | transactions_moneyOut_20_amount      | 2,100.00 |
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
+            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
+            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
+            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
+            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
+            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
+            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
+            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
+            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
+            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
+        And I save the page as "moneyoutentered"
+        And I press "transactions_saveMoneyOut"
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 11 | 
+            | accountBalance_closingDate_month | 11 | 
+            | accountBalance_closingDate_year  | 2014 | 
+            | accountBalance_closingBalance    | 4855.19 |
+        And I press "accountBalance_save"
+        Then I fill in the following:
+            | accountBalance_closingDateExplanation| closing date explanation |
+            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
+        And I press "accountBalance_save"
+        # Finally, Assets
+        Then I follow "tab-assets"
+        And I click on "add-an-asset"
+        When I fill in the following:
+            | asset_title       | Property | 
+            | asset_value       | 250000.00 | 
+            | asset_description | 2 beds flat in HA2 | 
+            | asset_valuationDate_day |  | 
+            | asset_valuationDate_month |  | 
+            | asset_valuationDate_year |  |
+        And I press "asset_save"
+        And I save the page as "report-assets-list-one"
+        Then the response status code should be 200
+        And the form should not contain an error
+        And I should see "2 beds flat in HA2" in the "list-assets" region
+        And I should see "£250,000.00" in the "list-assets" region
+        #Finally we are ready to submit the report
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/declaration"
+        Then I check "report_declaration_agree"
+        And I press "report_declaration_save"
+        And the URL should match "/report/\d+/submitted"
+        # Now view the report
+        When I go to "/report/1/formatted"
+        And I should see "closing date explanation" in "account-date-explanation"
+
     #Scenario: A report shows accounts
     #Scenario: A report shows the reason for account date mismatch
     #Scenario: A report shows the reason for balance mismatch
