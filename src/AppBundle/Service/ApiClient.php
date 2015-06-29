@@ -105,7 +105,7 @@ class ApiClient extends GuzzleClient
     public function getEntity($class, $endpoint, array $options = [])
     {
 
-        /*if($endpoint == 'find_report_by_id'){
+        /*if($endpoint == 'find_by_email'){
              print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
         }*/
         $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
