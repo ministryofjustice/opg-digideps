@@ -28,7 +28,10 @@ services:
         arguments: [ @jms_serializer,@oauth2client,@oauth.memcached,@session,{format: "json", base_url: "%api_base_url%", use_oauth2: "%oauth2_enabled%",endpoints: "%api_endpoints%", debug: "%kernel.debug%"} ]
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
-        arguments: [ @apiclient, @jms_serializer ]
+        arguments: [ @apiclient,%env% ]
+    userService:
+        class:  AppBundle\Service\UserService
+        arguments: [ @apiclient, %env% ]
     util:
         class: AppBundle\Service\Util
         arguments: [@apiclient]
@@ -47,6 +50,9 @@ services:
     mailSender:
         class: AppBundle\Service\MailSender
         arguments: [ @apiclient, @translator, @router,@validator ]
+    mailFactory:
+        class: AppBundle\Service\MailFactory
+        arguments: [ @service_container ]
     redirectorService:
         class: AppBundle\Service\Redirector
         arguments: [ @security.context, @router, @session ]

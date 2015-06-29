@@ -27,7 +27,7 @@ security:
             security: false    
             
         userActivate:
-            pattern:  ^/user/activate
+            pattern:  ^/user/activate*
             security: false
         
         behatControllers:
