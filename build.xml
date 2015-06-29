@@ -21,7 +21,7 @@
         <exec command="sudo setfacl -dR -m u:www-data:rwX -m u:`whoami`:rwX app/cache app/logs"></exec>-->
         <exec command="rm -rf app/cache/*"/>
         <exec command="rm -rf app/logs/*"/>
-        <exec command="chmod 777 /tmp/dd_mail_mock"></exec>
+        <exec command="chmod 666 /tmp/dd_mail_mock"></exec>
         <exec passthru="true" command="php -r &quot;function_exists('apc_clear_cache') and apc_clear_cache() and apc_clear_cache('user') and apc_clear_cache('opcode') and print 'all apc cache cleared';&quot;"/>
     </target>
     
@@ -81,9 +81,6 @@
     </target>
     
     <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint,add-oauth2-client">
-    </target>
-
-    <target name="buildonly" depends="composer-install">
     </target>
 
     <target name="release" depends="cache-clear,composer-install,db-migrate,phplint">

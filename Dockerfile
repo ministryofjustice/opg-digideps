@@ -6,17 +6,27 @@ RUN  apt-get update && apt-get install -y \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
-# application
-ADD  . /app
-RUN  chown -R app /app
+RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
+# build app dependencies
+COPY composer.json /app/
+COPY composer.lock /app/
+COPY app /app/app
+RUN  chown -R app /app
+WORKDIR /app
 USER app
 ENV  HOME /app
+RUN  composer install --prefer-source --no-interaction --no-scripts
 
-WORKDIR /app
-RUN  chmod a+x phing.phar
-RUN  ./phing.phar buildonly
+# install remaining parts of app
+ADD  . /app
+USER root
+RUN  chown -R app /app
+USER app
+ENV  HOME /app
+RUN  composer run-script post-install-cmd --no-interaction
 
+# cleanup
 USER root
 ENV  HOME /root
 
