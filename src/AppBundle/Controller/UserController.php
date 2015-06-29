@@ -32,7 +32,7 @@ class UserController extends Controller
         $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
+        $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             switch ($action) {
@@ -128,7 +128,7 @@ class UserController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
+        $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
         
         // recreate token
         $user->setRecreateRegistrationToken(true);

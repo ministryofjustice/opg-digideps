@@ -4,7 +4,9 @@ Feature: report explanations
     Scenario: add explanation for no contacts
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I am on the first report overview page
+      #delete current contact
       And I follow "tab-contacts"
+      # add explanation
       Then the "reason_for_no_contact_reason" field is expandable
       # empty form throws error
       When I fill in "reason_for_no_contact_reason" with ""
@@ -14,8 +16,30 @@ Feature: report explanations
       When I fill in "reason_for_no_contact_reason" with "kept in the book"
       And I press "reason_for_no_contact_saveReason"
       Then the form should not contain an error
+      And I should see "kept in the book" in the "reason-no-contacts" region
+      # edit reason, and cancel
+      When I click on "edit-reason-no-contacts"
+      Then the following fields should have the corresponding values:
+        | reason_for_no_contact_reason | kept in the book |  
+      When I click on "cancel-edit-reason"
+      Then the URL should match "/report/\d+/contacts"
+      # edit reason, and save
+      When I click on "edit-reason-no-contacts"
+      And I fill in the following:
+        | reason_for_no_contact_reason | nothing relevant contact added |  
+      And I press "reason_for_no_contact_saveReason"
+      And I should see "nothing relevant contact added" in the "reason-no-contacts" region
+      # delete reason and cancel
+      When I click on "edit-reason-no-contacts"
+      And I click on "delete-confirm"
+      And I click on "delete-reason-confirm-cancel"
+      Then the URL should match "/report/\d+/contacts/edit-reason"
+      # delete reason and confirm
+      When I click on "delete-confirm"
+      When I click on "delete-reason"
+      Then the URL should match "/report/\d+/contacts"
       And the following fields should have the corresponding values:
-         | reason_for_no_contact_reason | kept in the book |
+        | reason_for_no_contact_reason | |  
 
     @deputy
     Scenario: add explanation for no decisions
