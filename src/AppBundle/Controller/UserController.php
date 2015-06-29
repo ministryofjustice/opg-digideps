@@ -12,6 +12,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
+use AppBundle\Exception\NotFound;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -118,6 +119,56 @@ class UserController extends RestController
         return $this->getRepository('User')->findAll();
     }
 
+    /**
+     * @Route("/get-user-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getUserByEmail($email)
+    {
+        $request = $this->getRequest();
+       
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        $user = $this->getRepository('User')->getByEmail(strtolower($email));
+        
+        if(empty($user)){
+            throw new \Exception('User not found');
+        }
+        
+        return $user;
+    }
+    
+    /**
+     * @Route("/get-admin-by-email/{email}")
+     * @Method({"GET"})
+     */
+    public function getAdminByEmail($email)
+    {
+        $request = $this->getRequest();
+       
+        $serialisedGroups = ['basic'];
+        
+        if($request->query->has('groups')){
+            $serialisedGroups = $request->query->get('groups');
+        }
+        
+        $this->setJmsSerialiserGroup($serialisedGroups);
+        
+        $user = $this->getRepository('User')->getAdminByEmail(strtolower($email));
+        
+        if(empty($user)){
+            throw new \Exception('User not found');
+        }
+        
+        return $user;
+    }
+    
     
     /**
      * @Route("/get-by-email/{email}")
@@ -138,52 +189,25 @@ class UserController extends RestController
         return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
     
-        /**
-     * @Route("/get-user-by-email/{email}")
-     * @Method({"GET"})
-     */
-    public function getUserByEmail($email)
-    {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
-        }
-        
-        $this->setJmsSerialiserGroup($serialisedGroups);
-        
-        return $this->getRepository('User')->getByEmail(strtolower($email));
-    }
     
     /**
-     * @Route("/get-admin-by-email/{email}")
+     * @Route("/get-by-token/{domain}/{token}",defaults={ "domain" = "hybrid"}, requirements={"domain" = "(admin|deputy|hybrid)"})
      * @Method({"GET"})
      */
-    public function getAdminByEmail($email)
+    public function getByToken($token, $domain)
     {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
+        $user = $this->findEntityBy('User', ['registrationToken'=>$token], "User not found"); /* @var $user User */
         
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
+        $role = $user->getRole()->getRole();
+        
+        if ($domain ==='admin' && $role != 'ROLE_ADMIN') {
+            throw new NotFound('User not found');
+        }
+        if ($domain ==='deputy' && $role == 'ROLE_ADMIN') {
+            throw new NotFound('User not found');
         }
         
-        $this->setJmsSerialiserGroup($serialisedGroups);
-        
-        return $this->getRepository('User')->getAdminByEmail(strtolower($email));
-    }
-    
-    
-    /**
-     * @Route("/get-by-token/{token}")
-     * @Method({"GET"})
-     */
-    public function getByToken($token)
-    {
-        return $this->findEntityBy('User', ['registrationToken'=>$token], "User not found");
+        return $user;
     }
     
     /**
@@ -226,6 +250,15 @@ class UserController extends RestController
         if (!empty($data['recreate_registration_token'])) {
             $user->recreateRegistrationToken();
         }
+        
+        if (!empty($data['registration_token'])) {
+            $user->setRegistrationToken($data['registration_token']);
+        }
+        
+        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+            $user->setTokenDate(new \DateTime($data['token_date']));
+        }
+       
     }
     
 }
