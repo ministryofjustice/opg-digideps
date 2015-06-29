@@ -52,5 +52,4 @@ parameters:
             #min_lock_retry_microtime: 10000 # Minimum time (in microseconds) that the session handler should wait between attempts to acquire a lock
     oauth2_client_id: setme
     oauth2_client_secret: setme
-    oauth2_enabled: 0
-            
+    oauth2_enabled: false

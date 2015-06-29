@@ -8,4 +8,4 @@ keys = [
     "/api",
     "/email",
     "/oauth2",
-]
+ ]
