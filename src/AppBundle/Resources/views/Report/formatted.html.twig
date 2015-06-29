@@ -10,64 +10,9 @@
           (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
         </script>
 
-        <!--[if gt IE 8]><!--><link href="{{ asset('stylesheets/govuk-template.css') }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
-        <!--[if IE 6]><link href="{{ asset('stylesheets/govuk-template-ie6.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-        <!--[if IE 7]><link href="{{ asset('stylesheets/govuk-template-ie7.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-        <!--[if IE 8]><link href="{{ asset('stylesheets/govuk-template-ie8.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-
-        <link href="{{ asset('stylesheets/govuk-template-print.css') }}" media="print" rel="stylesheet" type="text/css" />
-
-        <!--[if IE 8]>
-        <script type="text/javascript">
-          (function(){if(window.opera){return;}
-           setTimeout(function(){var a=document,g,b={families:(g=
-           ["nta"]),urls:["{ asset('stylesheets/fonts-ie8.css') }}"]},
-           c="{{ asset('javascripts/vendor/goog/webfont-debug.js') }}",d="script",
-           e=a.createElement(d),f=a.getElementsByTagName(d)[0],h=g.length;WebFontConfig
-           ={custom:b},e.src=c,f.parentNode.insertBefore(e,f);for(;h=h-1;a.documentElement
-           .className+=' wf-'+g[h].replace(/\s/g,'').toLowerCase()+'-n4-loading');},0)
-          })()
-        </script>
-        <![endif]-->
-
-        <!--[if gte IE 9]><!-->
-          <link href="{{ asset('stylesheets/fonts.css') }}" media="all" rel="stylesheet" type="text/css" />
-        <!--<![endif]-->
-
-        <!--[if lt IE 9]>
-          <script src="{{ asset('javascripts/ie.js') }}" type="text/javascript"></script>
-        <![endif]-->
-
-        <link rel="shortcut icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon" />
-
-        <!-- Size for iPad and iPad mini (high resolution) -->
-        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="{{ asset('images/apple-touch-icon-152x152.png') }}">
-        <!-- Size for iPhone and iPod touch (high resolution) -->
-        <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{{ asset('images/apple-touch-icon-120x120.png') }}">
-        <!-- Size for iPad 2 and iPad mini (standard resolution) -->
-        <link rel="apple-touch-icon-precomposed" sizes="76x76" href="{{ asset('images/apple-touch-icon-76x76.png') }}">
-        <!-- Default non-defined size, also used for Android 2.1+ devices -->
-        <link rel="apple-touch-icon-precomposed" href="{{ asset('images/apple-touch-icon-60x60.png') }}">
-
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta property="og:image" content="{{ asset('images/opengraph-image.png') }}">
-
-        <!--[if gt IE 8]><!--><link href="{{ asset('stylesheets/moj-template.css') }}" media="screen" rel="stylesheet" type="text/css" /><!--<![endif]-->
-        <!--[if IE 6]><link href="{{ asset('stylesheets/moj-template-ie6.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-        <!--[if IE 7]><link href="{{ asset('stylesheets/moj-template-ie7.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-        <!--[if IE 8]><link href="{{ asset('stylesheets/moj-template-ie8.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
-
-        <!--[if gt IE 8]><!-->
-        <link href="{{ asset('stylesheets/application.css') }}" rel="stylesheet" type="text/css"/><!--<![endif]-->
-        <!--[if IE 6]>
-        <link href="{{ asset('stylesheets/application-ie6.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
-        <!--[if IE 7]>
-        <link href="{{ asset('stylesheets/application-ie7.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
-        <!--[if IE 8]>
-        <link href="{{ asset('stylesheets/application-ie8.css') }}" rel="stylesheet" type="text/css"/><![endif]-->
-
-        <link href="{{ asset('stylesheets/application-print.css') }}" media="print" rel="stylesheet" type="text/css" />
-
+        <style type="text/css">
+            {% include 'AppBundle:Email/css:emailreport.html.twig' %}
+        </style>
     </head>
     <body>
         <div id="wrapper">

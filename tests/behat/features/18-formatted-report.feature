@@ -1,6 +1,6 @@
 Feature: Formatted Report
     
-    @formatted-report
+    @wip @formatted-report
     Scenario: Setup the reporting user
         Given I am on "/login"
         When I fill in the following:
@@ -63,7 +63,7 @@ Feature: Formatted Report
         And the URL should match "report/\d+/overview"
         Then I save the application status into "reportuser"
 
-    @formatted-report
+    @wip @formatted-report
     Scenario: A report lists decisions
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
