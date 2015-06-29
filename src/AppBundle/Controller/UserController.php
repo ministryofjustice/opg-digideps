@@ -34,10 +34,7 @@ class UserController extends Controller
         $useMemcached = $this->container->getParameter('use_memcached');
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
-        // TODO: find_user_by_token
-        // TODO: find_admin_by_token
-        // TODO: find_user_by_token
+        $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             switch ($action) {
@@ -139,7 +136,7 @@ class UserController extends Controller
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         
         // check $token is correct
-        $user = $apiClient->getEntity('User', 'find_user_by_token', [ 'parameters' => [ 'token' => $token ] ]); /* @var $user EntityDir\User*/
+        $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
         
         // recreate token
         $user->setRecreateRegistrationToken(true);

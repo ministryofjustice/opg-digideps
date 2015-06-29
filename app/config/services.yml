@@ -26,6 +26,9 @@ services:
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @apiclient,%env% ]
+    userService:
+        class:  AppBundle\Service\UserService
+        arguments: [ @apiclient, %env% ]
     util:
         class: AppBundle\Service\Util
         arguments: [@apiclient]
