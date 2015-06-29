@@ -4,10 +4,10 @@
 # This file is a "template" of what your parameters.yml file should look like
 parameters:
     database_driver: pdo_pgsql
-    database_host: {{ getv "/database/host" }}
+    database_host: {{ getv "/database/hostname" }}
     database_port: {{ getv "/database/port" }}
     database_name: {{ getv "/database/name" }}
-    database_user: {{ getv "/database/user" }}
+    database_user: {{ getv "/database/username" }}
     database_password: {{ getv "/database/password" }}
     locale: en
     secret: {{ getv "/secret" }}
@@ -15,4 +15,4 @@ parameters:
     sendgrid_password: {{ getv "/sendgrid/password" }}
     smtp_hostname: {{ getv "/smtp/hostname" }}
     smtp_port: {{ getv "/smtp/port" }}
-    anonymous: false
+    anonymous: {{ getv "/security/anonymous" }}
