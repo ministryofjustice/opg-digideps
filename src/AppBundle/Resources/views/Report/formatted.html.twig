@@ -1,15 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 9]><html class="lte-ie8" lang="en"><![endif]-->
-<!--[if gt IE 8]><!--><html lang="en"><!--<![endif]-->
+<html lang="en">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
         <title>OPG Report</title>
-
-        <script type="text/javascript">
-          (function(){if(navigator.userAgent.match(/IEMobile\/10\.0/)){var d=document,c="appendChild",a=d.createElement("style");a[c](d.createTextNode("@-ms-viewport{width:auto!important}"));d.getElementsByTagName("head")[0][c](a);}})();
-        </script>
-
         <style type="text/css">
             {% include 'AppBundle:Email/css:emailreport.html.twig' %}
         </style>
@@ -20,7 +13,7 @@
                 <div id="report-header">Office of the Public Guardian</div>
                 <h1>Deputy report for property and financial decisions</h1>
 
-                <section id="deputy-client-information-section">
+                <div class="section" id="deputy-client-information-section">
                     <h2>
                         <span class="section-number">Section 1</span>
                         Deputy and client information
@@ -104,8 +97,8 @@
                             <div class="value">{{deputy.email}}</div>
                         </div>
                     </fieldset>
-                </section>
-                <section id="decisions-section">
+                </div>
+                <div class="section" id="decisions-section">
                     <h2>
                         <span class="section-number">Section 2</span>
                         Decisions made over the reporting period
@@ -139,8 +132,8 @@
                             {% endif %}
                         </ul>
                     </fieldset>
-                </section>
-                <section id="contacts-section">
+                </div>
+                <div class="section" id="contacts-section">
                     <h2>
                         <span class="section-number">Section 3</span>
                         People you consulted
@@ -192,8 +185,8 @@
                             {% endfor %}
                         </ul>
                     {% endif %}
-                </section>
-                <section id="accounts-section">
+                </div>
+                <div class="section" id="accounts-section">
                 
                     <h2>
                         <span class="section-number">Section 6</span>
@@ -363,10 +356,10 @@
                             </div>
                         </fieldset>
                     {% endfor %}
-                </section>
-                <section id="declaration">
+                </div>
+                <div class="section" id="declaration">
                     {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
-                </section>
+                </div>
             </div>
         </div>
     </body>
