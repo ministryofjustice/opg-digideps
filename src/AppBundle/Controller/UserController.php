@@ -97,16 +97,16 @@ class UserController extends Controller
                     //cache hashed password to use in oauth2 calls
                     if($useRedis){
                         $redis = $this->get('snc_redis.default');
-                        $redis->set($session->getId().'_user_credentials', serialize([ 'email' => $user->getEmail(), 'password' => $user->getPassword() ]));
+                        $redis->set($session->getId().'_user_credentials', serialize([ 'email' => $user->getEmail(), 'password' => $encodedPassword ]));
                         $redis->expire($session->getId().'_user_credentials',3600);
                     }elseif($useMemcached){
                         //cache hashed password to use in oauth2 calls
                         $memcached = $this->get('oauth.memcached');
                         $userApiKey = $memcached->get($session->getId().'_user_credentials');
                         if(!$userApiKey){
-                            $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword() ],3600);
+                            $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword ],3600);
                         }else{
-                            $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
+                            $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword ],3600);
                         }
                     }
                 }

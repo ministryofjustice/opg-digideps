@@ -44,12 +44,21 @@ class MailFactory
 
     public function createActivationEmail(EntityDir\User $user)
     {
+        /**
+         * Email is sent from admin site. If this email is sent to a deputy, then
+         * host url should for deputy site else for admin site
+         **/
+        if($user->getRole()['role'] == 'ROLE_ADMIN'){
+            $absoluteUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()],true);
+        }else{
+            $relativeUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()]);
+            $absoluteUrl = $this->container->getParameter('non_admin_host').$relativeUrl; 
+        }
+       
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->router->generate('homepage', [], true),
-            'link' => $this->router->generate('user_activate', [
-                'token' => $user->getRegistrationToken(), 
-            ], true),
+            'link' => $absoluteUrl,
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
         ];
         

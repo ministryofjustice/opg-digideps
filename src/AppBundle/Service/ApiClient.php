@@ -152,10 +152,12 @@ class ApiClient extends GuzzleClient
         try {
             $response = parent::send($request);
             
-            if($this->options['use_redis']){
-                $this->redis->set($this->session->getId().'_access_token',serialize($this->subscriber->getAccessToken()));     
-            }elseif($this->options['use_memcached']){
-                $this->memcached->set($this->session->getId().'_access_token',$this->subscriber->getAccessToken());  
+            if($this->options['use_oauth2']){
+                if($this->options['use_redis']){
+                    $this->redis->set($this->session->getId().'_access_token',serialize($this->subscriber->getAccessToken()));     
+                }elseif($this->options['use_memcached']){
+                    $this->memcached->set($this->session->getId().'_access_token',$this->subscriber->getAccessToken());  
+                }
             }
             
             return $response;
@@ -177,7 +179,13 @@ class ApiClient extends GuzzleClient
                 
                 if(!isset($responseArray['code'])){
                    $responseArray['code'] = 401;
-                   $responseArray['message'] = isset($responseArray['error_description']) ? $responseArray['error_description']: $responseArray['message'];
+                   //$responseArray['message'] = isset($responseArray['error_description']) ? $responseArray['error_description']: $responseArray['message'];
+                   
+                   if(isset($responseArray['error_description'])){
+                       $responseArray['message'] = $responseArray['error_description'];
+                   }elseif(!isset($responseArray['message'])){
+                       $responseArray['message'] = null;
+                   }
                 }
 
                 switch ($responseArray['code']) {

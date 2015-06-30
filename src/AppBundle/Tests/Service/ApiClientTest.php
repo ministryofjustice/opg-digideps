@@ -17,9 +17,13 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
     private $session;
     private $options;
     private $redis;
+    private $subscriber;
     
     public function setUp()
     {
+        $this->subscriber = m::mock('CommerceGuys\Guzzle\Oauth2\Oauth2Subscriber');
+        $this->subscriber->shouldReceive([ 'getAccessToken' => new \stdClass(), 'setAccessToken' => null, 'getRefreshToken' => new \stdClass() ]);
+        
         $this->jsonSerializer = m::mock('JMS\Serializer\Serializer');
         
         $this->options = [ 'base_url' => 'https://digideps.api/',
@@ -29,7 +33,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
                             'use_oauth2' => false ];
         
         $this->oauth2ClientMock = m::mock('AppBundle\Service\OAuth\OAuth2', ['https://digideps.api/app_dev.php', 'sfsfsdfdsfds', 'fsfsfsdfs']);
-        $this->oauth2ClientMock->shouldReceive('setUserCredentials')->with(m::any(),m::any())->andReturn(null);
+        $this->oauth2ClientMock->shouldReceive(['setUserCredentials' => null, 'getSubscriber' => $this->subscriber ]);
         
         $this->session = m::mock('session', [ 'start' => 1, 'getId' => 'test_session_id']);
         
@@ -37,7 +41,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         $this->memcached->shouldReceive('get')->andReturn([ 'email' => 'paul.oforduru@digital.justice.gov.uk', 'password' => 'dfdsfdsfsdfsffs']);
         
         $this->redis = m::mock('Predis\Client');
-        $this->redis->shouldReceive([ 'hget' => 'trash']);
+        $this->redis->shouldReceive([ 'get' => 'trash']);
         
         $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $this->jsonSerializer, $this->oauth2ClientMock,$this->redis,$this->memcached,$this->session,$this->options ]);
     }
