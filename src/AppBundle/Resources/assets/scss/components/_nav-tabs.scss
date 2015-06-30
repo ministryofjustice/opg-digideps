@@ -1,186 +1,185 @@
 .nav-tabs {
-  zoom:1;
-  background: #fff;
-  padding: 0;
-  position: relative;
-  margin-top: 50px;
+    zoom:1;
+    background: #fff;
+    padding: 0;
+    position: relative;
+    margin-top: 50px;
+  
+    &:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden
+    }
+
+    ol, ul {
+        float: left;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        z-index: 5;
+        width: 100%;
+    }
+
+    li {
+        @include core-24();
+        padding: 3px 3px 0 3px;
+        box-sizing: border-box;
+        margin: 0;
+        float: left;
+        width: 20%;
+        border-bottom: solid 1px #bfc1c3;
+        
+        .tab-container {
+            float: left;
+            height: 2.25em;
+            line-height: 2.25em;
+            padding: 0;
+            position: relative;
+            text-align: center;
+            top: 0;
+            width: 100%;
+            border: solid 1px #ffffff;
+            &:hover {
+                outline: 3px solid $yellow;
+            }
+            &:focus {
+                background-color: $yellow;
+            }
+        }
+    
+        &.active {
+            border-bottom: 1px solid #ffffff;
+            
+            .tab-container {
+                border: solid 1px #bfc1c3;
+                border-bottom: solid 1px #ffffff;
+                color: #0b0c0c;
+                position: relative;
+                text-decoration: none;
+                z-index: 5;
+                
+                &:hover {
+                    color: inherit
+                }
+            }
+
+        }
+        
+        
+        
+        &:first-child {
+            .tab-container {
+                margin-left: 0    
+            }
+        }
+    
+        &.icon__notification {
+            
+            .tab-container {
+                background: url("/images/icons/icon-notification.png") 5px center no-repeat;
+                padding-left: 20%;
+                width: 80%;
+                &:focus {
+                    background: $yellow url("/images/icons/icon-notification.png") 5px center no-repeat;
+                }
+            }
+        }
+    }
+
 }
 
-.nav-tabs:after {
-  content: ".";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden
+.tab-content {
+
+    .inner {
+        padding: 0em 2.5em 1em
+    }
+    h1.visuallyhidden+h2 {
+        margin-top: 2em
+    }
+    p {
+        padding: 0;
+        margin-left: 0;
+        margin-right: 0
+    }
+    em {
+        font-style: normal;
+        font-weight: bold
+    }
+    nav {
+        margin: 1em -1.375em 0
+    }
+    .tabs-panel{
+        display: none;
+
+        &.tabs-panel-selected{
+            display: block;
+        }
+    }
 }
 
-.nav-tabs ol,.nav-tabs ul {
-  float: left;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  z-index: 5;
-  width: 100%;
-}
 
-@media (max-width: 640px) {
-  .nav-tabs ol,.nav-tabs ul {
-    float:none;
-    margin: 0 -16px
-  }
-}
-
-.nav-tabs li {
-  @include core-24();
-  padding: 3px 3px 0 3px;
-  box-sizing: border-box;
-  margin: 0;
-  float: left;
-  width: 20%;
-  border-bottom: solid 1px #bfc1c3;
-}
-
-@media (max-width: 640px) {
-  .nav-tabs li {
-    font-size:14px;
-    line-height: 1.14286;
-    width: auto;
-  }
-}
-
-@media (max-width: 640px) {
-  .nav-tabs li {
-    float:none
-  }
-}
-
-.nav-tabs li .tab-container {
-  float: left;
-  height: 2.25em;
-  line-height: 2.25em;
-  padding: 0;
-  position: relative;
-  text-align: center;
-  top: 0;
-  width: 100%;
-  border: solid 1px #ffffff;
-  &:hover {
-      outline: 3px solid $yellow;
-  }
-}
-
-@media (max-width: 640px) {
-  .nav-tabs li .tab-container {
-    display:block;
-    position: static;
-    float: none;
-    height: auto;
-    line-height: 3.5em;
-    padding: 0 16px;
-    text-align: left;
-    border-bottom: 1px solid #bfc1c3
-  }
-}
-
-.nav-tabs li .tab-container:hover {
-  background-color: #fff;
-}
-
-.nav-tabs li.active {
-    border-bottom: 1px solid #ffffff;
-}
-
-.nav-tabs li.active .tab-container {
-  background-color: #fff;
-  border: solid 1px #bfc1c3;
-  border-bottom: solid 1px #fff;
-  color: #0b0c0c;
-  position: relative;
-  text-decoration: none;
-  z-index: 5;
-}
-
-@media (max-width: 640px) {
-  .nav-tabs li.active .tab-container {
-    border:none;
-    border-bottom: 1px solid #bfc1c3
-  }
-}
-
-.nav-tabs li.active .tab-container:hover {
-  color: inherit
-}
-
-.nav-tabs li:first-child .tab-container {
-  margin-left: 0
-}
-
-@media (max-width: 640px) {
-  .nav-tabs li:first-child .tab-container {
-    border-left:none;
-  }
-}
-
-@media (max-width: 640px) {
-  .tab-content {
-    margin: 0;
-  }
-}
-
-.tab-content .tab-pane {
-  padding: 0;
-  clear: both;
-  width: auto
-}
-
-@media (max-width: 640px) {
-  .tab-content .tab-pane {
-    border-top:none;
-    padding: 0
-  }
-}
-
-.tab-content .inner {
-  padding: 0em 2.5em 1em
-}
-
-@media (max-width: 640px) {
-  .tab-content .inner {
-    padding:0 1em 1em;
-    border-bottom: solid 1px #C9D0D0
-  }
-}
-
-.tab-content h1.visuallyhidden+h2 {
-  margin-top: 2em
-}
-
-.tab-content p {
-  padding: 0;
-  margin-left: 0;
-  margin-right: 0
-}
-
-.tab-content em {
-  font-style: normal;
-  font-weight: bold
-}
-
-.tab-content nav {
-  margin: 1em -1.375em 0
-}
-
-.tabs-panel{
-  display: none;
-
-  &.tabs-panel-selected{
-    display: block;
-  }
-}
 
 #content p.nothing-selected {
     @include bold-19();
     padding-bottom: 20px;
     border-bottom: 1px solid $grey-3;
+}
+
+@media (max-width: 768px)  {
+    .nav-tabs li .tab-container {
+        @include core-19();
+        padding-top: 8px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 640px) {
+
+    .nav-tabs ol,.nav-tabs ul {
+      float:none;
+      margin: 0 -16px
+    }
+
+    .nav-tabs li {
+        font-size:14px;
+        line-height: 1.14286;
+        width: auto;
+        float:none;
+        
+        &:active .tab-container {
+            border:none;
+            border-bottom: 1px solid #bfc1c3;
+        }
+        
+        &:first-child .tab-container {
+            border-left:none;
+        }
+    
+        .tab-container {
+            display:block;
+            position: static;
+            float: none;
+            height: auto;
+            line-height: 3.5em;
+            padding: 0 16px;
+            text-align: left;
+            border-bottom: 1px solid #bfc1c3;
+        }
+    }
+
+    .tab-content {
+        margin: 0;
+        .tab-pane {
+            border-top:none;
+            padding: 0;
+        }
+        .inner {
+            padding:0 1em 1em;
+            border-bottom: solid 1px #C9D0D0;
+        }
+    }
+
 }
