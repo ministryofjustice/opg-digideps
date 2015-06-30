@@ -3,7 +3,7 @@ parameters:
     locale: en
     secret: {{ getv "/secret" }}
     api_base_url: {{ getv "/api/url" }}
-    env: 'production'
+    env: {{ getv "/role" }}
     session_expire_seconds: 1500
     session_popup_show_after: 1200
     session_cookie_secure: true
