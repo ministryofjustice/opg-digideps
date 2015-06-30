@@ -32,15 +32,13 @@
 }
 
 .nav-tabs li {
-  font-family: "nta",Arial,sans-serif;
-  font-size: 24px;
-  line-height: 1.25;
-  font-weight: 400;
-  text-transform: none;
-  padding: 0;
+  @include core-24();
+  padding: 3px 3px 0 3px;
+  box-sizing: border-box;
   margin: 0;
   float: left;
   width: 20%;
+  border-bottom: solid 1px #bfc1c3;
 }
 
 @media (max-width: 640px) {
@@ -58,23 +56,17 @@
 }
 
 .nav-tabs li .tab-container {
-  border: solid 1px #fff;
-  border-bottom: none;
   float: left;
   height: 2.25em;
   line-height: 2.25em;
-  margin-bottom: -1px;
   padding: 0;
   position: relative;
   text-align: center;
   top: 0;
   width: 100%;
-  border-right: 1px solid $grey-3;
-}
-
-.nav-tabs li:last-of-type{
-  .tab-container{
-    border-right: 0;
+  border: solid 1px #ffffff;
+  &:hover {
+      outline: 3px solid $yellow;
   }
 }
 
@@ -87,13 +79,16 @@
     line-height: 3.5em;
     padding: 0 16px;
     text-align: left;
-    margin-bottom: 0;
     border-bottom: 1px solid #bfc1c3
   }
 }
 
 .nav-tabs li .tab-container:hover {
   background-color: #fff;
+}
+
+.nav-tabs li.active {
+    border-bottom: 1px solid #ffffff;
 }
 
 .nav-tabs li.active .tab-container {
@@ -104,7 +99,6 @@
   position: relative;
   text-decoration: none;
   z-index: 5;
-  padding-bottom: 1px;
 }
 
 @media (max-width: 640px) {
@@ -125,7 +119,6 @@
 @media (max-width: 640px) {
   .nav-tabs li:first-child .tab-container {
     border-left:none;
-    border-top: 1px solid #bfc1c3
   }
 }
 
@@ -137,7 +130,6 @@
 
 .tab-content .tab-pane {
   padding: 0;
-  border-top: solid 1px #bfc1c3;
   clear: both;
   width: auto
 }
