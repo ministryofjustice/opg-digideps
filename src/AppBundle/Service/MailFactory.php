@@ -40,6 +40,7 @@ class MailFactory
         $this->validator = $container->get('validator');
         $this->templating = $container->get('templating');
         $this->emailConfig =  $this->container->getParameter('email_send');
+        $this->reportMailConfig = $this->container->getParameter('email_report_submit');
     }
 
     public function createActivationEmail(EntityDir\User $user)
@@ -114,9 +115,9 @@ class MailFactory
     public function createReportEmail(EntityDir\Client $client, $reportContent)
     {
         $email = $this->createEmail()
-            ->setFromEmail($this->emailConfig['from_email'])
+            ->setFromEmail($this->reportMailConfig['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
-            ->setToEmail($this->emailConfig['to_email'])
+            ->setToEmail($this->reportMailConfig['to_email'])
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
