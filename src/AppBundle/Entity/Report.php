@@ -137,6 +137,7 @@ class Report implements UserFilterInterface
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="further_information", type="text", nullable=true)
      */
     private $furtherInformation;
