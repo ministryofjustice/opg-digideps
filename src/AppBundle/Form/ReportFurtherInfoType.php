@@ -6,14 +6,14 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class ReportFurtherInfoAddType extends AbstractType
+class ReportFurtherInfoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder 
                 ->add('id', 'hidden')
                 ->add('furtherInformation', 'textarea')
-                ->add('save', 'submit');
+                ->add('saveAndContinue', 'submit');
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)

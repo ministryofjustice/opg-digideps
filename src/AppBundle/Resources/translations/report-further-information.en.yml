@@ -1,15 +1,15 @@
 page:
   htmlTitle: "Report additional information"
   pageSectionTitle: "Is there anything else you'd like to tell us?"
-  goBackLink: "Go back to make changes to the report"
-furtherInformation:
-  label:  |
+  pageSectionDescription:  |
         For example, paying care home fees if the client's money runs low,
         managing the client's property, making gifts, other family members' 
         involvement with the client's funds,  what expenses you can claim.
-save:
-  label: "Save"
-edit:
-  label: "Edit"
-next:
-  label: "Next"
+  goBackLink: "Go back to make changes to the report"
+  editLink: Edit information
+  nextButton: Next
+form:
+  furtherInformation:
+    label: " "
+  saveAndContinue:
+    label: "Save and continue"

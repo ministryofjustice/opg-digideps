@@ -82,12 +82,21 @@ class ReportController extends Controller
     }
     
     /**
-     * @Route("/report/{reportId}/add_further_information", name="report_add_further_info")
+     * @Route("/report/{reportId}/add_further_information/{action}", 
+     *  name="report_add_further_info", 
+     *  defaults={"action": "view"}, 
+     *  requirements={"action": "(view|edit)"}
+     * )
      * @Template()
      */
-    public function furtherInformationAction(Request $request, $reportId)
+    public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        $firstLoad = $report->getFurtherInformation() === null;
+        if ($firstLoad) {
+            $action = 'edit';
+        }
+        
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
         if (count($violations)) {
@@ -97,9 +106,7 @@ class ReportController extends Controller
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
-        $formType = $report->getFurtherInformation() === null 
-                  ? new FormDir\ReportFurtherInfoAddType : new FormDir\ReportFurtherInfoEditType;
-        $form = $this->createForm($formType, $report);
+        $form = $this->createForm(new FormDir\ReportFurtherInfoType, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
@@ -110,22 +117,15 @@ class ReportController extends Controller
                 'deserialise_group' => 'furtherInformation',
             ]);
             
-            // edit link: stay on the same page
-            if ($form->has('edit') && $form->get('edit')->isClicked()) {
-                return $this->redirect($this->generateUrl('report_add_further_info', ['reportId'=>$reportId]));
-            }
-            
             // next or save: redirect to report declration
-            if (($form->has('next') && $form->get('next')->isClicked() )
-                ||
-                ($form->has('save') && $form->get('save')->isClicked())
-                ) {
+            if ($form->get('saveAndContinue')->isClicked()) {
                 return $this->redirect($this->generateUrl('report_declaration', ['reportId'=>$reportId]));
             }
-            
         }
         
         return [
+            'firstLoad' => $firstLoad,
+            'action' => $action,
             'report' => $report,
             'client' => $client,
             'form' => $form->createView(),

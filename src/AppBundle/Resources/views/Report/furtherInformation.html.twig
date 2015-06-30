@@ -16,31 +16,35 @@
         transDomain: translationDomain,
         pageSectionTitle: 'page.pageSectionTitle'
         } %}
+        
+        {% if action == 'edit' %}
+          
+          {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+          transDomain: translationDomain,
+          pageSectionDescription: 'page.pageSectionDescription'
+          } %}
+          
+          {% block validationSummary %}
+              {{ form_errors_list(form) }}
+          {% endblock %}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
+          {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+          {{ form_input(form.furtherInformation, 'form.furtherInformation', { 'labelClass': 'required' }) }}
 
-        {{ form_input(form.furtherInformation, 'furtherInformation', { 'labelClass': 'required' }) }}
+          {{ form_submit(form.saveAndContinue, 'form.saveAndContinue') }}
 
-        {% if form.save is defined %}
-          {{ form_submit(form.save, 'save') }}
+          {{ form_end(form) }}
+
         {% endif %}
         
-        {% if form.edit is defined %}
-          {{ form_submit(form.edit, 'edit') }}
+        {% if action == 'view' %}
+          <p class="page-section-description behat-region-additional-info">{{ report.furtherInformation | nl2br | default('pages.additionalInformation.noneAdded' | trans({}, 'report-overview')) }}</p>
+          <div>
+            <a class="behat-link-edit-information" href="{{ path('report_add_further_info', {'reportId': report.id, 'action': 'edit'}) }}">{{ 'page.editLink' | trans }}</a>
+          </div>
+          <a class="button behat-link-next" href="{{ path('report_declaration', {'reportId': report.id}) }}">{{ 'page.nextButton' | trans }}</a>
         {% endif %}
-        
-        {% if form.next is defined %}
-          {{ form_submit(form.next, 'next') }}
-        {% endif %}
-        
-        
-        
-        {{ form_end(form) }}
-
 
     {% endblock %}
 

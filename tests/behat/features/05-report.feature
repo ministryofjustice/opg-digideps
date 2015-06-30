@@ -698,9 +698,10 @@ Feature: report
         Given I set the report 1 end date to 3 days ago
         And I am on the first report overview page
         Then I should not see a "tab-contact-notification" element
-        # assert I cannot access the declaration page
+        # assert I cannot access the following steps
+        Then The URL "/report/1/add_further_information" should not be accessible
+        Then The URL "/report/1/add_further_information/edit" should not be accessible
         Then The URL "/report/1/declaration" should not be accessible
-        # assert I cannot access the submit page
         Then The URL "/report/1/submitted" should not be accessible
         # wrong declaration form
         When I go to the first report overview page
@@ -709,67 +710,57 @@ Feature: report
             | report_submit_reviewed_n_checked   |
         # correct declaration form
         When I am on the first report overview page
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        When I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I save the page as "report-submit-further-info-empty"
-        # ftest go back link from additional info page
+        # test go back link from additional-info page
         When I click on "report-preview-go-back"
         Then the URL should match "/report/\d+/overview"
-        # skip further info
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        And I press "report_add_info_save"
+        # submit without adding anything
+        When I confirm the report is ready to be submitted
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         # add further info, and check they are saved
         When I click on "report-preview-go-back"
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
+        And I click on "edit-information"
         And I fill in "report_add_info_furtherInformation" with "nothing to add"
-        And I press "report_add_info_edit"
-        Then the following fields should have the corresponding values:
-           | report_add_info_furtherInformation | nothing to add |
-        When I fill in "report_add_info_furtherInformation" with "no info to add"
-        And I press "report_add_info_next"   
+        And I press "report_add_info_saveAndContinue"
         # go back and check info was added, and edit them
         And I click on "report-preview-go-back"
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
+        Then I should see "nothing to add" in the "additional-info" region
+        When I click on "edit-information"
         Then the following fields should have the corresponding values:
-           | report_add_info_furtherInformation | no info to add |
+           | report_add_info_furtherInformation | nothing to add |
         When I fill in "report_add_info_furtherInformation" with "no further info to add"
         And I save the page as "report-submit-further-info-added"
-        And I press "report_add_info_next"
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         # test submitting from contacts page
         When I click on "report-preview-go-back"
         And I follow "tab-contacts"
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from decisions page
         When I follow "tab-decisions"
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from accounts page
         When I follow "tab-accounts"
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from account page
         When I am on the account "1234" page of the first report
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from assets page
         When I follow "tab-assets"
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
 
     @deputy
@@ -778,14 +769,12 @@ Feature: report
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
         When I click on "report-n1"    
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I confirm the report is ready to be submitted
         And I press "report_add_info_next"
         # test "go back" link from declaration page
         When I click on "report-preview-go-back"
         Then the URL should match "/report/\d+/overview"
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        When I confirm the report is ready to be submitted
         And I press "report_add_info_next"
         Then the URL should match "/report/\d+/declaration"
         And I save the page as "report-submit-declaration"
