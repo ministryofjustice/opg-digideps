@@ -770,12 +770,12 @@ Feature: report
         Then I should not see the "download-2015-report" link
         When I click on "report-n1"    
         And I confirm the report is ready to be submitted
-        And I press "report_add_info_next"
+        And I click on "next"
         # test "go back" link from declaration page
         When I click on "report-preview-go-back"
         Then the URL should match "/report/\d+/overview"
         When I confirm the report is ready to be submitted
-        And I press "report_add_info_next"
+        And I click on "next"
         Then the URL should match "/report/\d+/declaration"
         And I save the page as "report-submit-declaration"
         
