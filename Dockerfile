@@ -38,6 +38,7 @@ RUN  npm install
 RUN  npm run all
 
 # cleanup
+RUN  rm /app/app/config/parameters.yml
 USER root
 ENV  HOME /root
 
