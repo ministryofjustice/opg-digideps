@@ -1,0 +1,30 @@
+{% if (showNoContactReason) %}
+
+    {% trans_default_domain translationDomain %}
+
+    <div class="data-item data-item--no-reason">
+
+        <dl class="data-item-fields">
+
+            <div class="data-item-fields-row data-item-fields-row--header">
+                <dt class="visuallyhidden">{{ 'no_contact.fields.noContactReason.label' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <h2 class="data-item-header-title behat-region-client-name">{{ 'no_contact.fields.noContactReason.value' | trans }}</h2>
+                </dd>
+            </div>
+            <div class="data-item-fields-row data-item-fields-row--header float-right">
+                <dt class="visuallyhidden">{{ 'no_contact.fields.editReason.label' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--header">
+                    <a href="{{ url('contacts', { 'reportId': report.id, 'action': 'edit-reason' }) }}"
+                       class="js-data-item-edit-link data-item-edit-link behat-link-edit-reason-no-contacts">{{ 'no_contact.fields.editReason.value' | trans }}</a>
+                </dd>
+            </div>
+            <div class="data-item-fields-row">
+                <dt class="visuallyhidden">{{ 'no_contact.fields.noContactReason.value' | trans }}</dt>
+                <dd class="data-item-fields-description data-item-fields-description--noReason data-item-fields-description--normal behat-region-reason-no-contacts">{{ report.reasonForNoContacts }}</dd>
+            </div>
+
+        </dl>
+    </div>
+
+{% endif %}
