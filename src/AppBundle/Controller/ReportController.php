@@ -82,6 +82,40 @@ class ReportController extends Controller
     }
     
     /**
+     * @Route("/report/{reportId}/add_further_information", name="report_add_further_info")
+     * @Template()
+     */
+    public function furtherInformationAction(Request $request, $reportId)
+    {
+        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        // check status
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
+        
+        $clients = $this->getUser()->getClients();
+        $client = $clients[0];
+        
+        $form = $this->createForm(new FormDir\ReportFurtherInfoType(), $report);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // add furher info
+            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+                'deserialise_group' => 'furtherInformation',
+            ]);
+            
+            return $this->redirect($this->generateUrl('report_declaration', ['reportId'=>$reportId]));
+        }
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+    
+    /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template()
      */
@@ -151,7 +185,7 @@ class ReportController extends Controller
     public function displayAction($reportId, $isEmailAttachment = false)
     {
         $apiClient = $this->get('apiclient');
-        $util = $this->get('util');
+        $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
         $report = $util->getReport($reportId);
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);

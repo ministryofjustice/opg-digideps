@@ -51,7 +51,7 @@ class ReportSubmitter
             $this->container->get('apiclient')->putC('report/' . $report->getId(), $report, [
                 'deserialise_group' => 'reviewed',
             ]);
-            return new RedirectResponse($this->container->get('router')->generate('report_declaration', ['reportId' => $report->getId()]));
+            return new RedirectResponse($this->container->get('router')->generate('report_add_further_info', ['reportId' => $report->getId()]));
         }
         return null;
     }
