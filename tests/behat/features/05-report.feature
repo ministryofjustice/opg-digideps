@@ -684,7 +684,7 @@ Feature: report
 
 
     @deputy
-    Scenario: report declaration page
+    Scenario: report further info page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
@@ -711,41 +711,76 @@ Feature: report
         When I am on the first report overview page
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        # ftest go back link from additional info page
+        When I click on "report-preview-go-back"
+        Then the URL should match "/report/\d+/overview"
+        # skip further info
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        And I press "report_add_info_next"
         Then the URL should match "/report/\d+/declaration"
-        # test "go back" link
-        And I click on "report-preview-go-back"
+        # add further info, and check they are saved
+        When I click on "report-preview-go-back"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/declaration"
-        And I click on "report-preview-go-back"
-        # test submit from contacts page
-        When I follow "tab-contacts"
+        And I fill in "report_add_info_furtherInformation" with "no info to add"
+        And I press "report_add_info_next"
+        # go back and check info was added, and edit them
+        When I click on "report-preview-go-back"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the following fields should have the corresponding values:
+           | report_add_info_furtherInformation | no info to add |
+        When I fill in "report_add_info_furtherInformation" with "no further info to add"
+        And I press "report_add_info_next"
         Then the URL should match "/report/\d+/declaration"
+        # test submitting from contacts page
+        When I click on "report-preview-go-back"
+        And I follow "tab-contacts"
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from decisions page
         When I follow "tab-decisions"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/declaration"
+        Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from accounts page
         When I follow "tab-accounts"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/declaration"
+        Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from account page
         When I am on the account "1234" page of the first report
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/declaration"
+        Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from assets page
         When I follow "tab-assets"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+
+    @deputy
+    Scenario: report declaration page
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "client-home"
+        Then I should not see the "download-2015-report" link
+        When I click on "report-n1"    
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        And I press "report_add_info_next"
+        # test "go back" link from declaration page
+        When I click on "report-preview-go-back"
+        Then the URL should match "/report/\d+/overview"
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        And I press "report_add_info_next"
         Then the URL should match "/report/\d+/declaration"
         
 
