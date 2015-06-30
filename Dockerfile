@@ -1,7 +1,7 @@
 FROM registry.service.dsd.io/opguk/php-fpm:0.1.25
 
 RUN  apt-get update && apt-get install -y \
-     php-pear php5-curl php5-memcached php5-redis \
+     php-pear php5-curl php5-memcached php5-redis php5-pgsql \
      nodejs && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
@@ -27,6 +27,7 @@ ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
 
 # cleanup
+RUN  rm /app/app/config/parameters.yml
 USER root
 ENV  HOME /root
 
