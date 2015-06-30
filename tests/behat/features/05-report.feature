@@ -712,6 +712,7 @@ Feature: report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/add_further_information"
+        And I save the page as "report-submit-further-info-empty"
         # ftest go back link from additional info page
         When I click on "report-preview-go-back"
         Then the URL should match "/report/\d+/overview"
@@ -733,6 +734,7 @@ Feature: report
         Then the following fields should have the corresponding values:
            | report_add_info_furtherInformation | no info to add |
         When I fill in "report_add_info_furtherInformation" with "no further info to add"
+        And I save the page as "report-submit-further-info-added"
         And I press "report_add_info_next"
         Then the URL should match "/report/\d+/declaration"
         # test submitting from contacts page
@@ -782,6 +784,7 @@ Feature: report
         And I press "report_submit_submitReport"
         And I press "report_add_info_next"
         Then the URL should match "/report/\d+/declaration"
+        And I save the page as "report-submit-declaration"
         
 
     @deputy
@@ -804,9 +807,11 @@ Feature: report
         And the form should not contain an error
         And the response status code should be 200
         And the URL should match "/report/\d+/submitted"
+        And I save the page as "report-submit-submitted"
         # assert report display page is not broken
         When I go to "/report/1/display"
         Then the response status code should be 200
+        And I save the page as "report-submit-display"
         # assert email has been sent/wrote into the disk (only works if client `parameters.email_report_submit.to_email` is wqual to behat-deputyshipservice@publicguardian.gsi.gov.uk)
         And an email with subject "Report submission from Digital Deputy" should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
