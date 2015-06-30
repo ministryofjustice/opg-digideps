@@ -97,15 +97,32 @@ class ReportController extends Controller
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
-        $form = $this->createForm(new FormDir\ReportFurtherInfoType(), $report);
+        $formType = $report->getFurtherInformation() === null 
+                  ? new FormDir\ReportFurtherInfoAddType : new FormDir\ReportFurtherInfoEditType;
+        $form = $this->createForm($formType, $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
+            if (!$report->getFurtherInformation()) {
+                $report->setFurtherInformation('');
+            }
             $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
                 'deserialise_group' => 'furtherInformation',
             ]);
             
-            return $this->redirect($this->generateUrl('report_declaration', ['reportId'=>$reportId]));
+            // edit link: stay on the same page
+            if ($form->has('edit') && $form->get('edit')->isClicked()) {
+                return $this->redirect($this->generateUrl('report_add_further_info', ['reportId'=>$reportId]));
+            }
+            
+            // next or save: redirect to report declration
+            if (($form->has('next') && $form->get('next')->isClicked() )
+                ||
+                ($form->has('save') && $form->get('save')->isClicked())
+                ) {
+                return $this->redirect($this->generateUrl('report_declaration', ['reportId'=>$reportId]));
+            }
+            
         }
         
         return [

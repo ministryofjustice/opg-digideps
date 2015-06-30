@@ -25,8 +25,20 @@
 
         {{ form_input(form.furtherInformation, 'furtherInformation', { 'labelClass': 'required' }) }}
 
-        {{ form_submit(form.next, 'next') }}
-
+        {% if form.save is defined %}
+          {{ form_submit(form.save, 'save') }}
+        {% endif %}
+        
+        {% if form.edit is defined %}
+          {{ form_submit(form.edit, 'edit') }}
+        {% endif %}
+        
+        {% if form.next is defined %}
+          {{ form_submit(form.next, 'next') }}
+        {% endif %}
+        
+        
+        
         {{ form_end(form) }}
 
 

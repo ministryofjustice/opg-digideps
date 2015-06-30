@@ -719,16 +719,20 @@ Feature: report
         # skip further info
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
-        And I press "report_add_info_next"
+        And I press "report_add_info_save"
         Then the URL should match "/report/\d+/declaration"
         # add further info, and check they are saved
         When I click on "report-preview-go-back"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
-        And I fill in "report_add_info_furtherInformation" with "no info to add"
-        And I press "report_add_info_next"
+        And I fill in "report_add_info_furtherInformation" with "nothing to add"
+        And I press "report_add_info_edit"
+        Then the following fields should have the corresponding values:
+           | report_add_info_furtherInformation | nothing to add |
+        When I fill in "report_add_info_furtherInformation" with "no info to add"
+        And I press "report_add_info_next"   
         # go back and check info was added, and edit them
-        When I click on "report-preview-go-back"
+        And I click on "report-preview-go-back"
         And I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the following fields should have the corresponding values:

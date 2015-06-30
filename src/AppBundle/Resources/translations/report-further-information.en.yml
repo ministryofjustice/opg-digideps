@@ -7,5 +7,9 @@ furtherInformation:
         For example, paying care home fees if the client's money runs low,
         managing the client's property, making gifts, other family members' 
         involvement with the client's funds,  what expenses you can claim.
+save:
+  label: "Save"
+edit:
+  label: "Edit"
 next:
   label: "Next"
