@@ -83,7 +83,7 @@ snc_redis:
     session:
         client: default
         prefix: %session_prefix%
-        use_as_default: true
+        use_as_default: %use_redis%
     
 parameters:
     asset_dropdown:
