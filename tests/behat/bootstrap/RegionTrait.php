@@ -17,6 +17,7 @@ trait RegionTrait
      */
     public function iShouldNotSeeTheBehatElement($element, $type)
     {
+        $this->assertResponseStatus(200);
         $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         $count = count($linksElementsFound);
@@ -30,6 +31,7 @@ trait RegionTrait
      */
     public function iShouldSeeTheBehatElement($element, $type)
     {
+        $this->assertResponseStatus(200);
         $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         if (count($linksElementsFound) === 0) {
@@ -42,6 +44,7 @@ trait RegionTrait
      */
     public function iShouldSeeInTheRegion($text, $region)
     {
+        $this->assertResponseStatus(200);
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
     
@@ -58,6 +61,7 @@ trait RegionTrait
      */
     public function iShouldNotSeeInTheRegion($text, $region)
     {
+        $this->assertResponseStatus(200);
         $this->assertSession()->elementTextNotContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 

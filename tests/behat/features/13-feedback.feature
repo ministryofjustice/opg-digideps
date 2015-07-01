@@ -8,7 +8,8 @@ Feature: provide feedback
 
     @feedback
     Scenario: I give feedback on all fields and it is emailed to OPG
-        Given I am on the feedback page
+        Given I reset the email log
+        And I am on the feedback page
         And I fill in the following:
             | feedback_difficulty | I found it to be really easy |
             | feedback_ideas | I think it needs an iPhone app |
@@ -16,20 +17,21 @@ Feature: provide feedback
             | feedback_satisfactionLevel_1 | satisfied |
         And I press "feedback_save"
         Then the form should not contain an error
-        And an email with subject "User Feedback" should have been sent 
+        And an email with subject "User Feedback" should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
         And the email should contain "I found it to be really easy"
         And the email should contain "I think it needs an iPhone app"
         And the email should contain "satisfied"
         And the email should contain "No, I filled in this form myself"
         
     @feedback
-    Scenario: When I give feedback I dont have to fill all the fields in
-        Given I am on the feedback page
+    Scenario: When I give feedback I dont have to fill all the fields in 
+        Given I reset the email log
+        And I am on the feedback page
         And I fill in the following:
             | feedback_help_3 | No, I filled in this form myself |
         And I press "feedback_save"
         Then the form should not contain an error
-        And an email with subject "User Feedback" should have been sent 
+        And an email with subject "User Feedback" should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
         And the email should contain "No, I filled in this form myself"
     
     @feedback
