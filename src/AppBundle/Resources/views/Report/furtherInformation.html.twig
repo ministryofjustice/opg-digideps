@@ -18,32 +18,11 @@
         } %}
         
         {% if action == 'edit' %}
-          
-          {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-          transDomain: translationDomain,
-          pageSectionDescription: 'page.pageSectionDescription'
-          } %}
-          
-          {% block validationSummary %}
-              {{ form_errors_list(form) }}
-          {% endblock %}
-
-          {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-
-          {{ form_input(form.furtherInformation, 'form.furtherInformation', { 'labelClass': 'required' }) }}
-
-          {{ form_submit(form.saveAndContinue, 'form.saveAndContinue') }}
-
-          {{ form_end(form) }}
-
+          {% include 'AppBundle:Report:_furtherInformationEdit.html.twig' %}
         {% endif %}
         
         {% if action == 'view' %}
-          <p class="page-section-description behat-region-additional-info">{{ report.furtherInformation | default('pages.additionalInformation.noneAdded' | trans({}, 'report-overview')) | nl2br }}</p>
-          <div>
-            <a class="behat-link-edit-information" href="{{ path('report_add_further_info', {'reportId': report.id, 'action': 'edit'}) }}">{{ 'page.editLink' | trans }}</a>
-          </div>
-          <a class="button behat-link-next" href="{{ path('report_declaration', {'reportId': report.id}) }}">{{ 'page.nextButton' | trans }}</a>
+          {% include 'AppBundle:Report:_furtherInformationView.html.twig' %}
         {% endif %}
 
     {% endblock %}

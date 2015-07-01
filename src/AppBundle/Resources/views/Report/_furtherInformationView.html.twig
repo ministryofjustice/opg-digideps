@@ -1,0 +1,7 @@
+{% trans_default_domain translationDomain %}
+
+<p class="page-section-description behat-region-additional-info">{{ report.furtherInformation | default('pages.additionalInformation.noneAdded' | trans({}, 'report-overview')) | nl2br }}</p>
+<div>
+  <a class="behat-link-edit-information" href="{{ path('report_add_further_info', {'reportId': report.id, 'action': 'edit'}) }}">{{ 'page.editLink' | trans }}</a>
+</div>
+<a class="button behat-link-next" href="{{ path('report_declaration', {'reportId': report.id}) }}">{{ 'page.nextButton' | trans }}</a>
