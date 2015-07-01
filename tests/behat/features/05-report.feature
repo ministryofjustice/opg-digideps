@@ -730,11 +730,12 @@ Feature: report
         And I click on "report-preview-go-back"
         And I confirm the report is ready to be submitted
         Then I should see "nothing to add" in the "additional-info" region
+        And I save the page as "report-submit-further-info-view"
         When I click on "edit-information"
         Then the following fields should have the corresponding values:
            | report_add_info_furtherInformation | nothing to add |
         When I fill in "report_add_info_furtherInformation" with "no further info to add"
-        And I save the page as "report-submit-further-info-added"
+        And I save the page as "report-submit-further-info-edit"
         And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         # test submitting from contacts page
