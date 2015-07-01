@@ -58,7 +58,7 @@ Feature: report explanations
       Then the form should contain an error
       # add reason
       When I fill in the following:
-        | reason_for_no_decision_reason | small budget |  
+        | reason_for_no_decision_reason | small budget |
       And I press "reason_for_no_decision_saveReason"
       Then the form should not contain an error
       And I should see "small budget" in the "reason-no-decisions" region

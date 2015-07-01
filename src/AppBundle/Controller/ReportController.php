@@ -107,7 +107,7 @@ class ReportController extends Controller
             ]);
             
             // send report by email
-            $reportContent = $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
+            $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
             $reportEmail = $this->get('mailFactory')->createReportEmail($client, $reportContent);
             $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
             
@@ -149,6 +149,37 @@ class ReportController extends Controller
      * @Template()
      */
     public function displayAction($reportId, $isEmailAttachment = false)
+    {
+        $apiClient = $this->get('apiclient');
+        $util = $this->get('util');
+        
+        $report = $util->getReport($reportId);
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
+        $client = $util->getClient($report->getClient());
+        
+        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
+        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
+        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+            'assets' => $assets,
+            'contacts' => $contacts,
+            'decisions' => $decisions,
+            'isEmailAttachment' => $isEmailAttachment,
+            'deputy' => $this->getUser(),
+        ];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/formatted", name="formatted_report_display")
+     * @Template()
+     */
+    public function formattedAction($reportId, $isEmailAttachment = false)
     {
         $apiClient = $this->get('apiclient');
         $util = $this->get('util');
