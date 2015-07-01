@@ -160,6 +160,14 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitBehatLink("check-app-params");
         $this->assertResponseStatus(200);
     }
-   
     
+    /**
+     * @Given I confirm the report is ready to be submitted
+     */
+    public function IconfirmTheReportIsReadyToBeSubmitted()
+    {
+        $this->checkOption("report_submit_reviewed_n_checked");
+        $this->pressButton("report_submit_submitReport");
+    }
+   
 }

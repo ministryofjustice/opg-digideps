@@ -1,7 +1,8 @@
 .page-section-title {
   @include bold-27();
   margin-bottom: 30px;
-
+  display: inline-block;
+  
   .report-overview & {
     margin-bottom: 10px;
 

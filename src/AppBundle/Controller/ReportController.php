@@ -82,6 +82,57 @@ class ReportController extends Controller
     }
     
     /**
+     * @Route("/report/{reportId}/add_further_information/{action}", 
+     *  name="report_add_further_info", 
+     *  defaults={"action": "view"}, 
+     *  requirements={"action": "(view|edit)"}
+     * )
+     * @Template()
+     */
+    public function furtherInformationAction(Request $request, $reportId, $action = 'view')
+    {
+        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        $firstLoad = $report->getFurtherInformation() === null;
+        if ($firstLoad) {
+            $action = 'edit';
+        }
+        
+        // check status
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
+        
+        $clients = $this->getUser()->getClients();
+        $client = $clients[0];
+        
+        $form = $this->createForm(new FormDir\ReportFurtherInfoType, $report);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // add furher info
+            if (!$report->getFurtherInformation()) {
+                $report->setFurtherInformation('');
+            }
+            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+                'deserialise_group' => 'furtherInformation',
+            ]);
+            
+            // next or save: redirect to report declration
+            if ($form->get('saveAndContinue')->isClicked()) {
+                return $this->redirect($this->generateUrl('report_declaration', ['reportId'=>$reportId]));
+            }
+        }
+        
+        return [
+            'firstLoad' => $firstLoad,
+            'action' => $action,
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+    
+    /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template()
      */
@@ -151,7 +202,7 @@ class ReportController extends Controller
     public function displayAction($reportId, $isEmailAttachment = false)
     {
         $apiClient = $this->get('apiclient');
-        $util = $this->get('util');
+        $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
         $report = $util->getReport($reportId);
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
