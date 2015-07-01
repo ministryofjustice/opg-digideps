@@ -49,14 +49,18 @@ class MailFactory
          **/
         if($user->getRole()['role'] == 'ROLE_ADMIN'){
             $absoluteUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()],true);
+            $domainAbsolute = $this->router->generate('homepage', [], true);
         }else{
             $relativeUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()]);
-            $absoluteUrl = $this->container->getParameter('non_admin_host').$relativeUrl; 
+            $absoluteUrl = $this->container->getParameter('non_admin_host').$relativeUrl;
+            
+            $domainRelative = $this->router->generate('homepage', []);
+            $domainAbsolute = $this->container->getParameter('non_admin_host').$domainRelative;
         }
        
         $viewParams = [
             'name' => $user->getFullName(),
-            'domain' => $this->router->generate('homepage', [], true),
+            'domain' => $domainAbsolute,
             'link' => $absoluteUrl,
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
         ];
