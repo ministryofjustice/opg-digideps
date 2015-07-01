@@ -40,7 +40,7 @@ class Redirector
         'decisions',
         'assets',
         'report_declaration',
-        'report_declaration',
+        'report_add_further_info',
         'report_submit_confirmation',
         'client_home',
     ];
