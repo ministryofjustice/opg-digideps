@@ -1,15 +1,12 @@
 page:
   htmlTitle: "Report additional information"
-  pageSectionTitle: "Is there anything else you'd like to tell us?"
-  pageSectionDescription:  |
-        For example, paying care home fees if the client's money runs low,
-        managing the client's property, making gifts, other family members' 
-        involvement with the client's funds,  what expenses you can claim.
+  pageSectionTitle: "More information"
+  pageSectionDescription: Now you have completed your report, is there anything else you'd like to tell us?
   goBackLink: "Go back to make changes to the report"
-  editLink: Edit information
+  editLink: Edit
   nextButton: Next
 form:
   furtherInformation:
-    label: " "
+    label: "More information"
   saveAndContinue:
     label: "Save and continue"
