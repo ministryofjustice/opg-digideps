@@ -357,6 +357,14 @@
                         </fieldset>
                     {% endfor %}
                 </div>
+                {% if  report.furtherInformation %}
+                  <div class="section" id="more-info">
+                    <h2>More information</h2>
+                    <fieldset>
+                      <p class="page-section-description">{{ report.furtherInformation | nl2br }}</p>
+                    </fieldset>
+                  </div>
+                {% endif %}
                 <div class="section" id="declaration">
                     {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
                 </div>
