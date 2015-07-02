@@ -144,8 +144,8 @@ class Report implements UserFilterInterface
     
     /**
      * @var boolean
-     * @JMS\Groups({"transactions","basic"})
      * @JMS\Type("boolean")
+     * @JMS\Groups({"transactions","basic"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false})
      */
     private $noAssetToAdd;
@@ -329,6 +329,8 @@ class Report implements UserFilterInterface
      */
     public function setFurtherInformation($furtherInformation)
     {
+        $furtherInformation = trim($furtherInformation, " \n");
+        
         $this->furtherInformation = $furtherInformation;
 
         return $this;
