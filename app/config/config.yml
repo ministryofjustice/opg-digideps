@@ -21,7 +21,7 @@ framework:
     default_locale:  "%locale%"
     trusted_proxies: ~
     session:
-      handler_id: dd_session.handler.memcached
+      #hander_id: dd_session.memcached_handler
       name: digideps
       # force session usage, no cookie (we want to logout when the browser closes)
       cookie_lifetime: 0
@@ -73,6 +73,17 @@ swiftmailer:
     username:  ~
     password:  ~
     spool:     { type: memory }
+    
+snc_redis:
+    clients:
+        default:
+            type: predis
+            alias: default
+            dsn: %redis_dsn%
+    session:
+        client: default
+        prefix: %session_prefix%
+        use_as_default: %use_redis%
     
 parameters:
     asset_dropdown:
