@@ -11,7 +11,6 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 # build app dependencies
 COPY composer.json /app/
 COPY composer.lock /app/
-COPY app /app/app
 RUN  chown -R app /app
 WORKDIR /app
 USER app
