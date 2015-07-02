@@ -723,8 +723,7 @@ Feature: report
         # add further info, and check they are saved
         When I click on "report-preview-go-back"
         And I confirm the report is ready to be submitted
-        And I click on "edit-information"
-        And I fill in "report_add_info_furtherInformation" with "nothing to add"
+        And I fill in "report_add_info_furtherInformation" with "    nothing to add     "
         And I press "report_add_info_saveAndContinue"
         # go back and check info was added, and edit them
         And I click on "report-preview-go-back"
