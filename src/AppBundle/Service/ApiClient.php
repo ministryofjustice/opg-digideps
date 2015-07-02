@@ -150,17 +150,7 @@ class ApiClient extends GuzzleClient
     public function send(GuzzleRequestInterface $request)
     {
         try {
-            $response = parent::send($request);
-            
-            if($this->options['use_oauth2']){
-                if($this->options['use_redis']){
-                    $this->redis->set($this->session->getId().'_access_token',serialize($this->subscriber->getAccessToken()));     
-                }elseif($this->options['use_memcached']){
-                    $this->memcached->set($this->session->getId().'_access_token',$this->subscriber->getAccessToken());  
-                }
-            }
-            
-            return $response;
+            return parent::send($request);
         } catch (\Exception $e) {
 
             if ($e instanceof RequestException) {
@@ -343,48 +333,54 @@ class ApiClient extends GuzzleClient
      */
     private function getGuzzleClientConfig($oauth2Client)
     {
+        $config = [ 'base_url' =>  $this->options['base_url'],
+                    'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
+                                   'verify' => false ]];
+        
         // construct parent (GuzzleClient)
         if($this->options['use_oauth2'] && ($this->options['use_redis'] || $this->options['use_memcached'])){
-            $sessionId = $this->session->getId();
+            $this->updateSubscriber($oauth2Client);
             
-            if($this->options['use_redis']){
-                $accessToken = unserialize($this->redis->get($sessionId.'_access_token'));
-                
-                //only do this if we are already authenticating oauth2 using username/password
-                if(is_object($accessToken) && is_object($accessToken->getRefreshToken())){
-                    $this->subscriber->setAccessToken($accessToken);
-                }else{
-                    $credentials = unserialize($this->redis->get($sessionId.'_user_credentials'));
-                }
-            }else{
-                $accessToken = $this->memcached->get($sessionId.'_access_token');
-                
-                //only do this if we are already authenticating oauth2 using username/password
-                if(is_object($accessToken) && is_object($accessToken->getRefreshToken())){
-                    $this->subscriber->setAccessToken($accessToken);
-                }else{
-                    //check if we already have user api key
-                    $credentials = $this->memcached->get($sessionId.'_user_credentials');
-                }
-            }
-            
-            if(!empty($credentials['email']) && !empty($credentials['password'])){
-                $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
-                $this->subscriber = $oauth2Client->getSubscriber();
-            }
-            
-           $config = [ 'base_url' =>  $this->options['base_url'],
-                       'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                                      'verify' => false,
-                                      'auth' => 'oauth2',
-                                      'subscribers' => [ $this->subscriber ]
-                                      ]];
-        }else{
-           $config = [ 'base_url' =>  $this->options['base_url'],
-                       'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
-                                       'verify' => false
-                                      ]];
+            $config['defaults']['auth'] = 'oauth2';
+            $config['defaults']['subscribers'] = [ $this->subscriber ];
         }
         return $config;
+    }
+    
+    /**
+     * Update Oauth subscriber
+     * 
+     * @return type
+     */
+    private function updateSubscriber($oauth2Client)
+    {
+        $sessionId = $this->session->getId();
+        
+        if($this->options['use_redis']){
+            $accessToken = unserialize($this->redis->get($sessionId.'_access_token'));
+            $credentials = unserialize($this->redis->get($sessionId.'_user_credentials'));
+        }elseif($this->options['use_memcached']){
+            $accessToken = $this->memcached->get($sessionId.'_access_token'); 
+            $credentials = $this->memcached->get($sessionId.'_user_credentials');
+        }
+        
+        if(!empty($credentials['email']) && !empty($credentials['password']) && (empty($accessToken) || !is_object($accessToken->getRefreshToken()))){
+                $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
+                $this->subscriber = $oauth2Client->getSubscriber();
+         }
+            
+        if(empty($accessToken) || $accessToken->isExpired()){
+            $newAccessToken = $this->subscriber->getAccessToken();
+       
+            if($this->options['use_redis']){
+                $this->redis->set($this->session->getId().'_access_token',serialize($newAccessToken));   
+            }elseif($this->options['use_memcached']){
+                $this->memcached->set($this->session->getId().'_access_token',$newAccessToken); 
+            }
+            $accessToken = $newAccessToken;
+        }
+        $this->subscriber->setAccessToken($accessToken);
+        
+        return $this->subscriber;
     }
 }
