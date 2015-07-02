@@ -137,6 +137,7 @@ class Report implements UserFilterInterface
      * @var string
      *
      * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="further_information", type="text", nullable=true)
      */
     private $furtherInformation;
@@ -329,6 +330,8 @@ class Report implements UserFilterInterface
      */
     public function setFurtherInformation($furtherInformation)
     {
+        $furtherInformation = trim($furtherInformation, " \n");
+        
         $this->furtherInformation = $furtherInformation;
 
         return $this;
