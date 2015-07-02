@@ -9,12 +9,7 @@ help.legend: Did you have any help filling in this form?
 back.label: Back to deputy report
 send.label: Send feedback
 
-
-email:
-    subject: User Feedback
-    
 thankYou: Thank you for sending your feedback
-
 
 
 #_security:

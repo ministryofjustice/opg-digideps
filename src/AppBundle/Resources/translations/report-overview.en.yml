@@ -64,6 +64,8 @@ pages:
       subSectionTitle: "Assets"
       subSectionWarning: "You've not added any of the client's assets details."
       subSectionDescription: "<a href=\"%pageHref%\">Go to the Assets section</a> and add them now."
+  additionalInformation: 
+      subSectionTitle: More information
 reportSubmit:
     checkbox:
         label: I have reviewed and checked this report.

@@ -1,0 +1,12 @@
+page:
+  htmlTitle: "Report additional information"
+  pageSectionTitle: "More information"
+  pageSectionDescription: Now you have completed your report, is there anything else you'd like to tell us?
+  goBackLink: "Go back to make changes to the report"
+  editLink: Edit
+  nextButton: Next
+form:
+  furtherInformation:
+    label: "More information"
+  saveAndContinue:
+    label: "Save and continue"

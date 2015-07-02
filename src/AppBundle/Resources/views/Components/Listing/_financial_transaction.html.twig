@@ -4,6 +4,9 @@
 <li class="transaction">
     <dl>
         <dt class="transaction-label">{{ transaction.type | trans }}</dt>
+        {% if transaction.moreDetails %}
+            <dd class="transaction-detail">{{ transaction.moreDetails }}</dd>
+        {% endif %}
         <dd class="transaction-value">
             <span class="currency">{{ 'currencySymbol' | trans }}</span>
             <span class="amount">{{ transaction.amount | number_format(2, '.', ',') }}</span>

@@ -82,6 +82,53 @@ class ReportController extends Controller
     }
     
     /**
+     * @Route("/report/{reportId}/add_further_information/{action}", 
+     *  name="report_add_further_info", 
+     *  defaults={"action": "view"}, 
+     *  requirements={"action": "(view|edit)"}
+     * )
+     * @Template()
+     */
+    public function furtherInformationAction(Request $request, $reportId, $action = 'view')
+    {
+        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        
+        // check status
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
+        
+        $clients = $this->getUser()->getClients();
+        $client = $clients[0];
+        
+        $form = $this->createForm(new FormDir\ReportFurtherInfoType, $report);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            // add furher info
+            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+                'deserialise_group' => 'furtherInformation',
+            ]);
+            
+            // next or save: redirect to report declration
+            if ($form->get('saveAndContinue')->isClicked()) {
+                return $this->redirect($this->generateUrl('report_declaration', ['reportId'=>$reportId]));
+            }
+        }
+        
+        if (!$report->getFurtherInformation()) {
+            $action = 'edit';
+        }
+        
+        return [
+            'action' => $action,
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView(),
+        ];
+    }
+    
+    /**
      * @Route("/report/{reportId}/declaration", name="report_declaration")
      * @Template()
      */
@@ -107,7 +154,7 @@ class ReportController extends Controller
             ]);
             
             // send report by email
-            $reportContent = $this->forward('AppBundle:Report:display', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
+            $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
             $reportEmail = $this->get('mailFactory')->createReportEmail($client, $reportContent);
             $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
             
@@ -149,6 +196,37 @@ class ReportController extends Controller
      * @Template()
      */
     public function displayAction($reportId, $isEmailAttachment = false)
+    {
+        $apiClient = $this->get('apiclient');
+        $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
+        
+        $report = $util->getReport($reportId);
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
+        $client = $util->getClient($report->getClient());
+        
+        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
+        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
+        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
+        
+        return [
+            'report' => $report,
+            'client' => $client,
+            'assets' => $assets,
+            'contacts' => $contacts,
+            'decisions' => $decisions,
+            'isEmailAttachment' => $isEmailAttachment,
+            'deputy' => $this->getUser(),
+        ];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/formatted", name="formatted_report_display")
+     * @Template()
+     */
+    public function formattedAction($reportId, $isEmailAttachment = false)
     {
         $apiClient = $this->get('apiclient');
         $util = $this->get('util');
