@@ -119,7 +119,6 @@ class UserController extends RestController
         return $this->getRepository('User')->findAll();
     }
 
-    
     /**
      * @Route("/get-user-by-email/{email}")
      * @Method({"GET"})
@@ -143,7 +142,6 @@ class UserController extends RestController
         }
         
         return $user;
-        //return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
     
     /**
