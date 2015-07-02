@@ -92,10 +92,6 @@ class ReportController extends Controller
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
-        $firstLoad = $report->getFurtherInformation() === null;
-        if ($firstLoad) {
-            $action = 'edit';
-        }
         
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
@@ -110,9 +106,6 @@ class ReportController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            if (!$report->getFurtherInformation()) {
-                $report->setFurtherInformation('');
-            }
             $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
                 'deserialise_group' => 'furtherInformation',
             ]);
@@ -123,8 +116,11 @@ class ReportController extends Controller
             }
         }
         
+        if (!$report->getFurtherInformation()) {
+            $action = 'edit';
+        }
+        
         return [
-            'firstLoad' => $firstLoad,
             'action' => $action,
             'report' => $report,
             'client' => $client,

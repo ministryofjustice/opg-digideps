@@ -102,6 +102,10 @@ form {
     line-height: 1.4;
   }
 
+  select.form-control {
+      width: 100%;
+  }
+
   .input-group-prefix {
     & + input {
       padding-left: 2em;
