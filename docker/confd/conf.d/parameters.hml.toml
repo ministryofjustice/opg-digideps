@@ -1,0 +1,13 @@
+[template]
+prefix = "/frontend"
+src = "parameters.yml.tmpl"
+dest = "/app/app/config/parameters.yml"
+keys = [
+    "/role",
+    "/session",
+    "/secret",
+    "/api",
+    "/email",
+    "/oauth2",
+    "/fixtures",
+ ]

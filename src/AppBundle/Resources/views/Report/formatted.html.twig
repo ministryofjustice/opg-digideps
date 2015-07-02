@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <title>OPG Report</title>
+        <style type="text/css">
+            {% include 'AppBundle:Email/css:emailreport.html.twig' %}
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="content" class="formatted-report content">
+                <div id="report-header">Office of the Public Guardian</div>
+                <h1>Deputy report for property and financial decisions</h1>
+
+                <div class="section" id="deputy-client-information-section">
+                    <h2>
+                        <span class="section-number">Section 1</span>
+                        Deputy and client information
+                    </h2>            
+                    <fieldset class="single-field-fieldset three-quarter-width">
+                        <div class="label left-label">Case number</div>
+                        <div class="value right-value">{{ client.getCaseNumber }}</div>
+                    </fieldset>
+                    <fieldset class="case-number-subsection three-quarter-width">
+                        <h3>Reporting period</h3>
+                        
+                        <div class="form-group form-group-vertical half-width">
+                            <div class="label">Start date</div>
+                            <div class="value">{{ report.startDate | date("d / m / Y") }}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical half-width">
+                            <div class="label">End date</div>
+                            <div class="value">{{ report.endDate | date("d / m / Y") }}</div>
+                        </div>
+                    </fieldset>
+                    <fieldset id="deputy-details-subsection" class="extended-down half-width">
+                        <h3>Deputy details</h3>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">First names</div>
+                            <div class="value">{{deputy.firstname}}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Last name</div>
+                            <div class="value">{{deputy.lastname}}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Address</div>
+                            <div class="textarea address-value">
+                                {{ deputy.address1 }}<br/>
+                                {{ deputy.address2 }}<br/>
+                                {{ deputy.address3 }}<br/>
+                                {{ deputy.addressPostcode }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Telephone number</div>
+                            <div class="value">{{deputy.phoneMain}}</div>
+                        </div>        
+                    </fieldset>        
+                    <fieldset class="client-details-section half-width right">
+                        <h3>Client details</h3>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">First names</div>
+                            <div class="value">{{ client.firstname }}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Last name</div>
+                            <div class="value">{{ client.lastname }}</div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Address</div>
+                            <div class="textarea address-value">
+                                {{ client.address }}<br/>
+                                {{ client.address2 }}<br/>
+                                {{ client.county }}<br/>
+                                {{ client.postcode }}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Telephone number</div>
+                            <div class="value">{{client.phone}}</div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="full-width-extension">
+                        <div class="form-group form-group-vertical">
+                            <div class="label">Email (optional)</div>
+                            <div class="value">{{deputy.email}}</div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="section" id="decisions-section">
+                    <h2>
+                        <span class="section-number">Section 2</span>
+                        Decisions made over the reporting period
+                    </h2>
+                    <fieldset>
+                        <div class="half-width">
+                            <div class="list-label">Deputy decision</div>
+                        </div>
+                        <div class="half-width">
+                            <div class="list-label">Client involvement</div>
+                        </div>
+                        <ul class="decisions-list box-list">
+                            {% if report.decisions | length == 0 %}
+                                <li class="decision-item box-list-item">
+                                    <div class="form-group form-group-vertical half-width">
+                                        <div class="textarea address-value">{{ report.reasonForNoDecisions }}</div>
+                                    </div>
+                                </li>
+                            {% else %}
+                                {% for decision in decisions %}
+                                <li class="decision-item box-list-item">
+                                    <div class="form-group form-group-vertical half-width">
+                                        <div class="textarea address-value">{{ decision.description }}</div>
+                                    </div>
+                                    
+                                    <div class="form-group form-group-vertical half-width">
+                                        <div class="textarea address-value">{{ decision.clientInvolvedDetails | nl2br }}</div>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </fieldset>
+                </div>
+                <div class="section" id="contacts-section">
+                    <h2>
+                        <span class="section-number">Section 3</span>
+                        People you consulted
+                    </h2>
+                                    
+                    {% if report.contacts | length == 0 %}
+                        <fieldset class="contact-item no-contact">
+                            <div class="form-group right-label">
+                                <div class="checkbox">X</div>
+                                <label>Check this box if you did not consult anyone and use the box below to tell us why.</label>
+                            </div>
+                            <div class="form-group form-group-vertical">
+                                <div class="textarea address-value">{{ report.reasonForNoContacts }}</div>
+                            </div>
+                        </fieldset>
+                    {% else %}
+                        <ul class="contacts-list">
+                            {% for contact in contacts %}
+                                <li class="contact-item">
+                                    <fieldset>
+                                        <div class="half-width">
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Full name</div>
+                                                <div class="value">{{ contact.contactName }}</div>
+                                            </div>
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Address</div>
+                                                <div class="textarea address-value">
+                                                    {{ contact.address }}<br/>
+                                                    {{ contact.address2 }}<br/>
+                                                    {{ contact.county }}<br/>
+                                                    {{ contact.postcode }}<br/>
+                                                    {{ contact.country | country_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="half-width">
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Relationship to client</div>
+                                                <div class="value">{{ contact.relationship }}</div>
+                                            </div>
+                                            <div class="form-group form-group-vertical">
+                                                <div class="label">Why did you consult them?</div>
+                                                <div class="textarea">{{ contact.explanation }}</div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="section" id="accounts-section">
+                
+                    <h2>
+                        <span class="section-number">Section 6</span>
+                        Bank accounts
+                    </h2>                
+                    {% for account in report.accounts %}            
+                        <fieldset>
+                            <div class="half-width">
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Bank/building society name</div>
+                                    <div class="value">{{ account.bank }}</div>
+                                </div>
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Branch sort code</div>
+                                    <div class="value">{{ account.sortCode | split('', 2) | join('-') }}</div>
+                                </div>
+                            </div>
+                            <div class="half-width">
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Account Type</div>
+                                    <div class="value">Current account</div>
+                                </div>
+                                <div class="form-group form-group-vertical">
+                                    <div class="label">Last four digits of account number</div>
+                                    <div class="value">{{ account.accountNumber }}</div>
+                                </div>
+                            </div>
+                        </fieldset>
+                        
+                        <h3>Summary of money paid in</h3>
+                        <fieldset id="money-in">
+                            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+                                transactions: account.moneyIn,
+                                total: account.moneyInTotal,
+                                footerTitle: 'moneyInFooter'
+                            } %}                        
+                        </fieldset>
+                        
+                        <h3>Summary of money paid out</h3>
+                        <fieldset id="money-out">
+                            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+                                transactions: account.moneyOut,
+                                total: account.moneyOutTotal,
+                                footerTitle: 'moneyOutFooter'
+                            } %}
+                        </fieldset>
+
+                        
+                        <h3>Balancing the account</h3>
+                        
+                        <ol id="balancing">
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Opening balance for reporting period
+                                        <span class="sub-label">(as shown on bank statement)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-opening-balance" class="amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 1</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Total money paid in
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-total-in" class="amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 2</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Sub-total 1
+                                        <span class="sub-label">(box 1 plus box 2)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-sub-total" class="amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 3</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Total money paid out
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-total-out" class="amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 4</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Sub-total 2
+                                        <span class="sub-label">(box 3 minus box 4)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-sub-total-2" class="amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 5</div>
+                            </li>
+                            <li class="balancing-item transaction">
+                                <dl>
+                                    <dt class="transaction-label">
+                                        Closing balance for reporting period
+                                        <span class="sub-label">(as shown on bank statement)</span>
+                                    </dt>
+                                    <dd class="transaction-value">
+                                        <span class="currency">£</span>
+                                        <span id="balancing-closing-balance" class="amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
+                                    </dd>
+                                </dl>
+                                <div class="box-right">Box 6</div>
+                            </li>
+                        </ol>
+                        
+                        <fieldset id="accountBalance_closingBalanceExplanation">
+                            <div class="form-group form-group-vertical">
+                                <div class="label">If the figures in box 5 and box 6 are different, tell us why (for example, if you’ve rounded up or down any amounts or you have used a different date on the bank statement).</div>
+                                <div class="textarea">{% if account.closingBalanceExplanation %}{{ account.closingBalanceExplanation }}{% endif %}</div>
+                            </div>
+                        </fieldset>
+                        
+                        <fieldset id="account-date-explanation" class="case-number-subsection">
+                        
+                            <div class="label intro">If the dates used to calculate the opening and closing balances are different from the reporting period shown on the front page, write the dates you used below.</div>
+                        
+                            <div class="form-group form-group-vertical half-width">
+                                <div class="label">From</div>
+                                <div class="value">
+                                    {% if account.openingDateExplanation or account.closingDateExplanation %}
+                                        {{ account.openingDate | date("d/m/Y") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="form-group form-group-vertical half-width">
+                                <div class="label">To</div>
+                                <div class="value">
+                                    {% if account.openingDateExplanation or account.closingDateExplanation %}
+                                        {{ account.closingDate | date("d/m/Y") }}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="form-group form-group-vertical full-width">
+                                <div class="label">Tell us why the dates are different.</div>
+                                <div class="textarea">
+                                    {% if account.openingDateExplanation or account.closingDateExplanation %}
+                                        {{ account.openingDateExplanation}}<br/>
+                                        {{ account.closingDateExplanation}}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </fieldset>
+                    {% endfor %}
+                </div>
+                <div class="section" id="declaration">
+                    {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
