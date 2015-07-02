@@ -23,13 +23,15 @@
     {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
     {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
     
-    <div class="external-report-section external-report-section-additional-info">
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionTitle: 'pages.additionalInformation.subSectionTitle'
-        } %}
-        <p class="page-section-description">{{ report.furtherInformation | nl2br | default('pages.additionalInformation.noneAdded' | trans({}, translationDomain)) }}</p>
-    </div>
+    {% if  report.furtherInformation %}
+      <div class="external-report-section external-report-section-additional-info">
+          {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+              transDomain: translationDomain,
+              pageSectionTitle: 'pages.additionalInformation.subSectionTitle'
+          } %}
+          <p class="page-section-description">{{ report.furtherInformation | nl2br | default('pages.additionalInformation.noneAdded' | trans({}, translationDomain)) }}</p>
+      </div>
+    {% endif %}
     
     <div class="external-report-section external-report-section-contacts">
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
