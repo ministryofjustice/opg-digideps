@@ -29,7 +29,7 @@
               transDomain: translationDomain,
               pageSectionTitle: 'pages.additionalInformation.subSectionTitle'
           } %}
-          <p class="page-section-description">{{ report.furtherInformation | nl2br | default('pages.additionalInformation.noneAdded' | trans({}, translationDomain)) }}</p>
+          <p class="page-section-description">{{ report.furtherInformation | nl2br }}</p>
       </div>
     {% endif %}
     
