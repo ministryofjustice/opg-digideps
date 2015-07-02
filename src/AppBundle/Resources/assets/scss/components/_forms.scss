@@ -2,6 +2,7 @@
 // ==========================================================================
 
 form {
+  padding: 0 3px 0 3px;
   overflow: hidden;
 
   &.report-form {
@@ -22,12 +23,6 @@ form {
     }
 
     .form-group {
-
-      .form-control, .expanding-wrapper {
-        width: 90%;
-        max-width: 540px;
-        line-height: 1.4;
-      }
 
       textarea.form-control {
         height: 7em;
@@ -99,6 +94,12 @@ form {
   float: none; /* Only flat left if within a form container. */
   form & {
     float: left;
+  }
+
+  .form-control, .expanding-wrapper {
+    width: 90%;
+    max-width: 540px;
+    line-height: 1.4;
   }
 
   .input-group-prefix {
@@ -206,3 +207,7 @@ form {
     display: inline-block;
     margin-top: 15px;
 }
+
+form.single-texta-area {
+    padding-top: 3px;
+} 

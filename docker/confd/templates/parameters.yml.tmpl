@@ -1,0 +1,34 @@
+# This file is auto-generated during the composer install
+parameters:
+    locale: en
+    secret: {{ getv "/secret" }}
+    api_base_url: {{ getv "/api/url" }}
+    env: {{ getv "/role" }}
+    session_expire_seconds: 1500
+    session_popup_show_after: 1200
+    session_cookie_secure: false
+    session_redis_host: {{getv "/session/redis" }}
+    session_memcached_host: {{ getv "/session/memcache" }}
+    session_memcached_port: 11211
+    session_memcached_prefix: dd
+    email_send:
+        from_name: {{ getv "/email/from/name" }}
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: {{ getv "/email/to" }}
+    email_report_submit:
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: {{ getv "/email/report/to" }}
+    oauth2_client_id: {{ getv "/oauth2/client/id" }}
+    oauth2_client_secret: {{ getv "/oauth2/client/secret" }}
+    oauth2_enabled: {{ getv "/oauth2/enabled" }}
+{{ if lsdir "/fixtures" }}
+    fixtures:
+{{ range lsdir "/fixtures" }}
+        {{ getv (printf "/fixtures/%s/email" .) }}:
+            firstname: {{ getv (printf "/fixtures/%s/firstname" .) }}
+            lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
+            password: {{ getv (printf "/fixtures/%s/password" .) }}
+            roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
+            activated: {{ getv (printf "/fixtures/%s/activated" .) }}
+{{ end }}
+{{ end }}

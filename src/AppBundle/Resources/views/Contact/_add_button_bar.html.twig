@@ -17,7 +17,7 @@ showAddForm (true/false)
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
     linkButtonLabel: 'contact_form.addContactButton.label',
-    linkClass: 'button-secondary',
+    linkClass: 'button-secondary behat-link-add-a-contact',
     linkHref: path('contacts', {'reportId': params['reportId'], 'action': 'add' }) ~ "#add"
     } %}
 

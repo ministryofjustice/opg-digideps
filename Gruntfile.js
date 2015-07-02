@@ -33,6 +33,7 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
+                        style: 'compressed',
                         cwd: scssPath + '/email-template',
                         src: ['*.scss'],
                         dest: 'src/AppBundle/Resources/views/Email/css',

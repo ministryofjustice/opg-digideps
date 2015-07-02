@@ -140,6 +140,13 @@ class Report
     private $reviewed;
     
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"furtherInformation"})
+     * @var string
+     */
+    private $furtherInformation;
+    
+    /**
      * 
      * @return integer $id
      */
@@ -627,6 +634,23 @@ class Report
     {
         $this->reviewed = $reviewed;
     }
+        
+    /**
+     * @return string
+     */
+    public function getFurtherInformation()
+    {
+        return $this->furtherInformation;
+    }
+
+    /**
+     * @param string $furtherInformation
+     */
+    public function setFurtherInformation($furtherInformation)
+    {
+        $this->furtherInformation = $furtherInformation;
+    }
+
         
     /**
      * @return string $status | null

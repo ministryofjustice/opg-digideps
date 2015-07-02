@@ -25,7 +25,7 @@ class MailFactory
      * @var Container
      */
     protected $container;
-    
+
     /**
      * @var array
      */
@@ -39,7 +39,6 @@ class MailFactory
         $this->router = $container->get('router');
         $this->validator = $container->get('validator');
         $this->templating = $container->get('templating');
-        $this->emailConfig =  $this->container->getParameter('email_send');
     }
 
     public function createActivationEmail(EntityDir\User $user)
@@ -50,20 +49,26 @@ class MailFactory
          **/
         if($user->getRole()['role'] == 'ROLE_ADMIN'){
             $absoluteUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()],true);
+            $domainAbsolute = $this->router->generate('homepage', [], true);
         }else{
             $relativeUrl = $this->router->generate('user_activate', [ 'token' => $user->getRegistrationToken()]);
-            $absoluteUrl = $this->container->getParameter('non_admin_host').$relativeUrl; 
+            $absoluteUrl = $this->container->getParameter('non_admin_host').$relativeUrl;
+            
+            $domainRelative = $this->router->generate('homepage', []);
+            $domainAbsolute = $this->container->getParameter('non_admin_host').$domainRelative;
         }
        
         $viewParams = [
             'name' => $user->getFullName(),
-            'domain' => $this->router->generate('homepage', [], true),
+            'domain' => $domainAbsolute,
             'link' => $absoluteUrl,
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
         ];
+
+        $email = new ModelDir\Email();
         
-        $email = $this->createEmail()
-            ->setFromEmail($this->emailConfig['from_email'])
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -85,8 +90,10 @@ class MailFactory
                 ], true)
         ];
 
-        $email = $this->createEmail()
-            ->setFromEmail($this->emailConfig['from_email'])
+        $email = new ModelDir\Email();
+        
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFullName())
@@ -100,12 +107,14 @@ class MailFactory
     /**
      * @param EntityDir\User $user
      * 
-     * @return Email
+     * @return ModelDir\Email
      */
     public function createChangePasswordEmail(EntityDir\User $user)
     {
-         $email = $this->createEmail()
-            ->setFromEmail($this->emailConfig['from_email'])
+        $email = new ModelDir\Email();
+        
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('changePassword.fromName'))
             ->setToEmail($user->getEmail())
             ->setToName($user->getFirstname())
@@ -114,37 +123,54 @@ class MailFactory
 
         return $email;
     }
-    
-    
+
     /**
      * @param EntityDir\Client $client
      * @return ModelDir\Email
      */
     public function createReportEmail(EntityDir\Client $client, $reportContent)
     {
-        $email = $this->createEmail()
-            ->setFromEmail($this->emailConfig['from_email'])
+        $email = new ModelDir\Email();
+        
+        $email
+            ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
-            ->setToEmail($this->emailConfig['to_email'])
+            ->setToEmail($this->container->getParameter('email_report_submit')['to_email'])
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig'))
-            ->setAttachments([new ModelDir\EmailAttachment('report-'.$client->getCaseNumber().'.html', 'application/xml', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment('report-' . $client->getCaseNumber() . '.html', 'application/xml', $reportContent)]);
 
         return $email;
     }
-    
+
     /**
-     * @return \AppBundle\Service\ModelDir\Email
+     * @param string $response
+     * 
+     * @return ModelDir\Email
      */
-    private function createEmail()
+    public function createFeedbackEmail($response)
     {
-        return new ModelDir\Email();
+        $email = new ModelDir\Email();
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromName($this->translate('feedbackForm.fromName'))
+            ->setToEmail($this->container->getParameter('email_feedback_send')['to_email'])
+            ->setToName($this->translate('feedbackForm.toName'))
+            ->setSubject($this->translate('feedbackForm.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:feedback.html.twig', [ 'response' => $response]));
+
+        return $email;
     }
-    
-    private function translate($key, $vars = [])
+
+    /**
+     * @param string $key
+     * 
+     * @return string
+     */
+    private function translate($key)
     {
-        return $this->translator->trans($key, $vars, 'email');
+        return $this->translator->trans($key, [], 'email');
     }
 
 }
