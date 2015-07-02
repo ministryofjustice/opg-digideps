@@ -329,6 +329,8 @@ class Report implements UserFilterInterface
      */
     public function setFurtherInformation($furtherInformation)
     {
+        $furtherInformation = trim($furtherInformation, " \n");
+        
         $this->furtherInformation = $furtherInformation;
 
         return $this;
