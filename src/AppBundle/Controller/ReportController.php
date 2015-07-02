@@ -264,6 +264,10 @@ class ReportController extends RestController
             $report->setNoAssetToAdd($data['no_asset_to_add']);
         }
         
+        if (array_key_exists('further_information', $data)) {
+            $report->setFurtherInformation($data['further_information']);
+        }
+        
         $this->getEntityManager()->flush($report);
         
         return ['id'=>$report->getId()];
