@@ -20,7 +20,6 @@ RUN  gem install sass
 # build app dependencies
 COPY composer.json /app/
 COPY composer.lock /app/
-COPY app /app/app
 RUN  chown -R app /app
 WORKDIR /app
 USER app

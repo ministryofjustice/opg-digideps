@@ -6,7 +6,7 @@ parameters:
     env: {{ getv "/role" }}
     session_expire_seconds: 1500
     session_popup_show_after: 1200
-    session_cookie_secure: true
+    session_cookie_secure: false
     session_redis_host: {{getv "/session/redis" }}
     session_memcached_host: {{ getv "/session/memcache" }}
     session_memcached_port: 11211
