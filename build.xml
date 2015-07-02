@@ -82,7 +82,7 @@
     
     <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint,add-oauth2-client">
     </target>
-    
+
     <target name="release" depends="cache-clear,composer-install,db-migrate,phplint">
     </target>
     
