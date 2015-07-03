@@ -4,7 +4,7 @@ Feature: report
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         Then I should see a "#tab-overview" element
         And I should see a "#tab-decisions" element
         And I should see a "#tab-contacts" element
@@ -78,7 +78,7 @@ Feature: report
         # set report due
         Given I set the report 1 end date to 3 days ago
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         Then I should see the "tab-contacts-warning" region
         Then I should see the "tab-decisions-warning" region
         Then I should see the "tab-accounts-warning" region
@@ -91,7 +91,7 @@ Feature: report
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         And I follow "tab-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
@@ -125,7 +125,7 @@ Feature: report
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         And I follow "tab-decisions"
         And I save the page as "report-decision-empty"
         # form errors
@@ -169,7 +169,7 @@ Feature: report
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         And I follow "tab-assets"
         And I save the page as "report-assets-empty"
         # wrong form
@@ -226,7 +226,7 @@ Feature: report
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # empty form
