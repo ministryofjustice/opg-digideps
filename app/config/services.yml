@@ -52,7 +52,7 @@ services:
         arguments: [ @service_container ]
     redirectorService:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router, @session ]
+        arguments: [ @security.context, @router, @session, @util ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
         arguments: [ @event_dispatcher, @redirectorService ]
