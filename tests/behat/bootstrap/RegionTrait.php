@@ -127,6 +127,14 @@ trait RegionTrait
             }
         }
     }
+    
+    /**
+     * @Then I should see :text in the page header
+     */
+    public function iShouldSeeInThePageHeader($text)
+    {
+        $this->assertSession()->elementTextContains('css', '.page-header', $text);
+    }
 
     
 }
