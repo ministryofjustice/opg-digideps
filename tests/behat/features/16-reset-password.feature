@@ -53,11 +53,11 @@ Feature: password reset
           | reset_password_password_second  | Abcd12345 |
       And I press "reset_password_save"
       Then the form should not contain an error
-      And I should be on "client/show"
+      And the URL should match "report/\d+/overview"
       And I save the page as "forgotten-password-logged"
       # test login
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd12345"
-      Then I should be on "client/show"
+      Then the URL should match "report/\d+/overview"
       # assert set password link is not accessible
       When I open the "/user/password-reset/" link from the email
       Then the response status code should be 500
