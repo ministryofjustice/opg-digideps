@@ -1,2 +1,7 @@
 .git
 app/cache
+app/logs
+vendor
+.sass-cache
+bower_downloads
+node_modules
