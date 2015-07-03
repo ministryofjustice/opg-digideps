@@ -63,7 +63,7 @@ Feature: Formatted Report
         And the URL should match "report/\d+/overview"
         Then I save the application status into "reportuser"
 
-    @formatted-report @wip
+    @formatted-report
     Scenario: A report lists decisions
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -185,7 +185,7 @@ Feature: Formatted Report
         And I should see "2 televisions" in "decisions-section"
         And I should see "the client said he doesnt want a tv anymore" in "decisions-section"
 
-    @formatted-report
+    @formatted-report @wip
     Scenario: A report says why no decisions were made
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -290,6 +290,7 @@ Feature: Formatted Report
         When I go to "/report/1/formatted"
         Then the response status code should be 200
         And I should see "Deputy report for property and financial decisions"
+        Then I should see "No decisions made:" in "decisions-section"
         And I should see "small budget" in "decisions-section"
 
     #Scenario: A report shows contacts
