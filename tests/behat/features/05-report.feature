@@ -529,12 +529,11 @@ Feature: report
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
             | accountBalance_closingBalance    |
-        # only date mismatch (30/6/2015) instead of 7/6/2015)
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 30 | 
-            | accountBalance_closingDate_month | 06 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | -3100.50 | 
+        # only date mismatch (30 days ago instead of 3 days ago)
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
+        And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
+        And I fill in "accountBalance_closingBalance" with "-3100.50"
         And I press "accountBalance_save"
         Then the following fields should have an error:
             | accountBalance_closingDate_day   |

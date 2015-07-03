@@ -105,6 +105,11 @@ class Redirector
         }
         
         return $this->router->generate('client_home');
+   
+        
+//        $reportId = $clients[0]->getReports()[0];
+//        
+//        return $this->router->generate('report_overview', ['reportId'=>$reportId]);
     }
     
    
