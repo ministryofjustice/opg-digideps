@@ -4,7 +4,7 @@
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block contentClass %}{{ parent() }} my-client{% endblock %}
-{% block title %}{% trans %}page.pageSectionTitle{% endtrans %}{% endblock %}
+{% block title %}{{ client.getFullname }}{% endblock %}
 
 {% block afterTitle %}
     {% if lastSignedIn %}
