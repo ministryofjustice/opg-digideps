@@ -3,7 +3,7 @@ Feature: edit client details
     @deputy
     Scenario: edit client details
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/show"
+        And I click on "client-home"
         And I click on "edit-client-details"
         Then I should be on "client/show/edit-client#edit-client"
         Then the following fields should have the corresponding values:

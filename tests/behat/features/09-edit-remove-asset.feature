@@ -4,9 +4,6 @@ Feature: edit/remove an asset
     @deputy
     Scenario: edit asset-remove
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/show"
-        And I click on "report-n1"
-        And I am on the first report overview page
         And I follow "tab-assets"
         And I click on "asset-n1"
         Then the following fields should have the corresponding values:

@@ -3,9 +3,6 @@ Feature: edit/remove decision
     @deputy
     Scenario: edit remove decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/show"
-        And I click on "report-n1"
-        And I am on the first report overview page
         And I follow "tab-decisions"
         And the URL should match "/report/\d+/decisions"
         And I click on "decision-n1"

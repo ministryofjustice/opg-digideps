@@ -3,7 +3,6 @@ Feature: edit user details
     @deputy
     Scenario: edit user details
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/show"
         And I click on "my-details"
         And I click on "edit-user-details"
         Then I should be on "user/edit-your-details#edit-your-details"
@@ -57,7 +56,6 @@ Feature: edit user details
     @deputy   
     Scenario: change user password
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/show"
         And I click on "my-details"
         And I click on "edit-user-details"
         # wrong old password
