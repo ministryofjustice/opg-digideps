@@ -66,7 +66,7 @@ Feature: report
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the first report overview page
+        #And I am on the first report overview page
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#tab-contacts" element
         And I should see a "#tab-decisions" element
@@ -782,8 +782,10 @@ Feature: report
     @deputy
     Scenario: report submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # assert after login I'm redirected to report page
+        Then the URL should match "/report/\d+/overview"
         # assert I cannot access the sumbmitted page directly
-        Then the URL "/report/1/submitted" should not be accessible
+        And the URL "/report/1/submitted" should not be accessible
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
@@ -810,6 +812,8 @@ Feature: report
     @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
+        Then I should be on "/client/show"
         Then I should not see the "edit-report-period-2015-report" link
         And I should not see the "report-n1" link
         And I should see the "report-2015-submitted-on" region
