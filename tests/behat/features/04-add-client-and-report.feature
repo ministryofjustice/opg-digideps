@@ -115,7 +115,7 @@ Feature: add client and report
         And I should see "123456ABC" in the "case-number" region
         And I should see "1 South Parade" in the "client-address" region
         And I should see the "report-n1" link
-        And I should see the "create-new-report" link
+        And I should not see the "create-new-report" link
         And I save the page as "deputy-client-home"
         
     @deputy

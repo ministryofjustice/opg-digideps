@@ -35,8 +35,6 @@
     'translationDomain': translationDomain
     } %}
 
-    {% include 'AppBundle:Client:_report-form.html.twig' %}
-
     {% if reports is not empty %}
         {% include 'AppBundle:Client:_list-reports.html.twig' with {
         'translationDomain': translationDomain,
