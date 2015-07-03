@@ -61,7 +61,7 @@ Feature: edit client details
             | client_phone | 0123456789  |
         And I press "client_save"
         Then I should be on "client/show"
-        Then I should see "Nolan Ross" in the "client-name" region
+        Then I should see "Nolan Ross" in the page header
         Then I should see "123456ABC" in the "case-number" region
         Then I should see "2 South Parade" in the "client-address" region
         

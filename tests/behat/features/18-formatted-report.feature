@@ -1,6 +1,6 @@
 Feature: Formatted Report
     
-    @formatted-report
+    @formatted-report @wip
     Scenario: Setup the reporting user
         Given I am on "/login"
         When I fill in the following:
@@ -63,7 +63,7 @@ Feature: Formatted Report
         And the URL should match "report/\d+/overview"
         Then I save the application status into "reportuser"
 
-    @formatted-report
+    @formatted-report @wip
     Scenario: A report lists decisions
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -168,6 +168,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -181,7 +185,7 @@ Feature: Formatted Report
         And I should see "2 televisions" in "decisions-section"
         And I should see "the client said he doesnt want a tv anymore" in "decisions-section"
 
-    @formatted-report    
+    @formatted-report
     Scenario: A report says why no decisions were made
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -274,6 +278,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -390,6 +398,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -485,6 +497,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -600,6 +616,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -721,6 +741,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -831,6 +855,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -976,6 +1004,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -1131,6 +1163,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -1279,6 +1315,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
@@ -1425,6 +1465,10 @@ Feature: Formatted Report
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
