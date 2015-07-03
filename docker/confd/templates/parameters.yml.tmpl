@@ -6,11 +6,16 @@ parameters:
     env: {{ getv "/role" }}
     session_expire_seconds: 1500
     session_popup_show_after: 1200
-    session_cookie_secure: false
-    session_redis_host: {{getv "/session/redis" }}
+    session_cookie_secure: {{ getv "/session/cookie/secure" }}
     session_memcached_host: {{ getv "/session/memcache" }}
     session_memcached_port: 11211
     session_memcached_prefix: dd
+    redis_dsn: '{{getv "/session/redis/dsn" }}'
+    session_prefix: dd_session
+    use_redis: true
+    use_memcached: false
+    session_engine: redis
+    
     email_send:
         from_name: {{ getv "/email/from/name" }}
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
