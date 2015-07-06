@@ -3,7 +3,6 @@ prefix = "/api"
 src = "parameters.yml.tmpl"
 dest = "/app/app/config/parameters.yml"
 keys = [
-    "/sendgrid",
     "/database",
     "/smtp",
     "/secret",

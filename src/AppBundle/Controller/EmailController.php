@@ -17,7 +17,7 @@ use Swift_Message;
 class EmailController extends RestController
 {
     /**
-     * @Route("/send/{transport}",defaults={ "transport" = "sendgrid"})
+     * @Route("/send/{transport}",defaults={ "transport" = "default"}, requirements={"(default|secure-smtp)"})
      * @Method({"POST"})
      * "", ""
      * 
@@ -33,9 +33,9 @@ class EmailController extends RestController
             }
         }, ['toEmail', 'toName', 'fromEmail', 'fromName', 'subject', 'bodyText', 'bodyHtml']);
 
-        $mailTransport = 'mailer.transport.sendgrid';
+        $mailTransport = 'mailer.transport.smtp.default';
         if ($transport == 'secure-smtp') {
-            $mailTransport = 'mailer.transport.secureSmtp';
+            $mailTransport = 'mailer.transport.smtp.secure';
         }
 
         $mailerService = new Swift_Mailer($this->container->get($mailTransport));
