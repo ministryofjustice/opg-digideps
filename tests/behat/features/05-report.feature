@@ -182,7 +182,7 @@ Feature: report
         # invalid date
         When I fill in the following:
             | asset_title       | Vehicles | 
-            | asset_value       | 13000.00 | 
+            | asset_value       | 10000000001 | 
             | asset_description | Alfa Romeo 156 1.9 JTD | 
             | asset_valuationDate_day | 99 | 
             | asset_valuationDate_month |  | 
@@ -190,6 +190,7 @@ Feature: report
         And I press "asset_save"
         And I save the page as "report-assets-add-error-date"
         Then the following fields should have an error:
+            | asset_value |
             | asset_valuationDate_day |
             | asset_valuationDate_month |
             | asset_valuationDate_year |
@@ -453,6 +454,7 @@ Feature: report
             | transactions_moneyIn_1_amount        | 25,0000 | 
             | transactions_moneyIn_2_amount        | 25.25.25 | 
             | transactions_moneyIn_3_amount        | 250.250,12 | 
+            | transactions_moneyIn_4_amount        | 10000000001 | 
             | transactions_moneyOut_11_amount      | 250.12 | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I press "transactions_saveMoneyIn"
@@ -461,6 +463,7 @@ Feature: report
             | transactions_moneyIn_1_amount  |
             | transactions_moneyIn_2_amount  |
             | transactions_moneyIn_3_amount  |
+            | transactions_moneyIn_4_amount  |
             | transactions_moneyOut_11_id |
             | transactions_moneyOut_11_type |
             | transactions_moneyOut_11_amount |
@@ -472,6 +475,7 @@ Feature: report
             | transactions_moneyIn_1_amount       |  | 
             | transactions_moneyIn_2_amount       |  | 
             | transactions_moneyIn_3_amount       |  | 
+            | transactions_moneyIn_4_amount       |  | 
             | transactions_moneyIn_15_amount      | 2,000.0 | 
             | transactions_moneyIn_15_moreDetails | more-details-in-15  |
             | transactions_moneyOut_0_amount       | 02500 | 
@@ -519,9 +523,9 @@ Feature: report
             | accountBalance_closingBalance    | | 
         # invalid values
         When I fill in the following:
-            | accountBalance_closingDate_day   | 99 | 
-            | accountBalance_closingDate_month | 99 | 
-            | accountBalance_closingDate_year  | 1 | 
+            | accountBalance_closingDate_day   |  | 
+            | accountBalance_closingDate_month |  | 
+            | accountBalance_closingDate_year  |  | 
             | accountBalance_closingBalance    | invalid value | 
         And I press "accountBalance_save"
         Then the following fields should have an error:
@@ -529,6 +533,19 @@ Feature: report
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
             | accountBalance_closingBalance    |
+        # invalid values
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 99 | 
+            | accountBalance_closingDate_month | 99 | 
+            | accountBalance_closingDate_year  | 1 | 
+            | accountBalance_closingBalance    | 10000000001 | 
+        And I press "accountBalance_save"
+        Then the following fields should have an error:
+            | accountBalance_closingDate_day   |
+            | accountBalance_closingDate_month |
+            | accountBalance_closingDate_year  |
+            | accountBalance_closingBalance    |
+            | accountBalance_closingBalanceExplanation    |
         # only date mismatch (30 days ago instead of 3 days ago)
         When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
         And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"

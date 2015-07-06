@@ -20,7 +20,8 @@ class AccountTransaction
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"transactions"})
-     * @Assert\Type(type="numeric", message="account.moneyInOut.account.notNumeric", groups={"transactions"})
+     * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
+     * @Assert\Range(max=10000000000, maxMessage = "account.moneyInOut.amount.outOfRange", groups={"transactions"})
      * @var string
      */
     private $amount;
