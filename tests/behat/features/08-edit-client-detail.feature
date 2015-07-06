@@ -3,7 +3,7 @@ Feature: edit client details
     @deputy
     Scenario: edit client details
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/show"
+        And I click on "client-home"
         And I click on "edit-client-details"
         Then I should be on "client/show/edit-client#edit-client"
         Then the following fields should have the corresponding values:
@@ -61,7 +61,7 @@ Feature: edit client details
             | client_phone | 0123456789  |
         And I press "client_save"
         Then I should be on "client/show"
-        Then I should see "Nolan Ross" in the "client-name" region
+        Then I should see "Nolan Ross" in the page header
         Then I should see "123456ABC" in the "case-number" region
         Then I should see "2 South Parade" in the "client-address" region
         

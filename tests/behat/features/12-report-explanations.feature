@@ -3,7 +3,6 @@ Feature: report explanations
     @deputy
     Scenario: add explanation for no contacts
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I am on the first report overview page
       #delete current contact
       And I follow "tab-contacts"
       # add explanation

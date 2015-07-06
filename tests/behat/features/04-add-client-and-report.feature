@@ -110,12 +110,12 @@ Feature: add client and report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Given I am on client home page "client-home"
         Then the URL should match "client/show"
-        And I should see "Peter White" in the "client-name" region
+        And I should see "Peter White" in the page header
         And I should see the "edit-client-details" link
         And I should see "123456ABC" in the "case-number" region
         And I should see "1 South Parade" in the "client-address" region
         And I should see the "report-n1" link
-        And I should see the "create-new-report" link
+        And I should not see the "create-new-report" link
         And I save the page as "deputy-client-home"
         
     @deputy
