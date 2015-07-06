@@ -3,5 +3,5 @@
 /etc/my_init.d/*
 
 cd /app
-/sbin/setuser app php app/console twig:lint app/Resources/views
-/sbin/setuser app php app/console twig:lint src/AppBundle/Resources/views
+bin/behat --suite=admin
+
