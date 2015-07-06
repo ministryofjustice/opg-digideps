@@ -149,7 +149,7 @@ account:
         notBlank: Value is required and can't be empty
         type: Please enter a valid closing balance
         #mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
-        mismatch: The final balance from your statement s different from the balance in the accounts section.
+        mismatch: The final balance from your statement is different from the balance in the accounts section.
     closingBalanceExplanation:
         notBlankOnDateMismatch: Please enter a value
     moneyInOut:
