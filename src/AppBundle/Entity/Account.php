@@ -66,6 +66,7 @@ class Account
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
+     * @Assert\Range(max=10000000000, maxMessage = "account.openingBalance.outOfRange", groups={"basic"})
      * 
      * @var decimal
      */
@@ -81,6 +82,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"closing_balance"})
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance"})
+     * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance"})
      * @JMS\Groups({"balance", "edit_details_report_due"})
      * 
      * @var decimal
