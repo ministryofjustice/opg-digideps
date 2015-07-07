@@ -10,6 +10,8 @@ parameters:
     secret: setme
     smtp_default_hostname: localhost
     smtp_default_port: 25
+    smtp_default_user: setme
+    smtp_default_password: setme
     smtp_secure_hostname: localhost
     smtp_secure_port: 25
     session_popup_show_after: 1200

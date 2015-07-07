@@ -7,6 +7,10 @@ services:
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
+        calls:
+            - [ setEncryption, [ "tls"]]
+            - [ setUsername, [ %smtp_default_user%]]
+            - [ setPassword, [ %smtp_default_password%]]
     mailer.transport.smtp.secure:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_secure_hostname%", "%smtp_secure_port%" ]
