@@ -1,20 +1,19 @@
 services:
-    sendgrid:
-      class: SendGrid
-      arguments: [ "%sendgrid_username%", "%sendgrid_password%", {host: "api.sendgrid.com",} ]
         
     # pass it into Swift_Mailer to always write email into disk rather than sending them
     mailer.transport.fileWriter:
         class: AppBundle\Mailer\Transport\FileWriter
         arguments: [ "/tmp/dd_mail_mock" ]
-        
-    mailer.transport.secureSmtp:
+    mailer.transport.smtp.default:
         class: Swift_SmtpTransport
-        arguments: [ "%smtp_hostname%", "%smtp_port%" ]
-    
-    mailer.transport.sendgrid:
-        class: AppBundle\Mailer\Transport\SendGridTransport
-        arguments: [ @sendgrid, "/tmp/dd_sendgrid_current_attachment.tmp"]
+        arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
+        calls:
+            - [ setEncryption, [ "tls"]]
+            - [ setUsername, [ %smtp_default_user%]]
+            - [ setPassword, [ %smtp_default_password%]]
+    mailer.transport.smtp.secure:
+        class: Swift_SmtpTransport
+        arguments: [ "%smtp_secure_hostname%", "%smtp_secure_port%" ]
     userprovider:
         class: AppBundle\UserProvider\UserProvider
         arguments: [@doctrine.orm.entity_manager]
