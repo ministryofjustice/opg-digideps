@@ -45,7 +45,7 @@ class MailSender
      * @return type
      * @throws \Exception
      */
-    public function send(Email $email, array $groups = ['text'], $transport = 'sendgrid')
+    public function send(Email $email, array $groups = ['text'], $transport = 'default')
     {
         //validate change password object
         $errors = $this->validator->validate($email,$groups);
