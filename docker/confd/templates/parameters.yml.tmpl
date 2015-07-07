@@ -23,6 +23,8 @@ parameters:
     email_report_submit:
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         to_email: {{ getv "/email/report/to" }}
+    email_feedback_send:
+        to_email: {{ getv "/email/feedback/to" }}
     oauth2_client_id: {{ getv "/oauth2/client/id" }}
     oauth2_client_secret: {{ getv "/oauth2/client/secret" }}
     oauth2_enabled: {{ getv "/oauth2/enabled" }}

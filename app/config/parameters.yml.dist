@@ -24,7 +24,6 @@ parameters:
       to_email: deputyshipservice@publicguardian.gsi.gov.uk 
     # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
     email_feedback_send:
-        from_email: no-reply@digideps.dsd.io
         to_email: deputyshipfeedback@publicguardian.gsi.gov.uk
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
