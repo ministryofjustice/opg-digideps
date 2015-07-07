@@ -4,6 +4,7 @@ parameters:
     secret: {{ getv "/secret" }}
     api_base_url: {{ getv "/api/url" }}
     env: {{ getv "/role" }}
+    non_admin_host: {{ getv "/client/host" }}
     session_expire_seconds: 1500
     session_popup_show_after: 1200
     session_cookie_secure: {{ getv "/session/cookie/secure" }}

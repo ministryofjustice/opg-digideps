@@ -10,4 +10,5 @@ keys = [
     "/email",
     "/oauth2",
     "/fixtures",
+    "/link"
  ]

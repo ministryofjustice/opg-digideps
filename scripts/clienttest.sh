@@ -3,5 +3,5 @@
 /etc/my_init.d/*
 
 cd /app
-bin/behat --suite=admin
+/sbin/setuser app bin/behat --suite=deputy
 
