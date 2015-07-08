@@ -143,18 +143,21 @@ account:
     openingBalance:
         notBlank: Please enter an opening balance
         type: Please enter a valid opening balance
+        outOfRange: Please enter a valid closing balance
     openingDateExplanation:
         notBlankOnDateMismatch: Please enter a value
     closingBalance:
         notBlank: Value is required and can't be empty
         type: Please enter a valid closing balance
+        outOfRange: Please enter a valid closing balance
         #mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
         mismatch: The final balance from your statement is different from the balance in the accounts section.
     closingBalanceExplanation:
         notBlankOnDateMismatch: Please enter a value
     moneyInOut:
-        account:
+        amount:
           notNumeric: Please enter a total amount
+          outOfRange: Please enter a valid total amount
         moreDetails:
           empty: Please give further details
 asset:
@@ -163,6 +166,7 @@ asset:
     value:
         notBlank: Please enter asset value
         type: Please enter a valid asset
+        outOfRange: Please enter a valid value
     description:
         notBlank: Please enter asset description
         type: Please enter a valid asset description

@@ -3,6 +3,7 @@ parameters:
     locale: en
     secret: {{ getv "/secret" }}
     api_base_url: {{ getv "/api/url" }}
+    non_admin_host: {{ getv "/nonadmin/host" }}
     env: {{ getv "/role" }}
     session_expire_seconds: 1500
     session_popup_show_after: 1200
@@ -17,12 +18,14 @@ parameters:
     session_engine: redis
     
     email_send:
-        from_name: {{ getv "/email/from/name" }}
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
-        to_email: {{ getv "/email/to" }}
+        to_email: -
     email_report_submit:
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
         to_email: {{ getv "/email/report/to" }}
+    email_feedback_send:
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: {{ getv "/email/feedback/to" }}
     oauth2_client_id: {{ getv "/oauth2/client/id" }}
     oauth2_client_secret: {{ getv "/oauth2/client/secret" }}
     oauth2_enabled: {{ getv "/oauth2/enabled" }}

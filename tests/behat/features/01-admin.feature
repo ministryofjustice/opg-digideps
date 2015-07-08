@@ -1,15 +1,8 @@
 Feature: admin
 
-    @deputy @admin
-    Scenario: check app before starting
-        Given the application paramters.yml file is correct
-        Given I am on "/manage/availability/health-check.xml"
-        Then the response status code should be 200
-        #And I reset the behat data # not implemented yet. run phing behat on api and then on the client to prepare
-
     @deputy
     Scenario: login and add deputy user
-        Given I am on "/"
+        Given I am on "http://digideps-admin.local/"
         Then the response status code should be 200
         # test wrong credentials
         When I fill in the following:
@@ -23,13 +16,13 @@ Feature: admin
             | login_password  | Abcd1234 |
         And I click on "login"
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
-        When I go to "/logout"
+        When I go to "http://digideps-admin.local/logout"
         # test right credentials
         When I fill in the following:
             | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         And I click on "login"
-        When I go to "/admin"
+        When I go to "http://digideps-admin.local/admin"
         # invalid email
         When I fill in the following:
             | admin_email | invalidEmail |
@@ -53,14 +46,13 @@ Feature: admin
         And I save the page as "admin-deputy-added"
         And an email with subject "Complete the Deputy Report - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
-
     @admin
     Scenario: login and add admin user, check audit log
-        Given I am logged in as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | login |
-        When I go to "/admin"
+        When I go to "http://digideps-admin.local/admin"
         And I fill in the following:
             | admin_email | behat-admin-user@publicguardian.gsi.gov.uk |
             | admin_firstname | John |
@@ -76,7 +68,7 @@ Feature: admin
           | from | admin@publicguardian.gsi.gov.uk |
           | action | user_add |
           | user_affected | behat-admin-user@publicguardian.gsi.gov.uk |
-        When I go to "/logout"
+        When I go to "http://digideps-admin.local/logout"
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | logout |

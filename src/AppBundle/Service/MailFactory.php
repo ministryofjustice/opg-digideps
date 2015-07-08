@@ -153,7 +153,7 @@ class MailFactory
     {
         $email = new ModelDir\Email();
         $email
-            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromEmail($this->container->getParameter('email_feedback_send')['from_email'])
             ->setFromName($this->translate('feedbackForm.fromName'))
             ->setToEmail($this->container->getParameter('email_feedback_send')['to_email'])
             ->setToName($this->translate('feedbackForm.toName'))
