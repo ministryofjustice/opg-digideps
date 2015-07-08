@@ -48,8 +48,8 @@ Feature: add details
 
     @admin
     Scenario: add user details (admin user)
-        Given I am logged in as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "user/details"
+        Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "http://digideps-admin.local/user/details"
         And I save the page as "admin-step2"
         # testing validation, as the validation group for the form is different for admin user
         # missing firstname
@@ -71,7 +71,7 @@ Feature: add details
             | user_details_lastname | Doe admin |
         And I press "user_details_save"
         Then the form should not contain an error
-        When I go to "user/details"
+        When I go to "http://digideps-admin.local/user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
