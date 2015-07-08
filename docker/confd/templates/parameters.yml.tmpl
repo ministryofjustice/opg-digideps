@@ -7,12 +7,14 @@ parameters:
     database_host: {{ getv "/database/hostname" }}
     database_port: {{ getv "/database/port" }}
     database_name: {{ getv "/database/name" }}
-    database_user: {{ getv "/database/user" }}
+    database_user: {{ getv "/database/username" }}
     database_password: {{ getv "/database/password" }}
     locale: en
     secret: {{ getv "/secret" }}
     smtp_default_hostname: {{ getv "/smtp/default/hostname" }}
     smtp_default_port: {{ getv "/smtp/default/port" }}
+    smtp_default_user: {{ getv "/smtp/default/user" }}
+    smtp_default_password: {{ getv "/smtp/default/password" }}
     smtp_secure_hostname: {{ getv "/smtp/secure/hostname" }}
     smtp_secure_port: {{ getv "/smtp/secure/port" }}
     anonymous: {{ getv "/security/anonymous" }}
