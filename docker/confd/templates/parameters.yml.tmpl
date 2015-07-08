@@ -11,8 +11,12 @@ parameters:
     database_password: {{ getv "/database/password" }}
     locale: en
     secret: {{ getv "/secret" }}
-    sendgrid_username: {{ getv "/sendgrid/username" }}
-    sendgrid_password: {{ getv "/sendgrid/password" }}
-    smtp_hostname: {{ getv "/smtp/hostname" }}
-    smtp_port: {{ getv "/smtp/port" }}
+    smtp_default_hostname: {{ getv "/smtp/default/hostname" }}
+    smtp_default_port: {{ getv "/smtp/default/port" }}
+    smtp_default_user: {{ getv "/smtp/default/user" }}
+    smtp_default_password: {{ getv "/smtp/default/password" }}
+    smtp_secure_hostname: {{ getv "/smtp/secure/hostname" }}
+    smtp_secure_port: {{ getv "/smtp/secure/port" }}
     anonymous: {{ getv "/security/anonymous" }}
+    email_mock_address: {{ getv "/email/mock/address" }}
+    email_mock_path:  {{ getv "/email/mock/path" }}

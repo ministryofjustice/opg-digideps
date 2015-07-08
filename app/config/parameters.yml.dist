@@ -8,10 +8,12 @@ parameters:
     database_password: setme
     locale: en
     secret: setme
-    sendgrid_username: setme
-    sendgrid_password: setme
-    smtp_hostname: localhost
-    smtp_port: 25  
+    smtp_default_hostname: localhost
+    smtp_default_port: 25
+    smtp_default_user: setme
+    smtp_default_password: setme
+    smtp_secure_hostname: localhost
+    smtp_secure_port: 25
     session_popup_show_after: 1200
     # the following two paramters can be set to null on production
     email_mock_address: "/^behat-/i"
