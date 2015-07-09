@@ -45,4 +45,22 @@ trait ReportTrait
     {
         $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
     }
+    
+    /**
+     * @Then the :arg1 asset group should be :arg2
+     */
+    public function theAssetGroupShouldBe($index, $text)
+    {
+        $css = '#assets-section .asset-group:nth-child(' . $index .')';
+        $this->assertSession()->elementTextContains('css', $css, $text);
+    }
+
+    /**
+     * @Then the :arg1 asset in the :arg2 asset group should have a :arg3 :arg4
+     */
+    public function theAssetInTheAssetGroupShouldHaveA($assetIndex, $group, $field, $text)
+    {
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field;
+        $this->assertSession()->elementTextContains('css', $css, $text);
+    }
 }
