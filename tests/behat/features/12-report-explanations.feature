@@ -5,17 +5,20 @@ Feature: report explanations
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       #delete current contact
       And I follow "tab-contacts"
+      And I save the page as "report-contact-explanation-empty"
       # add explanation
       Then the "reason_for_no_contact_reason" field is expandable
       # empty form throws error
       When I fill in "reason_for_no_contact_reason" with ""
       And I press "reason_for_no_contact_saveReason"
       Then the form should contain an error
+      And I save the page as "report-contact-explanation-error"
       # add reason
       When I fill in "reason_for_no_contact_reason" with "kept in the book"
       And I press "reason_for_no_contact_saveReason"
       Then the form should not contain an error
       And I should see "kept in the book" in the "reason-no-contacts" region
+      And I save the page as "report-contact-explanation-added"
       # edit reason, and cancel
       When I click on "edit-reason-no-contacts"
       Then the following fields should have the corresponding values:
@@ -24,6 +27,7 @@ Feature: report explanations
       Then the URL should match "/report/\d+/contacts"
       # edit reason, and save
       When I click on "edit-reason-no-contacts"
+      And I save the page as "report-contact-explanation-edit"
       And I fill in the following:
         | reason_for_no_contact_reason | nothing relevant contact added |  
       And I press "reason_for_no_contact_saveReason"
