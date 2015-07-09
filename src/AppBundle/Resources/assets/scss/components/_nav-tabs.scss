@@ -125,7 +125,6 @@
 #content p.nothing-selected {
     @include bold-19();
     padding-bottom: 20px;
-    border-bottom: 1px solid $grey-3;
 }
 
 @media (max-width: 768px)  {
