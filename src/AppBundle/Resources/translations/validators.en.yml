@@ -40,7 +40,7 @@ client:
         minMessage: Firstname must be at least {{ limit }} characters
     lastname:
         notBlank: Please enter your last name
-        minMessage: Lastname must be at least {{ limit }} characters
+        minMessage: Last name must be at least {{ limit }} characters
     caseNumber:
         notBlank: Please enter the case number
     courtDate:
