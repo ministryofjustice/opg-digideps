@@ -12,15 +12,15 @@ user:
     minLength: Your last name must be at least {{ limit }} characters long
     maxLength: Your last name cannot be longer than {{ limit }} characters long
   password:
-      notBlank: Password cannot be blank 
+      notBlank: Password cannot be blank
       minLength: The password must be at least {{ limit }} characters long
       maxLength: The password cannot be longer than {{ limit }} characters long
       noLowerCaseChars: The password must contain at least one lowercase character
-      noUpperCaseChars: The password must contain at least one uppercase character    
+      noUpperCaseChars: The password must contain at least one uppercase character
       noNumber: The password must contain at least one number
   role:
       notBlank: You must specify a role for the user
-  address1: 
+  address1:
     notBlank: The address cannot be blank
   address2:
     notBlank: The address cannot be blank
@@ -36,11 +36,11 @@ user:
     notBlank: The main phone number cannot be blank
 client:
     firstname:
-        notBlank: Please enter your firstname
+        notBlank: Please enter your first name
         minMessage: Firstname must be at least {{ limit }} characters
     lastname:
-        notBlank: Please enter your lastname
-        minMessage: Lastname must be at least {{ limit }} characters
+        notBlank: Please enter your last name
+        minMessage: Last name must be at least {{ limit }} characters
     caseNumber:
         notBlank: Please enter the case number
     courtDate:
@@ -70,7 +70,7 @@ report:
         submitted: Report not submitted
         reviewedAndChecked: Report not reviewed and checked
         readyForSubmission: Report not ready for submission
-        
+
 report-declaration:
     agree:
         notBlank: You must agree to the statement to proceed
@@ -107,7 +107,7 @@ decision:
         length: The title must be at least {{ limit }} characters
     description:
         notBlank: Please enter a description for the decision
-        length: The description must be at least {{ limit }} characters   
+        length: The description must be at least {{ limit }} characters
     clientInvolvedBoolean:
         notBlank: Please specify if the client was involved or not
     clientInvolvedDetails:
@@ -176,7 +176,7 @@ asset:
         date: Please enter a valid asset valuation date
     no_assets:
         notBlank: Please tell us if you have no assets to add
-# validation messages for common elements (e.g. phone fields)        
+# validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:
     minLength: The phone number must be at least {{ limit }} characters long
@@ -200,4 +200,3 @@ sendEmail:
         notBlank: Please supply message for your email
     bodyHtml:
         notBlank: Please supply message for your email
-    

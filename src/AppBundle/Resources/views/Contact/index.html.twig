@@ -87,15 +87,6 @@ activeTab : "tab-contacts"
         pageSectionTitle: 'contact_form.pageSectionTitle'
         } %}
 
-        {% include 'AppBundle:Contact:_no_contact_form.html.twig' with {
-        'showNoContactForm': showNoContactForm
-        } %}
-        
-        {% include 'AppBundle:Contact:_no_contact_reason.html.twig' with {
-        translationDomain: translationDomain,
-        'showNoContactReason': showNoContactReason
-        } %}
-
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'contact_form.pageSectionDescription'
@@ -130,6 +121,17 @@ activeTab : "tab-contacts"
         'showDeleteConfirm': showDeleteConfirm,
         'form': form
         } %}
+        
+        {% if showNoContactForm or showNoContactReason %}
+            <div class="report-list-separator"> </div>
+            {% include 'AppBundle:Contact:_no_contact_form.html.twig' with {
+            'showNoContactForm': showNoContactForm
+            } %}
+            {% include 'AppBundle:Contact:_no_contact_reason.html.twig' with {
+            translationDomain: translationDomain,
+            'showNoContactReason': showNoContactReason
+            } %}
+        {% endif %}
 
     {% endblock %}
 

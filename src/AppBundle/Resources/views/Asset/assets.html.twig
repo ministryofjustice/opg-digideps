@@ -11,7 +11,8 @@ activeTab: "tab-assets"
     {% set formEditShow = false %}
     {% set showDeleteConfirm = false %}
     {% set showNoAssetToAddForm = false %}
-
+    {% set reportHasNoAssetExplanation = report.noAssetToAdd is not empty %}
+    
     {% if assets is not empty %}
         {% set showListData = true %}
         {% set showEditHelpInfo = true %}
@@ -51,15 +52,6 @@ activeTab: "tab-assets"
         pageSectionTitle: 'page.pageSectionTitle'
         } %}
         
-        
-        {% if report.noAssetToAdd is not empty %}
-          <p class="no-assets-selected nothing-selected page-section-description behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</p>
-        {% else %}
-            {% include 'AppBundle:Asset:_no_asset_form.html.twig' with {
-                'showNoAssetToAddForm': showNoAssetToAddForm
-            } %}
-        {% endif %}
-        
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
@@ -95,6 +87,18 @@ activeTab: "tab-assets"
             'showEditLink': showEditLink,
             'form': form
             } %}
+        {% endif %}
+        
+        
+        {% if showNoAssetToAddForm or reportHasNoAssetExplanation %}
+          <div class="report-list-separator"> </div>
+          {% if reportHasNoAssetExplanation %}
+            <p class="no-assets-selected nothing-selected page-section-description behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</p>
+          {% else %}
+              {% include 'AppBundle:Asset:_no_asset_form.html.twig' with {
+                  'showNoAssetToAddForm': showNoAssetToAddForm
+              } %}
+          {% endif %}
         {% endif %}
 
     {% endblock %}
