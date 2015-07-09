@@ -53,18 +53,21 @@ Feature: report explanations
       And I click on "decision-n1"
       And I click on "delete-confirm"
       And I click on "delete"
+      And I save the page as "report-decision-explanation-empty"
       # add explanation
       Then the reason_for_no_decision_reason field is expandable
       # empty form throws error
       When I fill in "reason_for_no_decision_reason" with ""
       And I press "reason_for_no_decision_saveReason"
       Then the form should contain an error
+      And I save the page as "report-decision-explanation-error"
       # add reason
       When I fill in the following:
         | reason_for_no_decision_reason | small budget |
       And I press "reason_for_no_decision_saveReason"
       Then the form should not contain an error
       And I should see "small budget" in the "reason-no-decisions" region
+      And I save the page as "report-decision-explanation-added"
       # edit reason, and cancel
       When I click on "edit-reason-no-decisions"
       Then the following fields should have the corresponding values:
@@ -73,6 +76,7 @@ Feature: report explanations
       Then the URL should match "/report/\d+/decisions"
       # edit reason, and save
       When I click on "edit-reason-no-decisions"
+      And I save the page as "report-decision-explanation-edit"
       And I fill in the following:
         | reason_for_no_decision_reason | nothing relevant purchased or sold |  
       And I press "reason_for_no_decision_saveReason"
@@ -99,13 +103,16 @@ Feature: report explanations
       And I click on "delete-confirm"
       And I click on "delete"
       Then the checkbox "report_no_assets_no_assets" should be unchecked
+      And I save the page as "report-asset-explanation-empty"
       # submit without ticking the box
       And I press "report_no_assets_saveNoAsset"
       Then the form should contain an error
+      And I save the page as "report-asset-explanation-error"
       # tick and submit
       When I check "report_no_assets_no_assets"
       And I press "report_no_assets_saveNoAsset"
       Then the form should not contain an error
+      And I save the page as "report-asset-explanation-added"
       And I should see the "no-assets-selected" region
       # add asset 
       When I click on "add-an-asset"
