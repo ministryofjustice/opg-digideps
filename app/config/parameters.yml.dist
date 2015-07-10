@@ -18,7 +18,7 @@ parameters:
       # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released
     # report submit email with attachment, uses local secure SMTP (no auth needed)
     email_report_submit:
-      from_email: noreply@localdomain
+      from_email: no-reply@digideps.dsd.io
       to_email: deputyshipservice@publicguardian.gsi.gov.uk 
     # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
     email_feedback_send:
