@@ -3,18 +3,19 @@ user:
   email:
     invalid: The email {{ value }} is not a valid email
     notBlank: The email cannot be blank
+    maxLength: The email name cannot be longer than {{ limit }} characters
   firstname:
     notBlank: The first name cannot be blank
     minLength: Your first name must be at least {{ limit }} characters long
-    maxLength: Your first name cannot be longer than {{ limit }} characters long
+    maxLength: Your first name cannot be longer than {{ limit }} characters
   lastname:
     notBlank: The last name cannot be blank
     minLength: Your last name must be at least {{ limit }} characters long
-    maxLength: Your last name cannot be longer than {{ limit }} characters long
+    maxLength: Your last name cannot be longer than {{ limit }} characters
   password:
       notBlank: Password cannot be blank
       minLength: The password must be at least {{ limit }} characters long
-      maxLength: The password cannot be longer than {{ limit }} characters long
+      maxLength: The password cannot be longer than {{ limit }} characters
       noLowerCaseChars: The password must contain at least one lowercase character
       noUpperCaseChars: The password must contain at least one uppercase character
       noNumber: The password must contain at least one number
@@ -22,6 +23,7 @@ user:
       notBlank: You must specify a role for the user
   address1:
     notBlank: The address cannot be blank
+    maxLength: Your address name cannot be longer than {{ limit }} characters
   address2:
     notBlank: The address cannot be blank
   address3:
@@ -29,7 +31,7 @@ user:
   addressPostcode:
     notBlank: The postcode cannot be blank
     minLength: The postcode must be at least {{ limit }} characters long
-    maxLength: The postcode cannot be longer than {{ limit }} characters long
+    maxLength: The postcode cannot be longer than {{ limit }} characters
   addressCountry:
     notBlank: The country cannot be blank
   phoneMain:
@@ -197,7 +199,7 @@ asset:
 common:
   genericPhone:
     minLength: The phone number must be at least {{ limit }} characters long
-    maxLength: The phone number cannot be longer than {{ limit }} characters long
+    maxLength: The phone number cannot be longer than {{ limit }} characters
 sendEmail:
     toEmail:
         notBlank: Please supply receipent's email (toEmail)
