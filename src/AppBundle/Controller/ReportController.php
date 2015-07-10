@@ -239,6 +239,7 @@ class ReportController extends Controller
         $client = $util->getClient($report->getClient());
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
+        $groupAssets = $this->groupAssets($assets);
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
         $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
         
@@ -246,11 +247,33 @@ class ReportController extends Controller
             'report' => $report,
             'client' => $client,
             'assets' => $assets,
+            'groupAssets' => $groupAssets,
             'contacts' => $contacts,
             'decisions' => $decisions,
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
         ];
+    }
+    
+    private function groupAssets($assets)
+    {
+        $assetGroups = array();
+        
+        foreach ($assets as $asset) {
+        
+            $type = $asset->getTitle();
+        
+            if (isset($assetGroups[$type])) {
+                $assetGroups[$type][] = $asset;
+            } else {
+                $assetGroups[$type] = array($asset);
+            }
+        }
+    
+        // sort the assets by their type now.
+        ksort($assetGroups);
+    
+        return $assetGroups;
     }
     
 }

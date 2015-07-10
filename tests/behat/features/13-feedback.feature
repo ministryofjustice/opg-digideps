@@ -1,12 +1,12 @@
 Feature: provide feedback
     
-    @feedback
+    @feedback @deputy
     Scenario: Feedback can be accessed by users who are not logged in
         Given I am not logged in
         And I goto the feedback page
         Then I should see "Your feedback"
 
-    @feedback
+    @feedback @deputy
     Scenario: I give feedback on all fields and it is emailed to OPG
         Given I reset the email log
         And I am on the feedback page
@@ -23,7 +23,7 @@ Feature: provide feedback
         And the email should contain "satisfied"
         And the email should contain "No, I filled in this form myself"
         
-    @feedback
+    @feedback @deputy
     Scenario: When I give feedback I dont have to fill all the fields in 
         Given I reset the email log
         And I am on the feedback page
@@ -34,7 +34,7 @@ Feature: provide feedback
         And an email with subject "User Feedback" should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
         And the email should contain "No, I filled in this form myself"
     
-    @feedback
+    @feedback @deputy
     Scenario: After giving feedback I see a thank you
         Given I am on the feedback page
         And I fill in the following:
@@ -42,13 +42,13 @@ Feature: provide feedback
         And I press "feedback_save"
         Then I should see "Thank you for sending your feedback"
         
-    @feedback
+    @feedback @deputy
     Scenario: On the feedback screen I can go back to my previous page
         Given I am on the login page
         And I goto the feedback page
         Then the "Back to deputy report" link url should contain "/login"
             
-    @feedback
+    @feedback @deputy
     Scenario: On the thank you screen I see a link back to the client home
         Given I am on the login page
         And I goto the feedback page

@@ -1,0 +1,39 @@
+<div class="section" id="decisions-section">
+    <h2>
+        <span class="section-number">Section 2</span>
+        Decisions made over the reporting period
+    </h2>
+    <fieldset>
+        <div class="half-width">
+            <div class="list-label">Deputy decision</div>
+        </div>
+        <div class="half-width">
+            <div class="list-label">Client involvement</div>
+        </div>
+        <ul class="decisions-list box-list">
+            {% if report.decisions | length == 0 %}
+                <li class="decision-item box-list-item">
+                    <div class="form-group form-group-vertical half-width">
+                        <div class="textarea address-value">No decisions made:<br/>
+                        {{ report.reasonForNoDecisions | nl2br}}</div>
+                    </div>
+                    <div class="form-group form-group-vertical half-width">
+                        <div class="textarea address-value">&nbsp;</div>
+                    </div>
+                </li>
+            {% else %}
+                {% for decision in decisions %}
+                <li class="decision-item box-list-item">
+                    <div class="form-group form-group-vertical half-width">
+                        <div class="textarea address-value">{{ decision.description }}</div>
+                    </div>
+                    
+                    <div class="form-group form-group-vertical half-width">
+                        <div class="textarea address-value">{{ decision.clientInvolvedDetails | nl2br }}</div>
+                    </div>
+                </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </fieldset>
+</div>
