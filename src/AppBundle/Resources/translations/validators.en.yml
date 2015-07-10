@@ -58,6 +58,8 @@ client:
         notBlank: Please select at least one court order type
     casenumber:
         notBlank: Please enter case number
+        minMessage: Case number must be at least {{ limit }} characters
+        maxMessage: Case number be at maximum {{ limit }} characters
     postcode:
         notBlank: Please enter postcode
         maxMessage: Postcode must be at maximum {{ limit }} characters
