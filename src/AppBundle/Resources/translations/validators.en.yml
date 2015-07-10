@@ -173,6 +173,7 @@ account:
 asset:
     title:
         notBlank: Please select an asset title
+        maxMessage: Asset title must be at maximum {{ limit }} characters
     value:
         notBlank: Please enter asset value
         type: Please enter a valid asset
