@@ -22,7 +22,7 @@ pages:
     propertyAndAffairs:
       pageSectionDescription: "Your report:"
       pageSectionList: "*tells the Office of the Public Guardian (OPG) about decisions you've made on behalf of the client and who you've consulted with *gives OPG official accounts and details of the clients assets"
-      pageSectionInfo: "Use the deputy service to complete your at the end of the reporting period or you can add information throughout the reporting period."
+      pageSectionInfo: "Use the deputy service to complete your report at the end of the reporting period or you can add information throughout the reporting period."
       contacts:
         subSectionTitle: "Contacts"
         subSectionDescription: "Let us know the contact details of the people you consult over the reporting period, such as:"
@@ -30,7 +30,7 @@ pages:
         subSectionInfo: "We need to know the the client's general situation. You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions."
       decisions:
         subSectionTitle: "Decisions"
-        subSectionDescription: "Let us know the siginificant decisions you make over the reporting period. A significant decisions is <strong>any</strong> important decision you make for the client during the reporting period. A significant decision might be:"
+        subSectionDescription: "Let us know the significant decisions you make over the reporting period. A significant decision is <strong>any</strong> important decision you make for the client during the reporting period. A significant decision might be:"
         subSectionList: "*buying or selling or renting property *buying or selling investments or shares *loans *making gifts *moving the client to another nursing or care home"
       accounts:
         subSectionTitle: "Accounts"
@@ -41,32 +41,8 @@ pages:
         subSectionDescription: "Add details of the client's assets and saving, such as:"
         subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
         noAssets: The client has not assets
-# removed with DD-845. uncomment when it's sure thise data is not needed anymore 
-#  duePeriod:
-#    pageSectionTitle: "Reviewing and submitting your report"
-#    pageSectionWarning: "Your report is now due"
-#    pageSectionConfirmation: "Confirm you've reviewed your report by checking the box above."
-#    pageSectionDescription: "Please review your report - check the notifications below to make sure you've completed all tasks. You can then click the 'ready to submit report' above."
-#    contacts:
-#      subSectionTitle: "Contacts"
-#      subSectionWarning: "You've not added any contact details."
-#      subSectionDescription: "<a href=\"%pageHref%\">Go to the Contacts section</a> and add them now. If you have no contacts to add, let us know why."
-#    decisions:
-#      subSectionTitle: "Decisions"
-#      subSectionWarning: "You've not added any decision details."
-#      subSectionDescription: "<a href=\"%pageHref%\">Go to the Decisions section</a> and add them now."
-#    accounts:
-#      subSectionTitle: "Accounts"
-#      subSectionWarningMissing: "You've not added any of your client's accounts."
-#      subSectionDescriptionMissing: "<a href=\"%pageHref%\">Go to the Accounts section</a> and add them now."
-#      subSectionWarningClosing: "Add the closing balances to your accounts."
-#      subSectionDescriptionClosing: "To sign off the report make sure you add the closing balances."
-#    assets:
-#      subSectionTitle: "Assets"
-#      subSectionWarning: "You've not added any of the client's assets details."
-#      subSectionDescription: "<a href=\"%pageHref%\">Go to the Assets section</a> and add them now."
-#  additionalInformation: 
-#      subSectionTitle: More information
+  additionalInformation: 
+      subSectionTitle: More information
 reportSubmit:
     checkbox:
         label: I have reviewed and checked this report.
