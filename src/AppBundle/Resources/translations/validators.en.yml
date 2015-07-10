@@ -38,22 +38,29 @@ client:
     firstname:
         notBlank: Please enter your first name
         minMessage: Firstname must be at least {{ limit }} characters
+        maxMessage: Firstname must be at maximum {{ limit }} characters
     lastname:
         notBlank: Please enter your last name
         minMessage: Last name must be at least {{ limit }} characters
+        maxMessage: Last name must be at maximum {{ limit }} characters
     caseNumber:
         notBlank: Please enter the case number
+        maxMessage: Case number must be at maximum {{ limit }} characters
     courtDate:
         message: Please enter a valid court order date
         notBlank: Please enter a court order date
     address:
         notBlank: Please enter your client's address
+        maxMessage: Address must be at maximum {{ limit }} characters
+    county:
+        maxMessage: County must be at maximum {{ limit }} characters
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
     casenumber:
         notBlank: Please enter case number
     postcode:
         notBlank: Please enter postcode
+        maxMessage: Postcode must be at maximum {{ limit }} characters
 report:
     startDate:
         notBlank: Please enter report start date
