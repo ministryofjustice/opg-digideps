@@ -38,22 +38,31 @@ client:
     firstname:
         notBlank: Please enter your first name
         minMessage: Firstname must be at least {{ limit }} characters
+        maxMessage: Firstname must be at maximum {{ limit }} characters
     lastname:
         notBlank: Please enter your last name
         minMessage: Last name must be at least {{ limit }} characters
+        maxMessage: Last name must be at maximum {{ limit }} characters
     caseNumber:
         notBlank: Please enter the case number
+        maxMessage: Case number must be at maximum {{ limit }} characters
     courtDate:
         message: Please enter a valid court order date
         notBlank: Please enter a court order date
     address:
         notBlank: Please enter your client's address
+        maxMessage: Address must be at maximum {{ limit }} characters
+    county:
+        maxMessage: County must be at maximum {{ limit }} characters
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
     casenumber:
         notBlank: Please enter case number
+        minMessage: Case number must be at least {{ limit }} characters
+        maxMessage: Case number be at maximum {{ limit }} characters
     postcode:
         notBlank: Please enter postcode
+        maxMessage: Postcode must be at maximum {{ limit }} characters
 report:
     startDate:
         notBlank: Please enter report start date
@@ -86,21 +95,27 @@ contact:
     name:
         notBlank: Please enter contact's name
         type: Contact name must be string
-        length: Contact name too short
+        minMessage: Contact name too short
+        maxMessage: Contact name must be at maximum {{ limit }} characters
     address:
         notBlank: Please enter contact's address
+        maxMessage: Address must be at maximum {{ limit }} characters
     postcode:
         notBlank: Please enter contact's postcode
+        maxMessage: Postcode must be at maximum {{ limit }} characters
     relationship:
         notBlank: Please enter contact's relationship to client
         type: Relationship to contact must be a string
-        length: Relationship to contact too short
+        minMessage: Relationship to contact too short
+        maxMessage: Relationship must be at maximum {{ limit }} characters
     explanation:
         notBlank: Please enter a reason for contact
         type: Reason for contact must be a string
         length: Reason for contact too short
     no-contact-reason:
         notBlank: Please enter a reason
+    phone:
+        maxMessage: Phone must be at maximum {{ limit }} characters
 decision:
     title:
         notBlank: Please enter a title for the decision
@@ -122,6 +137,7 @@ account:
     bank:
         notBlank: Please enter Bank/Building Society name
         type: Please enter a valid Bank/Building Society name
+        maxMessage: Bank/Building Society name must be at maximum {{ limit }} characters
     sortCode:
         notBlank: Please enter sort code
         type: Sort code must be  numeric
@@ -163,6 +179,7 @@ account:
 asset:
     title:
         notBlank: Please select an asset title
+        maxMessage: Asset title must be at maximum {{ limit }} characters
     value:
         notBlank: Please enter asset value
         type: Please enter a valid asset
