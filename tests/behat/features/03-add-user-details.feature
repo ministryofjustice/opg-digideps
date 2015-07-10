@@ -20,14 +20,10 @@ Feature: add details
         And I press "user_details_save"
         Then the form should contain an error
         And I save the page as "deputy-step2-empty-error"
-        # wrong values
+        # test length validators
         When I fill in the following:
-            | user_details_firstname | |
-            | user_details_lastname | |
-            | user_details_address1 | |
             | user_details_addressPostcode | 1234567890 more than 10 chars |
-            | user_details_addressCountry | |
-            | user_details_phoneMain | 1234567890-1234567890 more than 20 chars ||
+            | user_details_phoneMain | 1234567890-1234567890 more than 20 chars |
         And I press "user_details_save"
         Then the following fields should have an error:
             | user_details_firstname |
