@@ -95,21 +95,27 @@ contact:
     name:
         notBlank: Please enter contact's name
         type: Contact name must be string
-        length: Contact name too short
+        minMessage: Contact name too short
+        maxMessage: Contact name must be at maximum {{ limit }} characters
     address:
         notBlank: Please enter contact's address
+        maxMessage: Address must be at maximum {{ limit }} characters
     postcode:
         notBlank: Please enter contact's postcode
+        maxMessage: Postcode must be at maximum {{ limit }} characters
     relationship:
         notBlank: Please enter contact's relationship to client
         type: Relationship to contact must be a string
-        length: Relationship to contact too short
+        minMessage: Relationship to contact too short
+        maxMessage: Relationship must be at maximum {{ limit }} characters
     explanation:
         notBlank: Please enter a reason for contact
         type: Reason for contact must be a string
         length: Reason for contact too short
     no-contact-reason:
         notBlank: Please enter a reason
+    phone:
+        maxMessage: Phone must be at maximum {{ limit }} characters
 decision:
     title:
         notBlank: Please enter a title for the decision
