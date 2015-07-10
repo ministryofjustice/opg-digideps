@@ -5,7 +5,12 @@
     </h2>
 
     {% if report.assets | length == 0 %}
-        <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
+        <fieldset class="contact-item no-contact">
+            <div class="form-group right-label">
+                <div class="checkbox">X</div>
+                <label>My client has no assets</label>
+            </div>
+        </fieldset>
     {% else %}
         <ul class="asset-list">
             {% for title, assets in groupAssets %}            
@@ -17,11 +22,12 @@
                                 <li class="asset-item">
                                     <div class="form-group form-group-vertical asset-description">
                                         <div class="label">Description</div>
-                                        <div class="textarea description-value">{{ asset.description }}</div>
+                                        <div class="textarea value">{{ asset.description }}</div>
                                     </div>
                                     <div class="form-group form-group-vertical asset-valuationDate">
+                                        
                                         <div class="label">Date of evaluation</div>
-                                        <div class="value">{{ asset.valuationDate | date("d / m / Y") }}</div>
+                                        <div class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</div>
                                     </div>
                                     <div class="form-group form-group-vertical asset-value">
                                         <div class="label">Value</div>

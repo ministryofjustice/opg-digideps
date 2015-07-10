@@ -1559,16 +1559,93 @@ Feature: Formatted Report
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
-        # Now view the report
+        Then I save the application status into "reportsubmitted"
+    
+    @formatted-report
+    Scenario: A report lists asset types in order
+        When I load the application status from "reportsubmitted"
+        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         When I go to "/report/1/formatted"
         Then the response status code should be 200
         And I should see "Client’s assets and debts"
-        Then I save the application status into "reportassets"
         Then the 1 asset group should be "Property"
         And the 2 asset group should be "Vehicles"
-        And the 1 asset in the "Property" asset group should have a "description" "2 beds flat in HA2"
-        And the 1 asset in the "Property" asset group should have a "valuationDate" "09 / 07 / 2015"
-        And the 1 asset in the "Property" asset group should have a "value" "£250,000.00"
 
+    @formatted-report
+    Scenario: A report lists asset details
+        When I load the application status from "reportsubmitted"
+        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "/report/1/formatted"
+        Then the response status code should be 200
+        And the 1 asset in the "Vehicles" asset group should have a "description" "Mini cooper"
+        And the 1 asset in the "Vehicles" asset group should have a "valuationDate" "10 / 11 / 2015"
+        And the 1 asset in the "Vehicles" asset group should have a "value" "£12,000.00"
+        
+    @formatted-report
+    Scenario: A report shows blank valuation date if there isn't one
+        When I load the application status from "reportsubmitted"
+        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "/report/1/formatted"
+        Then the response status code should be 200
+        And the 1 asset in the "Property" asset group should have an empty "valuationDate"
 
-
+    @formatted-report
+    Scenario: A report says why there are no assets
+        When I load the application status from "reportuser"
+        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I go to "report/1/decisions"
+        # No Decisions
+        And I follow "tab-decisions"
+        Then I fill in the following:
+          | reason_for_no_decision_reason | small budget |
+        And I press "reason_for_no_decision_saveReason"
+        Then the form should not contain an error
+        # No Contacts
+        Then I follow "tab-contacts"
+        When I fill in "reason_for_no_contact_reason" with "kept in the book"
+        And I press "reason_for_no_contact_saveReason"
+        Then the form should not contain an error
+        # Bank account
+        Then I follow "tab-accounts"
+        And I fill in the following:
+            | account_bank    | HSBC - main account | 
+            | account_accountNumber_part_1 | 8 | 
+            | account_accountNumber_part_2 | 7 | 
+            | account_accountNumber_part_3 | 6 | 
+            | account_accountNumber_part_4 | 5 | 
+            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_2 | 77 |
+            | account_sortCode_sort_code_part_3 | 66 |
+            | account_openingDate_day   | 1 |
+            | account_openingDate_month | 1 |
+            | account_openingDate_year  | 2014 |
+            | account_openingBalance  | 155.00 |
+        And I press "account_save"
+        And the form should not contain an error
+        When I fill in the following:
+            | accountBalance_closingDate_day   | 1 | 
+            | accountBalance_closingDate_month | 1 | 
+            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingBalance    | 155.00 |
+        And I press "accountBalance_save"
+        And the form should not contain an error
+        # Finally, Assets
+        Then I follow "tab-assets"
+        And I check "report_no_assets_no_assets"
+        And I press "report_no_assets_saveNoAsset"
+        Then the form should not contain an error
+        #Finally we are ready to submit the report
+        When I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then the URL should match "/report/\d+/add_further_information"
+        And I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        And I press "report_add_info_saveAndContinue"
+        Then the URL should match "/report/\d+/declaration"
+        Then I check "report_declaration_agree"
+        And I press "report_declaration_save"
+        And the URL should match "/report/\d+/submitted"
+        When I go to "/report/1/formatted"
+        Then the response status code should be 200
+        And I should see "My client has no assets" in "assets-section" 
+        

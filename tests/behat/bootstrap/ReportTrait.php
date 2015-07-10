@@ -60,7 +60,28 @@ trait ReportTrait
      */
     public function theAssetInTheAssetGroupShouldHaveA($assetIndex, $group, $field, $text)
     {
-        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field;
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field . ' .value';
         $this->assertSession()->elementTextContains('css', $css, $text);
     }
+
+    /**
+     * @Then the :arg1 asset in the :arg2 asset group should have an empty :arg3
+     */
+    public function theAssetInTheAssetGroupShouldHaveEmpty($assetIndex, $group, $field)
+    {
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field . ' .value';
+        $driver = $this->getSession()->getDriver();
+
+        $elementsFound = $this->getSession()->getPage()->findAll('css', $css);
+        if (count($elementsFound) === 0) {
+            throw new \RuntimeException("Element not found");
+        }
+
+        if ($elementsFound[0]->getText() != '') {
+            throw new \RuntimeException("Element should be empty but contains: " . $elementsFound[0]->getText());
+        }
+
+    }
+
+
 }
