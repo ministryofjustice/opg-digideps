@@ -38,22 +38,22 @@ client:
     firstname:
         notBlank: Please enter your first name
         minMessage: Firstname must be at least {{ limit }} characters
-        maxMessage: Firstname must be at maximum {{ limit }} characters
+        maxMessage: Firstname cannot be longer than {{ limit }} characters
     lastname:
         notBlank: Please enter your last name
         minMessage: Last name must be at least {{ limit }} characters
-        maxMessage: Last name must be at maximum {{ limit }} characters
+        maxMessage: Last name cannot be longer than {{ limit }} characters
     caseNumber:
         notBlank: Please enter the case number
-        maxMessage: Case number must be at maximum {{ limit }} characters
+        maxMessage: Case number cannot be longer than {{ limit }} characters
     courtDate:
         message: Please enter a valid court order date
         notBlank: Please enter a court order date
     address:
         notBlank: Please enter your client's address
-        maxMessage: Address must be at maximum {{ limit }} characters
+        maxMessage: Address cannot be longer than {{ limit }} characters
     county:
-        maxMessage: County must be at maximum {{ limit }} characters
+        maxMessage: County cannot be longer than {{ limit }} characters
     allowedCourtOrderTypes:
         notBlank: Please select at least one court order type
     casenumber:
@@ -62,7 +62,7 @@ client:
         maxMessage: Case number be at maximum {{ limit }} characters
     postcode:
         notBlank: Please enter postcode
-        maxMessage: Postcode must be at maximum {{ limit }} characters
+        maxMessage: Postcode cannot be longer than {{ limit }} characters
 report:
     startDate:
         notBlank: Please enter report start date
@@ -96,18 +96,18 @@ contact:
         notBlank: Please enter contact's name
         type: Contact name must be string
         minMessage: Contact name too short
-        maxMessage: Contact name must be at maximum {{ limit }} characters
+        maxMessage: Contact name cannot be longer than {{ limit }} characters
     address:
         notBlank: Please enter contact's address
-        maxMessage: Address must be at maximum {{ limit }} characters
+        maxMessage: Address cannot be longer than {{ limit }} characters
     postcode:
         notBlank: Please enter contact's postcode
-        maxMessage: Postcode must be at maximum {{ limit }} characters
+        maxMessage: Postcode cannot be longer than {{ limit }} characters
     relationship:
         notBlank: Please enter contact's relationship to client
         type: Relationship to contact must be a string
         minMessage: Relationship to contact too short
-        maxMessage: Relationship must be at maximum {{ limit }} characters
+        maxMessage: Relationship cannot be longer than {{ limit }} characters
     explanation:
         notBlank: Please enter a reason for contact
         type: Reason for contact must be a string
@@ -115,7 +115,7 @@ contact:
     no-contact-reason:
         notBlank: Please enter a reason
     phone:
-        maxMessage: Phone must be at maximum {{ limit }} characters
+        maxMessage: Phone cannot be longer than {{ limit }} characters
 decision:
     title:
         notBlank: Please enter a title for the decision
@@ -137,7 +137,7 @@ account:
     bank:
         notBlank: Please enter Bank/Building Society name
         type: Please enter a valid Bank/Building Society name
-        maxMessage: Bank/Building Society name must be at maximum {{ limit }} characters
+        maxMessage: Bank/Building Society name cannot be longer than {{ limit }} characters
     sortCode:
         notBlank: Please enter sort code
         type: Sort code must be  numeric
@@ -179,7 +179,7 @@ account:
 asset:
     title:
         notBlank: Please select an asset title
-        maxMessage: Asset title must be at maximum {{ limit }} characters
+        maxMessage: Asset title cannot be longer than {{ limit }} characters
     value:
         notBlank: Please enter asset value
         type: Please enter a valid asset
