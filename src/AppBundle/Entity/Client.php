@@ -21,7 +21,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.firstname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "client.firstname.minMessage")
+     * @Assert\Length(min=2, minMessage= "client.firstname.minMessage", max=50, maxMessage= "client.firstname.maxMessage")
      * @var string $firstname
      */
     private $firstname;
@@ -43,7 +43,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.lastname.notBlank" )
-     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage")
+     * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
      * @var string $lastname
      */
     private $lastname;
@@ -57,6 +57,8 @@ class Client
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.caseNumber.notBlank")
+     * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage")
+     * 
      * @var string $caseNumber
      */
     private $caseNumber;
@@ -81,18 +83,21 @@ class Client
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.address.notBlank")
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
      * @var string $address
      */
     private $address;
     
     /**
      * @JMS\Type("string")
+     * @Assert\Length(max=200, maxMessage="client.address.maxMessage")
      * @var string $address2
      */
     private $address2;
     
     /**
      * @JMS\Type("string")
+     * @Assert\Length(max=75, maxMessage="client.county.maxMessage")
      * @var string $county
      */
     private $county;
@@ -100,6 +105,8 @@ class Client
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.postcode.notBlank")
+     * @Assert\Length(max=10, maxMessage= "client.postcode.maxMessage")
+     * 
      * @var string $postcode
      */
     private $postcode;
@@ -112,7 +119,7 @@ class Client
     
     /**
      * @JMS\Type("string")
-     * @Assert\Length(min=10, max=25, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
+     * @Assert\Length(min=10, max=20, minMessage="common.genericPhone.minLength", maxMessage="common.genericPhone.maxLength")
      * @var string $phone
      */
     private $phone;
