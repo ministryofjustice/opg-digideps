@@ -131,6 +131,7 @@ account:
     bank:
         notBlank: Please enter Bank/Building Society name
         type: Please enter a valid Bank/Building Society name
+        maxMessage: Bank/Building Society name must be at maximum {{ limit }} characters
     sortCode:
         notBlank: Please enter sort code
         type: Sort code must be  numeric
