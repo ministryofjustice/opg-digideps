@@ -1,6 +1,6 @@
 #!/bin/bash
 #let's configure environment
-/etc/my_init.d/*
+run-parts /etc/my_init.d
 
 cd /app
 /sbin/setuser app php app/console doctrine:query:sql "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;"
