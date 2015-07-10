@@ -63,11 +63,10 @@ Feature: Formatted Report
         And the URL should match "report/\d+/overview"
         Then I save the application status into "reportuser"
 
-    @formatted-report
+    @formatted-report @wip
     Scenario: A report lists decisions
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -177,7 +176,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And I should see "Deputy report for property and financial decisions"
         And I should see "3 beds" in "decisions-section"
@@ -189,7 +188,6 @@ Feature: Formatted Report
     Scenario: A report says why no decisions were made
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         Then I fill in the following:
           | reason_for_no_decision_reason | small budget |
@@ -287,7 +285,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And I should see "Deputy report for property and financial decisions"
         Then I should see "No decisions made:" in "decisions-section"
@@ -298,7 +296,6 @@ Feature: Formatted Report
     Scenario: A report lists contacts
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -408,7 +405,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And I should see "Deputy report for property and financial decisions"
         And I should see "Andy White" in "contacts-section"
@@ -418,7 +415,6 @@ Feature: Formatted Report
     Scenario: A report describes why there are no contacts
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -507,7 +503,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And I should see "Deputy report for property and financial decisions"
         And I should see "kept in the book" in "contacts-section"
@@ -516,7 +512,6 @@ Feature: Formatted Report
     Scenario: A report shows the account name and numbers
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -626,8 +621,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
-        Then the response status code should be 200
+        And I view the formatted report
         And I should see "HSBC - main account" in "accounts-section"
         And I should see "Current account" in "accounts-section"
         And I should see "88" in "accounts-section"
@@ -639,7 +633,6 @@ Feature: Formatted Report
     Scenario: A report lists money paid out for an account
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -751,7 +744,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then I should see "Summary of money paid out"
         And I should see "Care fees or local authority charges for care" in "money-out"
         And I should see "£ 100.00" in "money-out"
@@ -761,7 +754,6 @@ Feature: Formatted Report
     Scenario: A report lists money paid in to an account
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -865,7 +857,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then I should see "Summary of money paid out"
         And I should see "Care fees or local authority charges for care" in "money-out"
         And I should see "£ 100.01" in "money-in"
@@ -875,7 +867,6 @@ Feature: Formatted Report
     Scenario: A report lists total money in, out, the different and the actual
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -1014,7 +1005,7 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then I should see "Balancing the account"
         And I should see "155.00" in "balancing-opening-balance"
         And I should see "27,900.19" in "balancing-total-in"
@@ -1027,7 +1018,6 @@ Feature: Formatted Report
     Scenario: A report explains why the balance doesnt match the statement
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -1173,14 +1163,13 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         And I should see "£ 100.50 moved to other account" in "accountBalance_closingBalanceExplanation"
         
     @formatted-report    
     Scenario: A report explains why the opening date is off
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -1325,14 +1314,13 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         And I should see "earlier transaction made with other account" in "account-date-explanation"
 
     @formatted-report    
     Scenario: A report explains why the closing date is off
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         And I follow "tab-decisions"
         # Start by adding some decisions
         When I click on "add-a-decision"
@@ -1475,14 +1463,13 @@ Feature: Formatted Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         # Now view the report
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         And I should see "closing date explanation" in "account-date-explanation"
 
-    @formatted-report @wip
+    @formatted-report
     Scenario: A report lists assets
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         # No Decisions
         And I follow "tab-decisions"
         Then I fill in the following:
@@ -1565,7 +1552,7 @@ Feature: Formatted Report
     Scenario: A report lists asset types in order
         When I load the application status from "reportsubmitted"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And I should see "Client’s assets and debts"
         Then the 1 asset group should be "Property"
@@ -1575,7 +1562,7 @@ Feature: Formatted Report
     Scenario: A report lists asset details
         When I load the application status from "reportsubmitted"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And the 1 asset in the "Vehicles" asset group should have a "description" "Mini cooper"
         And the 1 asset in the "Vehicles" asset group should have a "valuationDate" "10 / 11 / 2015"
@@ -1585,7 +1572,7 @@ Feature: Formatted Report
     Scenario: A report shows blank valuation date if there isn't one
         When I load the application status from "reportsubmitted"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And the 1 asset in the "Property" asset group should have an empty "valuationDate"
 
@@ -1593,7 +1580,6 @@ Feature: Formatted Report
     Scenario: A report says why there are no assets
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "report/1/decisions"
         # No Decisions
         And I follow "tab-decisions"
         Then I fill in the following:
@@ -1645,7 +1631,7 @@ Feature: Formatted Report
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
-        When I go to "/report/1/formatted"
+        And I view the formatted report
         Then the response status code should be 200
         And I should see "My client has no assets" in "assets-section" 
         

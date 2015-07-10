@@ -70,7 +70,6 @@ trait ReportTrait
     public function theAssetInTheAssetGroupShouldHaveEmpty($assetIndex, $group, $field)
     {
         $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field . ' .value';
-        $driver = $this->getSession()->getDriver();
 
         $elementsFound = $this->getSession()->getPage()->findAll('css', $css);
         if (count($elementsFound) === 0) {
@@ -81,6 +80,32 @@ trait ReportTrait
             throw new \RuntimeException("Element should be empty but contains: " . $elementsFound[0]->getText());
         }
 
+    }
+    
+    /**
+     * @Then I view the formatted report
+     */
+    public function viewFormattedReport()
+    {
+        $this->visit('/client/show');
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.view-report-link');
+        
+        if (count($linksElementsFound) === 0) {
+           throw new \RuntimeException("Element .view-report-link not found");
+        }
+        
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Returned multiple elements");
+        }
+    
+        $url = $linksElementsFound[0]->getAttribute('href');
+        $epos = strpos($url, '/display');
+        $length = $epos - 8;
+        $reportNumber = substr($url, 8, $length);
+        $newUrl = '/report/' . $reportNumber . '/formatted';
+        
+        $this->visit($newUrl);
+        
     }
 
 
