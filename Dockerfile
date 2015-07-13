@@ -32,4 +32,3 @@ ENV  HOME /root
 
 # app configuration
 ADD docker/confd /etc/confd
-ADD docker/nginx/app.conf /etc/nginx/conf.d/app.conf
