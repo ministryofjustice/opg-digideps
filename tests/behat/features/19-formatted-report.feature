@@ -2,11 +2,7 @@ Feature: Formatted Report
     
     @formatted-report @deputy @wip
     Scenario: Setup the reporting user
-        Given I am on "/login"
-        When I fill in the following:
-            | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |
-            | login_password  | Abcd1234 |
-        And I click on "login"
+        Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
         When I fill in the following:
             | admin_email | behat-report@publicguardian.gsi.gov.uk | 
