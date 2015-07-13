@@ -61,7 +61,6 @@ trait DebugTrait
             $feature = basename($scope->getFeature()->getFile());
             $line = $scope->getFeature()->getLine();
             $this->debug($feature, $line);
-            $this->printLastResponse();
         }
     }
 
