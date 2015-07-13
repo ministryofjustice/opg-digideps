@@ -17,7 +17,7 @@ Feature: password reset
       And I press "password_forgotten_submit"
       Then the form should contain an error
       # non-existing email (no email is sent)
-      When I fill in "password_forgotten_email" with "behat-user-that-does-not-exist-in-the-db@publicguardian.gsi.gov.uk"
+      When I fill in "password_forgotten_email" with "ehat-not-existing@publicguardian.gsi.gov.uk"
       And I press "password_forgotten_submit"
       Then the form should not contain an error
       And I click on "return-to-login"
