@@ -451,18 +451,12 @@ Feature: report
         # wrong values (wrong amount types and amount without explanation)
         When I fill in the following:
             | transactions_moneyIn_0_amount        | in | 
-            | transactions_moneyIn_1_amount        | 25,0000 | 
-            | transactions_moneyIn_2_amount        | 25.25.25 | 
-            | transactions_moneyIn_3_amount        | 250.250,12 | 
             | transactions_moneyIn_4_amount        | 10000000001 | 
             | transactions_moneyOut_11_amount      | 250.12 | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I press "transactions_saveMoneyIn"
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
-            | transactions_moneyIn_1_amount  |
-            | transactions_moneyIn_2_amount  |
-            | transactions_moneyIn_3_amount  |
             | transactions_moneyIn_4_amount  |
             | transactions_moneyOut_11_id |
             | transactions_moneyOut_11_type |
