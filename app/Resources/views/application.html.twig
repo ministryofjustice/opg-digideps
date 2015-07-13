@@ -112,10 +112,6 @@
     <script type="text/javascript" src="{{ asset('javascripts/govuk/selection-buttons.js') }}"></script>
     <script type="text/javascript" src="{{ asset('javascripts/application.js') }}"></script>
     <script type="text/javascript" src="{{ asset('javascripts/components/expanding.js') }}"></script>
-    {% if (app.environment == 'dev') %}
-        <script src="http://digideps-client.local:35729/livereload.js"></script>
-    {% endif %}
-    
 {% endblock %}
 
 {% block bodyEnd %}

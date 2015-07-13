@@ -19,9 +19,9 @@ function mojDateString(localDate) {
 }
 
 function scrollIntoView(eleID) {
-   var e = document.getElementById(eleID);
-   if (e) {
-        $('html, body').animate({scrollTop: $(e).offset().top -40 }, 'fast');
+   var element = $('#' + eleID);
+   if (element.length === 1) {
+        $('html, body').animate({scrollTop: element.offset().top -40 }, 'fast');
    }
 }
 
