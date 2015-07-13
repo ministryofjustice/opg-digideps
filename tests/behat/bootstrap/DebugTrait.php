@@ -21,8 +21,8 @@ trait DebugTrait
         for ($i=1; $i<100; $i++) {
             $iPadded = str_pad($i, 2, '0', STR_PAD_LEFT);
             $filename = $feature
-                       ? 'misc/tmp/behat-response-' . $feature . '-' . $iPadded . '.html' 
-                       : 'misc/tmp/behat-response-' . $iPadded . '.html';
+                       ? '/tmp/behat/behat-response-' . $feature . '-' . $iPadded . '.html' 
+                       : '/tmp/behat/behat-response-' . $iPadded . '.html';
             if (!file_exists($filename)) {
                 break;
             }
@@ -40,7 +40,7 @@ trait DebugTrait
      */
     public function iSaveThePageAs($name)
     {
-        $filename = 'misc/tmp/behat-screenshot-' . $name . '.html';
+        $filename = '/tmp/behat/behat-screenshot-' . $name . '.html';
             
         $data = $this->getSession()->getPage()->getContent();
         if (!file_put_contents($filename, $data)) {

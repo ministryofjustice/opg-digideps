@@ -39,7 +39,7 @@ trait StatusSnapshotTrait
     private static function getSnapshotPath($name)
     {
         return getcwd()
-                . '/misc/tmp/behat-snapshot-'
+                . '/tmp/behat/behat-snapshot-'
                 . strtolower(preg_replace('/[^\w]+/', '-', $name))
                 . '.sql';
     }
