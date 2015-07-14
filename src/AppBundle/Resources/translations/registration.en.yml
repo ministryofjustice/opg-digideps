@@ -9,10 +9,10 @@ lastname:
     label: Last name
 caseNumber:
     label: Case number
-    hint: The case number is on the first page of the court order (top right-hand corner).
+    hint: You will find the case number on the first page of the court order (top right-hand corner).
 allowedCourtOrderTypes:
     legend: Court order type
-    hint: Select the court order type you have (or check both boxes if you have both)
+    hint: Select the type of court order you have. If you have both types, check both boxes.
     description-0: "If you make financial decisions on behalf of the client, you will have a property and affairs court order."
     description-1: "If you make health and care decisions on behalf of the client, you will have a personal welfare court order."
 address:
@@ -65,4 +65,3 @@ form:
     controls:
       cancel:
         label: "Cancel"
-

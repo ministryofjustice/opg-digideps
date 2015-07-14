@@ -1,0 +1,14 @@
+* text=auto
+
+*.sh text eol=crlf
+*.php text eol=crlf
+*.js text eol=crlf
+*.feature text eol=crlf
+*.dist text eol=crlf
+*.txt text eol=crlf
+*.scss text eol=crlf
+
+*.png binary
+*.jpg binary
+*.gif binary
+

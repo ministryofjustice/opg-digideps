@@ -75,18 +75,7 @@
                 margin-left: 0    
             }
         }
-    
-        &.icon__notification {
-            
-            .tab-container {
-                background: url("/images/icons/icon-notification.png") 5px center no-repeat;
-                padding-left: 20%;
-                width: 80%;
-                &:focus {
-                    background: $yellow url("/images/icons/icon-notification.png") 5px center no-repeat;
-                }
-            }
-        }
+
     }
 
 }

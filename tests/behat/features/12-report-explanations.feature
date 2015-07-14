@@ -22,14 +22,14 @@ Feature: report explanations
       # edit reason, and cancel
       When I click on "edit-reason-no-contacts"
       Then the following fields should have the corresponding values:
-        | reason_for_no_contact_reason | kept in the book |  
+        | reason_for_no_contact_reason | kept in the book |
       When I click on "cancel-edit-reason"
       Then the URL should match "/report/\d+/contacts"
       # edit reason, and save
       When I click on "edit-reason-no-contacts"
       And I save the page as "report-no-contact-edit"
       And I fill in the following:
-        | reason_for_no_contact_reason | nothing relevant contact added |  
+        | reason_for_no_contact_reason | nothing relevant contact added |
       And I press "reason_for_no_contact_saveReason"
       And I should see "nothing relevant contact added" in the "reason-no-contacts" region
       # delete reason and cancel
@@ -42,7 +42,7 @@ Feature: report explanations
       When I click on "delete-reason"
       Then the URL should match "/report/\d+/contacts"
       And the following fields should have the corresponding values:
-        | reason_for_no_contact_reason | |  
+        | reason_for_no_contact_reason | |
 
     @deputy
     Scenario: add explanation for no decisions
@@ -71,14 +71,14 @@ Feature: report explanations
       # edit reason, and cancel
       When I click on "edit-reason-no-decisions"
       Then the following fields should have the corresponding values:
-        | reason_for_no_decision_reason | small budget |  
+        | reason_for_no_decision_reason | small budget |
       When I click on "cancel-edit-reason"
       Then the URL should match "/report/\d+/decisions"
       # edit reason, and save
       When I click on "edit-reason-no-decisions"
       And I save the page as "report-no-decision-edit"
       And I fill in the following:
-        | reason_for_no_decision_reason | nothing relevant purchased or sold |  
+        | reason_for_no_decision_reason | nothing relevant purchased or sold |
       And I press "reason_for_no_decision_saveReason"
       And I should see "nothing relevant purchased or sold" in the "reason-no-decisions" region
       # delete reason and cancel
@@ -91,7 +91,7 @@ Feature: report explanations
       When I click on "delete-reason"
       Then the URL should match "/report/\d+/decisions"
       And the following fields should have the corresponding values:
-        | reason_for_no_decision_reason | |  
+        | reason_for_no_decision_reason | |
       
     @deputy
     Scenario: add explanation for no assets
@@ -122,7 +122,7 @@ Feature: report explanations
           | asset_description | Alfa Romeo 156 1.9 JTD | 
           | asset_valuationDate_day | 10 | 
           | asset_valuationDate_month | 11 | 
-          | asset_valuationDate_year | 2015 | 
+          | asset_valuationDate_year | 2015 |
       And I press "asset_save"
       # delete asset
       And I follow "tab-assets"

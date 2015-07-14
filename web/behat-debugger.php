@@ -11,14 +11,14 @@ if (!$isLocalBox && !$isJenkinsBox) {
 $frame = isset($_GET['frame']) ? $_GET['frame'] : null;
 if ($frame == 'page') {
     if (isset($_GET['f']) && strpos($_GET['f'], 'behat-') !== false) {
-        include __DIR__ . '/../misc/tmp/' . $_GET['f'];
+        include '/tmp/behat/' . $_GET['f'];
     } else {
         echo "click on a link at the top";
     }
 } elseif ($frame == 'list') {
     foreach (['responses' => 'behat-response*.html', 'screenshots' => 'behat-screenshot*.html'] as $groupName => $regexpr) {
         ?><h2><?php echo $groupName ?></h2><?php
-        $files = glob(__DIR__ . '/../misc/tmp/' . $regexpr);
+        $files = glob('/tmp/behat/' . $regexpr);
         usort($files, function($a, $b) {
             return filemtime($a) < filemtime($b);
         });

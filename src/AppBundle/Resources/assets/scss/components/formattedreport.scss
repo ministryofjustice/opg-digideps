@@ -62,6 +62,7 @@
         float: right;
         margin-left: 2%;
     }
+
     
     .section {
         @extend %contain-floats;
@@ -298,5 +299,41 @@
             }
         }
         
+    }
+    #assets-section {
+        h3 {
+            margin: 30px 0 0 0;
+        }
+        
+        .asset-group {
+            fieldset {
+                *padding-bottom: 20px;
+            }
+        }
+        
+        .asset-item {
+            @extend %contain-floats;
+            clear:both;
+            padding-top: 0;
+
+            .form-group.asset-description {
+                width: 48%;
+                padding-right: 2%; 
+                *width: 30%;
+                float: left;
+            }
+            .form-group.asset-valuationDate {
+                width: 22%;
+                padding-right: 3%; 
+                *width: 30%;
+                float: left;
+            }
+            .form-group.asset-value {
+                width: 22%;
+                padding-right: 3%; 
+                *width: 30%;
+                float: left;
+            }
+        }
     }
 }
