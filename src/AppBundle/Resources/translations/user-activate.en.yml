@@ -1,13 +1,13 @@
 page:
-  pageSectionDescription: Welcome to the deputyship service. Use this service to complete and submit your report.
+  pageSectionDescription:
 pageTitle: Set your password
-headerTitle: Step 1 - Set your password
+headerTitle: Step 1. Set your password
 email:
-    label: Your email address
-    hint: We sent you the registration link to this email address.
+    label: Add your email address
+    hint: Your registration link was sent to this email address.
 password:
     label: Password
-    hint: Your password needs to be at least 8 characters. Include at least one uppercase and lowercase letter and one number.
+    hint: Your password must have at least 8 characters, include at least 1 uppercase letter, at least 1 lowercase letter and at least 1 number.
     validation:
         passwordMismatch: The password fields must match.
 password_confirm:
