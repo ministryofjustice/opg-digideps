@@ -31,3 +31,9 @@
     @include core-19;
   }
 }
+
+.page-report-content {
+    .validation-summary {
+        width: 67%;
+    }
+}
