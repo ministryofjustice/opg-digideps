@@ -32,7 +32,7 @@ class ManageController extends Controller
     }
 
     /**
-     * @Route("/availability/health-check.xml")
+     * @Route("/availability/pingdom")
      * @Method({"GET"})
      */
     public function healthCheckXmlAction()
