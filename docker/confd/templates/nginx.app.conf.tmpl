@@ -12,7 +12,7 @@ server {
     error_page  404               /404.html;
 
     
-    index app.php;
+    index {{ getv "/index" }};
     
     client_max_body_size 20m;
 
@@ -37,7 +37,7 @@ server {
     }
     
     location / {
-        try_files $uri $uri/ /app.php$is_args$args;
+        try_files $uri $uri/ /{{ getv "/index" }}$is_args$args;
     }
 
     location ~ \.php$ {
