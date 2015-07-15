@@ -30,7 +30,17 @@ class ManageController extends Controller
 
         return $response;
     }
-
+    
+    /**
+     * @Route("/elb", name="manage-elb")
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function elbAction()
+    {
+        return ['status'=>'OK'];
+    }
+    
     /**
      * @Route("/availability/pingdom")
      * @Method({"GET"})
