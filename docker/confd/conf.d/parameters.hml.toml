@@ -5,6 +5,7 @@ dest = "/app/app/config/parameters.yml"
 keys = [
     "/role",
     "/session",
+    "/ga",
     "/secret",
     "/api",
     "/email",
