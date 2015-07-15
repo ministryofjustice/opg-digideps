@@ -26,7 +26,18 @@ class ManageController extends Controller
 
         return $data;
     }
-
+    
+    
+    /**
+     * @Route("/elb", name="manage-elb")
+     * @Method({"GET"})
+     */
+    public function elbAction()
+    {
+        return "ok";
+    }
+    
+    
     /**
      * @return array [boolean healthy, error string]
      */
