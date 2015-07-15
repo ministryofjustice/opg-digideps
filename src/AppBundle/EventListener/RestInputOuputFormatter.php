@@ -22,6 +22,11 @@ class RestInputOuputFormatter
     private $serializer;
 
     /**
+     * @var string
+     */
+    private $defaultFormat;
+    
+    /**
      * @var array
      */
     private $supportedFormats;
@@ -32,10 +37,11 @@ class RestInputOuputFormatter
     private $debug;
 
 
-    public function __construct(Serializer $serializer, array $supportedFormats, $debug)
+    public function __construct(Serializer $serializer, array $supportedFormats, $defaultFormat, $debug)
     {
         $this->serializer = $serializer;
         $this->supportedFormats = array_values($supportedFormats);
+        $this->defaultFormat = $defaultFormat;
         $this->debug = $debug;
     }
 
@@ -67,7 +73,11 @@ class RestInputOuputFormatter
         $format = $request->getContentType();
 
         if (!in_array($format, $this->supportedFormats)) {
-            throw new \Exception("format $format not supported. Supported formats: " . implode(',', $this->supportedFormats));
+            if ($this->defaultFormat) {
+                $format = $this->defaultFormat;
+            } else {
+                throw new \Exception("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
+            }
         }
 
         $context = SerializationContext::create(); //->setSerializeNull(true);
