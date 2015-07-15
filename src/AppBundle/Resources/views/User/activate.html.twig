@@ -20,11 +20,6 @@
 
 {% block pageBody %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
@@ -38,5 +33,5 @@
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
-
+    
 {% endblock %}
