@@ -18,10 +18,12 @@ class ManageController extends Controller
     public function availabilityAction()
     {
         list($dbHealthy, $dbError) = $this->dbInfo();
+        list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
+        list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
 
         $data = [
-            'healthy' => $dbHealthy,
-            'errors' => $dbError
+            'healthy' => $dbHealthy && $smtpDefaultHealthy && $smtpSecureHealthy,
+            'errors' => implode("\n", array_filter([$dbError, $smtpDefaultError, $smtpSecureError])) 
         ];
 
         return $data;
@@ -51,16 +53,48 @@ class ManageController extends Controller
             // customise error message if possible
             $returnMessage = 'Database generic error';
             if ($e instanceof \PDOException && $e->getCode() === 7) {
-                $returnMessage = 'Database service not running';
+                $returnMessage = 'Database service not reachabe (' . $e->getMessage() . ')';
             }
             if ($e instanceof \Doctrine\DBAL\DBALException) {
-                $returnMessage = 'Database schema error';
+                $returnMessage = 'Database schema error (dd_user table not found) (' . $e->getMessage() . ')';
             }
 
             // log real error message
             $this->get('logger')->error($e->getMessage());
 
             return [false, $returnMessage];
+        }
+    }
+    
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function smtpDefaultInfo()
+    {
+        try {
+            $transport = $this->container->get('mailer.transport.smtp.default'); /* @var $transport \Swift_SmtpTransport */
+            $transport->start();
+            $transport->stop();
+            
+            return [true, ''];
+        } catch (\Exception $e) {
+            return [false, 'SMTP default Error: ' . $e->getMessage()];
+        }
+    }
+    
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function smtpSecureInfo()
+    {
+        try {
+            $transport = $this->container->get('mailer.transport.smtp.secure'); /* @var $transport \Swift_SmtpTransport */
+            $transport->start();
+            $transport->stop();
+            
+            return [true, ''];
+        } catch (\Exception $e) {
+            return [false, 'SMTP Secure Error: ' . $e->getMessage()];
         }
     }
 
