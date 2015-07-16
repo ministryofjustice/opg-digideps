@@ -11,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class RestInputOuputFormatter
 {
@@ -20,6 +21,11 @@ class RestInputOuputFormatter
      * @var Serializer
      */
     private $serializer;
+    
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @var string
@@ -37,9 +43,10 @@ class RestInputOuputFormatter
     private $debug;
 
 
-    public function __construct(Serializer $serializer, array $supportedFormats, $defaultFormat, $debug)
+    public function __construct(Serializer $serializer, LoggerInterface $logger, array $supportedFormats, $defaultFormat, $debug)
     {
         $this->serializer = $serializer;
+        $this->logger = $logger;
         $this->supportedFormats = array_values($supportedFormats);
         $this->defaultFormat = $defaultFormat;
         $this->debug = $debug;
@@ -135,17 +142,22 @@ class RestInputOuputFormatter
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
+        $exceptionMessage = $event->getException()->getMessage();
+        $exceptionCode = $event->getException()->getCode();
+        
         $data = array(
             'success' => false, 
             'data' => '', 
-            'message' => $event->getException()->getMessage(),
+            'message' => $exceptionMessage,
             'stacktrace' => 'enable debug mode to see it',
-            'code' => $event->getException()->getCode()
+            'code' => $exceptionCode
         );
         
         if ($this->debug) {
-            $data['stacktrace'] = $event->getException()->getTraceAsString();
+            $data['stacktrace'] = $exceptionMessage;
         }
+        
+        $this->logger->warn($exceptionMessage);
         
         $response = $this->arrayToResponse($data, $event->getRequest());
 

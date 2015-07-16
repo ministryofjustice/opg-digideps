@@ -43,17 +43,6 @@ doctrine_migrations:
     table_name: migrations
 
             
-services:
-    kernel.listener.responseConverter:
-        class: AppBundle\EventListener\RestInputOuputFormatter
-        arguments: [ @serializer, ["json"], "json", "%kernel.debug%" ]
-        tags:
-            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
-            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
-    em:
-        alias: doctrine.orm.entity_manager
-        
 fos_oauth_server:
     db_driver: orm       # Driver availables: orm, mongodb, or propel
     client_class:        AppBundle\Entity\OAuth2Client
