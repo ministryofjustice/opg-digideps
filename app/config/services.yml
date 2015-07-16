@@ -25,7 +25,7 @@ services:
         arguments: [@jms_serializer,@oauth2client,@snc_redis.default,@oauth.memcached,@session,{format: "json", base_url: "%api_base_url%", use_redis: "%use_redis%", use_memcached: "%use_memcached%", use_oauth2: "%oauth2_enabled%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"}]
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
-        arguments: [ @apiclient,%env% ]
+        arguments: [ @service_container,%env% ]
     userService:
         class:  AppBundle\Service\UserService
         arguments: [ @apiclient, %env% ]
