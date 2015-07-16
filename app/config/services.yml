@@ -22,7 +22,16 @@ services:
             - [ addServer, [ %session_memcached_host%, %session_memcached_port%]]
     apiclient:
         class:  AppBundle\Service\ApiClient
-        arguments: [@jms_serializer,@oauth2client,@snc_redis.default,@oauth.memcached,@session,{format: "json", base_url: "%api_base_url%", use_redis: "%use_redis%", use_memcached: "%use_memcached%", use_oauth2: "%oauth2_enabled%", endpoints: "%api_endpoints%", debug: "%kernel.debug%"}]
+        arguments: 
+          - @service_container
+          - 
+              format: "json"
+              base_url: "%api_base_url%"
+              use_redis: "%use_redis%"
+              use_memcached: "%use_memcached%"
+              use_oauth2: "%oauth2_enabled%"
+              endpoints: "%api_endpoints%"
+              debug: "%kernel.debug%"
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @service_container,%env% ]
