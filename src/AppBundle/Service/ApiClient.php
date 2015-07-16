@@ -8,6 +8,7 @@ use AppBundle\Exception\DisplayableException;
 use RuntimeException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Message\ResponseInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ApiClient extends GuzzleClient
 {
@@ -56,8 +57,14 @@ class ApiClient extends GuzzleClient
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
 
 
-    public function __construct(SerializerInterface $serialiser, $oauth2Client,$redis,$memcached,$session,array $options)
+    public function __construct(ContainerInterface $container, array $options)
     {
+        $this->serialiser = $container->get('jms_serializer');
+        $this->redis = $container->get('snc_redis.default');
+        $this->memcached = $container->get('oauth.memcached');
+        $this->session = $container->get('session');
+        
+        $oauth2Client = $container->get('oauth2Client');
         $this->subscriber = $oauth2Client->getSubscriber();
         
         // check arguments
@@ -68,7 +75,6 @@ class ApiClient extends GuzzleClient
         }, ['base_url', 'endpoints', 'format', 'debug']);
 
         // set internal properties
-        $this->serialiser = $serialiser;
         $this->format = $options['format'];
         if (!in_array($this->format, $this->acceptedFormats)) {
             throw new \InvalidArgumentException(
@@ -78,10 +84,6 @@ class ApiClient extends GuzzleClient
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         $this->options = $options;
-
-        $this->session = $session;
-        $this->redis = $redis;
-        $this->memcached = $memcached;
        
         //lets get session id
         $sessionId = $this->session->getId();

@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\UserProvider;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
@@ -10,9 +11,9 @@ use AppBundle\Service\ApiClient;
 class DeputyProvider implements UserProviderInterface
 {
     /**
-     * @var ApiClient
+     * @var ContainerInterface
      */
-    private $apiclient;
+    private $container;
     
     /**
      * @var string $env
@@ -20,9 +21,9 @@ class DeputyProvider implements UserProviderInterface
     private $env;
     
     
-    public function __construct(ApiClient $apiclient,$env)
+    public function __construct(ContainerInterface $container, $env)
     {
-        $this->apiclient = $apiclient;
+        $this->container = $container;
         $this->env = $env;
     }
     
@@ -36,12 +37,14 @@ class DeputyProvider implements UserProviderInterface
     public function loadUserByUsername($email) 
     {
         try {
+            $apiclient = $this->container->get('apiclient');
+            
             if($this->env == 'admin'){
-                return $this->apiclient->getEntity('User', 'find_admin_by_email', [ 'parameters' => [ 'email' => $email ] ]);
-            }elseif(in_array($this->env,[ 'develop','staging','ci','prod'])){
-                return $this->apiclient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
-            }else{
-                return $this->apiclient->getEntity('User', 'find_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+                return $apiclient->getEntity('User', 'find_admin_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+            } elseif(in_array($this->env,[ 'develop','staging','ci','prod'])){
+                return $apiclient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+            } else{
+                return $apiclient->getEntity('User', 'find_by_email', [ 'parameters' => [ 'email' => $email ] ]);
             }
         } catch (\Exception $e) {
             throw new UsernameNotFoundException("We can't log you in at this time.");

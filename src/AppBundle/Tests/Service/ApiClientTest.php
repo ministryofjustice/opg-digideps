@@ -43,7 +43,17 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         $this->redis = m::mock('Predis\Client');
         $this->redis->shouldReceive([ 'get' => 'trash']);
         
-        $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $this->jsonSerializer, $this->oauth2ClientMock,$this->redis,$this->memcached,$this->session,$this->options ]);
+        
+        $containerMock = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
+            ->shouldReceive('get')->with('jms_serializer')->andReturn($this->jsonSerializer)
+            ->shouldReceive('get')->with('oauth2Client')->andReturn($this->oauth2ClientMock)
+            ->shouldReceive('get')->with('snc_redis.default')->andReturn($this->redis)
+            ->shouldReceive('get')->with('oauth.memcached')->andReturn($this->memcached)
+            ->shouldReceive('get')->with('session')->andReturn($this->session)
+            ->getMock();
+            
+        
+        $this->apiClientMock = m::mock('AppBundle\Service\ApiClient[get,post,put]', [ $containerMock, $this->options ]);
     }
     
     public function tearDown()
