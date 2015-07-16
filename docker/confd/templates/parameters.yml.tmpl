@@ -16,6 +16,7 @@ parameters:
     use_redis: true
     use_memcached: false
     session_engine: redis
+    ga: {{ getv "/ga" }}
     
     email_send:
         from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}

@@ -7,6 +7,7 @@ use GuzzleHttp\Message\RequestInterface as GuzzleRequestInterface;
 use AppBundle\Exception\DisplayableException;
 use RuntimeException;
 use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Message\ResponseInterface;
 
 class ApiClient extends GuzzleClient
 {
@@ -102,15 +103,28 @@ class ApiClient extends GuzzleClient
      *
      * @return stdClass entity object
      */
-    public function getEntity($class, $endpoint, array $options = [])
+    public function getEntity($class, $endpoint, array $options = [], $debug = false)
     {
 
         /*if($endpoint == 'find_by_email'){
              print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
         }*/
-        $responseArray = $this->deserialiseResponse($this->get($endpoint, $options));
+        if ($debug) {
+            error_log($endpoint);
+            error_log(__LINE__);
+            error_log(print_r($options,1));
+        }
+        $response = $this->get($endpoint, $options, $debug); 
+        
+        if ($debug) {
+            //doesn't reach this
+            error_log(__LINE__);
+        }
+        $responseArray = $this->deserialiseResponse($response);
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
-
+        if ($debug) {
+            error_log(__LINE__);
+        }
         return $ret;
     }
 
@@ -127,7 +141,7 @@ class ApiClient extends GuzzleClient
         $ret = [];
 
         $url = $e->getRequest()->getUrl();
-        $body = (string)$e->getResponse()->getBody();
+        $body = $e->getResponse() ? (string)$e->getResponse()->getBody() : '[No body found in response]';
 
         $ret[] = "Url: $url";
         $ret[] = "Response body: $body";
@@ -154,15 +168,16 @@ class ApiClient extends GuzzleClient
         } catch (\Exception $e) {
 
             if ($e instanceof RequestException) {
-                // add debug data dependign on kernely option
-                $debugData = $this->getDebugRequestExceptionData($e);
 
                 // try to unserialize response
+                $response = $e->getResponse();
+                if (!$response instanceof ResponseInterface) {
+                    throw new RuntimeException("No response from API. " . $this->getDebugRequestExceptionData($e));
+                }
                 try {
-                    $responseArray = $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', $this->format);
+                    $responseArray = $this->serialiser->deserialize($response->getBody(), 'array', $this->format);
                 } catch (\Exception $e) {
-
-                    throw new RuntimeException("Error from API: malformed message. " . $debugData);
+                    throw new RuntimeException("Error from API: malformed message. " . $this->getDebugRequestExceptionData($e));
                 }
 
                 // regognise specific error codes and launche specific exception classes
@@ -180,9 +195,9 @@ class ApiClient extends GuzzleClient
 
                 switch ($responseArray['code']) {
                     case 404:
-                        throw new DisplayableException('Record not found.' . $debugData);
+                        throw new DisplayableException('Record not found.' . $this->getDebugRequestExceptionData($e));
                     default:
-                        throw new RuntimeException($responseArray['message'] . ' ' . $debugData);
+                        throw new RuntimeException($responseArray['message'] . ' ' . $this->getDebugRequestExceptionData($e));
                 }
             }
 
@@ -265,7 +280,7 @@ class ApiClient extends GuzzleClient
     public function putC($endpoint, $bodyorEntity, array $options = [])
     {
         $body = $this->serialiseBodyOrEntity($bodyorEntity, $options);
-
+        
         if(isset($options['deserialise_group'])){
             unset($options['deserialise_group']);
         }
@@ -344,6 +359,10 @@ class ApiClient extends GuzzleClient
             $config['defaults']['auth'] = 'oauth2';
             $config['defaults']['subscribers'] = [ $this->subscriber ];
         }
+        
+        // use HTTP 1.0 to avoid "cURL error 56: Problem (2) in the Chunked-Encoded data"
+        $config['defaults']['version'] = 1.0;
+        
         return $config;
     }
     

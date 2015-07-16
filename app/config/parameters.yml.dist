@@ -43,4 +43,5 @@ parameters:
     redis_dsn: redis://localhost
     use_redis: true
     session_prefix: application_session
+    ga: null
             
