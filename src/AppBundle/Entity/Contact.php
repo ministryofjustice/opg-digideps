@@ -57,17 +57,20 @@ class Contact
     private $country;
     
     /**
-     *
+     * Reason for contact
+     * 
      * @JMS\Type("string")
      * @Assert\notBlank( message="contact.explanation.notBlank" )
-     * @Assert\Length( min=5, minMessage="contact.explanation.length")
+     * @Assert\Length( min=6, minMessage="contact.explanation.length")
      */
     private $explanation;
     
     /**
+     * Relationship to the client
+     * 
      * @JMS\Type("string")
      * @Assert\NotBlank( message="contact.relationship.notBlank" )
-     * @Assert\Length( min = 5, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
+     * @Assert\Length( min = 2, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
      */
     private $relationship;
     

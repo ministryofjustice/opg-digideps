@@ -107,8 +107,8 @@ Feature: report
         Then the "contact_explanation" field is expandable
         And I fill in the following:
             | contact_contactName | Andy White |
-            | contact_relationship | brother  |
-            | contact_explanation | no explanation |
+            | contact_relationship | GP  |
+            | contact_explanation | I owe him money |
             | contact_address | 45 Noth Road |
             | contact_address2 | Inslington |
             | contact_county | London |
