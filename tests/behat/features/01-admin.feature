@@ -30,9 +30,7 @@ Feature: admin
             | admin_lastname | 2 |
             | admin_roleId | 2 |
         And I press "admin_save"
-        Then I should see "is not a valid email"
-        And I should see "Your first name must be at least 2 characters long"
-        And I should see "Your last name must be at least 2 characters long"
+        Then the form should contain an error
         And I should not see "invalidEmail" in the "users" region
         # assert form OK
         When I fill in the following:
