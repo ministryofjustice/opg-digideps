@@ -146,9 +146,12 @@ class AccountController extends Controller
             'form' => $formMoneyInOut->createView(),
             // closing balance form: show closing balance/date explanation only in case of mismatch
             'closingBalanceForm' => $formClosingBalance->createView(),
-            'closingBalanceFormShow' => $action == 'list' && $report->isDue() && $account->needsClosingBalanceData(),
-            'closingBalanceFormDateExplanationShow' => $account->getClosingDate() && $closingBalanceFormIsSubmitted && !$account->isClosingDateValid(),
-            'closingBalanceFormBalanceExplanationShow' => $account->getClosingBalance() !== null && $closingBalanceFormIsSubmitted && !$account->isClosingBalanceValid(),
+            'closingBalanceFormShow' => ($action == 'list' && $report->isDue() && $account->needsClosingBalanceData()) 
+                                        || ($closingBalanceFormIsSubmitted && !$formBalanceIsValid),
+            'closingBalanceFormDateExplanationShow' => $account->getClosingDate() && $closingBalanceFormIsSubmitted 
+                                                       && !$account->isClosingDateEqualToReportEndDate(),
+            'closingBalanceFormBalanceExplanationShow' => $account->getClosingBalance() !== null && $closingBalanceFormIsSubmitted 
+                                                          && !$account->isClosingBalanceMatchingTransactionSum(),
             // edit form: show closing balance/date explanation only in case of mismatch
             'formEdit' => $formEdit ? $formEdit->createView() : null,
             'formEditShow' => $action == 'edit' || $action == 'delete',

@@ -218,11 +218,11 @@ class BehatController extends Controller
         $this->checkIsBehatBrowser();
 
         if (!preg_match('/^behat\-/', $this->container->getParameter('email_report_submit')['to_email'])) {
-            throw new \RuntimeException('email_report_submit.to_email must be a behat- email in order to be tested');
+            throw new \RuntimeException('email_report_submit.to_email must be a behat- email in order to test emails');
         }
         
         if (!preg_match('/^behat\-/', $this->container->getParameter('email_feedback_send')['to_email'])) {
-            throw new \RuntimeException('email_feedback_send.to_email must be a behat- email in order to be tested');
+            throw new \RuntimeException('email_feedback_send.to_email must be a behat- email in order to test emails');
         }
         
         return new Response('ok');
