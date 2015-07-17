@@ -79,7 +79,7 @@ Feature: add client and report
             | client_country | GB |
             | client_phone | 0123456789  |
         And I press "client_save"
-        Then the form should not contain an error
+        Then the form should be valid
         # assert you are on create report page
         And the URL should match "report/create/\d+"
 
@@ -103,28 +103,28 @@ Feature: add client and report
             | report_endDate_month |
             | report_endDate_year |
         And I press "report_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # invalid date
         When I fill in the following:
             | report_endDate_day | 99 |
             | report_endDate_month | 99 |
             | report_endDate_year | 2015 |
         And I press "report_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # date before report
         When I fill in the following:
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2010 |
         And I press "report_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # date range too high
         When I fill in the following:
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2016 |
         And I press "report_save"
-        Then the form should contain an error
+        Then the form should be invalid
         And I save the page as "deputy-step4-error"
         # valid form
         When I fill in the following:
@@ -132,7 +132,7 @@ Feature: add client and report
             | report_endDate_month | 12 |
             | report_endDate_year | 2015 |
         And I press "report_save"
-        Then the form should not contain an error
+        Then the form should be valid
         # assert you are on dashboard
         And the URL should match "report/\d+/overview"
 

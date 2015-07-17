@@ -32,7 +32,7 @@ Feature: edit user details
             | user_details_addressCountry |
             | user_details_phoneMain |
         And I press "user_details_save"
-        Then the form should contain an error
+        Then the form should be invalid
         When I fill in the following:
            | user_details_firstname | Paul |
            | user_details_lastname | Jamie |
@@ -44,7 +44,7 @@ Feature: edit user details
            | user_details_phoneMain | 020 3334 3556  |
            | user_details_phoneAlternative | 020 1234 5679  |
         And I press "user_details_save"
-        Then the form should not contain an error
+        Then the form should be valid
         Then I should be on "user"
         Then I should see "Paul Jamie" in the "my-details" region
         And I should see "103 Petty France" in the "my-details" region
@@ -94,7 +94,7 @@ Feature: edit user details
           | user_details_password_plain_password_first | Abcd12345 |
           | user_details_password_plain_password_second | Abcd12345 |
         And I press "user_details_save"
-        Then the form should not contain any error
+        Then the form should be valid
         And I should be on "/user"
         # restore old password (and assert the current password can be used as old password)
         When I click on "edit-user-details"
@@ -103,7 +103,7 @@ Feature: edit user details
           | user_details_password_plain_password_first | Abcd1234 |
           | user_details_password_plain_password_second | Abcd1234 |
         And I press "user_details_save"
-        Then the form should not contain any error
+        Then the form should be valid
         And I should be on "/user"
       
          

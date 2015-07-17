@@ -15,7 +15,6 @@ class Asset
     /**
      * 
      * @Assert\NotBlank(message="asset.description.notBlank")
-     * @Assert\Type( type="string", message="asset.description.type")
      * @Assert\Length(min=3, minMessage="asset.description.length")
      * 
      * @JMS\Type("string")

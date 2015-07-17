@@ -17,7 +17,6 @@ class Contact
     
     /**
      * @Assert\NotBlank( message="contact.name.notBlank" )
-     * @Assert\Type( type="string", message="contact.name.type")
      * @Assert\Length( min=2, minMessage="contact.name.minMessage", max=255, maxMessage="contact.name.maxMessage")
      * @JMS\SerializedName("contact_name")
      * @JMS\Type("string")
@@ -58,19 +57,20 @@ class Contact
     private $country;
     
     /**
-     *
+     * Reason for contact
+     * 
      * @JMS\Type("string")
      * @Assert\notBlank( message="contact.explanation.notBlank" )
-     * @Assert\Type( type="string", message="contact.explanation.type")
-     * @Assert\Length( min=5, minMessage="contact.explanation.length")
+     * @Assert\Length( min=6, minMessage="contact.explanation.length")
      */
     private $explanation;
     
     /**
+     * Relationship to the client
+     * 
      * @JMS\Type("string")
      * @Assert\NotBlank( message="contact.relationship.notBlank" )
-     * @Assert\Type( type="string", message="contact.relationship.type")
-     * @Assert\Length( min = 5, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
+     * @Assert\Length( min = 2, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
      */
     private $relationship;
     
