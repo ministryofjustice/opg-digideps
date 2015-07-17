@@ -1,5 +1,13 @@
 services:
-        
+    kernel.listener.responseConverter:
+        class: AppBundle\EventListener\RestInputOuputFormatter
+        arguments: [ @serializer, @logger, ["json"], "json", "%kernel.debug%" ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }            
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
+    em:
+        alias: doctrine.orm.entity_manager    
     # pass it into Swift_Mailer to always write email into disk rather than sending them
     mailer.transport.fileWriter:
         class: AppBundle\Mailer\Transport\FileWriter
