@@ -30,7 +30,17 @@ class ManageController extends Controller
 
         return $response;
     }
-
+    
+    /**
+     * @Route("/elb", name="manage-elb")
+     * @Method({"GET"})
+     * @Template()
+     */
+    public function elbAction()
+    {
+        return ['status'=>'OK'];
+    }
+    
     /**
      * @Route("/availability/pingdom")
      * @Method({"GET"})
@@ -57,7 +67,8 @@ class ManageController extends Controller
         $start = microtime(true);
         
         $services = [
-            new \AppBundle\Service\Availability\ApiAvailability($this->get('apiclient'))
+            new \AppBundle\Service\Availability\RedisAvailability($this->container),
+            new \AppBundle\Service\Availability\ApiAvailability($this->container)
         ];
         
         $healthy = true;

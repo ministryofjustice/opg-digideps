@@ -2,23 +2,31 @@
 
 namespace AppBundle\Service\Availability;
 
-use AppBundle\Service\ApiClient;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ApiAvailability extends ServiceAvailabilityAbstract
 {
-    public function __construct(ApiClient $apiClient)
+    public function __construct(ContainerInterface $container)
     {
-        $content = $apiClient->get('/manage/availability')->getBody();
-        $contentArray = json_decode($content, 1);
-        if (json_last_error() !== JSON_ERROR_NONE || !isset($contentArray['data']['healthy'])) {
-            $this->isHealthy = false;
-            $this->errors = 'Cannot read API status. ' . json_last_error_msg();
+        try {
+            $content = $container->get('apiclient')->get('/manage/availability')->getBody();
+            $contentArray = json_decode($content, 1);
+            // API not healtyh
+            if (json_last_error() !== JSON_ERROR_NONE || !isset($contentArray['data']['healthy'])) {
+                $this->isHealthy = false;
+                $this->errors = 'Cannot read API status. ' . json_last_error_msg();
+                return;
+            } 
             
-            return;
+            // API healthy
+            $this->isHealthy = $contentArray['data']['healthy'];
+            $this->errors = $contentArray['data']['errors'];
+            
+        } catch (\Exception $e) {
+            $this->isHealthy = false;
+            $this->errors = 'Error when using ApiClient to connect to API . ' . $e->getMessage();
         }
         
-        $this->isHealthy = $contentArray['data']['healthy'];
-        $this->errors = $contentArray['data']['errors'];
     }
     
     public function getName()

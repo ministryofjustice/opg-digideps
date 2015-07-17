@@ -2,7 +2,7 @@ FROM registry.service.dsd.io/opguk/php-fpm:0.1.38
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis \
-     nodejs && \
+     nodejs dos2unix && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
@@ -43,3 +43,6 @@ ENV  HOME /root
 
 # app configuration
 ADD docker/confd /etc/confd
+
+# let's make sure they always work
+RUN dos2unix /app/scripts/*
