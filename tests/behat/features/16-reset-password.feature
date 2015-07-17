@@ -11,15 +11,15 @@ Feature: password reset
       # empty form]
       And I fill in "password_forgotten_email" with ""
       And I press "password_forgotten_submit"
-      Then the form should contain an error
+      Then the form should be invalid
       # invalid email
       When I fill in "password_forgotten_email" with "invalidemail"
       And I press "password_forgotten_submit"
-      Then the form should contain an error
+      Then the form should be invalid
       # non-existing email (no email is sent)
       When I fill in "password_forgotten_email" with "ehat-not-existing@publicguardian.gsi.gov.uk"
       And I press "password_forgotten_submit"
-      Then the form should not contain an error
+      Then the form should be valid
       And I click on "return-to-login"
       And no email should have been sent
       # existing email (email is now sent)
@@ -27,7 +27,7 @@ Feature: password reset
       And I click on "forgotten-password"
       And I fill in "password_forgotten_email" with "behat-user@publicguardian.gsi.gov.uk"
       And I press "password_forgotten_submit"
-      Then the form should not contain an error
+      Then the form should be valid
       And I save the page as "forgotten-password-sent"
       And I click on "return-to-login"
       And an email with subject "Reset your password" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
@@ -39,20 +39,20 @@ Feature: password reset
           | reset_password_password_first   |  |
           | reset_password_password_second  |  |
       And I press "reset_password_save"
-      Then the form should contain an error
+      Then the form should be invalid
       #password mismatch
       When I fill in the following: 
           | reset_password_password_first   | Abcd1234 |
           | reset_password_password_second  | Abcd12345 |
       And I press "reset_password_save"
-      Then the form should contain an error
+      Then the form should be invalid
       # (nolowercase, nouppercase, no number skipped as already tested in "set password" scenario)
       # correct !!
       When I fill in the following: 
           | reset_password_password_first   | Abcd12345 |
           | reset_password_password_second  | Abcd12345 |
       And I press "reset_password_save"
-      Then the form should not contain an error
+      Then the form should be valid
       And the URL should match "report/\d+/overview"
       And I save the page as "forgotten-password-logged"
       # test login

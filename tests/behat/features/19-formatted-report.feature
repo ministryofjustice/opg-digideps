@@ -19,7 +19,7 @@ Feature: Formatted Report
             | set_password_password_first   | Abcd1234 |
             | set_password_password_second  | Abcd1234 |
         And I press "set_password_save"
-        Then the form should not contain an error
+        Then the form should be valid
         Then I should be on "user/details"
         When I fill in the following:
             | user_details_firstname | John |
@@ -32,7 +32,7 @@ Feature: Formatted Report
             | user_details_phoneMain | 020 3334 3555  |
             | user_details_phoneAlternative | 020 1234 5678  |
         And I press "user_details_save"
-        Then the form should not contain an error
+        Then the form should be valid
         When I fill in the following:
             | client_firstname | Peter |
             | client_lastname | White |
@@ -48,13 +48,13 @@ Feature: Formatted Report
             | client_country | GB |
             | client_phone | 0123456789  |
         And I press "client_save"
-        Then the form should not contain an error
+        Then the form should be valid
         When I fill in the following:
             | report_endDate_day | 1 |
             | report_endDate_month | 1 |
             | report_endDate_year | 2015 |
         And I press "report_save"
-        Then the form should not contain an error
+        Then the form should be valid
         # assert you are on dashboard
         And the URL should match "report/\d+/overview"
         Then I save the application status into "reportuser"
@@ -71,7 +71,7 @@ Feature: Formatted Report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
         Then I press "decision_save"
-        And the form should not contain an error
+        And the form should be valid
         Then I click on "add-a-decision"
         # add another decision
         And I fill in the following:
@@ -79,7 +79,7 @@ Feature: Formatted Report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
         Then I press "decision_save"
-        And the form should not contain an error
+        And the form should be valid
         # Next, some contacts
         Then I follow "tab-contacts"
         And I click on "add-a-contact"
@@ -93,7 +93,7 @@ Feature: Formatted Report
             | contact_postcode | N2 5JF |
             | contact_country | GB |
         And I press "contact_save"
-        And the form should not contain an error
+        And the form should be valid
         # And Another
         And I click on "add-a-contact"
         And I fill in the following:
@@ -106,7 +106,7 @@ Feature: Formatted Report
             | contact_postcode | SL1 1RR |
             | contact_country | GB |
         And I press "contact_save"
-        And the form should not contain an error
+        And the form should be valid
         # Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -154,7 +154,7 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should not contain an error        
+        And the form should be valid        
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
@@ -224,7 +224,7 @@ Feature: Formatted Report
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | 5855.19 |
         And I press "accountBalance_save"
-        And the form should not contain an error
+        And the form should be valid
         Then I save the application status into "readytosubmit"
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -258,7 +258,7 @@ Feature: Formatted Report
         Then I fill in the following:
           | reason_for_no_decision_reason | small budget |
         And I press "reason_for_no_decision_saveReason"
-        Then the form should not contain an error
+        Then the form should be valid
         # Next, some contacts
         Then I follow "tab-contacts"
         And I click on "add-a-contact"
@@ -272,7 +272,7 @@ Feature: Formatted Report
             | contact_postcode | N2 5JF |
             | contact_country | GB |
         And I press "contact_save"
-        And the form should not contain an error
+        And the form should be valid
         # And Another
         And I click on "add-a-contact"
         And I fill in the following:
@@ -285,7 +285,7 @@ Feature: Formatted Report
             | contact_postcode | SL1 1RR |
             | contact_country | GB |
         And I press "contact_save"
-        And the form should not contain an error
+        And the form should be valid
         # Bank account
         Then I follow "tab-accounts"
         And I fill in the following:
@@ -302,14 +302,14 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         When I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | 155.00 |
         And I press "accountBalance_save"
-        And the form should not contain an error
+        And the form should be valid
         # Finally, Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -323,7 +323,7 @@ Feature: Formatted Report
         And I press "asset_save"
         And I save the page as "report-assets-list-one"
         Then the response status code should be 200
-        And the form should not contain an error
+        And the form should be valid
         And I should see "2 beds flat in HA2" in the "list-assets" region
         And I should see "£250,000.00" in the "list-assets" region
         When I click on "add-an-asset"
@@ -379,7 +379,7 @@ Feature: Formatted Report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
         Then I press "decision_save"
-        And the form should not contain an error
+        And the form should be valid
         Then I click on "add-a-decision"
         # add another decision
         And I fill in the following:
@@ -387,12 +387,12 @@ Feature: Formatted Report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
         Then I press "decision_save"
-        And the form should not contain an error
+        And the form should be valid
         # Next, some contacts
         Then I follow "tab-contacts"
         When I fill in "reason_for_no_contact_reason" with "kept in the book"
         And I press "reason_for_no_contact_saveReason"
-        Then the form should not contain an error
+        Then the form should be valid
         
         # Bank account
         Then I follow "tab-accounts"
@@ -410,14 +410,14 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         When I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | 155.00 |
         And I press "accountBalance_save"
-        And the form should not contain an error
+        And the form should be valid
         # Finally, Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -431,7 +431,7 @@ Feature: Formatted Report
         And I press "asset_save"
         And I save the page as "report-assets-list-one"
         Then the response status code should be 200
-        And the form should not contain an error
+        And the form should be valid
         And I should see "2 beds flat in HA2" in the "list-assets" region
         And I should see "£250,000.00" in the "list-assets" region
         When I click on "add-an-asset"
@@ -515,7 +515,7 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         # Add values into the money out fields.
         And I click on "moneyIn-tab"
         When I fill in the following:
@@ -586,7 +586,7 @@ Feature: Formatted Report
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | 4855.19 |
         And I press "accountBalance_save"
-        And the form should not contain an error
+        And the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -628,7 +628,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
             | account_openingDateExplanation | earlier transaction made with other account |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         # Add values into the money out fields.
         And I click on "moneyIn-tab"
         When I fill in the following:
@@ -705,7 +705,7 @@ Feature: Formatted Report
         Then I fill in the following:
             | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
         And I press "accountBalance_save"
-        Then the form should not contain any error
+        Then the form should be valid
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/add_further_information"
@@ -740,7 +740,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
             | account_openingDateExplanation | earlier transaction made with other account |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         # Add values into the money out fields.
         And I click on "moneyIn-tab"
         When I fill in the following:
@@ -852,7 +852,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
             | account_openingDateExplanation | open date reason |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         # Add values into the money out fields.
         And I click on "moneyIn-tab"
         When I fill in the following:
@@ -976,12 +976,12 @@ Feature: Formatted Report
         Then I fill in the following:
           | reason_for_no_decision_reason | small budget |
         And I press "reason_for_no_decision_saveReason"
-        Then the form should not contain an error
+        Then the form should be valid
         # No Contacts
         Then I follow "tab-contacts"
         When I fill in "reason_for_no_contact_reason" with "kept in the book"
         And I press "reason_for_no_contact_saveReason"
-        Then the form should not contain an error
+        Then the form should be valid
         # Bank account
         Then I follow "tab-accounts"
         And I fill in the following:
@@ -998,19 +998,19 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should not contain an error
+        And the form should be valid
         When I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
             | accountBalance_closingDate_year  | 2015 | 
             | accountBalance_closingBalance    | 155.00 |
         And I press "accountBalance_save"
-        And the form should not contain an error
+        And the form should be valid
         # Finally, Assets
         Then I follow "tab-assets"
         And I check "report_no_assets_no_assets"
         And I press "report_no_assets_saveNoAsset"
-        Then the form should not contain an error
+        Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
