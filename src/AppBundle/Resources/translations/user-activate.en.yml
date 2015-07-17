@@ -9,7 +9,7 @@ password:
     label: Password
     hint: Your password must have at least 8 characters, include at least 1 uppercase letter, at least 1 lowercase letter and at least 1 number.
     validation:
-        passwordMismatch: The password fields must match.
+        passwordMismatch: The passwords you entered don't match.
 password_confirm:
     label: Confirm password
 agree:
