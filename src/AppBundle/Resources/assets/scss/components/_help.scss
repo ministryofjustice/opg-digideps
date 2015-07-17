@@ -1,0 +1,42 @@
+#contact-block {
+    display: inline-block;
+    width: 28%;
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    @include media(mobile) {
+        display:block;
+        top: auto;
+        left: auto;
+        position: static;
+        width: 65%;
+    }    
+
+}
+
+.report-money-input #contact-block {
+    display: none;
+    @include media(mobile) {
+        display:none;
+    }
+}
+
+.info-block {
+    background: $grey-3;
+    padding: 20px;
+    @include core-24();
+
+    .phone-number {
+        display: block;
+        @include bold-24();
+        padding: 20px 0 20px 0;
+    }
+    
+    .hours {
+        display: block;
+        @include core-19();
+    }
+    
+
+}

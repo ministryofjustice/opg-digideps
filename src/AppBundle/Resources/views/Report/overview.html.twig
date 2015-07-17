@@ -15,22 +15,11 @@ activeTab: "tab-overview"
     {% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
 
     {% block pageBody %}
-        {% if report.isDue() %}
-
-            {% include 'AppBundle:Report/Overview:_report-overview-due.html.twig' with {
-            'translationDomain': translationDomain,
-            'reportType': reportType
-            } %}
-
-        {% else %}
-
-            {% include 'AppBundle:Report/Overview:_report-overview.html.twig' with {
-            'translationDomain': translationDomain,
-            'reportType': reportType
-            } %}
-
-        {% endif %}
-
+      
+      {% include 'AppBundle:Report/Overview:_report-overview.html.twig' with {
+      'translationDomain': translationDomain,
+      'reportType': reportType
+      } %}
 
     {% endblock %}
 

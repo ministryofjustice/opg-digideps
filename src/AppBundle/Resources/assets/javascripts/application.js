@@ -18,6 +18,13 @@ function mojDateString(localDate) {
 
 }
 
+function scrollIntoView(eleID) {
+   var element = $('#' + eleID);
+   if (element.length === 1) {
+        $('html, body').animate({scrollTop: element.offset().top -40 }, 'fast');
+   }
+}
+
 var dateNow = new Date();
 
 //debugger;
@@ -30,3 +37,7 @@ if ($('.registration-client-add')) {
 if ($('.js-report-decisions-input')) {
     new GOVUK.SelectionButtons(":radio");
 }
+
+$(window).load(function(){
+    scrollIntoView('error-summary');   
+});

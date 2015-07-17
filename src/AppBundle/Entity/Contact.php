@@ -17,8 +17,7 @@ class Contact
     
     /**
      * @Assert\NotBlank( message="contact.name.notBlank" )
-     * @Assert\Type( type="string", message="contact.name.type")
-     * @Assert\Length( min=2, minMessage="contact.name.length")
+     * @Assert\Length( min=2, minMessage="contact.name.minMessage", max=255, maxMessage="contact.name.maxMessage")
      * @JMS\SerializedName("contact_name")
      * @JMS\Type("string")
      * @var string $contactName
@@ -28,22 +27,26 @@ class Contact
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="contact.address.notBlank")
+     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $address;
     
     /**
      * @JMS\Type("string")
+     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $address2;
     
     /**
      * @JMS\Type("string")
+     * @Assert\Length( max=200, maxMessage="contact.address.maxMessage")
      */
     private $county;
     
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="contact.postcode.notBlank")
+     * @Assert\Length( max=10, maxMessage="contact.postcode.maxMessage")
      */
     private $postcode;
     
@@ -57,7 +60,6 @@ class Contact
      *
      * @JMS\Type("string")
      * @Assert\notBlank( message="contact.explanation.notBlank" )
-     * @Assert\Type( type="string", message="contact.explanation.type")
      * @Assert\Length( min=5, minMessage="contact.explanation.length")
      */
     private $explanation;
@@ -65,13 +67,13 @@ class Contact
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="contact.relationship.notBlank" )
-     * @Assert\Type( type="string", message="contact.relationship.type")
-     * @Assert\Length( min = 5, minMessage="contact.relationship.length")
+     * @Assert\Length( min = 5, minMessage="contact.relationship.minMessage", max=100, maxMessage="contact.relationship.maxMessage")
      */
     private $relationship;
     
     /**
      * @JMS\Type("string")
+     * @Assert\Length( max=20, maxMessage="contact.phone.maxMessage")
      */
     private $phone;
     

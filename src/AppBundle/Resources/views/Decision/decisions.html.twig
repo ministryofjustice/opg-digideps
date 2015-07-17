@@ -83,15 +83,6 @@ activeTab: "tab-decisions"
         pageSectionTitle: 'page.pageSectionTitle'
         } %}
 
-        {% include 'AppBundle:Decision:_no_decision_form.html.twig' with {
-        'showNoDecisionForm': showNoDecisionForm
-        } %}
-
-        {% include 'AppBundle:Decision:_no_decision_reason.html.twig' with {
-        translationDomain: translationDomain,
-        'showNoDecisionReason': showNoDecisionReason
-        } %}
-
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
@@ -123,6 +114,18 @@ activeTab: "tab-decisions"
         {% include 'AppBundle:Decision:_listDecision.html.twig' with {
         'showListData': showListData
         } %}
+        
+        
+        {% if showNoDecisionForm or showNoDecisionReason %}
+          <div class="report-list-separator"> </div>
+          {% include 'AppBundle:Decision:_no_decision_form.html.twig' with {
+            'showNoDecisionForm': showNoDecisionForm
+          } %}
+          {% include 'AppBundle:Decision:_no_decision_reason.html.twig' with {
+            translationDomain: translationDomain,
+            'showNoDecisionReason': showNoDecisionReason
+          } %}
+        {% endif %}
 
     {% endblock %}
 

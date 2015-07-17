@@ -21,7 +21,8 @@ class Account
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic"})
-     * @Assert\Type(type="string", message="account.bank.type", groups={"basic"})
+     * @Assert\Length(max=100, maxMessage= "account.bank.maxMessage", groups={"basic"})
+     * 
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $bank

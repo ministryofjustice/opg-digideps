@@ -51,7 +51,8 @@
     </target>
 
     <target name="behat-init" description="Set up test db" depends="cache-clear,fixtures,build-assets">
-        <exec command="rm -f misc/tmp/behat*"></exec>
+        <exec command="mkdir -p /tmp/behat/"></exec>
+        <exec command="rm -f /tmp/behat/*"></exec>
         <exec command="chmod +x misc/scripts/aha/aha"></exec>
     </target>
 

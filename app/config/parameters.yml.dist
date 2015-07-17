@@ -15,17 +15,15 @@ parameters:
     # activation, change password, reset password emails (Amazon SES, needs @digideps.dsd.io sender )
     email_send:
       from_email: no-reply@digideps.dsd.io
-      from_name: Digital Deputyship Service
       # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released
-      to_email: deputyshipservice@publicguardian.gsi.gov.uk
-      to_name: Digital Deputyship Service
     # report submit email with attachment, uses local secure SMTP (no auth needed)
     email_report_submit:
+      from_email: no-reply@digideps.dsd.io
       to_email: deputyshipservice@publicguardian.gsi.gov.uk 
     # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
     email_feedback_send:
-        from_email: no-reply@digideps.dsd.io
-        to_email: deputyshipfeedback@publicguardian.gsi.gov.uk
+      from_email: no-reply@digideps.dsd.io
+      to_email: deputyshipfeedback@publicguardian.gsi.gov.uk
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"
@@ -45,4 +43,5 @@ parameters:
     redis_dsn: redis://localhost
     use_redis: true
     session_prefix: application_session
+    ga: null
             

@@ -45,4 +45,68 @@ trait ReportTrait
     {
         $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
     }
+    
+    /**
+     * @Then the :arg1 asset group should be :arg2
+     */
+    public function theAssetGroupShouldBe($index, $text)
+    {
+        $css = '#assets-section .asset-group:nth-child(' . $index .')';
+        $this->assertSession()->elementTextContains('css', $css, $text);
+    }
+
+    /**
+     * @Then the :arg1 asset in the :arg2 asset group should have a :arg3 :arg4
+     */
+    public function theAssetInTheAssetGroupShouldHaveA($assetIndex, $group, $field, $text)
+    {
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field . ' .value';
+        $this->assertSession()->elementTextContains('css', $css, $text);
+    }
+
+    /**
+     * @Then the :arg1 asset in the :arg2 asset group should have an empty :arg3
+     */
+    public function theAssetInTheAssetGroupShouldHaveEmpty($assetIndex, $group, $field)
+    {
+        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child('. $assetIndex . ') .asset-' . $field . ' .value';
+
+        $elementsFound = $this->getSession()->getPage()->findAll('css', $css);
+        if (count($elementsFound) === 0) {
+            throw new \RuntimeException("Element not found");
+        }
+
+        if ($elementsFound[0]->getText() != '') {
+            throw new \RuntimeException("Element should be empty but contains: " . $elementsFound[0]->getText());
+        }
+
+    }
+    
+    /**
+     * @Then I view the formatted report
+     */
+    public function viewFormattedReport()
+    {
+        $this->visit('/client/show');
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.view-report-link');
+        
+        if (count($linksElementsFound) === 0) {
+           throw new \RuntimeException("Element .view-report-link not found");
+        }
+        
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Returned multiple elements");
+        }
+    
+        $url = $linksElementsFound[0]->getAttribute('href');
+        $epos = strpos($url, '/display');
+        $length = $epos - 8;
+        $reportNumber = substr($url, 8, $length);
+        $newUrl = '/report/' . $reportNumber . '/formatted';
+        
+        $this->visit($newUrl);
+        
+    }
+
+
 }

@@ -19,6 +19,21 @@ Feature: add details
             | user_details_phoneMain |
         And I press "user_details_save"
         Then the form should contain an error
+        And I save the page as "deputy-step2-empty-error"
+        # test length validators
+        When I fill in the following:
+            | user_details_addressPostcode | 1234567890 more than 10 chars |
+            | user_details_phoneMain | 1234567890-1234567890 more than 20 chars |
+        And I press "user_details_save"
+        Then the following fields should have an error:
+            | user_details_firstname |
+            | user_details_lastname |
+            | user_details_address1 |
+            | user_details_addressPostcode |
+            | user_details_addressCountry |
+            | user_details_phoneMain |
+        And I press "user_details_save"
+        Then the form should contain an error
         And I save the page as "deputy-step2-error"
         # right values
         When I fill in the following:
@@ -48,8 +63,8 @@ Feature: add details
 
     @admin
     Scenario: add user details (admin user)
-        Given I am logged in as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "user/details"
+        Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to "http://digideps-admin.local/user/details"
         And I save the page as "admin-step2"
         # testing validation, as the validation group for the form is different for admin user
         # missing firstname
@@ -71,7 +86,7 @@ Feature: add details
             | user_details_lastname | Doe admin |
         And I press "user_details_save"
         Then the form should not contain an error
-        When I go to "user/details"
+        When I go to "http://digideps-admin.local/user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
