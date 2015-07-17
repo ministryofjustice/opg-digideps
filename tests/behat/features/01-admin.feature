@@ -3,6 +3,7 @@ Feature: admin
     @deputy
     Scenario: login and add deputy user
         Given I am on "http://digideps-admin.local/"
+        And I save the page as "admin-login"
         Then the response status code should be 200
         # test wrong credentials
         When I fill in the following:
@@ -10,6 +11,7 @@ Feature: admin
             | login_password  |  WRONG PASSWORD !! |
         And I click on "login"
         Then I should see the "header errors" region
+        And I save the page as "admin-login-error1"
         # test user email in caps
         When I fill in the following:
             | login_email     | ADMIN@PUBLICGUARDIAN.GSI.GOV.UK |
@@ -31,6 +33,7 @@ Feature: admin
             | admin_roleId | 2 |
         And I press "admin_save"
         Then the form should be invalid
+        And I save the page as "admin-deputy-error1"
         And I should not see "invalidEmail" in the "users" region
         # assert form OK
         When I fill in the following:
