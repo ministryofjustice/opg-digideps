@@ -30,7 +30,7 @@ Feature: admin
             | admin_lastname | 2 |
             | admin_roleId | 2 |
         And I press "admin_save"
-        Then the form should contain an error
+        Then the form should be invalid
         And I should not see "invalidEmail" in the "users" region
         # assert form OK
         When I fill in the following:

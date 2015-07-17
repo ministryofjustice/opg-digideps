@@ -9,7 +9,7 @@ trait FormTrait
 {    
 
     /**
-     * @Then the form should contain an error
+     * @Then the form should be invalid
      */
     public function theFormShouldContainAnError()
     {
@@ -17,8 +17,7 @@ trait FormTrait
     }
     
     /**
-     * @Then the form should not contain an error
-     * @Then the form should not contain any error
+     * @Then the form should be valid
      */
     public function theFormShouldNotContainAnError()
     {
