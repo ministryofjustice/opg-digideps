@@ -8,7 +8,7 @@ Feature: edit/remove contact
         And I click on "contact-n1"
         Then the following fields should have the corresponding values:
             | contact_contactName | Andy White |
-            | contact_relationship | brother |
+            | contact_relationship | GP |
             | contact_explanation | no explanation |
             | contact_address | 45 Noth Road |
             | contact_postcode | N2 5JF |
