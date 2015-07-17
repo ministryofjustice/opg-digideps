@@ -507,7 +507,9 @@ Feature: report
         When I set the report 1 end date to 3 days ago
         And I am on the accounts page of the first report
         Then I should see the "account-1234-warning" region
+        And I save the page as "report-account-closing-balance-overview"
         When I click on "account-1234"
+        And I save the page as "report-account-closing-balance-form"
         Then I should not see a "accountBalance_closingDateExplanation" element
         Then I should not see a "accountBalance_closingBalanceExplanation" element
         Then the following fields should have the corresponding values:
@@ -527,6 +529,7 @@ Feature: report
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
             | accountBalance_closingBalance    |
+        And I save the page as "report-account-closing-balance-form-errors"
         # invalid values
         When I fill in the following:
             | accountBalance_closingDate_day   | 99 | 
@@ -612,6 +615,7 @@ Feature: report
             | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
         And I press "accountBalance_save"
         Then the form should be valid
+        And I save the page as "report-account-closing-balance-form-valid"
         # assert the form disappeared
         Then I should not see the "account-closing-balance-form" region
         # assert transactions are not changed due to the form in the same page
