@@ -1,43 +1,54 @@
-$( document ).ready(function() {
-    var sortCodeParts = $(".sort-code-part");
-    var container = $(sortCodeParts[0]).parent().parents('.form-group');
+var opg = opg || {};
 
-    sortCodeParts.on('input', function(event) {
+(function ($, opg) {
+    
+    var sortCodeParts;
+    var container;
+    var noneNumericError = 'Sort code must be numeric';
+    var errors;
+
+    function skipToNext(event) {
         
         var target = $(event.target);
         
         if(target.val().length == target.attr('maxlength') && target[0] !== sortCodeParts[sortCodeParts.length -1] ) {
-            $('input', target.parent().nextAll(".form-group")[0]).focus();
+            var nextField = $('input', target.parent().nextAll(".form-group")[0])
+            nextField.focus();
         }    
-    
-    });
-    
-    function validate() {
-        
-        var valid = true;
-        
-        sortCodeParts.each(function(index, element) {
-            var $element = $(element);
-            var str = $element.val();
-            var parent = $element.parent();
+    }
 
-            // Make sure the field only contains 2 digits
-            if (/^\d{1,2}$/.test(str) && str.length === 2) {
-                parent.removeClass('field-with-errors');
-            } else {
-                parent.addClass('field-with-errors');
-                valid = false;
-            }
-        });
+    function validateField(event) {
         
-        if (valid) {
-            container.removeClass('field-with-errors');
+        var field = $(event.target);
+        var str = field.val();
+        var parent = field.parent();
+
+        if (/^\d{1,2}$/.test(str) && str.length === 2) {
+            parent.removeClass('field-with-errors');
         } else {
-            container.addClass('field-with-errors');
+            parent.addClass('field-with-errors');
         }
-        
+
+        showErrorDescription();
+    }
+
+    function showErrorDescription() {
+        if ($('.form-sort-code .field-with-errors').length > 0){
+            errors.empty().append('<li class="error">' + noneNumericError + '</li>');    
+            container.addClass('field-with-errors');  
+        } else {
+            container.removeClass('field-with-errors');
+            errors.empty();
+        }
     }
     
-    sortCodeParts.on('blur', validate);
+    opg.SortCodeValidate = function(target) {
+        container = $(target);
+        errors = container.find('.errors');
+        sortCodeParts = container.find(".sort-code-part");
+        
+        sortCodeParts.on('propertychange input', skipToNext);
+        sortCodeParts.on('blur', validateField);
+    };
 
-});
+})(jQuery, opg);
