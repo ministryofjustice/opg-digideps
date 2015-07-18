@@ -12,38 +12,38 @@ Feature: set password
             | set_password_password_first   |  |
             | set_password_password_second  |  |
         And I press "set_password_save"
-        Then the form should contain an error
+        Then the form should be invalid
         #password mismatch
         When I fill in the following: 
             | set_password_password_first   | Abcd1234 |
             | set_password_password_second  | Abcd12345 |
         And I press "set_password_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # nolowercase
         When I fill in the following: 
             | set_password_password_first   | ABCD1234 |
             | set_password_password_second  | ABCD1234 |
         And I press "set_password_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # nouppercase
         When I fill in the following: 
             | set_password_password_first   | abcd1234 |
             | set_password_password_second  | abcd1234 |
         And I press "set_password_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # no number
         When I fill in the following: 
             | set_password_password_first   | Abcdefgh |
             | set_password_password_second  | Abcdefgh |
         And I press "set_password_save"
-        Then the form should contain an error
+        Then the form should be invalid
         And I save the page as "deputy-step1-error"
         # correct !!
         When I fill in the following: 
             | set_password_password_first   | Abcd1234 |
             | set_password_password_second  | Abcd1234 |
         And I press "set_password_save"
-        Then the form should not contain an error
+        Then the form should be valid
         And I should see the "user-details" region
         # test login
         When I go to "logout"

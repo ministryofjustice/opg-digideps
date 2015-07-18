@@ -52,7 +52,7 @@ Feature: report
             | report_edit_endDate_month | 12 |
             | report_edit_endDate_year | 2015 |    
         And I press "report_edit_save"
-        Then the form should not contain an error
+        Then the form should be valid
         # check values
         And I click on "edit-report-period-2015-report"
         Then the following fields should have the corresponding values:
@@ -107,8 +107,8 @@ Feature: report
         Then the "contact_explanation" field is expandable
         And I fill in the following:
             | contact_contactName | Andy White |
-            | contact_relationship | brother  |
-            | contact_explanation | no explanation |
+            | contact_relationship | GP  |
+            | contact_explanation | I owe him money |
             | contact_address | 45 Noth Road |
             | contact_address2 | Inslington |
             | contact_county | London |
@@ -117,7 +117,7 @@ Feature: report
         And I press "contact_save"
         And I save the page as "report-contact-list"
         Then the response status code should be 200
-        And the form should not contain an error
+        And the form should be valid
         And the URL should match "/report/\d+/contacts"
         And I should see "Andy White" in the "list-contacts" region
 
@@ -142,7 +142,7 @@ Feature: report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails |  |
         And I press "decision_save"
-        And the form should contain an error
+        And the form should be invalid
         # add decision 
         Then the "decision_description" field is expandable
         And the "decision_clientInvolvedDetails" field is expandable
@@ -153,7 +153,7 @@ Feature: report
         And I press "decision_save"
         And I save the page as "report-decision-list"
         Then the response status code should be 200
-        And the form should not contain an error
+        And the form should be valid
         When I click on "add-a-decision"
         # add another decision
          And I fill in the following:
@@ -162,7 +162,7 @@ Feature: report
             | decision_clientInvolvedBoolean_0 | 1 |
             | decision_clientInvolvedDetails | the client was able to decide at 85% |
         And I press "decision_save"
-        And the form should not contain an error
+        And the form should be valid
         And I should see "2 beds" in the "list-decisions" region
         And I should see "3 beds" in the "list-decisions" region
         
@@ -206,7 +206,7 @@ Feature: report
         And I press "asset_save"
         And I save the page as "report-assets-list-one"
         Then the response status code should be 200
-        And the form should not contain an error
+        And the form should be valid
         And I should see "2 beds flat in HA2" in the "list-assets" region
         And I should see "£250,000.00" in the "list-assets" region
         When I click on "add-an-asset"
@@ -303,7 +303,7 @@ Feature: report
         And I press "account_save"
         And I save the page as "report-account-list"
         Then the response status code should be 200
-        And the form should not contain an error
+        And the form should be valid
         And the URL should match "/report/\d+/account/\d+"
         And I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
         # refresh page and check values
@@ -414,7 +414,7 @@ Feature: report
             | account_openingBalance  | 1,300.00 |
             | account_openingDateExplanation | just a test |
         And I press "account_save"
-        Then the form should not contain an error
+        Then the form should be valid
         
 
 
@@ -476,7 +476,7 @@ Feature: report
             | transactions_moneyOut_11_amount      | 5000.501 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
         And I press "transactions_saveMoneyIn"
-        Then the form should not contain an error
+        Then the form should be valid
         # assert value saved
         And the following fields should have the corresponding values:
             | transactions_moneyIn_0_amount       | 1,250.00 | 
@@ -507,7 +507,9 @@ Feature: report
         When I set the report 1 end date to 3 days ago
         And I am on the accounts page of the first report
         Then I should see the "account-1234-warning" region
+        And I save the page as "report-account-closing-balance-overview"
         When I click on "account-1234"
+        And I save the page as "report-account-closing-balance-form"
         Then I should not see a "accountBalance_closingDateExplanation" element
         Then I should not see a "accountBalance_closingBalanceExplanation" element
         Then the following fields should have the corresponding values:
@@ -527,6 +529,7 @@ Feature: report
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
             | accountBalance_closingBalance    |
+        And I save the page as "report-account-closing-balance-form-errors"
         # invalid values
         When I fill in the following:
             | accountBalance_closingDate_day   | 99 | 
@@ -606,12 +609,13 @@ Feature: report
         And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
         And I fill in "accountBalance_closingBalance" with "-3000"
         And I press "accountBalance_save"
-        Then the form should contain an error
+        Then the form should be invalid
         When I fill in the following:
             | accountBalance_closingDateExplanation| not possible to login to homebanking before |
             | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
         And I press "accountBalance_save"
-        Then the form should not contain any error
+        Then the form should be valid
+        And I save the page as "report-account-closing-balance-form-valid"
         # assert the form disappeared
         Then I should not see the "account-closing-balance-form" region
         # assert transactions are not changed due to the form in the same page
@@ -688,7 +692,7 @@ Feature: report
             | account_closingBalance | -3,000.50 | 
             | account_closingBalanceExplanation | £ 100 moved to other account | 
         And I press "account_save"
-        Then the form should not contain any error
+        Then the form should be valid
         And I should see "01/05/2015" in the "account-closing-balance-date" region
         And I should see "£-3,000.50" in the "account-closing-balance" region
 
@@ -809,7 +813,7 @@ Feature: report
         # tick agree and submit
         When I check "report_declaration_agree"
         And I press "report_declaration_save"
-        And the form should not contain an error
+        And the form should be valid
         And the response status code should be 200
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"

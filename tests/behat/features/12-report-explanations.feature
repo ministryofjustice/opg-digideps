@@ -11,12 +11,12 @@ Feature: report explanations
       # empty form throws error
       When I fill in "reason_for_no_contact_reason" with ""
       And I press "reason_for_no_contact_saveReason"
-      Then the form should contain an error
+      Then the form should be invalid
       And I save the page as "report-no-contact-error"
       # add reason
       When I fill in "reason_for_no_contact_reason" with "kept in the book"
       And I press "reason_for_no_contact_saveReason"
-      Then the form should not contain an error
+      Then the form should be valid
       And I should see "kept in the book" in the "reason-no-contacts" region
       And I save the page as "report-no-contact-added"
       # edit reason, and cancel
@@ -59,13 +59,13 @@ Feature: report explanations
       # empty form throws error
       When I fill in "reason_for_no_decision_reason" with ""
       And I press "reason_for_no_decision_saveReason"
-      Then the form should contain an error
+      Then the form should be invalid
       And I save the page as "report-no-decision-error"
       # add reason
       When I fill in the following:
         | reason_for_no_decision_reason | small budget |
       And I press "reason_for_no_decision_saveReason"
-      Then the form should not contain an error
+      Then the form should be valid
       And I should see "small budget" in the "reason-no-decisions" region
       And I save the page as "report-no-decision-added"
       # edit reason, and cancel
@@ -106,12 +106,12 @@ Feature: report explanations
       And I save the page as "report-no-asset-empty"
       # submit without ticking the box
       And I press "report_no_assets_saveNoAsset"
-      Then the form should contain an error
+      Then the form should be invalid
       And I save the page as "report-no-asset-error"
       # tick and submit
       When I check "report_no_assets_no_assets"
       And I press "report_no_assets_saveNoAsset"
-      Then the form should not contain an error
+      Then the form should be valid
       And I save the page as "report-no-asset-added"
       And I should see the "no-assets-selected" region
       # add asset 

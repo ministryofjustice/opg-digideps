@@ -18,7 +18,7 @@ Feature: add details
             | user_details_addressCountry |
             | user_details_phoneMain |
         And I press "user_details_save"
-        Then the form should contain an error
+        Then the form should be invalid
         And I save the page as "deputy-step2-empty-error"
         # test length validators
         When I fill in the following:
@@ -33,7 +33,7 @@ Feature: add details
             | user_details_addressCountry |
             | user_details_phoneMain |
         And I press "user_details_save"
-        Then the form should contain an error
+        Then the form should be invalid
         And I save the page as "deputy-step2-error"
         # right values
         When I fill in the following:
@@ -47,7 +47,7 @@ Feature: add details
             | user_details_phoneMain | 020 3334 3555  |
             | user_details_phoneAlternative | 020 1234 5678  |
         And I press "user_details_save"
-        Then the form should not contain an error
+        Then the form should be valid
         When I go to "user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John |
@@ -72,20 +72,20 @@ Feature: add details
             | user_details_firstname |  |
             | user_details_lastname | Doe admin |
         And I press "user_details_save"
-        Then the form should contain an error
+        Then the form should be invalid
         # missing lastname
         And I fill in the following:
             | user_details_firstname | John admin |
             | user_details_lastname |  |
         And I press "user_details_save"
-        Then the form should contain an error
+        Then the form should be invalid
         And I save the page as "admin-step2-error"
         # correct
         And I fill in the following:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |
         And I press "user_details_save"
-        Then the form should not contain an error
+        Then the form should be valid
         When I go to "http://digideps-admin.local/user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
