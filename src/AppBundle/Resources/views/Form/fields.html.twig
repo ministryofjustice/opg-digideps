@@ -1,26 +1,3 @@
-{% block sort_code_widget %}
-    <fieldset>
-        <legend class="form-label visuallyhidden">Sort Code</legend>
-        <div class="form-sort-code">
-            <div class="form-group">
-                {{ form_label(form.sort_code_part_1,'Sort Code part 1', {'label_attr': {'for': 'account_sortCode_sort_code_part_1', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control'} }) }}
-            </div>
-            <div class="separator">-</div>
-            <div class="form-group">
-                {{ form_label(form.sort_code_part_2,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_2', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.sort_code_part_2, { 'attr': {'class': 'sort-code-part form-control'} }) }}
-            </div>
-            <div class="separator">-</div>
-            <div class="form-group">
-                {{ form_label(form.sort_code_part_3,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_3', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.sort_code_part_3, { 'attr': {'class': 'sort-code-part form-control'} }) }}
-            </div>
-        </div>
-    </fieldset>
-    <script type="text/javascript" src="{{ asset('javascripts/components/sortcode.js') }}"></script>
-{% endblock %}
-
 {% block account_number_widget %}
     <fieldset>
         <legend class="form-label visuallyhidden">Last four digits of account number</legend>

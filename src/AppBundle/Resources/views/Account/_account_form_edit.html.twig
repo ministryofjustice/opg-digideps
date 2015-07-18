@@ -12,7 +12,7 @@
 
     {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
     {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
-    {{ form_input(form.sortCode, 'form.accountDetails.controls.sortCode') }}
+    {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}
 
     {# opening balance part #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {

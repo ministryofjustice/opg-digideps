@@ -3,9 +3,9 @@ describe('Sort Code Tests', function () {
     var placeholder = $('#placeholder'),
         markup = '<div id="sort-code-wrapper" class="form-group">' +
                     '<fieldset>' +
-                        '<legend><span class="form-label">Branch Sort Code</span></legend>' +
+                        '<legend class="form-label">Branch Sort Code</legend>' +
                         '<div class="form-sort-code">' +
-                            '<ul class="errors"></ul>' + 
+                            '<ul class="    {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}"></ul>' + 
                             '<div class="form-group">' +
                                 '<label for="account_sortCode_sort_code_part_1" class="visuallyhidden required">Sort Code part 1</label>' +
                                 '<input type="text" id="account_sortCode_sort_code_part_1" name="account[sortCode][sort_code_part_1]" required="required" maxlength="2" class="sort-code-part form-control" />' +
