@@ -5,4 +5,9 @@
             <h2 id="error-heading" class="behat-region-header-errors">{{ error|trans }}</h2>
         </div>
     </div>
+    <script type="text/javascript">
+        $(window).load(function(){
+            $('html, body').animate({scrollTop: $('#error-summary').offset().top -40 }, 'fast');
+        });
+    </script>
 {% endif %}

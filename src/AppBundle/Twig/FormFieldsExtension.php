@@ -39,6 +39,7 @@ class FormFieldsExtension extends \Twig_Extension
             'form_errors_list' => new \Twig_Function_Method($this, 'renderFormErrorsList'),
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
+            'form_sort_code' => new \Twig_Function_Method($this, 'renderFormSortCode'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
             'form_checkbox' => new \Twig_Function_Method($this, 'renderCheckboxInput')
@@ -155,6 +156,30 @@ class FormFieldsExtension extends \Twig_Extension
                                                                                               ]);
         echo $html;
     }
+    
+    public function renderFormSortCode($element, $elementName,array $vars = [], $transIndex = null)
+    {
+        //lets get the translation for class and labelText
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        // read domain from Form ption 'translation_domain'
+        $domain = $element->parent->vars['translation_domain'];
+        
+        //sort hint text translation
+        $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
+        $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+        
+        //get legendText translation
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        
+        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        
+        $html = $this->environment->render('AppBundle:Components/Form:_sort-code.html.twig', [ 'legendText' => $legendText,
+                                                                                                'hintText' => $hintText,
+                                                                                                'element' => $element
+                                                                                              ]);
+        echo $html;
+    }
+    
     
     
     /**
