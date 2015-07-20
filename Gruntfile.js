@@ -1,6 +1,5 @@
-"use strict";
-
 module.exports = function (grunt) {
+    'use strict';
 
     var scssPath = 'src/AppBundle/Resources/assets/scss';
     var jsPath = 'src/AppBundle/Resources/assets/javascripts';
@@ -63,15 +62,18 @@ module.exports = function (grunt) {
             },
             js: {
                 files: [jsPath + '/**/*.js'],
-                tasks: ['concat:dist', ]
+                tasks: ['jshint','concat:dist', ]
             }
+        },
+        jshint: {
+            all: ['Gruntfile.js', jsPath +'/**/*.js']
         },
         concat: {
             dist: {
-                src: ['src/AppBundle/Resources/assets/javascripts/expanding.js', 
-                    'src/AppBundle/Resources/assets/javascripts/sessionTimeoutDialog.js',
-                    'src/AppBundle/Resources/assets/javascripts/sortcode.js',
-                    'src/AppBundle/Resources/assets/javascripts/gdsbuttons.js'],
+                src: [jsPath +'/expanding.js', 
+                    jsPath + '/sessionTimeoutDialog.js',
+                    jsPath + '/sortcode.js',
+                    jsPath +'/gdsbuttons.js'],
                 dest: 'web/javascripts/application.js',
             }
         },
@@ -121,11 +123,10 @@ module.exports = function (grunt) {
             }
         }
 
-
     });
 
     // Register Grunt Tasks
-    grunt.registerTask('default', ['clean', 'copy', 'sass','concat:dist']);
+    grunt.registerTask('default', ['clean', 'copy', 'sass','jshint','concat:dist']);
     grunt.registerTask('build', ['default']);
 
 };

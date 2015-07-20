@@ -12,7 +12,7 @@ var opg = opg || {};
         var target = $(event.target);
         
         if(target.val().length == target.attr('maxlength') && target[0] !== sortCodeParts[sortCodeParts.length -1] ) {
-            var nextField = $('input', target.parent().nextAll(".form-group")[0])
+            var nextField = $('input', target.parent().nextAll(".form-group")[0]);
             nextField.focus();
         }    
     }
