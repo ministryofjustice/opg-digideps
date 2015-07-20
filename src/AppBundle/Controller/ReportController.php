@@ -12,10 +12,10 @@ use Symfony\Component\HttpFoundation\Request;
 class ReportController extends Controller
 {
     /**
-     * @Route("/report/create/{clientId}", name="report_create")
+     * @Route("/report/create/{clientId}/{registrationStep}", name="report_create", defaults={ "registrationStep" = 0})
      * @Template()
      */
-    public function createAction($clientId)
+    public function createAction($clientId, $registrationStep = false)
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
@@ -25,23 +25,26 @@ class ReportController extends Controller
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
-        //lets check if this  user already has another report, if not start date should be court order date
-        $report = new EntityDir\Report();
+        $existingReports = $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']);
+       
+        if ($registrationStep && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
+            $report = $firstReport;
+        } else {
+            // new report
+            $report = new EntityDir\Report();
+            
+            // check if this  user already has another report, if not start date should be court order date
+            $report->setStartDate($client->getCourtDate());
+            //if client has property & affairs and health & welfare then give them property & affairs
+            //else give them health and welfare
+            if(count($allowedCourtOrderTypes) > 1){
+                $report->setCourtOrderType(EntityDir\Report::PROPERTY_AND_AFFAIRS);
+            }else{
+                $report->setCourtOrderType($allowedCourtOrderTypes[0]);
+            }
+        }
         $report->setClient($client->getId());
         
-        $reports = $client->getReports();
-        
-        if(empty($reports)){
-            $report->setStartDate($client->getCourtDate());
-        }
-        
-        //if client has property & affairs and health & welfare then give them property & affairs
-        //else give them health and welfare
-        if(count($allowedCourtOrderTypes) > 1){
-            $report->setCourtOrderType(EntityDir\Report::PROPERTY_AND_AFFAIRS);
-        }else{
-            $report->setCourtOrderType($allowedCourtOrderTypes[0]);
-        }
         
         $form = $this->createForm(new FormDir\ReportType(), $report,
                                   [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
