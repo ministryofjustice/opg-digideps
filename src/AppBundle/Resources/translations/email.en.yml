@@ -1,17 +1,17 @@
 activation:
-    subject: "Complete the Deputy Report - activation email"
-    fromName: Complete a deputy report service
+    subject: Deputy report - activate your account now
+    fromName: Office of the Public Guardian
 changePassword:
-    subject: Change to your Complete a deputy report service password
-    fromName: Complete a deputy report service
+    subject: Deputy report - new password
+    fromName: Office of the Public Guardian
 reportSubmission:
     subject: Report submission from Digital Deputy
     fromName: Digital deputy secure email service
     toName: Deputyship Service
 resetPassword:
-    subject: Reset your password
-    fromName: Digital deputy secure email service
+    subject: Deputy report - reset your password
+    fromName: Office of the Public Guardian
 feedbackForm:
     subject: User Feedback
-    fromName: Complete a deputy report service - feedback form
+    fromName: Deputy report service - feedback form
     toName: Deputyship Service
