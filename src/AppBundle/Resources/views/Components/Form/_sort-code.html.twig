@@ -1,12 +1,12 @@
 <div class="form-group sort-code-wrapper {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
     <fieldset>
         <legend class="form-label">{{ legendText }}</legend>
-        {% if not element.vars.valid %}
-            <ul class="errors">
-                <li>{{ form_errors(element) }}</li>
-            </ul>
-        {% endif %}
         <div class="form-sort-code">
+            <ul class="errors">
+                {% if not element.vars.valid %}
+                    <li>{{ form_errors(element) }}</li>
+                {% endif %}
+            </ul>
             <div class="form-group">
                 {{ form_label(element.sort_code_part_1,'Sort Code part 1', {'label_attr': {'for': 'account_sortCode_sort_code_part_1', 'class': 'visuallyhidden' } }) }}
                 {{ form_widget(element.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control'} }) }}
