@@ -13,7 +13,8 @@
         </div>
     </div>
     <script type="text/javascript">
-        $(window).load(function(){
+        // Move to the error section once the document has finished rendering (takes into account the browser moving to a # section)
+        $(window).load(function() {
             $('html, body').animate({scrollTop: $('#error-summary').offset().top -40 }, 'fast');
         });
     </script>

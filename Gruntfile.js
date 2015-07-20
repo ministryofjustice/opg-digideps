@@ -63,10 +63,18 @@ module.exports = function (grunt) {
             },
             js: {
                 files: [jsPath + '/**/*.js'],
-                task: ['copy:copyJS']
+                tasks: ['concat:dist', ]
             }
         },
-
+        concat: {
+            dist: {
+                src: ['src/AppBundle/Resources/assets/javascripts/expanding.js', 
+                    'src/AppBundle/Resources/assets/javascripts/sessionTimeoutDialog.js',
+                    'src/AppBundle/Resources/assets/javascripts/sortcode.js',
+                    'src/AppBundle/Resources/assets/javascripts/gdsbuttons.js'],
+                dest: 'web/javascripts/application.js',
+            }
+        },
         copy: {
             copyGovUkTemplateImages: {
                 cwd: 'bower_downloads/govuk_elements/govuk/public/images',
@@ -105,29 +113,19 @@ module.exports = function (grunt) {
                 dest: 'web/javascripts/vendor/html5shiv',
                 expand: true
             },
-            
-            
-            copyJS: {
-                cwd: 'src/AppBundle/Resources/assets/javascripts',
-                src: ['**/*' ],
-                dest: 'web/javascripts',
-                expand: true
-            },
             copyImages: {
                 cwd: 'src/AppBundle/Resources/assets/images',
                 src: ['**/*' ],
                 dest: 'web/images',
                 expand: true
             }
-            
-
         }
 
 
     });
 
     // Register Grunt Tasks
-    grunt.registerTask('default', ['clean', 'copy', 'sass']);
-    grunt.registerTask('build', ['clean', 'copy', 'sass']);
+    grunt.registerTask('default', ['clean', 'copy', 'sass','concat:dist']);
+    grunt.registerTask('build', ['default']);
 
 };

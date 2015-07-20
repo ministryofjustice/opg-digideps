@@ -1,4 +1,4 @@
-<div class="form-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+<div class="form-group sort-code-wrapper {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
     <fieldset>
         <legend class="form-label">{{ legendText }}</legend>
         {% if not element.vars.valid %}
@@ -24,4 +24,8 @@
         </div>
     </fieldset>
 </div>
-<script type="text/javascript" src="{{ asset('javascripts/components/sortcode.js') }}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        opg.SortCodeValidate('.sort-code-wrapper');
+    });
+</script>

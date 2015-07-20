@@ -17,6 +17,16 @@ var opg = opg || {};
         }    
     }
 
+    function showErrorDescription() {
+        if ($('.form-sort-code .field-with-errors').length > 0){
+            errors.empty().append('<li class="error">' + noneNumericError + '</li>');    
+            container.addClass('field-with-errors');  
+        } else {
+            container.removeClass('field-with-errors');
+            errors.empty();
+        }
+    }
+
     function validateField(event) {
         
         var field = $(event.target);
@@ -30,16 +40,6 @@ var opg = opg || {};
         }
 
         showErrorDescription();
-    }
-
-    function showErrorDescription() {
-        if ($('.form-sort-code .field-with-errors').length > 0){
-            errors.empty().append('<li class="error">' + noneNumericError + '</li>');    
-            container.addClass('field-with-errors');  
-        } else {
-            container.removeClass('field-with-errors');
-            errors.empty();
-        }
     }
     
     opg.SortCodeValidate = function(target) {
