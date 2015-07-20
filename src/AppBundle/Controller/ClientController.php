@@ -87,8 +87,12 @@ class ClientController extends Controller
         
         $clients = $this->getUser()->getClients();
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
-            $client = $clients[0];
+            // update existing client
+            $method = 'put';
+            $client = $clients[0]; //existing client
         } else {
+            // new client
+            $method = 'post';
             $client = new EntityDir\Client();
             $client->addUser($this->getUser()->getId());
         }
@@ -97,7 +101,9 @@ class ClientController extends Controller
         
         $form->handleRequest($request);
         if ($form->isValid()) {
-            $response = $apiClient->postC('add_client', $form->getData());
+            $response = ($method === 'post') 
+                      ? $apiClient->postC('add_client', $form->getData())
+                      : $apiClient->putC('add_client', $form->getData());
 
             return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id'] ]));
         }
