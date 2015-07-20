@@ -144,7 +144,9 @@ class AccountController extends Controller
             'client' => $client,
             // moneyIn/Out form
             'form' => $formMoneyInOut->createView(),
-            // closing balance form: show closing balance/date explanation only in case of mismatch
+            // closing balance form: 
+            // Show the form if on list view, the report is due and the closing balance is not added. 
+            //  also show if the form is submitted but not valid 
             'closingBalanceForm' => $formClosingBalance->createView(),
             'closingBalanceFormShow' => ($action == 'list' && $report->isDue() && $account->needsClosingBalanceData()) 
                                         || ($closingBalanceFormIsSubmitted && !$formBalanceIsValid),
