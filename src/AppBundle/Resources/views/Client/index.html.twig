@@ -26,20 +26,21 @@
 
 {% block pageBody %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}
-
-    {% include 'AppBundle:Client:_client-details.html.twig' with {
-    'translationDomain': translationDomain
-    } %}
-
     {% if reports is not empty %}
         {% include 'AppBundle:Client:_list-reports.html.twig' with {
         'translationDomain': translationDomain,
         'reports': reports
         } %}
     {% endif %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
+
+
+    {% include 'AppBundle:Client:_client-details.html.twig' with {
+    'translationDomain': translationDomain
+    } %}
 
 {% endblock %}
