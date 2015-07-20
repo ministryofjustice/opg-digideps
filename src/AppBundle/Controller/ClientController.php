@@ -85,8 +85,13 @@ class ClientController extends Controller
         $util = $this->get('util');
         $apiClient = $this->get('apiclient');
         
-        $client = new EntityDir\Client();
-        $client->addUser($this->getUser()->getId());
+        $clients = $this->getUser()->getClients();
+        if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
+            $client = $clients[0];
+        } else {
+            $client = new EntityDir\Client();
+            $client->addUser($this->getUser()->getId());
+        }
   
         $form = $this->createForm(new FormDir\ClientType($util), $client);
         
