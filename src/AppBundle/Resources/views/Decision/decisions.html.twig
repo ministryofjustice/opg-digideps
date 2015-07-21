@@ -28,7 +28,7 @@ activeTab: "tab-decisions"
         {% set showDeleteConfirm = true %}
     {% endif %}
 
-    {% if action == 'edit-reason' %}
+    {% if (action == 'edit-reason') or (onErrorShowNoDecisionForm == true) %}
         {% set showNoDecisionForm = true %}
     {% else %}
 
