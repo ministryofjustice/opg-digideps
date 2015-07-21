@@ -30,7 +30,7 @@ Feature: password reset
       Then the form should be valid
       And I save the page as "forgotten-password-sent"
       And I click on "return-to-login"
-      And an email with subject "Reset your password" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+      And an email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
       # open password reset page
       When I open the "/user/password-reset/" link from the email
       And I save the page as "forgotten-password-reset"
