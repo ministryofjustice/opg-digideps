@@ -153,7 +153,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     }
     
     /**
-     * @Given the application paramters.yml file is correct
+     * @Given the application config is valid
      */
     public function iChecktheAppParameterFile()
     {
