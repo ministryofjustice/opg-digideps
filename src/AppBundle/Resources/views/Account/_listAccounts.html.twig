@@ -4,6 +4,16 @@
 <ul class="behat-region-list-accounts report-list report-list--accounts">
     {% for account in accounts %}
         {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id}) %}
+        {% set showWarningTransactions = report.isDue() and account.needsClosingBalanceData() and not account.hasAtLeastOneTransactionInAndOut() %}
+        {% set showWarningMissingClosingBalance =  report.isDue() and account.needsClosingBalanceData() and  account.hasAtLeastOneTransactionInAndOut() %}
+        {% set accountLinkAnchor = 'account-header' %}
+        {% if (showWarningTransactions) %}
+            {% set accountLinkAnchor = 'moneyIn' %}
+        {% endif %}
+        {% if (showWarningMissingClosingBalance) %}
+            {% set accountLinkAnchor = 'closing-balance' %}
+        {% endif %}
+        
         <li class="report-list__item">
             <dl class="report-list__item-fields">
                 <div class="report-list__item-fields-col-bank">
@@ -11,7 +21,7 @@
                     <dd class="report-list__item-fields-description">
                         <h3>
                             {% if report.isDue() and account.closingBalance is null %}
-                                <a href="{{ linkToAccountPage }}#account-header"
+                                <a href="{{ linkToAccountPage }}#{{ accountLinkAnchor }}"
                                    class="behat-link-account-{{ account.accountNumber }}">
                                     {{ account.bank }}
                                 </a>
@@ -57,13 +67,20 @@
                         </div>
                     {% endif %}
                 </div>
-                {% if report.isDue() and account.needsClosingBalanceData() %}
+                    {% if  showWarningMissingClosingBalance %}
                     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-                    transDomain: translationDomain,
-                    pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
-                    iconClass: 'icon icon__notification behat-region-account-' ~ account.accountNumber ~ '-warning'
+                      transDomain: translationDomain,
+                      pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
+                      iconClass: 'icon icon__notification behat-region-account-' ~ account.accountNumber ~ '-warning'
                     } %}
-                {% endif %}
+                  {% endif %}
+                   {% if  showWarningTransactions %}
+                    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+                      transDomain: translationDomain,
+                      pageSectionWarning: 'listing.addTrasactionsWarning' | trans,
+                      iconClass: 'icon icon__notification behat-region-account-' ~ account.accountNumber ~ '-warning'
+                    } %}
+                  {% endif %}
             </dl>
 
         </li>
