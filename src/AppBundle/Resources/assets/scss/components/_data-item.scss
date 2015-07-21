@@ -21,7 +21,7 @@ $item-right-margin: 263px;
         .edit-button {
             top: 30px;
         }
-    
+            
     }
 
 }
@@ -44,7 +44,6 @@ $item-right-margin: 263px;
         top: 0;
         right: 0;
     }
-    
 }
 
 .item-data {
@@ -98,5 +97,20 @@ $item-right-margin: 263px;
             }
         }
     }
-}
 
+    .reports {
+        .edit-button {
+            bottom: 30px;
+            top: auto;
+        }
+        
+        .open-button {
+            width: auto;
+            margin-right: 10%;
+            @include core-24();
+            position: absolute;
+            top: 30px;
+            right: 0;
+        }
+    }
+}

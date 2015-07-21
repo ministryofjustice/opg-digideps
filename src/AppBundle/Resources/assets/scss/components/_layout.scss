@@ -56,10 +56,15 @@ header.page-header {
     }
 
     .after-title {
+        @include core-19();
         width: 42%;
         position: absolute;
         bottom: 0;
         right: 0;
+        
+        .item-data .item-value {
+            @include core-19();
+        }
     }
 
 }

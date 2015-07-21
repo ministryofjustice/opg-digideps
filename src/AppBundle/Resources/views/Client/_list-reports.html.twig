@@ -22,6 +22,12 @@
                         </a>
                     {% endif %}
                 </h3>
+                
+                {% if report.submitted %}
+                    <a href="{{ linkToDownloadReport }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
+                {% else %}
+                    <a href="{{ linkToReportOverviewPage }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
+                {% endif %}
 
                 {% if report.submitted %}
                     <a href="{{ path('report_display', {'reportId': report.id}) }}" class="view-button">
