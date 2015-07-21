@@ -10,4 +10,5 @@ export PGHOST=postgres
 export PGPASSWORD=api
 export PGDATABASE=api
 export PGUSER=api
+rm -rf app/cache/*
 /sbin/setuser app bin/behat --suite=admin
