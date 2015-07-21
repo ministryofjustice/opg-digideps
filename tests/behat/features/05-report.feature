@@ -822,7 +822,7 @@ Feature: report
         Then the response status code should be 200
         And I save the page as "report-submit-display"
         # assert email has been sent/wrote into the disk (only works if client `parameters.email_report_submit.to_email` is wqual to behat-deputyshipservice@publicguardian.gsi.gov.uk)
-        And an email with subject "Report submission from Digital Deputy" should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
+        And an email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
     @deputy
     Scenario: assert report is not editable after submission

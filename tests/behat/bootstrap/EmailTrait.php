@@ -57,23 +57,6 @@ trait EmailTrait
     }
 
     /**
-     * @Then an email with subject :subject should have been sent to :to
-     */
-    public function anEmailWithSubjectShouldHaveBeenSentTo($subject, $to)
-    {
-        $mail = $this->getLatestEmailMockFromApi();
-        $mailTo = key($mail['to']);
-
-
-        if ($mail['subject'] != $subject) {
-            throw new \RuntimeException("Subject '" . $mail['subject'] . "' does not match the expected '" . $subject . "'");
-        }
-        if ($mailTo !== 'the specified email address' && $mailTo != $to) {
-            throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
-        }
-    }
-
-    /**
      * @Then an email with subject :subject should have been sent
      */
     public function anEmailWithSubjectShouldHaveBeenSent($subject)
@@ -84,6 +67,7 @@ trait EmailTrait
             throw new \RuntimeException("Subject '" . $mail['subject'] . "' does not match the expected '" . $subject . "'");
         }
     }
+    
 
     /**
      * @Then no email should have been sent
@@ -96,10 +80,14 @@ trait EmailTrait
         }
     }
 
+    
     /**
-     * @When I open the :linkPattern link from the email
+     * @param string $linkPattern
+     * @return string link matching the given pattern
+     * 
+     * @throws \Exception
      */
-    public function iOpenTheSpecificLinkOnTheEmail($linkPattern)
+    private function getFirstLinkInEmailMatching($linkPattern)
     {
         list($links, $mailContent) = $this->getLinksFromEmailHtmlBody();
 
@@ -113,10 +101,49 @@ trait EmailTrait
         if (count(array_unique($filteredLinks)) > 1) {
             throw new \Exception("more than one link found in the email's body. Filter: $linkPattern . Links: " . implode("\n", $filteredLinks).". Body:\n $mailContent");
         }
-        $linkToClick = array_shift($filteredLinks);
-
+        
+        return array_shift($filteredLinks);
+    }
+    
+    
+    /**
+     * @When I open the :linkPattern link from the email
+     */
+    public function iOpenTheSpecificLinkOnTheEmail($linkPattern)
+    {
+        $linkToClick = $this->getFirstLinkInEmailMatching($linkPattern);
+        
         // visit the link
         $this->visit($linkToClick);
+    }
+    
+    
+    /**
+     * @Then an email containing a link matching :partialLink should have been sent to :to
+     */
+    public function anEmailContainingALinkMatchingShouldHaveBeenSentTo($partialLink, $to)
+    {
+        $this->getFirstLinkInEmailMatching($partialLink);
+        
+        $mail = $this->getLatestEmailMockFromApi();
+        $mailTo = key($mail['to']);
+
+        if ($mailTo !== 'the specified email address' && $mailTo != $to) {
+            throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
+        }
+    }
+    
+    /**
+     * @Then an email should have been sent to :to
+     */
+    public function anEmailShouldHaveBeenSentTo($to)
+    {
+        $mail = $this->getLatestEmailMockFromApi();
+        $mailTo = key($mail['to']);
+
+        if ($mailTo !== 'the specified email address' && $mailTo != $to) {
+            throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
+        }
     }
 
 

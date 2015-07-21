@@ -34,7 +34,11 @@ class UserController extends Controller
         $useMemcached = $this->container->getParameter('use_memcached');
         
         // check $token is correct
-        $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
+        try {
+            $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
+        } catch (\Exception $e) {
+            throw new \AppBundle\Exception\DisplayableException('Token already used or invalid.');
+        }
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             switch ($action) {

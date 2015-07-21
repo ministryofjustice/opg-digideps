@@ -19,11 +19,11 @@ parameters:
     # report submit email with attachment, uses local secure SMTP (no auth needed)
     email_report_submit:
       from_email: no-reply@digideps.dsd.io
-      to_email: deputyshipservice@publicguardian.gsi.gov.uk 
+      to_email: behat-deputyshipservice@publicguardian.gsi.gov.uk 
     # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
     email_feedback_send:
       from_email: no-reply@digideps.dsd.io
-      to_email: deputyshipfeedback@publicguardian.gsi.gov.uk
+      to_email: behat-deputyshipfeedback@publicguardian.gsi.gov.uk
     fixtures: 
       admin@publicguardian.gsi.gov.uk:
         firstname: "Admin"

@@ -16,16 +16,17 @@
     input.sort-code-part {
       float: left;
       width: 50px;
-      margin-right: 5px;
       text-align: center;
-
-      &::after {
-        content: "-";
-        display: inline;
-      }
-
     }
 
   }
 
+}
+
+.field-with-errors .form-sort-code input {
+    border: 1px solid #bfc1c3;
+}
+
+.field-with-errors .form-sort-code .field-with-errors input {
+    border: 2px solid #af1324;
 }

@@ -105,28 +105,13 @@ class ApiClient extends GuzzleClient
      *
      * @return stdClass entity object
      */
-    public function getEntity($class, $endpoint, array $options = [], $debug = false)
+    public function getEntity($class, $endpoint, array $options = [])
     {
-
-        /*if($endpoint == 'find_by_email'){
-             print_r($this->get($endpoint, $options)->getBody()->getContents()); die;
-        }*/
-        if ($debug) {
-            error_log($endpoint);
-            error_log(__LINE__);
-            error_log(print_r($options,1));
-        }
-        $response = $this->get($endpoint, $options, $debug); 
+        $response = $this->get($endpoint, $options); 
         
-        if ($debug) {
-            //doesn't reach this
-            error_log(__LINE__);
-        }
         $responseArray = $this->deserialiseResponse($response);
         $ret = $this->serialiser->deserialize(json_encode($responseArray['data']), 'AppBundle\\Entity\\' . $class, $this->format);
-        if ($debug) {
-            error_log(__LINE__);
-        }
+        
         return $ret;
     }
 

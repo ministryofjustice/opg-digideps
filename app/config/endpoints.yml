@@ -19,7 +19,7 @@ parameters:
         update_client: client/upsert
         find_client_by_id: client/find-by-id
         # report
-        add_report: report/add
+        add_report: report/upsert
         find_report_by_id: report/find-by-id
         add_decision: decision/upsert
         update_decision: decision/upsert

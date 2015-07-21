@@ -49,7 +49,7 @@ form:
         label: Last four digits of the account number
         hint: ""
       sortCode:
-        label: Branch sort code
+        legend: Branch sort code
         hint: ""
   openingBalance:
     subSectionTitle: Add the opening balance
