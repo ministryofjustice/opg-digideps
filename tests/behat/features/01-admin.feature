@@ -2,7 +2,8 @@ Feature: admin
 
     @deputy
     Scenario: login and add deputy user
-        Given I am on "http://digideps-admin.local/"
+        Given I reset the email log
+        And I am on "http://digideps-admin.local/"
         And I save the page as "admin-login"
         Then the response status code should be 200
         # test wrong credentials
@@ -45,11 +46,12 @@ Feature: admin
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
         And I save the page as "admin-deputy-added"
-        And an email with subject "Complete the Deputy Report - activation email" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        And an email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
     @admin
     Scenario: login and add admin user, check audit log
-        Given I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I reset the email log
+        And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | login |
@@ -64,7 +66,7 @@ Feature: admin
         Then the response status code should be 200
         And I should see "OPG Administrator" in the "users" region
         And I save the page as "admin-admin-added"
-        And an email with subject "Complete the Deputy Report - activation email" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
+        And an email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         And the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | user_add |

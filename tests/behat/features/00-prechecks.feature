@@ -1,5 +1,5 @@
 Feature: pre checks
 
-    @deputy
+    @admin
     Scenario: check app status
-        #Given the application paramters.yml file is correct
+        Given the application config is valid
