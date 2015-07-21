@@ -8,30 +8,38 @@ use AppBundle\Entity as EntityDir;
 class ReportController extends RestController
 {
     /**
-     * @Route("/report/add")
+     * @Route("/report/upsert")
      * @Method({"POST"})
      */
-    public function addAction()
+    public function upsertAction()
     {
         $reportData = $this->deserializeBodyContent();
        
-        $client = $this->findEntityBy('Client', $reportData['client']);
-        $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
-        
-        if(empty($client)){
-            throw new \Exception("Client id: ".$reportData['client']." does not exists");
+        if (!empty($reportData['id'])) { 
+            // get existing report
+            $report = $this->findEntityBy('Report', $reportData['id']);
+        } else {
+            // new report
+             $client = $this->findEntityBy('Client', $reportData['client']);
+            if(empty($client)){
+                throw new \Exception("Client id: ".$reportData['client']." does not exists");
+            }
+            $report = new EntityDir\Report();
+            $report->setClient($client);
         }
         
+        // add court order type
+        $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
         if(empty($courtOrderType)){
             throw new \Exception("Court Order Type id: ".$reportData['court_order_type']." does not exists");
         }
+        $report->setCourtOrderType($courtOrderType);
         
-        $report = new EntityDir\Report();
+        // add other stuff
         $report->setStartDate(new \DateTime($reportData['start_date']));
         $report->setEndDate(new \DateTime($reportData['end_date']));
-        $report->setCourtOrderType($courtOrderType);
-        $report->setClient($client);
         
+        // persist
         $this->getEntityManager()->persist($report);
         $this->getEntityManager()->flush();
         
