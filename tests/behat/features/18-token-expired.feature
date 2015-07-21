@@ -11,7 +11,7 @@ Feature: Activation link resending
         Then I should be on "/user/activate/password/sent/behatuser123abc"
         And the response status code should be 200
         And I save the page as "user-activate-token-expired-sent"
-        And an email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.u"
+        And an email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         When I open the "/user/activate/" link from the email
         And I save the page as "user-activate-token-expired-click-from-email"
         Then the response status code should be 200
