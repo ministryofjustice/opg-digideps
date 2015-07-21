@@ -1,5 +1,6 @@
 $item-label-default-width: 100px;
 $client-label-width: 140px;
+$your-label-width: 235px;
 $item-right-margin: 263px;
 
 
@@ -106,11 +107,26 @@ $item-right-margin: 263px;
         
         .open-button {
             width: auto;
-            margin-right: 10%;
+            margin-right: 105px;
             @include core-24();
             position: absolute;
             top: 30px;
             right: 0;
+        }
+    }
+}
+
+.your-details {
+    width: 85%;
+
+    .item-data-fixed {
+        .item-label {
+            width: $your-label-width;
+            margin-bottom: 25px;
+        }
+        .item-value {
+            margin-left: $your-label-width;
+            margin-bottom: 25px;
         }
     }
 }

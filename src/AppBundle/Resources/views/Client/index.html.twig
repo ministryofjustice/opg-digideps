@@ -10,6 +10,7 @@
     {% set formClass = '' %}
 {% endif %}
 
+{% block bodyClasses %}your-client-page{% endblock %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block contentClass %}{{ parent() }} my-client{% endblock %}
