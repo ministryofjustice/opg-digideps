@@ -105,7 +105,7 @@ class ClientController extends Controller
                       ? $apiClient->postC('add_client', $form->getData())
                       : $apiClient->putC('add_client', $form->getData());
 
-            return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id'], 'registrationStep' => true ]));
+            return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id']]));
         }
         return [ 'form' => $form->createView() ];
     }

@@ -12,10 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 class ReportController extends Controller
 {
     /**
-     * @Route("/report/create/{clientId}/{registrationStep}", name="report_create", defaults={ "registrationStep" = 0})
+     * Create report
+     * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
+     * action "add" will instead add another report
+     * 
+     * 
+     * @Route("/report/{action}/{clientId}", name="report_create",
+     *   defaults={ "action" = "create"},
+     *   requirements={ "action" = "(create|add)"}
+     * )
      * @Template()
      */
-    public function createAction($clientId, $registrationStep = false)
+    public function createAction($clientId, $action = false)
     {
         $request = $this->getRequest();
         $apiClient = $this->get('apiclient');
@@ -27,7 +35,7 @@ class ReportController extends Controller
         
         $existingReports = $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']);
        
-        if ($registrationStep && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
+        if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
             $report = $firstReport;
         } else {
             // new report
