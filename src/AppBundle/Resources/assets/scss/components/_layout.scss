@@ -1,3 +1,4 @@
+$item-right-margin: 263px;
 
 .column-full {
   @include grid-column(1);
@@ -37,10 +38,6 @@
   border-bottom: 0;
 }
 
-.phase-banner {
-  //@include phase-banner(beta);
-}
-
 .back-navigation {
     @include core-19();
     margin-top: 35px;
@@ -49,3 +46,21 @@
 #footer .footer-meta .footer-meta-inner ul li:last-child {
     float: left;
 }
+
+header.page-header {
+
+    position: relative;
+
+    h1 {
+        width: 55%;
+    }
+
+    .after-title {
+        width: 42%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+}
+

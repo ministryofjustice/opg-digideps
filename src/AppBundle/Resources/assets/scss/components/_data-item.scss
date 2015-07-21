@@ -1,175 +1,102 @@
-.data-item {
-  overflow: hidden;
-  padding: 20px 0 10px 0;
+$item-label-default-width: 100px;
+$client-label-width: 140px;
+$item-right-margin: 263px;
 
-  .data-list & {
-    padding: 30px 0 10px 0;
-    border-bottom: 1px solid $grey-3;
-  }
 
-  &:last-child {
-    border-bottom: 0;
-  }
+.item-list {
+    
+    border-top: 1px solid #dee0e2;
+    border-bottom: 1px solid #dee0e2;
+    margin: 30px 0 40px 0;
+    padding-left: 0;
 
-  .data-item-fields {
-    overflow: hidden;
-    position: relative;
-
-    .data-item-fields-row {
-      overflow: hidden;
-      clear: both;
-      margin-top: 5px;
-
-      &--header {
-        float: left;
-        clear: none;
+    .item {
+        padding: 30px 0 30px 0;
         margin-top: 0;
 
-        &.float-right {
-          float: right;
+        &:last-child {
+            border-bottom: 0;
         }
-
-      }
-    }
-
-    dt.data-item-fields-term {
-      display: inline;
-      @include core-19();
-      color: $grey-1;
-      float: left;
-
-      &--block {
-        float: none;
-      }
-
-    }
-
-    dd.data-item-fields-description {
-      display: block;
-      @include bold-19();
-
-      &--inline {
-        display: inline;
-      }
-
-      &--block {
-        position: relative;
-        margin-left: auto;
-        font-weight: 400;
-      }
-
-      &--normal {
-        font-weight: 400;
-      }
-
-      &--header {
-        overflow: hidden;
-        position: relative;
-        margin-left: 0px;
-
-        .data-item-header-title {
-          float: left;
-          @include bold-24();
-          margin-bottom: 5px;
+    
+        .edit-button {
+            top: 30px;
         }
-
-        .data-item-edit-link {
-          @include core-19();
-        }
-
-      }
+    
     }
-  }
-
-  &--client-details {
-    dd.data-item-fields-description {
-      margin-left: 140px;
-      &--header {
-        .data-item-edit-link {
-          margin-right: 263px;
-        }
-      }
-
-    }
-  }
-
-  &--last-logged-in {
-
-    float: left;
-    padding-top: 55px;
-    margin-left: 339px;
-
-    .data-item-fields .data-item-fields-row {
-
-      dt.data-item-fields-term {
-        margin-right: 5px;
-      }
-
-    }
-  }
-
-  &--your-details {
-    .data-item-fields dd.data-item-fields-description--header .data-item-header-title {
-      margin-bottom: 25px;
-    }
-
-    .data-item-fields .data-item-fields-row {
-      margin-top: 25px;
-    }
-
-    dd.data-item-fields-description {
-      margin-left: 235px;
-      &--header {
-        .data-item-edit-link {
-          margin-left: 353px;
-        }
-      }
-
-    }
-
-  }
-
-  &--no-reason {
-
-    border-bottom: 1px solid $grey-3;
-    padding-bottom: 30px;
-    margin-bottom: 30px;
-
-    dd.data-item-fields-description {
-      &--noReason{
-        margin-right: 425px;
-      }
-
-      &--header {
-        .data-item-edit-link {
-          margin-right: 297px;
-        }
-      }
-
-    }
-  }
-
-  .data-list--client-list-reports & {
-    padding: 20px 0 20px 0;
-
-
-    dd.data-item-fields-description {
-
-      &--header {
-        .data-item-edit-link {
-          margin-right: 110px;
-        }
-      }
-
-    }
-
-    .data-item-fields-row {
-      margin-top: 0;
-
-      dt.data-item-fields-term {
-        margin-right: 5px;
-      }
-    }
-  }
 
 }
+
+.item {
+    
+    @include core-19();
+    position: relative;
+
+    margin-top: 40px;
+    
+    .title {
+        @include bold-24();
+        margin-bottom: 5px;
+    }
+    
+    .edit-button, .view-button  {
+        width: 32%;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    
+}
+
+.item-data {
+    @extend %contain-floats;
+    
+    .item-label {
+        color: $grey-1;
+        margin: 0 0 0 0;
+        display: inline;
+        float: left;
+        clear: both;
+    }
+    .item-value {
+        color: $black;
+        @include bold-19();
+        margin: 0 0 0 5px;
+        display: inline;
+        float:left;
+    }
+}
+.item-data.item-data-fixed {
+    .item-label {
+        float: left;
+        clear: left;
+        width: $item-label-default-width;
+        display: block;
+        margin-bottom: 5px;
+    }
+    .item-value {
+        margin-left: $item-label-default-width + 20;
+        display: block;
+        margin-bottom: 5px;
+        float: none;
+    }
+
+}
+
+.my-client {
+
+    .item-list.reports, .client-details {
+        width: 85%;
+    }
+
+    .client-details {
+        .item-data-fixed {
+            .item-label {
+                width: $client-label-width;
+            }
+            .item-value {
+                margin-left: $client-label-width;
+            }
+        }
+    }
+}
+
