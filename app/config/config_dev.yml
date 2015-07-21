@@ -21,5 +21,13 @@ monolog:
 assetic:
     use_controller: true
 
+services:
+    data_collector.apiCollectorss:
+        class: AppBundle\Service\ApiCollector
+        arguments: [@apiclient]
+        tags:
+            - { name: data_collector, template: "AppBundle:Manage:api-collector", id: "api-collector" }
+
+
 #swiftmailer:
 #    delivery_address: me@example.com

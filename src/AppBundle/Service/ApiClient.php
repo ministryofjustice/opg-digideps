@@ -56,7 +56,12 @@ class ApiClient extends GuzzleClient
      */
     private $acceptedFormats = ['json']; //xml should work but need to be tested first
 
+    /**
+     * @var array 
+     */
+    private $history = [];
 
+    
     public function __construct(ContainerInterface $container, array $options)
     {
         $this->serialiser = $container->get('jms_serializer');
@@ -84,6 +89,7 @@ class ApiClient extends GuzzleClient
         $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         $this->options = $options;
+        $this->collectData = $options['collectData'];
        
         //lets get session id
         $sessionId = $this->session->getId();
@@ -140,6 +146,20 @@ class ApiClient extends GuzzleClient
         return 'Debug informations (only displayed when kernel.debug=true):' . implode(', ', $ret);
     }
 
+    private function logRequest(GuzzleRequestInterface $request, $response, $time)
+    {
+        if (!$this->collectData) {
+            return;
+        }
+        
+        $this->history[] = [
+            'url' => $request->getUrl(),
+            'method' => $request->getMethod(),
+            'requestBody' => method_exists($request, 'getBody') ? (string)$request->getBody() : null,
+            'response' => method_exists($response, 'getBody') ? (string)$response->getBody() : null,
+            'time' => $time
+        ];
+    }
 
     /**
      * Override send() to recognise and re-throw error messages in a more understandable format
@@ -151,7 +171,11 @@ class ApiClient extends GuzzleClient
     public function send(GuzzleRequestInterface $request)
     {
         try {
-            return parent::send($request);
+            $start = microtime(true);
+            $response =  parent::send($request);
+            $this->logRequest($request, $response, microtime(true) - $start);
+            
+            return $response;
         } catch (\Exception $e) {
 
             if ($e instanceof RequestException) {
@@ -389,4 +413,14 @@ class ApiClient extends GuzzleClient
         
         return $this->subscriber;
     }
+    
+    /**
+     * @return array
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+
 }
