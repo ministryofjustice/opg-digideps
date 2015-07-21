@@ -22,7 +22,9 @@ class ReportType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('startDate', 'date', [ 'widget' => 'text',
+        $builder
+                ->add('id', 'hidden')
+                ->add('startDate', 'date', [ 'widget' => 'text',
                                               'input' => 'datetime',
                                               'format' => 'yyyy-MM-dd',
                                               'invalid_message' => 'report.startDate.invalidMessage' ])
