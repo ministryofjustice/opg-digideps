@@ -11,4 +11,4 @@ export PGPASSWORD=api
 export PGDATABASE=api
 export PGUSER=api
 rm -rf app/cache/*
-/sbin/setuser app bin/behat --suite=admin
+/sbin/setuser app bin/behat --suite=admin --stop-on-failure
