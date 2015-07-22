@@ -303,11 +303,74 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
+        And I click on "moneyIn-tab"
+        When I fill in the following:
+            | transactions_moneyIn_0_amount       | 10000.01 |
+            | transactions_moneyIn_1_amount       | 200.01 |
+            | transactions_moneyIn_2_amount       | 300.01 |
+            | transactions_moneyIn_3_amount       | 400.01 |
+            | transactions_moneyIn_4_amount       | 500.01 |
+            | transactions_moneyIn_5_amount       | 600.01 |
+            | transactions_moneyIn_6_amount       | 700.01 |
+            | transactions_moneyIn_7_amount       | 800.01 |
+            | transactions_moneyIn_8_amount       | 900.01 |
+            | transactions_moneyIn_9_amount       | 1000.01 |
+            | transactions_moneyIn_10_amount      | 1100.01 |
+            | transactions_moneyIn_11_amount      | 1,200.01 |
+            | transactions_moneyIn_12_amount      | 1,300.01 |
+            | transactions_moneyIn_13_amount      | 1,400.01 |
+            | transactions_moneyIn_14_amount      | 1,500.01 |
+            | transactions_moneyIn_15_amount      | 1,600.01 |
+            | transactions_moneyIn_16_amount      | 1,700.01 |
+            | transactions_moneyIn_17_amount      | 1,800.01 |
+            | transactions_moneyIn_18_amount      | 1,800.01 |
+            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
+            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
+            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
+            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
+        And I save the page as "moneyinentered"
+        And I press "transactions_saveMoneyIn"
+        And I save the page as "moneyinsaved"
+        And I click on "moneyOut-tab"
+        When I fill in the following:
+            | transactions_moneyOut_0_amount       | 100.00 |
+            | transactions_moneyOut_1_amount       | 200.00 |
+            | transactions_moneyOut_2_amount       | 300.00 |
+            | transactions_moneyOut_3_amount       | 400.00 |
+            | transactions_moneyOut_4_amount       | 500.00 |
+            | transactions_moneyOut_5_amount       | 600.00 |
+            | transactions_moneyOut_6_amount       | 700.00 |
+            | transactions_moneyOut_7_amount       | 800.00 |
+            | transactions_moneyOut_8_amount       | 900.00 |
+            | transactions_moneyOut_9_amount       | 1000.00 |
+            | transactions_moneyOut_10_amount      | 1100.00 |
+            | transactions_moneyOut_11_amount      | 1,200.00 |
+            | transactions_moneyOut_12_amount      | 1,300.00 |
+            | transactions_moneyOut_13_amount      | 1,400.00 |
+            | transactions_moneyOut_14_amount      | 1,500.00 |
+            | transactions_moneyOut_15_amount      | 1,600.00 |
+            | transactions_moneyOut_16_amount      | 1,700.00 |
+            | transactions_moneyOut_17_amount      | 1,800.00 |
+            | transactions_moneyOut_18_amount      | 1,900.00 |
+            | transactions_moneyOut_19_amount      | 2,000.00 |
+            | transactions_moneyOut_20_amount      | 2,100.00 |
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
+            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
+            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
+            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
+            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
+            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
+            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
+            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
+            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
+            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
+        And I save the page as "moneyoutentered"
+        And I press "transactions_saveMoneyOut"
         When I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
             | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
+            | accountBalance_closingBalance    | 5855.19 |
         And I press "accountBalance_save"
         And the form should be valid
         # Finally, Assets
@@ -411,11 +474,74 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
+        And I click on "moneyIn-tab"
+        When I fill in the following:
+            | transactions_moneyIn_0_amount       | 10000.01 |
+            | transactions_moneyIn_1_amount       | 200.01 |
+            | transactions_moneyIn_2_amount       | 300.01 |
+            | transactions_moneyIn_3_amount       | 400.01 |
+            | transactions_moneyIn_4_amount       | 500.01 |
+            | transactions_moneyIn_5_amount       | 600.01 |
+            | transactions_moneyIn_6_amount       | 700.01 |
+            | transactions_moneyIn_7_amount       | 800.01 |
+            | transactions_moneyIn_8_amount       | 900.01 |
+            | transactions_moneyIn_9_amount       | 1000.01 |
+            | transactions_moneyIn_10_amount      | 1100.01 |
+            | transactions_moneyIn_11_amount      | 1,200.01 |
+            | transactions_moneyIn_12_amount      | 1,300.01 |
+            | transactions_moneyIn_13_amount      | 1,400.01 |
+            | transactions_moneyIn_14_amount      | 1,500.01 |
+            | transactions_moneyIn_15_amount      | 1,600.01 |
+            | transactions_moneyIn_16_amount      | 1,700.01 |
+            | transactions_moneyIn_17_amount      | 1,800.01 |
+            | transactions_moneyIn_18_amount      | 1,800.01 |
+            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
+            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
+            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
+            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
+        And I save the page as "moneyinentered"
+        And I press "transactions_saveMoneyIn"
+        And I save the page as "moneyinsaved"
+        And I click on "moneyOut-tab"
+        When I fill in the following:
+            | transactions_moneyOut_0_amount       | 100.00 |
+            | transactions_moneyOut_1_amount       | 200.00 |
+            | transactions_moneyOut_2_amount       | 300.00 |
+            | transactions_moneyOut_3_amount       | 400.00 |
+            | transactions_moneyOut_4_amount       | 500.00 |
+            | transactions_moneyOut_5_amount       | 600.00 |
+            | transactions_moneyOut_6_amount       | 700.00 |
+            | transactions_moneyOut_7_amount       | 800.00 |
+            | transactions_moneyOut_8_amount       | 900.00 |
+            | transactions_moneyOut_9_amount       | 1000.00 |
+            | transactions_moneyOut_10_amount      | 1100.00 |
+            | transactions_moneyOut_11_amount      | 1,200.00 |
+            | transactions_moneyOut_12_amount      | 1,300.00 |
+            | transactions_moneyOut_13_amount      | 1,400.00 |
+            | transactions_moneyOut_14_amount      | 1,500.00 |
+            | transactions_moneyOut_15_amount      | 1,600.00 |
+            | transactions_moneyOut_16_amount      | 1,700.00 |
+            | transactions_moneyOut_17_amount      | 1,800.00 |
+            | transactions_moneyOut_18_amount      | 1,900.00 |
+            | transactions_moneyOut_19_amount      | 2,000.00 |
+            | transactions_moneyOut_20_amount      | 2,100.00 |
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
+            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
+            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
+            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
+            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
+            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
+            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
+            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
+            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
+            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
+        And I save the page as "moneyoutentered"
+        And I press "transactions_saveMoneyOut"
         When I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
             | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
+            | accountBalance_closingBalance    | 5855.19 |
         And I press "accountBalance_save"
         And the form should be valid
         # Finally, Assets
@@ -999,11 +1125,74 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
+        And I click on "moneyIn-tab"
+        When I fill in the following:
+            | transactions_moneyIn_0_amount       | 10000.01 |
+            | transactions_moneyIn_1_amount       | 200.01 |
+            | transactions_moneyIn_2_amount       | 300.01 |
+            | transactions_moneyIn_3_amount       | 400.01 |
+            | transactions_moneyIn_4_amount       | 500.01 |
+            | transactions_moneyIn_5_amount       | 600.01 |
+            | transactions_moneyIn_6_amount       | 700.01 |
+            | transactions_moneyIn_7_amount       | 800.01 |
+            | transactions_moneyIn_8_amount       | 900.01 |
+            | transactions_moneyIn_9_amount       | 1000.01 |
+            | transactions_moneyIn_10_amount      | 1100.01 |
+            | transactions_moneyIn_11_amount      | 1,200.01 |
+            | transactions_moneyIn_12_amount      | 1,300.01 |
+            | transactions_moneyIn_13_amount      | 1,400.01 |
+            | transactions_moneyIn_14_amount      | 1,500.01 |
+            | transactions_moneyIn_15_amount      | 1,600.01 |
+            | transactions_moneyIn_16_amount      | 1,700.01 |
+            | transactions_moneyIn_17_amount      | 1,800.01 |
+            | transactions_moneyIn_18_amount      | 1,800.01 |
+            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
+            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
+            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
+            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
+        And I save the page as "moneyinentered"
+        And I press "transactions_saveMoneyIn"
+        And I save the page as "moneyinsaved"
+        And I click on "moneyOut-tab"
+        When I fill in the following:
+            | transactions_moneyOut_0_amount       | 100.00 |
+            | transactions_moneyOut_1_amount       | 200.00 |
+            | transactions_moneyOut_2_amount       | 300.00 |
+            | transactions_moneyOut_3_amount       | 400.00 |
+            | transactions_moneyOut_4_amount       | 500.00 |
+            | transactions_moneyOut_5_amount       | 600.00 |
+            | transactions_moneyOut_6_amount       | 700.00 |
+            | transactions_moneyOut_7_amount       | 800.00 |
+            | transactions_moneyOut_8_amount       | 900.00 |
+            | transactions_moneyOut_9_amount       | 1000.00 |
+            | transactions_moneyOut_10_amount      | 1100.00 |
+            | transactions_moneyOut_11_amount      | 1,200.00 |
+            | transactions_moneyOut_12_amount      | 1,300.00 |
+            | transactions_moneyOut_13_amount      | 1,400.00 |
+            | transactions_moneyOut_14_amount      | 1,500.00 |
+            | transactions_moneyOut_15_amount      | 1,600.00 |
+            | transactions_moneyOut_16_amount      | 1,700.00 |
+            | transactions_moneyOut_17_amount      | 1,800.00 |
+            | transactions_moneyOut_18_amount      | 1,900.00 |
+            | transactions_moneyOut_19_amount      | 2,000.00 |
+            | transactions_moneyOut_20_amount      | 2,100.00 |
+            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
+            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
+            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
+            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
+            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
+            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
+            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
+            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
+            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
+            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
+        And I save the page as "moneyoutentered"
+        And I press "transactions_saveMoneyOut"
         When I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
             | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
+            | accountBalance_closingBalance    | 5855.19 |
         And I press "accountBalance_save"
         And the form should be valid
         # Finally, Assets
