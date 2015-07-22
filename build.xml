@@ -70,6 +70,8 @@
     <target name="fixtures" description="add fixtures from paramters.yml">
         <exec command="rm -rf app/cache/*"/>
         <exec command="php app/console digideps:fixtures" passthru="true" checkreturn="true"></exec>
+        <exec command="rm -rf app/logs/*"/>
+        <exec command="rm -rf app/cache/*"/>
     </target>
 
     <target name="front-end-tools" description="install tools required to build front end assets">

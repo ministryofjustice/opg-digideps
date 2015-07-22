@@ -30,7 +30,7 @@ activeTab : "tab-contacts"
         {% set showDeleteConfirm = true %}
     {% endif %}
     
-    {% if action == 'edit-reason' %}
+    {% if (action == 'edit-reason') or (no_contact.reason.vars.errors is not empty) %}
         {% set showNoContactForm = true %}
     {% else %}
 

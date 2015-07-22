@@ -20,7 +20,7 @@ Feature: Formatted Report
             | set_password_password_second  | Abcd1234 |
         And I press "set_password_save"
         Then the form should be valid
-        Then I should be on "user/details"
+        #Then I should be on "user/details"
         When I fill in the following:
             | user_details_firstname | John |
             | user_details_lastname | Doe |

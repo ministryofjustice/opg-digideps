@@ -38,7 +38,8 @@ trait LinksTrait
     {
        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
        
-       $this->visit("http://digideps-admin.local/behat/{$secret}/{$link}");
+       $adminUrl = $this->getSymfonyParam('admin_host');
+       $this->visit($adminUrl."/behat/{$secret}/{$link}");
     }
 
     /**

@@ -29,8 +29,14 @@ Feature: report explanations
       When I click on "edit-reason-no-contacts"
       And I save the page as "report-no-contact-edit"
       And I fill in the following:
+        | reason_for_no_contact_reason | |
+      And I press "reason_for_no_contact_saveReason"
+      Then the form should be invalid
+      And I save the page as "report-no-contact-error"
+      And I fill in the following:
         | reason_for_no_contact_reason | nothing relevant contact added |
       And I press "reason_for_no_contact_saveReason"
+      And I save the page as "report-no-contact-edit"
       And I should see "nothing relevant contact added" in the "reason-no-contacts" region
       # delete reason and cancel
       When I click on "edit-reason-no-contacts"
@@ -75,11 +81,17 @@ Feature: report explanations
       When I click on "cancel-edit-reason"
       Then the URL should match "/report/\d+/decisions"
       # edit reason, and save
-      When I click on "edit-reason-no-decisions"
+       When I click on "edit-reason-no-decisions"
       And I save the page as "report-no-decision-edit"
+      And I fill in the following:
+        | reason_for_no_decision_reason ||
+      And I press "reason_for_no_decision_saveReason"
+      Then the form should be invalid
+      And I save the page as "report-no-decision-error"
       And I fill in the following:
         | reason_for_no_decision_reason | nothing relevant purchased or sold |
       And I press "reason_for_no_decision_saveReason"
+      And I save the page as "report-no-decision-edit"
       And I should see "nothing relevant purchased or sold" in the "reason-no-decisions" region
       # delete reason and cancel
       When I click on "edit-reason-no-decisions"

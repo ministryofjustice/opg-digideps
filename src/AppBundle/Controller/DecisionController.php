@@ -85,8 +85,7 @@ class DecisionController extends Controller
 
         $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
         $noDecision->setData([ 'reason' => $report->getReasonForNoDecisions() ]);
-        $onErrorShowNoDecisionForm = false;
-
+        
         if ($request->isMethod('POST')) {
 
             $form->handleRequest($request);
@@ -106,12 +105,6 @@ class DecisionController extends Controller
                     $this->handleReasonForNoDecision($action, $noDecision, $reportId);
                     return $this->redirect($this->generateUrl('decisions',[ 'reportId' => $report->getId()]));
                 }
-                
-                $reasonForNoDecisions = $report->getReasonForNoDecisions();
-                if(!empty($reasonForNoDecisions)){
-                    $onErrorShowNoDecisionForm = true;
-                }
-                
             }else{
                 if($reportSubmit->isValid()){
                     if($report->readyToSubmit()){
@@ -129,8 +122,7 @@ class DecisionController extends Controller
             'report' => $report,
             'client' => $util->getClient($report->getClient()),
             'action' => $action,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView(),
-            'onErrorShowNoDecisionForm' => $onErrorShowNoDecisionForm
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
