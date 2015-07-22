@@ -3,15 +3,17 @@
 
 <ul class="behat-region-list-accounts report-list report-list--accounts">
     {% for account in accounts %}
+      
+        {# define warning message along with the account and the link (that changes depending on the warning) #}
         {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id}) %}
-        {% set showWarningTransactions = report.isDue() and account.needsClosingBalanceData() and not account.hasAtLeastOneTransactionInAndOut() %}
-        {% set showWarningMissingClosingBalance =  report.isDue() and account.needsClosingBalanceData() and  account.hasAtLeastOneTransactionInAndOut() %}
-        {% set accountLinkAnchor = 'account-header' %}
-        {% if (showWarningTransactions) %}
-            {% set accountLinkAnchor = 'moneyIn' %}
-        {% endif %}
-        {% if (showWarningMissingClosingBalance) %}
-            {% set accountLinkAnchor = 'closing-balance' %}
+        {% if report.isDue() and account.needsClosingBalanceData() %}
+          {% if account.hasAtLeastOneTransactionInAndOut() %}
+            {% set warningMessage = 'listing.addTotalsWarning' %}    
+            {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'money-both'}) ~ '#moneyIn' %}
+          {% else %}
+            {% set warningMessage = 'listing.addClosingBalanceWarning' %}    
+            {% set linkToAccountPage = linkToAccountPage ~ '#closing-balance' %}
+          {% endif %}
         {% endif %}
         
         <li class="report-list__item">
@@ -21,7 +23,7 @@
                     <dd class="report-list__item-fields-description">
                         <h3>
                             {% if report.isDue() and account.closingBalance is null %}
-                                <a href="{{ linkToAccountPage }}#{{ accountLinkAnchor }}"
+                                <a href="{{ linkToAccountPage }}"
                                    class="behat-link-account-{{ account.accountNumber }}">
                                     {{ account.bank }}
                                 </a>
@@ -67,17 +69,10 @@
                         </div>
                     {% endif %}
                 </div>
-                    {% if  showWarningMissingClosingBalance %}
+                  {% if warningMessage is defined %}
                     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
                       transDomain: translationDomain,
-                      pageSectionWarning: 'listing.addClosingBalanceWarning' | trans,
-                      iconClass: 'icon icon__notification behat-region-account-' ~ account.accountNumber ~ '-warning'
-                    } %}
-                  {% endif %}
-                   {% if  showWarningTransactions %}
-                    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-                      transDomain: translationDomain,
-                      pageSectionWarning: 'listing.addTrasactionsWarning' | trans,
+                      pageSectionWarning: warningMessage | trans,
                       iconClass: 'icon icon__notification behat-region-account-' ~ account.accountNumber ~ '-warning'
                     } %}
                   {% endif %}

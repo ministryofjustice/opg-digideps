@@ -78,5 +78,5 @@ listing:
   currencySymbol: "£"
   closingBalance: "Closing balance:"
   closingDate: "End of year:"
-  addTrasactionsWarning: Add at least one transaction In and one transaction Out
+  addTotalsWarning: Add at least one total for each section
   addClosingBalanceWarning: Add the closing balance of the account
