@@ -82,6 +82,41 @@ $item-right-margin: 263px;
 
 }
 
+.item-data.item-data-stacked {
+    .item-label {
+        display: block;
+        float: none;
+        margin: 0 0 5px 0;
+        color: $black;
+        @include bold-19();
+    }
+    .item-value {
+        display:block;
+        float: none;
+        margin: 0 0 0 0;
+        @include core-19();
+    }
+}
+
+.item-data.item-big {
+    .item-label {
+        @include core-24();
+    }
+}
+.item-data.item-data-stacked.item-big {
+    .item-label {
+        @include bold-24();
+    }
+}
+
+.no-reason {
+    width: 65%;
+    margin: 40px 0 40px 0;
+    .edit-button {
+        text-align: right;
+    }
+}
+
 .my-client {
 
     .item-list.reports, .client-details {
@@ -127,6 +162,28 @@ $item-right-margin: 263px;
         .item-value {
             margin-left: $your-label-width;
             margin-bottom: 25px;
+        }
+    }
+}
+
+.page-report-header {
+    .item-data-fixed {
+        .item-label {
+            width: 170px;
+        }
+        .item-value {
+            margin-left: 170px;
+        }
+    }
+}
+
+.external-report-section-declaration {
+    .item-data-fixed {
+        .item-label {
+            width: 170px;
+        }
+        .item-value {
+            margin-left: 170px;
         }
     }
 }

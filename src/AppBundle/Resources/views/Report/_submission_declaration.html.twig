@@ -14,22 +14,14 @@
         transOptions: {'%separator%': '<br/><br/>'}
     } %}
 
-    <div class="data-item">
-        <dl class="data-item-fields">
-            <div class="data-item-fields-row">
-                <dt class="data-item-fields-term">{{ 'status' | trans() }}</dt>
-                <dd class="data-item-fields-description">{{ 'deputyAgreed' | trans() }}</dd>
-            </div>
-            <div class="data-item-fields-row">
-                <dt class="data-item-fields-term">{{ 'declarationTime' | trans() }}</dt>
-                <dd class="data-item-fields-description">
-                    {{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}
-                </dd>
-            </div>
-            <div class="data-item-fields-row">
-                <dt class="data-item-fields-term">{{ 'deputyName' | trans() }}</dt>
-                <dd class="data-item-fields-description">{{ deputy.fullname }}</dd>
-            </div>
+    <div class="item">
+        <dl class="item-data item-data-fixed">
+            <dt class="item-label">{{ 'status' | trans() }}</dt>
+            <dd class="item-value">{{ 'deputyAgreed' | trans() }}</dd>
+            <dt class="item-label">{{ 'declarationTime' | trans() }}</dt>
+            <dd class="item-value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
+            <dt class="item-label">{{ 'deputyName' | trans() }}</dt>
+            <dd class="item-value">{{ deputy.fullname }}</dd>
         </dl>
     </div>
 </div>
