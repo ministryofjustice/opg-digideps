@@ -2,7 +2,7 @@ $item-label-default-width: 100px;
 $client-label-width: 140px;
 $your-label-width: 235px;
 $item-right-margin: 263px;
-
+$declaration-margin: 170px;
 
 .item-list {
     
@@ -166,24 +166,14 @@ $item-right-margin: 263px;
     }
 }
 
-.page-report-header {
-    .item-data-fixed {
-        .item-label {
-            width: 170px;
-        }
-        .item-value {
-            margin-left: 170px;
-        }
-    }
-}
-
+.page-report-header,
 .external-report-section-declaration {
     .item-data-fixed {
         .item-label {
-            width: 170px;
+            width: $declaration-margin;
         }
         .item-value {
-            margin-left: 170px;
+            margin-left: $declaration-margin
         }
     }
 }
