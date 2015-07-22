@@ -24,3 +24,6 @@ app/bootstrap.php.cache
 src/AppBundle/Resources/views/Email/css
 npm-debug.log
 *~
+.cache
+.composer
+.config
