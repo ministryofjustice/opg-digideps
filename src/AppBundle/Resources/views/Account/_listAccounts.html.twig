@@ -7,7 +7,7 @@
         {# define warning message along with the account and the link (that changes depending on the warning) #}
         {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id}) %}
         {% if report.isDue() and account.needsClosingBalanceData() %}
-          {% if account.hasAtLeastOneTransactionInAndOut() %}
+          {% if account.hasAtLeastOneTotalOutAndIn() %}
             {% set warningMessage = 'listing.addTotalsWarning' %}    
             {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'money-both'}) ~ '#moneyIn' %}
           {% else %}

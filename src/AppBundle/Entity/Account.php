@@ -482,7 +482,7 @@ class Account
     /**
      * @return true
      */
-    public function hasAtLeastOneTransactionInAndOut()
+    public function hasAtLeastOneTotalOutAndIn()
     {
         $moneyInTotalTranactions = array_filter($this->getMoneyIn(), function (AccountTransaction $t) {
            return $t->getAmount() !== null;
