@@ -432,6 +432,15 @@ Feature: report
         And I press "account_delete"
         Then I should not see the "account-6666" link
 
+    @deputy
+    Scenario: assert closing balance form is not shown when there are no transactions
+        Given I save the application status into "report-no-totals"
+        Given I set the report 1 end date to 3 days ago
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am on the accounts page of the first report
+        Then I should not see the "account-closing-balance-form" region
+        Then I load the application status from "report-no-totals"
+    
 
     @deputy
     Scenario: add account transactions
