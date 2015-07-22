@@ -113,7 +113,7 @@ class AccountController extends Controller
         }
         
         // edit/delete logic
-        $editFormHasClosingBalance = $report->isDue()/* && $account->getClosingBalance() > 0 not clear this after dd-588 changes */;
+        $editFormHasClosingBalance = $report->isDue() && $account->hasAtLeastOneTotalOutAndIn();
         list($formEdit, $formEditIsValid, $formDeleteIsValid) = $this->handleAccountEditDeleteForm($account, [
             'showClosingBalance' => $editFormHasClosingBalance,
             'showSubmitButton' => $action != 'delete',
@@ -144,9 +144,11 @@ class AccountController extends Controller
             'client' => $client,
             // moneyIn/Out form
             'form' => $formMoneyInOut->createView(),
-            // closing balance form: show closing balance/date explanation only in case of mismatch
+            // closing balance form: 
+            // Show the form if on list view, the report is due and the closing balance is not added. 
+            //  also show if the form is submitted but not valid 
             'closingBalanceForm' => $formClosingBalance->createView(),
-            'closingBalanceFormShow' => ($action == 'list' && $report->isDue() && $account->needsClosingBalanceData()) 
+            'closingBalanceFormShow' => ($action == 'list' && $report->isDue() && $account->needsClosingBalanceData() && $account->hasAtLeastOneTotalOutAndIn()) 
                                         || ($closingBalanceFormIsSubmitted && !$formBalanceIsValid),
             'closingBalanceFormDateExplanationShow' => $account->getClosingDate() && $closingBalanceFormIsSubmitted 
                                                        && !$account->isClosingDateEqualToReportEndDate(),

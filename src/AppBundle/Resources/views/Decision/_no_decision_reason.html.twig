@@ -2,29 +2,14 @@
 
     {% trans_default_domain translationDomain %}
 
-    <div class="data-item data-item--no-reason">
+    <div class="item no-reason">
 
-        <dl class="data-item-fields">
+        <a href="{{ url('decisions', { 'reportId': report.id, 'action': 'edit-reason' }) }}"
+           class="edit-button behat-link-edit-reason-no-decisions">{{ 'no_decision.fields.editReason.value' | trans }}</a>
 
-            <div class="data-item-fields-row data-item-fields-row--header">
-                <dt class="visuallyhidden">{{ 'no_decision.fields.noDecisionReason.label' | trans }}</dt>
-                <dd class="data-item-fields-description data-item-fields-description--header">
-                    <h2 class="data-item-header-title behat-region-client-name">{{ 'no_decision.fields.noDecisionReason.value' | trans }}</h2>
-                </dd>
-            </div>
-            <div class="data-item-fields-row data-item-fields-row--header float-right">
-                <dt class="visuallyhidden">{{ 'no_decision.fields.editReason.label' | trans }}</dt>
-                <dd class="data-item-fields-description data-item-fields-description--header">
-                    <a href="{{ url('decisions', { 'reportId': report.id, 'action': 'edit-reason' }) }}"
-                       class="js-data-item-edit-link data-item-edit-link behat-link-edit-reason-no-decisions">{{ 'no_decision.fields.editReason.value' | trans }}</a>
-                </dd>
-            </div>
-            <div class="data-item-fields-row">
-                <dt class="visuallyhidden">{{ 'no_decision.fields.noDecisionReason.value' | trans }}</dt>
-                <dd class="data-item-fields-description data-item-fields-description--noReason data-item-fields-description--normal behat-region-reason-no-decisions">{{ report.reasonForNoDecisions }}</dd>
-            </div>
-
+        <dl class="item-data item-data-stacked item-big">
+            <dt class="item-label">{{ 'no_decision.fields.noDecisionReason.value' | trans }}</dd>
+            <dd class="item-value behat-region-reason-no-decisions">{{ report.reasonForNoDecisions }}</dd>
         </dl>
     </div>
-
 {% endif %}

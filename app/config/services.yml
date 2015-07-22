@@ -32,6 +32,7 @@ services:
               use_oauth2: "%oauth2_enabled%"
               endpoints: "%api_endpoints%"
               debug: "%kernel.debug%"
+              collectData: "%kernel.debug%"
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
         arguments: [ @service_container,%env% ]

@@ -16,7 +16,7 @@ default:
                     maxNestingLevel: 200
                     # dbname used for db snapshot
                     dbName: api
-                    saveSnaphotBeforeEachScenario: false
+                    saveSnaphotBeforeEachScenario: true
       admin:
         description: End to end journey for Admin user
         paths:    [ %paths.base%/tests/behat/features ]
