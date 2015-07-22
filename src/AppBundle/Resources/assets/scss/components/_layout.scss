@@ -1,3 +1,4 @@
+$item-right-margin: 263px;
 
 .column-full {
   @include grid-column(1);
@@ -37,10 +38,6 @@
   border-bottom: 0;
 }
 
-.phase-banner {
-  //@include phase-banner(beta);
-}
-
 .back-navigation {
     @include core-19();
     margin-top: 35px;
@@ -48,4 +45,26 @@
 
 #footer .footer-meta .footer-meta-inner ul li:last-child {
     float: left;
+}
+
+header.page-header {
+
+    position: relative;
+
+    .after-title {
+        @include core-19();
+        width: 42%;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        
+        .item-data .item-value {
+            @include core-19();
+        }
+    }
+
+}
+
+.your-client-page header.page-header h1 {
+    width: 55%;    
 }

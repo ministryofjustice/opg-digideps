@@ -3,13 +3,14 @@
 {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} my-client{% endblock %}
+{% block contentClass %}{{ parent() }} your-details{% endblock %}
 {% block title %}{% trans %}page.pageSectionTitle{% endtrans %}{% endblock %}
 
 {% block validationSummary %}
     {# {{ form_errors_list(form) }} #}
 {% endblock %}
 
+{% block bodyClasses %}your-details-page{% endblock %}
 
 {% block pageBody %}
 

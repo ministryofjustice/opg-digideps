@@ -3,7 +3,10 @@
   margin-bottom: 10px;
 
   &.add-bar{
-    margin-left: 48%;
+    margin-left: 50%;
+    @include media(tablet) {
+        margin-left: 45%;
+    }
   }
 
 }

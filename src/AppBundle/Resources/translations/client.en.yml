@@ -24,6 +24,7 @@ reportDataList:
   hw: "Health and Welfare"
   pa: "Property and affairs"
   dueDate: "Due date:"
+  open: "Open report"
 form:
   newReportForm:
     subSectionTitle: "Create a new report"
