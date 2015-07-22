@@ -33,12 +33,11 @@ trait LinksTrait
     /**
      * @Given I visit the behat link :link
      */
-    
     public function visitBehatLink($link)
     {
        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
        
-       $this->visit("http://digideps-admin.local/behat/{$secret}/{$link}");
+       $this->visit("/behat/{$secret}/{$link}");
     }
 
     /**

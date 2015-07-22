@@ -219,8 +219,6 @@ class BehatController extends Controller
     {
         $this->checkIsBehatBrowser();
         
-        return new Response('skipped. behat does not seem to read properly via docker containers');
-        
         $param = $this->container->getParameter('email_report_submit')['to_email'];
         if (!preg_match('/^behat\-/', $param)) {
             throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");

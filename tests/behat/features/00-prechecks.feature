@@ -1,5 +1,5 @@
 Feature: pre checks
 
-    @admin
+    @admin @deputy
     Scenario: check app status
         Given the application config is valid
