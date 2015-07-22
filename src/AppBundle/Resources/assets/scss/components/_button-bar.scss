@@ -4,6 +4,9 @@
 
   &.add-bar{
     margin-left: 50%;
+    @include media(tablet) {
+        margin-left: 45%;
+    }
   }
 
 }

@@ -51,10 +51,6 @@ header.page-header {
 
     position: relative;
 
-    h1 {
-        width: 55%;
-    }
-
     .after-title {
         @include core-19();
         width: 42%;
@@ -69,3 +65,6 @@ header.page-header {
 
 }
 
+.your-client-page header.page-header h1 {
+    width: 55%;    
+}

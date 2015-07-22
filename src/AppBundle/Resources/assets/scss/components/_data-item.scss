@@ -89,6 +89,7 @@ $declaration-margin: 170px;
         margin: 0 0 5px 0;
         color: $black;
         @include bold-19();
+        width: 70%;
     }
     .item-value {
         display:block;
@@ -147,6 +148,10 @@ $declaration-margin: 170px;
             position: absolute;
             top: 30px;
             right: 0;
+            
+            @include media(tablet) {
+                margin-right: 40px;
+            }
         }
     }
 }
