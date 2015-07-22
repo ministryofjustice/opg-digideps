@@ -24,16 +24,11 @@
                 </h3>
                 
                 {% if report.submitted %}
-                    <a href="{{ linkToDownloadReport }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
-                {% else %}
-                    <a href="{{ linkToReportOverviewPage }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
-                {% endif %}
-
-                {% if report.submitted %}
                     <a href="{{ path('report_display', {'reportId': report.id}) }}" class="view-button">
                         {{ 'reportDataList.downloadThisReportLink' | trans() }}
                       </a>
                 {% else %}
+                    <a href="{{ linkToReportOverviewPage }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
                     <a href="{{ linkEditReportingPeriod }}"
                        class="edit-button behat-link-edit-report-period-{{ report.getPeriod() }}-report">{{ 'reportDataList.edit'| trans }}</a>
                 {% endif %}            
