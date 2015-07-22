@@ -16,7 +16,7 @@
 
 {% if hideForm %}
 
-    <div itemscope itemtype="http://schema.org/Person" class="item your-details">
+    <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
         
         <a href="{{ path('user_view', {'action': 'edit-your-details' })~'#edit-your-details' }}"
            class="edit-button behat-link-edit-user-details">{{ 'yourDetails.edit'| trans }}</a>
