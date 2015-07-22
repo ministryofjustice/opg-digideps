@@ -24,7 +24,7 @@
                 </h3>
                 
                 {% if report.submitted %}
-                    <a href="{{ path('report_display', {'reportId': report.id}) }}" class="view-button">
+                    <a href="{{ path('report_display', {'reportId': report.id}) }}" class="view-button behat-link-download-{{ report.getPeriod() }}-report">
                         {{ 'reportDataList.downloadThisReportLink' | trans() }}
                       </a>
                 {% else %}

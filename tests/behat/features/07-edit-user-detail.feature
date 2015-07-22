@@ -46,10 +46,10 @@ Feature: edit user details
         And I press "user_details_save"
         Then the form should be valid
         Then I should be on "user"
-        Then I should see "Paul Jamie" in the "my-details" region
-        And I should see "103 Petty France" in the "my-details" region
-        And I should see "020 3334 3556" in the "my-details" region
-        And I should see "020 1234 5679" in the "my-details" region
+        Then I should see "Paul Jamie" in the "my-details-name" region
+        And I should see "103 Petty France" in the "my-details-address" region
+        And I should see "020 3334 3556" in the "my-details-phone-main" region
+        And I should see "020 1234 5679" in the "my-details-phone-alt" region
         And I should see "behat-user@publicguardian.gsi.gov.uk" in the "my-details" region
      
   
