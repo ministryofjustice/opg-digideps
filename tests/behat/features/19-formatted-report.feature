@@ -132,7 +132,7 @@ Feature: Formatted Report
         And I fill in the following:
             | asset_title       | Vehicles | 
             | asset_value       | 13000.00 | 
-            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_description | Alfa Romeo 156 JTD | 
             | asset_valuationDate_day | 10 | 
             | asset_valuationDate_month | 11 | 
             | asset_valuationDate_year | 2015 |
@@ -394,13 +394,13 @@ Feature: Formatted Report
         And I fill in the following:
             | asset_title       | Vehicles | 
             | asset_value       | 13000.00 | 
-            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_description | Alfa Romeo 156 JTD | 
             | asset_valuationDate_day | 10 | 
             | asset_valuationDate_month | 11 | 
             | asset_valuationDate_year | 2015 |
         And I press "asset_save"
         And I save the page as "report-assets-list-two"
-        Then I should see "Alfa Romeo 156 1.9 JTD" in the "list-assets" region
+        Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
         And I should see "£13,000.00" in the "list-assets" region
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
@@ -565,13 +565,13 @@ Feature: Formatted Report
         And I fill in the following:
             | asset_title       | Vehicles | 
             | asset_value       | 13000.00 | 
-            | asset_description | Alfa Romeo 156 1.9 JTD | 
+            | asset_description | Alfa Romeo 156 JTD | 
             | asset_valuationDate_day | 10 | 
             | asset_valuationDate_month | 11 | 
             | asset_valuationDate_year | 2015 |
         And I press "asset_save"
         And I save the page as "report-assets-list-two"
-        Then I should see "Alfa Romeo 156 1.9 JTD" in the "list-assets" region
+        Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
         And I should see "£13,000.00" in the "list-assets" region
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
