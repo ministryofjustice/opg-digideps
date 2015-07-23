@@ -15,6 +15,7 @@
 
 }
 
+.report-declaration #contact-block,
 .report-money-input #contact-block {
     display: none;
     @include media(mobile) {
