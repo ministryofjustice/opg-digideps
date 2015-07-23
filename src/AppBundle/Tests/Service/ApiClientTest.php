@@ -30,6 +30,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
                             'endpoints' => [ 'find_user_by_email' => 'find-user-by-email'],
                             'format' => 'json',
                             'debug' => null,
+                            'collectData' => false,
                             'use_oauth2' => false ];
         
         $this->oauth2ClientMock = m::mock('AppBundle\Service\OAuth\OAuth2', ['https://digideps.api/app_dev.php', 'sfsfsdfdsfds', 'fsfsfsdfs']);

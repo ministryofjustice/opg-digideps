@@ -127,4 +127,25 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $f($input));
     }
     
+    public static function behat_namifyProvider()
+    {
+        return [
+            ['a', 'a'],
+            
+            ['  ab_cd-1  23  ! "random    data"!@£$%^&end*    ', 'ab-cd-1-23-random-dataend'],
+            ['Alfa Romeo 156 JTD', 'alfa-romeo-156-jtd']
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider behat_namifyProvider
+     */
+    public function behat_namify($input, $expected)
+    {
+        $f = $this->object->getFilters()['behat_namify']->getCallable();
+        
+        $this->assertSame($expected, $f($input));
+    }
+    
 }
