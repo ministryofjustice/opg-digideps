@@ -73,6 +73,30 @@ default:
                     session:   '@session'
                     maxNestingLevel: 200
 
+      formatted:
+        description: Tests related to the formatted report
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        filters:
+          tags: "@formatted-report"
+        contexts: 
+          - DigidepsBehat\FeatureContext:
+              -
+                  session:   '@session'
+                  maxNestingLevel: 200
+
+      wip:
+        description: Tests related to the formatted report
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        filters:
+            tags: "@wip"
+        contexts: 
+        - DigidepsBehat\FeatureContext:
+            -
+                session:   '@session'
+                maxNestingLevel: 200
+
       javascript:
         description: Tests related to user feedback
         paths:    [ %paths.base%/tests/behat/features ]
