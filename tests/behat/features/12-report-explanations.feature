@@ -3,6 +3,8 @@ Feature: report explanations
     @deputy
     Scenario: add explanation for no contacts
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      And I click on "client-home"
+      And I click on "report-n2"
       #delete current contact
       And I follow "tab-contacts"
       And I save the page as "report-no-contact-empty"
@@ -53,7 +55,9 @@ Feature: report explanations
     @deputy
     Scenario: add explanation for no decisions
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I am on the first report overview page
+      #And I am on the first report overview page
+      And I click on "client-home"
+      And I click on "report-n2"
       # delete current decision
       And I follow "tab-decisions"
       And I click on "decision-3-beds"
@@ -108,7 +112,9 @@ Feature: report explanations
     @deputy
     Scenario: add explanation for no assets
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I am on the first report overview page
+      #And I am on the first report overview page
+      And I click on "client-home"
+      And I click on "report-n2"
       # delete current asset
       And I follow "tab-assets"
       And I click on "asset-2-beds-flat-in-ha2"

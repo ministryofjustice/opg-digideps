@@ -664,7 +664,6 @@ class Report
     public function setReportSeen($reportSeen)
     {
         $this->reportSeen = $reportSeen;
-        return $this;
     }
 
     /**

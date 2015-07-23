@@ -3,6 +3,8 @@ Feature: edit/remove decision
     @deputy
     Scenario: edit decision, remove the decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "client-home"
+        And I click on "report-n2"
         And I follow "tab-decisions"
         And the URL should match "/report/\d+/decisions"
         And I click on "decision-2-beds"

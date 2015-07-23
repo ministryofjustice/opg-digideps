@@ -63,9 +63,9 @@ Feature: add details
 
     @admin
     Scenario: add user details (admin user)
-        Given I am logged in to admin as "behat-admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #When I go to "http://digideps-admin.local/app_dev.php/user/details"
-        Given I am on admin page "/user/details"
+        And I am on admin page "/user/details"
         And I save the page as "admin-step2"
         # testing validation, as the validation group for the form is different for admin user
         # missing firstname
