@@ -16,7 +16,7 @@ default:
                     maxNestingLevel: 200
                     # dbname used for db snapshot
                     dbName: api
-                    saveSnaphotBeforeEachScenario: false
+                    saveSnaphotBeforeEachScenario: true
       admin:
         description: End to end journey for Admin user
         paths:    [ %paths.base%/tests/behat/features ]
@@ -72,6 +72,29 @@ default:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
+
+      formatted:
+        description: Tests related to formatted report 
+        paths:    [ %paths.base%/tests/behat/features ]
+        filters:
+            tags: "@formatted-report&&~@javascript"
+        contexts:
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+
+      wip:
+        description: Tests related to the formatted report
+        paths:    [ %paths.base%/tests/behat/features ]
+        mink_session: default
+        filters:
+            tags: "@wip"
+        contexts: 
+        - DigidepsBehat\FeatureContext:
+            -
+                session:   '@session'
+                maxNestingLevel: 200
 
       javascript:
         description: Tests related to user feedback

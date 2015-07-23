@@ -479,6 +479,22 @@ class Account
         return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
     }
     
+    /**
+     * @return true
+     */
+    public function hasAtLeastOneTotalOutAndIn()
+    {
+        $moneyInTotalTranactions = array_filter($this->getMoneyIn(), function (AccountTransaction $t) {
+           return $t->getAmount() !== null;
+        });
+       
+        $moneyOutTotalTranactions = array_filter($this->getMoneyOut(), function (AccountTransaction $t) {
+           return $t->getAmount() !== null;
+        });
+
+        return count($moneyInTotalTranactions) > 0 && count($moneyOutTotalTranactions) > 0;
+    }
+    
     
     public function getMoneyIn()
     {

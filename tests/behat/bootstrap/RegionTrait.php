@@ -13,7 +13,9 @@ trait RegionTrait
 {
     
     /**
-     * @Then I should not see the :region :type
+     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist
+     * 
+     * @Then I should not see the :element :type
      */
     public function iShouldNotSeeTheBehatElement($element, $type)
     {
@@ -27,7 +29,9 @@ trait RegionTrait
     }
     
     /**
-     * @Then I should see the :region :type
+     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist
+     * 
+     * @Then I should see the :element :type
      */
     public function iShouldSeeTheBehatElement($element, $type)
     {

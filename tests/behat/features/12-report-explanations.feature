@@ -50,7 +50,7 @@ Feature: report explanations
       And I am on the first report overview page
       # delete current decision
       And I follow "tab-decisions"
-      And I click on "decision-n1"
+      And I click on "decision-3-beds"
       And I click on "delete-confirm"
       And I click on "delete"
       And I save the page as "report-no-decision-empty"
@@ -99,7 +99,7 @@ Feature: report explanations
       And I am on the first report overview page
       # delete current asset
       And I follow "tab-assets"
-      And I click on "asset-n1"
+      And I click on "asset-2-beds-flat-in-ha2"
       And I click on "delete-confirm"
       And I click on "delete"
       Then the checkbox "report_no_assets_no_assets" should be unchecked
@@ -119,14 +119,14 @@ Feature: report explanations
       And I fill in the following:
           | asset_title       | Vehicles | 
           | asset_value       | 13000.00 | 
-          | asset_description | Alfa Romeo 156 1.9 JTD | 
+          | asset_description | Alfa Romeo 156 JTD | 
           | asset_valuationDate_day | 10 | 
           | asset_valuationDate_month | 11 | 
           | asset_valuationDate_year | 2015 |
       And I press "asset_save"
       # delete asset
       And I follow "tab-assets"
-      And I click on "asset-n1"
+      And I click on "asset-alfa-romeo-156-jtd"
       And I click on "delete-confirm"
       And I click on "delete"
       # check checkbox is reset

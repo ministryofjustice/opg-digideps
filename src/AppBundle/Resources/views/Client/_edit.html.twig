@@ -4,6 +4,12 @@
 formTitle: "form.editClientForm.subSectionTitle" | trans
 } %}
 
+{{ form_start(formEditClient, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+
+{% block validationSummary %}
+    {{ form_errors_list(formEditClient) }}
+{% endblock %}
+
 {{ form_input(form.firstname, 'firstname') }}
 {{ form_input(form.lastname, 'lastname') }}
 
@@ -40,3 +46,5 @@ formTitle: "form.editClientForm.subSectionTitle" | trans
     } %}
 
 {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{{ form_end(formEditClient) }}

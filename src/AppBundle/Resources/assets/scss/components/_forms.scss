@@ -38,7 +38,7 @@ form {
 
     }
 
-    .data-item, .report-list__item & {
+    .report-list__item & {
 
       .form-date {
         .form-group {
@@ -70,13 +70,8 @@ form {
       margin-top: 40px;
     }
 
-    .data-item, .report-list__item & {
+    .report-list__item & {
       margin-bottom: 20px;
-    }
-
-    .data-item & {
-      padding-top: 6px;
-      padding-bottom: 3px;
     }
 
   }
