@@ -147,6 +147,12 @@ class Report
     private $furtherInformation;
     
     /**
+     * @JMS\Type("boolean")
+     * @var boolean
+     */
+    private $reportSeen;
+    
+    /**
      * 
      * @return integer $id
      */
@@ -650,8 +656,25 @@ class Report
     {
         $this->furtherInformation = $furtherInformation;
     }
+    
+    /**
+     * @param type $reportSeen
+     * @return \AppBundle\Entity\Report
+     */
+    public function setReportSeen($reportSeen)
+    {
+        $this->reportSeen = $reportSeen;
+        return $this;
+    }
 
-        
+    /**
+     * @return type
+     */
+    public function getReportSeen()
+    {
+        return $this->reportSeen;
+    }
+    
     /**
      * @return string $status | null
      */

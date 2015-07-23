@@ -28,7 +28,7 @@ class ClientController extends Controller
         $client = !empty($clients)? $clients[0]: null;
         
         $reports = $client ? $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']) : [];
-       
+        
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
 
@@ -61,6 +61,18 @@ class ClientController extends Controller
             }
         }
         
+        $newReportNotification = null;
+        
+        foreach($reports as $report){
+          if($report->getReportSeen() === false){
+              $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
+              
+              //update report to say message has been seen
+              $report->setReportSeen(true);
+              $apiClient->putC('report/' . $report->getId(), $report);
+          }   
+        }
+        
         return [
             'client' => $client,
             'reports' => $reports,
@@ -70,7 +82,8 @@ class ClientController extends Controller
             'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
-            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn')
+            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'newReportNotification' => $newReportNotification
         ];
 
     }
