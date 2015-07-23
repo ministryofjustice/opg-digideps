@@ -46,7 +46,6 @@ Feature: report explanations
 
     @deputy
     Scenario: add explanation for no decisions
-      Given I save the application status into "report-explanation-decision-explanation"
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I am on the first report overview page
       # delete current decision
@@ -100,7 +99,7 @@ Feature: report explanations
       And I am on the first report overview page
       # delete current asset
       And I follow "tab-assets"
-      And I click on "asset-2-beds-flat-in-HA2"
+      And I click on "asset-2-beds-flat-in-ha2"
       And I click on "delete-confirm"
       And I click on "delete"
       Then the checkbox "report_no_assets_no_assets" should be unchecked
@@ -127,7 +126,7 @@ Feature: report explanations
       And I press "asset_save"
       # delete asset
       And I follow "tab-assets"
-      And I click on "asset-2-beds-flat-in-HA2"
+      And I click on "asset-2-beds-flat-in-ha2"
       And I click on "delete-confirm"
       And I click on "delete"
       # check checkbox is reset
