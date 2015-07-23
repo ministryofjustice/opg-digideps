@@ -126,7 +126,7 @@ Feature: report explanations
       And I press "asset_save"
       # delete asset
       And I follow "tab-assets"
-      And I click on "asset-2-beds-flat-in-ha2"
+      And I click on "asset-alfa-romeo-156-jtd"
       And I click on "delete-confirm"
       And I click on "delete"
       # check checkbox is reset
