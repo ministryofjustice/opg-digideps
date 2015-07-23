@@ -46,11 +46,12 @@ Feature: report explanations
 
     @deputy
     Scenario: add explanation for no decisions
+      Given I save the application status into "report-explanation-decision-explanation"
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I am on the first report overview page
       # delete current decision
       And I follow "tab-decisions"
-      And I click on "decision-2-beds"
+      And I click on "decision-3-beds"
       And I click on "delete-confirm"
       And I click on "delete"
       And I save the page as "report-no-decision-empty"
