@@ -185,6 +185,14 @@ class Report implements UserFilterInterface
      */
     private $reviewed;
     
+    /**
+     * @var boolean
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
+     */
+    private $reportSeen;
+    
      /**
      * Constructor
      */
@@ -703,5 +711,28 @@ class Report implements UserFilterInterface
         $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
         
         return $qb;
+    }
+
+    /**
+     * Set reportSeen
+     *
+     * @param boolean $reportSeen
+     * @return Report
+     */
+    public function setReportSeen($reportSeen)
+    {
+        $this->reportSeen = $reportSeen;
+
+        return $this;
+    }
+
+    /**
+     * Get reportSeen
+     *
+     * @return boolean 
+     */
+    public function getReportSeen()
+    {
+        return $this->reportSeen;
     }
 }
