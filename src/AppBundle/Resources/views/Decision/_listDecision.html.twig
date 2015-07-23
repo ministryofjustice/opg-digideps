@@ -33,7 +33,7 @@ form
                     <div class="report-list__item-header"><h3>&nbsp;</h3>
                         {% if (showEditLink == true) %}
                             <a href="{{ url('decisions', {'reportId': report.id, 'action': 'edit', 'id': decision.id }) ~ "#edit-" ~ decision.id }}"
-                               class="js-report-list__item-edit-link report-list__item-edit-link behat-link-decision-{{decision.description | replace(' ','-') | lower}}">{{ 'listing.edit-link'| trans }}</a>
+                               class="js-report-list__item-edit-link report-list__item-edit-link behat-link-decision-{{decision.description | behat_namify}}">{{ 'listing.edit-link'| trans }}</a>
                        {% endif %}
                     </div>
                     <dl class="report-list__item-fields">
