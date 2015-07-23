@@ -3,7 +3,7 @@ activeTab: "tab-decisions"
 } %}
     {% set translationDomain = "report-decisions" %}
     {% trans_default_domain translationDomain %}
-
+    
     {# Initialise View States ******************* #}
     {% set showListData = false %}
     {% set showEditHelpInfo = false %}
@@ -28,7 +28,7 @@ activeTab: "tab-decisions"
         {% set showDeleteConfirm = true %}
     {% endif %}
 
-    {% if action == 'edit-reason' %}
+    {% if (action == 'edit-reason') or (no_decision.reason.vars.errors is not empty) %}
         {% set showNoDecisionForm = true %}
     {% else %}
 
