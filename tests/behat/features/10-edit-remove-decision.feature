@@ -12,7 +12,7 @@ Feature: edit/remove decision
             | decision_clientInvolvedDetails | the client was able to decide at 90% |
         And I click on "cancel-edit"
         And the URL should match "/report/\d+/decisions"
-        And I click on "decision-n1"
+        And I click on "decision-n2"
         When I fill in the following:
             | decision_description |  |
             | decision_clientInvolvedDetails |  |
@@ -27,7 +27,7 @@ Feature: edit/remove decision
         And I press "decision_save"
         Then I should see "5 beds" in the "list-decisions" region
         And I should see "the client was able to decide at 100%" in the "list-decisions" region
-        And I click on "decision-n1"
+        And I click on "decision-n2"
         And I click on "delete-confirm"
         And the URL should match "/report/\d+/decisions/delete-confirm/\d+#delete-confirm"
         And I click on "delete-confirm-cancel"
