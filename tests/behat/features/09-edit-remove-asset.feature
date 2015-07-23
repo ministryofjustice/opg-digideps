@@ -26,7 +26,7 @@ Feature: edit/remove an asset
        And I press "asset_save"
        Then I should see "I love my artworks" in the "list-assets" region
        And I should see "£10,000.00" in the "list-assets" region
-       And I click on "asset-i-love-artwork"
+       And I click on "asset-i-love-my-artworks"
        And I click on "delete-confirm"
        And the URL should match "/report/\d+/assets/delete-confirm/\d+#asset-delete-confirm"
        And I click on "delete-confirm-cancel"
@@ -35,4 +35,4 @@ Feature: edit/remove an asset
        And I click on "delete"
        And the URL should match "/report/\d+/assets"
        Then I should not see "I love my artworks" in the "list-assets" region
-       And I should not see the "asset-i-love-artwork" link
+       And I should not see the "asset-i-love-my-artworks" link
