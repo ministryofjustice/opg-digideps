@@ -29,7 +29,7 @@ form
                     <h3>{{ asset.title }}</h3>
                     {% if (showEditLink == true) %}
                         <a href="{{ url('assets', { 'reportId': report.id, 'id': asset.id, 'action': 'edit' }) ~ '#asset-edit-' ~ asset.id }}"
-                           class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-n{{ loop.index }}">{{ 'listing.editLink'| trans }}</a>
+                           class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-{{ asset.description | replace(' ','-') | lower}}">{{ 'listing.editLink'| trans }}</a>
                    {% endif %}
                 </div>
                 <dl class="report-list__item-fields">
