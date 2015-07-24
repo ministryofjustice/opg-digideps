@@ -852,6 +852,21 @@ Feature: report
     And I should see a "#tab-decisions" element
     And I should see a "#tab-accounts" element
     And I should see a "#tab-assets" element
+    When I am on the account "1234" page of the first report
+    And I click on "edit-account-details"
+    Then the following fields should have the corresponding values:
+        | account_bank    | HSBC main account | 
+        | account_accountNumber_part_1 | 1 | 
+        | account_accountNumber_part_2 | 2 | 
+        | account_accountNumber_part_3 | 3 | 
+        | account_accountNumber_part_4 | 4 | 
+        | account_sortCode_sort_code_part_1 | 12 |
+        | account_sortCode_sort_code_part_2 | 34 |
+        | account_sortCode_sort_code_part_3 | 56 |
+        | account_openingDate_day   | 01 |
+        | account_openingDate_month | 05 |
+        | account_openingDate_year  | 2015 |
+        | account_openingBalance  | -3,000.50 |
 
     @deputy
     Scenario: assert report is not editable after submission
