@@ -2,7 +2,8 @@ Feature: password reset
     
     @deputy
     Scenario: Password reset
-      Given I reset the email log
+      Given I save the application status into "reset-password-start"
+      And I reset the email log
       And I go to "/logout"
       And I go to "/"
       And I save the page as "forgotten-password-login"
@@ -61,4 +62,6 @@ Feature: password reset
       # assert set password link is not accessible
       When I open the "/user/password-reset/" link from the email
       Then the response status code should be 500
+      # restore previous password
+      And I load the application status from "reset-password-start"
        
