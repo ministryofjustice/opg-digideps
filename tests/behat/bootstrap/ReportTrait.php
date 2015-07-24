@@ -102,6 +102,11 @@ trait ReportTrait
         $epos = strpos($url, '/display');
         $length = $epos - 8;
         $reportNumber = substr($url, 8, $length);
+        $reportNumberSplit = explode('/', $reportNumber);
+        
+        if(count($reportNumberSplit) > 1){
+            $reportNumber = $reportNumberSplit[count($reportNumberSplit)-1];
+        }
         $newUrl = '/report/' . $reportNumber . '/formatted';
         
         $this->visit($newUrl);

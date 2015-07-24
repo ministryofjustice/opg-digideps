@@ -837,12 +837,32 @@ Feature: report
         And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
         
     @deputy
+    Scenario: assert 2nd year report has been created
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Then I should see the "edit-report-period-2016-report" link
+    And I click on "edit-report-period-2016-report"
+    Then the following fields should have the corresponding values:
+            | report_edit_startDate_day | 01 |
+            | report_edit_startDate_month | 01 |
+            | report_edit_startDate_year | 2016 |
+            | report_edit_endDate_day | 21 |
+            | report_edit_endDate_month | 07 |
+            | report_edit_endDate_year | 2016 |
+    When I click on "client-home"
+    And I click on "report-n1"
+    And I save the page as "report-property-affairs-homepage"
+    Then I should see a "#tab-contacts" element
+    And I should see a "#tab-decisions" element
+    And I should see a "#tab-accounts" element
+    And I should see a "#tab-assets" element
+
+    @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
         Then I should be on "/client/show"
         Then I should not see the "edit-report-period-2015-report" link
-        And I should not see the "report-n1" link
+        And I should not see the "report-n2" link
         And I should see the "report-2015-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/contacts" should not be accessible
