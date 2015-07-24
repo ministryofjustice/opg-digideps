@@ -1,0 +1,40 @@
+{% embed 'AppBundle:Email:digideps-email-template.html.twig' with {
+turnOnTableBorders: 0,
+outputStyleForInLine: false,
+outputHeaderStyles: true
+} %}
+
+    {% set translationDomain = "email-report-submit-confirm" %}
+    {% trans_default_domain translationDomain %}
+
+
+    {% block emailHTMLHeaderTitle %}
+    
+    {% endblock %}
+
+
+    {% block emailHTMLHeader %}{{ parent() }}{% endblock %}
+
+
+    {% block emailHTMLMessage %}
+        <p>Thank you for submitting your report for {{ submittedReport.startDate | date("d/m/Y") }} to {{ submittedReport.endDate | date("d/m/Y") }}.</p>
+        
+        <br/>
+        
+        <p>There's a new deputy report for you to fill in, covering {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}.</p>
+        
+        <br/>
+         
+        <p>Sign into the deputy service to fill in your report <br/>
+          <a href="{{ link }}">{{ link }}</a>
+        </p>
+
+        <br/>
+         
+        <p>You can submit this report at any time from {{ newReport.submittableFrom | date("d/m/Y") }} to {{ newReport.submittableTo | date("d/m/Y") }}.</p>
+    
+    {% endblock %}
+
+    {% block emailHTMLFooter %}{{ parent() }}{% endblock %}
+
+{% endembed %}
