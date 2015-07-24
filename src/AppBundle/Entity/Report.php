@@ -692,20 +692,4 @@ class Report
         }
         return null;
     }
-    
-    /**
-     * @return \DateTime
-     */
-    public function getSubmittableFrom()
-    {
-        return new \DateTime();
-    }
-    
-    /**
-     * @return \DateTime
-     */
-    public function getSubmittableTo()
-    {
-        return new \DateTime();
-    }
 }

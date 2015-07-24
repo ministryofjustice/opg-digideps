@@ -5,7 +5,7 @@ There's a new deputy report for you to fill in, covering {{ newReport.startDate 
 Sign into the deputy service to fill in your report
 {{ link }}
 
-You can submit this report at any time from {{ newReport.submittableFrom | date("d/m/Y") }} to {{ newReport.submittableTo | date("d/m/Y") }}.
+You can submit this report at any time from {{ newReport.endDate | date("d/m/Y") }} to {{ newReport.dueDate | date("d/m/Y") }}.
 
 Office of the Public Guardian
 

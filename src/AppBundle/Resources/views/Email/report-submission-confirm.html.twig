@@ -31,7 +31,7 @@ outputHeaderStyles: true
 
         <br/>
          
-        <p>You can submit this report at any time from {{ newReport.submittableFrom | date("d/m/Y") }} to {{ newReport.submittableTo | date("d/m/Y") }}.</p>
+        <p>You can submit this report at any time from {{ newReport.endDate | date("d/m/Y") }} to {{ newReport.dueDate | date("d/m/Y") }}.</p>
     
     {% endblock %}
 
