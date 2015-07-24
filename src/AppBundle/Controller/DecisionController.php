@@ -84,7 +84,10 @@ class DecisionController extends Controller
         }
 
         $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
-        $noDecision->setData([ 'reason' => $report->getReasonForNoDecisions() ]);
+        
+        $reason = $report->getReasonForNoDecisions();
+        $mode = empty($reason)? 'add':'edit';
+        $noDecision->setData([ 'reason' => $reason, 'mode' => $mode ]);
         
         if ($request->isMethod('POST')) {
 

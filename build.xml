@@ -58,7 +58,8 @@
 
     <target name="behat" description="Run all the behat journeys" depends="behat-init">
         <exec command="rm -rf app/cache/*"/>
-        <exec command="php vendor/behat/behat/bin/behat --stop-on-failure" checkreturn="true" passthru="true" ></exec>
+        <exec command="php vendor/behat/behat/bin/behat --stop-on-failure --suite=deputy" checkreturn="true" passthru="true" ></exec>
+        <exec command="php vendor/behat/behat/bin/behat --stop-on-failure --suite=admin" checkreturn="true" passthru="true" ></exec>
     </target>
     
     <target name="behat-log" description="Run all the behat journeys and create HTML output (note: no return code)" depends="behat-init">

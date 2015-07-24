@@ -76,7 +76,7 @@ Feature: admin
           | action | user_add |
           | user_affected | behat-admin-user@publicguardian.gsi.gov.uk |
         #When I go to "/logout"
-        Given I am not logged into admin
+        Given I am on admin page "/logout"
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | logout |

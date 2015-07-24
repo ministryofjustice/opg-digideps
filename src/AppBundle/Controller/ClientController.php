@@ -28,6 +28,8 @@ class ClientController extends Controller
         $client = !empty($clients)? $clients[0]: null;
         
         $reports = $client ? $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']) : [];
+         arsort($reports);
+        
         
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
