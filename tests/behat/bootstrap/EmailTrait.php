@@ -50,24 +50,24 @@ trait EmailTrait
 
     
     /**
-     * @param string $linkPattern
+     * @param string $regexpr
      * @return string link matching the given pattern
      * 
      * @throws \Exception
      */
-    private function getFirstLinkInEmailMatching($linkPattern)
+    private function getFirstLinkInEmailMatching($regexpr)
     {
         list($links, $mailContent) = $this->getLinksFromEmailHtmlBody();
 
-        $filteredLinks = array_filter($links, function ($element) use ($linkPattern) {
-            return preg_match('#'.$linkPattern.'#i', $element);
+        $filteredLinks = array_filter($links, function ($element) use ($regexpr) {
+            return preg_match('#'.$regexpr.'#i', $element);
         });
 
         if (empty($filteredLinks)) {
-            throw new \Exception("no link in the email's body. Filter: $linkPattern . Body:\n $mailContent");
+            throw new \Exception("no link in the email's body. Filter: $regexpr . Body:\n $mailContent");
         }
         if (count(array_unique($filteredLinks)) > 1) {
-            throw new \Exception("more than one link found in the email's body. Filter: $linkPattern . Links: " . implode("\n", $filteredLinks).". Body:\n $mailContent");
+            throw new \Exception("more than one link found in the email's body. Filter: $regexpr . Links: " . implode("\n", $filteredLinks).". Body:\n $mailContent");
         }
         
         return array_shift($filteredLinks);
@@ -75,11 +75,11 @@ trait EmailTrait
     
     
     /**
-     * @When I open the :linkPattern link from the email
+     * @When I open the :regexpr link from the email
      */
-    public function iOpenTheSpecificLinkOnTheEmail($linkPattern)
+    public function iOpenTheSpecificLinkOnTheEmail($regexpr)
     {
-        $linkToClick = $this->getFirstLinkInEmailMatching($linkPattern);
+        $linkToClick = $this->getFirstLinkInEmailMatching($regexpr);
         
         // visit the link
         $this->visit($linkToClick);
