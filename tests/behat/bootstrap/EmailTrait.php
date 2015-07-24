@@ -133,5 +133,17 @@ trait EmailTrait
 
         return [$matches[0], $mailContent];
     }
+    
+    /**
+     * @Then the last email should contain :text
+     */
+    public function mailContainsText($text)
+    {
+        $mailContent = $this->getEmailMockFromApi()['parts'][0]['body'];
+
+        if (strpos($mailContent, $text) === FALSE) {
+            throw new \Exception("Text: $text not found in email. Body: \n $mailContent");
+        }
+    }
 
 }
