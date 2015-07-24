@@ -170,7 +170,9 @@ class ReportController extends Controller
             $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
             
             //lets create subsequent year's report
-            $newReport = $this->get('apiclient')->postC('clone_report', $report);
+            $response = $this->get('apiclient')->postC('clone_report', $report);
+            
+            $newReport = $this->get('util')->getReport($response['report'], $this->getUser()->getId()); /* @var $report EntityDir\Report */
             
             //send confirmation email
             $reportConfirmEmail = $this->get('mailFactory')->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
