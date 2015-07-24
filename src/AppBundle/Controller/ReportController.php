@@ -69,10 +69,17 @@ class ReportController extends RestController
         
         
         //lets clone the assets
-        /*$assets = $report->getAssets();
+        $assets = $report->getAssets();
         
         foreach($assets as $asset){
-            $newReport->addAsset($asset);
+            $newAsset = new EntityDir\Asset();
+            $newAsset->setDescription($asset->getDescription());
+            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setValuationDate($asset->getValuationDate());
+            $newAsset->setValue($asset->getValue());
+            $newAsset->setReport($newReport);
+            
+            $this->getEntityManager()->persist($newAsset);
         }
         
         //lets clone accounts
@@ -82,12 +89,14 @@ class ReportController extends RestController
             $newAccount = new EntityDir\Account();
             $newAccount->setBank($account->getBank());
             $newAccount->setSortCode($account->getSortCode());
-            $newAccount->setAccountNumber($account->setAccountNumber());
+            $newAccount->setAccountNumber($account->getAccountNumber());
             $newAccount->setOpeningBalance($account->getClosingBalance());
             $newAccount->setOpeningDate($account->getClosingDate());
+            $newAccount->setCreatedAt(new \DateTime());
+            $newAccount->setReport($newReport);
             
-            $newReport->addAccount($newAccount);
-        }*/
+            $this->getEntityManager()->persist($newAccount);
+        }
         // persist
         $this->getEntityManager()->persist($newReport);
         $this->getEntityManager()->flush();
