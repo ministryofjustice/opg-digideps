@@ -169,6 +169,11 @@ class ReportController extends Controller
             $reportEmail = $this->get('mailFactory')->createReportEmail($client, $reportContent);
             $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
             
+            //send confirmation email
+            $newReport = $report; // TODO change with real new report when YEAR-2 story is implememented 
+            $reportConfirmEmail = $this->get('mailFactory')->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
+            $this->get('mailSender')->send($reportConfirmEmail, [ 'text', 'html']);
+            
             return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
         }
         
