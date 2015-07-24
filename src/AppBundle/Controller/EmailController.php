@@ -55,7 +55,7 @@ class EmailController extends RestController
 
         // behat-@ emails goes to file instead of real sending
         if ($this->isEmailToMock($message)) {
-            $result = $this->writeMessageIntoFile($message);
+            $result = $this->prependMessageIntoEmailMockPath($message);
         } else {
             $result = $mailerService->send($message);
         }
@@ -88,17 +88,42 @@ class EmailController extends RestController
      * @return type
      * @throws \RuntimeException
      */
-    private function writeMessageIntoFile(Swift_Message $swiftMessage)
+    private function prependMessageIntoEmailMockPath(Swift_Message $swiftMessage)
+    {
+        // prepend email into the file
+        $emails =  $this->getEmailsFromFile();
+        
+        array_unshift($emails, MessageUtils::messageToArray($swiftMessage));
+        
+        $ret = $this->writeEmailsToFile($emails);
+
+        return "Email saved. $ret bytes written.";
+    }
+    
+    /**
+     * @return array
+     */
+    private function getEmailsFromFile()
     {
         $path = $this->container->getParameter('email_mock_path');
-
-        $data = MessageUtils::messageToArray($swiftMessage);
-        $ret = file_put_contents($path, json_encode($data));
+        
+        return json_decode(file_get_contents($path), true) ?: [];
+    }
+    
+    /**
+     * @return array
+     */
+    private function writeEmailsToFile(array $emails)
+    {
+        $path = $this->container->getParameter('email_mock_path');
+        
+        $ret = file_put_contents($path, json_encode($emails));
+        
         if (false === $ret) {
             throw new \RuntimeException("Cannot write email into $path");
         }
-
-        return "Email saved into $path. $ret bytes written.";
+        
+        return $ret;
     }
 
 }
