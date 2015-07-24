@@ -46,7 +46,7 @@ Feature: admin
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
         And I save the page as "admin-deputy-added"
-        And an email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
     @admin
     Scenario: login and add admin user, check audit log
@@ -66,7 +66,7 @@ Feature: admin
         Then the response status code should be 200
         And I should see "OPG Administrator" in the "users" region
         And I save the page as "admin-admin-added"
-        And an email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
+        And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         And the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | user_add |

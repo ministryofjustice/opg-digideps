@@ -6,49 +6,29 @@ trait EmailTrait
 {
 
     /**
-     * Array (
-      [to] => Array(
-      [deputyshipservice@publicguardian.gsi.gov.uk] => test Test
-      )
-
-      [from] => Array(
-      [admin@digideps.service.dsd.io ] => Digital deputyship service
-      )
-      [bcc] =>
-      [cc] =>
-      [replyTo] =>
-      [returnPath] =>
-      [subject] => Complete the Deputy Report - activation email
-      [body] => Hello test Test, click here http://link.com/activate/testtoken to activate your account
-      [sender] =>
-      [parts] => Array(
-      [0] => Array(
-      [body] => Hello test Test<br/><br/>click here <a href="http://link.com/activate/testtoken">http://link.com/activate/testtoken</a> to activate your account
-      [contentType] => text/html
-      )
-      )
-      )
-     *
-     * @retun array
+     * @param boolean $throwExceptionIfNotFound
+     * @param integer $index 0 = last (default), 1=second last
+     * 
+     * @return array|null
      */
-    private function getLatestEmailMockFromApi($throwExceptionIfNotFound = true)
+    private function getEmailMockFromApi($throwExceptionIfNotFound = true, $index = 0)
     {
         $this->visitBehatLink('email-get-last');
 
-        $content = $this->getSession()->getPage()->getContent();
-        $contentJson = json_decode($content, true);
+        $emailsJson = $this->getSession()->getPage()->getContent();
+        $emailsArray = json_decode($emailsJson , true);
 
-        if ($throwExceptionIfNotFound && empty($contentJson['to'])) {
-            throw new \RuntimeException("Email has not been sent. Api returned: " . $content);
+        if ($throwExceptionIfNotFound && empty($emailsArray[0]['to'])) {
+            throw new \RuntimeException("No email has been sent. Api returned: " . $emailsJson );
         }
 
-        return $contentJson;
+        return isset($emailsArray[$index]) ? $emailsArray[$index] : null;
     }
 
     /**
      * @Given I reset the email log
      */
-    public function beforeScenarioCleanMail()
+    public function iResetTheEmailLog()
     {
         $this->visitBehatLink('email-reset');
         $this->assertResponseStatus(200);
@@ -56,25 +36,13 @@ trait EmailTrait
         $this->assertNoEmailShouldHaveBeenSent();
     }
 
-    /**
-     * @Then an email with subject :subject should have been sent
-     */
-    public function anEmailWithSubjectShouldHaveBeenSent($subject)
-    {
-        $mail = $this->getLatestEmailMockFromApi();
-
-        if ($mail['subject'] != $subject) {
-            throw new \RuntimeException("Subject '" . $mail['subject'] . "' does not match the expected '" . $subject . "'");
-        }
-    }
-    
 
     /**
      * @Then no email should have been sent
      */
     public function assertNoEmailShouldHaveBeenSent()
     {
-        $content = $this->getLatestEmailMockFromApi(false);
+        $content = $this->getEmailMockFromApi(false);
         if ($content) {
             throw new \RuntimeException("Found unexpected email with subject '" . $content['subject'] . "'");
         }
@@ -92,7 +60,7 @@ trait EmailTrait
         list($links, $mailContent) = $this->getLinksFromEmailHtmlBody();
 
         $filteredLinks = array_filter($links, function ($element) use ($linkPattern) {
-            return strpos($element, $linkPattern) !== false;
+            return preg_match('#'.$linkPattern.'#i', $element);
         });
 
         if (empty($filteredLinks)) {
@@ -119,13 +87,13 @@ trait EmailTrait
     
     
     /**
-     * @Then an email containing a link matching :partialLink should have been sent to :to
+     * @Then the last email containing a link matching :partialLink should have been sent to :to
      */
     public function anEmailContainingALinkMatchingShouldHaveBeenSentTo($partialLink, $to)
     {
         $this->getFirstLinkInEmailMatching($partialLink);
         
-        $mail = $this->getLatestEmailMockFromApi();
+        $mail = $this->getEmailMockFromApi();
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
@@ -134,11 +102,18 @@ trait EmailTrait
     }
     
     /**
-     * @Then an email should have been sent to :to
+     * @Then the :which email should have been sent to :to
      */
-    public function anEmailShouldHaveBeenSentTo($to)
+    public function anEmailShouldHaveBeenSentTo($which, $to)
     {
-        $mail = $this->getLatestEmailMockFromApi();
+        if ($which=='last') {
+            $index = 0;
+        } else if ($which=='second_last') {
+            $index = 1;
+        } else {
+             throw new \RuntimeException("position $which not regognised");
+        }
+        $mail = $this->getEmailMockFromApi(true, $index);
         $mailTo = key($mail['to']);
 
         if ($mailTo !== 'the specified email address' && $mailTo != $to) {
@@ -152,24 +127,11 @@ trait EmailTrait
      */
     private function getLinksFromEmailHtmlBody()
     {
-        $mailContent = $this->getLatestEmailMockFromApi()['parts'][0]['body'];
+        $mailContent = $this->getEmailMockFromApi()['parts'][0]['body'];
 
         preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
 
         return [$matches[0], $mailContent];
-    }
-
-
-    /**
-     * @Then the email should contain :text
-     */
-    public function mailContainsText($text)
-    {
-        $mailContent = $this->getLatestEmailMockFromApi()['parts'][0]['body'];
-
-        if (strpos($mailContent, $text) === FALSE) {
-            throw new \Exception("Text: $text not found in email. Body: \n $mailContent");
-        }
     }
 
 }
