@@ -99,4 +99,21 @@ Feature: Add Another
             | contact_country | GB |
         And I press "contact_save"
         Then I should see "Add another contact" in the "add-a-contact" region
-        
+            
+            
+    @another
+    Scenario: Adding a contact changes the add button to say add another contact
+        When I load the application status from "anotheruser"
+        And I am logged in as "behat-another@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Then I follow "tab-assets"
+        Then I should see "Add an asset" in the "add-a-asset" region
+        And I click on "add-an-asset"
+        And I fill in the following:
+            | asset_title       | Vehicles | 
+            | asset_value       | 12000.00 | 
+            | asset_description | Mini cooper | 
+            | asset_valuationDate_day | 10 | 
+            | asset_valuationDate_month | 11 | 
+            | asset_valuationDate_year | 2015 |
+        Then I press "asset_save"
+        Then I should see "Add another asset" in the "add-a-asset" region
