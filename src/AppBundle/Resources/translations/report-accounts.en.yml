@@ -39,7 +39,7 @@ form:
   listing:
   listing:
     addButton:
-      label: Add an account
+      label: Add another account
   accountDetails:
     subSectionTitle: Add your account details
     controls:
