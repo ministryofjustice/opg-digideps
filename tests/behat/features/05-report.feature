@@ -304,8 +304,10 @@ Feature: report
         And I save the page as "report-account-list"
         Then the response status code should be 200
         And the form should be valid
-        And the URL should match "/report/\d+/account/\d+"
-        And I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
+        And the URL should match "/report/\d+/accounts"
+        And I should see "HSBC - main account" in the "list-accounts" region
+        When I click on "account-8765"
+        Then I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
         # refresh page and check values
         When I follow "tab-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
