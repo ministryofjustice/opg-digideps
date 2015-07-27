@@ -63,11 +63,11 @@ class ClientController extends Controller
             }
         }
         
-        $flashMessage = null;
+        $newReportNotification = null;
         
         foreach($reports as $report){
           if($report->getReportSeen() === false){
-              $flashMessage = $this->get('translator')->trans('newReportNotification', [], 'client');
+              $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
               
               $reportObj = $util->getReport($report->getId());
               //update report to say message has been seen
@@ -87,7 +87,7 @@ class ClientController extends Controller
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
             'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
-            'flashMessage' => $flashMessage
+            'newReportNotification' => $newReportNotification
         ];
 
     }

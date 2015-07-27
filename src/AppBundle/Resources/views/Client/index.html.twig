@@ -27,8 +27,8 @@
 
 {% block pageBody %}
 
-    {% if flashMessage %}
-        <p class="flash">{{ flashMessage }}</p>
+    {% if newReportNotification %}
+        <p class="flash">{{ newReportNotification }}</p>
     {% endif %}
 
     {% if reports is not empty %}
