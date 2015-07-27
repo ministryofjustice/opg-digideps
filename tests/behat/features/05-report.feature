@@ -838,15 +838,15 @@ Feature: report
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
     And I click on "client-home"
     Then I should see the "edit-report-period-2016-report" link
-    And I click on "edit-report-period-2016-report"
-    Then the following fields should have the corresponding values:
-            | report_edit_startDate_day | 01 |
-            | report_edit_startDate_month | 01 |
-            | report_edit_startDate_year | 2016 |
-            | report_edit_endDate_day | 21 |
-            | report_edit_endDate_month | 07 |
-            | report_edit_endDate_year | 2016 |
-    When I click on "client-home"
+    #And I click on "edit-report-period-2016-report"
+    #Then the following fields should have the corresponding values:
+    #        | report_edit_startDate_day | 01 |
+    #        | report_edit_startDate_month | 01 |
+    #        | report_edit_startDate_year | 2016 |
+    #        | report_edit_endDate_day | 21 |
+    #        | report_edit_endDate_month | 07 |
+    #        | report_edit_endDate_year | 2016 |
+    #When I click on "client-home"
     And I click on "report-n1"
     And I save the page as "report-property-affairs-homepage"
     Then I should see a "#tab-contacts" element
