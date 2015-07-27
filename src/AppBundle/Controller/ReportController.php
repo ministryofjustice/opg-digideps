@@ -63,8 +63,8 @@ class ReportController extends RestController
         $newReport = new EntityDir\Report();
         $newReport->setClient($report->getClient());
         $newReport->setCourtOrderType($report->getCourtOrderType());
-        $newReport->setStartDate($report->getStartDate()->modify('+12 months'));
-        $newReport->setEndDate($report->getEndDate()->modify('+12 months'));
+        $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
+        $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);
         
         
