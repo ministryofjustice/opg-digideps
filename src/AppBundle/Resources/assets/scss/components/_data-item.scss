@@ -14,12 +14,13 @@ $declaration-margin: 170px;
     .item {
         padding: 30px 0 30px 0;
         margin-top: 0;
+        border-top: 1px solid #dee0e2;
 
-        &:last-child {
-            border-bottom: 0;
+        &:first-child {
+            border-top: none;
         }
     
-        .edit-button, .view-button {
+        .edit-button, .view-button, .button-wrapper {
             top: 30px;
         }
             
@@ -39,7 +40,7 @@ $declaration-margin: 170px;
         margin-bottom: 5px;
     }
     
-    .edit-button, .view-button  {
+    .edit-button, .view-button, .button-wrapper  {
         width: 32%;
         position: absolute;
         top: 0;
@@ -142,16 +143,7 @@ $declaration-margin: 170px;
         }
         
         .open-button {
-            width: auto;
-            margin-right: 105px;
             @include core-24();
-            position: absolute;
-            top: 30px;
-            right: 0;
-            
-            @include media(tablet) {
-                margin-right: 40px;
-            }
         }
     }
 }
