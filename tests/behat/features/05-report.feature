@@ -448,8 +448,6 @@ Feature: report
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
-        And I click on "moneyIn-tab"
-        And I click on "moneyOut-tab"
         # check no data was previously saved
         Then the following fields should have the corresponding values:
             | transactions_moneyIn_0_amount        |  | 
