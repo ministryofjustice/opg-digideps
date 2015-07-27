@@ -154,7 +154,8 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should be valid        
+        And the form should be valid     
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
@@ -303,6 +304,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
@@ -474,6 +476,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
@@ -643,6 +646,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
@@ -756,6 +760,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
@@ -868,6 +873,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
@@ -980,6 +986,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
@@ -1125,6 +1132,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
+        And I click on "account-8765"
         And I click on "moneyIn-tab"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
