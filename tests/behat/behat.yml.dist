@@ -2,11 +2,11 @@
 default:
     #http://docs.behat.org/en/latest/guides/6.profiles.html#custom-autoloading
     autoload:
-        '': %paths.base%/tests/behat/bootstrap
+        '': %paths.base%/bootstrap
     suites:
       deputy:
         description: End to end journey for Lay deputy user
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         filters:
             tags: "@deputy&&~@javascript"
         contexts: 
@@ -19,7 +19,7 @@ default:
                     saveSnaphotBeforeEachScenario: true
       admin:
         description: End to end journey for Admin user
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         filters:
             tags: "@admin&&~@javascript"
         contexts: 
@@ -30,7 +30,7 @@ default:
                     
       feedback:
         description: Tests related to user feedback
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         filters:
             tags: "@feedback&&~@javascript"
         contexts: 
@@ -41,7 +41,7 @@ default:
                     
       cookies:
         description: Tests related to user feedback
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         filters:
             tags: "@cookie&&~@javascript"
         contexts: 
@@ -52,7 +52,7 @@ default:
                     
       terms:
         description: Tests related to user feedback
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         filters:
             tags: "@terms&&~@javascript"
         contexts: 
@@ -63,7 +63,7 @@ default:
 
       textarea:
         description: Tests related to user feedback
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         mink_session: default
         filters:
             tags: "@textarea"
@@ -75,7 +75,7 @@ default:
 
       formatted:
         description: Tests related to formatted report 
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         filters:
             tags: "@formatted-report&&~@javascript"
         contexts:
@@ -86,19 +86,30 @@ default:
 
       wip:
         description: Tests related to the formatted report
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         mink_session: default
         filters:
             tags: "@wip"
         contexts: 
-        - DigidepsBehat\FeatureContext:
-            -
-                session:   '@session'
-                maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+                
+      another:
+        description: Tests related to context sensitive add buttons
+        paths:    [ %paths.base%/features ]
+        filters:
+            tags: "@another&&~@javascript"
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
 
       javascript:
         description: Tests related to user feedback
-        paths:    [ %paths.base%/tests/behat/features ]
+        paths:    [ %paths.base%/features ]
         mink_session: default
         filters:
             tags: "@javascript"

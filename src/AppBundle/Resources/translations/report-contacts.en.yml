@@ -38,6 +38,7 @@ contact_form:
     subSectionTitleEdit : Edit this contact
     addContactButton:
       label: Add a contact
+      moreLabel: Add another contact
 no_contact:
     subSectionDescription: "If you haven't added any contacts, tell us why."
     fields:

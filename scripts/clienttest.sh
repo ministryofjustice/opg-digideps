@@ -13,5 +13,5 @@ export PGUSER=api
 rm -rf app/cache/*
 suitename=${1:-deputy}
 
-/sbin/setuser app bin/behat --suite=$suitename --stop-on-failure
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=$suitename --stop-on-failure
 
