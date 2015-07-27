@@ -1,112 +1,80 @@
 .account-transactions {
-
-  overflow: hidden;
-
-  &__header {
     margin-bottom: 30px;
-    margin-top: 10px;
-    padding: 10px;
-  }
+    overflow: hidden;
 
-  &__footer {
-    margin-top: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-  }
+    &__header {
+        margin-bottom: 30px;
+        margin-top: 10px;
+        padding: 10px;
+    }
 
-  &__total-balance-label {
-    @include core-24();
-    float: left;
-    width: 649px;
+    &__footer {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        padding: 10px;
+    }
 
-  }
+    &__total-balance-label {
+        @include core-24();
+        float: left;
+        width: 649px;
+    }
 
-  &__total-balance-total {
-    @include core-24();
-    float: left;
-  }
-
-  &__accordion {
-    margin-bottom: 30px;
-
-    details, summary {
-      display: block;
+    &__total-balance-total {
+        @include core-24();
+        float: left;
     }
 
     .details {
-      position: relative;
-      border-top: 1px solid $grey-3;
+        @extend %contain-floats;
+        position: relative;
+        border-top: 1px solid $grey-3;
 
-      &:last-of-type {
-        border-bottom: 1px solid $grey-3;
-      }
-
-      a.details-summary-link:focus{
-        background-color: inherit;
-        outline: inherit;
-      }
-
-    }
-
-    .summary {
-      position: relative;
-      @include core-24();
-
-      padding: 10px 0;
-      overflow: hidden;
-
-      .icon__accordion {
-        position: absolute;
-        right: 20px;
-        top: 20px;
-      }
-
-      .summary-title {
-        float: left;
-        font-weight: 700;
-        width: 638px;
-        margin-left: 10px;
-
-        &--adjust {
-          width: 630px;
-
+        &:last-of-type {
+            border-bottom: 1px solid $grey-3;
         }
-      }
-      .transaction-total {
-        float: left;
-        color: $text-colour;
-      }
-    }
 
-    .details .content {
-      display: none;
-      clear: both;
-      overflow: hidden;
-    }
-
-    .details.open, details[open] {
-
-      .content {
-        display: block;
-      }
-
-      .summary {
-        background-color: $grey-3;
-        color: $text-colour;
-
-        .icon__accordion {
-          background-position: -12px -61px;
-
+        a.details-summary-link:focus{
+            background-color: inherit;
+            outline: inherit;
         }
-      }
+        
+        .summary {
+            @extend %contain-floats;
+            position: relative;
+            @include core-24();
+            padding: 10px 0;
+            background-color: $grey-3;
+            color: $text-colour;
+            
+            .icon__accordion {
+                position: absolute;
+                right: 20px;
+                top: 20px;
+            }
+
+            .summary-title {
+                float: left;
+                font-weight: 700;
+                width: 638px;
+                margin-left: 10px;
+
+                &--adjust {
+                  width: 630px;
+                }
+            }
+            
+            .transaction-total {
+                float: left;
+                color: $text-colour;
+            }
+        }
 
     }
-
-    summary::-webkit-details-marker {
-      display: none
+    
+    .details.closed .summary {
+        background-color: $white;
     }
-
-  }
 
   .form-group.button-bar {
     margin-top: 20px;
