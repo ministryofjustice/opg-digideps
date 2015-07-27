@@ -5,7 +5,16 @@
     {{ form_errors(element) }}
 
     {% if (hintText is defined) and (hintText is not empty) %}
-        <p class="form-hint">{{ hintText }}</p>
+        <p class="form-hint">
+          {{ hintText }}
+        </p>
+        {% if hintListArray is defined %}
+          <ul class="hintList">
+            {% for hintList in hintListArray %} 
+              <li>{{ hintList }}</li>   
+            {% endfor %}
+          </ul>
+        {% endif %}
     {% endif %}
 
     {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
