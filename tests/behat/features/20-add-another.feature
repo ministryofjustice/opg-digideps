@@ -99,14 +99,13 @@ Feature: Add Another
             | contact_country | GB |
         And I press "contact_save"
         Then I should see "Add another contact" in the "add-a-contact" region
-            
-            
+                        
     @another
     Scenario: Adding a contact changes the add button to say add another contact
         When I load the application status from "anotheruser"
         And I am logged in as "behat-another@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I follow "tab-assets"
-        Then I should see "Add an asset" in the "add-a-asset" region
+        Then I should see "Add an asset" in the "add-an-asset" region
         And I click on "add-an-asset"
         And I fill in the following:
             | asset_title       | Vehicles | 
@@ -116,4 +115,18 @@ Feature: Add Another
             | asset_valuationDate_month | 11 | 
             | asset_valuationDate_year | 2015 |
         Then I press "asset_save"
-        Then I should see "Add another asset" in the "add-a-asset" region
+        Then I should see "Add another asset" in the "add-an-asset" region
+
+    @another
+    Scenario: Adding a decision changes the add button to say add another decision
+        When I load the application status from "anotheruser"
+        And I am logged in as "behat-another@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-decisions"
+        Then I should see "Add a decision" in the "add-a-decision" region
+        Then I click on "add-a-decision"
+        And I fill in the following:
+            | decision_description | 3 beds |
+            | decision_clientInvolvedBoolean_0 | 1 |
+            | decision_clientInvolvedDetails | the client was able to decide at 85% |
+        Then I press "decision_save"
+        Then I should see "Add another decision" in the "add-a-decision" region

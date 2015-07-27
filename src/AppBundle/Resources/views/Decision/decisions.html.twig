@@ -13,10 +13,12 @@ activeTab: "tab-decisions"
     {% set showNoDecisionForm = false %}
     {% set showDeleteReasonConfirm = false %}
     {% set showNoDecisionReason = false %}
+    {% set showMoreLink = false %}
 
     {% if decisions is not empty %}
         {% set showListData = true %}
         {% set showEditHelpInfo = true %}
+        {% set showMoreLink = true %}
     {% endif %}
 
     {% if (action == 'edit') %}
@@ -102,7 +104,8 @@ activeTab: "tab-decisions"
         {% endblock %}
 
         {% include 'AppBundle:Decision:_add_button_bar.html.twig' with {
-        'showAddForm': showAddForm
+        'showAddForm': showAddForm,
+        'showMoreLink': showMoreLink
         } %}
 
         {% include 'AppBundle:Decision:_decision_form.html.twig' with {
