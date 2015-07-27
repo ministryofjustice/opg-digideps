@@ -870,6 +870,7 @@ Feature: report
     @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
         # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
         Then I should be on "/client/show"
         Then I should not see the "edit-report-period-2015-report" link
@@ -885,13 +886,15 @@ Feature: report
     @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
         # download report from confirmation page
         When I go to "/report/1/submitted"
         When I click on "download-report"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
         # download report from client page
-        When I go to the homepage
+        #When I go to the homepage
+        When I click on "client-home"
         And I click on "download-2015-report"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
