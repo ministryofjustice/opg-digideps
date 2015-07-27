@@ -32,6 +32,10 @@
   }
 }
 
+.field-with-errors ul.hintList li {
+  color: $black;
+}
+
 .button-link {
   margin-left: 15px;
   top: 1px;
