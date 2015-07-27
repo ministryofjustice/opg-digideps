@@ -14,9 +14,10 @@ $declaration-margin: 170px;
     .item {
         padding: 30px 0 30px 0;
         margin-top: 0;
+        border-top: 1px solid #dee0e2;
 
-        &:last-child {
-            border-bottom: 0;
+        &:first-child {
+            border-top: none;
         }
     
         .edit-button, .view-button, .button-wrapper {

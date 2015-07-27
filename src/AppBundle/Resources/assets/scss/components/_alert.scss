@@ -19,3 +19,18 @@
   }
 
 }
+
+#content p.flash {
+    border-left: 3px solid $turquoise;
+    padding: 15px 10px 15px 40px;
+    width: 85%;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    background: rgba( $turquoise, .1 ) url(/images/icons/tick.png) 10px 13px no-repeat;
+}
+
+#content .report-submission  p.flash {
+    max-width: 540px;
+}
