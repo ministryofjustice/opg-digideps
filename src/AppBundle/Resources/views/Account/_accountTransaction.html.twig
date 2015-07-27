@@ -6,85 +6,87 @@
     {% set summaryClass = "summary-title summary-title--adjust" %}
 {% endif %}
 
-<div id="{{ href }}" class="details {{ openPanel ? 'open' : '' }}">
-    <details {{ openPanel ? 'open' : '' }}>
-        <summary>
-            <a href="{{ link }}#account-header" class="details-summary-link behat-link-{{ href }}-tab">
-                <div class="summary">
-                    <span class="icon icon__accordion"></span>
+<div id="{{ href }}" class="details">
+    <div class="summary">
+        <span class="icon icon__accordion"></span>
+        <h3 class="{{ summaryClass }}">{{ (section ~ '.panelTitle') | trans }}</h3>
+        <div class="transaction-total behat-region-{{ href }}-total">
+            {{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}
+        </div>
+    </div>
+    <div class="content">
+        {% for element in elements %}
 
-                    <h3 class="{{ summaryClass }}">{{ (section ~ '.panelTitle') | trans }}</h3>
+            {% set elementId = element.type.vars.value %}
 
-                    <div class="transaction-total behat-region-{{ href }}-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
-                </div>
-            </a>
-        </summary>
-        <div class="content">
-            {% for element in elements %}
+            <div class="form-row">
+                {% if element.moreDetails is defined %}
 
-                {% set elementId = element.type.vars.value %}
-
-                <div class="form-row">
-                    {% if element.moreDetails is defined %}
-
-                        {% set hasErrors = true %}
-                        {% if element.vars.valid and element.moreDetails.vars.valid %}
-                            {% set hasErrors = false %}
-                        {% endif %}
-
-                        <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-combo-with-errors behat-region-form-errors{% endif %}">
-                            <fieldset>
-                                <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
-
-                                {{ form_row(element.id) }}
-                                {{ form_row(element.type) }}
-
-                                {{ form_input(element.amount,'', {
-                                'labelText': 'Total Value',
-                                'labelClass': 'visuallyhidden',
-                                'formGroupClass': 'form-group-combo-input',
-                                'inputPrefix' : '£',
-                                'inputClass' : 'form-control__number'
-                                }) }}
-
-                                {{ form_input(element.moreDetails, '', {
-                                'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans,
-                                'formGroupClass': 'form-group-combo-description',
-                                'inputClass': 'expanding'
-                                }) }}
-
-                            </fieldset>
-                        </div>
-                    {% else %}
-
-                        {{ form_row(element.id) }}
-                        {{ form_row(element.type) }}
-
-                        {{ form_input(element.amount,'', {
-                        'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans,
-                        'formGroupClass': 'form-inline',
-                        'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number'
-                        }) }}
-
+                    {% set hasErrors = true %}
+                    {% if element.vars.valid and element.moreDetails.vars.valid %}
+                        {% set hasErrors = false %}
                     {% endif %}
-                </div>
 
-            {% endfor %}
+                    <div class="form-group form-inline form-input-description-combo {% if hasErrors %}field-combo-with-errors behat-region-form-errors{% endif %}">
+                        <fieldset>
+                            <legend class="form-label">{{ ( section ~ '.elements.' ~ elementId ~ '.label') | trans }}</legend>
 
-            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-            {{ form_submit(submitButton, 'save', {
-            'labelText': ( 'save.label') | trans,
-            'buttonClass': 'behat-link-save'
-            }) }}
-            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+                            {{ form_row(element.id) }}
+                            {{ form_row(element.type) }}
 
-            <div class=" form-group total-footer">
-                <span class="sub-total-label">{{ (section ~ '.panelFooter') | trans }}</span>
+                            {{ form_input(element.amount,'', {
+                            'labelText': 'Total Value',
+                            'labelClass': 'visuallyhidden',
+                            'formGroupClass': 'form-group-combo-input',
+                            'inputPrefix' : '£',
+                            'inputClass' : 'form-control__number'
+                            }) }}
 
-                <div class="sub-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
+                            {{ form_input(element.moreDetails, '', {
+                            'labelText': ( section ~ '.elements.' ~ elementId ~ '.further_guidance') | trans,
+                            'formGroupClass': 'form-group-combo-description',
+                            'inputClass': 'expanding'
+                            }) }}
+
+                        </fieldset>
+                    </div>
+                {% else %}
+
+                    {{ form_row(element.id) }}
+                    {{ form_row(element.type) }}
+
+                    {{ form_input(element.amount,'', {
+                    'labelText': ( section ~ '.elements.' ~ elementId ~ '.label') | trans,
+                    'formGroupClass': 'form-inline',
+                    'inputPrefix' : '£',
+                    'inputClass' : 'form-control__number'
+                    }) }}
+
+                {% endif %}
             </div>
 
+        {% endfor %}
+
+        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+        {{ form_submit(submitButton, 'save', {
+        'labelText': ( 'save.label') | trans,
+        'buttonClass': 'behat-link-save'
+        }) }}
+        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        <div class=" form-group total-footer">
+            <span class="sub-total-label">{{ (section ~ '.panelFooter') | trans }}</span>
+
+            <div class="sub-total">{{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}</div>
         </div>
-    </details>
+
+    </div>
 </div>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        opg.accordian({
+            target: '#{{ href }}'
+        });
+    });
+</script>
