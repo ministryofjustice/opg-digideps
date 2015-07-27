@@ -80,3 +80,23 @@ Feature: Add Another
             And I press "account_save"
             And the form should be valid
             Then I should see "Add another account" in "add-account-button"
+                
+    @another
+    Scenario: Adding a contact changes the add button to say add another contact
+        When I load the application status from "anotheruser"
+        And I am logged in as "behat-another@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-contacts"
+        Then I should see "Add a contact" in the "add-a-contact" region
+        And I click on "add-a-contact"
+        And I fill in the following:
+            | contact_contactName | Andy White |
+            | contact_relationship | brother  |
+            | contact_explanation | no explanation |
+            | contact_address | 45 Noth Road |
+            | contact_address2 | Inslington |
+            | contact_county | London |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I press "contact_save"
+        Then I should see "Add another contact" in the "add-a-contact" region
+        

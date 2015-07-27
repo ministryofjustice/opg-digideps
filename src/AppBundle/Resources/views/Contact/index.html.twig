@@ -14,11 +14,13 @@ activeTab : "tab-contacts"
     {% set showDeleteConfirm = false %}
     {% set showNoContactReason = false %}
     {% set showDeleteReasonConfirm = false %}
+    {% set showMoreLink = false %}
 
 
     {% if contacts is not empty %}
         {% set showListData = true %}
         {% set showEditHelpInfo = true %}
+        {% set showMoreLink = true %}
     {% endif %}
 
     {% if (action == 'edit') %}
@@ -82,6 +84,7 @@ activeTab : "tab-contacts"
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
 
     {% block pageBody %}
+    
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
         transDomain: translationDomain,
         pageSectionTitle: 'contact_form.pageSectionTitle'
@@ -106,7 +109,8 @@ activeTab : "tab-contacts"
         {% endblock %}
 
         {% include 'AppBundle:Contact:_add_button_bar.html.twig' with {
-        'showAddForm': showAddForm
+        'showAddForm': showAddForm,
+        'showMoreLink': showMoreLink
         } %}
 
         {% include 'AppBundle:Contact:_contact_form.html.twig' with {

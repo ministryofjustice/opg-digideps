@@ -57,7 +57,7 @@ trait RegionTrait
      */
     public function iShouldSeeInTheContainer($text, $container)
     {
-        $this->assertSession()->elementTextContains('css', '#' . $container , $text);
+        $this->assertSession()->elementTextContains('css', '#' . $container . ', .' . $container , $text);
     }
     
     /**
