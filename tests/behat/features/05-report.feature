@@ -836,6 +836,7 @@ Feature: report
     @deputy
     Scenario: assert 2nd year report has been created
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "client-home"
     Then I should see the "edit-report-period-2016-report" link
     And I click on "edit-report-period-2016-report"
     Then the following fields should have the corresponding values:
