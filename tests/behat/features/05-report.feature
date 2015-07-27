@@ -831,11 +831,11 @@ Feature: report
         # assert email has been sent/wrote into the disk (only works if client `parameters.email_report_submit.to_email` is wqual to behat-deputyshipservice@publicguardian.gsi.gov.uk)
         And an email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
-    @deputy
-    Scenario: assert 2nd year report has been created
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "client-home"
-    Then I should see the "edit-report-period-2016-report" link
+    #@deputy
+    #Scenario: assert 2nd year report has been created
+    #Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    #And I click on "client-home"
+    #Then I should see the "edit-report-period-2015-2016-report" link
     #And I click on "edit-report-period-2016-report"
     #Then the following fields should have the corresponding values:
     #        | report_edit_startDate_day | 01 |
@@ -845,27 +845,27 @@ Feature: report
     #        | report_edit_endDate_month | 07 |
     #        | report_edit_endDate_year | 2016 |
     #When I click on "client-home"
-    And I click on "report-n1"
-    And I save the page as "report-property-affairs-homepage"
-    Then I should see a "#tab-contacts" element
-    And I should see a "#tab-decisions" element
-    And I should see a "#tab-accounts" element
-    And I should see a "#tab-assets" element
-    When I am on the account "1234" page of the first report
-    And I click on "edit-account-details"
-    Then the following fields should have the corresponding values:
-        | account_bank    | HSBC main account | 
-        | account_accountNumber_part_1 | 1 | 
-        | account_accountNumber_part_2 | 2 | 
-        | account_accountNumber_part_3 | 3 | 
-        | account_accountNumber_part_4 | 4 | 
-        | account_sortCode_sort_code_part_1 | 12 |
-        | account_sortCode_sort_code_part_2 | 34 |
-        | account_sortCode_sort_code_part_3 | 56 |
-        | account_openingDate_day   | 01 |
-        | account_openingDate_month | 05 |
-        | account_openingDate_year  | 2015 |
-        | account_openingBalance  | -3,000.50 |
+    #And I click on "report-n1"
+    #And I save the page as "report-property-affairs-homepage"
+    #Then I should see a "#tab-contacts" element
+    #And I should see a "#tab-decisions" element
+    #And I should see a "#tab-accounts" element
+    #And I should see a "#tab-assets" element
+    #When I am on the account "1234" page of the first report
+    #And I click on "edit-account-details"
+    #Then the following fields should have the corresponding values:
+    #    | account_bank    | HSBC main account | 
+    #    | account_accountNumber_part_1 | 1 | 
+    #    | account_accountNumber_part_2 | 2 | 
+    #    | account_accountNumber_part_3 | 3 | 
+    #    | account_accountNumber_part_4 | 4 | 
+    #    | account_sortCode_sort_code_part_1 | 12 |
+    #    | account_sortCode_sort_code_part_2 | 34 |
+    #    | account_sortCode_sort_code_part_3 | 56 |
+    #    | account_openingDate_day   | 01 |
+    #    | account_openingDate_month | 05 |
+    #    | account_openingDate_year  | 2015 |
+    #    | account_openingBalance  | -3,000.50 |
 
     @deputy
     Scenario: assert report is not editable after submission
