@@ -457,12 +457,14 @@ Feature: report
             | transactions_moneyOut_11_amount      |  | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I save the page as "report-account-transactions-empty"
-        # wrong values (wrong amount types and amount without explanation)
+        # wrong values (wrong amount types, amount without explanation, explanation without amount)
         When I fill in the following:
             | transactions_moneyIn_0_amount        | in | 
             | transactions_moneyIn_4_amount        | 10000000001 | 
             | transactions_moneyOut_11_amount      | 250.12 | 
             | transactions_moneyOut_11_moreDetails |  | 
+            | transactions_moneyOut_12_amount |  | 
+            | transactions_moneyOut_12_moreDetails | more details given without amount  | 
         And I press "transactions_saveMoneyIn"
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
@@ -471,7 +473,11 @@ Feature: report
             | transactions_moneyOut_11_type |
             | transactions_moneyOut_11_amount |
             | transactions_moneyOut_11_moreDetails |
-        And I save the page as "report-account-transactions-errors"    
+            | transactions_moneyOut_12_id |
+            | transactions_moneyOut_12_type |
+            | transactions_moneyOut_12_amount |
+            | transactions_moneyOut_12_moreDetails |
+        And I save the page as "report-account-transactions-errors"   
         # right values
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 1,250 | 
@@ -484,6 +490,8 @@ Feature: report
             | transactions_moneyOut_0_amount       | 02500 | 
             | transactions_moneyOut_11_amount      | 5000.501 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+            | transactions_moneyOut_12_amount      |  | 
+            | transactions_moneyOut_12_moreDetails |  | 
         And I press "transactions_saveMoneyIn"
         Then the form should be valid
         # assert value saved
