@@ -47,3 +47,13 @@
         </div>
     </fieldset>
 {% endblock %}
+
+{%- block form_errors -%}
+    {%- if errors|length > 0 -%}
+    <ul class="errors">
+        {%- for error in errors -%}
+            <li class="error-message">{{ error.message }}</li>
+        {%- endfor -%}
+    </ul>
+    {%- endif -%}
+{%- endblock form_errors -%}

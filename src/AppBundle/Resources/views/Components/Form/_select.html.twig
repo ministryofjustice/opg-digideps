@@ -4,7 +4,7 @@
 
     {{ form_errors(element) }}
 
-    {% if hintText is defined %}
+    {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint">{{ hintText }}</p>
     {% endif %}
 

@@ -2,20 +2,20 @@
 
     {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
 
-    {{ form_errors(element) }}
-
     {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint">
           {{ hintText }}
         </p>
         {% if hintListArray is defined %}
-          <ul class="hintList">
-            {% for hintList in hintListArray %} 
-              <li>{{ hintList }}</li>   
-            {% endfor %}
-          </ul>
+            <ul class="form-hint list-bullet">
+                {% for hintList in hintListArray %} 
+                    <li>{{ hintList }}</li>   
+                {% endfor %}
+            </ul>
         {% endif %}
     {% endif %}
+
+    {{ form_errors(element) }}
 
     {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
 
