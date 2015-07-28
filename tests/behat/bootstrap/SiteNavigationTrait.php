@@ -25,6 +25,15 @@ trait SiteNavigationTrait
     }
     
     /**
+     * @Given I am on admin page :path
+     */
+    public function iAmOnAdminPage($path)
+    {
+        $adminUrl = $this->getSymfonyParam('admin_host');
+        $this->visitPath($adminUrl.$path);
+    }
+    
+    /**
      * @Given I am on the feedback page
      * @Given I goto the feedback page
      * @And I select the feedback link

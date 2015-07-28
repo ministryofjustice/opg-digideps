@@ -57,7 +57,8 @@ Feature: set password
    
     @admin
     Scenario: login and add user (admin)
-        Given I am on "http://digideps-admin.local/logout"
+        #Given I am on "http://digideps-admin.local/app_dev.php/logout"
+        Given I am not logged into admin
         When I open the "/user/activate/" link from the email
         Then the response status code should be 200
         And I save the page as "admin-step1"
