@@ -17,11 +17,11 @@ Feature: provide feedback
             | feedback_satisfactionLevel_1 | satisfied |
         And I press "feedback_save"
         Then the form should be valid
-        And an email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
-        And the email should contain "I found it to be really easy"
-        And the email should contain "I think it needs an iPhone app"
-        And the email should contain "satisfied"
-        And the email should contain "No, I filled in this form myself"
+        And the last email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
+        And the last email should contain "I found it to be really easy"
+        And the last email should contain "I think it needs an iPhone app"
+        And the last email should contain "satisfied"
+        And the last email should contain "No, I filled in this form myself"
         
     @feedback @deputy
     Scenario: When I give feedback I dont have to fill all the fields in 
@@ -31,8 +31,8 @@ Feature: provide feedback
             | feedback_help_3 | No, I filled in this form myself |
         And I press "feedback_save"
         Then the form should be valid
-        And an email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
-        And the email should contain "No, I filled in this form myself"
+        And the last email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
+        And the last email should contain "No, I filled in this form myself"
     
     @feedback @deputy
     Scenario: After giving feedback I see a thank you
