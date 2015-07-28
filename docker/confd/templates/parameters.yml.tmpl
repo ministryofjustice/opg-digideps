@@ -4,6 +4,7 @@ parameters:
     secret: {{ getv "/secret" }}
     api_base_url: {{ getv "/api/url" }}
     non_admin_host: {{ getv "/nonadmin/host" }}
+    admin_host: http://digideps-admin.local
     env: {{ getv "/role" }}
     session_expire_seconds: 1500
     session_popup_show_after: 1200

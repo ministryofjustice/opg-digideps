@@ -20,7 +20,11 @@ class AssetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) 
     {
         $builder->add('title', 'choice', [ 'choices' => $this->titles, 'empty_value' => 'Please select' ])
-                ->add('value', 'number', [ 'grouping' => true, 'precision' => 2 ])
+                ->add('value', 'number', [ 
+                    'grouping' => true, 
+                    'precision' => 2, 
+                    'invalid_message' => 'asset.value.type'
+                ])
                 ->add('description', 'textarea')
                 ->add('valuationDate', 'date',[ 'widget' => 'text',
                                                  'input' => 'datetime',

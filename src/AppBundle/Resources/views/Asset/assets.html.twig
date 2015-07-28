@@ -11,11 +11,13 @@ activeTab: "tab-assets"
     {% set formEditShow = false %}
     {% set showDeleteConfirm = false %}
     {% set showNoAssetToAddForm = false %}
+    {% set showMoreLink = false %}
     {% set reportHasNoAssetExplanation = report.noAssetToAdd is not empty %}
     
     {% if assets is not empty %}
         {% set showListData = true %}
         {% set showEditHelpInfo = true %}
+        {% set showMoreLink = true %}
     {% endif %}
 
     {% if (action == 'edit') %}
@@ -72,7 +74,8 @@ activeTab: "tab-assets"
         {% endblock %}
 
         {% include 'AppBundle:Asset:_asset_add_button_bar.html.twig' with {
-        'showAddForm': showAddForm
+        'showAddForm': showAddForm,
+        'showMoreLink': showMoreLink
         } %}
 
         {% include 'AppBundle:Asset:_asset_form.html.twig' with {

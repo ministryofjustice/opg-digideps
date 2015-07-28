@@ -3,6 +3,7 @@ Component parameters
 --------------------
 
 showAddForm (true/false)
+showMoreLink (true/false)
 #}
 
 {% if (not showAddForm) %}
@@ -14,11 +15,17 @@ showAddForm (true/false)
 
     {% set  params = app.request.attributes.get('_route_params') %}
 
+    {% if showMoreLink %}
+        {% set label = 'form.controls.addButton.moreLabel' %}
+    {% else %}
+        {% set label = 'form.controls.addButton.label' %}
+    {% endif %}
+
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
-    linkButtonLabel: 'form.controls.addButton.label',
-    linkClass: 'button-secondary behat-link-add-a-decision',
-    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' }) ~ "#add"
+    linkButtonLabel: label,
+    linkClass: 'button-secondary behat-link-add-a-decision behat-region-add-a-decision',
+    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' }) ~ "#pageBody"
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

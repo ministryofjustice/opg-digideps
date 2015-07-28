@@ -22,6 +22,7 @@ form:
   controls:
     addButton:
       label: "Add a decision"
+      moreLabel: "Add another decision"
 # form
 title:
   label: Title

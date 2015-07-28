@@ -12,6 +12,7 @@ class ReasonForNoContactType extends AbstractType{
     {
         $builder->add('reason','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'contact.no-contact-reason.notBlank'])
                      ]])
+                ->add('mode', 'hidden')
                 ->add('saveReason', 'submit');
     }
     

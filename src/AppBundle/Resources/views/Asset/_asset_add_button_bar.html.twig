@@ -3,6 +3,7 @@ Component parameters
 --------------------
 
 showAddForm (true/false)
+showMoreLink (true/false)
 #}
 
 {% if (not showAddForm) %}
@@ -14,10 +15,16 @@ showAddForm (true/false)
 
         {% set  params = app.request.attributes.get('_route_params') %}
 
+        {% if showMoreLink %}
+            {% set label = 'form.listing.addButton.moreLabel' %}
+        {% else %}
+            {% set label = 'form.listing.addButton.label' %}
+        {% endif %}
+
         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
         transDomain: translationDomain,
-        linkButtonLabel: 'form.listing.addButton.label',
-        linkClass: 'button-secondary behat-link-add-an-asset',
+        linkButtonLabel: label,
+        linkClass: 'button-secondary behat-link-add-an-asset behat-region-add-an-asset',
         linkHref: path('assets', {'reportId': params['reportId'], 'action': 'add' })
         } %}
 
