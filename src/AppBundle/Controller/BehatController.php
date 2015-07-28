@@ -16,7 +16,7 @@ class BehatController extends RestController
      * @Route("/email")
      * @Method({"GET"})
      */
-    public function getAction()
+    public function emailAction()
     {
         $mailPath = $this->getBehatMailFilePath();
         
@@ -35,7 +35,7 @@ class BehatController extends RestController
      * @Route("/email")
      * @Method({"DELETE"})
      */
-    public function resetAction()
+    public function emailResetAction()
     {
         $mailPath = $this->getBehatMailFilePath();
         
@@ -48,23 +48,23 @@ class BehatController extends RestController
      * @Route("/behat-data")
      * @Method({"DELETE"})
      */
-    public function deleteBehatDataAction()    {
-        $em = $this->getEntityManager();
-        
-        foreach ($this->getRepository('User')->findAll() as $user) {  /* @var $user User */
-            if (preg_match('/^behat-/', $user->getEmail())) {
-                foreach ($user->getClients() as $client) {
-                    foreach ($client->getReports() as $report) {
-                       $em->remove($report);
-                    }
-                    $em->remove($client);
-                }
-                $em->remove($user);
-            }
-        }
-        
-        return "User deleted";
-    }
+//    public function deleteBehatDataAction()    {
+//        $em = $this->getEntityManager();
+//        
+//        foreach ($this->getRepository('User')->findAll() as $user) {  /* @var $user User */
+//            if (preg_match('/^behat-/', $user->getEmail())) {
+//                foreach ($user->getClients() as $client) {
+//                    foreach ($client->getReports() as $report) {
+//                       $em->remove($report);
+//                    }
+//                    $em->remove($client);
+//                }
+//                $em->remove($user);
+//            }
+//        }
+//        
+//        return "User deleted";
+//    }
     
     private function getBehatMailFilePath()
     {
