@@ -102,10 +102,36 @@ trait ReportTrait
         $epos = strpos($url, '/display');
         $length = $epos - 8;
         $reportNumber = substr($url, 8, $length);
+        $reportNumberSplit = explode('/', $reportNumber);
+        
+        if(count($reportNumberSplit) > 1){
+            $reportNumber = $reportNumberSplit[count($reportNumberSplit)-1];
+        }
         $newUrl = '/report/' . $reportNumber . '/formatted';
         
         $this->visit($newUrl);
         
+    }
+    
+    /**
+     * @Given I edit lastest active report
+     */
+    public function iClickActiveReportEditLink()
+    {
+        $this->visit('/client/show');
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.edit-report');
+        
+        if (count($linksElementsFound) === 0) {
+           throw new \RuntimeException("Element .edit-report not found");
+        }
+        
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Returned multiple elements");
+        }
+        
+        $url = $linksElementsFound[0]->getAttribute('href');
+       
+        $this->visit($url);
     }
 
 

@@ -3,7 +3,7 @@ Feature: add details
     @deputy
     Scenario: add user details (deputy) 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "user/details"
+        Then I should be on "/user/details"
         And I save the page as "deputy-step2"
         # wrong form
         When I fill in the following:
@@ -48,7 +48,7 @@ Feature: add details
             | user_details_phoneAlternative | 020 1234 5678  |
         And I press "user_details_save"
         Then the form should be valid
-        When I go to "user/details"
+        When I go to "/user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John |
             | user_details_lastname | Doe |
@@ -64,7 +64,8 @@ Feature: add details
     @admin
     Scenario: add user details (admin user)
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I go to "http://digideps-admin.local/user/details"
+        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
+        And I am on admin page "/user/details"
         And I save the page as "admin-step2"
         # testing validation, as the validation group for the form is different for admin user
         # missing firstname
@@ -86,7 +87,8 @@ Feature: add details
             | user_details_lastname | Doe admin |
         And I press "user_details_save"
         Then the form should be valid
-        When I go to "http://digideps-admin.local/user/details"
+        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
+        Given I am on admin page "/user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
             | user_details_lastname | Doe admin |

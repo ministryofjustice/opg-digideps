@@ -84,8 +84,11 @@ class DecisionController extends Controller
         }
 
         $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
-        $noDecision->setData([ 'reason' => $report->getReasonForNoDecisions() ]);
-
+        
+        $reason = $report->getReasonForNoDecisions();
+        $mode = empty($reason)? 'add':'edit';
+        $noDecision->setData([ 'reason' => $reason, 'mode' => $mode ]);
+        
         if ($request->isMethod('POST')) {
 
             $form->handleRequest($request);
@@ -100,7 +103,7 @@ class DecisionController extends Controller
                     return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
                 }
             } elseif ($noDecision->get('saveReason')->isClicked()){
-
+                
                 if($noDecision->isValid()){
                     $this->handleReasonForNoDecision($action, $noDecision, $reportId);
                     return $this->redirect($this->generateUrl('decisions',[ 'reportId' => $report->getId()]));

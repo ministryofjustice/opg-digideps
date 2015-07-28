@@ -3,8 +3,8 @@ Component parameters
 --------------------
 
 showAddForm (true/false)
+showMoreLink (true/false)
 #}
-
 {% if (not showAddForm) %}
 
     {# Then we need to show the Add Button Link #}
@@ -12,13 +12,19 @@ showAddForm (true/false)
     buttonBarClass: 'add-bar js-add-contact-button-bar'
     } %}
 
-    {% set  params = app.request.attributes.get('_route_params') %}
+    {% set params = app.request.attributes.get('_route_params') %}
 
+    {% if showMoreLink %}
+        {% set label = 'contact_form.addContactButton.moreLabel' %}
+    {% else %}
+        {% set label = 'contact_form.addContactButton.label' %}
+    {% endif %}
+    
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'contact_form.addContactButton.label',
-    linkClass: 'button-secondary behat-link-add-a-contact',
-    linkHref: path('contacts', {'reportId': params['reportId'], 'action': 'add' }) ~ "#add"
+        transDomain: translationDomain,
+        linkButtonLabel: label,
+        linkClass: 'button-secondary behat-link-add-a-contact behat-region-add-a-contact',
+        linkHref: path('contacts', {'reportId': params['reportId'], 'action': 'add' }) ~ "#add"
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
