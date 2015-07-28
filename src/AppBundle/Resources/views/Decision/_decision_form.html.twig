@@ -86,5 +86,16 @@ form
     </div>
 
     {{ form_end(form) }}
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.help-item').each(function(index,item) {
+                opg.accordian({
+                    target:item,
+                    open: false
+                });
+            });
+        });
+    </script>
 
 {% endif %}
