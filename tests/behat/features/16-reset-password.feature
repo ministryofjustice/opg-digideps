@@ -2,7 +2,8 @@ Feature: password reset
     
     @deputy
     Scenario: Password reset
-      Given I reset the email log
+      Given I save the application status into "reset-password-start"
+      And I reset the email log
       And I go to "/logout"
       And I go to "/"
       And I save the page as "forgotten-password-login"
@@ -30,7 +31,7 @@ Feature: password reset
       Then the form should be valid
       And I save the page as "forgotten-password-sent"
       And I click on "return-to-login"
-      And an email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+      And the last email should have been sent to "behat-user@publicguardian.gsi.gov.uk"
       # open password reset page
       When I open the "/user/password-reset/" link from the email
       And I save the page as "forgotten-password-reset"
@@ -61,4 +62,6 @@ Feature: password reset
       # assert set password link is not accessible
       When I open the "/user/password-reset/" link from the email
       Then the response status code should be 500
+      # restore previous password
+      And I load the application status from "reset-password-start"
        

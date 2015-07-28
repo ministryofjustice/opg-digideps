@@ -70,6 +70,17 @@ class ComponentsExtension extends \Twig_Extension
                
                return $value;
             }),
+            // convert 'Very Random "string" !!" into "very-random-string"
+            'behat_namify' => new \Twig_SimpleFilter('behat_namify', function($string) {
+                
+                $string = preg_replace ('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unneeded chars
+                $string = str_replace ('_', ' ', $string);             // treat underscores as spaces
+                $string = preg_replace ('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
+                $string = preg_replace ('/[-\s]+/', '-', $string);     // convert spaces to hyphens
+                $string = strtolower ($string);                        // convert to lowercase
+               
+               return $string;
+            })
         ];
     }
     

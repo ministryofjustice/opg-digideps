@@ -3,7 +3,8 @@ Feature: admin
     @deputy
     Scenario: login and add deputy user
         Given I reset the email log
-        And I am on "http://digideps-admin.local/"
+        #And I am on "http://digideps-admin.local/app_dev.php/"
+        Given I am on admin login page
         And I save the page as "admin-login"
         Then the response status code should be 200
         # test wrong credentials
@@ -19,13 +20,15 @@ Feature: admin
             | login_password  | Abcd1234 |
         And I click on "login"
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
-        When I go to "http://digideps-admin.local/logout"
+        #When I go to "http://digideps-admin.local/app_dev.php/logout"
+        Given I am not logged into admin
         # test right credentials
         When I fill in the following:
             | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         And I click on "login"
-        When I go to "http://digideps-admin.local/admin"
+        #When I go to "/admin"
+        Given I am on admin page "/admin"
         # invalid email
         When I fill in the following:
             | admin_email | invalidEmail |
@@ -46,7 +49,7 @@ Feature: admin
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
         And I save the page as "admin-deputy-added"
-        And an email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
     @admin
     Scenario: login and add admin user, check audit log
@@ -55,7 +58,8 @@ Feature: admin
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | login |
-        When I go to "http://digideps-admin.local/admin"
+        #When I go to "/admin"
+        Given I am on admin page "/admin"
         And I fill in the following:
             | admin_email | behat-admin-user@publicguardian.gsi.gov.uk |
             | admin_firstname | John |
@@ -66,12 +70,13 @@ Feature: admin
         Then the response status code should be 200
         And I should see "OPG Administrator" in the "users" region
         And I save the page as "admin-admin-added"
-        And an email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
+        And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         And the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | user_add |
           | user_affected | behat-admin-user@publicguardian.gsi.gov.uk |
-        When I go to "http://digideps-admin.local/logout"
+        #When I go to "/logout"
+        Given I am on admin page "/logout"
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | logout |

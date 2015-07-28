@@ -27,7 +27,7 @@
       .report-list__item-edit-link {
         @include core-19();
         position: absolute;
-        left: 522px;
+        right: 20px;
       }
 
     }
@@ -81,10 +81,6 @@
 
     .report-list__item-fields {
 
-      dd.report-list__item-fields-description {
-        margin-right: 300px;
-      }
-
       dt.report-list__item-fields-term {
         width: 210px;
       }
@@ -118,6 +114,8 @@
 }
 
 .report-list--assets {
+
+  margin-top: 60px;
 
   .report-list__item {
     position: relative;

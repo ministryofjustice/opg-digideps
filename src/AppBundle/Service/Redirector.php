@@ -111,14 +111,25 @@ class Redirector
             return $lastUsedUri;
         }
    
-        $reportId = $clients[0]->getReports()[0];
+        /*$reportId = $clients[0]->getReports()[0];
         
         $report = $this->util->getReport($reportId);
         if ($report->getSubmitted()) {
             return $this->router->generate('client_home');
         }
         
-        return $this->router->generate('report_overview', ['reportId'=>$reportId]);
+        return $this->router->generate('report_overview', ['reportId'=>$reportId]);*/
+        
+        $reportIds = $clients[0]->getReports();
+        
+        foreach($reportIds as $reportId){
+            $report = $this->util->getReport($reportId);
+            
+            if(!$report->getSubmitted()){
+                return $this->router->generate('report_overview', ['reportId'=>$reportId]);
+            }
+        }
+        return $this->router->generate('client_home');
     }
     
    

@@ -304,8 +304,10 @@ Feature: report
         And I save the page as "report-account-list"
         Then the response status code should be 200
         And the form should be valid
-        And the URL should match "/report/\d+/account/\d+"
-        And I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
+        And the URL should match "/report/\d+/accounts"
+        And I should see "HSBC - main account" in the "list-accounts" region
+        When I click on "account-8765"
+        Then I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
         # refresh page and check values
         When I follow "tab-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
@@ -446,8 +448,6 @@ Feature: report
     Scenario: add account transactions
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
-        And I click on "moneyIn-tab"
-        And I click on "moneyOut-tab"
         # check no data was previously saved
         Then the following fields should have the corresponding values:
             | transactions_moneyIn_0_amount        |  | 
@@ -457,12 +457,14 @@ Feature: report
             | transactions_moneyOut_11_amount      |  | 
             | transactions_moneyOut_11_moreDetails |  | 
         And I save the page as "report-account-transactions-empty"
-        # wrong values (wrong amount types and amount without explanation)
+        # wrong values (wrong amount types, amount without explanation, explanation without amount)
         When I fill in the following:
             | transactions_moneyIn_0_amount        | in | 
             | transactions_moneyIn_4_amount        | 10000000001 | 
             | transactions_moneyOut_11_amount      | 250.12 | 
             | transactions_moneyOut_11_moreDetails |  | 
+            | transactions_moneyOut_12_amount |  | 
+            | transactions_moneyOut_12_moreDetails | more details given without amount  | 
         And I press "transactions_saveMoneyIn"
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
@@ -471,7 +473,11 @@ Feature: report
             | transactions_moneyOut_11_type |
             | transactions_moneyOut_11_amount |
             | transactions_moneyOut_11_moreDetails |
-        And I save the page as "report-account-transactions-errors"    
+            | transactions_moneyOut_12_id |
+            | transactions_moneyOut_12_type |
+            | transactions_moneyOut_12_amount |
+            | transactions_moneyOut_12_moreDetails |
+        And I save the page as "report-account-transactions-errors"   
         # right values
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 1,250 | 
@@ -484,6 +490,8 @@ Feature: report
             | transactions_moneyOut_0_amount       | 02500 | 
             | transactions_moneyOut_11_amount      | 5000.501 | 
             | transactions_moneyOut_11_moreDetails | more-details-out-11 | 
+            | transactions_moneyOut_12_amount      |  | 
+            | transactions_moneyOut_12_moreDetails |  | 
         And I press "transactions_saveMoneyIn"
         Then the form should be valid
         # assert value saved
@@ -805,7 +813,8 @@ Feature: report
 
     @deputy
     Scenario: report submission
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I reset the email log
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert after login I'm redirected to report page
         Then the URL should match "/report/\d+/overview"
         # assert I cannot access the sumbmitted page directly
@@ -830,16 +839,44 @@ Feature: report
         When I go to "/report/1/display"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        # assert email has been sent/wrote into the disk (only works if client `parameters.email_report_submit.to_email` is wqual to behat-deputyshipservice@publicguardian.gsi.gov.uk)
-        And an email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
+        # assert email has been sent/wrote into the disk
+        And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        # assert confirmation email has been sent
+        And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
+        
+    @deputy
+    Scenario: assert 2nd year report has been created
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "client-home"
+    And I edit lastest active report
+    When I click on "client-home"
+    And I click on "report-n1"
+    And I save the page as "report-property-affairs-homepage"
+    Then I should see a "#tab-contacts" element
+    And I should see a "#tab-decisions" element
+    And I should see a "#tab-accounts" element
+    And I should see a "#tab-assets" element
+    When I am on the account "1234" page of the first report
+    And I click on "edit-account-details"
+    Then the following fields should have the corresponding values:
+        | account_bank    | HSBC main account | 
+        | account_accountNumber_part_1 | 1 | 
+        | account_accountNumber_part_2 | 2 | 
+        | account_accountNumber_part_3 | 3 | 
+        | account_accountNumber_part_4 | 4 | 
+        | account_sortCode_sort_code_part_1 | 12 |
+        | account_sortCode_sort_code_part_2 | 34 |
+        | account_sortCode_sort_code_part_3 | 56 |
+        | account_openingBalance  | -3,000.50 |
 
     @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
         # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
         Then I should be on "/client/show"
         Then I should not see the "edit-report-period-2015-report" link
-        And I should not see the "report-n1" link
+        And I should not see the "report-n2" link
         And I should see the "report-2015-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/contacts" should not be accessible
@@ -851,13 +888,15 @@ Feature: report
     @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
         # download report from confirmation page
         When I go to "/report/1/submitted"
         When I click on "download-report"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
         # download report from client page
-        When I go to the homepage
+        #When I go to the homepage
+        When I click on "client-home"
         And I click on "download-2015-report"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"

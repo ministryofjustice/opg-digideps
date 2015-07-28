@@ -51,7 +51,7 @@ class AccountController extends Controller
                 'deserialise_group' => 'add'
             ]);
             return $this->redirect(
-                $this->generateUrl('account', [ 'reportId' => $reportId, 'accountId'=>$response['id'] ])
+                $this->generateUrl('accounts', [ 'reportId' => $reportId ])
             );
         }
 

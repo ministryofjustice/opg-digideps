@@ -20,21 +20,6 @@ span.icon {
   width: 16px;
   text-indent: -9999em; /* In case we have used some text as well */
 
-  &__accordion {
-    background-image: url('/images/icons/accordian-arrow.png');
-
-    /*
-        @include device-pixel-ratio() {
-          background-image: url("/images/isonsaccordian-arrow-2x.png");
-          background-size: 100%;
-        }
-    */
-    background-position: -12px -16px;
-    width: 21px;
-    height: 13px;
-
-  }
-
   &__notification {
     background-image: url('/images/icons/icon-notification.png');
 

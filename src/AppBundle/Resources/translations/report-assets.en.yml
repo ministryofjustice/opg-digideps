@@ -8,6 +8,7 @@ form:
   listing:
     addButton:
       label: "Add an asset"
+      moreLabel: "Add another asset"
   newAsset:
     subSectionTitleAdd: "Add an asset"
     subSectionTitleEdit: "Edit this asset"

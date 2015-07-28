@@ -70,10 +70,7 @@ module.exports = function (grunt) {
         },
         concat: {
             dist: {
-                src: [jsPath +'/expanding.js', 
-                    jsPath + '/sessionTimeoutDialog.js',
-                    jsPath + '/sortcode.js',
-                    jsPath +'/gdsbuttons.js'],
+                src: jsPath +'/**/*.js',
                 dest: 'web/javascripts/application.js',
             }
         },

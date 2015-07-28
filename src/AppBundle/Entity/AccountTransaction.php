@@ -21,7 +21,7 @@ class AccountTransaction
      * @JMS\Type("string")
      * @JMS\Groups({"transactions"})
      * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
-     * @Assert\Range(max=10000000000, maxMessage = "account.moneyInOut.amount.outOfRange", groups={"transactions"})
+     * @Assert\Range(min=0, max=10000000000, minMessage = "account.moneyInOut.amount.minMessage", maxMessage = "account.moneyInOut.amount.maxMessage", groups={"transactions"})
      * @var string
      */
     private $amount;
@@ -134,7 +134,6 @@ class AccountTransaction
     }
     
     /**
-     * Add error if the transaction needs more details, an amount is give, but not details are provided
      * @param ExecutionContextInterface $context
      */
     public function moreDetailsValidate(ExecutionContextInterface $context)
@@ -142,6 +141,10 @@ class AccountTransaction
         $moreDetailsClean = trim($this->getMoreDetails(), " \n");
         if ($this->hasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
+        }
+        
+        if ($moreDetailsClean && !$this->getAmount()) {
+            $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
         }
     }
 

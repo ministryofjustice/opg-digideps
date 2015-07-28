@@ -164,6 +164,33 @@ class MailFactory
     }
 
     /**
+     * @param EntityDir\User $user
+     * 
+     * @return ModelDir\Email
+     */
+    public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report $submittedReport, EntityDir\Report $newReport)
+    {
+        $email = new ModelDir\Email();
+        
+        $viewParams = [
+            'submittedReport'=> $submittedReport,
+            'newReport' => $newReport,
+            'link' => $this->router->generate('report_overview', [ 'reportId' => $newReport->getId()],true)
+        ];
+        
+        $email
+            ->setFromEmail($this->container->getParameter('email_send')['from_email'])
+            ->setFromName($this->translate('reportSubmissionConfirmation.fromName'))
+            ->setToEmail($user->getEmail())
+            ->setToName($user->getFirstname())
+            ->setSubject($this->translate('reportSubmissionConfirmation.subject'))
+            ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission-confirm.html.twig', $viewParams))
+            ->setBodyText($this->templating->render('AppBundle:Email:report-submission-confirm.text.twig', $viewParams));
+
+        return $email;
+    }
+    
+    /**
      * @param string $key
      * 
      * @return string
