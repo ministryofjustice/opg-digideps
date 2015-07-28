@@ -169,7 +169,7 @@ account:
         amount:
           notNumeric: Enter the total amount
           minMessage: The amount must be more than £ {{ limit }}
-          maxMessage: The amount must be less than £ {{ limit }}
+          maxMessage: The amount must be less than £ 10,000,000,000
           missingWhenDetailsFilled: Enter the total amount
         moreDetails:
           empty: You must give us more information about any compensation or damages awards
