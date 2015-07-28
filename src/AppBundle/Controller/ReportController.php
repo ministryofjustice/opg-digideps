@@ -46,6 +46,64 @@ class ReportController extends RestController
         return [ 'report' => $report->getId()] ;
     }
     
+    /**
+     * @Route("/report/clone")
+     * @Method({"POST"})
+     */
+    public function cloneAction()
+    {
+        $reportData = $this->deserializeBodyContent();
+        
+        $report = $this->findEntityBy('Report', $reportData['id']);
+        
+        if(empty($report)){
+            throw new \Exception("Report id: ".$reportData['id']." does not exists");
+        }
+        //lets clone the report
+        $newReport = new EntityDir\Report();
+        $newReport->setClient($report->getClient());
+        $newReport->setCourtOrderType($report->getCourtOrderType());
+        $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
+        $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
+        $newReport->setReportSeen(false);
+        
+        
+        //lets clone the assets
+        $assets = $report->getAssets();
+        
+        foreach($assets as $asset){
+            $newAsset = new EntityDir\Asset();
+            $newAsset->setDescription($asset->getDescription());
+            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setValuationDate($asset->getValuationDate());
+            $newAsset->setValue($asset->getValue());
+            $newAsset->setReport($newReport);
+            
+            $this->getEntityManager()->persist($newAsset);
+        }
+        
+        //lets clone accounts
+        $accounts = $report->getAccounts();
+        
+        foreach($accounts as $account){
+            $newAccount = new EntityDir\Account();
+            $newAccount->setBank($account->getBank());
+            $newAccount->setSortCode($account->getSortCode());
+            $newAccount->setAccountNumber($account->getAccountNumber());
+            $newAccount->setOpeningBalance($account->getClosingBalance());
+            $newAccount->setOpeningDate($account->getClosingDate());
+            $newAccount->setCreatedAt(new \DateTime());
+            $newAccount->setReport($newReport);
+            
+            $this->getEntityManager()->persist($newAccount);
+        }
+        // persist
+        $this->getEntityManager()->persist($newReport);
+        $this->getEntityManager()->flush();
+        
+        return [ 'report' => $newReport->getId()] ;
+    }
+    
      
    /**
      * @Route("/report/find-by-id/{id}")
@@ -254,6 +312,10 @@ class ReportController extends RestController
         
         if (array_key_exists('reviewed', $data)) {
             $report->setReviewed((boolean)$data['reviewed']);
+        }
+        
+        if (array_key_exists('report_seen', $data)) {
+            $report->setReportSeen((boolean)$data['report_seen']);
         }
         
         if (array_key_exists('submit_date', $data)) {
