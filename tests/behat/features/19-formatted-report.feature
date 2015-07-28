@@ -154,8 +154,8 @@ Feature: Formatted Report
             | account_openingDate_year  | 2014 |
             | account_openingBalance  | 155.00 |
         And I press "account_save"
-        And the form should be valid        
-        And I click on "moneyIn-tab"
+        And the form should be valid     
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -183,7 +183,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -303,7 +302,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -331,7 +330,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -474,7 +472,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -502,7 +500,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -643,7 +640,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -671,7 +668,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -756,7 +752,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -784,7 +780,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -868,7 +863,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -896,7 +891,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -980,7 +974,7 @@ Feature: Formatted Report
         And I press "account_save"
         And the form should be valid
         # Add values into the money out fields.
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 100.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -1008,7 +1002,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
@@ -1125,7 +1118,7 @@ Feature: Formatted Report
             | account_openingBalance  | 155.00 |
         And I press "account_save"
         And the form should be valid
-        And I click on "moneyIn-tab"
+        And I click on "account-8765"
         When I fill in the following:
             | transactions_moneyIn_0_amount       | 10000.01 |
             | transactions_moneyIn_1_amount       | 200.01 |
@@ -1153,7 +1146,6 @@ Feature: Formatted Report
         And I save the page as "moneyinentered"
         And I press "transactions_saveMoneyIn"
         And I save the page as "moneyinsaved"
-        And I click on "moneyOut-tab"
         When I fill in the following:
             | transactions_moneyOut_0_amount       | 100.00 |
             | transactions_moneyOut_1_amount       | 200.00 |
