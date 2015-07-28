@@ -25,6 +25,7 @@ reportDataList:
   pa: "Property and affairs"
   dueDate: "Due date:"
   open: "Open report"
+newReportNotification: Your new report has been created
 form:
   newReportForm:
     subSectionTitle: "Create a new report"

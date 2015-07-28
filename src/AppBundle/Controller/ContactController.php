@@ -82,7 +82,9 @@ class ContactController extends Controller{
         
         //set up add reason for no contact form
         $noContact = $this->createForm(new FormDir\ReasonForNoContactType(), null, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId])."#pageBody" ]);
-        $noContact->setData([ 'reason' => $report->getReasonForNoContacts() ]);
+        $reason = $report->getReasonForNoContacts();
+        $mode = empty($reason)? 'add':'edit';
+        $noContact->setData([ 'reason' => $reason, 'mode' => $mode ]);
 
         if($request->getMethod() == 'POST'){
             $forms = [ 'contactForm' => $form,

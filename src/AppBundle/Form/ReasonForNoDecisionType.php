@@ -12,6 +12,7 @@ class ReasonForNoDecisionType extends AbstractType{
     {
         $builder->add('reason','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'decision.no-decision-reason.notBlank'])
                      ]])
+                ->add('mode','hidden')
                 ->add('saveReason', 'submit');
     }
     

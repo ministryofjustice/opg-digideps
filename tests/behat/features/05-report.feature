@@ -834,12 +834,38 @@ Feature: report
         And an email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
 
     @deputy
+    Scenario: assert 2nd year report has been created
+    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    And I click on "client-home"
+    And I edit lastest active report
+    When I click on "client-home"
+    And I click on "report-n1"
+    And I save the page as "report-property-affairs-homepage"
+    Then I should see a "#tab-contacts" element
+    And I should see a "#tab-decisions" element
+    And I should see a "#tab-accounts" element
+    And I should see a "#tab-assets" element
+    When I am on the account "1234" page of the first report
+    And I click on "edit-account-details"
+    Then the following fields should have the corresponding values:
+        | account_bank    | HSBC main account | 
+        | account_accountNumber_part_1 | 1 | 
+        | account_accountNumber_part_2 | 2 | 
+        | account_accountNumber_part_3 | 3 | 
+        | account_accountNumber_part_4 | 4 | 
+        | account_sortCode_sort_code_part_1 | 12 |
+        | account_sortCode_sort_code_part_2 | 34 |
+        | account_sortCode_sort_code_part_3 | 56 |
+        | account_openingBalance  | -3,000.50 |
+
+    @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
         # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
         Then I should be on "/client/show"
         Then I should not see the "edit-report-period-2015-report" link
-        And I should not see the "report-n1" link
+        And I should not see the "report-n2" link
         And I should see the "report-2015-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/contacts" should not be accessible
@@ -851,13 +877,15 @@ Feature: report
     @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I click on "client-home"
         # download report from confirmation page
         When I go to "/report/1/submitted"
         When I click on "download-report"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
         # download report from client page
-        When I go to the homepage
+        #When I go to the homepage
+        When I click on "client-home"
         And I click on "download-2015-report"
         And the response should contain "123456ABC"
         And the response should contain "Peter White"
