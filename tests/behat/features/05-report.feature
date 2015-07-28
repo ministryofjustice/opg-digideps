@@ -813,7 +813,8 @@ Feature: report
 
     @deputy
     Scenario: report submission
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I reset the email log
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert after login I'm redirected to report page
         Then the URL should match "/report/\d+/overview"
         # assert I cannot access the sumbmitted page directly
@@ -838,9 +839,11 @@ Feature: report
         When I go to "/report/1/display"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        # assert email has been sent/wrote into the disk (only works if client `parameters.email_report_submit.to_email` is wqual to behat-deputyshipservice@publicguardian.gsi.gov.uk)
-        And an email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
-
+        # assert email has been sent/wrote into the disk
+        And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
+        # assert confirmation email has been sent
+        And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
+        
     @deputy
     Scenario: assert 2nd year report has been created
     Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"

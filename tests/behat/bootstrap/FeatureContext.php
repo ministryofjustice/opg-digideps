@@ -88,10 +88,10 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     /**
      * @Given I reset the behat data
      */
-    public function iResetTheBehatData()
-    {
-        $this->visitBehatLink("delete-behat-data");
-    }
+//    public function iResetTheBehatData()
+//    {
+//        $this->visitBehatLink("delete-behat-data");
+//    }
     
     /**
      * @Then the response should have the :arg1 header containing :arg2

@@ -42,7 +42,11 @@ class AccountType extends AbstractType
                 'format' => 'yyyy-MM-dd',
                 'invalid_message' => 'account.openingDate.invalidMessage'
             ])
-            ->add('openingBalance', 'number', [ 'grouping' => true, 'precision' => 2])
+            ->add('openingBalance', 'number', [ 
+                'grouping' => true, 
+                'precision' => 2, 
+                'invalid_message' => 'account.openingBalance.type'
+            ])
             ->add('openingDateExplanation', 'textarea')
             ->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
             ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
@@ -55,7 +59,11 @@ class AccountType extends AbstractType
                     'invalid_message' => 'Value or character is not valid'
                 ])
                 ->add('closingDateExplanation', 'textarea')
-                ->add('closingBalance', 'number', [ 'grouping' => true, 'precision' => 2])
+                ->add('closingBalance', 'number', [ 
+                    'grouping' => true, 
+                    'precision' => 2,
+                    'invalid_message' => 'account.closingBalance.type'
+                ])
                 ->add('closingBalanceExplanation', 'textarea');
         }
 
