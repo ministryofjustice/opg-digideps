@@ -134,7 +134,6 @@ class AccountTransaction
     }
     
     /**
-     * Add error if the transaction needs more details, an amount is give, but not details are provided
      * @param ExecutionContextInterface $context
      */
     public function moreDetailsValidate(ExecutionContextInterface $context)
@@ -142,6 +141,10 @@ class AccountTransaction
         $moreDetailsClean = trim($this->getMoreDetails(), " \n");
         if ($this->hasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
+        }
+        
+        if ($moreDetailsClean && !$this->getAmount()) {
+            $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
         }
     }
 

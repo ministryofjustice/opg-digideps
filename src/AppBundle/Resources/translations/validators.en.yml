@@ -169,6 +169,7 @@ account:
         amount:
           notNumeric: Please enter a total amount
           outOfRange: Please enter a valid total amount
+          missingWhenDetailsFilled: Details are given, please insert the amount
         moreDetails:
           empty: Please give further details
 asset:
