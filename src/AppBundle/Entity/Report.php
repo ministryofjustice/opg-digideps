@@ -50,7 +50,7 @@ class Report implements UserFilterInterface
      * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getAccountIds")
      * @JMS\Type("array")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
     
