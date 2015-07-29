@@ -871,6 +871,16 @@ Feature: report
         | account_sortCode_sort_code_part_2 | 34 |
         | account_sortCode_sort_code_part_3 | 56 |
         | account_openingBalance  | -3,000.50 |
+    And I am on the account "1234" page of the first report
+    # check no data was previously saved
+    Then the following fields should have the corresponding values:
+        | transactions_moneyIn_0_amount        |  | 
+        | transactions_moneyIn_15_amount       |  | 
+        | transactions_moneyIn_15_moreDetails  |  | 
+        | transactions_moneyOut_0_amount       |  | 
+        | transactions_moneyOut_11_amount      |  | 
+        | transactions_moneyOut_11_moreDetails |  | 
+    And I save the page as "report-account-transactions-empty"
 
     @deputy
     Scenario: assert report is not editable after submission
