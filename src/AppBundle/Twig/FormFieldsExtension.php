@@ -99,7 +99,7 @@ class FormFieldsExtension extends \Twig_Extension
         //sort hint text translation
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
-
+        
         //get legendText translation
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
         
@@ -287,6 +287,10 @@ class FormFieldsExtension extends \Twig_Extension
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
 
+        //sort hintList text translation
+        $hintListTextTrans =  $this->translator->trans($translationKey.'.hintList', [],$domain);
+        $hintListEntriesText = ($hintListTextTrans != $translationKey.'.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
+        
         //sort out labelText translation
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
 
@@ -300,6 +304,7 @@ class FormFieldsExtension extends \Twig_Extension
         return [ 
             'labelText' => $labelText,
             'hintText' => $hintText,
+            'hintListArray' => $hintListEntriesText,
             'element'  => $element,
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
