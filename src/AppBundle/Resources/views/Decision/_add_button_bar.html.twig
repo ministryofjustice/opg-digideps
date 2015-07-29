@@ -25,7 +25,7 @@ showMoreLink (true/false)
     transDomain: translationDomain,
     linkButtonLabel: label,
     linkClass: 'button-secondary behat-link-add-a-decision behat-region-add-a-decision',
-    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' }) ~ "#add"
+    linkHref: path('decisions', {'reportId': params['reportId'], 'action': 'add' }) ~ "#pageBody"
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
