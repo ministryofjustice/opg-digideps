@@ -94,6 +94,8 @@ class ReportController extends RestController
             $newAccount->setOpeningDate($account->getClosingDate());
             $newAccount->setCreatedAt(new \DateTime());
             $newAccount->setReport($newReport);
+
+            $this->getRepository('Account')->addEmptyTransactionsToAccount($newAccount);
             
             $this->getEntityManager()->persist($newAccount);
         }
