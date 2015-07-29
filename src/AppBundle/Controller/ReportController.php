@@ -66,7 +66,7 @@ class ReportController extends RestController
         $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);
-        
+        $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
         
         //lets clone the assets
         $assets = $report->getAssets();
