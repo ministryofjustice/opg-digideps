@@ -179,7 +179,7 @@ form {
 }
 
 .form-label {
-  margin-bottom: 0;
+  margin-bottom: 5px;
   width: 50%;
 }
 legend .form-label {
@@ -190,6 +190,10 @@ legend .form-label {
 .form-hint {
   margin-top: 0;
   width: 50%;
+  margin-bottom: 5px;
+}
+ul.form-hint {
+    margin-left: 10px;
 }
 
 .input-group-prefix {
@@ -214,3 +218,12 @@ legend .form-label {
 form.single-texta-area {
     padding-top: 3px;
 } 
+
+.errors {
+    width: auto;
+    margin-bottom: 5px;
+    .error-message {
+        color: $error-colour;
+        width: auto;
+    }
+}

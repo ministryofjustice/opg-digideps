@@ -17,21 +17,6 @@
   }
 }
 
-.field-with-errors input,
-.field-with-errors select {
-
-}
-
-.field-with-errors {
-  ul {
-    width: auto;
-  }
-  li {
-    color: $error-colour;
-    width: auto;
-  }
-}
-
 .button-link {
   margin-left: 15px;
   top: 1px;
@@ -46,3 +31,4 @@
     margin-right: 297px;
     float:right;
 }
+
