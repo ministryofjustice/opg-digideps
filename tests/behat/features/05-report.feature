@@ -10,6 +10,7 @@ Feature: report
         And I should see a "#tab-contacts" element
         But I should not see a "#tab-accounts" element
         And I should not see a "#tab-assets" element
+        And I should see a ".report_submission_period" element
 
     @deputy
     Scenario: change report type to "Property and Affairs"
@@ -72,6 +73,7 @@ Feature: report
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
         And I should see a "#tab-assets" element
+        And I should see a ".report_submission_period" element
 
     @deputy
     Scenario: Check report notification and submission warnings
@@ -85,6 +87,7 @@ Feature: report
         Then I should see the "tab-assets-warning" region
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
+        And I should not see a ".report_submission_period" element
         # set back report not to be due
         And I set the report 1 end date to 3 days ahead
 
