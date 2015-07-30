@@ -35,7 +35,9 @@ class AccountController extends Controller
         $account = new EntityDir\Account();
         $account->setReportObject($report);
 
-        $form = $this->createForm(new FormDir\AccountType(), $account);
+        $form = $this->createForm(new FormDir\AccountType(), $account, [
+            'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
+        ]);
         
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
