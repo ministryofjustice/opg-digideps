@@ -28,7 +28,7 @@ var opg = opg || {};
     
     opg.DateValidate.prototype.addErrorSection = function() {
         this.container.find('.errors').remove();
-        this.container.find('.form-date').before('<ul class="errors"><li class="error-message">Invalid Date</li></ul>');
+        this.container.find('fieldset .form-group').first().before('<ul class="errors"><li class="error-message">Invalid Date</li></ul>');
     };
     opg.DateValidate.prototype.pad = function(event) {
         var field = $(event.target);
@@ -76,15 +76,10 @@ var opg = opg || {};
 
         this.clearErrors();
 
-        var field = $(event.target);            
-        var str = field.val();
+        var field = $(event.target);
         var parent = field.parent();
         var dayStr, dayValue, monthStr, monthValue, yearStr, yearValue;
-        
-        if (str === '') {
-            return;
-        }
-        
+                
         dayStr = this.dayInput.val();
         if (dayStr.length > 0) {
             dayValue = parseInt(dayStr, 10);
@@ -92,7 +87,7 @@ var opg = opg || {};
                 this.showError(this.dayInput);
             }
         }
-        
+
         monthStr = this.monthInput.val();
         if (monthStr.length > 0) {
             monthValue = parseInt(monthStr);

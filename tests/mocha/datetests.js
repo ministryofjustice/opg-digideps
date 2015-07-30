@@ -1,27 +1,21 @@
 describe('Date validation tests', function () {
 
     var placeholder = $('#placeholder'),
-        markup = '<div class="form-group date-wrapper">' +
+        markup = '<div class="form-group form-date date-wrapper">' +
                     '<fieldset>' +
                         '<legend class="form-label">Add the opening balance date for this account</legend>' +
-                        '<div class="form-date">' +
-
-                            '<p class="form-hint">(DD/MM/YYYY)</p>' +
-
-                            '<div class="form-group form-group-day">' +
-                                '<label for="account_openingDate_day" class="visuallyhidden required">Day</label>' +
-                                '<input type="text" id="account_openingDate_day" name="account[openingDate][day]" required="required" class="form-control" pattern="[0-9]" maxlength="2" value="" />' +
-                            '</div>' +
-
-                            '<div class="form-group form-group-month">' +
-                                '<label for="account_openingDate_month" class="visuallyhidden required">Month</label>' +
-                                '<input type="text" id="account_openingDate_month" name="account[openingDate][month]" required="required" class="form-control" pattern="[0-9]" maxlength="2" value="" />' +
-                            '</div>' +
-
-                            '<div class="form-group form-group-year">' +
-                                '<label for="account_openingDate_year" class="visuallyhidden required">Year</label>' +
-                                '<input type="text" id="account_openingDate_year" name="account[openingDate][year]" required="required" class="form-control" pattern="[0-9]" maxlength="4" />' +
-                            '</div>' +
+                        '<p class="form-hint">(DD/MM/YYYY)</p>' +
+                        '<div class="form-group form-group-day">' +
+                            '<label for="account_openingDate_day" class="visuallyhidden required">Day</label>' +
+                            '<input type="text" id="account_openingDate_day" name="account[openingDate][day]" required="required" class="form-control" pattern="[0-9]" maxlength="2" value="" />' +
+                        '</div>' +
+                        '<div class="form-group form-group-month">' +
+                            '<label for="account_openingDate_month" class="visuallyhidden required">Month</label>' +
+                            '<input type="text" id="account_openingDate_month" name="account[openingDate][month]" required="required" class="form-control" pattern="[0-9]" maxlength="2" value="" />' +
+                        '</div>' +
+                        '<div class="form-group form-group-year">' +
+                            '<label for="account_openingDate_year" class="visuallyhidden required">Year</label>' +
+                            '<input type="text" id="account_openingDate_year" name="account[openingDate][year]" required="required" class="form-control" pattern="[0-9]" maxlength="4" />' +
                         '</div>' +
                     '</fieldset>' +
                 '</div>',
@@ -263,12 +257,12 @@ describe('Date validation tests', function () {
             errorListContainsError();
         });
         it('should replace the contents of the error section if one already exists', function () {
-            placeholder.find('.form-date').before('<ul class="errors"><li class="error-message">old error</li></ul>');
+            placeholder.find('fieldset .form-group').first().before('<ul class="errors"><li class="error-message">old error</li></ul>');
             dayField.val('0').trigger('blur');
             errorListContainsError();
         });
         it('should delete the error list element if there are no errors', function() {
-            placeholder.find('.form-date').before('<ul class="errors"><li class="error-message">old error</li></ul>');
+            placeholder.find('fieldset .form-group').first().before('<ul class="errors"><li class="error-message">old error</li></ul>');
             dayField.val('1').trigger('blur');
             expect(placeholder.find('.errors').length).to.equal(0);
         });
@@ -349,11 +343,10 @@ describe('Date validation tests', function () {
     });
     
     function errorListContainsError() {
-        var formDate = placeholder.find('.form-date');
-        var list = formDate.prev();
-        expect(list.prop('tagName')).to.equal('UL');
-        expect(list.find('li.error-message').length).to.equal(1);
-        expect(list.find('li.error-message').first().text()).to.equal('Invalid Date');
+        var errors = placeholder.find('fieldset .errors');
+        expect(errors.prop('tagName')).to.equal('UL');
+        expect(errors.find('li.error-message').length).to.equal(1);
+        expect(errors.find('li.error-message').first().text()).to.equal('Invalid Date');
     }
     
     function fieldIsActive(field) {
