@@ -34,7 +34,7 @@ var opg = opg || {};
         var field = $(event.target);
         var str = field.val();
         
-        if (field === this.yearInput || str === '' || str.length == 2) {
+        if (field[0] === this.yearInput[0] || str === '' || str.length == 2) {
             return;
         }
     
