@@ -10,6 +10,7 @@ Feature: report
         And I should see a "#tab-contacts" element
         But I should not see a "#tab-accounts" element
         And I should not see a "#tab-assets" element
+        And I should see a ".report_submission_period" element
 
     @deputy
     Scenario: change report type to "Property and Affairs"
@@ -72,6 +73,7 @@ Feature: report
         And I should see a "#tab-decisions" element
         And I should see a "#tab-accounts" element
         And I should see a "#tab-assets" element
+        And I should see a ".report_submission_period" element
 
     @deputy
     Scenario: Check report notification and submission warnings
@@ -85,6 +87,7 @@ Feature: report
         Then I should see the "tab-assets-warning" region
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
+        And I should not see a ".report_submission_period" element
         # set back report not to be due
         And I set the report 1 end date to 3 days ahead
 
@@ -868,6 +871,16 @@ Feature: report
         | account_sortCode_sort_code_part_2 | 34 |
         | account_sortCode_sort_code_part_3 | 56 |
         | account_openingBalance  | -3,000.50 |
+    And I am on the account "1234" page of the first report
+    # check no data was previously saved
+    Then the following fields should have the corresponding values:
+        | transactions_moneyIn_0_amount        |  | 
+        | transactions_moneyIn_15_amount       |  | 
+        | transactions_moneyIn_15_moreDetails  |  | 
+        | transactions_moneyOut_0_amount       |  | 
+        | transactions_moneyOut_11_amount      |  | 
+        | transactions_moneyOut_11_moreDetails |  | 
+    And I save the page as "report-account-transactions-empty"
 
     @deputy
     Scenario: assert report is not editable after submission

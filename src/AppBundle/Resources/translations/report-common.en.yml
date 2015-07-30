@@ -2,7 +2,9 @@ report:
   header:
     report: "report"
     to: "to"
+    and: "and"
     reportingPeriod: "Reporting period:"
+    submissionPeriod: "Report can be submitted between:"
     dueDate: "Due date:"
     caseNumber: "Case number:"
     form:
