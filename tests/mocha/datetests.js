@@ -4,7 +4,6 @@ describe('Date validation tests', function () {
         markup = '<div class="form-group date-wrapper">' +
                     '<fieldset>' +
                         '<legend class="form-label">Add the opening balance date for this account</legend>' +
-                        '<ul class="errors"></ul>' + 
                         '<div class="form-date">' +
 
                             '<p class="form-hint">(DD/MM/YYYY)</p>' +
@@ -258,7 +257,12 @@ describe('Date validation tests', function () {
             expect(fieldMarkedInvalid(yearField)).to.be.false;
         });
     });
-
+    describe('Field Error List', function () {
+        it('should add an error section if there is an error and no error container');
+        it('should replace the contents of the error section if one already exists');
+        it('should delete the error list element if there are no errors');
+    });
+    
     describe('Support multiple date fields', function() {
         
         var wrappers;
