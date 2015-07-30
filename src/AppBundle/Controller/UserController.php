@@ -222,9 +222,13 @@ class UserController extends Controller
         $useMemcached = $this->container->getParameter('use_memcached');
         $useRedis = $this->container->getParameter('use_redis');
         
-        $formEditDetails = $this->createForm(new FormDir\UserDetailsFullType([
-            'addressCountryEmptyValue' => 'Please select...', [], 'user_view'
-        ]), $user);
+        
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
+            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
+        ]);
+        
+        $formEditDetails = $this->createForm($formType, $user);
         
         $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
