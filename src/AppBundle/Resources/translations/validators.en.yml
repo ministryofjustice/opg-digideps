@@ -129,7 +129,9 @@ decision:
 account:
     openingDate:
         invalidMessage: Opening Date is not valid
-        notBlank: Please enter opening date
+        notBlank: Please enter opening balance date
+        notSameAsReport: The start date of the report and the date here is different. Please tell us why below.
+        date: Please enter a valid date
     bank:
         notBlank: Please enter Bank/Building Society name
         maxMessage: Bank/Building Society name can't be longer than {{ limit }} characters
@@ -141,10 +143,6 @@ account:
         notBlank: Please enter last 4 digits of your account number
         type: Account number must be numeric
         length: Please enter last 4 digits of your account number
-    openingDate:
-        notBlank: Please enter opening balance date
-        notSameAsReport: The start date of the report and the date here is different. Please tell us why below.
-        date: Please enter a valid date
     closingDate:
         notBlank: Please enter closing balance date
         date: Please enter a valid date
