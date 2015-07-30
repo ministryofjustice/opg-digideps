@@ -23,7 +23,7 @@
     linkButtonLabel: 'form.listing.addButton.label',
     linkClass: 'button-secondary',
     linkId: 'add-account-button',
-    linkHref: path('accounts', {'reportId': params['reportId'], 'action': 'add' })
+    linkHref: path('accounts', {'reportId': params['reportId'], 'action': 'add' }) ~ "#pageBody"
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
