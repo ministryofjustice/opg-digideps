@@ -11,15 +11,8 @@
     padding-left: 0;
 }
 
-.field-with-errors {
-  & input, select, textarea {
+.field-with-errors > input, .field-with-errors > select, .field-with-errors > textarea {
     border: 2px solid $error-colour;
-  }
-}
-
-.field-with-errors input,
-.field-with-errors select {
-
 }
 
 .field-with-errors {
