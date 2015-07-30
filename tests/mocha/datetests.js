@@ -258,9 +258,20 @@ describe('Date validation tests', function () {
         });
     });
     describe('Field Error List', function () {
-        it('should add an error section if there is an error and no error container');
-        it('should replace the contents of the error section if one already exists');
-        it('should delete the error list element if there are no errors');
+        it('should add an error section if there is an error and no error container', function() {
+            dayField.val('0').trigger('blur');
+            errorListContainsError();
+        });
+        it('should replace the contents of the error section if one already exists', function () {
+            placeholder.find('.form-date').before('<ul class="errors"><li class="error-message">old error</li></ul>');
+            dayField.val('0').trigger('blur');
+            errorListContainsError();
+        });
+        it('should delete the error list element if there are no errors', function() {
+            placeholder.find('.form-date').before('<ul class="errors"><li class="error-message">old error</li></ul>');
+            dayField.val('1').trigger('blur');
+            expect(placeholder.find('.errors').length).to.equal(0);
+        });
     });
     
     describe('Support multiple date fields', function() {
@@ -336,6 +347,14 @@ describe('Date validation tests', function () {
             expect(wrapperb.hasClass('field-with-errors')).to.be.false;
         });
     });
+    
+    function errorListContainsError() {
+        var formDate = placeholder.find('.form-date');
+        var list = formDate.prev();
+        expect(list.prop('tagName')).to.equal('UL');
+        expect(list.find('li.error-message').length).to.equal(1);
+        expect(list.find('li.error-message').first().text()).to.equal('Invalid Date');
+    }
     
     function fieldIsActive(field) {
         return field[0] === document.activeElement;

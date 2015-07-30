@@ -10,7 +10,6 @@ var opg = opg || {};
         var _this = this, dateParts;
         
         this.container = $(target);
-        this.errors = this.container.find('.errors');
         
         dateParts = this.container.find('input');
         this.dayInput = $(dateParts[0]);
@@ -26,6 +25,11 @@ var opg = opg || {};
         });
     };
     
+    
+    opg.DateValidate.prototype.addErrorSection = function() {
+        this.container.find('.errors').remove();
+        this.container.find('.form-date').before('<ul class="errors"><li class="error-message">Invalid Date</li></ul>');
+    };
     opg.DateValidate.prototype.pad = function(event) {
         var field = $(event.target);
         var str = field.val();
@@ -60,11 +64,11 @@ var opg = opg || {};
     };
     opg.DateValidate.prototype.showError = function(field) {
         $(field).parent().addClass('field-with-errors');
-        this.container.addClass('field-with-errors'); 
-        this.errors.empty().append('<li class="error">Invalid Date</li>'); 
+        this.container.addClass('field-with-errors');
+        this.addErrorSection();
     };
     opg.DateValidate.prototype.clearErrors = function() {
-        this.errors.empty();
+        this.container.find('.errors').remove();
         this.container.removeClass('field-with-errors');
         this.container.find('.field-with-errors').removeClass('field-with-errors');
     };
