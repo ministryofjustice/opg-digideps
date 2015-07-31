@@ -1,11 +1,10 @@
 <div class="form-group form-group__checkbox{% if not element.vars.valid %} field-with-errors behat-region-form-errors{% endif %}{% if formGroupClass is defined %} {{ formGroupClass }}{% endif %}">
 
-    {{ form_errors(element) }}
-
     {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint">{{ hintText }}</p>
     {% endif %}
-
+    {{ form_errors(element) }}
+    
     {% set class = element.vars.attr.class | default('') ~ '' ~ inputClass | default('') %}
 
     {% set labelClasss = 'block-label ' ~ (labelClass is defined ?  labelClass : '') %}

@@ -22,6 +22,7 @@
         "grunt-contrib-jshint": "~0.11.2",
         "jquery": "1.11.*",
         "mocha": "*",
-        "chai": "*"
+        "chai": "*",
+        "sinon": "*"
     }
 }

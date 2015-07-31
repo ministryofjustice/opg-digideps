@@ -5,7 +5,7 @@ describe('Sort Code Tests', function () {
                     '<fieldset>' +
                         '<legend class="form-label">Branch Sort Code</legend>' +
                         '<div class="form-sort-code">' +
-                            '<ul class="    {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}"></ul>' + 
+                            '<ul class="errors"></ul>' + 
                             '<div class="form-group">' +
                                 '<label for="account_sortCode_sort_code_part_1" class="visuallyhidden required">Sort Code part 1</label>' +
                                 '<input type="text" id="account_sortCode_sort_code_part_1" name="account[sortCode][sort_code_part_1]" required="required" maxlength="2" class="sort-code-part form-control" />' +
@@ -34,7 +34,7 @@ describe('Sort Code Tests', function () {
         opg.SortCodeValidate('#sort-code-wrapper');
     });
     afterEach(function() {
-        placeholder.empty();
+        //placeholder.empty();
     });
     
     describe('Navigate between fields', function () {

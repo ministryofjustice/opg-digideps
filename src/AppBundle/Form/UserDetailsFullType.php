@@ -43,12 +43,7 @@ class UserDetailsFullType extends UserDetailsBasicType
     {
         $resolver->setDefaults( [
             'translation_domain' => 'user-details',
-            'validation_groups' => ['user_details_full']
+            'validation_groups' => 'user_details_full'
         ]);
-    }
-    
-    public function getName()
-    {
-        return 'user_details';
     }
 }
