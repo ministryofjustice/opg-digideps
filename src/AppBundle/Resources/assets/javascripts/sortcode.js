@@ -19,7 +19,7 @@ var opg = opg || {};
 
     function showErrorDescription() {
         if ($('.form-sort-code .field-with-errors').length > 0){
-            errors.empty().append('<li class="error">' + noneNumericError + '</li>');    
+            errors.empty().append('<li class="error-message">' + noneNumericError + '</li>');    
             container.addClass('field-with-errors');  
         } else {
             container.removeClass('field-with-errors');

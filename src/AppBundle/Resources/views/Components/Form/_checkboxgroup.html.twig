@@ -1,13 +1,12 @@
 <div class="form-group form-group__checkbox-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
     <fieldset class="{{ fieldSetClass }}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
+        <p class="form-hint">{{ hintText }}</p>
         {% if not element.vars.valid %}
-            <ul>
-                <li>{{ form_errors(element) }}</li>
+            <ul class="errors">
+                <li class="error-message">{{ form_errors(element) }}</li>
             </ul>
         {% endif %}
-        <p class="form-hint">{{ hintText }}</p>
-
         {% for key,choiceElement in element %}
 
             {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
