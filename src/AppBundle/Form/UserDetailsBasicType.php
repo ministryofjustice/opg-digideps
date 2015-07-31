@@ -20,7 +20,7 @@ class UserDetailsBasicType extends AbstractType
     {
         $resolver->setDefaults( [
             'translation_domain' => 'user-details',
-            'validation_groups' => ['user_details_basic'],
+            'validation_groups' => 'user_details_basic',
         ]);
     }
     
