@@ -24,11 +24,6 @@ class UserDetailsBasicType extends AbstractType
         ]);
     }
     
-    public function getPasswordValidationGroup()
-    {
-        return 'user_details_basic';
-    }
-    
     public function getName()
     {
         return 'user_details';

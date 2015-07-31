@@ -46,9 +46,4 @@ class UserDetailsFullType extends UserDetailsBasicType
             'validation_groups' => 'user_details_full'
         ]);
     }
-    
-    public function getPasswordValidationGroup()
-    {
-        return 'user_details_full';
-    }
 }
