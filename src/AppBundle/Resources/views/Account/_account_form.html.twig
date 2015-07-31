@@ -21,9 +21,9 @@
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
     transDomain: translationDomain,
     linkButtonLabel: 'form.listing.addButton.label',
-    linkClass: 'button-secondary',
+    linkClass: 'button-secondary behat-link-add-account',
     linkId: 'add-account-button',
-    linkHref: path('accounts', {'reportId': params['reportId'], 'action': 'add' })
+    linkHref: path('accounts', {'reportId': params['reportId'], 'action': 'add' }) ~ "#pageBody"
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

@@ -35,7 +35,9 @@ class AccountController extends Controller
         $account = new EntityDir\Account();
         $account->setReportObject($report);
 
-        $form = $this->createForm(new FormDir\AccountType(), $account);
+        $form = $this->createForm(new FormDir\AccountType(), $account, [
+            'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
+        ]);
         
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
@@ -50,8 +52,14 @@ class AccountController extends Controller
             $response = $apiClient->postC('add_report_account', $account, [
                 'deserialise_group' => 'add'
             ]);
+            
+            $request->getSession()->getFlashBag()->add(
+                'action', 
+                'page.accountAdded'
+            );
+
             return $this->redirect(
-                $this->generateUrl('accounts', [ 'reportId' => $reportId ])
+                $this->generateUrl('accounts', [ 'reportId' => $reportId ]) . "#pageBody"
             );
         }
 
