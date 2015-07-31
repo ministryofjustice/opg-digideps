@@ -4,7 +4,7 @@
         <div class="form-sort-code">
             <ul class="errors">
                 {% if not element.vars.valid %}
-                    <li>{{ form_errors(element) }}</li>
+                    <li class="error-message">{{ form_errors(element) }}</li>
                 {% endif %}
             </ul>
             <div class="form-group">

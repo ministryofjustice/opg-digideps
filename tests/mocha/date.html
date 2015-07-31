@@ -6,7 +6,7 @@
         <link href="../../web/stylesheets/govuk-template.css" media="screen" rel="stylesheet" type="text/css" />
         <link href="../../web/stylesheets/fonts.css" media="all" rel="stylesheet" type="text/css" />
         <link href="../../web/stylesheets/moj-template.css" media="screen" rel="stylesheet" type="text/css" />
-         <link href="../../web/stylesheets/application.css" rel="stylesheet" type="text/css"/>
+        <link href="../../web/stylesheets/application.css" rel="stylesheet" type="text/css"/>
         
         <link href="../../node_modules/mocha/mocha.css" rel="stylesheet" />
     </head>
@@ -17,17 +17,15 @@
         <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
         <script src="../../node_modules/chai/chai.js"></script>
         <script src="../../node_modules/mocha/mocha.js"></script>
+        <script src="sinon.js"></script>
 
         <script>
             var expect = chai.expect;
             mocha.setup('bdd');
         </script>
 
-
-        <script src="../../src/AppBundle/Resources/assets/javascripts/components/sortcode.js"></script>
-
-
-        <script src="sortcodetests.js"></script>
+        <script src="../../src/AppBundle/Resources/assets/javascripts/date.js"></script>
+        <script src="datetests.js"></script>
 
         <script>
             mocha.checkLeaks();
