@@ -65,10 +65,10 @@ client:
 report:
     startDate:
         notBlank: Enter the date when your reporting period starts
-        invalidMessage: This start date is not valid
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     endDate:
         notBlank: Enter the date when your reporting period ends
-        invalidMessage: This end date is not valid
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
     courtOrderType:
@@ -92,77 +92,78 @@ login:
         notBlank: Enter your password
 contact:
     name:
-        notBlank: Please enter contact's name
-        minMessage: Contact name too short
-        maxMessage: Contact name can't be longer than {{ limit }} characters
+        notBlank: Enter the contact's first and last name
+        minMessage: The name must be at least {{ limit }} letters
+        maxMessage: The name can't be longer than {{ limit }} letters
     address:
-        notBlank: Please enter contact's address
-        maxMessage: Address can't be longer than {{ limit }} characters
+        notBlank: Enter the contact's address
+        maxMessage: The address can't be longer than {{ limit }} letters
     postcode:
-        notBlank: Please enter contact's postcode
-        maxMessage: Postcode can't be longer than {{ limit }} characters
+        notBlank: Enter the contact's postcode
+        maxMessage: The postcode can't be longer than {{ limit }} characters
     relationship:
-        notBlank: Please enter contact's relationship to client
-        minMessage: Relationship to contact too short
-        maxMessage: Relationship can't be longer than {{ limit }} characters
+        notBlank: Enter the contact's relationship to the client
+        minMessage: This description is too short
+        maxMessage: The description can't be longer than {{ limit }} letters
     explanation:
-        notBlank: Please enter a reason for contact
-        length: Reason for contact too short
+        notBlank: Enter a reason why you contacted this person
+        length: This reason is too short
     no-contact-reason:
-        notBlank: Please enter a reason
+        notBlank: Enter a reason why you contacted this person
     phone:
-        maxMessage: Phone can't be longer than {{ limit }} characters
+        maxMessage: The phone number can't be longer than {{ limit }} numbers
 decision:
-    title:
-        notBlank: Please enter a title for the decision
-        length: The title must be at least {{ limit }} characters
     description:
-        notBlank: Please enter a description for the decision
-        length: The description must be at least {{ limit }} characters
+        notBlank: You have to enter some details about this decision
+        length: This description must be at least {{ limit }} letters long
     clientInvolvedBoolean:
-        notBlank: Please specify if the client was involved or not
+        notBlank: Choose Yes or No
     clientInvolvedDetails:
-        notBlank: Please write how much the client was involved in this decision
-        length: The text must be at least {{ limit }} characters
+        notBlank: Tell us if you involved the client
+        length: This description must be at least {{ limit }} letters long
     no-decision-reason:
-        notBlank: Please enter a reason
+        notBlank: Enter a reason here
 account:
     openingDate:
-        invalidMessage: Opening Date is not valid
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         notBlank: Please enter opening balance date
         notSameAsReport: The start date of the report and the date here is different. Please tell us why below.
         date: Please enter a valid date
     bank:
-        notBlank: Please enter Bank/Building Society name
-        maxMessage: Bank/Building Society name can't be longer than {{ limit }} characters
+        notBlank: Enter the bank or building society name
+        maxMessage: The bank or building society name can't be longer than {{ limit }} letters
     sortCode:
-        notBlank: Please enter sort code
-        type: Sort code must be  numeric
-        length: Sort code must be at least {{ limit }} characters long
+        notBlank: Enter the sort code
+        type: The sort code must be numbers
+        length: The sort code must be at least {{ limit }} numbers long
     accountNumber:
-        notBlank: Please enter last 4 digits of your account number
-        type: Account number must be numeric
-        length: Please enter last 4 digits of your account number
+        notBlank: Enter the last 4 numbers of the account number
+        type: The account number must be numbers
+        length: Enter the last 4 digits of the account number
+    openingDate:
+        notBlank: Enter the opening balance date
+        notSameAsReport: The start date of the report and the date here is different. Tell us why below.
+        date: You must enter a valid date
     closingDate:
-        notBlank: Please enter closing balance date
-        date: Please enter a valid date
-        mismatch: The end date of the report and the date here is different. Please tell us why below.
+        notBlank: You must enter the closing balance date
+        date: Enter a valid date in this format: DD/MM/YYYY
+        mismatch: The end date of the report and the date here is different. Tell us why below.
     closingDateExplanation:
-        notBlankOnDateMismatch: Please enter a value
+        notBlankOnDateMismatch: You must explain why these dates are different
     openingBalance:
-        notBlank: Please enter an opening balance
-        type: Please enter a valid opening balance
-        outOfRange: Please enter a valid closing balance
+        notBlank: You must enter an opening balance
+        type: You must enter a valid opening balance
+        outOfRange: The opening balance must be less than £10,000,000,000
     openingDateExplanation:
-        notBlankOnDateMismatch: Please enter a value
+        notBlankOnDateMismatch: You must explain why the opening balance date is different to your report start date
     closingBalance:
-        notBlank: Value is required and can't be empty
-        type: Please enter a valid closing balance
-        outOfRange: Please enter a valid closing balance
+        notBlank: You must enter a closing balance
+        type: Enter a valid closing balance
+        outOfRange: Enter a valid closing balance
         #mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
         mismatch: The final balance from your statement is different from the balance in the accounts section.
     closingBalanceExplanation:
-        notBlankOnDateMismatch: Please enter a value
+        notBlankOnDateMismatch: You must explain why the final balance from your statement and the balance in the accounts section are different
     moneyInOut:
         amount:
           notNumeric: Enter the total amount
@@ -170,35 +171,35 @@ account:
           maxMessage: The amount must be less than £10,000,000,000
           missingWhenDetailsFilled: Enter the total amount
         moreDetails:
-          empty: You must give us more information about any compensation or damages awards
+          empty: You must give us more information about this amount
 asset:
     title:
-        notBlank: Please select an asset title
-        maxMessage: Asset title can't be longer than {{ limit }} characters
+        notBlank: Choose the type of asset from the list
+        maxMessage: The asset name can't be longer than {{ limit }} letters
     value:
-        notBlank: Please enter asset value
-        type: Please enter a valid asset value
-        outOfRange: Please enter a valid value
+        notBlank: Enter the value of this asset
+        type: Enter a valid amount for this asset
+        outOfRange: The amount must be less than £10,000,000,000
     description:
-        notBlank: Please enter asset description
-        length: Asset description is too short
+        notBlank: Enter a description for this asset
+        length: This description is too short
     date:
-        notBlank: Please enter asset valuation date
-        date: Please enter a valid asset valuation date
+        notBlank: Enter the date the asset was valued
+        date: Enter a valid date
     no_assets:
-        notBlank: Please tell us if you have no assets to add
+        notBlank: Tell us if you have no assets to add
 # validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:
-    minLength: Check your phone number: it must have at least {{ limit }} numbers
-    maxLength: Check your phone number: it can't be more than {{ limit }} numbers long
+    minLength: Check the phone number: it must have at least {{ limit }} numbers
+    maxLength: Check the phone number: it can't be more than {{ limit }} numbers long
 sendEmail:
     toEmail:
-        notBlank: Please supply receipent's email (toEmail)
-        invalid:  Receipent email address is invalid
+        notBlank: Please supply recipient's email (toEmail)
+        invalid:  Recipient email address is invalid
     toName:
-        notBlank: Please supply receipent's name (toName)
-        invalid: Receipent name is invalid
+        notBlank: Please supply recipient's name (toName)
+        invalid: Recipient name is invalid
     fromEmail:
         notBlank: Please supply sender's email (fromEmail)
         invalid:  Sender email address is invalid
