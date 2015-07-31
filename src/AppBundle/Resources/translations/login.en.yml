@@ -12,7 +12,7 @@ login:
     label: Sign in
     invalidMessage: Invalid email or password
 forgottenPassword: Forgotten your password?
-sessionTimeoutOutWarning: Sorry, your session has timed out either to inactivity or because you have signed in on another browser. Please sign in again.
+sessionTimeoutOutWarning: Sorry, your session has timed out either due to inactivity or because you have signed in on another browser. Please sign in again.
 manualLogout:
   pageTitle: You are now signed out
   pageSectionTitle: Thank you for using the Complete a deputy report service.
