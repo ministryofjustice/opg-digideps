@@ -87,6 +87,26 @@ trait EmailTrait
     
     
     /**
+     * @When I open the :regexpr link from the email on the :area area
+     */
+    public function iOpenTheLinkFromTheEmailOnTheArea($regexpr, $area)
+    {
+        $linkToClick = $this->getFirstLinkInEmailMatching($regexpr);
+        
+        if ($area == 'admin') {
+            $linkToClick = str_replace($this->getSymfonyParam('non_admin_host'), $this->getSymfonyParam('admin_host'), $linkToClick);
+        } else if ($area == 'deputy') {
+            $linkToClick = str_replace($this->getSymfonyParam('admin_host'), $this->getSymfonyParam('non_admin_host'), $linkToClick);
+        } else {
+            throw new \RuntimeException(__METHOD__ . ": $area not defined");
+        }
+        
+        // visit the link
+        $this->visit($linkToClick);
+    }
+    
+    
+    /**
      * @Then the last email containing a link matching :partialLink should have been sent to :to
      */
     public function anEmailContainingALinkMatchingShouldHaveBeenSentTo($partialLink, $to)

@@ -30,7 +30,9 @@ trait DebugTrait
         $data = $this->getSession()->getPage()->getContent();
         $bytes = file_put_contents($filename, $data);
         #exec("firefox $filename 2>&1");
-        echo "Open $filename to debug last response ($bytes bytes written).\n";
+        echo "- Url: " . $this->getSession()->getCurrentUrl() . "\n";
+        echo "- Status code: " . $this->session->getStatusCode() . "\n";
+        echo "- Response: saved into $filename ($bytes bytes).\n";
     }
     
     
