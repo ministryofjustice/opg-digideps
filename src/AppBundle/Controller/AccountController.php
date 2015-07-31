@@ -52,6 +52,12 @@ class AccountController extends Controller
             $response = $apiClient->postC('add_report_account', $account, [
                 'deserialise_group' => 'add'
             ]);
+            
+            $request->getSession()->getFlashBag()->add(
+                'action', 
+                'page.accountAdded'
+            );
+
             return $this->redirect(
                 $this->generateUrl('accounts', [ 'reportId' => $reportId ]) . "#pageBody"
             );

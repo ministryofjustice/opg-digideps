@@ -23,7 +23,9 @@ activeTab: "tab-accounts"
         transDomain: translationDomain,
         pageSectionWarning: 'page.pageSectionWarning'
         } %}
-
+        {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+              transDomain: translationDomain
+        } %}
         {% block validationSummary %}
             {{ form_errors_list(form) }}
         {% endblock %}

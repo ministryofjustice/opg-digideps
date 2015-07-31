@@ -5,6 +5,7 @@ page:
     Tell us about the main bank account or accounts you use regularly to receive money and make payments 
     on behalf of the client. For most people, this is their  current account, and they usually just have one.
   pageSectionWarning: "Do not include savings or investment accounts, such as ISAs - add these to the assets section."
+  accountAdded: "We’ve added your account"
 form:
   edit:
     currencySymbol: "£"
