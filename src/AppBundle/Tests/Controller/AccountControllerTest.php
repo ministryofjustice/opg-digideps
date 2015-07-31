@@ -18,7 +18,9 @@ class AccountControllerTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient();
+        $this->client = static::createClient([ 'environment' => 'test',
+                                               'debug' => false ]);
+        
         $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
     }
 
