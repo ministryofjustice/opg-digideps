@@ -47,8 +47,8 @@ class UserDetailsFullType extends UserDetailsBasicType
         ]);
     }
     
-    public function getName()
+    public function getPasswordValidationGroup()
     {
-        return 'user_details';
+        return 'user_details_full';
     }
 }
