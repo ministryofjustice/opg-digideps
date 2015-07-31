@@ -34,14 +34,14 @@ pages:
         subSectionList: "*buying or selling or renting property *buying or selling investments or shares *loans *making gifts *moving the client to another nursing or care home"
       accounts:
         subSectionTitle: "Accounts"
-        subSectionDescription: "Add details of your client's accounts. Let us know the regular payments you make and money you receive for the client."
+        subSectionDescription: "Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."
         subSectionWarning: "You can only sign off the accounts' section at the end of the reporting period when you know the final totals."
       assets:
         subSectionTitle: "Assets"
         subSectionDescription: "Add details of the client's assets and saving, such as:"
         subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
         noAssets: The client has not assets
-  additionalInformation: 
+  additionalInformation:
       subSectionTitle: More information
 reportSubmit:
     checkbox:
