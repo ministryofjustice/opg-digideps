@@ -403,6 +403,8 @@ Feature: report
     Scenario: add another account 6666 (will be deleted by next scenario)
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the accounts page of the first report
+        And I click on "add-account"
+        Then the URL should match "/report/\d+/accounts/add#pageBody"
         # add another account
         And I fill in the following:
             | account_bank    | Barclays acccount to delete | 
@@ -419,7 +421,8 @@ Feature: report
             | account_openingBalance  | 1,300.00 |
             | account_openingDateExplanation | just a test |
         And I press "account_save"
-        Then the form should be valid
+        Then the URL should match "/report/\d+/accounts#pageBody"
+        And the form should be valid
         
 
 
