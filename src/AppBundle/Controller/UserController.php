@@ -235,7 +235,7 @@ class UserController extends Controller
         if($request->getMethod() == 'POST'){
             $formEditDetails->handleRequest($request);
             $apiClient = $this->get('apiclient');
-           
+            
             if($formEditDetails->isValid()){
                 $formData = $formEditDetails->getData();
                 $formRawData = $request->request->get('user_details');

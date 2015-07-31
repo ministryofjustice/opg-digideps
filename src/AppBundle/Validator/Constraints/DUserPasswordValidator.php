@@ -23,7 +23,7 @@ class DUserPasswordValidator extends UserPasswordValidator
     public function validate($password, Constraint $constraint)
     {
         $user = $this->securityContext->getToken()->getUser();
-
+        
         if (!$user instanceof UserInterface) {
             throw new ConstraintDefinitionException('The User object must implement the UserInterface interface.');
         }

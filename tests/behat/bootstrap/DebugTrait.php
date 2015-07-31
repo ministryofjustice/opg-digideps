@@ -27,11 +27,11 @@ trait DebugTrait
                 break;
             }
         }
-        $data = $this->getSession()->getPage()->getContent();
+        $session = $this->getSession();
+        $data = $session->getPage()->getContent();
         $bytes = file_put_contents($filename, $data);
-        #exec("firefox $filename 2>&1");
-        echo "- Url: " . $this->getSession()->getCurrentUrl() . "\n";
-        echo "- Status code: " . $this->session->getStatusCode() . "\n";
+        echo "- Url: " . $session->getCurrentUrl() . "\n";
+        echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
     }
     
