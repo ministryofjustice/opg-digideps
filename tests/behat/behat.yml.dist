@@ -27,6 +27,9 @@ default:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
+                    # dbname used for db snapshot
+                    dbName: api
+                    saveSnaphotBeforeEachScenario: true
                     
       feedback:
         description: Tests related to user feedback
