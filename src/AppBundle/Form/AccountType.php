@@ -74,7 +74,7 @@ class AccountType extends AbstractType
         $builder->add('closingDate', 'date', [ 'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
-                'invalid_message' => 'Value or character is not valid'
+                'invalid_message' => 'account.closingDate.invalidMessage'
             ])
             ->add('closingDateExplanation', 'textarea')
             ->add('closingBalance', 'number', [
