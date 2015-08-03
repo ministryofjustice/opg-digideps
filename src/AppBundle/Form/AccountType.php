@@ -36,20 +36,12 @@ class AccountType extends AbstractType
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('bank', 'text')
-            ->add('openingDate', 'date', [ 'widget' => 'text',
-                'input' => 'datetime',
-                'format' => 'yyyy-MM-dd',
-                'invalid_message' => 'account.openingDate.invalidMessage'
-            ])
-            ->add('openingBalance', 'number', [ 
-                'grouping' => true, 
-                'precision' => 2, 
-                'invalid_message' => 'account.openingBalance.type'
-            ])
-            ->add('openingDateExplanation', 'textarea')
-            ->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
-            ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
+        $builder->add('bank', 'text');
+        
+        $this->addOpeningBalanceFields($builder);
+            
+        $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
+                ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
 
         
         if ($this->options['showClosingBalance']) {
@@ -64,6 +56,27 @@ class AccountType extends AbstractType
         }
     }
 
+    /**
+     * Add fields: openingDate, openingBalance, openingDateExplanation
+     * 
+     * @param FormBuilderInterface $builder
+     */
+    protected function addOpeningBalanceFields(FormBuilderInterface $builder)
+    {
+        $builder
+            ->add('openingDate', 'date', [ 'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'yyyy-MM-dd',
+                'invalid_message' => 'account.openingDate.invalidMessage'
+            ])
+            ->add('openingBalance', 'number', [ 
+                'grouping' => true, 
+                'precision' => 2, 
+                'invalid_message' => 'account.openingBalance.type'
+            ])
+            ->add('openingDateExplanation', 'textarea');
+    }
+    
     /**
      * Add fields: closingDate, closingDateExplanation, closingBalance, closingBalanceExplanation
      * 
