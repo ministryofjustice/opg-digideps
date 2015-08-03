@@ -19,7 +19,8 @@ class SafeguardingType extends AbstractType
 		        	                   'response.once_a_month' => 'response.once_a_month',
 		        	                   'response.more_than_twice_a_year' => 'response.more_than_twice_a_year',
 		        	                   'response.once_a_year' => 'response.once_a_year',
-		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ]
+		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ],
+					    'expanded' => true
 		        	))
 		        ->add('howOftenDoYouPhoneOrVideoCall', 'choice', array(
 		        	    'choices' => [ 'response.everyday' => 'response.everyday',
@@ -27,7 +28,8 @@ class SafeguardingType extends AbstractType
 		        	                   'response.once_a_month' => 'response.once_a_month',
 		        	                   'response.more_than_twice_a_year' => 'response.more_than_twice_a_year',
 		        	                   'response.once_a_year' => 'response.once_a_year',
-		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ]
+		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ],
+					   'expanded' => true
 		        	))
 		        ->add('howOftenDoYouWriteEmailOrLetter', 'choice', array(
 		        	    'choices' => [ 'response.everyday' => 'response.everyday',
@@ -35,7 +37,8 @@ class SafeguardingType extends AbstractType
 		        	                   'response.once_a_month' => 'response.once_a_month',
 		        	                   'response.more_than_twice_a_year' => 'response.more_than_twice_a_year',
 		        	                   'response.once_a_year' => 'response.once_a_year',
-		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ]
+		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ],
+					   'expanded' => true
 		        	))
 		        ->add('howOftenDoesClientSeeOtherPeople', 'choice', array(
 		        	    'choices' => [ 'response.everyday' => 'response.everyday',
@@ -43,7 +46,8 @@ class SafeguardingType extends AbstractType
 		        	                   'response.once_a_month' => 'response.once_a_month',
 		        	                   'response.more_than_twice_a_year' => 'response.more_than_twice_a_year',
 		        	                   'response.once_a_year' => 'response.once_a_year',
-		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ]
+		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ],
+					   'expanded' => true
 		        	))
 		        ->add('AnythingElseToTell', 'textarea')
 

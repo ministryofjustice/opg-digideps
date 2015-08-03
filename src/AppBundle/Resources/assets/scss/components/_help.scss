@@ -16,7 +16,9 @@
 }
 
 .report-declaration #contact-block,
-.report-money-input #contact-block {
+.report-money-input #contact-block,
+.safeguarding-page #contact-block 
+{
     display: none;
     @include media(mobile) {
         display:none;
