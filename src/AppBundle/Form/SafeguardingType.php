@@ -49,7 +49,7 @@ class SafeguardingType extends AbstractType
 		        	                   'response.less_than_once_a_year' => 'response.less_than_once_a_year' ],
 					   'expanded' => true
 		        	))
-		        ->add('AnythingElseToTell', 'textarea')
+		        ->add('anythingElseToTell', 'textarea')
 
 		        ->add('doesClientReceiveCare', 'choice', array(
                     	'choices' => [ 'response.yes'=>'response.yes', 'response.no'=>'response.no'],
@@ -63,7 +63,7 @@ class SafeguardingType extends AbstractType
                     	'expanded' => true
                  	 ))
 
-		        ->add('WhoIsDoingTheCaring', 'textarea')
+		        ->add('whoIsDoingTheCaring', 'textarea')
 
 		        ->add('whenWasCarePlanLastReviewed', 'date',[ 'widget' => 'text',
 			                                                 'input' => 'datetime',
