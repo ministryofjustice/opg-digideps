@@ -56,15 +56,15 @@ form:
         hint: ""
   openingBalance:
     subSectionTitle: Add the opening balance
-    subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period.
+    subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}.
     controls:
       openingDate:
-        legend: Add the opening balance date for this account
+        legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ? 
         hint: (DD/MM/YYYY)
       openingBalancePrefix:
         label: £
       openingDateExplanation:
-        label: Is the start date of your reporting period and the opening balance date the same? If not, tell us why the dates are different.
+        label: Tell us why the opening date is not {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}.
       openingBalance:
         label: Opening balance
       save:

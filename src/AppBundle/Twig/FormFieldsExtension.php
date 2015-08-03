@@ -146,13 +146,15 @@ class FormFieldsExtension extends \Twig_Extension
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
         
         //get legendText translation
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);
         
         $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
         
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
                                                                                                 'hintText' => $hintText,
-                                                                                                'element' => $element
+                                                                                                'element' => $element,
+                                                                                                'legendTextRaw' => !empty($vars['legendRaw'])
                                                                                               ]);
         echo $html;
     }
@@ -292,7 +294,8 @@ class FormFieldsExtension extends \Twig_Extension
         $hintListEntriesText = ($hintListTextTrans != $translationKey.'.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
         
         //sort out labelText translation
-        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
+        $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label', $labelParams, $domain);
 
         //inputPrefix
         $inputPrefix = isset($vars['inputPrefix'])? $this->translator->trans($vars['inputPrefix'],[],$domain): null;
@@ -309,7 +312,8 @@ class FormFieldsExtension extends \Twig_Extension
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
-            'formGroupClass' => $formGroupClass
+            'formGroupClass' => $formGroupClass,
+            'labelRaw' => !empty($vars['labelRaw'])
         ];
     }
     

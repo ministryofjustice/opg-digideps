@@ -1,7 +1,13 @@
 {% set id = random() %}
 <div class="form-group form-date {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}" id="{{ id }}">
     <fieldset>
-        <legend class="form-label">{{ legendText }}</legend>
+        <legend class="form-label">
+          {% if legendTextRaw is defined %}
+              {{ legendText | raw }}
+          {% else %}
+              {{ legendText }}
+          {% endif %}
+        </legend>
         <p class="form-hint">{{ hintText }}</p>
         {% if not element.vars.valid %}
             <ul class="errors">
