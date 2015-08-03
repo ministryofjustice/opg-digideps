@@ -68,7 +68,7 @@ class SafeguardingType extends AbstractType
 			                                              ]);
 	}
 
-	public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
             'translation_domain' => 'report-safeguarding',
