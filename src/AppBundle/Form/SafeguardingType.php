@@ -58,8 +58,13 @@ class SafeguardingType extends AbstractType
                     	               'all_care_is_paid_by_someone_else' => 'response.all_care_is_paid_by_someone_else' ],
                     	'expanded' => true
                  	 ))
-
+                        
 		        ->add('whoIsDoingTheCaring', 'textarea')
+                        
+                        ->add('doesClientHaveACarePlan', 'choice', array(
+                                'choices' => [ 'yes'=>'response.yes', 'no'=>'response.no'],
+                                'expanded' => true
+                            ))
 
 		        ->add('whenWasCarePlanLastReviewed', 'date',[ 'widget' => 'text',
 			                                                 'input' => 'datetime',
