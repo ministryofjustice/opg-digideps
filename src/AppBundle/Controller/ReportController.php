@@ -274,6 +274,23 @@ class ReportController extends Controller
             'deputy' => $this->getUser(),
         ];
     }
+
+    /**
+     * @Route("/report/{reportId}/safeguarding", name="report_safeguarding")
+     * @Template()
+     */
+    public function safeguardingAction($reportId)
+    {
+        $util = $this->get('util');
+        $report = $util->getReport($reportId);
+
+        $form = $this->createForm(new FormDir\SafeguardingType());
+
+        return[ 'report' => $report,
+                'client' => $util->getClient($report->getClient()),
+                'form' => $form->createView()
+              ];
+    }
     
     private function groupAssets($assets)
     {

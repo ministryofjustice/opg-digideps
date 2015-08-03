@@ -1,0 +1,18 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+activeTab: "tab-decisions"
+} %}
+
+ {% set translationDomain = "report-safeguarding" %}
+ {% trans_default_domain translationDomain %}
+
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block contentClass %}{{ parent() }} js-report-decisions-input{% endblock %}
+{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+
+{% block pageBody %}
+         
+   {{form(form)}}
+{% endblock %}
+
+{% endembed %}
