@@ -53,18 +53,7 @@ class AccountType extends AbstractType
 
         
         if ($this->options['showClosingBalance']) {
-            $builder->add('closingDate', 'date', [ 'widget' => 'text',
-                    'input' => 'datetime',
-                    'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Value or character is not valid'
-                ])
-                ->add('closingDateExplanation', 'textarea')
-                ->add('closingBalance', 'number', [ 
-                    'grouping' => true, 
-                    'precision' => 2,
-                    'invalid_message' => 'account.closingBalance.type'
-                ])
-                ->add('closingBalanceExplanation', 'textarea');
+            $this->addClosingBalanceFields($builder);
         }
 
         if ($this->options['showSubmitButton']) {
@@ -75,6 +64,27 @@ class AccountType extends AbstractType
         }
     }
 
+    /**
+     * Add fields: closingDate, closingDateExplanation, closingBalance, closingBalanceExplanation
+     * 
+     * @param FormBuilderInterface $builder
+     */
+    protected function addClosingBalanceFields(FormBuilderInterface $builder)
+    {
+        $builder->add('closingDate', 'date', [ 'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Value or character is not valid'
+            ])
+            ->add('closingDateExplanation', 'textarea')
+            ->add('closingBalance', 'number', [
+                'grouping' => true,
+                'precision' => 2,
+                'invalid_message' => 'account.closingBalance.type'
+            ])
+            ->add('closingBalanceExplanation', 'textarea');
+    }
+    
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
