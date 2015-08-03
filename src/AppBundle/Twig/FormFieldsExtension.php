@@ -84,6 +84,7 @@ class FormFieldsExtension extends \Twig_Extension
      * form_checkbox_group(element, 'allowedCourtOrderTypes', {
        'legendClass' : 'form-label-bold',
        'fieldSetClass' : 'inline',
+       'vertical': true,
        'items': [
            {'labelClass': 'block-label', 'elementClass': 'checkbox' },
            {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
@@ -113,6 +114,7 @@ class FormFieldsExtension extends \Twig_Extension
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass']: null,
             'hintText' => $hintText,
             'element'  => $element,
+            'vertical' => isset($vars['vertical']) ? $vars['vertical']: false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
         ]);
     }

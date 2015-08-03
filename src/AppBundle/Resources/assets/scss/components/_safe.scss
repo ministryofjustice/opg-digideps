@@ -1,0 +1,21 @@
+.safeguarding-page {
+
+    .form-group.form-group__check-vertical
+    {
+        @extend %contain-floats;
+        
+        .form-control.radio-vertical {
+             width: 15%;
+            display: inline-block;
+            float: left;
+            margin-right: 10px;
+            overflow: hidden;
+            
+            .block-label {
+                padding: 5px 0 5px 0;
+            }
+        }
+    }
+    
+    
+}

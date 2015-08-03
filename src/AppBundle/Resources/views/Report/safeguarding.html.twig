@@ -14,8 +14,8 @@ activeTab: "tab-safeguarding"
 <div>         
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
         {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
-        'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
+        'vertical': true,
         'items': [
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' },
@@ -27,8 +27,8 @@ activeTab: "tab-safeguarding"
         }) }}
         
         {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
-        'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
+        'vertical': true,
         'items': [
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' },
@@ -40,8 +40,8 @@ activeTab: "tab-safeguarding"
         }) }}
         
         {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter, 'howOftenDoYouWriteEmailOrLetter', {
-        'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
+        'vertical': true,
         'items': [
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' },
@@ -53,8 +53,8 @@ activeTab: "tab-safeguarding"
         }) }}
         
         {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 'howOftenDoesClientSeeOtherPeople', {
-        'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
+        'vertical': true,
         'items': [
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' },
