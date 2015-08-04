@@ -15,15 +15,17 @@ use Symfony\Component\Form\FormInterface;
  */
 class AccountType extends AbstractType
 {
+
     /**
      * @var array 
      */
     private $options = [
         'showClosingBalance' => false,
-        'showSubmitButton'   => true,
-        'showDeleteButton'   => false,
+        'showSubmitButton' => true,
+        'showDeleteButton' => false,
     ];
-    
+
+
     /**
      * @param boolean showClosingBalance, default false
      * @param boolean showSubmitButton, default true
@@ -31,19 +33,20 @@ class AccountType extends AbstractType
      */
     public function __construct(array $optionsOverride = [])
     {
-        $this->options = $optionsOverride +  $this->options;
+        $this->options['id']='elvisform';
+        $this->options = $optionsOverride + $this->options;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('bank', 'text');
-        
-        $this->addOpeningBalanceFields($builder);
-            
-        $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
-                ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
 
-        
+        $this->addOpeningBalanceFields($builder);
+
+        $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
+            ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
+
+
         if ($this->options['showClosingBalance']) {
             $this->addClosingBalanceFields($builder);
         }
@@ -64,19 +67,25 @@ class AccountType extends AbstractType
     protected function addOpeningBalanceFields(FormBuilderInterface $builder)
     {
         $builder
+            ->add('openingDateSame', 'choice', [ 
+                'choices' => ['yes'=>'Yes', 'no'=>'No'],
+                'multiple' => false,
+                'expanded' => true,
+                'mapped' => false
+            ])
             ->add('openingDate', 'date', [ 'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'yyyy-MM-dd',
                 'invalid_message' => 'account.openingDate.invalidMessage'
             ])
-            ->add('openingBalance', 'number', [ 
-                'grouping' => true, 
-                'precision' => 2, 
+            ->add('openingBalance', 'number', [
+                'grouping' => true,
+                'precision' => 2,
                 'invalid_message' => 'account.openingBalance.type'
             ])
             ->add('openingDateExplanation', 'textarea');
     }
-    
+
     /**
      * Add fields: closingDate, closingDateExplanation, closingBalance, closingBalanceExplanation
      * 
@@ -97,7 +106,7 @@ class AccountType extends AbstractType
             ])
             ->add('closingBalanceExplanation', 'textarea');
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
