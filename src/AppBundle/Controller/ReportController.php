@@ -276,7 +276,7 @@ class ReportController extends Controller
     }
 
     /**
-     * @Route("/report/{reportId}/safeguarding", name="report_safeguarding")
+     * @Route("/report/{reportId}/safeguarding", name="safeguarding")
      * @Template()
      */
     public function safeguardingAction($reportId)
@@ -312,7 +312,7 @@ class ReportController extends Controller
               ];
     }
     
-    
+
     private function groupAssets($assets)
     {
         $assetGroups = array();

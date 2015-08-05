@@ -25,6 +25,10 @@
         {% set tabNotificationClass = tabNotificationClass| merge({'tab-assets': 'icon icon__notification behat-region-tab-assets-warning'}) %}
     {% endif %}
 
+    {% if report.missingSafeguardingInfo() %}
+        {% set tabNotificationClass = tabNotificationClass| merge({'tab-safeguarding': 'icon icon__notification behat-region-tab-safeguarding-warning'}) %}
+    {% endif %}
+
 {% endif %}
 
 
