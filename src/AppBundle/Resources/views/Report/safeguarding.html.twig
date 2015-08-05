@@ -11,6 +11,8 @@ activeTab: "tab-safeguarding"
 
 
 {% block pageBody %}
+    {#{{client.fullname}}#}
+
 <div>         
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
         {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {

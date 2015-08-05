@@ -212,3 +212,25 @@ sendEmail:
         notBlank: Please supply message for your email
     bodyHtml:
         notBlank: Please supply message for your email
+safeguarding:
+    doYouLiveWithClient:
+        notBlank: Please select one option
+    howOftenDoYouVisit: 
+        notBlank: Please select one option
+    howOftenDoYouPhoneOrVideoCall: 
+        notBlank: Please select one option
+    howOftenDoYouWriteEmailOrLetter: 
+        notBlank: Please select one option
+    howOftenDoesClientSeeOtherPeople: 
+        notBlank: Please select one option
+    doesClientReceivePaidCare: 
+        notBlank: Please select one option
+    howIsCareFunded: 
+        notBlank: Please select one option
+    whoIsDoingTheCaring: 
+        notBlank: Please select one option 
+    whenWasCarePlanLastReviewed:
+        notBlank: Please enter last review date
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+    doesClientHaveACarePlan:
+        notBlank: Please select one option 
