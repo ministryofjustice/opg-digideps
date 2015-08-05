@@ -8,22 +8,21 @@
       }
     } %}
 
+{# yes/no radio button asking if opening date is the same. Not used for non-JS version, so initially hidden #}
 <div id="account_opening_date_same_wrapper" class="visuallyhidden">
-
   {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
       transDomain: translationDomain,
       subSectionDescription: 'Is the start date of your reporting period and the opening balance date the same ?',
     } %}
 
-  {{ form_checkbox_group(form.openingDateSame, 'openingDateSameYesNo', {
-          'fieldSetClass' : 'vertical',
-          'legendClass' : 'form-label',
-          'items': [
+    {{ form_checkbox_group(form.openingDateSame, 'openingDateSameYesNo', {
+            'fieldSetClass' : 'vertical',
+            'legendClass' : 'form-label',
+            'items': [
               {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateSame.labelYes" | trans({}, translationDomain) },
               {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateSame.labelNo" | trans({}, translationDomain) }
           ]
       }) }}
-
 </div>
 
 <div id="account_opening_date_not_same">
@@ -61,16 +60,22 @@
 
     // initiate JS version (hide fields)
     openingDateNotSameBlock.addClass('visuallyhidden');
-
-    // show the checkbox and attach onClick event
+    
+    // show the checkbox, run and attach "switch" logic
     $('#account_opening_date_same_wrapper')
         .removeClass('visuallyhidden')
         .change(function () {
-          if ("yes" === $('input[name="{{ form.openingDateSame.vars.full_name }}"]:checked', '#{{ formId }}').val()) {
+          if ("yes" === $('input[name="account[openingDateSame]"]:checked').val()) {
             openingDateNotSameBlock.addClass('visuallyhidden');
           } else {
             openingDateNotSameBlock.removeClass('visuallyhidden');
           }
-        });
+        })
+        .trigger('change');
+
+    {% if addMode %}
+       $('#account_openingDateSame_0').trigger('click');
+    {% endif %}
+        
   });
 </script>

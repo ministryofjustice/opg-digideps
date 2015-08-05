@@ -8,6 +8,10 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
+use AppBundle\Entity\Account;
 
 /**
  * Form to add and edit account
@@ -70,9 +74,26 @@ class AccountType extends AbstractType
             ->add('openingDateSame', 'choice', [ 
                 'choices' => ['yes'=>'Yes', 'no'=>'No'],
                 'multiple' => false,
-                'expanded' => true,
-                'mapped' => false
+                'expanded' => true
             ])
+            // if the openingDateSame is "yes", then ovverride openingDate and openingDateExplanation values
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+                
+                if ($data['openingDateSame'] == Account::OPENING_DATE_SAME_YES) {
+                    $account = $event->getForm()->getData();
+                    $reportStartdate = $account->getReportObject(true)->getStartDate();
+                    
+                    $data['openingDate'] = [
+                        'day' => $reportStartdate->format('d'),
+                        'month' => $reportStartdate->format('m'),
+                        'year' => $reportStartdate->format('Y'),
+                    ];
+                    $data['openingDateExplanation'] = '';
+                    
+                    $event->setData($data);
+                 }
+           })
             ->add('openingDate', 'date', [ 'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'yyyy-MM-dd',

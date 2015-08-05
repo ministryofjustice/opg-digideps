@@ -58,7 +58,8 @@
     {# opening balance logic (shared template) #}
     {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
       form: form, 
-      formId: formId
+      formId: formId,
+      addMode: true
     } %}
     
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}

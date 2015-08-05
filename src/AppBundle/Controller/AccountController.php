@@ -185,20 +185,27 @@ class AccountController extends Controller
     private function handleAccountEditDeleteForm(EntityDir\Account $account, array $options)
     {
         $form = $this->createForm(new FormDir\AccountType($options), $account);
-        // set default value, needed to make submit working when JS is not enabled
-        $form->get('openingDateSame')->setData('no');
+        
         $form->handleRequest($this->getRequest());
-        $isEditSubmitted = $form->has('save') && $form->get('save')->isClicked();
-        $isEditSubmittedAndValid = $isEditSubmitted && $form->isValid();
+        $isEditOrAddSubmitted = $form->has('save') && $form->get('save')->isClicked();
+        // set default value to make submit working when JS is not enabled
+        if (!$account->getId() && $isEditOrAddSubmitted) {
+             $form->get('openingDateSame')->setData(EntityDir\Account::OPENING_DATE_SAME_NO);
+        }
+        $isEditSubmittedAndValid = $isEditOrAddSubmitted && $form->isValid();
         $isDeleteSubmittedAndValid = $form->has('delete') && $form->get('delete')->isClicked();
         
-        // if closing date is valid, reset the explanation
-        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingDateEqualToReportEndDate()) {
-            $account->setClosingDateExplanation(null);
-        }
-        // if closing balance is valid, reset the explanation
-        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingBalanceMatchingTransactionSum()) {
-            $account->setClosingBalanceExplanation(null);
+        // account edit/add post-save logic
+        //TODO refactor in PRE_SUBMIT event
+        if ($form->has('save') && $form->get('save')->isClicked()) {
+            // if closing date is valid, reset the explanation
+            if ($account->isClosingDateEqualToReportEndDate()) {
+                $account->setClosingDateExplanation(null);
+            }
+            // if closing balance is valid, reset the explanation
+            if ($account->isClosingBalanceMatchingTransactionSum()) {
+                $account->setClosingBalanceExplanation(null);
+            }
         }
         
         return [$form, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];

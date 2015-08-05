@@ -12,6 +12,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Account
 {
+    const OPENING_DATE_SAME_YES = 'yes';
+    const OPENING_DATE_SAME_NO = 'no';
     /**
      * @JMS\Type("integer")
      * @var integer $id
@@ -51,6 +53,14 @@ class Account
      * @var string $accountNumber
      */
     private $accountNumber;
+    
+    /**
+     * field not mapped in the API.
+     * Only used for JS version of the account form, to make easier holding options with form interactions
+     * 
+     * @var string 
+     */
+    private $openingDateSame;
     
     /**
      * @JMS\Type("DateTime")
@@ -362,8 +372,12 @@ class Account
     /**
      * @return Report
      */
-    public function getReportObject()
+    public function getReportObject($validate = false)
     {
+        if ($validate && !$this->reportObject instanceof Report) {
+            throw new \RuntimeException("Report object not found.");
+        }
+        
         return $this->reportObject;
     }
     
@@ -539,5 +553,26 @@ class Account
     {
         return $this->moneyTotal;
     }
+    
+    /**
+     * Virtual field.
+     * 
+     * @return string 'yes' if opening date is the same as reprot start date, "no" otherwise
+     * @throws \RuntimeException
+     */
+    public function getOpeningDateSame()
+    {
+        $openingDate = $this->getOpeningDate();
+        
+        $format = 'd/m/Y';
+        $reportStartDate = $this->getReportObject(true)->getStartDate();
+        return $openingDate && $reportStartDate && $openingDate->format($format) == $reportStartDate->format($format) 
+               ? self::OPENING_DATE_SAME_YES : self::OPENING_DATE_SAME_NO;
+    }
 
+    
+    public function setOpeningDateSame($openingDateSame)
+    {
+        $this->openingDateSame = $openingDateSame;
+    }
 }

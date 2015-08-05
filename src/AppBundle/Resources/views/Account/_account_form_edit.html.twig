@@ -26,7 +26,8 @@
     {# opening balance logic (shared template) #}
     {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
       form: form, 
-      formId: formId
+      formId: formId,
+      addMode: false
     } %}
 
     {# closing balance part #}
