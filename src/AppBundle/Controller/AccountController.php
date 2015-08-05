@@ -185,6 +185,8 @@ class AccountController extends Controller
     private function handleAccountEditDeleteForm(EntityDir\Account $account, array $options)
     {
         $form = $this->createForm(new FormDir\AccountType($options), $account);
+        // set default value, needed to make submit working when JS is not enabled
+        $form->get('openingDateSame')->setData('no');
         $form->handleRequest($this->getRequest());
         $isEditSubmitted = $form->has('save') && $form->get('save')->isClicked();
         $isEditSubmittedAndValid = $isEditSubmitted && $form->isValid();
