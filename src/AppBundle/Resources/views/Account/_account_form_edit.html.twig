@@ -10,7 +10,7 @@
     transDomain: translationDomain,
     subSectionTitle: 'form.edit.accountDetails.subSectionTitle'
     } %}
-
+    
     {# start common form elements #}
     
     {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
@@ -22,65 +22,12 @@
     transDomain: translationDomain,
     subSectionTitle: 'form.edit.openingBalance.subSectionTitle'
     } %}
-
-    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-      transDomain: translationDomain,
-      subSectionDescription: 'form.openingBalance.subSectionDescription',
-      transOptions: { 
-        '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
-        '{{ boldStart }}': '<strong style="font-weight:bold">',
-        '{{ boldEnd }}': '</strong>'
-      }
+    
+    {# opening balance logic (shared template) #}
+    {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
+      form: form, 
+      formId: formId
     } %}
-    
-    <div id="account_opening_date_same_wrapper" class="visuallyhidden">
-      
-      {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-      transDomain: translationDomain,
-      subSectionDescription: 'Is the start date of your reporting period and the opening balance date the same ?',
-    } %}
-      
-      {{ form_checkbox_group(form.openingDateSame, 'openingDateSameYesNo', {
-          'fieldSetClass' : 'vertical',
-          'legendClass' : 'form-label',
-          'items': [
-              {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateSame.labelYes" | trans({}, translationDomain) },
-              {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateSame.labelNo" | trans({}, translationDomain) }
-          ]
-      }) }}
-      
-    </div>
-    
-    <div id="account_opening_date_not_same">
-          
-    {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate', {
-        'legendParameters': {
-          '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
-          '{{ boldStart }}': '<strong style="font-weight:bold">',
-          '{{ boldEnd }}': '</strong>'
-        },
-        'legendRaw': true
-    }) }}
-    
-    {{ form_input(form.openingDateExplanation, 'form.openingBalance.controls.openingDateExplanation', { 
-      'labelClass': 'required',
-      'inputClass': 'expanding',
-      'labelParameters': {
-        '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
-        '{{ boldStart }}': '<strong style="font-weight:bold">',
-        '{{ boldEnd }}': '</strong>'
-      },
-      'labelRaw': true
-    }) }}
-    
-    </div>
-    
-    {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance', {
-    'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
-    'inputClass' : 'form-control__number'
-    } ) }}
-    
-    {# end common form elements #}
 
     {# closing balance part #}
     {% if form.closingDate is defined and form.closingBalance is defined %}
@@ -156,28 +103,3 @@
 
     {{ form_end(form) }}
 </div>
-
-{# openingData toggle logic #}
- <script type="text/javascript">
-
-      $().ready(function () {
-        
-        var openingDateNotSameBlock = $('#account_opening_date_not_same');
-        
-        // initiate JS version (hide fields)
-        openingDateNotSameBlock.addClass('visuallyhidden');
-        
-        // show the checkbox and attach onClick event
-        $('#account_opening_date_same_wrapper')
-         .removeClass('visuallyhidden')
-         .change(function() {
-            if ("yes" === $('input[name="{{ form.openingDateSame.vars.full_name }}"]:checked', '#{{ formId }}').val()) {
-              openingDateNotSameBlock.addClass('visuallyhidden');
-            } else {
-              openingDateNotSameBlock.removeClass('visuallyhidden');
-            }
-        });
-
-      });
-
-  </script>
