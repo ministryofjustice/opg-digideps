@@ -1,11 +1,13 @@
-{% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-      transDomain: translationDomain,
-      subSectionDescription: 'form.openingBalance.subSectionDescription',
-      transOptions: { 
+{% set reportBoldStartDateTransReplacements = { 
         '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
         '{{ boldStart }}': '<strong style="font-weight:bold">',
         '{{ boldEnd }}': '</strong>'
-      }
+}%}
+
+{% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+      transDomain: translationDomain,
+      subSectionDescription: 'form.openingBalance.subSectionDescription',
+      transOptions: reportBoldStartDateTransReplacements
     } %}
 
 {# yes/no radio button asking if opening date is the same. Not used for non-JS version, so initially hidden #}
@@ -28,22 +30,14 @@
 <div id="account_opening_date_not_same">
 
   {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate', {
-        'legendParameters': {
-          '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
-          '{{ boldStart }}': '<strong style="font-weight:bold">',
-          '{{ boldEnd }}': '</strong>'
-        },
+        'legendParameters': reportBoldStartDateTransReplacements,
         'legendRaw': true
     }) }}
 
   {{ form_input(form.openingDateExplanation, 'form.openingBalance.controls.openingDateExplanation', { 
       'labelClass': 'required',
       'inputClass': 'expanding',
-      'labelParameters': {
-        '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
-        '{{ boldStart }}': '<strong style="font-weight:bold">',
-        '{{ boldEnd }}': '</strong>'
-      },
+      'labelParameters': reportBoldStartDateTransReplacements,
       'labelRaw': true
     }) }}
 
