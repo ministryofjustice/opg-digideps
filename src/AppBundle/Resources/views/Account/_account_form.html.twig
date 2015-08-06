@@ -45,16 +45,6 @@
     subSectionTitle: 'form.openingBalance.subSectionTitle'
     } %}
 
-    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-      transDomain: translationDomain,
-      subSectionDescription: 'form.openingBalance.subSectionDescription',
-      transOptions: { 
-        '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
-        '{{ boldStart }}': '<strong style="font-weight:bold">',
-        '{{ boldEnd }}': '</strong>'
-      }
-    } %}
-    
     {# opening balance logic (shared template) #}
     {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
       form: form, 
