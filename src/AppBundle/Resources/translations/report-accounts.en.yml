@@ -61,8 +61,10 @@ form:
       openingDateSame:
         labelYes: " "
         labelNo: " "
+        legend: Is the start date of your reporting period and the opening balance date the same ?
       openingDate:
         legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ? 
+        legendJs: Add the opening balance date for this account
         hint: (DD/MM/YYYY)
       openingBalancePrefix:
         label: £
