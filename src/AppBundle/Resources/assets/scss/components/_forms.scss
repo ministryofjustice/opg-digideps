@@ -181,6 +181,10 @@ form {
 .form-label {
   margin-bottom: 5px;
   width: 50%;
+  
+  .bold {
+    font-weight: bold;
+  }
 }
 legend .form-label {
     width: 100%;
