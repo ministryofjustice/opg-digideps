@@ -15,16 +15,16 @@ class Version040 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE report ADD do_you_live_with_client VARCHAR(4) NOT NULL');
+        $this->addSql('ALTER TABLE report ADD do_you_live_with_client VARCHAR(4) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD how_often_do_you_visit VARCHAR(55) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD how_often_do_you_phone_or_video_call VARCHAR(55) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD how_often_do_you_write_email_or_letter VARCHAR(55) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD how_often_does_client_see_other_people VARCHAR(55) DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD anything_else_to_tell TEXT DEFAULT NULL');
-        $this->addSql('ALTER TABLE report ADD does_client_receive_paid_care TEXT NOT NULL');
-        $this->addSql('ALTER TABLE report ADD who_is_doing_the_caring TEXT NOT NULL');
-        $this->addSql('ALTER TABLE report ADD does_client_have_a_care_plan VARCHAR(4) NOT NULL');
-        $this->addSql('ALTER TABLE report ADD when_was_care_plan_last_reviewed TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL');
+        $this->addSql('ALTER TABLE report ADD does_client_receive_paid_care TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD who_is_doing_the_caring TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD does_client_have_a_care_plan VARCHAR(4) DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD when_was_care_plan_last_reviewed TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
     }
 
     public function down(Schema $schema)
