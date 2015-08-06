@@ -47,7 +47,8 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 
         // skip migration if locked
         if ($this->isLocked()) {
-            $message = 'Migration is locked by another migration, skipped.';
+            $message = 'Migration is locked by another migration, skipped.'
+                       . ' Launch with -- clear-lock to manually delete the log';
             $this->getService('logger')->warning($message);
             $output->writeln($message);
             return 0;
@@ -55,8 +56,17 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 
         
         $this->writeLock();
-        $ret = parent::execute($input, $output);
-        $this->deleteLock();
+        $output->writeln('Lock written.');
+        try {
+            $ret = parent::execute($input, $output);
+            $this->deleteLock();
+            $output->writeln('Lock deleted.');
+        } catch (\Exception $e) {
+            // in case of exception, delete the lock, then re-throw to keep the parent behaviour
+            $this->deleteLock();
+            $output->writeln('Exception raised. Lock deleted.');
+            throw $e;
+        }
         
         return $ret;
     }
