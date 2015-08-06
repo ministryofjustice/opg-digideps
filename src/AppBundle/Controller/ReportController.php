@@ -299,7 +299,7 @@ class ReportController extends Controller
                     $this->get('apiclient')->putC('report/' .  $report->getId(),$data);
                     $translator = $this->get('translator');
 
-                    $this->get('session')->getFlashBag()->add('notice', $translator->trans('notice.message',[],'report-safeguarding'));
+                    $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
 
                     return $this->redirect($this->generateUrl('report_safeguarding', ['reportId'=>$reportId]));
                 }

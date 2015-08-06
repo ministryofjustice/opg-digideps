@@ -1,4 +1,3 @@
 page:
     htmlTitle: Report Safeguarding
-notice:
-    message: Your changes were saved
+    safeguardInfoSaved: Your changes were saved
