@@ -3,7 +3,7 @@
     .form-group.form-group__check-vertical
     {
         @extend %contain-floats;
-        
+                
         .form-control.radio-vertical {
             width: 15%;
             display: inline-block;
@@ -12,8 +12,13 @@
             overflow: hidden;
             padding: 0;
             border: none;
+            position: relative;
+            background: #fff;
+            box-sizing: border-box;
+            padding: 0 3px;
 
-            .block-label {
+            label {
+                display:block;
                 box-sizing: border-box;
                 padding: 5px;
                 margin: 0;
@@ -23,17 +28,29 @@
                 height: 3.5em;
                 float: none;
                 background: $grey-3;
+                
             }
-            .checkbox-wrapper {
-                margin: 10px 0 0 0;
+            
+            .input-wrapper {
+                margin: 10px 0 3px 0;
                 padding: 10px 0;
-                width: 100%;
+                box-sizing: border-box;
                 background-color: $grey-2;
+                border: 1px solid $grey-2;
                 clear: both;
                 text-align: center;
                 display: block;
             }
             
+            &.selected .input-wrapper {
+                background: $white;
+                border: 1px solid #000;
+
+            }
+
+            &.focused .input-wrapper {
+                outline: 3px solid #FFBF47;
+            }
         }
     }
     

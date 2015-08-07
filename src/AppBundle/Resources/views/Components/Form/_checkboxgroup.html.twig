@@ -9,14 +9,10 @@
             </ul>
         {% endif %}
         {% for key,choiceElement in element %}
-            
             <div class="form-control radio-vertical">
-                <label class="block-label" for="{{ choiceElement.vars.id }}">{{ choiceElement.vars.label | trans}}</label>
-                <div class="checkbox-wrapper">
-                    {{ form_widget(choiceElement) }}
-                </div>
+                <label for="{{ choiceElement.vars.id }}">{{ choiceElement.vars.label | trans}}</label>
+                <div class="input-wrapper">{{ form_widget(choiceElement) }}</div>
             </div>
-
         {% endfor %}
     </fieldset>
 {% else %}

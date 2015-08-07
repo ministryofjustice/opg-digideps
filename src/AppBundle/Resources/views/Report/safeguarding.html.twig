@@ -44,7 +44,16 @@ activeTab: "tab-safeguarding"
          
     <hr/>
     
-   {{form(form)}}
+    {{form(form)}}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".form-group__check-vertical").each(function(index, element) {
+                new opg.RadioGroup(element);
+            });
+        });
+    </script>
+
 {% endblock %}
 
 {% endembed %}

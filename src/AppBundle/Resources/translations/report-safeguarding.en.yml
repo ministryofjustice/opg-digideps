@@ -8,3 +8,8 @@ response:
     more_than_twice_a_year: More than twice a year
     once_a_year: Once a year
     less_than_once_a_year: Less than once a year
+howOftenDoYouVisit.legend: How often do you visit or other deputies visit the client?
+howOftenDoYouPhoneOrVideoCall.legend: How often do you or other deputies phone or vieo call the client?
+howOftenDoYouWriteEmailOrLetter.legend: How often do you or other deputies write emails or letters to the client?
+howOftenDoesClientSeeOtherPeople.legend: How often does the client see other people?
+
