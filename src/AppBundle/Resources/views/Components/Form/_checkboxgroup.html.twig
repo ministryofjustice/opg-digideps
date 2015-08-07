@@ -1,6 +1,6 @@
 {% if vertical is defined and vertical == true %}
     {% trans_default_domain translationDomain %}
-    <fieldset class="{{ fieldSetClass }} form-group form-group__checkbox-group form-group__check-vertical {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+    <fieldset class="{{ fieldSetClass }} form-group form-group__radiobox-group radio-vertical-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
         <p class="form-hint">{{ hintText }}</p>
         {% if not element.vars.valid %}

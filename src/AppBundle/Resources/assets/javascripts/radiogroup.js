@@ -12,9 +12,10 @@ var opg = opg || {};
         this.selectedClass = 'selected';
     };
         
-    RadioGroup.prototype.markSelected = function(target) {
+    RadioGroup.prototype.markSelected = function(radio) {
         this.fieldset.find('.selected').removeClass(this.selectedClass);
-        target.parent().parent().addClass(this.selectedClass);
+        radio.addClass(this.selectedClass);
+        radio.find('input').prop('checked', true);
     };
     RadioGroup.prototype.markFocused = function(target, state) {
         if (state === 'focused') {
@@ -26,7 +27,7 @@ var opg = opg || {};
     
     RadioGroup.prototype.getClickHandler = function () {
         return function (e) {
-            this.markSelected($(e.target));
+            this.markSelected($(e.currentTarget));
         }.bind(this);
     };
     RadioGroup.prototype.getFocusHandler = function (opts) {
