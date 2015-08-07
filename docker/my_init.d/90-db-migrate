@@ -1,3 +1,4 @@
-# migrate db and lock
+#!/bin/sh
 cd /app
-/sbin/setuser app php app/console doctrine:migrations:migrate-lock --no-interaction
+echo "Migrating db (with redis-based lock mechanism)
+/sbin/setuser app php app/console doctrine:migrations:migrate-lock --no-interaction --verbose
