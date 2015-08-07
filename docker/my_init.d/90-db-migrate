@@ -1,0 +1,4 @@
+# to test
+su - app
+cd /app
+php app/console doctrine:migrations:migrate-lock --no-interaction
