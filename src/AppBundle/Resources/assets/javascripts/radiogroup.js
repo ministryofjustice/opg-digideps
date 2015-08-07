@@ -3,25 +3,28 @@ var opg = opg || {};
 // call with a selector for a group that 
 (function ($, opg) {
 
+    var FOCUSEDCLASS = 'focused',
+        SELECTEDCLASS = 'selected';
+
+
     var RadioGroup = function(element, opts) {
         this.fieldset = $(element);
         this.formControls = this.fieldset.find('.form-control.radio-vertical');
         this.radios = this.fieldset.find('input');
         this.addEvents();
-        this.focusedClass = 'focused';
-        this.selectedClass = 'selected';
+
     };
         
     RadioGroup.prototype.markSelected = function(radio) {
-        this.fieldset.find('.selected').removeClass(this.selectedClass);
-        radio.addClass(this.selectedClass);
+        this.fieldset.find(SELECTEDCLASS).removeClass(SELECTEDCLASS);
+        radio.addClass(SELECTEDCLASS);
         radio.find('input').prop('checked', true);
     };
     RadioGroup.prototype.markFocused = function(target, state) {
         if (state === 'focused') {
-          target.parent().parent().addClass(this.focusedClass);
+          target.parent().parent().addClass(FOCUSEDCLASS);
         } else {
-          target.parent().parent().removeClass(this.focusedClass);
+          target.parent().parent().removeClass(FOCUSEDCLASS);
         }
     };
     
@@ -46,9 +49,7 @@ var opg = opg || {};
         this.formControls.on('click', this.clickHandler);
         this.radios.on('focus blur', this.focusHandler);
     };
-    
-    
-    
+        
     opg.RadioGroup = RadioGroup;
 
 
