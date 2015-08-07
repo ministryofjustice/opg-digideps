@@ -24,72 +24,62 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
             ->setName('doctrine:migrations:migrate-lock')
             ->setDescription('Same as doctrine:migrations:migrate, but locking the database.')
             ->setHelp(null)
-            ->addOption('clear-lock', null, InputOption::VALUE_NONE, 'Only delete migration lock and exit.')
-            ->addOption('write-lock', null, InputOption::VALUE_NONE, 'Manually write lock, for testing purposes.')
+            ->addOption('release-lock', null, InputOption::VALUE_NONE, 'Release lock and exit.')
         ;
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        // debug command to clear lock
-        if ($input->getOption('clear-lock')) {
-            $this->deleteLock();
-            $output->writeln('Lock cleared.');
-            return 0;
-        }
-        
-        // debug command to write lock
-        if ($input->getOption('write-lock')) {
-            $this->writeLock();
-            $output->writeln('Lock written.');
-            return 0;
-        }
-
-        // skip migration if locked
-        if ($this->isLocked()) {
-            $message = 'Migration is locked by another migration, skipped.'
-                       . ' Launch with -- clear-lock to manually delete the log';
-            $this->getService('logger')->warning($message);
-            $output->writeln($message);
+        // release lock and exit
+        if ($input->getOption('release-lock')) {
+            $this->releaseLock($output);
             return 0;
         }
 
         
-        $this->writeLock();
-        $output->writeln('Lock written.');
         try {
-            $ret = parent::execute($input, $output);
-            $this->deleteLock();
-            $output->writeln('Lock deleted.');
+            // skip migration if locked
+            
+            if ($this->acquireLock($output)) {
+                $returnCode = parent::execute($input, $output);
+                $this->releaseLock($output);
+            } else {
+                $message = 'Migration is locked by another migration, skipped. Launch with --release-lock if needed.';
+                $this->getService('logger')->warning($message);
+                $output->writeln($message);
+                $returnCode = 0;
+            }
+            
         } catch (\Exception $e) {
             // in case of exception, delete the lock, then re-throw to keep the parent behaviour
-            $this->deleteLock();
-            $output->writeln('Exception raised. Lock deleted.');
+            $this->releaseLock($output);
             throw $e;
         }
         
-        return $ret;
+        return $returnCode;
     }
 
     /**
-     * @return boolean
+     * @return boolean true if lock if acquired, false if not (already acquired)
      */
-    private function isLocked()
+    private function acquireLock($output)
     {
-        return $this->getRedis()->get(self::LOCK_KEY) === self::LOCK_VALUE;
+        $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
+        $output->writeln($ret ? 'Lock acquired.' : 'Cannot aquire lock, already acquired.');
+        
+        return $ret;
     }
-
-    private function writeLock()
+    
+    /**
+     * release lock
+     * 
+     * @param type $output
+     */
+    private function releaseLock($output)
     {
-        $this->getRedis()->set(self::LOCK_KEY, self::LOCK_VALUE);
-        if ($this->getRedis()->get(self::LOCK_KEY) !== self::LOCK_VALUE) {
-            throw new \RuntimeException('Cannot write the lock value into redis');
-        }
-    }
-
-    private function deleteLock()
-    {
-        $this->getRedis()->set(self::LOCK_KEY, null);
+        $output->writeln('Lock released.');
+        
+        return $this->getRedis()->del(self::LOCK_KEY);
     }
     
     /**
