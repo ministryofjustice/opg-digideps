@@ -65,7 +65,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     private function acquireLock($output)
     {
         $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
-        $output->writeln($ret ? 'Lock acquired.' : 'Cannot aquire lock, already acquired.');
+        $output->writeln($ret ? 'Lock acquired.' : 'Cannot acquire lock, already acquired.');
         
         return $ret;
     }
