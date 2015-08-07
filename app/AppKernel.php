@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\OAuthServerBundle\FOSOAuthServerBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

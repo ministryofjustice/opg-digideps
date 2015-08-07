@@ -7,5 +7,6 @@ keys = [
     "/smtp",
     "/secret",
     "/security",
-    "/email"
+    "/email",
+    "/redis"
 ]

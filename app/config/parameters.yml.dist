@@ -18,3 +18,4 @@ parameters:
     email_mock_address: "/^behat-/i"
     email_mock_path:  "/tmp/dd_behat_last_sent_email.json"
     anonymous: true
+    redis_dsn: redis://localhost
