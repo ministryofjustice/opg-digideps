@@ -310,7 +310,7 @@ Feature: report
         And the URL should match "/report/\d+/accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
         When I click on "account-8765"
-        Then I should see "earlier transaction made with other account" in the "opening-balance-explanation" region
+        Then I should not see the "opening-balance-explanation" region
         # refresh page and check values
         When I follow "tab-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
