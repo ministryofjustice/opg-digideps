@@ -69,4 +69,4 @@ snc_redis:
         default:
             type: predis
             alias: default
-            dsn: redis://redisapi
+            dsn: %redis_dsn%
