@@ -1,4 +1,3 @@
 # migrate db and lock
-su - app
 cd /app
-php app/console doctrine:migrations:migrate-lock --no-interaction
+/sbin/setuser app php app/console doctrine:migrations:migrate-lock --no-interaction
