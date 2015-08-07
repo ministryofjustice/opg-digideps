@@ -5,15 +5,35 @@
         @extend %contain-floats;
         
         .form-control.radio-vertical {
-             width: 15%;
+            width: 15%;
             display: inline-block;
             float: left;
             margin-right: 10px;
             overflow: hidden;
-            
+            padding: 0;
+            border: none;
+
             .block-label {
-                padding: 5px 0 5px 0;
+                box-sizing: border-box;
+                padding: 5px;
+                margin: 0;
+                width: 100%;
+                text-align: center;
+                vertical-align: middle;
+                height: 3.5em;
+                float: none;
+                background: $grey-3;
             }
+            .checkbox-wrapper {
+                margin: 10px 0 0 0;
+                padding: 10px 0;
+                width: 100%;
+                background-color: $grey-2;
+                clear: both;
+                text-align: center;
+                display: block;
+            }
+            
         }
     }
     

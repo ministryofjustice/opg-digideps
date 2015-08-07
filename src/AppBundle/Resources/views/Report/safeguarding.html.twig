@@ -1,9 +1,11 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig' with {
 activeTab: "tab-safeguarding"
 } %}
+
+{% set translationDomain = "report-safeguarding" %}
+{% trans_default_domain translationDomain %}
+
  {% block bodyClasses %}safeguarding-page{% endblock %}
- {% set translationDomain = "report-safeguarding" %}
- {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block contentClass %}{{ parent() }} js-report-decisions-input{% endblock %}
@@ -11,66 +13,36 @@ activeTab: "tab-safeguarding"
 
 
 {% block pageBody %}
-    {#{{client.fullname}}#}
 
-<div>         
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
+    <div>         
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
+        
         {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
-        'legendClass' : 'form-label',
-        'vertical': true,
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+            'legendClass' : 'form-label',
+            'legendText' : 'Test',
+            'vertical': true
         }) }}
         
         {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
-        'legendClass' : 'form-label',
-        'vertical': true,
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+            'legendClass' : 'form-label',
+            'vertical': true
         }) }}
         
-        {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter, 'howOftenDoYouWriteEmailOrLetter', {
-        'legendClass' : 'form-label',
-        'vertical': true,
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
+            'howOftenDoYouWriteEmailOrLetter', {
+            'legendClass' : 'form-label',
+            'vertical': true
         }) }}
         
-        {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 'howOftenDoesClientSeeOtherPeople', {
-        'legendClass' : 'form-label',
-        'vertical': true,
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
+        {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 
+            'howOftenDoesClientSeeOtherPeople', {
+            'legendClass' : 'form-label',
+            'vertical': true
         }) }}
-    {{ form_end(form) }}
-</div>
+        {{ form_end(form) }}
+    </div>
          
     <hr/>
-
     
    {{form(form)}}
 {% endblock %}

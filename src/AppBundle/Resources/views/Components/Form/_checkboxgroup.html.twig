@@ -1,4 +1,5 @@
 {% if vertical is defined and vertical == true %}
+    {% trans_default_domain translationDomain %}
     <fieldset class="{{ fieldSetClass }} form-group form-group__checkbox-group form-group__check-vertical {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
         <p class="form-hint">{{ hintText }}</p>
@@ -8,18 +9,12 @@
             </ul>
         {% endif %}
         {% for key,choiceElement in element %}
-
-            {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
-            {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
-            {% set description = items[key].description is defined ?  items[key].description : null %}
-
-            {% if description is not null %}
-                <p class="form-hint description">{{ description }}</p>
-            {% endif %}
             
             <div class="form-control radio-vertical">
-                <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">{{ choiceElement.vars.label }}</label>
-                {{ form_widget(choiceElement, {'attr': {'class': elementClass }}) }}
+                <label class="block-label" for="{{ choiceElement.vars.id }}">{{ choiceElement.vars.label | trans}}</label>
+                <div class="checkbox-wrapper">
+                    {{ form_widget(choiceElement) }}
+                </div>
             </div>
 
         {% endfor %}

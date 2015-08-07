@@ -106,6 +106,7 @@ class FormFieldsExtension extends \Twig_Extension
         
         $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
         
+
          //generate input field html using variables supplied
         echo $this->environment->render( 'AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
@@ -116,6 +117,7 @@ class FormFieldsExtension extends \Twig_Extension
             'element'  => $element,
             'vertical' => isset($vars['vertical']) ? $vars['vertical']: false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
+            'translationDomain' => $domain
         ]);
     }
     
