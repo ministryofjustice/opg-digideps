@@ -38,16 +38,15 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 
         
         try {
-            // skip migration if locked
-            
             if ($this->acquireLock($output)) {
                 $returnCode = parent::execute($input, $output);
                 $this->releaseLock($output);
+                return $returnCode;
             } else {
                 $message = 'Migration is locked by another migration, skipped. Launch with --release-lock if needed.';
                 $this->getService('logger')->warning($message);
                 $output->writeln($message);
-                $returnCode = 0;
+                return 0;
             }
             
         } catch (\Exception $e) {
@@ -55,8 +54,6 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
             $this->releaseLock($output);
             throw $e;
         }
-        
-        return $returnCode;
     }
 
     /**
