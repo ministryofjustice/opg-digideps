@@ -37,7 +37,7 @@
         </dl>
     {% endif %}
     
-    {% if account.openingDateExplanation %}
+    {% if account.openingDateExplanation and showAccountOpeningDateExplanation | default(false) %}
         {% include 'AppBundle:Components/Page:_sub-section.html.twig' with {
             transDomain: transDomain,
             title: 'page.header.pleaseTellUsWhy.openingDatesMismatch',
