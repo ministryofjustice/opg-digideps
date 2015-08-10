@@ -8,7 +8,7 @@
 
   padding: 0;
   margin: 40px 0 40px 0;
-  max-width: 540px;
+  max-width: 560px;
 
   .page-report-content & {
     margin-bottom: 20px;
@@ -34,6 +34,6 @@
 
 .page-report-content {
     .validation-summary {
-        width: 67%;
+        width: 100%;
     }
 }

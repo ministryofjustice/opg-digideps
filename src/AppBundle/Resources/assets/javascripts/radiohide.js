@@ -10,15 +10,14 @@ var opg = opg || {};
     var RadioHide = function(options) {
         this.radio = $(options.radio);
         this.content = $(options.content);
+    
         this.hideOnYes = options.hideOnYes || false;
         this.hideByDefault = options.hideByDefault || true;
 
         this.changeHandler = this.getUpdateHandler();
         this.radio.change(this.changeHandler);
 
-        if (this.hideByDefault) {
-            this.content.hide();
-        }
+        this.updateView();
     };
 
     RadioHide.prototype.hideContent = function () {

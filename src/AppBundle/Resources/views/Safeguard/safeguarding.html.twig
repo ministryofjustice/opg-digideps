@@ -21,6 +21,14 @@ activeTab: "tab-safeguarding"
     transDomain: translationDomain,
     pageSectionDescription: 'page.pageSectionDescription'
     } %}
+    
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+    
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+          transDomain: translationDomain
+    } %}
       
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
     

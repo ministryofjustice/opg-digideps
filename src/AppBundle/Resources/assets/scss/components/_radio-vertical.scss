@@ -1,10 +1,15 @@
 .form-group.radio-vertical-group {
     @extend %contain-floats;
+    box-sizing: border-box;;
     
     @include media(tablet) {
         margin-bottom: 40px;
     }
-        
+    
+    .form-label {
+        width: 100%;
+    }
+    
     .form-control.radio-vertical {
         width: 15%;
         display: inline-block;
@@ -31,7 +36,7 @@
             background: $grey-3;
             
         }
-        
+            
         .input-wrapper {
             margin: 10px 0 3px 0;
             padding: 10px 0;
@@ -53,4 +58,9 @@
             outline: 3px solid #FFBF47;
         }
     }
+
+}
+
+#safeguarding-content {
+    display: none;
 }
