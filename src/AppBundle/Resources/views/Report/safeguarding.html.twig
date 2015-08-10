@@ -14,33 +14,56 @@ activeTab: "tab-safeguarding"
 
 {% block pageBody %}
 
-    <div>         
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
-        
-        {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
-            'legendClass' : 'form-label',
-            'legendText' : 'Test',
-            'vertical': true
-        }) }}
-        
-        {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
-            'legendClass' : 'form-label',
-            'vertical': true
-        }) }}
-        
-        {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
-            'howOftenDoYouWriteEmailOrLetter', {
-            'legendClass' : 'form-label',
-            'vertical': true
-        }) }}
-        
-        {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 
-            'howOftenDoesClientSeeOtherPeople', {
-            'legendClass' : 'form-label',
-            'vertical': true
-        }) }}
-        {{ form_end(form) }}
-    </div>
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'page.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
+      
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
+    
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'form.contact.subSectionTitle'
+    } %}
+    
+    {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
+        'fieldSetClass' : 'inline do-you-live-radio',
+        'legendClass' : 'form-label',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '', 'label':'Yes' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    
+    {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
+        'legendClass' : 'form-label',
+        'legendText' : 'Test',
+        'vertical': true
+    }) }}
+    
+    {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
+        'legendClass' : 'form-label',
+        'vertical': true
+    }) }}
+    
+    {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
+        'howOftenDoYouWriteEmailOrLetter', {
+        'legendClass' : 'form-label',
+        'vertical': true
+    }) }}
+    
+    {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 
+        'howOftenDoesClientSeeOtherPeople', {
+        'legendClass' : 'form-label',
+        'vertical': true
+    }) }}
+    {{ form_end(form) }}
+
          
     <hr/>
     
@@ -50,6 +73,7 @@ activeTab: "tab-safeguarding"
         $(document).ready(function() {
             $(".radio-vertical-group").each(function(index, element) {
                 new opg.RadioGroup(element);
+                new GOVUK.SelectionButtons(".do-you-live-radio :radio");
             });
         });
     </script>
