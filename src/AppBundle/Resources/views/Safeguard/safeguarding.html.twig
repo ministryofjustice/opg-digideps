@@ -5,10 +5,8 @@ activeTab: "tab-safeguarding"
 {% set translationDomain = "report-safeguarding" %}
 {% trans_default_domain translationDomain %}
 
- {% block bodyClasses %}safeguarding-page{% endblock %}
-
+{% block bodyClasses %}safeguarding-page{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block contentClass %}{{ parent() }} js-report-decisions-input{% endblock %}
 {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
 
@@ -35,7 +33,7 @@ activeTab: "tab-safeguarding"
         'fieldSetClass' : 'inline do-you-live-radio',
         'legendClass' : 'form-label',
         'items': [
-            {'labelClass': 'block-label', 'elementClass': '', 'label':'Yes' },
+            {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' }
         ]
     }) }}
@@ -62,10 +60,51 @@ activeTab: "tab-safeguarding"
         'legendClass' : 'form-label',
         'vertical': true
     }) }}
-    {{ form_end(form) }}
+    
+    {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    
+    {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
+        'fieldSetClass' : 'inline does-client-receive-care',
+        'legendClass' : 'form-label',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    
+    {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
+        'fieldSetClass' : 'stacked',
+        'legendClass' : 'form-label',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+        
+    {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    
+    {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
+        'fieldSetClass' : 'inline does-client-receive-care',
+        'legendClass' : 'form-label',
+        'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+        ]
+    }) }}
+    
+    {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed') }}
 
-         
-    <hr/>
+
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    
+    
+
+    
+    {{ form_end(form) }}
     
     {{form(form)}}
 
@@ -73,8 +112,8 @@ activeTab: "tab-safeguarding"
         $(document).ready(function() {
             $(".radio-vertical-group").each(function(index, element) {
                 new opg.RadioGroup(element);
-                new GOVUK.SelectionButtons(".do-you-live-radio :radio");
             });
+            new GOVUK.SelectionButtons(".form-group__checkbox-group :radio");
         });
     </script>
 

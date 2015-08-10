@@ -6,20 +6,32 @@ page:
 form:
     contact:
         subSectionTitle: Contact with the client?
+    save.label: Save
 
-response:
-    everyday: Everyday
-    once_a_week: Once a week
-    once_a_month: Once a month
-    more_than_twice_a_year: More than twice a year
-    once_a_year: Once a year
-    less_than_once_a_year: Less than once a year
-    yes: Yes
-    no: No
+
+everyday: Everyday
+once_a_week: Once a week
+once_a_month: Once a month
+more_than_twice_a_year: More than twice a year
+once_a_year: Once a year
+less_than_once_a_year: Less than once a year
+client_pays_for_all: Client pays for all their own care
+
 
 doYouLiveWithClient.legend: Do you live with the client?
 howOftenDoYouVisit.legend: How often do you visit or other deputies visit the client?
 howOftenDoYouPhoneOrVideoCall.legend: How often do you or other deputies phone or vieo call the client?
 howOftenDoYouWriteEmailOrLetter.legend: How often do you or other deputies write emails or letters to the client?
 howOftenDoesClientSeeOtherPeople.legend: How often does the client see other people?
-
+anythingElseToTell.label: Is there anything else you want to tell us? (optional)
+doesClientReceivePaidCare.legend: Does the client receive care which is paid for?
+doesClientReceivePaidCare.hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
+howIsCareFunded.legend: How is the care funded?
+client_gets_financial_help.legend: Client gets some financial help (for example, from the local authority NHS)
+all_care_is_paid_by_someone_else: All care is paid for by someone else (for example, by the local authority or NHS)
+whoIsDoingTheCaring.label: Who is doing the caring?
+whoIsDoingTheCaring.hint: For example, local authority or private residential care, live-in or visiting care workers.
+doesClientHaveACarePlan.legend: Does the client have a care plan?
+whenWasCarePlanLastReviewed:
+    legend: When was the care plan last reviewed
+    hint: (DD/MM/YYYY)

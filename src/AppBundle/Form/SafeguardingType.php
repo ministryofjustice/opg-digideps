@@ -11,63 +11,63 @@ class SafeguardingType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->add('doYouLiveWithClient', 'choice', array(
-                    	'choices' => ['yes'=>'response.yes', 'no'=>'response.no'],
+                    	'choices' => ['yes'=>'Yes', 'no'=>'No'],
                     	'expanded' => true
                  	 ))
 		        ->add('howOftenDoYouVisit', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'response.everyday',
-		        	                   'once_a_week' => 'response.once_a_week',
-		        	                   'once_a_month' => 'response.once_a_month',
-		        	                   'more_than_twice_a_year' => 'response.more_than_twice_a_year',
-		        	                   'once_a_year' => 'response.once_a_year',
-		        	                   'less_than_once_a_year' => 'response.less_than_once_a_year' ],
+		        	    'choices' => [ 'everyday' => 'everyday',
+		        	                   'once_a_week' => 'once_a_week',
+		        	                   'once_a_month' => 'once_a_month',
+		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
+		        	                   'once_a_year' => 'once_a_year',
+		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
 		        	    'expanded' => true
 		        	))
 		        ->add('howOftenDoYouPhoneOrVideoCall', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'response.everyday',
-		        	                   'once_a_week' => 'response.once_a_week',
-		        	                   'once_a_month' => 'response.once_a_month',
-		        	                   'more_than_twice_a_year' => 'response.more_than_twice_a_year',
-		        	                   'once_a_year' => 'response.once_a_year',
-		        	                   'less_than_once_a_year' => 'response.less_than_once_a_year' ],
+		        	    'choices' => [ 'everyday' => 'everyday',
+		        	                   'once_a_week' => 'once_a_week',
+		        	                   'once_a_month' => 'once_a_month',
+		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
+		        	                   'once_a_year' => 'once_a_year',
+		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
 		        	    'expanded' => true
 		        	))
 		        ->add('howOftenDoYouWriteEmailOrLetter', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'response.everyday',
-		        	                   'once_a_week' => 'response.once_a_week',
-		        	                   'once_a_month' => 'response.once_a_month',
-		        	                   'more_than_twice_a_year' => 'response.more_than_twice_a_year',
-		        	                   'once_a_year' => 'response.once_a_year',
-		        	                   'less_than_once_a_year' => 'response.less_than_once_a_year' ],
+		        	    'choices' => [ 'everyday' => 'everyday',
+		        	                   'once_a_week' => 'once_a_week',
+		        	                   'once_a_month' => 'once_a_month',
+		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
+		        	                   'once_a_year' => 'once_a_year',
+		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
 		        	    'expanded' => true
 		        	))
 		        ->add('howOftenDoesClientSeeOtherPeople', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'response.everyday',
-		        	                   'once_a_week' => 'response.once_a_week',
-		        	                   'once_a_month' => 'response.once_a_month',
-		        	                   'more_than_twice_a_year' => 'response.more_than_twice_a_year',
-		        	                   'once_a_year' => 'response.once_a_year',
-		        	                   'less_than_once_a_year' => 'response.less_than_once_a_year' ],
+		        	    'choices' => [ 'everyday' => 'everyday',
+		        	                   'once_a_week' => 'once_a_week',
+		        	                   'once_a_month' => 'once_a_month',
+		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
+		        	                   'once_a_year' => 'once_a_year',
+		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
 		        	    'expanded' => true
 		        	))
 		        ->add('anythingElseToTell', 'textarea')
 
 		        ->add('doesClientReceivePaidCare', 'choice', array(
-                    	'choices' => [ 'yes'=>'response.yes', 'no'=>'response.no'],
+                    	'choices' => [ 'yes'=>'Yes', 'no'=>'No'],
                     	'expanded' => true
                  	 ))
 
 		        ->add('howIsCareFunded', 'choice', array(
-                    	'choices' => [ 'client_pays_for_all'=>'response.client_pays_for_all', 
-                    	               'client_gets_financial_help'=>'response.client_gets_financial_help',
-                    	               'all_care_is_paid_by_someone_else' => 'response.all_care_is_paid_by_someone_else' ],
+                    	'choices' => [ 'client_pays_for_all'=>'Client pays for all their own care', 
+                    	               'client_gets_financial_help'=>'Client gets some financial help (for example, from local authority or NHS)',
+                    	               'all_care_is_paid_by_someone_else' => 'All care paid for by someone else (for example, by the local authority or NHS)' ],
                     	'expanded' => true
                  	 ))
                         
 		        ->add('whoIsDoingTheCaring', 'textarea')
                         
                 ->add('doesClientHaveACarePlan', 'choice', array(
-                        'choices' => [ 'yes'=>'response.yes', 'no'=>'response.no'],
+                        'choices' => [ 'yes'=>'Yes', 'no'=>'No'],
                         'expanded' => true
                     ))
                 

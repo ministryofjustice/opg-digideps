@@ -36,6 +36,16 @@ form {
         width: 22%;
       }      
 
+      fieldset.stacked {
+          label.block-label {
+              width: 85%;
+          }
+      }
+      
+      label.block-label {
+          @include core-19();
+      }
+
     }
 
     .report-list__item & {
