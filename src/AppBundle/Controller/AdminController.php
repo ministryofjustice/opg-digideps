@@ -69,6 +69,7 @@ class AdminController extends Controller
     public function editUserAction($id)
     {
         $apiClient = $this->get('apiclient');
+        $request = $this->getRequest();
         
         $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]);
        
@@ -76,12 +77,34 @@ class AdminController extends Controller
             throw new \Exception('User does not exists');
         }
         
+        $roleDisabled = false;
+        $userRole = $user->getRole();
+        
+
+        if($userRole['role'] == "ROLE_ADMIN"){
+            $roleDisabled = true;
+        }
+
         $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
-            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
+            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
+            'roleDisabled' => $roleDisabled
         ]), $user );
+    
+        if($request->getMethod() == "POST"){
+            $form->handleRequest($request);
+            
+            if($form->isValid()){
+                $updateUser = $form->getData();
+                $apiClient->putC('user/' . $user->getId(), $updateUser);
+                
+                $request->getSession()->getFlashBag()->add('action', 'action.message');
+                
+                $this->redirect($this->generateUrl('admin_editUser', [ 'id' => $user->getId() ]));
+            }
+        }
         
-        return [ 'form' => $form->createView(), 'action' => 'edit', 'id' => $id ];
+        return [ 'form' => $form->createView(), 'action' => 'edit', 'id' => $id, 'user' => $user ];
     }
     
     /**
