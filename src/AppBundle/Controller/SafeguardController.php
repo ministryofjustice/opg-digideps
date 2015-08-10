@@ -43,7 +43,8 @@ class SafeguardController extends Controller{
 
         return[ 'report' => $report,
                 'client' => $util->getClient($report->getClient()),
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'report_form_submit' => $this->get('reportSubmitter')->getFormView()
               ];
     }
     
