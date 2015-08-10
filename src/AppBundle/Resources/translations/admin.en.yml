@@ -23,3 +23,5 @@ no:
     label: No
 yes:
     label: Yes
+action:
+    message: Your changes were saved
