@@ -36,7 +36,7 @@ class SafeguardController extends Controller{
 
                     $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
 
-                    return $this->redirect($this->generateUrl('report_safeguarding', ['reportId'=>$reportId]));
+                    return $this->redirect($this->generateUrl('report_safeguarding', ['reportId'=>$reportId]) . "#pageBody");
                 }
             }
         }
