@@ -24,6 +24,9 @@ class AdminController extends Controller
     public function indexAction(Request $request)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $orderBy = $request->query->has('order_by')? $request->query->get('order_by'): 'firstname';
+        $sortOrder = $request->query->has('sort_order')? $request->query->get('sort_order'): 'ASC';
+
         
         $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
@@ -52,10 +55,14 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('admin_homepage'));
             } 
         }
-        
+
+        $users = $this->get('apiclient')->getEntities('User', 'list_users', [ 'parameters' => [$orderBy, $sortOrder]]);
+        $newSortOrder = $sortOrder == "ASC"? "DESC": "ASC";
+
         return [
-            'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
-            'form'=>$form->createView()
+            'users'=>$users, 
+            'form'=>$form->createView(),
+            'newSortOrder' => $newSortOrder
         ];
     }
     
