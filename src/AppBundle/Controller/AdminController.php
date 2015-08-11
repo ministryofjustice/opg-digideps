@@ -77,18 +77,10 @@ class AdminController extends Controller
             throw new \Exception('User does not exists');
         }
         
-        $roleDisabled = false;
-        $userRole = $user->getRole();
         
-
-        if($userRole['role'] == "ROLE_ADMIN"){
-            $roleDisabled = true;
-        }
-
         $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
-            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
-            'roleDisabled' => $roleDisabled
+            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), $user );
     
         if($request->getMethod() == "POST"){
