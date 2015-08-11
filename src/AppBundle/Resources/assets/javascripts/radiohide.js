@@ -44,15 +44,15 @@ var opg = opg || {};
             }
         } else if (value == 'yes') {
             if (this.hideOnYes) {
-                this.showContent();
-            } else {
                 this.hideContent();
+            } else {
+                this.showContent();
             }
         } else {
             if (this.hideOnYes) {
-                this.hideContent();
-            } else {
                 this.showContent();
+            } else {
+                this.hideContent();
             }
         } 
     

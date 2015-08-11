@@ -30,46 +30,51 @@ activeTab: "tab-safeguarding"
           transDomain: translationDomain
     } %}
       
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
     subSectionTitle: 'form.contact.subSectionTitle'
     } %}
     
-    {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
-        'fieldSetClass' : 'inline do-you-live-radio',
-        'legendClass' : 'form-label',
-        'items': [
-            {'labelClass': 'block-label', 'elementClass': '' },
-            {'labelClass': 'block-label', 'elementClass': '' }
-        ]
-    }) }}
-    <div id="safeguarding-content">
-        {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
+    <div class="form-section">
+        {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
+            'fieldSetClass' : 'inline do-you-live-radio',
             'legendClass' : 'form-label',
-            'legendText' : 'Test',
-            'vertical': true
+            'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+            ]
         }) }}
-        
-        {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
-            'legendClass' : 'form-label',
-            'vertical': true
-        }) }}
-        
-        {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
-            'howOftenDoYouWriteEmailOrLetter', {
-            'legendClass' : 'form-label',
-            'vertical': true
-        }) }}
-        
-        {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 
-            'howOftenDoesClientSeeOtherPeople', {
-            'legendClass' : 'form-label',
-            'vertical': true
-        }) }}
-        
-        {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+        <div id="visit-questions">
+            {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
+                'legendClass' : 'form-label',
+                'legendText' : 'Test',
+                'vertical': true
+            }) }}
+            
+            {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
+                'legendClass' : 'form-label',
+                'vertical': true
+            }) }}
+            
+            {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
+                'howOftenDoYouWriteEmailOrLetter', {
+                'legendClass' : 'form-label',
+                'vertical': true
+            }) }}
+            
+            {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 
+                'howOftenDoesClientSeeOtherPeople', {
+                'legendClass' : 'form-label',
+                'vertical': true
+            }) }}
+
+            {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+        </div>
+    </div>
+    
+    <div class="form-section">
         
         {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
             'fieldSetClass' : 'inline does-client-receive-care',
@@ -80,20 +85,23 @@ activeTab: "tab-safeguarding"
             ]
         }) }}
         
-        {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
-            'fieldSetClass' : 'stacked',
-            'legendClass' : 'form-label',
-            'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-            ]
-        }) }}
-            
-        {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
-        
+        <div id="care-questions">
+            {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
+                'fieldSetClass' : 'stacked',
+                'legendClass' : 'form-label',
+                'items': [
+                    {'labelClass': 'block-label', 'elementClass': '' },
+                    {'labelClass': 'block-label', 'elementClass': '' },
+                    {'labelClass': 'block-label', 'elementClass': '' }
+                ]
+            }) }}
+                
+            {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+        </div>
+    </div>
+    <div class="form-section">
         {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
-            'fieldSetClass' : 'inline does-client-receive-care',
+            'fieldSetClass' : 'inline care-plan',
             'legendClass' : 'form-label',
             'items': [
                 {'labelClass': 'block-label', 'elementClass': '' },
@@ -101,8 +109,9 @@ activeTab: "tab-safeguarding"
             ]
         }) }}
         
-        {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed') }}
-
+        <div id="care-plan-questions">
+            {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed') }}
+        </div>
     </div>
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
@@ -124,7 +133,18 @@ activeTab: "tab-safeguarding"
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
             new opg.RadioHide({
                 radio:'.do-you-live-radio input[type=radio]',
-                content: '#safeguarding-content'
+                content: '#visit-questions',
+                hideOnYes: true
+            });
+            new opg.RadioHide({
+                radio:'.does-client-receive-care input[type=radio]',
+                content: '#care-questions',
+                hideOnYes: false
+            });
+            new opg.RadioHide({
+                radio:'.care-plan input[type=radio]',
+                content: '#care-plan-questions',
+                hideOnYes: false
             });
         });
     </script>

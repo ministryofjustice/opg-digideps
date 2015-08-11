@@ -88,10 +88,15 @@ form {
 
 }
 
-.form {
-  &--client-add-report {
+.form-section {
+    @extend %contain-floats;
+    border-left: 3px solid $grey-2;
+    padding-left: 15px;
+    margin-bottom: 40px
+}
+
+.form--client-add-report {
     margin: 40px 0 20px 0;
-  }
 }
 
 .form-group {
