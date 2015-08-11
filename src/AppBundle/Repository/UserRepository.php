@@ -36,4 +36,12 @@ class UserRepository extends EntityRepository
         
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    public function getAllUsers($orderBy, $sortOrder)
+    {
+       $qb = $this->createQueryBuilder('u');
+       $qb->orderBy('u.'.$orderBy, $sortOrder);
+
+       return $qb->getQuery()->execute();
+    }
 }

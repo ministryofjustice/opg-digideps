@@ -111,12 +111,12 @@ class UserController extends RestController
 
     
     /**
-     * @Route("")
+     * @Route("/get-all/{order_by}/{sort_order}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
      * @Method({"GET"})
      */
-    public function getAll()
+    public function getAll($order_by, $sort_order)
     {
-        return $this->getRepository('User')->findAll();
+        return $this->getRepository('User')->findBy([],[ $order_by => $sort_order ]);
     }
 
     /**
