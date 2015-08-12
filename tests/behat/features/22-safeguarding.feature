@@ -61,8 +61,8 @@ Feature: Safeguarding
     
     @safeguarding @deputy    
     Scenario: Lives with client
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -76,8 +76,8 @@ Feature: Safeguarding
     
     @safeguarding @deputy
     Scenario: Does not live with client
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_1 | no |
@@ -101,8 +101,8 @@ Feature: Safeguarding
 
     @safeguarding @deputy
     Scenario: User must answer sub questions when not living with client
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_1 | no |
@@ -139,8 +139,8 @@ Feature: Safeguarding
     
     @safeguarding @deputy    
     Scenario: Client does not receive care
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -154,8 +154,8 @@ Feature: Safeguarding
     
     @safeguarding @deputy
     Scenario: Client does receive care
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -171,8 +171,8 @@ Feature: Safeguarding
     
     @safeguarding @deputy
     Scenario: User must answer sub questions when receiving care
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -185,11 +185,26 @@ Feature: Safeguarding
             | safeguarding_howIsCareFunded_0 |
             | safeguarding_howIsCareFunded_1 |
             | safeguarding_howIsCareFunded_2 |
-              
+
+    @safeguarding @deputy      
+    Scenario: Who is doing the caring?
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
+        Then I follow "tab-safeguarding"
+        And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones" 
+
     @safeguarding @deputy
     Scenario: Client has care plan
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -209,8 +224,8 @@ Feature: Safeguarding
         
     @safeguarding @deputy
     Scenario: Client does not have care plan
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -222,23 +237,35 @@ Feature: Safeguarding
         Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_1" should be checked
 
-    @safeguarding @deputy      
-    Scenario: Who is doing the caring?
-        When I load the application status from "reportuser"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    @safeguarding @deputy
+    Scenario: Client must answer sub questions when there is a care plan
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
-            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
-        And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones" 
-        
-            
-    Scenario: Client must answer sub questions when there is a care plan
+        Then the form should be invalid
+        And the following fields should have an error:
+            | safeguarding_whenWasCarePlanLastReviewed_day |
+            | safeguarding_whenWasCarePlanLastReviewed_month |
+            | safeguarding_whenWasCarePlanLastReviewed_year |
     
+    @safeguarding @deputy
     Scenario: Deputy must answer top level questions
-    
+        When I load the application status from "safeuser"
+        And I am logged in as "behat-safe@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I press "safeguarding_save"
+        Then the form should be invalid
+        And the following fields should have an error:
+            | safeguarding_doYouLiveWithClient_0 |
+            | safeguarding_doYouLiveWithClient_1 |
+            | safeguarding_doesClientReceivePaidCare_0 |
+            | safeguarding_doesClientReceivePaidCare_1 |
+            | safeguarding_doesClientHaveACarePlan_0 |
+            | safeguarding_doesClientHaveACarePlan_1 |
+            | safeguarding_whoIsDoingTheCaring |
