@@ -17,11 +17,6 @@ class AddUserType extends AbstractType
      * @var string
      */
     private $roleIdEmptyValue;
-
-    /**
-     * @var boolean $roleDisabled
-     */
-    private $roleDisabled;
     
     /**
      * @param array $options keys: array roles, roleIdEmptyValue
@@ -32,7 +27,6 @@ class AddUserType extends AbstractType
             $this->roleChoices[$role->getId()] = $role->getName();
         }
         $this->roleIdEmptyValue = $options['roleIdEmptyValue'];
-        $this->roleDisabled = isset($options['roleDisabled'])? $options['roleDisabled']: false ;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -42,8 +36,7 @@ class AddUserType extends AbstractType
                  ->add('lastname', 'text')
                  ->add('roleId', 'choice', array(
                     'choices' => $this->roleChoices,
-                    'empty_value' => $this->roleIdEmptyValue,
-                    'disabled' => $this->roleDisabled
+                    'empty_value' => $this->roleIdEmptyValue
                   ))
                  ->add('save', 'submit');
     }

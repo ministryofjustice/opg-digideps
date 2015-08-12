@@ -279,7 +279,7 @@ class Account
      */
     public function hasClosingBalance()
     {
-        if(empty($this->closingBalance)){
+        if(is_null($this->closingBalance)){
             return false;
         }
         return true;

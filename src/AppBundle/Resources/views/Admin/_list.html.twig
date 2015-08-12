@@ -7,9 +7,49 @@
   <table>
     <thead>
       <tr>
-        <th scope="col">Firstname</th>
-        <th scope="col">Lastname</th>
-        <th scope="col">Email</th>
+        <th scope="col">
+            {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'firstname') %}
+                <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': newSortOrder })}}"> Firstname</a>
+
+                {% if app.request.query.get('sort_order') == "ASC" %}
+                         (a-z)
+                {% else %}
+                         (z-a)
+                {% endif %}
+
+            {% else %}
+                <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': 'DESC' })}}" > Firstname</a>
+            {% endif %}
+        </th>
+
+        <th scope="col">
+           {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'lastname') %}
+                <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}">Lastname</a>
+
+                {% if app.request.query.get('sort_order') == "ASC" %}
+                         (a-z)
+                {% else %}
+                         (z-a)
+                {% endif %}
+
+           {% else %}
+                <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}"  >Lastname</a>
+           {% endif %}
+        </th>
+        <th scope="col">
+               {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'email') %}
+                      <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': newSortOrder })}}">Email</a>
+
+                      {% if app.request.query.get('sort_order') == "ASC" %}
+                            (a-z)
+                      {% else %}
+                            (z-a)
+                      {% endif %}
+
+               {% else %}
+                      <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': 'ASC' })}}" >Email</a>
+               {% endif %}
+        </th>
         <th scope="col">Role</th>
       </tr>
     </thead>
