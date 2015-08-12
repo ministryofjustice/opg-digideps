@@ -30,7 +30,7 @@ default:
                     # dbname used for db snapshot
                     dbName: api
                     saveSnaphotBeforeEachScenario: true
-                    
+
       feedback:
         description: Tests related to user feedback
         paths:    [ %paths.base%/features ]
@@ -41,7 +41,29 @@ default:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
-                    
+
+      terms:
+          description: Tests related to user feedback
+          paths:    [ %paths.base%/features ]
+          filters:
+              tags: "@terms&&~@javascript"
+          contexts: 
+              - DigidepsBehat\FeatureContext:
+                  -
+                      session:   '@session'
+                      maxNestingLevel: 200
+
+      safeguarding:
+        description: Tests related to user safeguarding
+        paths:    [ %paths.base%/features ]
+        filters:
+            tags: "@safeguarding&&~@javascript"
+        contexts: 
+            - DigidepsBehat\FeatureContext:
+                -
+                    session:   '@session'
+                    maxNestingLevel: 200
+                                    
       cookies:
         description: Tests related to user feedback
         paths:    [ %paths.base%/features ]
