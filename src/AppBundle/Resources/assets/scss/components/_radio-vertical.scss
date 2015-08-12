@@ -8,6 +8,7 @@
     
     .form-label {
         width: 100%;
+        float: left;
     }
     
     .form-control.radio-vertical {
@@ -59,8 +60,4 @@
         }
     }
 
-}
-
-#safeguarding-content {
-    display: none;
 }

@@ -16,7 +16,8 @@ var opg = opg || {};
     };
         
     RadioGroup.prototype.markSelected = function(radio) {
-        this.fieldset.find(SELECTEDCLASS).removeClass(SELECTEDCLASS);
+        var current = this.fieldset.find('.' + SELECTEDCLASS);
+        current.removeClass(SELECTEDCLASS);
         radio.addClass(SELECTEDCLASS);
         radio.find('input').prop('checked', true);
     };
