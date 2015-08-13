@@ -106,6 +106,11 @@ class ReportTest extends \PHPUnit_Framework_TestCase
        $this->report->setDecisions([ $decision ]);
        $this->report->setAssets([ $asset ]);
        
+       $this->report->setDoYouLiveWithClient('yes');
+       $this->report->setDoesClientReceivePaidCare('no');
+       $this->report->setWhoIsDoingTheCaring('I am doing all the caring');
+       $this->report->setDoesClientHaveACarePlan('no');
+
        $this->assertTrue($this->report->isReadyToSubmit());
     }
 }
