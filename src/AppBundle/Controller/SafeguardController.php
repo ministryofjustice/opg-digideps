@@ -20,9 +20,19 @@ class SafeguardController extends Controller{
         $report = $util->getReport($reportId);
         $request = $this->getRequest();
         
+        // just needed for title etc,
+        $report = $util->getReport($reportId, $this->getUser()->getId());
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+        
         $form = $this->createForm(new FormDir\SafeguardingType(), $report);
         
-
+        // report submit logic
+        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
+            return $redirectResponse;
+        }
+        
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
             

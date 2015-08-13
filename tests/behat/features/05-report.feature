@@ -624,7 +624,7 @@ Feature: report
             | accountBalance_closingDate_day   |
             | accountBalance_closingDate_month |
             | accountBalance_closingDate_year  |
-            | accountBalance_closingDateExplanation | 
+            | accountBalance_closingDateExplanation |
         # save with both date and balance mismatch
         # both date and balance mismatch: add explanations
         When I fill in "accountBalance_closingDate_day" with the value of "30 days ahead, DD"
@@ -652,7 +652,7 @@ Feature: report
 
 
     @deputy
-      Scenario: edit closing balance
+    Scenario: edit closing balance
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I am on the account "1234" page of the first report
         And I click on "edit-account-details"
@@ -663,13 +663,13 @@ Feature: report
         Then the following fields should have the corresponding values:
             | account_closingDateExplanation  | not possible to login to homebanking before | 
             | account_closingBalance    | -3,000.00 | 
-            | account_closingBalanceExplanation | £ 100.50 moved to other account | 
+            | account_closingBalanceExplanation | £ 100.50 moved to other account |
         # invalid values
         When I fill in the following:
             | account_closingDate_day   |  | 
             | account_closingDate_month |  | 
             | account_closingDate_year  |  | 
-            | account_closingBalance    |  | 
+            | account_closingBalance    |  |
         And I press "account_save"
         Then the following fields should have an error:
             | account_closingDate_day   |
@@ -689,14 +689,14 @@ Feature: report
             | account_closingBalance    | -3100.50 |
         And I press "account_save"
         Then the following fields should have an error:
-            | account_bank   | 
+            | account_bank   |
         And I should not see the "account_closingDateExplanation" element
         And I should not see the "account_closingBalanceExplanation" element
         # assert explanations are required
         When go to "/report/1/account/1/edit"
         And I fill in the following:
             | account_closingDateExplanation | |
-            | account_closingBalanceExplanation |  | 
+            | account_closingBalanceExplanation |  |
         And I press "account_save"
         Then the following fields should have an error:
             | account_closingDate_day   | 
@@ -704,7 +704,7 @@ Feature: report
             | account_closingDate_year  |
             | account_closingDateExplanation | 
             | account_closingBalance    | 
-            | account_closingBalanceExplanation | 
+            | account_closingBalanceExplanation |
         # simple save
         When go to "/report/1/account/1/edit"
         And I fill in the following:
@@ -713,12 +713,23 @@ Feature: report
             | account_closingDate_year  | 2015 |
             | account_closingDateExplanation | not possible to login to homebanking  |
             | account_closingBalance | -3,000.50 | 
-            | account_closingBalanceExplanation | £ 100 moved to other account | 
+            | account_closingBalanceExplanation | £ 100 moved to other account |
         And I press "account_save"
         Then the form should be valid
         And I should see "01/05/2015" in the "account-closing-balance-date" region
         And I should see "£-3,000.50" in the "account-closing-balance" region
 
+    @safeguarding @deputy    
+    Scenario: Lives with client
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            And I press "safeguarding_save"
+            Then the form should be valid
 
     @deputy
     Scenario: report further info page

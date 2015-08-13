@@ -224,6 +224,14 @@ Feature: Formatted Report
             | accountBalance_closingBalance    | 5855.19 |
         And I press "accountBalance_save"
         And the form should be valid
+        Then I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         Then I save the application status into "readytosubmit"
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -400,6 +408,22 @@ Feature: Formatted Report
         And I save the page as "report-assets-list-two"
         Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
         And I should see "£13,000.00" in the "list-assets" region
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -570,6 +594,14 @@ Feature: Formatted Report
         And I save the page as "report-assets-list-two"
         Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
         And I should see "£13,000.00" in the "list-assets" region
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -709,6 +741,14 @@ Feature: Formatted Report
             | accountBalance_closingBalance    | 4855.19 |
         And I press "accountBalance_save"
         And the form should be valid
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -827,6 +867,14 @@ Feature: Formatted Report
             | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
         And I press "accountBalance_save"
         Then the form should be valid
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/add_further_information"
@@ -937,6 +985,14 @@ Feature: Formatted Report
         Then I fill in the following:
             | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
         And I press "accountBalance_save"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -1046,6 +1102,14 @@ Feature: Formatted Report
             | accountBalance_closingDateExplanation| closing date explanation |
             | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
         And I press "accountBalance_save"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -1191,6 +1255,14 @@ Feature: Formatted Report
         Then I follow "tab-assets"
         And I check "report_no_assets_no_assets"
         And I press "report_no_assets_saveNoAsset"
+        Then the form should be valid
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         Then the form should be valid
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
