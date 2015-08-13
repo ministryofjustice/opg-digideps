@@ -30,7 +30,13 @@
         margin: 0;
         float: left;
         width: 16.5%;
+        border: solid 1px #fff;
         border-bottom: solid 1px #bfc1c3;
+        border-left: none;
+        
+        &:nth-child(4) {
+            width: 17%;
+        }
         
         .tab-container {
             float: left;
@@ -41,7 +47,7 @@
             text-align: center;
             top: 0;
             width: 100%;
-            border: solid 1px #ffffff;
+
             &:hover {
                 outline: 3px solid $yellow;
             }
@@ -51,11 +57,10 @@
         }
     
         &.active {
+            border: solid 1px #bfc1c3;
             border-bottom: 1px solid #ffffff;
-            
+                            
             .tab-container {
-                border: solid 1px #bfc1c3;
-                border-bottom: solid 1px #ffffff;
                 color: #0b0c0c;
                 position: relative;
                 text-decoration: none;
@@ -124,7 +129,7 @@
     }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 320px) {
 
     .nav-tabs ol,.nav-tabs ul {
       float:none;
