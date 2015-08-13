@@ -36,6 +36,10 @@
             float: none;
             background: $grey-3;
             
+            @include media($max_width: 850px) {
+                height: 5em;
+            }
+            
         }
             
         .input-wrapper {
