@@ -100,11 +100,14 @@ class AccountController extends Controller
         
         // closing balance logic
         list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
-        if ($formBalanceIsValid) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
-                'deserialise_group' => 'balance',
-            ]);
-            return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
+        if ($action == "list") {
+            if ($formBalanceIsValid) {
+                $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
+                    'deserialise_group' => 'balance',
+                ]);
+
+                return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
+            }
         }
         
         // money in/out logic
