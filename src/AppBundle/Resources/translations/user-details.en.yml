@@ -6,7 +6,7 @@ firstname:
 lastname:
     label: Last name
 address1:
-    label: Address 
+    label: Address
 address2:
     label: " "
 address3:
@@ -19,7 +19,7 @@ addressCountry:
 phoneMain:
     label: Main phone number
 phoneAlternative:
-    label: Alternative phone number 
+    label: Alternative phone number
 submit:
     label: Save and continue
 cancelText: Cancel
@@ -27,7 +27,7 @@ currentPassword:
     label: Current password
 newPassword:
     label: New password
-    hint: | 
+    hint: |
           Your password must have:
           - at least 8 characters
           - at least 1 uppercase letter
@@ -75,4 +75,4 @@ form:
         label: "Confirm new password"
   changeYourEmail:
     subSectionTitle: "Change your email"
-    subSectionDescription: "To change your email address, send your updated email information to the Office of the Public Guardian (OPG) at <a href='mailto:deputyemailchange@publicguardian.gsi.gov.uk'>deputyemailchange@publicguardian.gsi.gov.uk</a>"
+    subSectionDescription: "To change your email address, send your updated email information to the Office of the Public Guardian (OPG) at <a href='mailto:deputyshipservice@publicguardian.gsi.gov.uk'>deputyshipservice@publicguardian.gsi.gov.uk</a>"
