@@ -108,10 +108,13 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/report/find-by-id/{id}")
+     * @Route("/report/find-by-id/{id}/{userId}")
      * @Method({"GET"})
+     * 
+     * @param integer $id
+     * @param integer $userId to check the record is accessible by this user
      */
-    public function get($id)
+    public function get($id, $userId)
     {   
         $request = $this->getRequest();
         
@@ -119,13 +122,14 @@ class ReportController extends RestController
         
         $this->setJmsSerialiserGroup($serialiseGroups);
         
-        $ret = $this->getRepository('Report')->find($id);
+        $report = $this->getRepository('Report')->find($id); /* @var $report EntityDir\Report */
         
-        if(empty($ret)){
+        // throw exception if the report does not exist or it's not accessible from the given user
+        if (empty($report) || !in_array($userId, $report->getClient()->getUserIds())) {
             throw new \Exception("Report not found");
         }
         
-        return $ret;
+        return $report;
     }
         
     /**
