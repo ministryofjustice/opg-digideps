@@ -24,6 +24,9 @@ class AdminController extends Controller
     public function indexAction(Request $request)
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $orderBy = $request->query->has('order_by')? $request->query->get('order_by'): 'firstname';
+        $sortOrder = $request->query->has('sort_order')? $request->query->get('sort_order'): 'ASC';
+
         
         $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
@@ -52,10 +55,14 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('admin_homepage'));
             } 
         }
-        
+
+        $users = $this->get('apiclient')->getEntities('User', 'list_users', [ 'parameters' => [$orderBy, $sortOrder]]);
+        $newSortOrder = $sortOrder == "ASC"? "DESC": "ASC";
+
         return [
-            'users'=>$this->get('apiclient')->getEntities('User', 'list_users'), 
-            'form'=>$form->createView()
+            'users'=>$users, 
+            'form'=>$form->createView(),
+            'newSortOrder' => $newSortOrder
         ];
     }
     
@@ -69,6 +76,7 @@ class AdminController extends Controller
     public function editUserAction($id)
     {
         $apiClient = $this->get('apiclient');
+        $request = $this->getRequest();
         
         $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]);
        
@@ -76,12 +84,26 @@ class AdminController extends Controller
             throw new \Exception('User does not exists');
         }
         
+        
         $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), $user );
+    
+        if($request->getMethod() == "POST"){
+            $form->handleRequest($request);
+            
+            if($form->isValid()){
+                $updateUser = $form->getData();
+                $apiClient->putC('user/' . $user->getId(), $updateUser);
+                
+                $request->getSession()->getFlashBag()->add('action', 'action.message');
+                
+                $this->redirect($this->generateUrl('admin_editUser', [ 'id' => $user->getId() ]));
+            }
+        }
         
-        return [ 'form' => $form->createView(), 'action' => 'edit', 'id' => $id ];
+        return [ 'form' => $form->createView(), 'action' => 'edit', 'id' => $id, 'user' => $user ];
     }
     
     /**

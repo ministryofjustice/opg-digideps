@@ -85,7 +85,7 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions", "basic", "edit_details", "add"})
+     * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
      */
     private $openingDateExplanation;
     
@@ -94,7 +94,7 @@ class Account
      * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"closing_balance"})
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance"})
      * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance"})
-     * @JMS\Groups({"balance", "edit_details_report_due"})
+     * @JMS\Groups({"balance", "edit_details_report_due","edit_details"})
      * 
      * @var decimal
      */
@@ -289,7 +289,7 @@ class Account
      */
     public function hasClosingBalance()
     {
-        if(empty($this->closingBalance)){
+        if(is_null($this->closingBalance)){
             return false;
         }
         return true;

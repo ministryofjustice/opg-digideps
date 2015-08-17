@@ -36,7 +36,8 @@ activeTab: "tab-accounts"
 
         {% include 'AppBundle:Account:_account-header.html.twig' with {
         transDomain: translationDomain,
-        hideComponent: (formEditShow)
+        hideComponent: (formEditShow),
+        showAccountOpeningDateExplanation: false
         } %}
 
         {% block validationSummary %}

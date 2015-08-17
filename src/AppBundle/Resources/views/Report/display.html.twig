@@ -1,5 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-{% block pageTitle %}Deputyship service{% endblock %}
+{% block pageTitle %}Complete the deputy report{% endblock %}
 {% block contentClass %}external-report{% endblock %}
 {% set page = 'reportPeriod' %}
 
@@ -18,11 +18,11 @@
           <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to your client</a>
       </div>
     {% endif %}
-    
+
     <!-- set class to external-report -->
     {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
 
-    
+
     <div class="external-report-section external-report-section-decisions">
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
             transDomain: translationDomain,
@@ -41,7 +41,7 @@
         {% endif %}
     </div>
 
-     
+
     <div class="external-report-section external-report-section-contacts">
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
             transDomain: translationDomain,
@@ -59,7 +59,7 @@
             } %}
         {% endif %}
     </div>
-    
+
     {% if reportType is sameas("propertyAndAffairs") %}
 
         <div class="external-report-section external-report-section-accounts">
@@ -94,8 +94,8 @@
                 } %}
             {% endif %}
         </div>
-        
-        
+
+
         {% if  report.furtherInformation %}
           <div class="external-report-section external-report-section-additional-info">
               {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
@@ -105,15 +105,14 @@
               <p class="page-section-description">{{ report.furtherInformation | nl2br }}</p>
           </div>
         {% endif %}
-        
+
         {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
 
     {% endif %}
 {% endblock %}
-  
+
 {% block popups %}
   {% if not isEmailAttachment%}
       {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
   {% endif %}
 {% endblock %}
-

@@ -28,7 +28,7 @@ class AccountController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         $accounts = $report->getAccounts();
 
@@ -92,7 +92,10 @@ class AccountController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        if (!in_array($accountId, $report->getAccountIds())) {
+            throw new \RuntimeException("Bank account not found.");
+        }
+        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
@@ -100,11 +103,14 @@ class AccountController extends Controller
         
         // closing balance logic
         list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
-        if ($formBalanceIsValid) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
-                'deserialise_group' => 'balance',
-            ]);
-            return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
+        if ($action == "list") {
+            if ($formBalanceIsValid) {
+                $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
+                    'deserialise_group' => 'balance',
+                ]);
+
+                return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
+            }
         }
         
         // money in/out logic
