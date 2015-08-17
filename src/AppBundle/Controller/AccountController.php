@@ -92,6 +92,9 @@ class AccountController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
+        if (!in_array($accountId, $report->getAccountIds())) {
+            throw new \RuntimeException("Bank account not found.");
+        }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
