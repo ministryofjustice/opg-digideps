@@ -74,12 +74,13 @@ class ClientController extends RestController
     
 
     /**
-     * @Route("/find-by-id/{id}", name="client_find_by_id" )
+     * @Route("/find-by-id/{id}/{userId}", name="client_find_by_id" )
      * @Method({"GET"})
      * 
      * @param integer $id
+     * @param integer $userId to check the record is accessible by this user
      */
-    public function findByIdAction($id)
+    public function findByIdAction($id, $userId)
     {
         $request = $this->getRequest();
         
@@ -93,10 +94,11 @@ class ClientController extends RestController
         
         $client = $this->getRepository('Client')->find($id);
         
-        //if client does not exist
-        if(empty($client)){
+        //  throw exception if the client does not exist or it's not accessible by the given user
+        if(empty($client) || !in_array($userId, $client->getUserIds())) {
             throw new \Exception("Client with id: $id does not exist");
         }
+        
         return $client;
     }
     
