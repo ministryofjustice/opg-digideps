@@ -67,6 +67,9 @@ class ContactController extends Controller{
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
+            if (!in_array($id, $report->getContacts())) {
+               throw new \RuntimeException("Contact not found.");
+            }
             $contact = $apiClient->getEntity('Contact','get_report_contact', [ 'parameters' => ['id' => $id ]]);
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
         }else{
