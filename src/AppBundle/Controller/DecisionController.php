@@ -60,7 +60,10 @@ class DecisionController extends Controller
             throw new \RuntimeException("Report already submitted and not editable.");
         }
 
-        if(in_array($action, [ 'edit', 'delete-confirm']) && in_array($id,$report->getDecisions())){
+        if(in_array($action, [ 'edit', 'delete-confirm'])){
+            if (!in_array($id, $report->getDecisions())) {
+               throw new \RuntimeException("Decision not found.");
+            }
             $decision = $apiClient->getEntity('Decision','get_report_decision', [ 'parameters' => ['id' => $id ] ]);
 
             $form = $this->createForm(new FormDir\DecisionType([
@@ -123,7 +126,7 @@ class DecisionController extends Controller
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
-            'client' => $util->getClient($report->getClient()),
+            'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
             'action' => $action,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
