@@ -64,11 +64,19 @@ class Redirector
     }
 
     /**
+     * @return \AppBundle\Entity\User
+     */
+    private function getLoggedUser()
+    {
+        return $this->security->getToken()->getUser();
+    }
+    
+    /**
      * @return string
      */
     public function getUserFirstPage($enabledLastAccessedUrl = true)
     {
-        $user = $this->security->getToken()->getUser();
+        $user = $this->getLoggedUser();
 
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return $this->getAdminHomepage();
@@ -111,19 +119,11 @@ class Redirector
             return $lastUsedUri;
         }
    
-        /*$reportId = $clients[0]->getReports()[0];
-        
-        $report = $this->util->getReport($reportId);
-        if ($report->getSubmitted()) {
-            return $this->router->generate('client_home');
-        }
-        
-        return $this->router->generate('report_overview', ['reportId'=>$reportId]);*/
-        
         $reportIds = $clients[0]->getReports();
+        $userId = $this->getLoggedUser()->getId();
         
         foreach($reportIds as $reportId){
-            $report = $this->util->getReport($reportId);
+            $report = $this->util->getReport($reportId, $userId);
             
             if(!$report->getSubmitted()){
                 return $this->router->generate('report_overview', ['reportId'=>$reportId]);

@@ -67,11 +67,13 @@ class Report
     
     /**
      * @JMS\Type("array")
-     * @var array $accounts
+     * @var Account[]
      */
     private $accounts;
     
     /**
+     * This is not used. For consistency, it should hold the account objects, and $accounts should hold integers
+     * 
      * @JMS\Type("array<AppBundle\Entity\Account>")
      * @JMS\Accessor(getter="getAccounts", setter="setAccounts")
      * @var array $accountObs
@@ -392,6 +394,16 @@ class Report
     public function getAccounts()
     {
         return $this->accounts;
+    }
+    
+    /**
+     * @return array of integers (Account IDs)
+     */
+    public function getAccountIds()
+    {
+        return array_map(function($account) {
+            return $account->getId();
+        }, $this->accounts);
     }
     
     /**
