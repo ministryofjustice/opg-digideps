@@ -86,6 +86,16 @@ default:
                 -
                     session:   '@session'
                     maxNestingLevel: 200
+      accounts:
+          description: Tests related to account details 
+          paths:    [ %paths.base%/features ]
+          filters:
+              tags: "@accounts &&~@javascript"
+          contexts:
+              - DigidepsBehat\FeatureContext:
+                  -
+                      session:   '@session'
+                      maxNestingLevel: 200
 
       wip:
         description: Tests related to the formatted report
