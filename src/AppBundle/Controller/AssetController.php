@@ -60,7 +60,7 @@ class AssetController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             $asset = $apiClient->getEntity('Asset','get_report_asset', [ 'parameters' => ['id' => $id ]]);

@@ -51,18 +51,34 @@ class Util
         return $choices;
     }
     
-    public function getClient($clientId, array $groups = [])
+    /**
+     * @param integer $clientId
+     * @param integer $userId for secutity check (if present)
+     * @param array $groups
+     * 
+     * @return Client
+     */
+    public function getClient($clientId, $userId, array $groups = [])
     {
-        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId ], 'query' => ['groups' => $groups] ]);
-    }
-    
-    public function getReport($reportId,$groups = [ "transactions", "basic"])
-    {
-        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'id' => $reportId ], 'query' => [ 'groups' => $groups ]]);
+        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId, 'userId'=>$userId ], 'query' => ['groups' => $groups ] ]);
     }
     
     /**
+     * @param integer $reportId
+     * @param integer $userId for secutity checks (if present)
+     * @param array $groups
+     * 
+     * @return Report
+     */
+    public function getReport($reportId, $userId, array $groups = [ "transactions", "basic"])
+    {
+        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'id' => $reportId, 'userId'=>$userId ], 'query' => [ 'groups' => $groups ]]);
+    }
+    
+    /**
+     * @param integer $userId userId (remove at next refactor. not needed as securty is already in the class)
      * @param Client $client
+     * 
      * @return Report[]
      */
     public function getReportsIndexedById($userId, Client $client, $groups)
@@ -75,7 +91,7 @@ class Util
         
         $ret = [];
         foreach($reportIds as $id){
-            $ret[$id] = $this->getReport($id,$groups);
+            $ret[$id] = $this->getReport($id, $userId, $groups);
         }
         
         return $ret;

@@ -18,7 +18,7 @@ class ContactController extends Controller{
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to update this report
-        $report = $util->getReport($reportId,['transactions']);
+        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
 
         if(!empty($report)){
             $report->setReasonForNoContacts(null);
@@ -37,7 +37,7 @@ class ContactController extends Controller{
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $util->getReport($reportId,['transactions']);
+        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getContacts())){
             $this->get('apiclient')->delete('delete_report_contact', [ 'parameters' => [ 'id' => $id ]]);
@@ -55,11 +55,11 @@ class ContactController extends Controller{
     {
         $util = $this->get('util');
 
-        $report = $util->getReport($reportId,['transactions']);
+        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         $request = $this->getRequest();
 
@@ -126,7 +126,7 @@ class ContactController extends Controller{
         $form->handleRequest($request);
         $noContact->handleRequest($request);
 
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         
         //check if contacts form was submitted
         if($form->get('save')->isClicked()){

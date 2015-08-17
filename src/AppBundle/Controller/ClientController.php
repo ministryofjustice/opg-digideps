@@ -69,7 +69,7 @@ class ClientController extends Controller
           if($report->getReportSeen() === false){
               $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
               
-              $reportObj = $util->getReport($report->getId());
+              $reportObj = $util->getReport($report->getId(), $this->getUser()->getId());
               //update report to say message has been seen
               $reportObj->setReportSeen(true);
               
