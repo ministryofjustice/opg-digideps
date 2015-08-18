@@ -113,6 +113,21 @@ activeTab: "tab-accounts"
 
         {{ form_end(form) }}
         
+    <script type="text/javascript">
+        var transactionHasChanged = false;
+        var message = "{{ 'leaveWarning' | trans | raw }}";
+
+        $( document ).ready(function() {
+            $(".account-transactions").on("keyup input paste", ".form-row input.form-control__number", function(){
+                transactionHasChanged = true;
+            });
+            
+            $(window).bind("beforeunload",function(event) {
+                if (transactionHasChanged) return message;
+            });
+        });
+    </script>
+
     {% endblock %}
     
 {% endembed %}
