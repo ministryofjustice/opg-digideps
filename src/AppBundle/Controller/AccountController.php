@@ -194,10 +194,6 @@ class AccountController extends Controller
         
         $form->handleRequest($this->getRequest());
         $isEditOrAddSubmitted = $form->has('save') && $form->get('save')->isClicked();
-        // set default value to make submit working when JS is not enabled
-        if (!$account->getId() && $isEditOrAddSubmitted) {
-             $form->get('openingDateSame')->setData(EntityDir\Account::OPENING_DATE_SAME_NO);
-        }
         $isEditSubmittedAndValid = $isEditOrAddSubmitted && $form->isValid();
         $isDeleteSubmittedAndValid = $form->has('delete') && $form->get('delete')->isClicked();
         

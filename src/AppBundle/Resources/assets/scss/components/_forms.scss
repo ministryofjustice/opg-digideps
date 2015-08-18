@@ -239,3 +239,19 @@ form.single-texta-area {
         width: auto;
     }
 }
+
+.form-label {
+    .legend-none-js {
+        display: block;
+    }
+    .legend-js {
+        display: none;
+    }
+    
+    .js-enabled & .legend-none-js {
+        display: none;
+    }
+    .js-enabled & .legend-js {
+        display: block;
+    }
+}

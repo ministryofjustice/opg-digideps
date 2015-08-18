@@ -80,7 +80,7 @@ class AccountType extends AbstractType
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $data = $event->getData();
                 
-                if ($data['openingDateSame'] == Account::OPENING_DATE_SAME_YES) {
+                if (isset($data['openingDateSame']) && $data['openingDateSame'] == Account::OPENING_DATE_SAME_YES) {
                     $account = $event->getForm()->getData();
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
                     

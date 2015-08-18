@@ -562,12 +562,7 @@ class Account
      */
     public function getOpeningDateSame()
     {
-        $openingDate = $this->getOpeningDate();
-        
-        $format = 'd/m/Y';
-        $reportStartDate = $this->getReportObject(true)->getStartDate();
-        return $openingDate && $reportStartDate && $openingDate->format($format) == $reportStartDate->format($format) 
-               ? self::OPENING_DATE_SAME_YES : self::OPENING_DATE_SAME_NO;
+        return $this->getOpeningDate();
     }
 
     

@@ -4,6 +4,8 @@
         '{{ boldEnd }}': '</strong>'
 }%}
 
+
+
 {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
       transDomain: translationDomain,
       subSectionDescription: 'form.openingBalance.subSectionDescription',
@@ -11,7 +13,7 @@
     } %}
 
 {# yes/no radio button asking if opening date is the same. Not used for non-JS version, so initially hidden #}
-<div id="account_opening_date_same_wrapper" class="visuallyhidden">
+<div id="account_opening_date_same_wrapper">
   {# % include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
       transDomain: translationDomain,
       subSectionDescription: 'Is the start date of your reporting period and the opening balance date the same ?',
@@ -34,8 +36,6 @@
         'legendParameters': reportBoldStartDateTransReplacements,
         'legendRaw': true
     }) }}
-    {# used to hold the text that will be replaced as a legend of the element above when JS is enabled #}
-    <span id="openingDateLegendJs" class="visuallyhidden">{{ 'form.openingBalance.controls.openingDate.legendJs' | trans({}, translationDomain) }}</span>
 
   {{ form_input(form.openingDateExplanation, 'form.openingBalance.controls.openingDateExplanation', { 
       'labelClass': 'required',
@@ -52,30 +52,12 @@
     } ) }}
 
 <script type="text/javascript">
-  $().ready(function () {
-    var openingDateNotSameBlock = $('#account_opening_date_not_same');
 
-    // initiate JS version (hide opening date, hide explanation fields and replace legend for opening date)
-    openingDateNotSameBlock.addClass('visuallyhidden');
-    $('#account_openingDate_day').parents('fieldset').find('legend').html(
-      $('#openingDateLegendJs').html()
-    );
-    
-    // show the checkbox, run and attach "switch" logic
-    $('#account_opening_date_same_wrapper')
-        .removeClass('visuallyhidden')
-        .change(function () {
-          if ("yes" === $('input[name="account[openingDateSame]"]:checked').val()) {
-            openingDateNotSameBlock.addClass('visuallyhidden');
-          } else {
-            openingDateNotSameBlock.removeClass('visuallyhidden');
-          }
-        })
-        .trigger('change');
-
-    {% if addMode %}
-       $('#account_openingDateSame_0').trigger('click');
-    {% endif %}
-        
-  });
+    $(document).ready(function () {
+        new opg.RadioHide({
+                radio:'#account_opening_date_same_wrapper input[type=radio]',
+                content: '#account_opening_date_not_same',
+                hideOnYes: true
+            });
+    })
 </script>

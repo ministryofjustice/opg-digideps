@@ -147,11 +147,16 @@ class FormFieldsExtension extends \Twig_Extension
         
         //get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);
+        
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);    
+        $legendTextTransJS = $this->translator->trans($translationKey.'.legendjs', $legendParams, $domain); 
         
         $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        $legendTextJS =  ($legendTextTrans != $translationKey.'.legendjs')? $legendTextTransJS: null;
+        
         
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
+                                                                                                'legendTextJS' => $legendTextJS,
                                                                                                 'hintText' => $hintText,
                                                                                                 'element' => $element,
                                                                                                 'legendTextRaw' => !empty($vars['legendRaw'])
