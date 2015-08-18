@@ -2,7 +2,7 @@
 
 namespace DigidepsBehat;
 
-trait ExpressionContext
+trait ExpressionTrait
 {
     /**
      * @When I fill in :field with the value of :expression

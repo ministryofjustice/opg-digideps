@@ -28,7 +28,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         FormTrait,
         ReportTrait,
         KernelDictionary,
-        ExpressionContext;
+        ExpressionTrait;
     
     private static $dbName;
     private static $saveSnaphotBeforeEachScenario;
