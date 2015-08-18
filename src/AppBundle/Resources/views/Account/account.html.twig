@@ -115,7 +115,7 @@ activeTab: "tab-accounts"
 
     <script type="text/javascript">
         var transactionHasChanged = false;
-        var message = "You haven't saved the transactions you entered. Do you want to leave without saving?";
+        var message = "{{ 'leaveWarning' | trans | raw }}";
 
         $( document ).ready(function() {
             $(".account-transactions").on("keyup input paste", ".form-row input.form-control__number", function(){
