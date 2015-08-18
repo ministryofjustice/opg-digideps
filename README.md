@@ -1,6 +1,6 @@
-#CleComplete the Deputy Report | Client
+#Complete the Deputy Report | Client
 
-beta
+beta version
     
 ## Thank You
 
