@@ -4,14 +4,7 @@ Feature: Add Another
     Scenario: setup add another user
         Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
-        When I fill in the following:
-            | admin_email | behat-another@publicguardian.gsi.gov.uk | 
-            | admin_firstname | Another | 
-            | admin_lastname | Brown | 
-            | admin_roleId | 2 |
-        And I click on "save"
-        Then I should see "behat-another@publicguardian.gsi.gov.uk" in the "users" region
-        Then I should see "Another Brown" in the "users" region
+        When I create a new "Lay Deputy" user "Another" "Brown" with email "behat-another@publicguardian.gsi.gov.uk"
         Given I am on "/logout"
         When I open the "/user/activate/" link from the email
         Then the response status code should be 200

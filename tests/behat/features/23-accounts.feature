@@ -4,14 +4,7 @@ Feature: Accounts
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
-      When I fill in the following:
-          | admin_email | behat-account@publicguardian.gsi.gov.uk | 
-          | admin_firstname | Account | 
-          | admin_lastname | Smith | 
-          | admin_roleId | 2 |
-      And I click on "save"
-      Then I should see "behat-account@publicguardian.gsi.gov.uk" in the "users" region
-      Then I should see "Account Smith" in the "users" region
+      When I create a new "Lay Deputy" user "Account" "Smith" with email "behat-account@publicguardian.gsi.gov.uk"
       Given I am on "/logout"
       When I open the "/user/activate/" link from the email
       Then the response status code should be 200

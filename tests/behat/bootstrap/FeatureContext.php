@@ -28,9 +28,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         FormTrait,
         ReportTrait,
         KernelDictionary,
-        ExpressionTrait;
+        ExpressionTrait,
+        UserTrait;
     
     private static $dbName;
+    
     private static $saveSnaphotBeforeEachScenario;
     
     public function __construct($options = [])
@@ -77,22 +79,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $this->iShouldSeeInTheRegion($text, 'page-title');
     }
-    
-    /**
-     * @When I delete all the existing behat users
-     */
-    public function iDeleteAllTheExistingBehatUsers()
-    {
-        $this->visitBehatLink('delete-behat-users');
-    }
-    
-    /**
-     * @Given I reset the behat data
-     */
-//    public function iResetTheBehatData()
-//    {
-//        $this->visitBehatLink("delete-behat-data");
-//    }
+   
     
     /**
      * @Then the response should have the :arg1 header containing :arg2
@@ -143,14 +130,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             $this->iShouldSeeInTheRegion($value, 'entry-1');
         }
         
-    }
-    
-    /**
-     * @Given I change the user :userId token to :token dated last week
-     */
-    public function iChangeTheUserToken($userId, $token)
-    {
-        $this->visitBehatLink("user/{$userId}/token/{$token}/token-date/-7days");
     }
     
     /**
