@@ -10,26 +10,15 @@ default:
         filters:
             tags: "@deputy&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
-                    # dbname used for db snapshot
-                    dbName: api
-                    saveSnaphotBeforeEachScenario: true
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+
       admin:
         description: End to end journey for Admin user
         paths:    [ %paths.base%/features ]
         filters:
             tags: "@admin&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
-                    # dbname used for db snapshot
-                    dbName: api
-                    saveSnaphotBeforeEachScenario: true
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
                     
       feedback:
         description: Tests related to user feedback
@@ -37,10 +26,7 @@ default:
         filters:
             tags: "@feedback&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
                     
       cookies:
         description: Tests related to cookies
@@ -48,10 +34,7 @@ default:
         filters:
             tags: "@cookie&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
                     
       terms:
         description: Tests related to terms
@@ -59,10 +42,7 @@ default:
         filters:
             tags: "@terms&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       textarea:
         description: Tests related to textareas
@@ -70,32 +50,23 @@ default:
         mink_session: default
         filters:
             tags: "@textarea"
-        contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+        contexts: [ DigidepsBehat\FeatureContext ]
 
       formatted:
         description: Tests related to formatted report 
         paths:    [ %paths.base%/features ]
         filters:
             tags: "@formatted-report&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+        contexts: 
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+
       accounts:
           description: Tests related to account details 
           paths:    [ %paths.base%/features ]
           filters:
               tags: "@accounts &&~@javascript"
-          contexts:
-              - DigidepsBehat\FeatureContext:
-                  -
-                      session:   '@session'
-                      maxNestingLevel: 200
+          contexts: 
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       wip:
         description: Tests related to the formatted report
@@ -104,10 +75,7 @@ default:
         filters:
             tags: "@wip"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
                 
       another:
         description: Tests related to context sensitive add buttons
@@ -115,10 +83,7 @@ default:
         filters:
             tags: "@another&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       javascript:
         description: Tests related to user feedback
@@ -127,10 +92,7 @@ default:
         filters:
             tags: "@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext:
-                -
-                    session:   '@session'
-                    maxNestingLevel: 200
+            - DigidepsBehat\FeatureContext: [{ dbName: api }]
                     
     extensions:
         Behat\Symfony2Extension: ~

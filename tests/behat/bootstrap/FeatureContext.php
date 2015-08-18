@@ -33,14 +33,15 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     private static $dbName;
     private static $saveSnaphotBeforeEachScenario;
     
-    public function __construct(array $options)
+    public function __construct($options = [])
     {
         //$options['session']; // not used
-        ini_set('xdebug.max_nesting_level', $options['maxNestingLevel'] ?: 200);
-        ini_set('max_nesting_level', $options['maxNestingLevel'] ?: 200);
-        $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
-        self::$dbName = empty($options['dbName']) ? null : $options['dbName'];
-        self::$saveSnaphotBeforeEachScenario = !empty($options['saveSnaphotBeforeEachScenario']);
+        $maxNestingLevel = isset($options['maxNestingLevel']) ? $options['maxNestingLevel'] : 200;
+        ini_set('xdebug.max_nesting_level', $maxNestingLevel);
+        ini_set('max_nesting_level', $maxNestingLevel);
+        $this->sessionName = empty($options['sessionName']) ? '@session' : $options['sessionName'];
+        self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
+        self::$saveSnaphotBeforeEachScenario = isset($options['saveSnaphotBeforeEachScenario']) ? $options['saveSnaphotBeforeEachScenario'] : true;
     }
         
     
