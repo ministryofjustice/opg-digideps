@@ -17,11 +17,10 @@ class SafeguardController extends Controller{
     public function safeguardingAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId);
+        $report = $util->getReport($reportId, $this->getUser()->getId());
         $request = $this->getRequest();
         
         // just needed for title etc,
-        $report = $util->getReport($reportId, $this->getUser()->getId());
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -52,7 +51,7 @@ class SafeguardController extends Controller{
         }
 
         return[ 'report' => $report,
-                'client' => $util->getClient($report->getClient()),
+                'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
                 'form' => $form->createView(),
                 'report_form_submit' => $this->get('reportSubmitter')->getFormView()
               ];
