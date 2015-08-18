@@ -41,7 +41,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $maxNestingLevel = isset($options['maxNestingLevel']) ? $options['maxNestingLevel'] : 200;
         ini_set('xdebug.max_nesting_level', $maxNestingLevel);
         ini_set('max_nesting_level', $maxNestingLevel);
-        $this->sessionName = empty($options['sessionName']) ? '@session' : $options['sessionName'];
+        $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
         self::$saveSnaphotBeforeEachScenario = isset($options['saveSnaphotBeforeEachScenario']) ? $options['saveSnaphotBeforeEachScenario'] : true;
     }

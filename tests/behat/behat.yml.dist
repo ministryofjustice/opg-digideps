@@ -10,7 +10,7 @@ default:
         filters:
             tags: "@deputy&&~@javascript"
         contexts: 
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+            - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
       admin:
         description: End to end journey for Admin user
