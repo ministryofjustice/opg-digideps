@@ -2,6 +2,8 @@
 
 namespace DigidepsBehat;
 
+use Behat\Gherkin\Node\TableNode;
+
 trait UserTrait
 {
     // added here for simplicity
@@ -45,6 +47,21 @@ trait UserTrait
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
         $this->pressButton('set_password_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+    
+    
+    /**
+     * @When I set the user details to:
+     */
+    public function iSetTheUserDetailsTo(TableNode $table)
+    {
+        $this->visit("/user/details");
+        foreach ($table->getRowsHash() as $field => $value) {
+            $this->fillField('user_details_' . $field, $value);
+        }
+        $this->pressButton('user_details_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }

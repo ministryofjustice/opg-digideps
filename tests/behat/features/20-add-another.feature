@@ -6,18 +6,17 @@ Feature: Add Another
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
         When I create a new "Lay Deputy" user "Another" "Brown" with email "behat-another@publicguardian.gsi.gov.uk"
         And I activate the user with password "Abcd1234"
-        When I fill in the following:
-            | user_details_firstname | Another |
-            | user_details_lastname | Brown |
-            | user_details_address1 | 102 Petty France |
-            | user_details_address2 | MOJ |
-            | user_details_address3 | London |
-            | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | GB |
-            | user_details_phoneMain | 020 3334 3555  |
-            | user_details_phoneAlternative | 020 1234 5678  |
-        And I press "user_details_save"
-        Then the form should be valid
+        And I set the user details to:
+            | firstname | Another |
+            | lastname | Brown |
+            | address1 | 102 Petty France |
+            | address2 | MOJ |
+            | address3 | London |
+            | addressPostcode | SW1H 9AJ |
+            | addressCountry | GB |
+            | phoneMain | 020 3334 3555  |
+            | phoneAlternative | 020 1234 5678  |
+        # 
         When I fill in the following:
             | client_firstname | Jillian |
             | client_lastname | White |
