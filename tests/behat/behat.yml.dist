@@ -43,7 +43,7 @@ default:
                     maxNestingLevel: 200
                     
       cookies:
-        description: Tests related to user feedback
+        description: Tests related to cookies
         paths:    [ %paths.base%/features ]
         filters:
             tags: "@cookie&&~@javascript"
@@ -54,7 +54,7 @@ default:
                     maxNestingLevel: 200
                     
       terms:
-        description: Tests related to user feedback
+        description: Tests related to terms
         paths:    [ %paths.base%/features ]
         filters:
             tags: "@terms&&~@javascript"
@@ -65,7 +65,7 @@ default:
                     maxNestingLevel: 200
 
       textarea:
-        description: Tests related to user feedback
+        description: Tests related to textareas
         paths:    [ %paths.base%/features ]
         mink_session: default
         filters:
