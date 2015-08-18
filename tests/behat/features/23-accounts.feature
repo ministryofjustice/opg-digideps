@@ -5,14 +5,7 @@ Feature: Accounts
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
       When I create a new "Lay Deputy" user "Account" "Smith" with email "behat-account@publicguardian.gsi.gov.uk"
-      Given I am on "/logout"
-      When I open the "/user/activate/" link from the email
-      Then the response status code should be 200
-      When I fill in the following: 
-          | set_password_password_first   | Abcd1234 |
-          | set_password_password_second  | Abcd1234 |
-      And I press "set_password_save"
-      Then the form should be valid
+      And I activate the user with password "Abcd1234"
       #Then I should be on "user/details"
       When I fill in the following:
           | user_details_firstname | John |
