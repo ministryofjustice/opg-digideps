@@ -18,15 +18,8 @@ Feature: Accounts
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
-      #      
-      When I fill in the following:
-          | report_endDate_day | 1 |
-          | report_endDate_month | 1 |
-          | report_endDate_year | 2015 |
-      And I press "report_save"
-      Then the form should be valid
-      # assert you are on dashboard
-      And the URL should match "report/\d+/overview"
+      And I set the report end date to "1/1/2015"
+      Then the URL should match "report/\d+/overview"
       Then I am on "/logout"
       And I reset the email log
       Then I save the application status into "accountuser"

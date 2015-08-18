@@ -133,14 +133,8 @@ Feature: add client and report
         Then the form should be invalid
         And I save the page as "deputy-step4-error"
         # valid form
-        When I fill in the following:
-            | report_endDate_day | 31 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |
-        And I press "report_save"
-        Then the form should be valid
-        # assert you are on dashboard
-        And the URL should match "report/\d+/overview"
+        When I set the report end date to "31/12/2015"
+        Then the URL should match "report/\d+/overview"
 
 
     @deputy
