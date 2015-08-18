@@ -7,32 +7,17 @@ Feature: Add Another
         When I create a new "Lay Deputy" user "Another" "Brown" with email "behat-another@publicguardian.gsi.gov.uk"
         And I activate the user with password "Abcd1234"
         And I set the user details to:
-            | firstname | Another |
-            | lastname | Brown |
-            | address1 | 102 Petty France |
-            | address2 | MOJ |
-            | address3 | London |
-            | addressPostcode | SW1H 9AJ |
-            | addressCountry | GB |
-            | phoneMain | 020 3334 3555  |
-            | phoneAlternative | 020 1234 5678  |
-        # 
-        When I fill in the following:
-            | client_firstname | Jillian |
-            | client_lastname | White |
-            | client_caseNumber | 123456ABC |
-            | client_courtDate_day | 1 |
-            | client_courtDate_month | 1 |
-            | client_courtDate_year | 2014 |
-            | client_allowedCourtOrderTypes_0 | 2 |
-            | client_address |  1 South Parade |
-            | client_address2 | First Floor  |
-            | client_county | Nottingham  |
-            | client_postcode | NG1 2HT  |
-            | client_country | GB |
-            | client_phone | 0123456789  |
-        And I press "client_save"
-        Then the form should be valid
+            | name | Another | Brown |
+            | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
+            | phone | 020 3334 3555 | 020 1234 5678  |
+         When I set the client details to:
+            | name | Jillian | White | 
+            | caseNumber | 123456ABC |
+            | courtDate | 1 | 1 | 2014 |
+            | allowedCourtOrderTypes_0 | 2 |
+            | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
+            | phone | 0123456789  |
+        #
         When I fill in the following:
             | report_endDate_day | 1 |
             | report_endDate_month | 1 |
