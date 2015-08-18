@@ -132,3 +132,4 @@ moneyOut:
       further_guidance: Please give more details
 save:
   label: "Save"
+leaveWarning: "You haven't saved the transactions you have entered. Do you want to leave without saving?"
