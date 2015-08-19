@@ -17,7 +17,7 @@ Feature: Formatted Report
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
-      And I set the report end date to "1/11/2015"
+      And I set the report end date to "1/1/2015"
       Then the URL should match "report/\d+/overview"
       Then I am on "/logout"
       And I reset the email log
