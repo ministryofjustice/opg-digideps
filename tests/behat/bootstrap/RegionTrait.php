@@ -53,6 +53,14 @@ trait RegionTrait
     }
     
     /**
+     * @Then I should see :text in :section section
+     */
+    public function iShouldSeeInSection($text, $section)
+    {
+        $this->assertSession()->elementTextContains('css', '#' . $section . '-section', $text);
+    }
+    
+    /**
      * @Then I should see :text in :container
      */
     public function iShouldSeeInTheContainer($text, $container)

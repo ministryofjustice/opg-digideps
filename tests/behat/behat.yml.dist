@@ -60,13 +60,21 @@ default:
         contexts: 
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      safeguarding:
+      safeguardingentry:
         description: Tests related to the safeguarding section
         paths:    [ %paths.base%/features ]
         filters:
-            tags: "@safeguarding&&~@javascript"
+            tags: "@safeguarding&&@entry&&~@javascript"
         contexts: 
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
+            
+      safeguardingreport:
+        description: Tests related to the safeguarding section
+        paths:    [ %paths.base%/features ]
+        filters:
+          tags: "@safeguarding&&@formatted-report&&~@javascript"
+        contexts: 
+          - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       accounts:
           description: Tests related to account details 
@@ -77,13 +85,12 @@ default:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       wip:
-        description: Tests related to the formatted report
-        paths:    [ %paths.base%/features ]
-        mink_session: default
-        filters:
-            tags: "@wip"
-        contexts: 
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+          description: Tests related to the safeguarding section
+          paths:    [ %paths.base%/features ]
+          filters:
+              tags: "@wip"
+          contexts: 
+              - DigidepsBehat\FeatureContext: [{ dbName: api }]
                 
       another:
         description: Tests related to context sensitive add buttons

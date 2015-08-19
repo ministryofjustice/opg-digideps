@@ -1,0 +1,25 @@
+<div class="section" id="safeguarding-section">
+    <h2>
+        <span class="section-number">Section 4</span>
+        Safeguarding
+    </h2>
+    <fieldset>
+        <div id="do-you-live-with-the-client" class="checkboxes horizontal">
+            <h3>Do you live with the client?</h3>
+            
+            <div class="form-group right-label">
+                <div class="checkbox">{% if report.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Yes</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox">{% if report.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">No</div>
+            </div>
+
+        </div>
+        
+        {% if report.doYouLiveWithClient == 'no' %}
+            <div id="visits sub-section"></div>
+        {% endif %}
+    </fieldset>
+</div>

@@ -1,6 +1,6 @@
 Feature: Formatted Report
     
-    @formatted-report @accounts @deputy
+    @formatted-report @deputy
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
@@ -22,8 +22,7 @@ Feature: Formatted Report
       Then I am on "/logout"
       And I reset the email log
       Then I save the application status into "reportuser"
-      
-    
+
     @formatted-report @deputy
     Scenario: Enter a report
         When I load the application status from "reportuser"
@@ -1242,5 +1241,4 @@ Feature: Formatted Report
         And the URL should match "/report/\d+/submitted"
         And I view the formatted report
         Then the response status code should be 200
-        And I should see "My client has no assets" in "assets-section" 
-        
+        And I should see "My client has no assets" in "assets-section"
