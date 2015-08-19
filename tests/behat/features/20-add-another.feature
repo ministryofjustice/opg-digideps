@@ -49,17 +49,11 @@ Feature: Add Another
         And I am logged in as "behat-another@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-contacts"
         Then I should see "Add a contact" in the "add-a-contact" region
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Andy White |
-            | contact_relationship | brother  |
-            | contact_explanation | no explanation |
-            | contact_address | 45 Noth Road |
-            | contact_address2 | Inslington |
-            | contact_county | London |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
+        When I add the following contact:
+            | contactName | Andy White |
+            | relationship | brother  |
+            | explanation | no explanation |
+            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
         Then I should see "Add another contact" in the "add-a-contact" region
                         
     @another

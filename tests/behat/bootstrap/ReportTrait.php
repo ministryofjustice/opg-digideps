@@ -2,6 +2,8 @@
 
 namespace DigidepsBehat;
 
+use Behat\Gherkin\Node\TableNode;
+
 trait ReportTrait
 {
     /**
@@ -150,6 +152,39 @@ trait ReportTrait
         $this->fillField('report_endDate_year', $endDatePieces[2]);
         
         $this->pressButton('report_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+    
+    /**
+     * Click on contacts tab and add a contact
+     * If the form is not shown, click first on "add-a-contact" button (with no exception thrown)
+     * 
+     * @When I add the following contact:
+     */
+    public function IAddtheFollowingContact(TableNode $table)
+    {
+        $this->clickLink('tab-contacts');
+        
+        // expand form if collapsed
+        if (0 === count($this->getSession()->getPage()->findAll('css', 'contact_contactName'))) {
+            $this->clickOnBehatLink('add-a-contact');
+        }
+        
+        $rows = $table->getRowsHash();
+        
+        $this->fillField('contact_contactName', $rows['contactName']);
+        $this->fillField('contact_relationship', $rows['relationship']);
+        $this->fillField('contact_explanation', $rows['explanation']);
+        $this->fillField('contact_address', $rows['address'][0]);
+        $this->fillField('contact_address2', $rows['address'][1]);
+        $this->fillField('contact_county', $rows['address'][2]);
+        $this->fillField('contact_postcode', $rows['address'][3]);
+        if (isset($rows['address'][4])) {
+            $this->fillField('contact_country', $rows['address'][4]);
+        }
+        
+        $this->pressButton("contact_save");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }

@@ -45,33 +45,17 @@ Feature: Formatted Report
             | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
         Then I press "decision_save"
         And the form should be valid
-        # Next, some contacts
-        Then I follow "tab-contacts"
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Andy White |
-            | contact_relationship | brother  |
-            | contact_explanation | no explanation |
-            | contact_address | 45 Noth Road |
-            | contact_address2 | Inslington |
-            | contact_county | London |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
-        And the form should be valid
-        # And Another
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Fred Smith |
-            | contact_relationship | Social Worker  |
-            | contact_explanation | Advices on benefits available |
-            | contact_address | Town Hall |
-            | contact_address2 | Maidenhead |
-            | contact_county | Berkshire |
-            | contact_postcode | SL1 1RR |
-            | contact_country | GB |
-        And I press "contact_save"
-        And the form should be valid
+        # Next, 2 contacts
+        When I add the following contact:
+            | contactName | Andy White |
+            | relationship | brother  |
+            | explanation | no explanation |
+            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
+        And I add the following contact:
+            | contactName | Fred Smith |
+            | relationship | Social Worke  |
+            | explanation | Advices on benefits available |
+            | address | Town Hall |Maidenhead | Berkshire | SL1 1RR | GB |
         # Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -223,33 +207,17 @@ Feature: Formatted Report
           | reason_for_no_decision_reason | small budget |
         And I press "reason_for_no_decision_saveReason"
         Then the form should be valid
-        # Next, some contacts
-        Then I follow "tab-contacts"
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Andy White |
-            | contact_relationship | brother  |
-            | contact_explanation | no explanation |
-            | contact_address | 45 Noth Road |
-            | contact_address2 | Inslington |
-            | contact_county | London |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
-        And the form should be valid
-        # And Another
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Fred Smith |
-            | contact_relationship | Social Worker  |
-            | contact_explanation | Advices on benefits available |
-            | contact_address | Town Hall |
-            | contact_address2 | Maidenhead |
-            | contact_county | Berkshire |
-            | contact_postcode | SL1 1RR |
-            | contact_country | GB |
-        And I press "contact_save"
-        And the form should be valid
+        # Next, 2 contacts
+        When I add the following contact:
+            | contactName | Andy White |
+            | relationship | brother  |
+            | explanation | no explanation |
+            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
+        And I add the following contact:
+            | contactName | Fred Smith |
+            | relationship | Social Worke  |
+            | explanation | Advices on benefits available |
+            | address | Town Hall |Maidenhead | Berkshire | SL1 1RR | GB |
         # Bank account
         Then I follow "tab-accounts"
         And I fill in the following:

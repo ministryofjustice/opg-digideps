@@ -31,14 +31,11 @@ Feature: edit/remove contact
             | contact_explanation |
             | contact_address |  |
             | contact_postcode |
-        When I fill in the following:
-            | contact_contactName | Andy Brown |
-            | contact_relationship | brother |
-            | contact_explanation | no explanation |
-            | contact_address | 46 Noth Road |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
+        When I add the following contact:
+            | contactName | Andy Brown |
+            | relationship | brother  |
+            | explanation | no explanation |
+            | address | 46 Noth Road |  |  | N2 5JF | GB |
         And the URL should match "/report/\d+/contacts"
         Then I should see "Andy Brown" in the "list-contacts" region
         And I should see "46 Noth Road" in the "list-contacts" region

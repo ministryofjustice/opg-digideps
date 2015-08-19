@@ -108,16 +108,11 @@ Feature: report
             | contact_postcode |
         # right values
         Then the "contact_explanation" field is expandable
-        And I fill in the following:
-            | contact_contactName | Andy White |
-            | contact_relationship | GP  |
-            | contact_explanation | I owe him money |
-            | contact_address | 45 Noth Road |
-            | contact_address2 | Inslington |
-            | contact_county | London |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
+        And I add the following contact:
+            | contactName | Andy White |
+            | relationship | GP  |
+            | explanation | I owe him money |
+            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
         And I save the page as "report-contact-list"
         Then the response status code should be 200
         And the form should be valid
