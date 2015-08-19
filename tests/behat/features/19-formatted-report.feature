@@ -30,21 +30,12 @@ Feature: Formatted Report
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         # Start by adding some decisions
-        When I click on "add-a-decision"
-        And I fill in the following:
-            | decision_description | 3 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 85% |
-        Then I press "decision_save"
-        And the form should be valid
-        Then I click on "add-a-decision"
-        # add another decision
-        And I fill in the following:
-            | decision_description | 2 televisions |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
-        Then I press "decision_save"
-        And the form should be valid
+        And I add the following decision:
+            | description | 3 beds |
+            | clientInvolved | yes | the client was able to decide at 85% |
+        And I add the following decision:
+            | description | 2 televisions |
+            | clientInvolved | yes | the client said he doesnt want a tv anymore |
         # Next, 2 contacts
         When I add the following contact:
             | contactName | Andy White |
@@ -367,27 +358,17 @@ Feature: Formatted Report
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         # Start by adding some decisions
-        When I click on "add-a-decision"
-        And I fill in the following:
-            | decision_description | 3 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 85% |
-        Then I press "decision_save"
-        And the form should be valid
-        Then I click on "add-a-decision"
-        # add another decision
-        And I fill in the following:
-            | decision_description | 2 televisions |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
-        Then I press "decision_save"
-        And the form should be valid
+        And I add the following decision:
+            | description | 3 beds |
+            | clientInvolved | yes | the client was able to decide at 85% |
+        And I add the following decision:
+            | description | 2 televisions |
+            | clientInvolved | yes | the client said he doesnt want a tv anymore |
         # Next, some contacts
         Then I follow "tab-contacts"
         When I fill in "reason_for_no_contact_reason" with "kept in the book"
         And I press "reason_for_no_contact_saveReason"
         Then the form should be valid
-        
         # Bank account
         Then I follow "tab-accounts"
         And I fill in the following:

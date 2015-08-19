@@ -22,11 +22,9 @@ Feature: edit/remove decision
         Then the following fields should have an error:
             | decision_description |
             | decision_clientInvolvedDetails |
-        When I fill in the following:
-            | decision_description | 5 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 100% |
-        And I press "decision_save"
+        When I add the following decision:
+            | description | 5 beds |
+            | clientInvolved | yes | the client was able to decide at 100% |
         Then I should see "5 beds" in the "list-decisions" region
         And I should see "the client was able to decide at 100%" in the "list-decisions" region
         And I click on "decision-5-beds"

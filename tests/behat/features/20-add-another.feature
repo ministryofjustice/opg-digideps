@@ -79,10 +79,7 @@ Feature: Add Another
         And I am logged in as "behat-another@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         Then I should see "Add a decision" in the "add-a-decision" region
-        Then I click on "add-a-decision"
-        And I fill in the following:
-            | decision_description | 3 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 85% |
-        Then I press "decision_save"
+        When I add the following decision:
+            | description | 3 beds |
+            | clientInvolved | yes | the client was able to decide at 85% |
         Then I should see "Add another decision" in the "add-a-decision" region

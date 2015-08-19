@@ -167,7 +167,7 @@ trait ReportTrait
         $this->clickLink('tab-contacts');
         
         // expand form if collapsed
-        if (0 === count($this->getSession()->getPage()->findAll('css', 'contact_contactName'))) {
+        if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
             $this->clickOnBehatLink('add-a-contact');
         }
         
@@ -185,6 +185,43 @@ trait ReportTrait
         }
         
         $this->pressButton("contact_save");
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+    
+    /**
+     * Click on decisions tab and add a decision
+     * If the form is not shown, click first on "add-a-decision" button (with no exception thrown)
+     * 
+     * @When I add the following decision:
+     */
+    public function IAddtheFollowingDecision(TableNode $table)
+    {
+        $this->clickLink("tab-decisions");
+        
+        // expand form if collapsed
+        if (0 === count($this->getSession()->getPage()->findAll('css', '#decision_clientInvolvedBoolean_0'))) {
+            $this->clickOnBehatLink('add-a-decision');
+        }
+        
+        $rows = $table->getRowsHash();
+        
+        $this->fillField('decision_description', $rows['description']);
+        switch ($rows['clientInvolved'][0]) {
+            case 'yes':
+                $this->fillField('decision_clientInvolvedBoolean_0', 1);
+                break;
+            
+            case 'no':
+                $this->fillField('decision_clientInvolvedBoolean_1', 0);
+                break;
+            default:
+                throw new \RuntimeException("Invalid value for clientInvolved");
+        }
+        
+        $this->fillField('decision_clientInvolvedDetails',  $rows['clientInvolved'][1]);
+        
+        $this->pressButton("decision_save");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
