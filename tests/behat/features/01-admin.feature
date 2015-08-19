@@ -40,12 +40,7 @@ Feature: admin
         And I save the page as "admin-deputy-error1"
         And I should not see "invalidEmail" in the "users" region
         # assert form OK
-        When I fill in the following:
-            | admin_email | behat-user@publicguardian.gsi.gov.uk |
-            | admin_firstname | John |
-            | admin_lastname | Doe |
-            | admin_roleId | 2 |
-        And I click on "save"
+        When I create a new "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-user@publicguardian.gsi.gov.uk" in the "users" region
         Then I should see "Lay Deputy" in the "users" region
         And I save the page as "admin-deputy-added"
@@ -60,12 +55,7 @@ Feature: admin
           | action | login |
         #When I go to "/admin"
         Given I am on admin page "/admin"
-        And I fill in the following:
-            | admin_email | behat-admin-user@publicguardian.gsi.gov.uk |
-            | admin_firstname | John |
-            | admin_lastname | Doe |
-            | admin_roleId | 1 |
-        And I click on "save"
+        And I create a new "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
         Then the response status code should be 200
         And I should see "OPG Administrator" in the "users" region

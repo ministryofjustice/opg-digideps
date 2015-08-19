@@ -133,6 +133,26 @@ trait ReportTrait
        
         $this->visit($url);
     }
+    
+    /**
+     * @When I set the report end date to :endDateDMY
+     */
+    public function iSetTheReportStartDateToAndEndDateTo($endDateDMY)
+    {
+        /*$startDatePieces = explode('/', $startDateDMY);
+        $this->fillField('report_startDate_day', $startDatePieces[0]);
+        $this->fillField('report_startDate_month', $startDatePieces[1]);
+        $this->fillField('report_startDate_year', $startDatePieces[2]);*/
+        
+        $endDatePieces = explode('/', $endDateDMY);
+        $this->fillField('report_endDate_day', $endDatePieces[0]);
+        $this->fillField('report_endDate_month', $endDatePieces[1]);
+        $this->fillField('report_endDate_year', $endDatePieces[2]);
+        
+        $this->pressButton('report_save');
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
 
 
 }
