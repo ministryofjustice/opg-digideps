@@ -17,7 +17,7 @@
                     {% if report.submitted %}
                         {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
                     {% else %}
-                        <a href="{{ linkToReportOverviewPage }}#account-header" class="behat-link-report-n{{ loop.index }}">
+                        <a href="{{ linkToReportOverviewPage }}#account-header" class="behat-link-report-id-{{ report.id }} behat-link-report-n{{ loop.index }}">
                             {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
                         </a>
                     {% endif %}

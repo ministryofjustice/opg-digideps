@@ -842,7 +842,7 @@ Feature: report
     And I click on "client-home"
     And I edit lastest active report
     When I click on "client-home"
-    And I click on "report-n1"
+    And I click on "report-n1-to-2016"
     And I save the page as "report-property-affairs-homepage"
     Then I should see a "#tab-contacts" element
     And I should see a "#tab-decisions" element
