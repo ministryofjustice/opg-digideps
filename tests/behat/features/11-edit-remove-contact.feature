@@ -36,16 +36,12 @@ Feature: edit/remove contact
             | relationship | brother  |
             | explanation | no explanation |
             | address | 46 Noth Road |  |  | N2 5JF | GB |
-        And the URL should match "/report/\d+/contacts"
-        Then I should see "Andy Brown" in the "list-contacts" region
-        And I should see "46 Noth Road" in the "list-contacts" region
-        And I click on "contact-n1"
+        When I click on "contact-n1"
         And I click on "delete-confirm"
-        And the URL should match "/report/\d+/contacts/delete-confirm/\d+#delete-confirm"
         And I click on "delete-confirm-cancel"
-        And the URL should match "/report/\d+/contacts/edit/\d+#edit-\d+"
         And I click on "delete-confirm"
         And I click on "delete"
         And the URL should match "/report/\d+/contacts"
+        Then I should see "Andy Brown" in the "list-contacts" region
 
 
