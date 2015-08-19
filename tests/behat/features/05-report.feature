@@ -108,16 +108,11 @@ Feature: report
             | contact_postcode |
         # right values
         Then the "contact_explanation" field is expandable
-        And I fill in the following:
-            | contact_contactName | Andy White |
-            | contact_relationship | GP  |
-            | contact_explanation | I owe him money |
-            | contact_address | 45 Noth Road |
-            | contact_address2 | Inslington |
-            | contact_county | London |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
+        And I add the following contact:
+            | contactName | Andy White |
+            | relationship | GP  |
+            | explanation | I owe him money |
+            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
         And I save the page as "report-contact-list"
         Then the response status code should be 200
         And the form should be valid
@@ -149,25 +144,16 @@ Feature: report
         # add decision 
         Then the "decision_description" field is expandable
         And the "decision_clientInvolvedDetails" field is expandable
-        And I fill in the following:
-            | decision_description | 2 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 90% |
-        And I press "decision_save"
-        And I save the page as "report-decision-list"
-        Then the response status code should be 200
-        And the form should be valid
-        When I click on "add-a-decision"
-        # add another decision
-         And I fill in the following:
-            #| decision_title | Sold house in Sw18 |
-            | decision_description | 3 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 85% |
-        And I press "decision_save"
-        And the form should be valid
-        And I should see "2 beds" in the "list-decisions" region
-        And I should see "3 beds" in the "list-decisions" region
+        And I add the following decision:
+            | description | 2 beds |
+            | clientInvolved | yes | the client was able to decide at 90% |
+       And I save the page as "report-decision-list"
+       And I add the following decision:
+            | description | 3 beds |
+            | clientInvolved | yes | the client was able to decide at 85% |
+       And I should see "2 beds" in the "list-decisions" region
+       And I should see "3 beds" in the "list-decisions" region
+
         
     @deputy
     Scenario: add asset

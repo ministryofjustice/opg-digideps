@@ -7,6 +7,7 @@ Feature: edit/remove an asset
         And I click on "client-home"
         And I click on "report-n2"
         And I follow "tab-assets"
+        And I save the page as "report-assets-remove-init"
         And I click on "asset-alfa-romeo-156-jtd"
         Then the following fields should have the corresponding values:
             | asset_title | Vehicles |
@@ -26,15 +27,20 @@ Feature: edit/remove an asset
             | asset_valuationDate_month | 11 |
             | asset_valuationDate_year | 2015 |
        And I press "asset_save"
+       And I save the page as "report-assets-remove-added"
        Then I should see "I love my artworks" in the "list-assets" region
        And I should see "£10,000.00" in the "list-assets" region
        And I click on "asset-i-love-my-artworks"
+       And I save the page as "report-assets-remove-edit"
        And I click on "delete-confirm"
+       And I save the page as "report-assets-remove-delete-confirm"
        And the URL should match "/report/\d+/assets/delete-confirm/\d+#asset-delete-confirm"
        And I click on "delete-confirm-cancel"
        And the URL should match "/report/\d+/assets/edit/\d+#asset-edit-\d+"
+       And I save the page as "report-assets-remove-remove-cancel"
        And I click on "delete-confirm"
        And I click on "delete"
+       And I save the page as "report-assets-remove-remove-deleted"
        And the URL should match "/report/\d+/assets"
        Then I should not see "I love my artworks" in the "list-assets" region
        And I should not see the "asset-i-love-my-artworks" link
