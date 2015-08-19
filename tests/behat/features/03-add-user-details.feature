@@ -74,8 +74,13 @@ Feature: add details
         And I press "user_details_save"
         Then the form should be invalid
         And I save the page as "admin-step2-error"
-        And I set the user details to:
-          | name | John admin | Doe admin |
+        # correct
+        And I fill in the following:
+            | user_details_firstname | John admin |
+            | user_details_lastname | Doe admin |
+        And I press "user_details_save"
+        Then the form should be valid
+        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
         Given I am on admin page "/user/details"
         Then the following fields should have the corresponding values:
             | user_details_firstname | John admin |
