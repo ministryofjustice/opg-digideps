@@ -31,17 +31,25 @@ Feature: edit/remove contact
             | contact_explanation |
             | contact_address |  |
             | contact_postcode |
-        When I add the following contact:
-            | contactName | Andy Brown |
-            | relationship | brother  |
-            | explanation | no explanation |
-            | address | 46 Noth Road |  |  | N2 5JF | GB |
-        When I click on "contact-n1"
+        # edit contact
+        When I fill in the following:
+            | contact_contactName | Andy Brown |
+            | contact_relationship | brother |
+            | contact_explanation | no explanation |
+            | contact_address | 46 Noth Road |
+            | contact_postcode | N2 5JF |
+            | contact_country | GB |
+        And I press "contact_save"
+        And the URL should match "/report/\d+/contacts"
+        Then I should see "Andy Brown" in the "list-contacts" region
+        And I should see "46 Noth Road" in the "list-contacts" region
+        And I click on "contact-n1"
         And I click on "delete-confirm"
         And I click on "delete-confirm-cancel"
         And I click on "delete-confirm"
         And I click on "delete"
+        Then the response status code should be 200
         And the URL should match "/report/\d+/contacts"
-        Then I should see "Andy Brown" in the "list-contacts" region
+        Then I should not see the "list-contacts" region
 
 
