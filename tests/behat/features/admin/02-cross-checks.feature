@@ -1,7 +1,6 @@
 Feature: admin acl
 
 
-    @admin
     Scenario: An admin user cannot login into deputy area
         # check admin can login into admin site
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -17,7 +16,6 @@ Feature: admin acl
         And I should be on "/login"
 
 
-    @admin
     Scenario: An admin cannot reset password from the deptuy area
         # check admin can recover password from admin site
         Given I reset the email log
