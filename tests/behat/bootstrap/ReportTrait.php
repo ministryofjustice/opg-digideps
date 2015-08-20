@@ -285,28 +285,39 @@ trait ReportTrait
                 $this->fillField('account_openingDateExplanation', $rows['openingDate'][1]);
             }
             $this->fillField('account_openingBalance', $rows['openingBalance']);
+            
             $this->pressButton("account_save");
             $this->theFormShouldBeValid();
             $this->assertResponseStatus(200);
-            
-            // open account and add transactions
-            $this->clickOnBehatLink('account-' . implode('', $rows['accountNumber']));
-            $this->addTransactions($rows, 'moneyIn_' , 'transactions_saveMoneyIn');
-            $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
-            
-            // add closing balance
-            if (isset($rows['closingDate'])) {
-                $closingDatePieces = explode('/', $rows['closingDate']);
-                $this->fillField('accountBalance_closingDate_day', $closingDatePieces[0]);
-                $this->fillField('accountBalance_closingDate_month', $closingDatePieces[1]);
-                $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
-                $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
-                $this->pressButton("accountBalance_save");
-                $this->theFormShouldBeValid();
-                $this->assertResponseStatus(200);
-            }
-            
+//    }
+//    
+//     
+//     /**
+//     * Needs to be on accounts page
+//     * @When I add the following to the bank :accountNumber account :
+//     */
+//    public function iAddTheFollowingBankAccountAssets(TableNode $table)
+//    {
+//        $rows = $table->getRowsHash();
+        
+        // open account and add transactions
+        $this->clickOnBehatLink('account-' . implode('', $rows['accountNumber']));
+        $this->addTransactions($rows, 'moneyIn_' , 'transactions_saveMoneyIn');
+        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
+        
+         // add closing balance
+        if (isset($rows['closingDate'])) {
+            $closingDatePieces = explode('/', $rows['closingDate']);
+            $this->fillField('accountBalance_closingDate_day', $closingDatePieces[0]);
+            $this->fillField('accountBalance_closingDate_month', $closingDatePieces[1]);
+            $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
+            $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
+            $this->pressButton("accountBalance_save");
+            $this->theFormShouldBeValid();
+            $this->assertResponseStatus(200);
+        }
     }
+    
     
     private function addTransactions(array $rows, $prefix, $buttonId)
     {
