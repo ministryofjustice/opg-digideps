@@ -225,6 +225,36 @@ trait ReportTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
+    
+    /**
+     * @When I add the following assets:
+     */
+    public function iAddTheFollowingAssets(TableNode $table)
+    {
+        foreach ($table->getHash() as $row) {
+            $this->clickLink("tab-assets");
+            
+            // expand form if collapsed
+            if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title'))) {
+                $this->clickOnBehatLink('add-an-asset');
+            }
+            
+            $this->fillField('asset_title', $row['title']);
+            $this->fillField('asset_value', $row['value']);
+            $this->fillField('asset_description', $row['description']);
+            
+            if ($row['valuationDate']) {
+                $datePieces = explode('/', $row['valuationDate']);
+                $this->fillField('asset_valuationDate_day', $datePieces[0]);
+                $this->fillField('asset_valuationDate_month', $datePieces[1]);
+                $this->fillField('asset_valuationDate_year', $datePieces[2]);
+            }
+            
+            $this->pressButton("asset_save");
+            $this->theFormShouldBeValid();
+            $this->assertResponseStatus(200);
+        }
+    }
 
 
 }

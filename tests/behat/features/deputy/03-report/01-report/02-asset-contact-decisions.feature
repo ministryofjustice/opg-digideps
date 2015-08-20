@@ -94,29 +94,12 @@ Feature: report
             | asset_valuationDate_year |
         # first asset (empty date)
         Then the "asset_description" field should be expandable
-        When I fill in the following:
-            | asset_title       | Property | 
-            | asset_value       | 250000.00 | 
-            | asset_description | 2 beds flat in HA2 | 
-            | asset_valuationDate_day |  | 
-            | asset_valuationDate_month |  | 
-            | asset_valuationDate_year |  | 
-        And I press "asset_save"
-        And I save the page as "report-assets-list-one"
-        Then the response status code should be 200
-        And the form should be valid
+        When I add the following assets:
+          | title        | value       |  description        | valuationDate | 
+          | Property    | 250000.00   |  2 beds flat in HA2 |               | 
+          | Vehicles    | 13000.00   |  Alfa Romeo 156 JTD |    10/11/2015  | 
         And I should see "2 beds flat in HA2" in the "list-assets" region
         And I should see "£250,000.00" in the "list-assets" region
-        When I click on "add-an-asset"
-        # 2nd asset (with date)
-        And I fill in the following:
-            | asset_title       | Vehicles | 
-            | asset_value       | 13000.00 | 
-            | asset_description | Alfa Romeo 156 JTD | 
-            | asset_valuationDate_day | 10 | 
-            | asset_valuationDate_month | 11 | 
-            | asset_valuationDate_year | 2015 | 
-        And I press "asset_save"
-        And I save the page as "report-assets-list-two"
         Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
         And I should see "£13,000.00" in the "list-assets" region
+        And I save the page as "report-assets-list"
