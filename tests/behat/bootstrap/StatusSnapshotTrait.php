@@ -25,8 +25,7 @@ trait StatusSnapshotTrait
         $sqlFile = self::getSnapshotPath($status);
         if (!file_exists($sqlFile)) {
             $error = "File $sqlFile not found. Re-run the full behat suite to recreate the missing snapshots.";
-            echo $error;
-            //throw new \RuntimeException($error);
+            throw new \RuntimeException($error);
         }
         exec("psql " . self::$dbName . " < {$sqlFile}");
     }
