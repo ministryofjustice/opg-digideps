@@ -477,7 +477,8 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 | earlier transaction made with other account |
+            | openingDate   | 1/1/2014 |
+            | openingDateExplanation    | earlier transaction made with other account |
             | openingBalance  | 155.000 |
             #
             | moneyIn_0    | 100.01 |
@@ -549,7 +550,8 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/2/2014 | earlier transaction made with other account |
+            | openingDate   | 1/2/2014 |
+            | openingDateExplanation  | earlier transaction made with other account |
             | openingBalance  | 155.000 |
             #
             | moneyIn_0    | 100.01 |
@@ -660,7 +662,8 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/2/2014 | earlier transaction made with other account |
+            | openingDate   | 1/2/2014 |
+            | openingDateExplanation   | earlier transaction made with other account |
             | openingBalance  | 155.000 |
             #
             | moneyIn_0    | 10000.01 |
