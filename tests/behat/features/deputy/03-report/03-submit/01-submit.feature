@@ -101,6 +101,7 @@ Feature: deputy / report / submit
     Scenario: report submission
         Given I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I save the application status into "report-submit-pre"
         # assert after login I'm redirected to report page
         Then the URL should match "/report/\d+/overview"
         # assert I cannot access the sumbmitted page directly
@@ -129,7 +130,7 @@ Feature: deputy / report / submit
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
-        
+        And I save the application status into "report-submit-post"
 
     @deputy
     Scenario: assert 2nd year report has been created
