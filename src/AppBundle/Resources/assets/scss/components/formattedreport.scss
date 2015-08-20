@@ -43,7 +43,7 @@
         font-family: Helvetica, Arial;
         min-height: 30px;
     }
-    .label, item-label {
+    .label, .item-label {
         font-size: 17px;
         *width: 90.5%;
     }
@@ -131,6 +131,11 @@
             }
             .checkbox {
                 margin-right: 5px;
+            }
+        }
+        .checkboxes.horizontal {
+            .label {
+                display: inline-block;
             }
         }
     }
