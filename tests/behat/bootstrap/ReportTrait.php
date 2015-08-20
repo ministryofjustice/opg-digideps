@@ -160,33 +160,31 @@ trait ReportTrait
      * Click on contacts tab and add a contact
      * If the form is not shown, click first on "add-a-contact" button (with no exception thrown)
      * 
-     * @When I add the following contact:
+     * @When I add the following contacts:
      */
     public function IAddtheFollowingContact(TableNode $table)
     {
-        $this->clickLink('tab-contacts');
-        
-        // expand form if collapsed
-        if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
-            $this->clickOnBehatLink('add-a-contact');
+        foreach ($table->getHash() as $row) {
+            $this->clickLink('tab-contacts');
+
+            // expand form if collapsed
+            if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
+                $this->clickOnBehatLink('add-a-contact');
+            }
+
+            $this->fillField('contact_contactName', $row['contactName']);
+            $this->fillField('contact_relationship', $row['relationship']);
+            $this->fillField('contact_explanation', $row['explanation']);
+            $this->fillField('contact_address', $row['address']);
+            $this->fillField('contact_address2', $row['address2']);
+            $this->fillField('contact_county', $row['county']);
+            $this->fillField('contact_postcode', $row['postcode']);
+            $this->fillField('contact_country', $row['country']);
+
+            $this->pressButton("contact_save");
+            $this->theFormShouldBeValid();
+            $this->assertResponseStatus(200);
         }
-        
-        $rows = $table->getRowsHash();
-        
-        $this->fillField('contact_contactName', $rows['contactName']);
-        $this->fillField('contact_relationship', $rows['relationship']);
-        $this->fillField('contact_explanation', $rows['explanation']);
-        $this->fillField('contact_address', $rows['address'][0]);
-        $this->fillField('contact_address2', $rows['address'][1]);
-        $this->fillField('contact_county', $rows['address'][2]);
-        $this->fillField('contact_postcode', $rows['address'][3]);
-        if (isset($rows['address'][4])) {
-            $this->fillField('contact_country', $rows['address'][4]);
-        }
-        
-        $this->pressButton("contact_save");
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
     }
     
     /**

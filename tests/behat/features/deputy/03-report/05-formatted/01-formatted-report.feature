@@ -35,16 +35,10 @@ Feature: Formatted Report
           | 3 beds      | yes           | the client was able to decide at 85% |
           | 2 televisions | yes           | the client said he doesnt want a tv anymore |
         # Next, 2 contacts
-        When I add the following contact:
-            | contactName | Andy White |
-            | relationship | brother  |
-            | explanation | no explanation |
-            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
-        And I add the following contact:
-            | contactName | Fred Smith |
-            | relationship | Social Worke  |
-            | explanation | Advices on benefits available |
-            | address | Town Hall |Maidenhead | Berkshire | SL1 1RR | GB |
+        When I add the following contacts:
+          | contactName | relationship | explanation                    | address       | address2  | county    | postcode | country |
+          | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
+          | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
         # Assets
         And I add the following assets:
             | title        | value       |  description       | valuationDate | 
@@ -171,17 +165,10 @@ Feature: Formatted Report
           | reason_for_no_decision_reason | small budget |
         And I press "reason_for_no_decision_saveReason"
         Then the form should be valid
-        # Next, 2 contacts
-        When I add the following contact:
-            | contactName | Andy White |
-            | relationship | brother  |
-            | explanation | no explanation |
-            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
-        And I add the following contact:
-            | contactName | Fred Smith |
-            | relationship | Social Worke  |
-            | explanation | Advices on benefits available |
-            | address | Town Hall |Maidenhead | Berkshire | SL1 1RR | GB |
+        When I add the following contacts:
+          | contactName | relationship | explanation                    | address       | address2  | county    | postcode | country |
+          | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
+          | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
         # Bank account
         Then I follow "tab-accounts"
         And I fill in the following:
