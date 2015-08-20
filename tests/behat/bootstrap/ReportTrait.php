@@ -381,5 +381,23 @@ trait ReportTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
+    
+    /**
+     * @Then the report should indicate that the :checkboxvalue checkbox for :checkboxname is checked
+     */
+    public function theReportShouldIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
+    {
+	$titleElement = $this->getSession()->getPage()->find('xpath', '//h3[text()="' . $checkboxname . '"]');
+	$titleParent = $titleElement->getParent();
+	$checkedElements = $titleParent->find('xpath', '//div[text()="X"]')->getParent()->findAll('css','.label');
+	
+	if (count($checkedElements) != 1) {
+	   throw new \RuntimeException("Checkbox not checked");
+	 }
+	
+	if ($checkedElements[0]->getText() != $checkboxvalue) {
+		throw new \RuntimeException("Checkbox value wrong. expected:" . $checkboxvalue . " got " . $checkedElements[0]->getText());
+	}
+}
 
 }
