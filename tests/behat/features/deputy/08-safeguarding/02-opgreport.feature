@@ -29,48 +29,23 @@ Feature: Safeguarding OPG Report
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         # Start by adding some decisions
-        When I click on "add-a-decision"
-        And I fill in the following:
-            | decision_description | 3 beds |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client was able to decide at 85% |
-        Then I press "decision_save"
-        And the form should be valid
-        Then I click on "add-a-decision"
-        # add another decision
-        And I fill in the following:
-            | decision_description | 2 televisions |
-            | decision_clientInvolvedBoolean_0 | 1 |
-            | decision_clientInvolvedDetails | the client said he doesnt want a tv anymore |
-        Then I press "decision_save"
-        And the form should be valid
-        # Next, some contacts
-        Then I follow "tab-contacts"
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Andy White |
-            | contact_relationship | brother  |
-            | contact_explanation | no explanation |
-            | contact_address | 45 Noth Road |
-            | contact_address2 | Inslington |
-            | contact_county | London |
-            | contact_postcode | N2 5JF |
-            | contact_country | GB |
-        And I press "contact_save"
-        And the form should be valid
-        # And Another
-        And I click on "add-a-contact"
-        And I fill in the following:
-            | contact_contactName | Fred Smith |
-            | contact_relationship | Social Worker  |
-            | contact_explanation | Advices on benefits available |
-            | contact_address | Town Hall |
-            | contact_address2 | Maidenhead |
-            | contact_county | Berkshire |
-            | contact_postcode | SL1 1RR |
-            | contact_country | GB |
-        And I press "contact_save"
-        And the form should be valid
+        And I add the following decision:
+            | description | 3 beds |
+            | clientInvolved | yes | the client was able to decide at 85% |
+        And I add the following decision:
+            | description | 2 televisions |
+            | clientInvolved | yes | the client said he doesnt want a tv anymore |
+        # Next, 2 contacts
+        When I add the following contact:
+            | contactName | Andy White |
+            | relationship | brother  |
+            | explanation | no explanation |
+            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
+        And I add the following contact:
+            | contactName | Fred Smith |
+            | relationship | Social Worke  |
+            | explanation | Advices on benefits available |
+            | address | Town Hall |Maidenhead | Berkshire | SL1 1RR | GB |
         # Assets
         Then I follow "tab-assets"
         And I click on "add-an-asset"
@@ -196,7 +171,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         Then the form should be valid
-        Then I save the application status into "readytosubmit"
+        Then I save the application status into "safeguardingreadytosubmit"
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/add_further_information"
@@ -209,7 +184,7 @@ Feature: Safeguarding OPG Report
         And the URL should match "/report/\d+/submitted"
         Then I save the application status into "safereportsubmitted"
         
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: Report contains a safeguarding section
         When I load the application status from "safereportsubmitted"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -217,7 +192,7 @@ Feature: Safeguarding OPG Report
         Then I should see "Section 4"
         And I should see "Safeguarding"
     
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: When I live with the client dont show further answers
         When I load the application status from "safereportsubmitted"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -226,4 +201,38 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Yes" checkbox for "Do you live with the client?" is checked
         And I should not see the "visits" subsection
     
-        
+    @safeguarding @formatted-report @deputy @wip
+    Scenario: When dont live with the client, expect to see further answers
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | everyday |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | everyday |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        Then I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        Then I fill in the following:
+            | report_add_info_furtherInformation | More info. |
+        Then I press "report_add_info_saveAndContinue"
+        Then I check "report_declaration_agree"
+        And I press "report_declaration_save"
+        Then I view the formatted report
+        Then I should see "Do you live with the client?"
+        And the report should indicate that the "No" checkbox for "Do you live with the client?" is checked
+        And I should see the "visits" subsection
+        And the report should indicate that the "Every day" checkbox for "Visits" is checked
+        And the report should indicate that the "Every day" checkbox for "Phone and video calls" is checked
+        And the report should indicate that the "Every day" checkbox for "Letters and email" is checked
+        And I should see the "visitors" subsection
+        And the report should indicate that the "Every day" checkbox for "How often does the client see other people?" is checked
+        And I should see "Is there anything else you want to tell us?" in "safeguarding" section
+        And I should see "More info." in "safeguarding-moreinfo"
+            

@@ -2,8 +2,6 @@
 
 namespace DigidepsBehat;
 
-use Behat\Gherkin\Node\TableNode;
-
 trait ReportTrait
 {
     /**
@@ -155,76 +153,6 @@ trait ReportTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
-    
-    /**
-     * Click on contacts tab and add a contact
-     * If the form is not shown, click first on "add-a-contact" button (with no exception thrown)
-     * 
-     * @When I add the following contact:
-     */
-    public function IAddtheFollowingContact(TableNode $table)
-    {
-        $this->clickLink('tab-contacts');
-        
-        // expand form if collapsed
-        if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
-            $this->clickOnBehatLink('add-a-contact');
-        }
-        
-        $rows = $table->getRowsHash();
-        
-        $this->fillField('contact_contactName', $rows['contactName']);
-        $this->fillField('contact_relationship', $rows['relationship']);
-        $this->fillField('contact_explanation', $rows['explanation']);
-        $this->fillField('contact_address', $rows['address'][0]);
-        $this->fillField('contact_address2', $rows['address'][1]);
-        $this->fillField('contact_county', $rows['address'][2]);
-        $this->fillField('contact_postcode', $rows['address'][3]);
-        if (isset($rows['address'][4])) {
-            $this->fillField('contact_country', $rows['address'][4]);
-        }
-        
-        $this->pressButton("contact_save");
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-    
-    /**
-     * Click on decisions tab and add a decision
-     * If the form is not shown, click first on "add-a-decision" button (with no exception thrown)
-     * 
-     * @When I add the following decision:
-     */
-    public function IAddtheFollowingDecision(TableNode $table)
-    {
-        $this->clickLink("tab-decisions");
-        
-        // expand form if collapsed
-        if (0 === count($this->getSession()->getPage()->findAll('css', '#decision_clientInvolvedBoolean_0'))) {
-            $this->clickOnBehatLink('add-a-decision');
-        }
-        
-        $rows = $table->getRowsHash();
-        
-        $this->fillField('decision_description', $rows['description']);
-        switch ($rows['clientInvolved'][0]) {
-            case 'yes':
-                $this->fillField('decision_clientInvolvedBoolean_0', 1);
-                break;
-            
-            case 'no':
-                $this->fillField('decision_clientInvolvedBoolean_1', 0);
-                break;
-            default:
-                throw new \RuntimeException("Invalid value for clientInvolved");
-        }
-        
-        $this->fillField('decision_clientInvolvedDetails',  $rows['clientInvolved'][1]);
-        
-        $this->pressButton("decision_save");
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
 
     /**
      * @Then the report should indicate that the :checkboxvalue checkbox for :checkboxname is checked
@@ -233,9 +161,9 @@ trait ReportTrait
     {
         $titleElement = $this->getSession()->getPage()->find('xpath', '//h3[text()="' . $checkboxname . '"]');
         $titleParent = $titleElement->getParent();
-        $checkedElements = $titleParent->find('xpath', '//div[text()="X"]')->getParent()->find('css','.label');
+        $checkedElements = $titleParent->find('xpath', '//div[text()="X"]')->getParent()->findAll('css','.label');
         
-        if (count($checkedElements) === 0) {
+        if (count($checkedElements) != 1) {
            throw new \RuntimeException("Checkbox not checked");
         }
         
