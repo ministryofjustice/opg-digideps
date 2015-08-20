@@ -52,7 +52,10 @@ trait StatusSnapshotTrait
             return;
         }
         
-        $snapshotName = basename( $scope->getFeature()->getFile()) 
+        $file = $scope->getFeature()->getFile();
+        $expectedPrefix = '/behat/features/';
+        
+        $snapshotName = substr($file, strpos($file, $expectedPrefix) + strlen($expectedPrefix))
                    . '-' 
                    . str_pad($scope->getScenario()->getLine(), 4, '0', STR_PAD_LEFT);
         
