@@ -6,7 +6,7 @@ default:
     suites:
       deputy:
         description: End to end journey for Lay deputy user
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@deputy&&~@javascript"
         contexts: 
@@ -14,7 +14,7 @@ default:
 
       admin:
         description: End to end journey for Admin user
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/admin ]
         filters:
             tags: "@admin&&~@javascript"
         contexts: 
@@ -22,7 +22,7 @@ default:
                     
       feedback:
         description: Tests related to user feedback
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@feedback&&~@javascript"
         contexts: 
@@ -30,7 +30,7 @@ default:
                     
       cookies:
         description: Tests related to cookies
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@cookie&&~@javascript"
         contexts: 
@@ -38,7 +38,7 @@ default:
                     
       terms:
         description: Tests related to terms
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@terms&&~@javascript"
         contexts: 
@@ -46,7 +46,7 @@ default:
 
       textarea:
         description: Tests related to textareas
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/components ]
         mink_session: default
         filters:
             tags: "@textarea"
@@ -54,7 +54,7 @@ default:
 
       formatted:
         description: Tests related to formatted report 
-        paths:    [ %paths.base%/features ]
+        paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@formatted-report&&~@javascript"
         contexts: 

@@ -46,27 +46,4 @@ Feature: admin
         And I save the page as "admin-deputy-added"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
 
-    @admin
-    Scenario: login and add admin user, check audit log
-        Given I reset the email log
-        And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then the last audit log entry should contain:
-          | from | admin@publicguardian.gsi.gov.uk |
-          | action | login |
-        #When I go to "/admin"
-        Given I am on admin page "/admin"
-        And I create a new "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
-        Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
-        Then the response status code should be 200
-        And I should see "OPG Administrator" in the "users" region
-        And I save the page as "admin-admin-added"
-        And the last email containing a link matching "/user/activate/" should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
-        And the last audit log entry should contain:
-          | from | admin@publicguardian.gsi.gov.uk |
-          | action | user_add |
-          | user_affected | behat-admin-user@publicguardian.gsi.gov.uk |
-        #When I go to "/logout"
-        Given I am on admin page "/logout"
-        Then the last audit log entry should contain:
-          | from | admin@publicguardian.gsi.gov.uk |
-          | action | logout |
+   
