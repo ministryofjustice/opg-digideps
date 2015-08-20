@@ -175,27 +175,14 @@ Feature: report
     @deputy
     Scenario: add another account 6666 (will be deleted by next scenario)
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the first report
-        And I click on "add-account"
-        Then the URL should match "/report/\d+/accounts/add#pageBody"
-        # add another account
-        And I fill in the following:
-            | account_bank    | Barclays acccount to delete | 
-            | account_accountNumber_part_1 | 6 | 
-            | account_accountNumber_part_2 | 6 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 6 | 
-            | account_sortCode_sort_code_part_1 | 55 |
-            | account_sortCode_sort_code_part_2 | 55 |
-            | account_sortCode_sort_code_part_3 | 55 |
-            | account_openingDate_day   | 4 |
-            | account_openingDate_month | 4 |
-            | account_openingDate_year  | 2015 |
-            | account_openingBalance  | 1,300.00 |
-            | account_openingDateExplanation | just a test |
-        And I press "account_save"
-        Then the URL should match "/report/\d+/accounts#pageBody"
-        And the form should be valid
+        And I am on the first report overview page
+        Then I add the following bank account:
+            | bank    | Barclays acccount to delete | 
+            | accountNumber | 6 | 6 | 6 | 6 | 
+            | sortCode | 55 | 55 | 55 |
+            | openingDate   | 4/4/2015 | 
+            | openingDateExplanation  | just a test |
+            | openingBalance  | 1,300.00 |
         
 
 

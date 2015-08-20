@@ -16,7 +16,7 @@ default:
         description: End to end journey for Admin user
         paths:    [ %paths.base%/features/admin ]
         filters:
-            tags: "@admin&&~@javascript"
+            tags: "~@javascript"
         contexts: 
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
                     
