@@ -313,6 +313,20 @@ trait ReportTrait
             $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
             $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
             $this->pressButton("accountBalance_save");
+            
+            if (isset($rows['closingBalanceExplanation']) || isset($rows['closingDateExplanation'])) {
+                $this->theFormShouldBeInvalid();
+                
+                if (isset($rows['closingBalanceExplanation'])) {
+                    $this->fillField('accountBalance_closingBalanceExplanation', $rows['closingBalanceExplanation']);
+                }
+                if (isset($rows['closingDateExplanation'])) {
+                    $this->fillField('accountBalance_closingDateExplanation', $rows['closingDateExplanation']);
+                }
+                
+                $this->pressButton("accountBalance_save");
+            }
+            
             $this->theFormShouldBeValid();
             $this->assertResponseStatus(200);
         }

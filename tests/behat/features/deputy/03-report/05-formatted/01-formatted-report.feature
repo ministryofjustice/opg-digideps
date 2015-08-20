@@ -402,99 +402,59 @@ Feature: Formatted Report
     Scenario: A report explains why the balance doesnt match the statement
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I follow "tab-accounts"
-        And I fill in the following:
-            | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
-            | account_sortCode_sort_code_part_1 | 88 |
-            | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingDate_day   | 1 |
-            | account_openingDate_month | 1 |
-            | account_openingDate_year  | 2014 |
-            | account_openingBalance  | 155.00 |
-            | account_openingDateExplanation | earlier transaction made with other account |
-        And I press "account_save"
-        And the form should be valid
-        # Add values into the money out fields.
-        And I click on "account-8765"
-        When I fill in the following:
-            | transactions_moneyIn_0_amount       | 100.01 |
-            | transactions_moneyIn_1_amount       | 200.01 |
-            | transactions_moneyIn_2_amount       | 300.01 |
-            | transactions_moneyIn_3_amount       | 400.01 |
-            | transactions_moneyIn_4_amount       | 500.01 |
-            | transactions_moneyIn_5_amount       | 600.01 |
-            | transactions_moneyIn_6_amount       | 700.01 |
-            | transactions_moneyIn_7_amount       | 800.01 |
-            | transactions_moneyIn_8_amount       | 900.01 |
-            | transactions_moneyIn_9_amount       | 1000.01 |
-            | transactions_moneyIn_10_amount      | 1100.01 |
-            | transactions_moneyIn_11_amount      | 1,200.01 |
-            | transactions_moneyIn_12_amount      | 1,300.01 |
-            | transactions_moneyIn_13_amount      | 1,400.01 |
-            | transactions_moneyIn_14_amount      | 1,500.01 |
-            | transactions_moneyIn_15_amount      | 1,600.01 |
-            | transactions_moneyIn_16_amount      | 1,700.01 |
-            | transactions_moneyIn_17_amount      | 1,800.01 |
-            | transactions_moneyIn_18_amount      | 1,800.01 |
-            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
-            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
-            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
-            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
-        And I save the page as "moneyinentered"
-        And I press "transactions_saveMoneyIn"
-        And I save the page as "moneyinsaved"
-        When I fill in the following:
-            | transactions_moneyOut_0_amount       | 100.00 |
-            | transactions_moneyOut_1_amount       | 200.00 |
-            | transactions_moneyOut_2_amount       | 300.00 |
-            | transactions_moneyOut_3_amount       | 400.00 |
-            | transactions_moneyOut_4_amount       | 500.00 |
-            | transactions_moneyOut_5_amount       | 600.00 |
-            | transactions_moneyOut_6_amount       | 700.00 |
-            | transactions_moneyOut_7_amount       | 800.00 |
-            | transactions_moneyOut_8_amount       | 900.00 |
-            | transactions_moneyOut_9_amount       | 1000.00 |
-            | transactions_moneyOut_10_amount      | 1100.00 |
-            | transactions_moneyOut_11_amount      | 1,200.00 |
-            | transactions_moneyOut_12_amount      | 1,300.00 |
-            | transactions_moneyOut_13_amount      | 1,400.00 |
-            | transactions_moneyOut_14_amount      | 1,500.00 |
-            | transactions_moneyOut_15_amount      | 1,600.00 |
-            | transactions_moneyOut_16_amount      | 1,700.00 |
-            | transactions_moneyOut_17_amount      | 1,800.00 |
-            | transactions_moneyOut_18_amount      | 1,900.00 |
-            | transactions_moneyOut_19_amount      | 2,000.00 |
-            | transactions_moneyOut_20_amount      | 2,100.00 |
-            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
-            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
-            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
-            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
-            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
-            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
-            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
-            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
-            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
-            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
-        And I save the page as "moneyoutentered"
-        And I press "transactions_saveMoneyOut"
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 1 | 
-            | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
-        And I press "accountBalance_save"
-        Then the following fields should have an error:
-            | accountBalance_closingBalance    |
-            | accountBalance_closingBalanceExplanation    |
-        Then I fill in the following:
-            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
-        And I press "accountBalance_save"
-        Then the form should be valid
+        And I add the following bank account:
+            | bank    | HSBC - main account | 
+            | accountNumber | 8 | 7 | 6 | 5 | 
+            | sortCode | 88 | 77 | 66 |
+            | openingDate   | 1/1/2014 | |
+            | openingBalance  | 155.000 |
+            #
+            | moneyIn_0    | 100.01 |
+            | moneyIn_1    | 200.01 |
+            | moneyIn_2    | 300.01 |
+            | moneyIn_3    | 400.01 |
+            | moneyIn_4    | 500.01 |
+            | moneyIn_5    | 600.01 |
+            | moneyIn_6    | 700.01 |
+            | moneyIn_7    | 800.01 |
+            | moneyIn_8    | 900.01 |
+            | moneyIn_9    | 1000.01 |
+            | moneyIn_10   | 1100.01 |
+            | moneyIn_11   | 1,200.01 |
+            | moneyIn_12   | 1,300.01 |
+            | moneyIn_13   | 1,400.01 |
+            | moneyIn_14   | 1,500.01 |
+            | moneyIn_15   | 1,600.01 | more-details-in-15 |
+            | moneyIn_16   | 1,700.01 | more-details-in-16 |
+            | moneyIn_17   | 1,800.01 | more-details-in-17 |
+            | moneyIn_18   | 1,800.01 | more-details-in-18 |
+            #
+            | moneyOut_0   | 100.00 |
+            | moneyOut_1   | 200.00 |
+            | moneyOut_2   | 300.00 |
+            | moneyOut_3   | 400.00 |
+            | moneyOut_4   | 500.00 |
+            | moneyOut_5   | 600.00 |
+            | moneyOut_6   | 700.00 |
+            | moneyOut_7   | 800.00 |
+            | moneyOut_8   | 900.00 |
+            | moneyOut_9   | 1000.00 |
+            | moneyOut_10  | 1100.00 |
+            | moneyOut_11  | 1,200.00 | more-details-out-11 |
+            | moneyOut_12  | 1,300.00 | more-details-out-12 |
+            | moneyOut_13  | 1,400.00 | more-details-out-13 |
+            | moneyOut_14  | 1,500.00 | more-details-out-14 |
+            | moneyOut_15  | 1,600.00 | more-details-out-15 |
+            | moneyOut_16  | 1,700.00 | more-details-out-16 |
+            | moneyOut_17  | 1,800.00 | more-details-out-17 |
+            | moneyOut_18  | 1,900.00 | more-details-out-18 |
+            | moneyOut_19  | 2,000.00 | more-details-out-19 |
+            | moneyOut_20  | 2,100.00 | more-details-out-20 |
+            #
+            | closingDate    | 1 /1/2015 | 
+            | closingBalance | 155.00 | 
+            #∑
+            | closingBalanceExplanation | £ 100.50 moved to other account |
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
         Then the URL should match "/report/\d+/add_further_information"
@@ -513,98 +473,59 @@ Feature: Formatted Report
     Scenario: A report explains why the opening date is off
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I follow "tab-accounts"
-        And I fill in the following:
-            | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
-            | account_sortCode_sort_code_part_1 | 88 |
-            | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingDate_day   | 1 |
-            | account_openingDate_month | 2 |
-            | account_openingDate_year  | 2014 |
-            | account_openingBalance  | 155.00 |
-            | account_openingDateExplanation | earlier transaction made with other account |
-        And I press "account_save"
-        And the form should be valid
-        # Add values into the money out fields.
-        And I click on "account-8765"
-        When I fill in the following:
-            | transactions_moneyIn_0_amount       | 100.01 |
-            | transactions_moneyIn_1_amount       | 200.01 |
-            | transactions_moneyIn_2_amount       | 300.01 |
-            | transactions_moneyIn_3_amount       | 400.01 |
-            | transactions_moneyIn_4_amount       | 500.01 |
-            | transactions_moneyIn_5_amount       | 600.01 |
-            | transactions_moneyIn_6_amount       | 700.01 |
-            | transactions_moneyIn_7_amount       | 800.01 |
-            | transactions_moneyIn_8_amount       | 900.01 |
-            | transactions_moneyIn_9_amount       | 1000.01 |
-            | transactions_moneyIn_10_amount      | 1100.01 |
-            | transactions_moneyIn_11_amount      | 1,200.01 |
-            | transactions_moneyIn_12_amount      | 1,300.01 |
-            | transactions_moneyIn_13_amount      | 1,400.01 |
-            | transactions_moneyIn_14_amount      | 1,500.01 |
-            | transactions_moneyIn_15_amount      | 1,600.01 |
-            | transactions_moneyIn_16_amount      | 1,700.01 |
-            | transactions_moneyIn_17_amount      | 1,800.01 |
-            | transactions_moneyIn_18_amount      | 1,800.01 |
-            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
-            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
-            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
-            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
-        And I save the page as "moneyinentered"
-        And I press "transactions_saveMoneyIn"
-        And I save the page as "moneyinsaved"
-        When I fill in the following:
-            | transactions_moneyOut_0_amount       | 100.00 |
-            | transactions_moneyOut_1_amount       | 200.00 |
-            | transactions_moneyOut_2_amount       | 300.00 |
-            | transactions_moneyOut_3_amount       | 400.00 |
-            | transactions_moneyOut_4_amount       | 500.00 |
-            | transactions_moneyOut_5_amount       | 600.00 |
-            | transactions_moneyOut_6_amount       | 700.00 |
-            | transactions_moneyOut_7_amount       | 800.00 |
-            | transactions_moneyOut_8_amount       | 900.00 |
-            | transactions_moneyOut_9_amount       | 1000.00 |
-            | transactions_moneyOut_10_amount      | 1100.00 |
-            | transactions_moneyOut_11_amount      | 1,200.00 |
-            | transactions_moneyOut_12_amount      | 1,300.00 |
-            | transactions_moneyOut_13_amount      | 1,400.00 |
-            | transactions_moneyOut_14_amount      | 1,500.00 |
-            | transactions_moneyOut_15_amount      | 1,600.00 |
-            | transactions_moneyOut_16_amount      | 1,700.00 |
-            | transactions_moneyOut_17_amount      | 1,800.00 |
-            | transactions_moneyOut_18_amount      | 1,900.00 |
-            | transactions_moneyOut_19_amount      | 2,000.00 |
-            | transactions_moneyOut_20_amount      | 2,100.00 |
-            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
-            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
-            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
-            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
-            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
-            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
-            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
-            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
-            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
-            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
-        And I save the page as "moneyoutentered"
-        And I press "transactions_saveMoneyOut"
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 1 | 
-            | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 155.00 |
-        And I press "accountBalance_save"
-        Then the following fields should have an error:
-            | accountBalance_closingBalance    |
-            | accountBalance_closingBalanceExplanation    |
-        Then I fill in the following:
-            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
-        And I press "accountBalance_save"
+        And I add the following bank account:
+            | bank    | HSBC - main account | 
+            | accountNumber | 8 | 7 | 6 | 5 | 
+            | sortCode | 88 | 77 | 66 |
+            | openingDate   | 1/1/2014 | earlier transaction made with other account |
+            | openingBalance  | 155.000 |
+            #
+            | moneyIn_0    | 100.01 |
+            | moneyIn_1    | 200.01 |
+            | moneyIn_2    | 300.01 |
+            | moneyIn_3    | 400.01 |
+            | moneyIn_4    | 500.01 |
+            | moneyIn_5    | 600.01 |
+            | moneyIn_6    | 700.01 |
+            | moneyIn_7    | 800.01 |
+            | moneyIn_8    | 900.01 |
+            | moneyIn_9    | 1000.01 |
+            | moneyIn_10   | 1100.01 |
+            | moneyIn_11   | 1,200.01 |
+            | moneyIn_12   | 1,300.01 |
+            | moneyIn_13   | 1,400.01 |
+            | moneyIn_14   | 1,500.01 |
+            | moneyIn_15   | 1,600.01 | more-details-in-15 |
+            | moneyIn_16   | 1,700.01 | more-details-in-16 |
+            | moneyIn_17   | 1,800.01 | more-details-in-17 |
+            | moneyIn_18   | 1,800.01 | more-details-in-18 |
+            #
+            | moneyOut_0   | 100.00 |
+            | moneyOut_1   | 200.00 |
+            | moneyOut_2   | 300.00 |
+            | moneyOut_3   | 400.00 |
+            | moneyOut_4   | 500.00 |
+            | moneyOut_5   | 600.00 |
+            | moneyOut_6   | 700.00 |
+            | moneyOut_7   | 800.00 |
+            | moneyOut_8   | 900.00 |
+            | moneyOut_9   | 1000.00 |
+            | moneyOut_10  | 1100.00 |
+            | moneyOut_11  | 1,200.00 | more-details-out-11 |
+            | moneyOut_12  | 1,300.00 | more-details-out-12 |
+            | moneyOut_13  | 1,400.00 | more-details-out-13 |
+            | moneyOut_14  | 1,500.00 | more-details-out-14 |
+            | moneyOut_15  | 1,600.00 | more-details-out-15 |
+            | moneyOut_16  | 1,700.00 | more-details-out-16 |
+            | moneyOut_17  | 1,800.00 | more-details-out-17 |
+            | moneyOut_18  | 1,900.00 | more-details-out-18 |
+            | moneyOut_19  | 2,000.00 | more-details-out-19 |
+            | moneyOut_20  | 2,100.00 | more-details-out-20 |
+            #
+            | closingDate    | 1 /1/2015 | 
+            | closingBalance | 155.00 | 
+            #∑
+            | closingBalanceExplanation | £ 100.50 moved to other account |
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -624,96 +545,60 @@ Feature: Formatted Report
     Scenario: A report explains why the closing date is off
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I follow "tab-accounts"
-        And I fill in the following:
-            | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
-            | account_sortCode_sort_code_part_1 | 88 |
-            | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingDate_day   | 1 |
-            | account_openingDate_month | 2 |
-            | account_openingDate_year  | 2014 |
-            | account_openingBalance  | 155.00 |
-            | account_openingDateExplanation | open date reason |
-        And I press "account_save"
-        And the form should be valid
-        # Add values into the money out fields.
-        And I click on "account-8765"
-        When I fill in the following:
-            | transactions_moneyIn_0_amount       | 100.01 |
-            | transactions_moneyIn_1_amount       | 200.01 |
-            | transactions_moneyIn_2_amount       | 300.01 |
-            | transactions_moneyIn_3_amount       | 400.01 |
-            | transactions_moneyIn_4_amount       | 500.01 |
-            | transactions_moneyIn_5_amount       | 600.01 |
-            | transactions_moneyIn_6_amount       | 700.01 |
-            | transactions_moneyIn_7_amount       | 800.01 |
-            | transactions_moneyIn_8_amount       | 900.01 |
-            | transactions_moneyIn_9_amount       | 1000.01 |
-            | transactions_moneyIn_10_amount      | 1100.01 |
-            | transactions_moneyIn_11_amount      | 1,200.01 |
-            | transactions_moneyIn_12_amount      | 1,300.01 |
-            | transactions_moneyIn_13_amount      | 1,400.01 |
-            | transactions_moneyIn_14_amount      | 1,500.01 |
-            | transactions_moneyIn_15_amount      | 1,600.01 |
-            | transactions_moneyIn_16_amount      | 1,700.01 |
-            | transactions_moneyIn_17_amount      | 1,800.01 |
-            | transactions_moneyIn_18_amount      | 1,800.01 |
-            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
-            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
-            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
-            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
-        And I save the page as "moneyinentered"
-        And I press "transactions_saveMoneyIn"
-        And I save the page as "moneyinsaved"
-        When I fill in the following:
-            | transactions_moneyOut_0_amount       | 100.00 |
-            | transactions_moneyOut_1_amount       | 200.00 |
-            | transactions_moneyOut_2_amount       | 300.00 |
-            | transactions_moneyOut_3_amount       | 400.00 |
-            | transactions_moneyOut_4_amount       | 500.00 |
-            | transactions_moneyOut_5_amount       | 600.00 |
-            | transactions_moneyOut_6_amount       | 700.00 |
-            | transactions_moneyOut_7_amount       | 800.00 |
-            | transactions_moneyOut_8_amount       | 900.00 |
-            | transactions_moneyOut_9_amount       | 1000.00 |
-            | transactions_moneyOut_10_amount      | 1100.00 |
-            | transactions_moneyOut_11_amount      | 1,200.00 |
-            | transactions_moneyOut_12_amount      | 1,300.00 |
-            | transactions_moneyOut_13_amount      | 1,400.00 |
-            | transactions_moneyOut_14_amount      | 1,500.00 |
-            | transactions_moneyOut_15_amount      | 1,600.00 |
-            | transactions_moneyOut_16_amount      | 1,700.00 |
-            | transactions_moneyOut_17_amount      | 1,800.00 |
-            | transactions_moneyOut_18_amount      | 1,900.00 |
-            | transactions_moneyOut_19_amount      | 2,000.00 |
-            | transactions_moneyOut_20_amount      | 2,100.00 |
-            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
-            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
-            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
-            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
-            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
-            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
-            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
-            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
-            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
-            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
-        And I save the page as "moneyoutentered"
-        And I press "transactions_saveMoneyOut"
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 11 | 
-            | accountBalance_closingDate_month | 11 | 
-            | accountBalance_closingDate_year  | 2014 | 
-            | accountBalance_closingBalance    | 4855.19 |
-        And I press "accountBalance_save"
-        Then I fill in the following:
-            | accountBalance_closingDateExplanation| closing date explanation |
-            | accountBalance_closingBalanceExplanation| £ 100.50 moved to other account |
-        And I press "accountBalance_save"
+        And I add the following bank account:
+            | bank    | HSBC - main account | 
+            | accountNumber | 8 | 7 | 6 | 5 | 
+            | sortCode | 88 | 77 | 66 |
+            | openingDate   | 1/2/2014 | earlier transaction made with other account |
+            | openingBalance  | 155.000 |
+            #
+            | moneyIn_0    | 100.01 |
+            | moneyIn_1    | 200.01 |
+            | moneyIn_2    | 300.01 |
+            | moneyIn_3    | 400.01 |
+            | moneyIn_4    | 500.01 |
+            | moneyIn_5    | 600.01 |
+            | moneyIn_6    | 700.01 |
+            | moneyIn_7    | 800.01 |
+            | moneyIn_8    | 900.01 |
+            | moneyIn_9    | 1000.01 |
+            | moneyIn_10   | 1100.01 |
+            | moneyIn_11   | 1,200.01 |
+            | moneyIn_12   | 1,300.01 |
+            | moneyIn_13   | 1,400.01 |
+            | moneyIn_14   | 1,500.01 |
+            | moneyIn_15   | 1,600.01 | more-details-in-15 |
+            | moneyIn_16   | 1,700.01 | more-details-in-16 |
+            | moneyIn_17   | 1,800.01 | more-details-in-17 |
+            | moneyIn_18   | 1,800.01 | more-details-in-18 |
+            #
+            | moneyOut_0   | 100.00 |
+            | moneyOut_1   | 200.00 |
+            | moneyOut_2   | 300.00 |
+            | moneyOut_3   | 400.00 |
+            | moneyOut_4   | 500.00 |
+            | moneyOut_5   | 600.00 |
+            | moneyOut_6   | 700.00 |
+            | moneyOut_7   | 800.00 |
+            | moneyOut_8   | 900.00 |
+            | moneyOut_9   | 1000.00 |
+            | moneyOut_10  | 1100.00 |
+            | moneyOut_11  | 1,200.00 | more-details-out-11 |
+            | moneyOut_12  | 1,300.00 | more-details-out-12 |
+            | moneyOut_13  | 1,400.00 | more-details-out-13 |
+            | moneyOut_14  | 1,500.00 | more-details-out-14 |
+            | moneyOut_15  | 1,600.00 | more-details-out-15 |
+            | moneyOut_16  | 1,700.00 | more-details-out-16 |
+            | moneyOut_17  | 1,800.00 | more-details-out-17 |
+            | moneyOut_18  | 1,900.00 | more-details-out-18 |
+            | moneyOut_19  | 2,000.00 | more-details-out-19 |
+            | moneyOut_20  | 2,100.00 | more-details-out-20 |
+            #
+            | closingDate    | 11 /11/2014 | 
+            | closingDateExplanation    | closing date explanation | 
+            | closingBalance | 4855.19 | 
+            #∑
+            | closingBalanceExplanation | £ 100.50 moved to other account |
         #Finally we are ready to submit the report
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -770,91 +655,58 @@ Feature: Formatted Report
         And I press "reason_for_no_contact_saveReason"
         Then the form should be valid
         # Bank account
-        Then I follow "tab-accounts"
-        And I fill in the following:
-            | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
-            | account_sortCode_sort_code_part_1 | 88 |
-            | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingDate_day   | 1 |
-            | account_openingDate_month | 1 |
-            | account_openingDate_year  | 2014 |
-            | account_openingBalance  | 155.00 |
-        And I press "account_save"
-        And the form should be valid
-        And I click on "account-8765"
-        When I fill in the following:
-            | transactions_moneyIn_0_amount       | 10000.01 |
-            | transactions_moneyIn_1_amount       | 200.01 |
-            | transactions_moneyIn_2_amount       | 300.01 |
-            | transactions_moneyIn_3_amount       | 400.01 |
-            | transactions_moneyIn_4_amount       | 500.01 |
-            | transactions_moneyIn_5_amount       | 600.01 |
-            | transactions_moneyIn_6_amount       | 700.01 |
-            | transactions_moneyIn_7_amount       | 800.01 |
-            | transactions_moneyIn_8_amount       | 900.01 |
-            | transactions_moneyIn_9_amount       | 1000.01 |
-            | transactions_moneyIn_10_amount      | 1100.01 |
-            | transactions_moneyIn_11_amount      | 1,200.01 |
-            | transactions_moneyIn_12_amount      | 1,300.01 |
-            | transactions_moneyIn_13_amount      | 1,400.01 |
-            | transactions_moneyIn_14_amount      | 1,500.01 |
-            | transactions_moneyIn_15_amount      | 1,600.01 |
-            | transactions_moneyIn_16_amount      | 1,700.01 |
-            | transactions_moneyIn_17_amount      | 1,800.01 |
-            | transactions_moneyIn_18_amount      | 1,800.01 |
-            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
-            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
-            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
-            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
-        And I save the page as "moneyinentered"
-        And I press "transactions_saveMoneyIn"
-        And I save the page as "moneyinsaved"
-        When I fill in the following:
-            | transactions_moneyOut_0_amount       | 100.00 |
-            | transactions_moneyOut_1_amount       | 200.00 |
-            | transactions_moneyOut_2_amount       | 300.00 |
-            | transactions_moneyOut_3_amount       | 400.00 |
-            | transactions_moneyOut_4_amount       | 500.00 |
-            | transactions_moneyOut_5_amount       | 600.00 |
-            | transactions_moneyOut_6_amount       | 700.00 |
-            | transactions_moneyOut_7_amount       | 800.00 |
-            | transactions_moneyOut_8_amount       | 900.00 |
-            | transactions_moneyOut_9_amount       | 1000.00 |
-            | transactions_moneyOut_10_amount      | 1100.00 |
-            | transactions_moneyOut_11_amount      | 1,200.00 |
-            | transactions_moneyOut_12_amount      | 1,300.00 |
-            | transactions_moneyOut_13_amount      | 1,400.00 |
-            | transactions_moneyOut_14_amount      | 1,500.00 |
-            | transactions_moneyOut_15_amount      | 1,600.00 |
-            | transactions_moneyOut_16_amount      | 1,700.00 |
-            | transactions_moneyOut_17_amount      | 1,800.00 |
-            | transactions_moneyOut_18_amount      | 1,900.00 |
-            | transactions_moneyOut_19_amount      | 2,000.00 |
-            | transactions_moneyOut_20_amount      | 2,100.00 |
-            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
-            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
-            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
-            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
-            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
-            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
-            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
-            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
-            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
-            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
-        And I save the page as "moneyoutentered"
-        And I press "transactions_saveMoneyOut"
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 1 | 
-            | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 5855.19 |
-        And I press "accountBalance_save"
-        And the form should be valid
+
+        And I add the following bank account:
+            | bank    | HSBC - main account | 
+            | accountNumber | 8 | 7 | 6 | 5 | 
+            | sortCode | 88 | 77 | 66 |
+            | openingDate   | 1/2/2014 | earlier transaction made with other account |
+            | openingBalance  | 155.000 |
+            #
+            | moneyIn_0    | 10000.01 |
+            | moneyIn_1    | 200.01 |
+            | moneyIn_2    | 300.01 |
+            | moneyIn_3    | 400.01 |
+            | moneyIn_4    | 500.01 |
+            | moneyIn_5    | 600.01 |
+            | moneyIn_6    | 700.01 |
+            | moneyIn_7    | 800.01 |
+            | moneyIn_8    | 900.01 |
+            | moneyIn_9    | 1000.01 |
+            | moneyIn_10   | 1100.01 |
+            | moneyIn_11   | 1,200.01 |
+            | moneyIn_12   | 1,300.01 |
+            | moneyIn_13   | 1,400.01 |
+            | moneyIn_14   | 1,500.01 |
+            | moneyIn_15   | 1,600.01 | more-details-in-15 |
+            | moneyIn_16   | 1,700.01 | more-details-in-16 |
+            | moneyIn_17   | 1,800.01 | more-details-in-17 |
+            | moneyIn_18   | 1,800.01 | more-details-in-18 |
+            #
+            | moneyOut_0   | 100.00 |
+            | moneyOut_1   | 200.00 |
+            | moneyOut_2   | 300.00 |
+            | moneyOut_3   | 400.00 |
+            | moneyOut_4   | 500.00 |
+            | moneyOut_5   | 600.00 |
+            | moneyOut_6   | 700.00 |
+            | moneyOut_7   | 800.00 |
+            | moneyOut_8   | 900.00 |
+            | moneyOut_9   | 1000.00 |
+            | moneyOut_10  | 1100.00 |
+            | moneyOut_11  | 1,200.00 | more-details-out-11 |
+            | moneyOut_12  | 1,300.00 | more-details-out-12 |
+            | moneyOut_13  | 1,400.00 | more-details-out-13 |
+            | moneyOut_14  | 1,500.00 | more-details-out-14 |
+            | moneyOut_15  | 1,600.00 | more-details-out-15 |
+            | moneyOut_16  | 1,700.00 | more-details-out-16 |
+            | moneyOut_17  | 1,800.00 | more-details-out-17 |
+            | moneyOut_18  | 1,900.00 | more-details-out-18 |
+            | moneyOut_19  | 2,000.00 | more-details-out-19 |
+            | moneyOut_20  | 2,100.00 | more-details-out-20 |
+            #
+            | closingDate    | 1 /1/2015 | 
+            | closingBalance | 5855.19 | 
         # Finally, Assets
         Then I follow "tab-assets"
         And I check "report_no_assets_no_assets"
