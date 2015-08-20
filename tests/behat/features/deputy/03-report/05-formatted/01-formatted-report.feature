@@ -46,7 +46,7 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 | |
+            | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
             | moneyIn_0    | 10000.01 |
             | moneyIn_1    | 200.01 |
@@ -90,17 +90,7 @@ Feature: Formatted Report
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             | closingDate    | 1 /1/2015 | 
             | closingBalance | 5855.19 |
-        Then I save the application status into "readytosubmit"
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
+        When I submit the report with further info "More info."
         Then I save the application status into "reportsubmitted"
                 
     @formatted-report @deputy
@@ -132,7 +122,7 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 | |
+            | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
             | moneyIn_0    | 10000.01 |
             | moneyIn_1    | 200.01 |
@@ -181,18 +171,7 @@ Feature: Formatted Report
           | title        | value       |  description        | valuationDate | 
           | Property    | 250000.00    |  2 beds flat in HA2 |               | 
           | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  | 
-        #Finally we are ready to submit the report
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
-        # Now view the report
+        And I submit the report with further info "More info."
         And I view the formatted report
         Then the response status code should be 200
         And I should see "Deputy report for property and financial decisions"
@@ -228,7 +207,7 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 | |
+            | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
             | moneyIn_0    | 10000.01 |
             | moneyIn_1    | 200.01 |
@@ -276,17 +255,7 @@ Feature: Formatted Report
           | title        | value       |  description        | valuationDate | 
           | Property    | 250000.00    |  2 beds flat in HA2 |               | 
           | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  | 
-        #Finally we are ready to submit the report
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
+        And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
         Then the response status code should be 200
@@ -333,7 +302,7 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 | |
+            | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
             | moneyIn_0    | 100.01 |
             | moneyIn_1    | 200.01 |
@@ -377,17 +346,7 @@ Feature: Formatted Report
             | moneyOut_20  | 2,200.00 | more-details-out-20 |
             | closingDate    | 1 /1/2015 | 
             | closingBalance | 4855.19 |
-        #Finally we are ready to submit the report
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
+        And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
         Then I should see "Balancing the account"
@@ -406,7 +365,7 @@ Feature: Formatted Report
             | bank    | HSBC - main account | 
             | accountNumber | 8 | 7 | 6 | 5 | 
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 | |
+            | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
             #
             | moneyIn_0    | 100.01 |
@@ -455,17 +414,7 @@ Feature: Formatted Report
             | closingBalance | 155.00 | 
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
-        # Now view the report
+        And I submit the report with further info "More info."
         And I view the formatted report
         And I should see "£ 100.50 moved to other account" in "accountBalance_closingBalanceExplanation"
         
@@ -527,17 +476,7 @@ Feature: Formatted Report
             | closingBalance | 155.00 | 
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
-        #Finally we are ready to submit the report
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
+        And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
         And I should see "earlier transaction made with other account" in "account-date-explanation"
@@ -601,17 +540,7 @@ Feature: Formatted Report
             | closingBalance | 4855.19 | 
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
-        #Finally we are ready to submit the report
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
+        And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
         And I should see "closing date explanation" in "account-date-explanation"
@@ -715,17 +644,7 @@ Feature: Formatted Report
         And I check "report_no_assets_no_assets"
         And I press "report_no_assets_saveNoAsset"
         Then the form should be valid
-        #Finally we are ready to submit the report
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then the URL should match "/report/\d+/add_further_information"
-        And I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        And the URL should match "/report/\d+/submitted"
+        And I submit the report with further info "More info."
         And I view the formatted report
         Then the response status code should be 200
         And I should see "My client has no assets" in "assets-section" 

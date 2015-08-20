@@ -180,7 +180,8 @@ Feature: report
             | bank    | Barclays acccount to delete | 
             | accountNumber | 6 | 6 | 6 | 6 | 
             | sortCode | 55 | 55 | 55 |
-            | openingDate   | 4/4/2015 | just a test |
+            | openingDate   | 4/4/2015 | 
+            | openingDateExplanation  | just a test |
             | openingBalance  | 1,300.00 |
         
 

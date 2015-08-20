@@ -130,40 +130,41 @@ Feature: report submission
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
         
+
     @deputy
     Scenario: assert 2nd year report has been created
-    Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-    And I click on "client-home"
-    And I edit lastest active report
-    When I click on "client-home"
-    And I click on "report-n1"
-    And I save the page as "report-property-affairs-homepage"
-    Then I should see a "#tab-contacts" element
-    And I should see a "#tab-decisions" element
-    And I should see a "#tab-accounts" element
-    And I should see a "#tab-assets" element
-    When I am on the account "1234" page of the first report
-    And I click on "edit-account-details"
-    Then the following fields should have the corresponding values:
-        | account_bank    | HSBC main account | 
-        | account_accountNumber_part_1 | 1 | 
-        | account_accountNumber_part_2 | 2 | 
-        | account_accountNumber_part_3 | 3 | 
-        | account_accountNumber_part_4 | 4 | 
-        | account_sortCode_sort_code_part_1 | 12 |
-        | account_sortCode_sort_code_part_2 | 34 |
-        | account_sortCode_sort_code_part_3 | 56 |
-        | account_openingBalance  | -3,000.50 |
-    And I am on the account "1234" page of the first report
-    # check no data was previously saved
-    Then the following fields should have the corresponding values:
-        | transactions_moneyIn_0_amount        |  | 
-        | transactions_moneyIn_15_amount       |  | 
-        | transactions_moneyIn_15_moreDetails  |  | 
-        | transactions_moneyOut_0_amount       |  | 
-        | transactions_moneyOut_11_amount      |  | 
-        | transactions_moneyOut_11_moreDetails |  | 
-    And I save the page as "report-account-transactions-empty"
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I click on "client-home"
+        And I edit lastest active report
+        When I click on "client-home"
+        And I click on "report-n1"
+        And I save the page as "report-property-affairs-homepage"
+        Then I should see a "#tab-contacts" element
+        And I should see a "#tab-decisions" element
+        And I should see a "#tab-accounts" element
+        And I should see a "#tab-assets" element
+        When I am on the account "1234" page of the first report
+        And I click on "edit-account-details"
+        Then the following fields should have the corresponding values:
+            | account_bank    | HSBC main account | 
+            | account_accountNumber_part_1 | 1 | 
+            | account_accountNumber_part_2 | 2 | 
+            | account_accountNumber_part_3 | 3 | 
+            | account_accountNumber_part_4 | 4 | 
+            | account_sortCode_sort_code_part_1 | 12 |
+            | account_sortCode_sort_code_part_2 | 34 |
+            | account_sortCode_sort_code_part_3 | 56 |
+            | account_openingBalance  | -3,000.50 |
+        And I am on the account "1234" page of the first report
+        # check no data was previously saved
+        Then the following fields should have the corresponding values:
+            | transactions_moneyIn_0_amount        |  | 
+            | transactions_moneyIn_15_amount       |  | 
+            | transactions_moneyIn_15_moreDetails  |  | 
+            | transactions_moneyOut_0_amount       |  | 
+            | transactions_moneyOut_11_amount      |  | 
+            | transactions_moneyOut_11_moreDetails |  | 
+        And I save the page as "report-account-transactions-empty"
 
     @deputy
     Scenario: assert report is not editable after submission

@@ -360,5 +360,26 @@ trait ReportTrait
 
         return $ret;
     }
+    
+     /**
+     * @When I submit the report with further info :moreInfo
+     */
+    public function iSubmitTheReportWithFurtherInfo($moreInfo)
+    {
+        // checkbox top page
+        $this->checkOption("report_submit_reviewed_n_checked");
+        $this->pressButton("report_submit_submitReport");
+        
+        # more info page
+        $this->fillField('report_add_info_furtherInformation', $moreInfo);
+        $this->pressButton("report_add_info_saveAndContinue");
+
+        # declaration page
+        $this->checkOption("report_declaration_agree");
+        $this->pressButton("report_declaration_save");
+        
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
 
 }
