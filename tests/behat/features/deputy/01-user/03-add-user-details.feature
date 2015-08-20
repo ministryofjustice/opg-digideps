@@ -54,36 +54,6 @@ Feature: add details
             | user_details_phoneAlternative | 020 1234 5678  |
         
 
-    @admin
-    Scenario: add user details (admin user)
-        Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
-        And I am on admin page "/user/details"
-        And I save the page as "admin-step2"
-        # testing validation, as the validation group for the form is different for admin user
-        # missing firstname
-        And I fill in the following:
-            | user_details_firstname |  |
-            | user_details_lastname | Doe admin |
-        And I press "user_details_save"
-        Then the form should be invalid
-        # missing lastname
-        And I fill in the following:
-            | user_details_firstname | John admin |
-            | user_details_lastname |  |
-        And I press "user_details_save"
-        Then the form should be invalid
-        And I save the page as "admin-step2-error"
-        # correct
-        And I fill in the following:
-            | user_details_firstname | John admin |
-            | user_details_lastname | Doe admin |
-        And I press "user_details_save"
-        Then the form should be valid
-        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
-        Given I am on admin page "/user/details"
-        Then the following fields should have the corresponding values:
-            | user_details_firstname | John admin |
-            | user_details_lastname | Doe admin |
+    
         
         
