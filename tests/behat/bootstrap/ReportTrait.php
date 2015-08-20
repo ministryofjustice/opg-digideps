@@ -253,6 +253,101 @@ trait ReportTrait
             $this->assertResponseStatus(200);
         }
     }
-
+    
+     /**
+     * @When I add the following bank account:
+     */
+    public function iAddTheFollowingBankAccountAssets(TableNode $table)
+    {
+            $this->clickLink("tab-accounts");
+            
+            // expand form if collapsed
+            if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
+                $this->clickOnBehatLink('add-account');
+            }
+            
+            $rows = $table->getRowsHash();
+            
+            $this->fillField('account_bank', $rows['bank']);
+            $this->fillField('account_accountNumber_part_1', $rows['accountNumber'][0]);
+            $this->fillField('account_accountNumber_part_2', $rows['accountNumber'][1]);
+            $this->fillField('account_accountNumber_part_3', $rows['accountNumber'][2]);
+            $this->fillField('account_accountNumber_part_4', $rows['accountNumber'][3]);
+            $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
+            $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
+            $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
+            
+            $datePieces = explode('/', $rows['openingDate'][0]);
+            $this->fillField('account_openingDate_day', $datePieces[0]);
+            $this->fillField('account_openingDate_month', $datePieces[1]);
+            $this->fillField('account_openingDate_year', $datePieces[2]);
+            if (isset($rows['openingDate'][1])) {
+                $this->fillField('account_openingDateExplanation', $rows['openingDate'][1]);
+            }
+            $this->fillField('account_openingBalance', $rows['openingBalance']);
+            $this->pressButton("account_save");
+            $this->theFormShouldBeValid();
+            $this->assertResponseStatus(200);
+            
+            // open account and add transactions
+            $this->clickOnBehatLink('account-' . implode('', $rows['accountNumber']));
+            $this->addTransactions($rows, 'moneyIn_' , 'transactions_saveMoneyIn');
+            $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
+            
+            // add closing balance
+            if (isset($rows['closingDate'])) {
+                $closingDatePieces = explode('/', $rows['closingDate']);
+                $this->fillField('accountBalance_closingDate_day', $closingDatePieces[0]);
+                $this->fillField('accountBalance_closingDate_month', $closingDatePieces[1]);
+                $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
+                $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
+                $this->pressButton("accountBalance_save");
+                $this->theFormShouldBeValid();
+                $this->assertResponseStatus(200);
+            }
+            
+    }
+    
+    private function addTransactions(array $rows, $prefix, $buttonId)
+    {
+        $records = $this->getRowsMatching($rows, $prefix);
+        if (!$records) { 
+            return; 
+        }
+        
+        foreach ($records as $key => $value) {
+            if (is_array($value)) {
+                $this->fillField("transactions_{$key}_amount", $value[0]);
+                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
+            } else {
+                $this->fillField("transactions_{$key}_amount", $value);
+            }
+        }
+        
+        // save and return to page
+        $this->pressButton($buttonId);
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+    
+    
+    /**
+     * @param array $rows
+     * @param string $needle
+     * 
+     * @return array
+     */
+    private function getRowsMatching(array $rows, $needle)
+    {
+        $ret = $rows;
+        foreach ($ret as $k => $value) {
+            if (strpos($k, $needle) === false) {
+                unset($ret[$k]);
+            }
+        }
+        
+        return $ret;
+        
+    }
 
 }
