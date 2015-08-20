@@ -1,6 +1,5 @@
 Feature: admin
 
-    @admin
     Scenario: login and add admin user, check audit log
         Given I reset the email log
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -26,7 +25,6 @@ Feature: admin
           | action | logout |
 
 
-    @admin
     Scenario: login and add user (admin)
         #Given I am on "http://digideps-admin.local/app_dev.php/logout"
         Given I am not logged into admin
@@ -46,7 +44,7 @@ Feature: admin
         Then I should not see the "header errors" region
         And I should be on "/admin/"
 
-    @admin
+
     Scenario: change user password on admin area
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "admin-pasword-change-init"
