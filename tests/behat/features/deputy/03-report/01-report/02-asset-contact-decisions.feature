@@ -53,15 +53,13 @@ Feature: report
         # add decision 
         Then the "decision_description" field is expandable
         And the "decision_clientInvolvedDetails" field is expandable
-        And I add the following decision:
-            | description | 2 beds |
-            | clientInvolved | yes | the client was able to decide at 90% |
-       And I save the page as "report-decision-list"
-       And I add the following decision:
-            | description | 3 beds |
-            | clientInvolved | yes | the client was able to decide at 85% |
+        And I add the following decisions:
+            | description | clientInvolved | clientInvolvedDetails | 
+            | 2 beds | yes | the client was able to decide at 90% |
+            | 3 beds | yes | the client was able to decide at 85% |
        And I should see "2 beds" in the "list-decisions" region
        And I should see "3 beds" in the "list-decisions" region
+       And I save the page as "report-decision-list"
 
         
     @deputy

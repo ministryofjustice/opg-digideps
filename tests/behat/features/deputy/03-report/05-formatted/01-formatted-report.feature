@@ -30,12 +30,10 @@ Feature: Formatted Report
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         # Start by adding some decisions
-        And I add the following decision:
-            | description | 3 beds |
-            | clientInvolved | yes | the client was able to decide at 85% |
-        And I add the following decision:
-            | description | 2 televisions |
-            | clientInvolved | yes | the client said he doesnt want a tv anymore |
+        And I add the following decisions:
+          | description  | clientInvolved | clientInvolvedDetails | 
+          | 3 beds      | yes           | the client was able to decide at 85% |
+          | 2 televisions | yes           | the client said he doesnt want a tv anymore |
         # Next, 2 contacts
         When I add the following contact:
             | contactName | Andy White |
@@ -309,12 +307,10 @@ Feature: Formatted Report
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         # Start by adding some decisions
-        And I add the following decision:
-            | description | 3 beds |
-            | clientInvolved | yes | the client was able to decide at 85% |
-        And I add the following decision:
-            | description | 2 televisions |
-            | clientInvolved | yes | the client said he doesnt want a tv anymore |
+        And I add the following decisions:  
+           | description   | clientInvolved | clientInvolvedDetails | 
+           | 3 beds      | yes            | the client was able to decide at 85% |
+           | 2 televisions | yes            | the client said he doesnt want a tv anymore |
         # Next, some contacts
         Then I follow "tab-contacts"
         When I fill in "reason_for_no_contact_reason" with "kept in the book"
