@@ -1,4 +1,4 @@
-Feature: admin
+Feature: admin / admin
 
     Scenario: login and add admin user, check audit log
         Given I reset the email log

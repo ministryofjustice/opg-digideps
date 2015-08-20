@@ -1,4 +1,4 @@
-Feature: add client and report
+Feature: deputy / user / add client and report
     
     @deputy
     Scenario: add client

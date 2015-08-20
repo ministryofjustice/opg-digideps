@@ -1,4 +1,4 @@
-Feature: report
+Feature: deputy / report / account transactions
     
     @deputy
     Scenario: add account transactions

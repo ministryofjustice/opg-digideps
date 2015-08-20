@@ -1,4 +1,4 @@
-Feature: report explanations
+Feature: deputy / report / edit user explanations
 
     @deputy
     Scenario: add explanation for no contacts

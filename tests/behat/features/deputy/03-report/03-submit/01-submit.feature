@@ -1,4 +1,4 @@
-Feature: report submission
+Feature: deputy / report / submit
     
     @deputy
     Scenario: report further info page

@@ -1,4 +1,4 @@
-Feature: add details
+Feature: deputy / user / add details
     
     @deputy
     Scenario: add user details (deputy) 

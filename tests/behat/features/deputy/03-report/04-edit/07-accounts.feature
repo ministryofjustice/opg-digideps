@@ -1,4 +1,4 @@
-Feature: Accounts
+Feature: deputy / report / edit accounts
 
     @accounts @deputy
     Scenario: Setup the test user

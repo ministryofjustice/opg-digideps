@@ -1,4 +1,4 @@
-Feature: set password
+Feature: deputy / user / set password
     
     @deputy
     Scenario: login and add user (deputy)

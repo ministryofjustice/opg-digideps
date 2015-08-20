@@ -1,4 +1,4 @@
-Feature: Formatted Report
+Feature: deputy / report / Formatted Report
     
     @formatted-report @accounts @deputy
     Scenario: Setup the test user

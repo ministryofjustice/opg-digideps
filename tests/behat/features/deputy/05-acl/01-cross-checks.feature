@@ -1,4 +1,4 @@
-Feature: cross domain (admin and deputy) checks
+Feature: deputy / acl / cross domain (admin and deputy) checks
 
     @deputy
     Scenario: A deputy cannot login into admin area

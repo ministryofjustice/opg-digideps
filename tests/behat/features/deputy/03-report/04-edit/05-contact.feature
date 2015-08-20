@@ -1,4 +1,4 @@
-Feature: edit/remove contact
+Feature: deputy / report / edit user contact
 
     @deputy
     Scenario: edit remove contact

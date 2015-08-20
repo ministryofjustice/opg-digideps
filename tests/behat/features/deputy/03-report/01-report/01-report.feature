@@ -1,4 +1,4 @@
-Feature: report edit and test tabs
+Feature: deputy / report / edit and test tabs
     
     @deputy
     Scenario: test tabs for "Health & Welfare" report

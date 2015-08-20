@@ -1,4 +1,4 @@
-Feature: edit client details
+Feature: deputy / report / edit client
 
     @deputy
     Scenario: edit client details
