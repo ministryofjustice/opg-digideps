@@ -384,7 +384,7 @@
         }
     }
 
-    table {
+    table#safeguarding-visits-subsection {
     
         th,td {
             box-sizing: border-box;
@@ -418,6 +418,23 @@
         .checkbox {
             margin: 10px 20px;
         }
+    }
+
+    table.yesno, #safegaurding-care-funding table {
+        
+        margin: 10px 0;
+        
+        .checkbox {
+            width: .75em;
+        }
+        .label {
+            padding-left: 10px;
+            width: 5em;
+        }
+    }
+
+    #safegaurding-care-funding table .label {
+        width: auto;
     }
 
     #safeguarding-contact, #care-arrangements-subsection {

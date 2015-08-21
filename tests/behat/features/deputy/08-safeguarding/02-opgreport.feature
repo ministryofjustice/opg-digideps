@@ -151,7 +151,7 @@ Feature: Safeguarding OPG Report
         And I should see a subsection called "safeguarding-visitors"
         And I should see a subsection called "safeguarding-furtherinfo"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @formatted-report @deputy @wip
     Scenario: When dont live with the client, all visits are every day
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
