@@ -20,6 +20,7 @@ form:
       # other controls are taken from the other sections in this file
       closingDate:
         legend: "End date of reporting period"
+        legendjs: "End date of reporting period"
         hint: "(DD/MM/YYYY)"
       closingDateExplanation:
         label: Please tell us why the closing dates do not match    
