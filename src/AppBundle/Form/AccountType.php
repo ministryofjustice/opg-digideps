@@ -77,16 +77,23 @@ class AccountType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
             ])
-            // if JS is enabled and the openingDateMatchesReportDate is "yes", 
-            // ovverride openingDate and openingDateExplanation values
-            // (just before submitting the form)
+            // set the opening date to the report start date if either
+            // - JS enabled and openingDate is empty
+            // - JS disabled and checkbox "openingDateMatchesReportDate" is set to "yes"
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                
                 $data = $event->getData();
                 
-                if ('yes' == $data['js-enabled'] 
+                $jsDisabledAndDateEmpty = 'no' == $data['js-enabled'] 
+                    && empty($data['openingDate']['day'])
+                    && empty($data['openingDate']['month'])
+                    && empty($data['openingDate']['year']);
+                
+                $jsEnabledAndCheckboxYes = 'yes' == $data['js-enabled'] 
                     && isset($data['openingDateMatchesReportDate']) 
-                    && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES
-                ) {
+                    && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES;
+                
+                if ($jsDisabledAndDateEmpty || $jsEnabledAndCheckboxYes) {
                     $account = $event->getForm()->getData();
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
                     
