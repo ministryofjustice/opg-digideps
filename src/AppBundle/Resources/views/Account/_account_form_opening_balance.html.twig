@@ -1,5 +1,5 @@
 {% set reportBoldStartDateTransReplacements = { 
-        '{{ reportStartDate }}': report.StartDate | date('m/d/Y'),
+        '{{ reportStartDate }}': report.StartDate | date('d/m/Y'),
         '{{ boldStart }}': '<strong class="bold">',
         '{{ boldEnd }}': '</strong>'
 }%}
