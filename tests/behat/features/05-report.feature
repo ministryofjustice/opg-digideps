@@ -234,8 +234,8 @@ Feature: report
         And I follow "tab-accounts"
         And I save the page as "report-account-empty"
         # assert "no" is selected in the visually hidden radio options
-        Then the checkbox "account_openingDateSame_0" should be unchecked
-        Then the checkbox "account_openingDateSame_1" should be checked
+        Then the checkbox "account_openingDateMatchesReportDate_0" should be unchecked
+        Then the checkbox "account_openingDateMatchesReportDate_1" should be checked
         # empty form
         And I press "account_save"
         And I save the page as "report-account-add-error"

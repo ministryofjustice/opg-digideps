@@ -55,14 +55,6 @@ class Account
     private $accountNumber;
     
     /**
-     * field not mapped in the API.
-     * Only used for JS version of the account form, to make easier holding options with form interactions
-     * 
-     * @var string 
-     */
-    private $openingDateSame;
-    
-    /**
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"basic"})
      * @Assert\Date(message="account.openingDate.date", groups={"basic"})
@@ -560,7 +552,7 @@ class Account
      * @return string 'yes' if opening date is the same as report start date, "no" otherwise
      * @throws \RuntimeException
      */
-    public function getOpeningDateSame()
+    public function getOpeningDateMatchesReportDate()
     {
         $openingDate = $this->getOpeningDate();
         
@@ -571,8 +563,8 @@ class Account
     }
 
     
-    public function setOpeningDateSame($openingDateSame)
+    public function setOpeningDateMatchesReportDate($openingDateMatchesReportDate)
     {
-        $this->openingDateSame = $openingDateSame;
+        $this->openingDateMatchesReportDate = $openingDateMatchesReportDate;
     }
 }

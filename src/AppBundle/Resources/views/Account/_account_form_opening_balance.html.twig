@@ -19,13 +19,13 @@
       subSectionDescription: 'Is the start date of your reporting period and the opening balance date the same ?',
     } % #}
 
-    {{ form_checkbox_group(form.openingDateSame, 'form.openingBalance.controls.openingDateSame', {
+    {{ form_checkbox_group(form.openingDateMatchesReportDate, 'form.openingBalance.controls.openingDateMatchesReportDate', {
             'fieldSetClass' : 'horizontal',
             'legendClass' : 'form-label',
             'labelClass' : 'block-label-horizontal',
             'items': [
-              {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateSame.labelYes" | trans({}, translationDomain) },
-              {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateSame.labelNo" | trans({}, translationDomain) }
+              {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateMatchesReportDate.labelYes" | trans({}, translationDomain) },
+              {'labelClass': 'block-label', 'elementClass': '', 'description': "form.openingBalance.controls.openingDateMatchesReportDate.labelNo" | trans({}, translationDomain) }
           ]
       }) }}
 </div>

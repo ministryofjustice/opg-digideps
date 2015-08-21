@@ -72,20 +72,20 @@ class AccountType extends AbstractType
     protected function addOpeningBalanceFields(FormBuilderInterface $builder)
     {
         $builder
-            ->add('openingDateSame', 'choice', [ 
+            ->add('openingDateMatchesReportDate', 'choice', [ 
                 'choices' => ['yes'=>'Yes', 'no'=>'No'],
                 'multiple' => false,
                 'expanded' => true,
             ])
-            // if JS is enabled and the openingDateSame is "yes", 
+            // if JS is enabled and the openingDateMatchesReportDate is "yes", 
             // ovverride openingDate and openingDateExplanation values
             // (just before submitting the form)
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $data = $event->getData();
                 
                 if ('yes' == $data['js-enabled'] 
-                    && isset($data['openingDateSame']) 
-                    && $data['openingDateSame'] == Account::OPENING_DATE_SAME_YES
+                    && isset($data['openingDateMatchesReportDate']) 
+                    && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES
                 ) {
                     $account = $event->getForm()->getData();
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
