@@ -1,4 +1,4 @@
-Feature: admin acl
+Feature: admin / acl
 
 
     Scenario: An admin user cannot login into deputy area

@@ -1,4 +1,4 @@
-Feature: report
+Feature: deputy / report / closing balance
     
 
     @deputy

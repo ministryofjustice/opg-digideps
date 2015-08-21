@@ -1,4 +1,4 @@
-Feature: report
+Feature: deputy / report / add contact, decision, assets
     
     @deputy
     Scenario: add contact

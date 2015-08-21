@@ -1,4 +1,4 @@
-Feature: admin
+Feature: deputy / user / add user
 
     @deputy
     Scenario: login and add deputy user

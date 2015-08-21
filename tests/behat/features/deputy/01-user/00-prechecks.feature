@@ -1,4 +1,4 @@
-Feature: pre checks
+Feature: deputy / user / pre checks
 
     @deputy
     Scenario: check app status

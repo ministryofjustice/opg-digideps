@@ -1,4 +1,4 @@
-Feature: edit/remove an asset
+Feature: deputy / report / edit asset
 
 
     @deputy

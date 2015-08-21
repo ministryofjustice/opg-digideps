@@ -1,4 +1,4 @@
-Feature: edit user details
+Feature: deputy / report / edit user
 
     @deputy
     Scenario: edit user details

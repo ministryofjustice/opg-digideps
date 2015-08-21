@@ -1,4 +1,4 @@
-Feature: edit/remove decision
+Feature:deputy / report / edit decision
 
     @deputy
     Scenario: edit decision, remove the decision

@@ -1,4 +1,4 @@
-Feature: Activation link resending
+Feature: deputy / Activation link resending
     When the token expires, the user can have the activation link resent and continue from the user activation step
     
     @deputy
