@@ -61,6 +61,7 @@ class AccountType extends AbstractType
         if ($this->options['showDeleteButton']) {
             $builder->add('delete', 'submit');
         }
+        $builder->add('js-enabled', 'hidden', ['data'=>'no', 'mapped'=>false]);
     }
 
     /**
@@ -74,13 +75,18 @@ class AccountType extends AbstractType
             ->add('openingDateSame', 'choice', [ 
                 'choices' => ['yes'=>'Yes', 'no'=>'No'],
                 'multiple' => false,
-                'expanded' => true
+                'expanded' => true,
             ])
-            // if the openingDateSame is "yes", then ovverride openingDate and openingDateExplanation values
+            // if JS is enabled and the openingDateSame is "yes", 
+            // ovverride openingDate and openingDateExplanation values
+            // (just before submitting the form)
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $data = $event->getData();
                 
-                if (isset($data['openingDateSame']) && $data['openingDateSame'] == Account::OPENING_DATE_SAME_YES) {
+                if ('yes' == $data['js-enabled'] 
+                    && isset($data['openingDateSame']) 
+                    && $data['openingDateSame'] == Account::OPENING_DATE_SAME_YES
+                ) {
                     $account = $event->getForm()->getData();
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
                     

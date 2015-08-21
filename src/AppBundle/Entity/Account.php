@@ -557,12 +557,17 @@ class Account
     /**
      * Virtual field.
      * 
-     * @return string 'yes' if opening date is the same as reprot start date, "no" otherwise
+     * @return string 'yes' if opening date is the same as report start date, "no" otherwise
      * @throws \RuntimeException
      */
     public function getOpeningDateSame()
     {
-        return $this->getOpeningDate();
+        $openingDate = $this->getOpeningDate();
+        
+        $format = 'd/m/Y';
+        $reportStartDate = $this->getReportObject(true)->getStartDate();
+        return $openingDate && $reportStartDate && $openingDate->format($format) == $reportStartDate->format($format) 
+               ? self::OPENING_DATE_SAME_YES : self::OPENING_DATE_SAME_NO;
     }
 
     

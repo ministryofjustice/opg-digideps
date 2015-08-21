@@ -103,15 +103,15 @@ class AccountController extends Controller
         
         // closing balance logic
         list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
-        if ($action == "list") {
-            if ($formBalanceIsValid) {
+//        if ($action == "list") {
+            if ($closingBalanceFormIsSubmitted && $formBalanceIsValid) {
                 $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
                     'deserialise_group' => 'balance',
                 ]);
 
                 return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
             }
-        }
+//        }
         
         // money in/out logic
         list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
@@ -191,7 +191,6 @@ class AccountController extends Controller
     private function handleAccountEditDeleteForm(EntityDir\Account $account, array $options)
     {
         $form = $this->createForm(new FormDir\AccountType($options), $account);
-        
         $form->handleRequest($this->getRequest());
         $isEditOrAddSubmitted = $form->has('save') && $form->get('save')->isClicked();
         $isEditSubmittedAndValid = $isEditOrAddSubmitted && $form->isValid();
