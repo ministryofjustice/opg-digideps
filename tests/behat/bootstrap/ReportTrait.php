@@ -256,7 +256,7 @@ trait ReportTrait
     /**
      * @When I add the following bank account:
      */
-    public function iAddTheFollowingBankAccountAssets(TableNode $table)
+    public function iAddTheFollowingBankAccount(TableNode $table)
     {
         $this->clickLink("tab-accounts");
 
@@ -382,22 +382,30 @@ trait ReportTrait
         $this->assertResponseStatus(200);
     }
     
+    private function replace_dashes($string) {
+        $string = str_replace(" ", "-", $string);
+        return strtolower($string);
+    }
+    
+    
     /**
      * @Then the report should indicate that the :checkboxvalue checkbox for :checkboxname is checked
      */
     public function theReportShouldIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
     {
-	$titleElement = $this->getSession()->getPage()->find('xpath', '//h3[text()="' . $checkboxname . '"]');
-	$titleParent = $titleElement->getParent();
-	$checkedElements = $titleParent->find('xpath', '//div[text()="X"]')->getParent()->findAll('css','.label');
-	
-	if (count($checkedElements) != 1) {
-	   throw new \RuntimeException("Checkbox not checked");
-	 }
-	
-	if ($checkedElements[0]->getText() != $checkboxvalue) {
-		throw new \RuntimeException("Checkbox value wrong. expected:" . $checkboxvalue . " got " . $checkedElements[0]->getText());
-	}
-}
+        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]'; 
+        $elements = $this->getSession()->getPage()->findAll('css',$css);
+        
+        if(count($elements) === 0) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        } 
+        
+        if ($elements[0]->getText() != "X") {
+            throw new \RuntimeException("Checkbox not checked");
+        }
+        
+    }
+    
+
 
 }

@@ -8,18 +8,110 @@
             <h3>Do you live with the client?</h3>
             
             <div class="form-group right-label">
-                <div class="checkbox">{% if report.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if report.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</div>
                 <div class="label">Yes</div>
             </div>
             <div class="form-group right-label">
-                <div class="checkbox">Yes</div>
-                <div class="label">{% if report.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if report.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">No</div>
             </div>
 
         </div>
         
-        {% if report.doYouLiveWithClient == 'no' %}
-            <div id="visits sub-section"></div>
-        {% endif %}
+{% if report.doYouLiveWithClient == 'no' %}
+        <table id="safeguarding-visits-subsection">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Visits</th>
+                    <th>Phone and video calls</th>
+                    <th>Letters and emails</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Every Day</th>
+                    <td><div class="checkbox" data-checkbox="visits--every-day">{% if report.howOftenDoYouVisit == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--every-day">{% if report.howOftenDoYouPhoneOrVideoCall == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--every-day">{% if report.howOftenDoYouWriteEmailOrLetter == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>At least once a week</th>
+                    <td><div class="checkbox" data-checkbox="visits--at-least-once-a-week">{% if report.howOftenDoYouVisit == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--at-least-once-a-week">{% if report.howOftenDoYouPhoneOrVideoCall == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--at-least-once-a-week">{% if report.howOftenDoYouWriteEmailOrLetter == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>At least once a month</th>
+                    <td><div class="checkbox" data-checkbox="visits--at-least-once-a-month">{% if report.howOftenDoYouVisit == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--at-least-once-a-month">{% if report.howOftenDoYouPhoneOrVideoCall == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--at-least-once-a-month">{% if report.howOftenDoYouWriteEmailOrLetter == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>More than twice a year</th>
+                    <td><div class="checkbox" data-checkbox="visits--more-than-twice-a-year">{% if report.howOftenDoYouVisit == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--more-than-twice-a-year">{% if report.howOftenDoYouPhoneOrVideoCall == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--more-than-twice-a-year">{% if report.howOftenDoYouWriteEmailOrLetter == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>Once a year</th>
+                    <td><div class="checkbox" data-checkbox="visits--once-a-year">{% if report.howOftenDoYouVisit == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--once-a-year">{% if report.howOftenDoYouPhoneOrVideoCall == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--once-a-year">{% if report.howOftenDoYouWriteEmailOrLetter == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>Less than once a year</th>
+                    <td><div class="checkbox" data-checkbox="visits--less-than-once-a-year">{% if report.howOftenDoYouVisit == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--less-than-once-a-year">{% if report.howOftenDoYouPhoneOrVideoCall == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--less-than-once-a-year">{% if report.howOftenDoYouWriteEmailOrLetter == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+    
+    <fieldset id="safeguarding-visitors-subsection">
+        <div class="checkboxes horizontal">
+            <h3>How often does the client see other people</h3>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--every-day">
+                        {% if report.howOftenDoesClientSeeOtherPeople == 'everyday' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Every day</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--at-least-once-a-week">
+                        {% if report.howOftenDoesClientSeeOtherPeople == 'once_a_week' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">At least once a week</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--at-least-once-a-month">
+                        {% if report.howOftenDoesClientSeeOtherPeople == 'once_a_month' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">At least once a month</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--more-than-twice-a-year">
+                        {% if report.howOftenDoesClientSeeOtherPeople == 'more_than_twice_a_year' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">More than twice a year</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--once-a-year">
+                        {% if report.howOftenDoesClientSeeOtherPeople == 'once_a_year' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Once a year</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--less-than-once-a-year">
+                        {% if report.howOftenDoesClientSeeOtherPeople == 'less_than_once_a_year' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Less than once a year</div>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset id="safeguarding-furtherinfo-subsection">
+        <div class="form-group form-group-vertical">
+            <div class="label intro">Is there anything else you want to tell us? (optional)</div>
+            <div class="textarea safeguarding-furtherinfo-field">{{report.anythingElseToTell}}</div>
+        </div>
+    </fieldset>
+
+{% endif %}
     </fieldset>
 </div>

@@ -28,141 +28,67 @@ Feature: Safeguarding OPG Report
         When I load the application status from "safereportuser"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
-        # Start by adding some decisions
-        And I add the following decision:
-            | description | 3 beds |
-            | clientInvolved | yes | the client was able to decide at 85% |
-        And I add the following decision:
-            | description | 2 televisions |
-            | clientInvolved | yes | the client said he doesnt want a tv anymore |
-        # Next, 2 contacts
-        When I add the following contact:
-            | contactName | Andy White |
-            | relationship | brother  |
-            | explanation | no explanation |
-            | address | 45 Noth Road | Islington | London | N2 5JF | GB |
-        And I add the following contact:
-            | contactName | Fred Smith |
-            | relationship | Social Worke  |
-            | explanation | Advices on benefits available |
-            | address | Town Hall |Maidenhead | Berkshire | SL1 1RR | GB |
-        # Assets
-        Then I follow "tab-assets"
-        And I click on "add-an-asset"
-        And I fill in the following:
-            | asset_title       | Vehicles | 
-            | asset_value       | 12000.00 | 
-            | asset_description | Mini cooper | 
-            | asset_valuationDate_day | 10 | 
-            | asset_valuationDate_month | 11 | 
-            | asset_valuationDate_year | 2015 |
-        Then I press "asset_save"
-        Then I click on "add-an-asset"
-        When I fill in the following:
-            | asset_title       | Property | 
-            | asset_value       | 250000.00 | 
-            | asset_description | 2 beds flat in HA2 | 
-            | asset_valuationDate_day |  | 
-            | asset_valuationDate_month |  | 
-            | asset_valuationDate_year |  |
-        And I press "asset_save"
-        Then I click on "add-an-asset"
-        # 2nd asset (with date)
-        And I fill in the following:
-            | asset_title       | Vehicles | 
-            | asset_value       | 13000.00 | 
-            | asset_description | Alfa Romeo 156 JTD | 
-            | asset_valuationDate_day | 10 | 
-            | asset_valuationDate_month | 11 | 
-            | asset_valuationDate_year | 2015 |
-        Then I press "asset_save"
-        Then I save the application status into "reportwithoutmoney"
-        # Bank account
-        Then I follow "tab-accounts"
-        And I fill in the following:
-            | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
-            | account_sortCode_sort_code_part_1 | 88 |
-            | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingDate_day   | 1 |
-            | account_openingDate_month | 1 |
-            | account_openingDate_year  | 2014 |
-            | account_openingBalance  | 155.00 |
-        And I press "account_save"
-        And the form should be valid     
-        And I click on "account-8765"
-        When I fill in the following:
-            | transactions_moneyIn_0_amount       | 10000.01 |
-            | transactions_moneyIn_1_amount       | 200.01 |
-            | transactions_moneyIn_2_amount       | 300.01 |
-            | transactions_moneyIn_3_amount       | 400.01 |
-            | transactions_moneyIn_4_amount       | 500.01 |
-            | transactions_moneyIn_5_amount       | 600.01 |
-            | transactions_moneyIn_6_amount       | 700.01 |
-            | transactions_moneyIn_7_amount       | 800.01 |
-            | transactions_moneyIn_8_amount       | 900.01 |
-            | transactions_moneyIn_9_amount       | 1000.01 |
-            | transactions_moneyIn_10_amount      | 1100.01 |
-            | transactions_moneyIn_11_amount      | 1,200.01 |
-            | transactions_moneyIn_12_amount      | 1,300.01 |
-            | transactions_moneyIn_13_amount      | 1,400.01 |
-            | transactions_moneyIn_14_amount      | 1,500.01 |
-            | transactions_moneyIn_15_amount      | 1,600.01 |
-            | transactions_moneyIn_16_amount      | 1,700.01 |
-            | transactions_moneyIn_17_amount      | 1,800.01 |
-            | transactions_moneyIn_18_amount      | 1,800.01 |
-            | transactions_moneyIn_15_moreDetails | more-details-in-15 |
-            | transactions_moneyIn_16_moreDetails | more-details-in-16 |
-            | transactions_moneyIn_17_moreDetails | more-details-in-17 |
-            | transactions_moneyIn_18_moreDetails | more-details-in-18 |
-        And I save the page as "moneyinentered"
-        And I press "transactions_saveMoneyIn"
-        And I save the page as "moneyinsaved"
-        When I fill in the following:
-            | transactions_moneyOut_0_amount       | 100.00 |
-            | transactions_moneyOut_1_amount       | 200.00 |
-            | transactions_moneyOut_2_amount       | 300.00 |
-            | transactions_moneyOut_3_amount       | 400.00 |
-            | transactions_moneyOut_4_amount       | 500.00 |
-            | transactions_moneyOut_5_amount       | 600.00 |
-            | transactions_moneyOut_6_amount       | 700.00 |
-            | transactions_moneyOut_7_amount       | 800.00 |
-            | transactions_moneyOut_8_amount       | 900.00 |
-            | transactions_moneyOut_9_amount       | 1000.00 |
-            | transactions_moneyOut_10_amount      | 1100.00 |
-            | transactions_moneyOut_11_amount      | 1,200.00 |
-            | transactions_moneyOut_12_amount      | 1,300.00 |
-            | transactions_moneyOut_13_amount      | 1,400.00 |
-            | transactions_moneyOut_14_amount      | 1,500.00 |
-            | transactions_moneyOut_15_amount      | 1,600.00 |
-            | transactions_moneyOut_16_amount      | 1,700.00 |
-            | transactions_moneyOut_17_amount      | 1,800.00 |
-            | transactions_moneyOut_18_amount      | 1,900.00 |
-            | transactions_moneyOut_19_amount      | 2,000.00 |
-            | transactions_moneyOut_20_amount      | 2,100.00 |
-            | transactions_moneyOut_11_moreDetails | more-details-out-11 |
-            | transactions_moneyOut_12_moreDetails | more-details-out-12 |
-            | transactions_moneyOut_13_moreDetails | more-details-out-13 |
-            | transactions_moneyOut_14_moreDetails | more-details-out-14 |
-            | transactions_moneyOut_15_moreDetails | more-details-out-15 |
-            | transactions_moneyOut_16_moreDetails | more-details-out-16 |
-            | transactions_moneyOut_17_moreDetails | more-details-out-17 |
-            | transactions_moneyOut_18_moreDetails | more-details-out-18 |
-            | transactions_moneyOut_19_moreDetails | more-details-out-19 |
-            | transactions_moneyOut_20_moreDetails | more-details-out-20 |
-        And I save the page as "moneyoutentered"
-        And I press "transactions_saveMoneyOut"
-        When I fill in the following:
-            | accountBalance_closingDate_day   | 1 | 
-            | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
-            | accountBalance_closingBalance    | 5855.19 |
-        And I press "accountBalance_save"
-        And the form should be valid
+        And I add the following decisions:
+            | description  | clientInvolved | clientInvolvedDetails | 
+            | 3 beds      | yes           | the client was able to decide at 85% |
+            | 2 televisions | yes           | the client said he doesnt want a tv anymore |
+        And I add the following contacts:
+            | contactName | relationship | explanation                    | address       | address2  | county    | postcode | country |
+            | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
+            | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
+        And I add the following assets:
+            | title        | value       |  description       | valuationDate | 
+            | Vehicles    | 12000.00    |  Mini cooper       | 10/11/2015 |
+            | Property    | 250000.0    | 2 beds flat in HA2 |            |
+            | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2015 |
+        And I add the following bank account:
+            | bank    | HSBC - main account | 
+            | accountNumber | 8 | 7 | 6 | 5 | 
+            | sortCode | 88 | 77 | 66 |
+            | openingDate   | 1/1/2014 |
+            | openingBalance  | 155.000 |
+            | moneyIn_0    | 10000.01 |
+            | moneyIn_1    | 200.01 |
+            | moneyIn_2    | 300.01 |
+            | moneyIn_3    | 400.01 |
+            | moneyIn_4    | 500.01 |
+            | moneyIn_5    | 600.01 |
+            | moneyIn_6    | 700.01 |
+            | moneyIn_7    | 800.01 |
+            | moneyIn_8    | 900.01 |
+            | moneyIn_9    | 1000.01 |
+            | moneyIn_10   | 1100.01 |
+            | moneyIn_11   | 1,200.01 |
+            | moneyIn_12   | 1,300.01 |
+            | moneyIn_13   | 1,400.01 |
+            | moneyIn_14   | 1,500.01 |
+            | moneyIn_15   | 1,600.01 | more-details-in-15 |
+            | moneyIn_16   | 1,700.01 | more-details-in-16 |
+            | moneyIn_17   | 1,800.01 | more-details-in-17 |
+            | moneyIn_18   | 1,800.01 | more-details-in-18 |
+            | moneyOut_0   | 100.00 |
+            | moneyOut_1   | 200.00 |
+            | moneyOut_2   | 300.00 |
+            | moneyOut_3   | 400.00 |
+            | moneyOut_4   | 500.00 |
+            | moneyOut_5   | 600.00 |
+            | moneyOut_6   | 700.00 |
+            | moneyOut_7   | 800.00 |
+            | moneyOut_8   | 900.00 |
+            | moneyOut_9   | 1000.00 |
+            | moneyOut_10  | 1100.00 |
+            | moneyOut_11  | 1,200.00 | more-details-out-11 |
+            | moneyOut_12  | 1,300.00 | more-details-out-12 |
+            | moneyOut_13  | 1,400.00 | more-details-out-13 |
+            | moneyOut_14  | 1,500.00 | more-details-out-14 |
+            | moneyOut_15  | 1,600.00 | more-details-out-15 |
+            | moneyOut_16  | 1,700.00 | more-details-out-16 |
+            | moneyOut_17  | 1,800.00 | more-details-out-17 |
+            | moneyOut_18  | 1,900.00 | more-details-out-18 |
+            | moneyOut_19  | 2,000.00 | more-details-out-19 |
+            | moneyOut_20  | 2,100.00 | more-details-out-20 |
+            | closingDate    | 1 /1/2015 | 
+            | closingBalance | 5855.19 |
         Then I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -201,7 +127,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Yes" checkbox for "Do you live with the client?" is checked
         And I should not see the "visits" subsection
     
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, expect to see further answers
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -217,22 +143,171 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
             | safeguarding_anythingElseToTell | nothing to report |
         And I press "safeguarding_save"
-        Then I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        Then I fill in the following:
-            | report_add_info_furtherInformation | More info. |
-        Then I press "report_add_info_saveAndContinue"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
+        And I submit the report with further info "More info."
         Then I view the formatted report
         Then I should see "Do you live with the client?"
-        And the report should indicate that the "No" checkbox for "Do you live with the client?" is checked
-        And I should see the "visits" subsection
+        And the report should indicate that the "No" checkbox for "Do you live with the client" is checked
+        And I should see a subsection called "safeguarding-visits"
+        And I should see a subsection called "safeguarding-visitors"
+        And I should see a subsection called "safeguarding-furtherinfo"
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When dont live with the client, all visits are every day
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | everyday |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | everyday |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
         And the report should indicate that the "Every day" checkbox for "Visits" is checked
         And the report should indicate that the "Every day" checkbox for "Phone and video calls" is checked
-        And the report should indicate that the "Every day" checkbox for "Letters and email" is checked
-        And I should see the "visitors" subsection
-        And the report should indicate that the "Every day" checkbox for "How often does the client see other people?" is checked
+        And the report should indicate that the "Every day" checkbox for "Letters and emails" is checked
+        And the report should indicate that the "Every day" checkbox for "How often does the client see other people" is checked
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When dont live with the client, all visits are once a week
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | once_a_week |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | once_a_week |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | once_a_week |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | once_a_week |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "At least once a week" checkbox for "Visits" is checked
+        And the report should indicate that the "At least once a week" checkbox for "Phone and video calls" is checked
+        And the report should indicate that the "At least once a week" checkbox for "Letters and emails" is checked
+        And the report should indicate that the "At least once a week" checkbox for "How often does the client see other people" is checked
+        
+    @safeguarding @formatted-report @deputy
+    Scenario: When dont live with the client, all visits are once a month
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | once_a_month |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | once_a_month |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | once_a_month |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | once_a_month |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "At least once a month" checkbox for "Visits" is checked
+        And the report should indicate that the "At least once a month" checkbox for "Phone and video calls" is checked
+        And the report should indicate that the "At least once a month" checkbox for "Letters and emails" is checked
+        And the report should indicate that the "At least once a month" checkbox for "How often does the client see other people" is checked
+        
+    @safeguarding @formatted-report @deputy
+    Scenario: When dont live with the client, all visits are twice a year
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | more_than_twice_a_year |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | more_than_twice_a_year |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | more_than_twice_a_year |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | more_than_twice_a_year |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "More than twice a year" checkbox for "Visits" is checked
+        And the report should indicate that the "More than twice a year" checkbox for "Phone and video calls" is checked
+        And the report should indicate that the "More than twice a year" checkbox for "Letters and emails" is checked
+        And the report should indicate that the "More than twice a year" checkbox for "How often does the client see other people" is checked
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When dont live with the client, all visits are once a year
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | once_a_year |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | once_a_year |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | once_a_year |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | once_a_year |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "Once a year" checkbox for "Visits" is checked
+        And the report should indicate that the "Once a year" checkbox for "Phone and video calls" is checked
+        And the report should indicate that the "Once a year" checkbox for "Letters and emails" is checked
+        And the report should indicate that the "Once a year" checkbox for "How often does the client see other people" is checked
+        
+    @safeguarding @formatted-report @deputy
+    Scenario: When dont live with the client, all visits are less than once a year
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | less_than_once_a_year |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | less_than_once_a_year |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | less_than_once_a_year |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | less_than_once_a_year |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "Less than once a year" checkbox for "Visits" is checked
+        And the report should indicate that the "Less than once a year" checkbox for "Phone and video calls" is checked
+        And the report should indicate that the "Less than once a year" checkbox for "Letters and emails" is checked
+        And the report should indicate that the "Less than once a year" checkbox for "How often does the client see other people" is checked
+        
+    @safeguarding @formatted-report @deputy @wip
+    Scenario: When dont live with the client, provide extra info
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | no |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+            | safeguarding_howOftenDoYouVisit_0 | everyday |
+            | safeguarding_howOftenDoYouPhoneOrVideoCall_0 | everyday |
+            | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
+            | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
+            | safeguarding_anythingElseToTell | nothing to report |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
         And I should see "Is there anything else you want to tell us?" in "safeguarding" section
-        And I should see "More info." in "safeguarding-moreinfo"
-            
+        And I should see "nothing to report" in "safeguarding-furtherinfo-field"    
+        
+        

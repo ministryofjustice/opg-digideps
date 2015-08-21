@@ -44,6 +44,19 @@ trait RegionTrait
     }
     
     /**
+     * @Then I should see a subsection called :subsection
+     */
+    public function iShouldSeeTheSubsection($subsection)
+    {
+        $elementsFound = $this->getSession()->getPage()->findAll('css', '#' . $subsection . '-subsection');
+        if (count($elementsFound) === 0) {
+            throw new \RuntimeException("Subsection $subsection not found");
+        }
+    }
+    
+    
+    
+    /**
      * @Then I should see :text in the :region region
      */
     public function iShouldSeeInTheRegion($text, $region)

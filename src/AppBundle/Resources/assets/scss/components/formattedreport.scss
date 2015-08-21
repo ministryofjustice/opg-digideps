@@ -113,6 +113,7 @@
         .checkbox {
             @include inline-block();
             background: #fff;
+            width: .75em;
             padding: 0 10px 0 10px;
             font-size: 20px;
             font-weight: bold;
@@ -136,6 +137,9 @@
         .checkboxes.horizontal {
             .label {
                 display: inline-block;
+            }
+            h3 {
+                margin-bottom: 10px;
             }
         }
     }
@@ -355,6 +359,52 @@
         }
     }
 
+    table {
+    
+        th,td {
+            box-sizing: border-box;
+            width: 22%;
+        
+            &:first-child {
+                width: 34%;
+            }
+        }
+        
+    
+        thead th {
+            text-align: center;
+            padding: 0 30px;
+        }
+        
+        tbody th {
+            text-align: left;
+            font-weight: bold;
+        }
 
+        tr {
+            padding: 10px 0;
+        }
+
+        td {
+            text-align: center;
+            
+        }
+
+        .checkbox {
+            margin: 10px 20px;
+        }
+    }
+
+    #safeguarding-visitors-subsection {
+    
+        .form-group {
+            box-sizing: border-box;
+            width: 33%;
+            padding-right: 20px;
+            margin-right: 0;
+            
+        }
+    
+    }
 
 }
