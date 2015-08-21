@@ -406,6 +406,56 @@ trait ReportTrait
         
     }
     
+    /**
+     * @Then the report should not indicate that the :checkboxvalue checkbox for :checkboxname is checked
+     */
+    public function theReportShouldNotIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]'; 
+        $elements = $this->getSession()->getPage()->findAll('css',$css);
+        
+        if(count($elements) === 0) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        } 
+        
+        if ($elements[0]->getText() == "X") {
+            throw new \RuntimeException("Checkbox not unchecked");
+        }
+        
+    }
 
+    /**
+     * @Then the report should indicate that the :checkbox checkbox is checked
+     */
+    public function theReportShouldIndicateThatTheCheckboxIsChecked($checkbox)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]'; 
+        $elements = $this->getSession()->getPage()->findAll('css',$css);
+        
+        if(count($elements) === 0) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        } 
+        
+        if ($elements[0]->getText() != "X") {
+            throw new \RuntimeException("Checkbox not checked");
+        }
+    }
+    
+    /**
+     * @Then the report should not indicate that the :checkbox checkbox is checked
+     */
+    public function theReportShouldNotIndicateThatTheCheckboxIsChecked($checkbox)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]'; 
+        $elements = $this->getSession()->getPage()->findAll('css',$css);
+        
+        if(count($elements) === 0) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        } 
+        
+        if ($elements[0]->getText() == "X") {
+            throw new \RuntimeException("Checkbox checked");
+        }
+    }
 
 }

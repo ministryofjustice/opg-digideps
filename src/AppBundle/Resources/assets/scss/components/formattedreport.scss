@@ -34,6 +34,10 @@
         @include bold-27();
     }
     
+    .form-group h3 {
+        @include bold-19();
+    }
+    
     .value, .textarea, .item-value {
         background: #ffffff;
         color: #454572;
@@ -53,6 +57,9 @@
     .three-quarter-width {
         width: 75%;
     }
+    .one-quarter-width {
+        width: 25%;
+    }
     .half-width {
         width: 49%;
         *width: 44%;
@@ -61,6 +68,14 @@
     .half-width.right {
         float: right;
         margin-left: 2%;
+    }
+    .one-third-width {
+        width: 33%;
+        float: left;
+    }
+    .two-thirds-width {
+        width: 66%;
+        float: left;
     }
 
     
@@ -114,7 +129,7 @@
             @include inline-block();
             background: #fff;
             width: .75em;
-            padding: 0 10px 0 10px;
+            padding: 4px 10px 2px 10px;
             font-size: 20px;
             font-weight: bold;
             margin-right: 15px;
@@ -130,6 +145,13 @@
                 display: inline-block;
                 margin-right: 20px;
             }
+            .form-group.half-width,
+            .form-group.three-quarter-width,
+            .form-group.one-quarter-width,
+            .form-group.one-third-width,
+            .form-group.two-thirds-width {
+                margin-right: 0;
+            }
             .checkbox {
                 margin-right: 5px;
             }
@@ -137,6 +159,9 @@
         .checkboxes.horizontal {
             .label {
                 display: inline-block;
+            }
+            .label.intro, .intro {
+                display: block;
             }
             h3 {
                 margin-bottom: 10px;
@@ -395,6 +420,15 @@
         }
     }
 
+    #safeguarding-contact, #care-arrangements-subsection {
+        margin-top: 10px;
+    }
+
+    .fieldset-outer-title {
+        margin-top: 30px;
+    }
+    
+
     #safeguarding-visitors-subsection {
     
         .form-group {
@@ -405,6 +439,10 @@
             
         }
     
+    }
+    
+    #care-plan-subsection .form-group-vertical .value {
+        width: 10em;
     }
 
 }

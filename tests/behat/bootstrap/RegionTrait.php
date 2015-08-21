@@ -77,8 +77,19 @@ trait RegionTrait
      * @Then I should see :text in :container
      */
     public function iShouldSeeInTheContainer($text, $container)
-    {
+    {        
         $this->assertSession()->elementTextContains('css', '#' . $container . ', .' . $container , $text);
+    }
+    
+    /**
+     * @Then the :selector element should be empty
+     */
+    public function theElementShouldBeEmpty($selector)
+    {
+        $this->assertSession()->elementExists('css', '#' . $selector);
+        if ( !empty($this->getSession()->getPage()->find('css', '#' . $selector)->getText()) ) {
+            throw new \RuntimeException("Element Not Empty");
+        }
     }
     
     /**

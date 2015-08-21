@@ -124,7 +124,7 @@ Feature: Safeguarding OPG Report
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I view the formatted report
         Then I should see "Do you live with the client?"
-        And the report should indicate that the "Yes" checkbox for "Do you live with the client?" is checked
+        And the report should indicate that the "Yes" checkbox for "Do you live with the client" is checked
         And I should not see the "visits" subsection
     
     @safeguarding @formatted-report @deputy
@@ -289,7 +289,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Less than once a year" checkbox for "Letters and emails" is checked
         And the report should indicate that the "Less than once a year" checkbox for "How often does the client see other people" is checked
         
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, provide extra info
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -309,5 +309,110 @@ Feature: Safeguarding OPG Report
         Then I view the formatted report
         And I should see "Is there anything else you want to tell us?" in "safeguarding" section
         And I should see "nothing to report" in "safeguarding-furtherinfo-field"    
+
         
-        
+    @safeguarding @formatted-report @deputy
+    Scenario: When care is not funded, indicate this
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_howIsCareFunded_0 | client_pays_for_all |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "No" checkbox for "Does the client receive care which is paid for" is checked
+        And the report should not indicate that the "Client pays for all their own care" checkbox for "How is care funded" is checked
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When care is funded, and client pays for all
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | yes |
+            | safeguarding_howIsCareFunded_0 | client_pays_for_all |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
+        And the report should indicate that the "Client pays for all their own care" checkbox for "How is care funded" is checked
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When care is funded, and client gets some help
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | yes |
+            | safeguarding_howIsCareFunded_0 | client_gets_financial_help |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
+        And the report should indicate that the "Client gets financial help" checkbox for "How is care funded" is checked
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When care is funded, and all funded from someone else
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | yes |
+            | safeguarding_howIsCareFunded_0 | all_care_is_paid_by_someone_else |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
+        And the report should indicate that the "All care is paid by someone else" checkbox for "How is care funded" is checked
+
+    @safeguarding @formatted-report @deputy
+    Scenario: When there is no care plan
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
+            | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
+            | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should indicate that the "There is no care plan" checkbox is checked
+        And the "safeguarding-last-review-date" element should be empty
+            
+    @safeguarding @formatted-report @deputy
+    Scenario: When there is acare plan
+        When I load the application status from "safeguardingreadytosubmit"
+        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_0 | yes |
+            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
+            | safeguarding_whenWasCarePlanLastReviewed_month | 2 |
+            | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the formatted report
+        And the report should not indicate that the "There is no care plan" checkbox is checked
+        And I should see "2 / 2015" in "safeguarding-last-review-date"

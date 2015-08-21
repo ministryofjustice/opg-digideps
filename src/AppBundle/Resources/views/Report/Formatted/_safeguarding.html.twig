@@ -3,7 +3,8 @@
         <span class="section-number">Section 4</span>
         Safeguarding
     </h2>
-    <fieldset>
+    <h3 class="fieldset-outer-title">Contact with client</h3>
+    <fieldset id="safeguarding-contact">
         <div id="do-you-live-with-the-client" class="checkboxes horizontal">
             <h3>Do you live with the client?</h3>
             
@@ -114,4 +115,63 @@
 
 {% endif %}
     </fieldset>
+
+    <h3 class="fieldset-outer-title">Care arrangements</h3>
+    <fieldset id="care-arrangements-subsection">
+    
+        <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
+            <h3>Does the client receive care which is paid for?</h3>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--yes">
+                        {% if report.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Yes</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--no">
+                        {% if report.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">No</div>
+            </div>
+        </div>
+        
+        <div class="checkboxes horizontal" id="safeguarding-care-funding">
+            <div class="label intro">If yes, how is the care funded?</div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-is-care-funded--client-pays-for-all-their-own-care">
+                        {% if report.doesClientReceivePaidCare == 'yes' and report.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Client pays for all their own care</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-is-care-funded--client-gets-financial-help">
+                        {% if report.doesClientReceivePaidCare == 'yes' and report.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Client gets some financial help (for example, from the local authority or council, or NHS)</div>
+            </div>
+            <div class="form-group right-label">
+                <div class="checkbox" data-checkbox="how-is-care-funded--all-care-is-paid-by-someone-else">
+                        {% if report.doesClientReceivePaidCare == 'yes' and report.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">All care is paid for by someone else (for example, by the local authority or council, or NHS)</div>
+            </div>
+        </div>
+        
+        <div class="form-group form-group-vertical">
+            <h3>Who is doing the caring?</h3>
+            <div class="textarea">{{ report.whoIsDoingTheCaring }}</div>
+        </div>
+    
+    </fieldset>
+
+    <fieldset id="care-plan-subsection">
+        <div class="checkboxes horizontal">
+            <h3>If there is a care plan, when was it last reviewed?</h3>
+            <div class="form-group form-group-vertical two-thirds-width">
+                <div class="value" id="safeguarding-last-review-date">{% if report.doesClientHaveACarePlan == 'yes' %}{{ report.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %}&nbsp;{% endif %}</div>
+                <div class="label">Review date</div>
+            </div>
+            <div class="form-group right-label one-third-width">
+                <div class="checkbox" data-checkbox="there-is-no-care-plan">
+                        {% if report.doesClientHaveACarePlan == 'no' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">There is no care plan</div>
+            </div>
+    </fieldset>
+
+
 </div>
