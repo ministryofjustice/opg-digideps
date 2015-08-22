@@ -1,5 +1,5 @@
 Feature: Safeguarding OPG Report
-    
+
     @safeguarding @formatted-report @deputy
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
@@ -11,7 +11,7 @@ Feature: Safeguarding OPG Report
           | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
           | phone | 020 3334 3555 | 020 1234 5678  |
       And I set the client details to:
-            | name | Peter | White | 
+            | name | Peter | White |
             | caseNumber | 123456ABC |
             | courtDate | 1 | 1 | 2014 |
             | allowedCourtOrderTypes_0 | 2 |
@@ -29,7 +29,7 @@ Feature: Safeguarding OPG Report
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         And I add the following decisions:
-            | description  | clientInvolved | clientInvolvedDetails | 
+            | description  | clientInvolved | clientInvolvedDetails |
             | 3 beds      | yes           | the client was able to decide at 85% |
             | 2 televisions | yes           | the client said he doesnt want a tv anymore |
         And I add the following contacts:
@@ -37,13 +37,13 @@ Feature: Safeguarding OPG Report
             | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
             | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
         And I add the following assets:
-            | title        | value       |  description       | valuationDate | 
+            | title        | value       |  description       | valuationDate |
             | Vehicles    | 12000.00    |  Mini cooper       | 10/11/2015 |
             | Property    | 250000.0    | 2 beds flat in HA2 |            |
             | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2015 |
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
@@ -87,7 +87,7 @@ Feature: Safeguarding OPG Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 | 
+            | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
         Then I follow "tab-safeguarding"
         And I fill in the following:
@@ -109,7 +109,7 @@ Feature: Safeguarding OPG Report
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         Then I save the application status into "safereportsubmitted"
-        
+
     @safeguarding @formatted-report @deputy
     Scenario: Report contains a safeguarding section
         When I load the application status from "safereportsubmitted"
@@ -117,7 +117,7 @@ Feature: Safeguarding OPG Report
         And I view the formatted report
         Then I should see "Section 4"
         And I should see "Safeguarding"
-    
+
     @safeguarding @formatted-report @deputy
     Scenario: When I live with the client dont show further answers
         When I load the application status from "safereportsubmitted"
@@ -126,7 +126,7 @@ Feature: Safeguarding OPG Report
         Then I should see "Do you live with the client?"
         And the report should indicate that the "Yes" checkbox for "Do you live with the client" is checked
         And I should not see the "visits" subsection
-    
+
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, expect to see further answers
         When I load the application status from "safeguardingreadytosubmit"
@@ -196,7 +196,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "At least once a week" checkbox for "Phone and video calls" is checked
         And the report should indicate that the "At least once a week" checkbox for "Letters and emails" is checked
         And the report should indicate that the "At least once a week" checkbox for "How often does the client see other people" is checked
-        
+
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, all visits are once a month
         When I load the application status from "safeguardingreadytosubmit"
@@ -219,7 +219,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "At least once a month" checkbox for "Phone and video calls" is checked
         And the report should indicate that the "At least once a month" checkbox for "Letters and emails" is checked
         And the report should indicate that the "At least once a month" checkbox for "How often does the client see other people" is checked
-        
+
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, all visits are twice a year
         When I load the application status from "safeguardingreadytosubmit"
@@ -265,7 +265,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Once a year" checkbox for "Phone and video calls" is checked
         And the report should indicate that the "Once a year" checkbox for "Letters and emails" is checked
         And the report should indicate that the "Once a year" checkbox for "How often does the client see other people" is checked
-        
+
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, all visits are less than once a year
         When I load the application status from "safeguardingreadytosubmit"
@@ -288,7 +288,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Less than once a year" checkbox for "Phone and video calls" is checked
         And the report should indicate that the "Less than once a year" checkbox for "Letters and emails" is checked
         And the report should indicate that the "Less than once a year" checkbox for "How often does the client see other people" is checked
-        
+
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, provide extra info
         When I load the application status from "safeguardingreadytosubmit"
@@ -308,9 +308,9 @@ Feature: Safeguarding OPG Report
         And I submit the report with further info "More info."
         Then I view the formatted report
         And I should see "Is there anything else you want to tell us?" in "safeguarding" section
-        And I should see "nothing to report" in "safeguarding-furtherinfo-field"    
+        And I should see "nothing to report" in "safeguarding-furtherinfo-field"
 
-        
+
     @safeguarding @formatted-report @deputy
     Scenario: When care is not funded, indicate this
         When I load the application status from "safeguardingreadytosubmit"
@@ -397,7 +397,7 @@ Feature: Safeguarding OPG Report
         Then I view the formatted report
         And the report should indicate that the "There is no care plan" checkbox is checked
         And the "safeguarding-last-review-date" element should be empty
-            
+
     @safeguarding @formatted-report @deputy
     Scenario: When there is acare plan
         When I load the application status from "safeguardingreadytosubmit"
