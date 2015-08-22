@@ -86,12 +86,7 @@
 
     fieldset {
         @extend %contain-floats;
-        @include inline-block();
-
         box-sizing: border-box;
-
-        width: 100%;
-        min-width: 0;
         padding: 10px 20px 0 20px;
         margin: 40px 0 0 0;
         border: 0;
@@ -181,6 +176,7 @@
     fieldset.full-width-extension {
         float: left;
         margin-top: 0;
+        width: 100%;
 
         .textarea {
             width: 95%;
@@ -203,13 +199,19 @@
         }
     }
 
-    .box-list-item {
+    .box-list {
         @extend %contain-floats;
-        margin-bottom: 20px;
+
+        .box-list-item {
+            @extend %contain-floats;
+            margin-bottom: 20px;
+        }
     }
 
     .decision-item {
         border-bottom: 1px solid $grey-2;
+        *border-bottom: none;
+
         &:last-child {
             border-bottom: none;
         }
