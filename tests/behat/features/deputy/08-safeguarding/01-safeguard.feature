@@ -1,5 +1,5 @@
 Feature: Safeguarding Data entry
-    
+
     @safeguarding @entry @deputy
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
@@ -11,7 +11,7 @@ Feature: Safeguarding Data entry
           | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
           | phone | 020 3334 3555 | 020 1234 5678  |
       And I set the client details to:
-            | name | Peter | White | 
+            | name | Peter | White |
             | caseNumber | 123456ABC |
             | courtDate | 1 | 1 | 2014 |
             | allowedCourtOrderTypes_0 | 2 |
@@ -22,7 +22,7 @@ Feature: Safeguarding Data entry
       Then I am on "/logout"
       And I reset the email log
       Then I save the application status into "safeentryuser"
-    
+
     @safeguarding @entry @deputy
     Scenario: Lives with client
         When I load the application status from "safeentryuser"
@@ -37,7 +37,7 @@ Feature: Safeguarding Data entry
         Then the form should be valid
         Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doYouLiveWithClient_0" should be checked
-    
+
     @safeguarding @entry @deputy
     Scenario: Does not live with client
         When I load the application status from "safeentryuser"
@@ -100,8 +100,8 @@ Feature: Safeguarding Data entry
             | safeguarding_howOftenDoesClientSeeOtherPeople_3 |
             | safeguarding_howOftenDoesClientSeeOtherPeople_4 |
             | safeguarding_howOftenDoesClientSeeOtherPeople_5 |
-    
-    @safeguarding @entry @deputy    
+
+    @safeguarding @entry @deputy
     Scenario: Client does not receive care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -115,7 +115,7 @@ Feature: Safeguarding Data entry
         Then the form should be valid
         Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientReceivePaidCare_1" should be checked
-    
+
     @safeguarding @entry @deputy
     Scenario: Client does receive care
         When I load the application status from "safeentryuser"
@@ -132,7 +132,7 @@ Feature: Safeguarding Data entry
         Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientReceivePaidCare_0" should be checked
         And the checkbox "safeguarding_howIsCareFunded_0" should be checked
-    
+
     @safeguarding @entry @deputy
     Scenario: User must answer sub questions when receiving care
         When I load the application status from "safeentryuser"
@@ -150,7 +150,7 @@ Feature: Safeguarding Data entry
             | safeguarding_howIsCareFunded_1 |
             | safeguarding_howIsCareFunded_2 |
 
-    @safeguarding @entry @deputy    
+    @safeguarding @entry @deputy
     Scenario: Who is doing the caring?
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -163,7 +163,7 @@ Feature: Safeguarding Data entry
         And I press "safeguarding_save"
         Then the form should be valid
         Then I follow "tab-safeguarding"
-        And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones" 
+        And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones"
 
     @safeguarding @entry @deputy
     Scenario: Client has care plan
@@ -185,7 +185,7 @@ Feature: Safeguarding Data entry
         And the "safeguarding_whenWasCarePlanLastReviewed_day" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_month" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2015"
-        
+
     @safeguarding @entry @deputy
     Scenario: Client does not have care plan
         When I load the application status from "safeentryuser"
@@ -217,7 +217,7 @@ Feature: Safeguarding Data entry
             | safeguarding_whenWasCarePlanLastReviewed_day |
             | safeguarding_whenWasCarePlanLastReviewed_month |
             | safeguarding_whenWasCarePlanLastReviewed_year |
-    
+
     @safeguarding @entry @deputy
     Scenario: Deputy must answer top level questions
         When I load the application status from "safeentryuser"
