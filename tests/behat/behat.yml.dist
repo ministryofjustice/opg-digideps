@@ -9,7 +9,7 @@ default:
         paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@deputy&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps' }]
 
       admin:
@@ -17,31 +17,31 @@ default:
         paths:    [ %paths.base%/features/admin ]
         filters:
             tags: "~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
-                    
+
       feedback:
         description: Tests related to user feedback
         paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@feedback&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
-                    
+
       cookies:
         description: Tests related to cookies
         paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@cookie&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
-                    
+
       terms:
         description: Tests related to terms
         paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@terms&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       textarea:
@@ -53,11 +53,11 @@ default:
         contexts: [ DigidepsBehat\FeatureContext ]
 
       formatted:
-        description: Tests related to formatted report 
+        description: Tests related to formatted report
         paths:    [ %paths.base%/features/deputy ]
         filters:
             tags: "@formatted-report&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       safeguardingentry:
@@ -65,23 +65,31 @@ default:
         paths:    [ %paths.base%/features ]
         filters:
             tags: "@safeguarding&&@entry&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
-            
-      safeguardingreport:
+
+      safeguardingopgreport:
         description: Tests related to the safeguarding section
         paths:    [ %paths.base%/features ]
         filters:
           tags: "@safeguarding&&@formatted-report&&~@javascript"
-        contexts: 
+        contexts:
+          - DigidepsBehat\FeatureContext: [{ dbName: api }]
+
+      safeguardinguserreport:
+        description: Tests related to the safeguarding section
+        paths:    [ %paths.base%/features ]
+        filters:
+          tags: "@safeguarding&&@user-report&&~@javascript"
+        contexts:
           - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       accounts:
-          description: Tests related to account details 
+          description: Tests related to account details
           paths:    [ %paths.base%/features ]
           filters:
               tags: "@accounts&&~@javascript"
-          contexts: 
+          contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       wip:
@@ -89,15 +97,15 @@ default:
           paths:    [ %paths.base%/features ]
           filters:
               tags: "@wip"
-          contexts: 
+          contexts:
               - DigidepsBehat\FeatureContext: [{ dbName: api }]
-                
+
       another:
         description: Tests related to context sensitive add buttons
         paths:    [ %paths.base%/features ]
         filters:
             tags: "@another&&~@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
       javascript:
@@ -106,9 +114,9 @@ default:
         mink_session: default
         filters:
             tags: "@javascript"
-        contexts: 
+        contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
-                    
+
     extensions:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:
@@ -123,12 +131,12 @@ default:
                 capabilities:
                     browserstack-tunnel: true
                     browserstack-debug: true
-                    
+
 chrome:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: Chrome
@@ -141,19 +149,19 @@ safari:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: Safari
                     browserVersion: 8.0
                     os: OS X
                     os_version: Yosemite
-                    
+
 firefox:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: Firefox
@@ -165,7 +173,7 @@ ie7:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: IE
@@ -177,19 +185,19 @@ ie8:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: IE
                     browserVersion: 8.0
                     os: Windows
                     os_version: 7
-                    
+
 ie9:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: IE
@@ -201,7 +209,7 @@ ie10:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: IE
@@ -213,7 +221,7 @@ ie11:
     extensions:
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             default_session: browser_stack
-                
+
             browser_stack:
                 capabilities:
                     browser: IE
