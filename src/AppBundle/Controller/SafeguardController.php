@@ -9,32 +9,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class SafeguardController extends Controller{
-    
+
     /**
      * @Route("/report/{reportId}/safeguarding", name="safeguarding")
      * @Template()
      */
-    public function safeguardingAction($reportId)
+    public function editAction($reportId)
     {
         $util = $this->get('util');
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $request = $this->getRequest();
-        
+
         // just needed for title etc,
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        
+
         $form = $this->createForm(new FormDir\SafeguardingType(), $report);
-        
+
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
-        
+
         if($request->getMethod() == 'POST'){
             $form->handleRequest($request);
-            
+
             if($form->get('save')->isClicked()){
                 if($form->isValid()){
                     $data = $form->getData();
@@ -56,5 +56,5 @@ class SafeguardController extends Controller{
                 'report_form_submit' => $this->get('reportSubmitter')->getFormView()
               ];
     }
-    
+
 }

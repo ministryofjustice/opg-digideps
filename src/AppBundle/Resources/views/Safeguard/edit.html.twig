@@ -21,22 +21,22 @@ activeTab: "tab-safeguarding"
     transDomain: translationDomain,
     pageSectionDescription: 'page.pageSectionDescription'
     } %}
-    
+
     {% block validationSummary %}
         {{ form_errors_list(form) }}
     {% endblock %}
-    
+
     {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
           transDomain: translationDomain
     } %}
-      
+
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
-    
+
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
     subSectionTitle: 'form.contact.subSectionTitle'
     } %}
-    
+
     <div class="form-section">
         {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
             'fieldSetClass' : 'inline do-you-live-radio',
@@ -52,19 +52,19 @@ activeTab: "tab-safeguarding"
                 'legendText' : 'Test',
                 'vertical': true
             }) }}
-            
+
             {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
                 'legendClass' : 'form-label',
                 'vertical': true
             }) }}
-            
+
             {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
                 'howOftenDoYouWriteEmailOrLetter', {
                 'legendClass' : 'form-label',
                 'vertical': true
             }) }}
-            
-            {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople, 
+
+            {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople,
                 'howOftenDoesClientSeeOtherPeople', {
                 'legendClass' : 'form-label',
                 'vertical': true
@@ -73,9 +73,9 @@ activeTab: "tab-safeguarding"
             {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
         </div>
     </div>
-    
+
     <div class="form-section">
-        
+
         {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
             'fieldSetClass' : 'inline does-client-receive-care',
             'legendClass' : 'form-label',
@@ -84,7 +84,7 @@ activeTab: "tab-safeguarding"
                 {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
-        
+
         <div id="care-questions">
             {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
                 'fieldSetClass' : 'stacked',
@@ -109,7 +109,7 @@ activeTab: "tab-safeguarding"
                 {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
-        
+
         <div id="care-plan-questions">
             {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed') }}
         </div>
@@ -118,12 +118,12 @@ activeTab: "tab-safeguarding"
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.save') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-    
-    
 
-    
+
+
+
     {{ form_end(form) }}
-    
+
     {{form(form)}}
 
     <script type="text/javascript">
