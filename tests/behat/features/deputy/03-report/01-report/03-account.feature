@@ -212,7 +212,6 @@ Feature: deputy / report / account
             | account_openingDate_day |
             | account_openingDate_month |
             | account_openingDate_year |
-            | account_openingBalance |
             | account_openingDateExplanation |
   
 
