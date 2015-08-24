@@ -1,0 +1,46 @@
+{% set translationDomain = "report-safeguarding" %}
+{% trans_default_domain translationDomain %}
+
+{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionTitle: 'page.pageSectionTitle'
+} %}
+
+<div id="safeguarding-contact">
+    {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+        question: 'doYouLiveWithClient',
+        answer: report.doYouLiveWithClient
+    } %}
+</div>
+
+{% if report.doYouLiveWithClient == 'no' %}
+    <div id="safeguarding-contact-intervals">
+
+        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+            question: 'howOftenDoYouVisit',
+            answer: report.howOftenDoYouVisit
+        } %}
+
+        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+            question: 'howOftenDoYouPhoneOrVideoCall',
+            answer: report.howOftenDoYouPhoneOrVideoCall
+        } %}
+
+        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+            question: 'howOftenDoYouWriteEmailOrLetter',
+            answer: report.howOftenDoYouWriteEmailOrLetter
+        } %}
+
+        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+            question: 'howOftenDoesClientSeeOtherPeople',
+            answer: report.howOftenDoesClientSeeOtherPeople
+        } %}
+
+        {% if report.anythingElseToTell %}
+            {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+                question: 'howOftenDoesClientSeeOtherPeople',
+                answer: report.howOftenDoesClientSeeOtherPeople
+            } %}
+        {% endif %}
+    </div>
+{% endif %}

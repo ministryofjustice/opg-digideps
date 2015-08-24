@@ -1,6 +1,6 @@
 Feature: Safeguarding OPG Report
 
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
@@ -23,7 +23,7 @@ Feature: Safeguarding OPG Report
       And I reset the email log
       Then I save the application status into "safereportuser"
 
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: Enter a report
         When I load the application status from "safereportuser"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -151,7 +151,7 @@ Feature: Safeguarding OPG Report
         And I should see a subsection called "safeguarding-visitors"
         And I should see a subsection called "safeguarding-furtherinfo"
 
-    @safeguarding @formatted-report @deputy @wip
+    @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, all visits are every day
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"

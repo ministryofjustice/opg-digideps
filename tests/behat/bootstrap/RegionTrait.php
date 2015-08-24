@@ -11,10 +11,10 @@ use Behat\Mink\Exception\ExpectationException;
  */
 trait RegionTrait
 {
-    
+
     /**
      * Assert that the HTML elemtn with class behat-<type>-<element> does not exist
-     * 
+     *
      * @Then I should not see the :element :type
      */
     public function iShouldNotSeeTheBehatElement($element, $type)
@@ -27,10 +27,18 @@ trait RegionTrait
             throw new \RuntimeException("$count  $regionCss element(s) found. None expected");
         }
     }
-    
+
+    /**
+     * @Then I should not see :text text
+     */
+    public function iShouldNotSee($text)
+    {
+        $this->assertSession()->elementTextNotContains('css', 'body', $text);
+    }
+
     /**
      * Assert that the HTML elemtn with class behat-<type>-<element> does not exist
-     * 
+     *
      * @Then I should see the :element :type
      */
     public function iShouldSeeTheBehatElement($element, $type)
@@ -42,7 +50,7 @@ trait RegionTrait
             throw new \RuntimeException("Element $regionCss not found");
         }
     }
-    
+
     /**
      * @Then I should see a subsection called :subsection
      */
@@ -53,9 +61,9 @@ trait RegionTrait
             throw new \RuntimeException("Subsection $subsection not found");
         }
     }
-    
-    
-    
+
+
+
     /**
      * @Then I should see :text in the :region region
      */
@@ -64,7 +72,7 @@ trait RegionTrait
         $this->assertResponseStatus(200);
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
-    
+
     /**
      * @Then I should see :text in :section section
      */
@@ -72,15 +80,15 @@ trait RegionTrait
     {
         $this->assertSession()->elementTextContains('css', '#' . $section . '-section', $text);
     }
-    
+
     /**
      * @Then I should see :text in :container
      */
     public function iShouldSeeInTheContainer($text, $container)
-    {        
+    {
         $this->assertSession()->elementTextContains('css', '#' . $container . ', .' . $container , $text);
     }
-    
+
     /**
      * @Then the :selector element should be empty
      */
@@ -91,7 +99,7 @@ trait RegionTrait
             throw new \RuntimeException("Element Not Empty");
         }
     }
-    
+
     /**
      * @Then I should not see :text in the :region region
      */
@@ -110,26 +118,26 @@ trait RegionTrait
             $this->iShouldSeeInTheRegion($text, $region);
         }
     }
-    
+
     public static function behatElementToCssSelector($element, $type)
     {
         return '.behat-'.$type.'-' . preg_replace('/\s+/', '-', $element);
     }
-    
+
     /**
      * @Then I should see the cookie warning banner
      */
     public function seeCookieBanner()
     {
         $driver = $this->getSession()->getDriver();
-        
+
         if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
-        
+
             $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
             if (count($elementsFound) === 0) {
                 throw new \RuntimeException("Cookie banner not found");
             }
-            
+
             foreach ($elementsFound as $node) {
                 // Note: getText() will return an empty string when using Selenium2D. This
                 // is ok since it will cause a failed step.
@@ -139,17 +147,17 @@ trait RegionTrait
             }
         }
     }
-    
+
     /**
      * @Then I should not see the cookie warning banner
      */
     public function dontSeeCookieBanner()
     {
         $driver = $this->getSession()->getDriver();
-        
+
         if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
             $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
-        
+
             if (count($elementsFound) === 0) {
                 return;
             }
@@ -163,7 +171,7 @@ trait RegionTrait
             }
         }
     }
-    
+
     /**
      * @Then I should see :text in the page header
      */
@@ -172,5 +180,5 @@ trait RegionTrait
         $this->assertSession()->elementTextContains('css', '.page-header', $text);
     }
 
-    
+
 }
