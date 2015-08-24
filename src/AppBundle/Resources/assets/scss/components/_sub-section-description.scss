@@ -17,5 +17,10 @@
     strong {
         font-weight: bold;
     }
+    
+    // this solve the problem under opening balance (otherwise not displayed). DD-929
+    #account_edit_form & {
+      float: left;
+    }
 
 }

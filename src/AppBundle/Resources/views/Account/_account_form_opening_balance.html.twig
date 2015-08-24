@@ -4,14 +4,16 @@
         '{{ boldEnd }}': '</strong>'
 }%}
 
+{% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'form.openingBalance.subSectionDescription',
+    transOptions: reportBoldStartDateTransReplacements
+  } %}
   
-<div style="float:left">
-  {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-      transDomain: translationDomain,
-      subSectionDescription: 'form.openingBalance.subSectionDescription',
-      transOptions: reportBoldStartDateTransReplacements
-    } %}
-</div>
+{#{% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'form.openingBalance.subSectionDescription',
+  } %}#}
 
 {# yes/no radio button asking if opening date is the same. hidden and default set to NO for nonJS version #}
 <div id="account_opening_date_same_wrapper">
