@@ -117,7 +117,7 @@ Feature: Safeguarding OPG Report
         And I view the users latest report
         And I should see "Safeguarding"
 
-    @safeguarding @user-report @deputy @wip
+    @safeguarding @user-report @deputy
     Scenario: When I live with the client dont show further answers
         When I load the application status from "safereportsubmitted2"
         And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -127,7 +127,8 @@ Feature: Safeguarding OPG Report
         And I should not see "How often do you or other deputies phone or vieo call the client?" text
         And I should not see "How often do you or other deputies write emails or letters to the client?" text
         And I should not see "How often does the client see other people?" text
-        And I should not see "Is there anything else you want to tell us? (optional)" in the safeguarding section
+        And I should not see "Is there anything else you want to tell us? (optional)" in the "safeguarding" section
+        And I save the page as "safeguarding-userreport-live-with-client"
 
     @safeguarding @user-report @deputy
     Scenario: When dont live with the client, all visists are every day
@@ -152,8 +153,9 @@ Feature: Safeguarding OPG Report
         Then the "How often do you or other deputies phone or video call the client?" question should be answered with "Everyday"
         Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "Everyday"
         Then the "How often does the client see other people?" question should be answered with "Everyday"
+        And I save the page as "safeguarding-userreport-doesnt-live-with-client"
 
-    @safeguarding @user-report @deputy @wip
+    @safeguarding @user-report @deputy
     Scenario: When dont live with the client, all visists are once a week
         When I load the application status from "safeguardingreadytosubmit2"
         And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -268,7 +270,7 @@ Feature: Safeguarding OPG Report
         Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "Less than once a year"
         Then the "How often does the client see other people?" question should be answered with "Less than once a year"
 
-    @safeguarding @user-report @deputy @wip
+    @safeguarding @user-report @deputy
     Scenario: When dont live with the client, provide extra info
         When I load the application status from "safeguardingreadytosubmit2"
         And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -286,7 +288,7 @@ Feature: Safeguarding OPG Report
         And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Is there anything else you want to tell us? (optional)" question, in the "safeguarding section" should be answered with "Nothing to report"
+        Then the "Is there anything else you want to tell us? (optional)" question, in the "safeguarding" section, should be answered with "Nothing to report"
 
     @safeguarding @user-report @deputy
     Scenario: When care is not funded, indicate this
@@ -304,6 +306,7 @@ Feature: Safeguarding OPG Report
         Then I view the users latest report
         Then the "Does the client receive care which is paid for?" question should be answered with "No"
         And I should not see "How is the care funded?" text
+        And I save the page as "safeguarding-userreport-care-not-funded"
 
     @safeguarding @user-report @deputy
     Scenario: When care is funded, and client pays for all
@@ -318,11 +321,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         And I submit the report with further info "More info."
-        Then I view the users latestreport
-        Then the "Does the client receive care which is paid for?" question should be answered with "No"
-        And I should not see "How is the care funded?" text
-        Then the "How the care funded?" question should be answered with "Client pays for all their own care"
-
+        Then I view the users latest report
+        Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
+        Then the "How is the care funded?" question should be answered with "Client pays for all their own care"
+        And I save the page as "safeguarding-userreport-care-funded"
 
     @safeguarding @user-report @deputy
     Scenario: When care is funded, and client gets some help
@@ -337,10 +339,9 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         And I submit the report with further info "More info."
-        Then I view the users latestreport
-        Then the "Does the client receive care which is paid for?" question should be answered with "No"
-        And I should not see "How is the care funded?" text
-        Then the "How the care funded?" question should be answered with "Client gets financial help"
+        Then I view the users latest report
+        Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
+        Then the "How is the care funded?" question should be answered with "Client gets some financial help (for example, from the local authority NHS)"
 
     @safeguarding @user-report @deputy
     Scenario: When care is funded, and all funded from someone else
@@ -355,10 +356,27 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         And I submit the report with further info "More info."
-        Then I view the users latestreport
-        Then the "Does the client receive care which is paid for?" question should be answered with "No"
-        And I should not see "How is the care funded?" text
-        Then the "How the care funded?" question should be answered with "All care is paid by someone else"
+        Then I view the users latest report
+        Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
+        Then the "How is the care funded?" question should be answered with "All care is paid for by someone else (for example, by the local authority or NHS)"
+
+    @safeguarding @user-report @deputy @wip
+    Scenario: Who is doing the caring?
+        When I load the application status from "safeguardingreadytosubmit2"
+        And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "tab-safeguarding"
+        And I fill in the following:
+            | safeguarding_doYouLiveWithClient_1 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
+            | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
+            | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
+        And I submit the report with further info "More info."
+        Then I view the users latest report
+        Then the "Who is doing the caring?" question should be answered with "Fred Jones"
 
     @safeguarding @user-report @deputy
     Scenario: When there is no care plan
@@ -375,15 +393,15 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         And I submit the report with further info "More info."
-        Then I view the users latestreport
+        Then I view the users latest report
         Then the "Does the client have a care plan?" question should be answered with "No"
         And I should not see "When was the care plan last reviewed?" text
-
+        And I save the page as "safeguarding-userreport-no-care-plan"
 
     @safeguarding @user-report @deputy
     Scenario: When there is a care plan
         When I load the application status from "safeguardingreadytosubmit2"
-        And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-safeguarding"
         And I fill in the following:
             | safeguarding_doYouLiveWithClient_1 | yes |
@@ -395,6 +413,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         And I submit the report with further info "More info."
-        Then I view the users latestreport
-        Then the "Does the client have a care plan?" question should be answered with "No"
+        Then I view the users latest report
+        Then the "Does the client have a care plan?" question should be answered with "Yes"
         Then the "When was the care plan last reviewed?" question should be answered with "01/02/2015"
+        And I save the page as "safeguarding-userreport-care-plan"
+
+        
+        

@@ -80,6 +80,15 @@ trait RegionTrait
     {
         $this->assertSession()->elementTextContains('css', '#' . $section . '-section', $text);
     }
+    
+    /**
+     * @Then I should not see :text in the :section section
+     */
+    public function iShouldNotSeeInTheSection($text, $section)
+    {
+        $this->assertResponseStatus(200);
+        $this->assertSession()->elementTextNotContains('css', '#' . $section . '-section', $text);
+    }
 
     /**
      * @Then I should see :text in :container

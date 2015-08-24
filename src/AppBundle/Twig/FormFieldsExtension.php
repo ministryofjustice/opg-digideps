@@ -101,12 +101,20 @@ class FormFieldsExtension extends \Twig_Extension
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
         
-        //get legendText translation
+        //get legendText translation. Look for a .legend value, if there isn't one then try the top level
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
         
-        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        if ($legendTextTrans != $translationKey.'.legend') {
+            $legendText = $legendTextTrans;
+        } else {
+            $legendTextTrans = $this->translator->trans($translationKey . '.label', [],$domain);
+            if ($legendTextTrans != $translationKey.'.label') {
+                $legendText = $legendTextTrans;
+            } else {
+                $legendText = null;
+            }
+        }
         
-
          //generate input field html using variables supplied
         echo $this->environment->render( 'AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
@@ -149,10 +157,19 @@ class FormFieldsExtension extends \Twig_Extension
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
         
-        //get legendText translation
+        //get legendText translation. Look for a .legend value, if there isn't one then try the top level
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
         
-        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        if ($legendTextTrans != $translationKey.'.legend') {
+            $legendText = $legendTextTrans;
+        } else {
+            $legendTextTrans = $this->translator->trans($translationKey . '.label', [],$domain);
+            if ($legendTextTrans != $translationKey.'.label') {
+                $legendText = $legendTextTrans;
+            } else {
+                $legendText = null;
+            }
+        }
         
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
                                                                                                 'hintText' => $hintText,

@@ -62,6 +62,7 @@ Feature: Safeguarding Data entry
         Then the checkbox "safeguarding_howOftenDoYouWriteEmailOrLetter_0" should be checked
         Then the checkbox "safeguarding_howOftenDoesClientSeeOtherPeople_0" should be checked
         And the "safeguarding_anythingElseToTell" field should contain "nothing to report"
+        And I save the page as "safeguarding-dataentry"
 
     @safeguarding @entry @deputy
     Scenario: User must answer sub questions when not living with client

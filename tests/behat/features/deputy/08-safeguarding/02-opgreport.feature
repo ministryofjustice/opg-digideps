@@ -126,6 +126,7 @@ Feature: Safeguarding OPG Report
         Then I should see "Do you live with the client?"
         And the report should indicate that the "Yes" checkbox for "Do you live with the client" is checked
         And I should not see the "visits" subsection
+        And I save the page as "safeguarding-opgreport-live-with-client"
 
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, expect to see further answers
@@ -150,6 +151,7 @@ Feature: Safeguarding OPG Report
         And I should see a subsection called "safeguarding-visits"
         And I should see a subsection called "safeguarding-visitors"
         And I should see a subsection called "safeguarding-furtherinfo"
+        And I save the page as "safeguarding-opgreport-dont-live-with-client"
 
     @safeguarding @formatted-report @deputy
     Scenario: When dont live with the client, all visits are every day
@@ -310,7 +312,6 @@ Feature: Safeguarding OPG Report
         And I should see "Is there anything else you want to tell us?" in "safeguarding" section
         And I should see "nothing to report" in "safeguarding-furtherinfo-field"
 
-
     @safeguarding @formatted-report @deputy
     Scenario: When care is not funded, indicate this
         When I load the application status from "safeguardingreadytosubmit"
@@ -327,6 +328,7 @@ Feature: Safeguarding OPG Report
         Then I view the formatted report
         And the report should indicate that the "No" checkbox for "Does the client receive care which is paid for" is checked
         And the report should not indicate that the "Client pays for all their own care" checkbox for "How is care funded" is checked
+        And I save the page as "safeguarding-opgreport-care-not-funded"
 
     @safeguarding @formatted-report @deputy
     Scenario: When care is funded, and client pays for all
@@ -344,6 +346,7 @@ Feature: Safeguarding OPG Report
         Then I view the formatted report
         And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
         And the report should indicate that the "Client pays for all their own care" checkbox for "How is care funded" is checked
+        And I save the page as "safeguarding-opgreport-care-is-funded"
 
     @safeguarding @formatted-report @deputy
     Scenario: When care is funded, and client gets some help
@@ -397,6 +400,7 @@ Feature: Safeguarding OPG Report
         Then I view the formatted report
         And the report should indicate that the "There is no care plan" checkbox is checked
         And the "safeguarding-last-review-date" element should be empty
+        And I save the page as "safeguarding-opgreport-no-care-plan"
 
     @safeguarding @formatted-report @deputy
     Scenario: When there is acare plan
@@ -416,3 +420,4 @@ Feature: Safeguarding OPG Report
         Then I view the formatted report
         And the report should not indicate that the "There is no care plan" checkbox is checked
         And I should see "2 / 2015" in "safeguarding-last-review-date"
+        And I save the page as "safeguarding-opgreport-careplan"

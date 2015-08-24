@@ -38,9 +38,40 @@
 
         {% if report.anythingElseToTell %}
             {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-                question: 'howOftenDoesClientSeeOtherPeople',
-                answer: report.howOftenDoesClientSeeOtherPeople
+                question: 'anythingElseToTell',
+                answer: report.anythingElseToTell
             } %}
         {% endif %}
     </div>
+{% endif %}
+
+
+{%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+    question: 'doesClientReceivePaidCare',
+    answer: report.doesClientReceivePaidCare
+} %}
+{% if report.doesClientReceivePaidCare == 'yes' %}
+    {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+        question: 'howIsCareFunded',
+        answer: report.howIsCareFunded
+    } %}
+{% endif %}
+
+
+{%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+    question: 'whoIsDoingTheCaring',
+    answer: report.whoIsDoingTheCaring
+} %}
+
+
+{%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+    question: 'doesClientHaveACarePlan',
+    answer: report.doesClientHaveACarePlan
+} %}
+{% if report.doesClientHaveACarePlan == 'yes' %}
+    {% set carePlanDate = report.whenWasCarePlanLastReviewed.format("d/m/Y") %}
+    {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+        question: 'whenWasCarePlanLastReviewed',
+        answer: carePlanDate
+    } %}
 {% endif %}

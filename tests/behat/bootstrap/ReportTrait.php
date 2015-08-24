@@ -400,7 +400,7 @@ trait ReportTrait
             throw new \RuntimeException("Checkbox not found:$css");
         }
 
-        if ($elements->getText() != "X") {
+        if ($element->getText() != "X") {
             throw new \RuntimeException("Checkbox not checked");
         }
 
@@ -497,7 +497,7 @@ trait ReportTrait
 
         $questionElement = $this->getSession()->getPage()->find('xpath', '//div[text()="' . $question . '"]');
 
-        if (!isset(questionElement)) {
+        if (!isset($questionElement)) {
             throw new \RuntimeException("Can't find element with: $question");
         }
 
@@ -518,7 +518,7 @@ trait ReportTrait
     }
 
     /**
-     * @Then the :question question, in the $section section, should be answered with :answer
+     * @Then the :question question, in the :section section, should be answered with :answer
      */
     public function theQuestionInSectionShouldBeAnsweredWith($question, $section, $answer)
     {
