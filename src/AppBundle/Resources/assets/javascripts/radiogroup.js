@@ -12,9 +12,15 @@ var opg = opg || {};
         this.formControls = this.fieldset.find('.form-control.radio-vertical');
         this.radios = this.fieldset.find('input');
         this.addEvents();
-
+        this.setInitialSelectedState();
     };
-        
+    
+    RadioGroup.prototype.setInitialSelectedState = function() {
+        var current = this.fieldset.find('input[type="radio"]:checked');
+        if (current.length == 1) {
+            this.markSelected(current.parent().parent());
+        }
+    };
     RadioGroup.prototype.markSelected = function(radio) {
         var current = this.fieldset.find('.' + SELECTEDCLASS);
         current.removeClass(SELECTEDCLASS);
