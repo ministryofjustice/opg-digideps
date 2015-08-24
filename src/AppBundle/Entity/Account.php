@@ -6,7 +6,7 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"basic"})
+ * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"opening_balance"})
  * @Assert\Callback(methods={"isClosingDateValidOrExplanationIsGiven"}, groups={"closing_balance"})
  * @Assert\Callback(methods={"isClosingBalanceMatchingTransactionsSum"}, groups={"closing_balance"})
  */
@@ -56,13 +56,20 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"basic"})
-     * @Assert\Date(message="account.openingDate.date", groups={"basic"})
+     * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"opening_balance"})
+     * @Assert\Date(message="account.openingDate.date", groups={"opening_balance"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var \DateTime 
      */
     private $openingDate;
+    
+      
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
+     */
+    private $openingDateExplanation;
     
     /**
      * @JMS\Type("string")
@@ -74,12 +81,7 @@ class Account
      * @var decimal
      */
     private $openingBalance;
-    
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
-     */
-    private $openingDateExplanation;
+  
     
     /**
      * @JMS\Type("string")
@@ -549,17 +551,42 @@ class Account
     /**
      * Virtual field.
      * 
-     * @return string 'yes' if opening date is the same as report start date, "no" otherwise
+     * @return string|null 'yes' if opening date is the same as report start date, "no" otherwise. 
+     *         Returns null if the opening date is not set (needed when mapped to the "add" form)
+     * 
+     * @Assert\NotBlank(message="Please select an option", groups={"basic"})
+     * 
      * @throws \RuntimeException
      */
     public function getOpeningDateMatchesReportDate()
     {
         $openingDate = $this->getOpeningDate();
+        if (!$openingDate instanceof \DateTime) {
+            return null;
+        }
         
-        $format = 'd/m/Y';
-        $reportStartDate = $this->getReportObject(true)->getStartDate();
-        return $openingDate && $reportStartDate && $openingDate->format($format) == $reportStartDate->format($format) 
+        return $openingDate->format('dmY') === $this->getReportStartDate()->format('dmY') 
                ? self::OPENING_DATE_SAME_YES : self::OPENING_DATE_SAME_NO;
+    }
+    
+    /**
+     * @return \DateTime
+     * 
+     * @throws \RuntimeException if report not found or date not added (should never happen)
+     */
+    private function getReportStartDate()
+    {
+        // get report start date
+        if (!$this->getReportObject(true)) {
+            throw new \RuntimeException("Account needs report object to get start date");
+        }
+        $ret = $this->getReportObject(true)->getStartDate();
+        
+        if (!$ret) {
+            throw new \RuntimeException("Account needs report object to get start date");
+        }
+        
+        return $ret;
     }
 
     
