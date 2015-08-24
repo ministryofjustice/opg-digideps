@@ -99,6 +99,8 @@ class AccountType extends AbstractType
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 
                 $data = $event->getData();
+                $account = $event->getForm()->getData();  /* @var $account Account */
+                
                 $jsEnabled = ('yes' === $data['js-enabled']) ;
                 $jsDisabled = ('no' === $data['js-enabled']) ;
                 // $editMode = !empty($data['id']);
@@ -118,7 +120,7 @@ class AccountType extends AbstractType
                     || 
                     ($jsEnabled && $checkboxYes)
                 ) {
-                    $account = $event->getForm()->getData();  /* @var $account Account */
+                    
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
                     
                     $data['openingDate'] = [
@@ -173,16 +175,12 @@ class AccountType extends AbstractType
             'translation_domain' => 'report-accounts',
             'data_class' => 'AppBundle\Entity\Account',
             'validation_groups' => function(FormInterface $form) use ($showClosingBalance) {
-            	$validationGroups = ['basic'];
+            	$validationGroups = ['basic', 'opening_balance'];
                 
-                $account = $form->getData(); /* @var $account Account */
+                //$account = $form->getData(); /* @var $account Account */
                 
                 if ($showClosingBalance) {
                    $validationGroups[] = 'closing_balance'; 
-                }
-                
-                if ($account->getOpeningDateMatchesReportDate() == Account::OPENING_DATE_SAME_NO) {
-                    $validationGroups[] = 'opening_balance'; 
                 }
                 
             	return $validationGroups;
