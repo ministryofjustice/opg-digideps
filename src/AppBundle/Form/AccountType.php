@@ -43,6 +43,7 @@ class AccountType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('id', 'hidden');
         $builder->add('bank', 'text');
 
         $this->addOpeningBalanceFields($builder);
@@ -74,22 +75,27 @@ class AccountType extends AbstractType
         $builder
             ->add('openingDateMatchesReportDate', 'choice', [ 
                 'choices' => ['yes'=>'Yes', 'no'=>'No'],
-                'multiple' => false,
-                'expanded' => true,
+                'expanded' => true
             ])
-            // set the opening date to the report start date if either
-            // - JS enabled and openingDate is empty
-            // - JS disabled and checkbox "openingDateMatchesReportDate" is set to "yes"
+            // Auto fill the openingDate field (with the same date as report start date) if either
+            // - JS disabled and openingDate is not filled
+            // - JS enabled and checkbox "openingDateMatchesReportDate" is set to "yes"
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 
                 $data = $event->getData();
+                $jsEnabled = ('yes' === $data['js-enabled']) ;
+                    
+                // no-JS in edit mode: always pre-select checkbox with "no" to enable validators
+                if (!$jsEnabled && !empty($data['id'])) {
+                    $data['openingDateMatchesReportDate'] = 'no';
+                }
                 
-                $jsDisabledAndDateEmpty = 'no' == $data['js-enabled'] 
+                $jsDisabledAndDateEmpty = !$jsEnabled
                     && empty($data['openingDate']['day'])
                     && empty($data['openingDate']['month'])
                     && empty($data['openingDate']['year']);
                 
-                $jsEnabledAndCheckboxYes = 'yes' == $data['js-enabled'] 
+                $jsEnabledAndCheckboxYes = $jsEnabled
                     && isset($data['openingDateMatchesReportDate']) 
                     && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES;
                 
@@ -106,7 +112,7 @@ class AccountType extends AbstractType
                     
                     $event->setData($data);
                  }
-           })
+            })
             ->add('openingDate', 'date', [ 'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'yyyy-MM-dd',
@@ -143,10 +149,26 @@ class AccountType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
+        $showClosingBalance = $this->options['showClosingBalance'];
+        
         $resolver->setDefaults([
             'translation_domain' => 'report-accounts',
             'data_class' => 'AppBundle\Entity\Account',
-            'validation_groups' => $this->options['showClosingBalance'] ? ['basic', 'closing_balance'] : ['basic'],
+            'validation_groups' => function(FormInterface $form) use ($showClosingBalance) {
+            	$validationGroups = ['basic'];
+                
+                $account = $form->getData(); /* @var $account Account */
+                
+                if ($showClosingBalance) {
+                   $validationGroups[] = 'closing_balance'; 
+                }
+                
+                if ($account->getOpeningDateMatchesReportDate() == Account::OPENING_DATE_SAME_NO) {
+                    $validationGroups[] = 'opening_balance'; 
+                }
+                
+            	return $validationGroups;
+            },
         ]);
     }
 
