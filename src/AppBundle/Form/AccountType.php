@@ -100,21 +100,23 @@ class AccountType extends AbstractType
                 
                 $data = $event->getData();
                 $jsEnabled = ('yes' === $data['js-enabled']) ;
-                $editMode = !empty($data['id']);
+                $jsDisabled = ('no' === $data['js-enabled']) ;
+                // $editMode = !empty($data['id']);
                 $openingDateNotFilled = empty($data['openingDate']['day'])
                     && empty($data['openingDate']['month'])
                     && empty($data['openingDate']['year']);
                 $checkboxYes = isset($data['openingDateMatchesReportDate']) 
                     && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES; 
                     
-                // no-JS in edit mode: always pre-select checkbox with "no" to enable validators
-                if (!$jsEnabled && $editMode) {
+                // no-JS: always pre-select checkbox with "no" as the opening date is always shown
+                if ($jsDisabled ) {
                     $data['openingDateMatchesReportDate'] = 'no';
                 }
                 
                 if (
-                    (!$jsEnabled && $openingDateNotFilled) 
-                    || ($jsEnabled && $checkboxYes)
+                    ($jsDisabled && $openingDateNotFilled) 
+                    || 
+                    ($jsEnabled && $checkboxYes)
                 ) {
                     $account = $event->getForm()->getData();  /* @var $account Account */
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
