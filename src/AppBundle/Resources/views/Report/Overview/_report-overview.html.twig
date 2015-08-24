@@ -17,7 +17,7 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     pageSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.pageSectionInfo'
     } %}
 
-    
+
     {# Decisions #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
@@ -57,6 +57,23 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionInfo'
     } %}
     <a href="{{ path('contacts', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}</a>
+
+    {# Safeguarding #}
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionDescription'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionInfo'
+    } %}
+    <a href="{{ path('safeguarding', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.safeguradingLink') | trans({}, translationDomain) }}</a>
 
 {% else %} {#  Property & Affairs Overview  #}
 
@@ -75,7 +92,7 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     pageSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.pageSectionInfo'
     } %}
 
-    
+
     {# Decisions #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
     transDomain: translationDomain,
@@ -115,6 +132,26 @@ pageSectionTitle: 'pages.' ~ page ~ '.pageSectionTitle'
     subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionInfo'
     } %}
     <a href="{{ path('contacts', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}</a>
+
+
+    {# Safeguarding #}
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    transDomain: translationDomain,
+    subSectionTitle: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionDescription'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+    transDomain: translationDomain,
+    subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionInfo'
+    } %}
+    <a href="{{ path('safeguarding', {reportId: report.id}) }}" class="overview-link">{{ ('pages.' ~ page ~ '.safeguradingLink') | trans({}, translationDomain) }}</a>
+
+
 
     {# Accounts #}
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
