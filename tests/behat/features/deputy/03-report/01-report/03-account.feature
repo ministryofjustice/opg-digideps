@@ -19,10 +19,6 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_1 |
             | account_sortCode_sort_code_part_2 |
             | account_sortCode_sort_code_part_3 |
-            | account_openingDate_day |
-            | account_openingDate_month |
-            | account_openingDate_year |
-            | account_openingDateExplanation |
             | account_openingBalance |
         # test validators
         When I fill in the following:
@@ -89,7 +85,35 @@ Feature: deputy / report / account
         And I should see "HSBC - main account" in the "list-accounts" region
         And I should see "8765" in the "list-accounts" region
         And I should see "£1,155.00" in the "list-accounts" region
-        
+    
+    @deputy
+    Scenario: add account without specifying opening date
+      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      And I save the application status into "report-account-before-2nd-account"
+      When I follow "tab-accounts"
+      And I fill in the following:
+        | account_bank    | test openingdate default values | 
+        | account_accountNumber_part_1 | 9 | 
+        | account_accountNumber_part_2 | 9 | 
+        | account_accountNumber_part_3 | 9 | 
+        | account_accountNumber_part_4 | 9 | 
+        | account_sortCode_sort_code_part_1 | 99 |
+        | account_sortCode_sort_code_part_2 | 99 |
+        | account_sortCode_sort_code_part_3 | 99 |
+        | account_openingDate_day   |  |
+        | account_openingDate_month |  |
+        | account_openingDate_year  |  |
+        | account_openingDateExplanation  |  |
+        | account_openingBalance  | 1 |
+      And I press "account_save"
+      Then the response status code should be 200
+      And the form should be valid
+      When I click on "account-9999"
+      Then I should see "01/01/2015" in the "opening-balance" region
+      # restore status (equivalent to delete this account)
+      And I load the application status from "report-account-before-2nd-account"
+      
+    
     @deputy
     Scenario: edit account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
