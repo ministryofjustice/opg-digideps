@@ -64,6 +64,12 @@ class Account
      */
     private $openingDate;
     
+    /**
+     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"basic"})
+     * 
+     * @var string OPENING_DATE_SAME_* values
+     */
+    private $openingDateMatchesReportDate;
       
     /**
      * @JMS\Type("string")
@@ -548,48 +554,18 @@ class Account
         return $this->moneyTotal;
     }
     
+    
     /**
-     * Virtual field.
-     * 
-     * @return string|null 'yes' if opening date is the same as report start date, "no" otherwise. 
-     *         Returns null if the opening date is not set (needed when mapped to the "add" form)
-     * 
-     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"basic"})
-     * 
-     * @throws \RuntimeException
+     * @return string
      */
     public function getOpeningDateMatchesReportDate()
     {
-        $openingDate = $this->getOpeningDate();
-        if (!$openingDate instanceof \DateTime) {
-            return null;
-        }
-        
-        return $openingDate->format('dmY') === $this->getReportStartDate()->format('dmY') 
-               ? self::OPENING_DATE_SAME_YES : self::OPENING_DATE_SAME_NO;
+        return $this->openingDateMatchesReportDate;
     }
     
     /**
-     * @return \DateTime
-     * 
-     * @throws \RuntimeException if report not found or date not added (should never happen)
+     * @param string $openingDateMatchesReportDate
      */
-    private function getReportStartDate()
-    {
-        // get report start date
-        if (!$this->getReportObject(true)) {
-            throw new \RuntimeException("Account needs report object to get start date");
-        }
-        $ret = $this->getReportObject(true)->getStartDate();
-        
-        if (!$ret) {
-            throw new \RuntimeException("Account needs report object to get start date");
-        }
-        
-        return $ret;
-    }
-
-    
     public function setOpeningDateMatchesReportDate($openingDateMatchesReportDate)
     {
         $this->openingDateMatchesReportDate = $openingDateMatchesReportDate;

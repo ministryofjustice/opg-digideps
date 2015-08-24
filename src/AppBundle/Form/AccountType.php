@@ -37,7 +37,6 @@ class AccountType extends AbstractType
      */
     public function __construct(array $optionsOverride = [])
     {
-        $this->options['id']='elvisform';
         $this->options = $optionsOverride + $this->options;
     }
 
@@ -77,6 +76,23 @@ class AccountType extends AbstractType
                 'choices' => ['yes'=>'Yes', 'no'=>'No'],
                 'expanded' => true
             ])
+            // PRE_SET_DATA
+            // Auto set the checkbox value (to "yes" if the date matches, to "no" otherwise) if in edit mode 
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+                $account = $event->getData(); /* @var $account Account */
+                
+                // skip if not in edit mode
+                if (!$account->getId()) {
+                    return;
+                }
+                
+                $dateMatching = $account->getOpeningDate()->format('dmY') === $account->getReportObject(true)->getStartDate()->format('dmY');
+                $account->setOpeningDateMatchesReportDate(
+                    $dateMatching ? Account::OPENING_DATE_SAME_YES : Account::OPENING_DATE_SAME_NO
+                );
+                
+            })
+            // PRE_SUBMIT:
             // Auto fill the openingDate field (with the same date as report start date) if either
             // - JS disabled and openingDate is not filled
             // - JS enabled and checkbox "openingDateMatchesReportDate" is set to "yes"
@@ -85,23 +101,22 @@ class AccountType extends AbstractType
                 $data = $event->getData();
                 $jsEnabled = ('yes' === $data['js-enabled']) ;
                 $editMode = !empty($data['id']);
+                $openingDateNotFilled = empty($data['openingDate']['day'])
+                    && empty($data['openingDate']['month'])
+                    && empty($data['openingDate']['year']);
+                $checkboxYes = isset($data['openingDateMatchesReportDate']) 
+                    && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES; 
                     
                 // no-JS in edit mode: always pre-select checkbox with "no" to enable validators
                 if (!$jsEnabled && $editMode) {
                     $data['openingDateMatchesReportDate'] = 'no';
                 }
                 
-                $jsDisabledAndDateEmpty = !$jsEnabled
-                    && empty($data['openingDate']['day'])
-                    && empty($data['openingDate']['month'])
-                    && empty($data['openingDate']['year']);
-                
-                $jsEnabledAndCheckboxYes = $jsEnabled
-                    && isset($data['openingDateMatchesReportDate']) 
-                    && $data['openingDateMatchesReportDate'] == Account::OPENING_DATE_SAME_YES;
-                
-                if ($jsDisabledAndDateEmpty || $jsEnabledAndCheckboxYes) {
-                    $account = $event->getForm()->getData();
+                if (
+                    (!$jsEnabled && $openingDateNotFilled) 
+                    || ($jsEnabled && $checkboxYes)
+                ) {
+                    $account = $event->getForm()->getData();  /* @var $account Account */
                     $reportStartdate = $account->getReportObject(true)->getStartDate();
                     
                     $data['openingDate'] = [
