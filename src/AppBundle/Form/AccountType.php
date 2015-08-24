@@ -84,9 +84,10 @@ class AccountType extends AbstractType
                 
                 $data = $event->getData();
                 $jsEnabled = ('yes' === $data['js-enabled']) ;
+                $editMode = !empty($data['id']);
                     
                 // no-JS in edit mode: always pre-select checkbox with "no" to enable validators
-                if (!$jsEnabled && !empty($data['id'])) {
+                if (!$jsEnabled && $editMode) {
                     $data['openingDateMatchesReportDate'] = 'no';
                 }
                 
