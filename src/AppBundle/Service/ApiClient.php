@@ -188,7 +188,7 @@ class ApiClient extends GuzzleClient
                 try {
                     $responseArray = $this->serialiser->deserialize($response->getBody(), 'array', $this->format);
                 } catch (\Exception $e) {
-                    throw new RuntimeException("Error from API: malformed message. " . $this->getDebugRequestExceptionData($e));
+                    throw new RuntimeException("Error from API: malformed message. " . $e->getMessage());
                 }
 
                 // regognise specific error codes and launche specific exception classes

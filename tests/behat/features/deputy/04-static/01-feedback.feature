@@ -1,4 +1,4 @@
-Feature: provide feedback
+Feature:  provide feedback
     
     @feedback @deputy
     Scenario: Feedback can be accessed by users who are not logged in

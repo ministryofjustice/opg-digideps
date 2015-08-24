@@ -11,7 +11,7 @@ trait FormTrait
     /**
      * @Then the form should be invalid
      */
-    public function theFormShouldContainAnError()
+    public function theFormShouldBeInvalid()
     {
         $this->iShouldSeeTheBehatElement('form-errors', 'region');
     }
@@ -19,7 +19,7 @@ trait FormTrait
     /**
      * @Then the form should be valid
      */
-    public function theFormShouldNotContainAnError()
+    public function theFormShouldBeValid()
     {
         $this->iShouldNotSeeTheBehatElement('form-errors', 'region');
     }

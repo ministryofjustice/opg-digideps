@@ -25,8 +25,7 @@ trait StatusSnapshotTrait
         $sqlFile = self::getSnapshotPath($status);
         if (!file_exists($sqlFile)) {
             $error = "File $sqlFile not found. Re-run the full behat suite to recreate the missing snapshots.";
-            echo $error;
-            //throw new \RuntimeException($error);
+            throw new \RuntimeException($error);
         }
         exec("psql " . self::$dbName . " < {$sqlFile}");
     }
@@ -52,7 +51,10 @@ trait StatusSnapshotTrait
             return;
         }
         
-        $snapshotName = basename( $scope->getFeature()->getFile()) 
+        $file = $scope->getFeature()->getFile();
+        $expectedPrefix = '/behat/features/';
+        
+        $snapshotName = substr($file, strpos($file, $expectedPrefix) + strlen($expectedPrefix))
                    . '-' 
                    . str_pad($scope->getScenario()->getLine(), 4, '0', STR_PAD_LEFT);
         

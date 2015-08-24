@@ -1,4 +1,4 @@
-Feature: Expanding Textarea
+Feature: components / Expanding Textarea
     On javascript enablbed browsers the textareas should grow ads a user enters more 
     text so that the information is easily viewable and easy to read.
     

@@ -1,4 +1,4 @@
-Feature: add details
+Feature: deputy / user / add details
     
     @deputy
     Scenario: add user details (deputy) 
@@ -36,17 +36,10 @@ Feature: add details
         Then the form should be invalid
         And I save the page as "deputy-step2-error"
         # right values
-        When I fill in the following:
-            | user_details_firstname | John |
-            | user_details_lastname | Doe |
-            | user_details_address1 | 102 Petty France |
-            | user_details_address2 | MOJ |
-            | user_details_address3 | London |
-            | user_details_addressPostcode | SW1H 9AJ |
-            | user_details_addressCountry | GB |
-            | user_details_phoneMain | 020 3334 3555  |
-            | user_details_phoneAlternative | 020 1234 5678  |
-        And I press "user_details_save"
+        When I set the user details to:
+          | name | John | Doe |
+          | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
+          | phone | 020 3334 3555  | 020 1234 5678  |
         Then the form should be valid
         When I go to "/user/details"
         Then the following fields should have the corresponding values:
@@ -61,36 +54,6 @@ Feature: add details
             | user_details_phoneAlternative | 020 1234 5678  |
         
 
-    @admin
-    Scenario: add user details (admin user)
-        Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
-        And I am on admin page "/user/details"
-        And I save the page as "admin-step2"
-        # testing validation, as the validation group for the form is different for admin user
-        # missing firstname
-        And I fill in the following:
-            | user_details_firstname |  |
-            | user_details_lastname | Doe admin |
-        And I press "user_details_save"
-        Then the form should be invalid
-        # missing lastname
-        And I fill in the following:
-            | user_details_firstname | John admin |
-            | user_details_lastname |  |
-        And I press "user_details_save"
-        Then the form should be invalid
-        And I save the page as "admin-step2-error"
-        # correct
-        And I fill in the following:
-            | user_details_firstname | John admin |
-            | user_details_lastname | Doe admin |
-        And I press "user_details_save"
-        Then the form should be valid
-        #When I go to "http://digideps-admin.local/app_dev.php/user/details"
-        Given I am on admin page "/user/details"
-        Then the following fields should have the corresponding values:
-            | user_details_firstname | John admin |
-            | user_details_lastname | Doe admin |
+    
         
         

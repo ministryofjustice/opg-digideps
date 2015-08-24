@@ -1,4 +1,4 @@
-Feature: edit/remove decision
+Feature:deputy / report / edit decision
 
     @deputy
     Scenario: edit decision, remove the decision
@@ -39,5 +39,6 @@ Feature: edit/remove decision
         And the URL should match "/report/\d+/decisions"
         Then I should not see "the client was able to decide at 100%" in the "list-decisions" region
         Then I should not see the "5 beds" link
+        And I should not see the "list-assets" region
 
 
