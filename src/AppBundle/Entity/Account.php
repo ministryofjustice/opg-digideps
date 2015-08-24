@@ -554,7 +554,7 @@ class Account
      * @return string|null 'yes' if opening date is the same as report start date, "no" otherwise. 
      *         Returns null if the opening date is not set (needed when mapped to the "add" form)
      * 
-     * @Assert\NotBlank(message="Please select an option", groups={"basic"})
+     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"basic"})
      * 
      * @throws \RuntimeException
      */
