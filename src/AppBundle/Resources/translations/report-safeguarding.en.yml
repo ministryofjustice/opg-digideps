@@ -35,4 +35,4 @@ whoIsDoingTheCaring.hint: For example, local authority or private residential ca
 doesClientHaveACarePlan.label: Does the client have a care plan?
 whenWasCarePlanLastReviewed:
     label: When was the care plan last reviewed?
-    hint: (DD/MM/YYYY)
+    hint: (MM/YYYY)

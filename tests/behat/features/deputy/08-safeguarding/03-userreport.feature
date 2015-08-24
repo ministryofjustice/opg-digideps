@@ -369,7 +369,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
-            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
@@ -387,7 +386,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
-            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
@@ -407,7 +405,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
-            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_month | 2 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
@@ -415,7 +412,7 @@ Feature: Safeguarding OPG Report
         And I submit the report with further info "More info."
         Then I view the users latest report
         Then the "Does the client have a care plan?" question should be answered with "Yes"
-        Then the "When was the care plan last reviewed?" question should be answered with "01/02/2015"
+        Then the "When was the care plan last reviewed?" question should be answered with "02/2015"
         And I save the page as "safeguarding-userreport-care-plan"
 
         

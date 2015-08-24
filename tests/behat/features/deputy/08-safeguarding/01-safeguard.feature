@@ -176,14 +176,12 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
         And I press "safeguarding_save"
         Then the form should be valid
         Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_0" should be checked
-        And the "safeguarding_whenWasCarePlanLastReviewed_day" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_month" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2015"
 
@@ -234,3 +232,6 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientHaveACarePlan_0 |
             | safeguarding_doesClientHaveACarePlan_1 |
             | safeguarding_whoIsDoingTheCaring |
+            | safeguarding_whenWasCarePlanLastReviewed_day |
+            | safeguarding_whenWasCarePlanLastReviewed_month |
+            | safeguarding_whenWasCarePlanLastReviewed_year |

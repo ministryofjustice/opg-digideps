@@ -5,6 +5,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormEvent;
 
 class SafeguardingType extends AbstractType
 {
@@ -76,7 +78,21 @@ class SafeguardingType extends AbstractType
 			                                                 'format' => 'dd-MM-yyyy',
 			                                                 'invalid_message' => 'safeguarding.whenWasCarePlanLastReviewed.invalidMessage'
 			                                              ])
-		        ->add('save', 'submit');
+		        ->add('save', 'submit')
+				
+				->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                
+	                $data = $event->getData();
+					
+					// Strip out the date field if it's not needed. Having a partial date field breaks things
+					// if the care plan date is hidden as it receives a date that only has a day
+					if (isset($data['doesClientHaveACarePlan']) && $data['doesClientHaveACarePlan'] == 'no') {
+						$data['whenWasCarePlanLastReviewed'] = null;
+					}
+    
+                    $event->setData($data);
+	            
+				});
 	}
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

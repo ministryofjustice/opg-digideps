@@ -153,6 +153,13 @@ class FormFieldsExtension extends \Twig_Extension
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
         
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        if (isset($vars['showDay'])) {
+            $showDay = $vars['showDay'];
+        } else {
+            $showDay = 'true';
+        }
+        
         //sort hint text translation
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
@@ -173,7 +180,8 @@ class FormFieldsExtension extends \Twig_Extension
         
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
                                                                                                 'hintText' => $hintText,
-                                                                                                'element' => $element
+                                                                                                'element' => $element,
+                                                                                                'showDay' => $showDay
                                                                                               ]);
         echo $html;
     }

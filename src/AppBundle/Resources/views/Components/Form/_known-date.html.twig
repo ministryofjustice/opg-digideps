@@ -8,11 +8,14 @@
                 <li class="error-message">{{ form_errors(element) }}</li>
             </ul>
         {% endif %}
-
-        <div class="form-group form-group-day">
-            {{ form_label(element.day,'Day', {'label_attr': {'for': 'dob-day', 'class': 'visuallyhidden' } }) }}
-            {{ form_widget(element.day, { 'type':'number','attr': {'class': 'form-control', 'pattern': '[0-9]', 'maxlength': 2, 'value': element.day.vars.value | pad_day_month }}) }}
-        </div>
+        {% if showDay == 'true' %}
+            <div class="form-group form-group-day">
+                {{ form_label(element.day,'Day', {'label_attr': {'for': 'dob-day', 'class': 'visuallyhidden' } }) }}
+                {{ form_widget(element.day, { 'type':'number','attr': {'class': 'form-control', 'pattern': '[0-9]', 'maxlength': 2, 'value': element.day.vars.value | pad_day_month }}) }}
+            </div>
+        {% else %}
+            {{ form_widget(element.day, { 'type':'hidden', 'value': '01' }) }}
+        {% endif %}
 
         <div class="form-group form-group-month">
             {{ form_label(element.month,'Month', {'label_attr': {'for': 'dob-month', 'class': 'visuallyhidden' } }) }}

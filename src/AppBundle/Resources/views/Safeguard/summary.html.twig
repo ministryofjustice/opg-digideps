@@ -69,7 +69,7 @@
     answer: report.doesClientHaveACarePlan
 } %}
 {% if report.doesClientHaveACarePlan == 'yes' %}
-    {% set carePlanDate = report.whenWasCarePlanLastReviewed.format("d/m/Y") %}
+    {% set carePlanDate = report.whenWasCarePlanLastReviewed.format("m/Y") %}
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
         question: 'whenWasCarePlanLastReviewed',
         answer: carePlanDate

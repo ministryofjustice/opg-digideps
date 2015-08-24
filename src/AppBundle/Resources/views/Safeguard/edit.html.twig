@@ -110,7 +110,9 @@ activeTab: "tab-safeguarding"
         }) }}
 
         <div id="care-plan-questions">
-            {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed') }}
+            {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed', {
+                'showDay': 'false'
+            }) }}
         </div>
     </div>
 

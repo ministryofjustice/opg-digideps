@@ -391,7 +391,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
-            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
@@ -411,7 +410,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
-            | safeguarding_whenWasCarePlanLastReviewed_day | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_month | 2 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
