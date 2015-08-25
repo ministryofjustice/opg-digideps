@@ -1,0 +1,17 @@
+.radio-hide-content {
+    display: block;
+    max-height: 9999px;
+    -webkit-transition: all 250ms linear;
+    -moz-transition: all 250ms linear;
+    -ms-transition: all 250ms linear;
+    -o-transition: all 250ms linear;
+    transition: all 250ms linear;
+    overflow: hidden;
+    float: left;
+}
+
+.radio-hide-content.hidden {
+    max-height: 0;
+    -moz-opacity: 0;
+    opacity: 0; 
+}

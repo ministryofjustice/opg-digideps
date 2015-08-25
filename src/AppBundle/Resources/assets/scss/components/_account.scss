@@ -16,3 +16,24 @@
   }
 
 }
+
+#account_edit_form {
+    
+    #account_opening_date_same_wrapper {
+        display: none;
+    }
+    
+    #openingDateLegendJs {
+        display: none;
+    }
+    
+    .js-enabled & {    
+        #account_opening_date_same_wrapper {
+            display:block;
+        }
+        #openingDateLegendJs {
+            display: block;
+        }
+    }
+    
+}

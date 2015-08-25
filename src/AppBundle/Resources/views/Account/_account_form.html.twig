@@ -7,9 +7,9 @@
 #}
 {% set translationDomain = "report-accounts" %}
 {% trans_default_domain translationDomain %}
+{% set formId = "account_edit_form" %}
 
-
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass, id: formId } }) }}
 
 {% if hideForm %}
     {# Then we need to show the Add Button Link #}
@@ -45,22 +45,13 @@
     subSectionTitle: 'form.openingBalance.subSectionTitle'
     } %}
 
-    {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-    transDomain: translationDomain,
-    subSectionDescription: 'form.openingBalance.subSectionDescription'
+    {# opening balance logic (shared template) #}
+    {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
+      form: form, 
+      formId: formId,
+      addMode: true
     } %}
-
-    {{ form_known_date(form.openingDate, 'form.openingBalance.controls.openingDate') }}
     
-    {{ form_input(form.openingDateExplanation, 'form.openingBalance.controls.openingDateExplanation', { 'labelClass': 'required','inputClass': 'expanding' }) }}
-    
-    
-    {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance', {
-        'inputPrefix' : 'form.openingBalance.controls.openingBalancePrefix.label',
-        'inputClass' : 'form-control__number'
-    } ) }}
-    
-
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.openingBalance.controls.save') }}
     {% if hideForm or (action == 'add') %}

@@ -143,10 +143,12 @@ account:
     openingDate:
         notBlank: Enter the opening balance date
         notSameAsReport: The start date of the report and the date here is different. Tell us why below.
-        date: You must enter a valid date
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
+    openingDateSameAsReportDate:
+        notBlank: Please select an option
     closingDate:
         notBlank: You must enter the closing balance date
-        date: Enter a valid date in this format: DD/MM/YYYY
+        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         mismatch: The end date of the report and the date here is different. Tell us why below.
     closingDateExplanation:
         notBlankOnDateMismatch: You must explain why these dates are different

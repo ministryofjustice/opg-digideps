@@ -23,7 +23,7 @@
         </dl>
     </div>
 
-    <dl class="account-balance opening-balance">
+    <dl class="account-balance opening-balance behat-region-opening-balance">
         <dt class="label">{{ 'page.header.openingBalance.label' |trans({}, transDomain)|raw }}</dt>
         <dd class="date">{{ account.openingDate | date("d/m/Y") }}</td>
         <dd class="value">£{{ account.openingBalance | number_format(2, '.', ',') }}</td>

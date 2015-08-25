@@ -103,15 +103,15 @@ class AccountController extends Controller
         
         // closing balance logic
         list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
-        if ($action == "list") {
-            if ($formBalanceIsValid) {
+//        if ($action == "list") {
+            if ($closingBalanceFormIsSubmitted && $formBalanceIsValid) {
                 $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
                     'deserialise_group' => 'balance',
                 ]);
 
                 return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
             }
-        }
+//        }
         
         // money in/out logic
         list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
@@ -192,17 +192,21 @@ class AccountController extends Controller
     {
         $form = $this->createForm(new FormDir\AccountType($options), $account);
         $form->handleRequest($this->getRequest());
-        $isEditSubmitted = $form->has('save') && $form->get('save')->isClicked();
-        $isEditSubmittedAndValid = $isEditSubmitted && $form->isValid();
+        $isEditOrAddSubmitted = $form->has('save') && $form->get('save')->isClicked();
+        $isEditSubmittedAndValid = $isEditOrAddSubmitted && $form->isValid();
         $isDeleteSubmittedAndValid = $form->has('delete') && $form->get('delete')->isClicked();
         
-        // if closing date is valid, reset the explanation
-        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingDateEqualToReportEndDate()) {
-            $account->setClosingDateExplanation(null);
-        }
-        // if closing balance is valid, reset the explanation
-        if ($form->has('save') && $form->get('save')->isClicked() && $account->isClosingBalanceMatchingTransactionSum()) {
-            $account->setClosingBalanceExplanation(null);
+        // account edit/add post-save logic
+        //TODO refactor in PRE_SUBMIT event
+        if ($form->has('save') && $form->get('save')->isClicked()) {
+            // if closing date is valid, reset the explanation
+            if ($account->isClosingDateEqualToReportEndDate()) {
+                $account->setClosingDateExplanation(null);
+            }
+            // if closing balance is valid, reset the explanation
+            if ($account->isClosingBalanceMatchingTransactionSum()) {
+                $account->setClosingBalanceExplanation(null);
+            }
         }
         
         return [$form, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];
