@@ -18,6 +18,7 @@ class SafeguardController extends Controller{
     {
         $util = $this->get('util');
         $report = $util->getReport($reportId, $this->getUser()->getId());
+        $safeguard = $report->getSafeguard();
         $request = $this->getRequest();
 
         // just needed for title etc,
@@ -25,30 +26,27 @@ class SafeguardController extends Controller{
             throw new \RuntimeException("Report already submitted and not editable.");
         }
 
-        $form = $this->createForm(new FormDir\SafeguardingType(), $report);
+        $form = $this->createForm(new FormDir\SafeguardingType(), $safeguard);
 
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
 
-        if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
-            if($form->get('save')->isClicked()){
-                if($form->isValid()){
-                    $data = $form->getData();
-                    $data->keepOnlyRelevantSafeguardingData();
+        if($form->get('save')->isClicked() && $form->isValid()){
+            $data = $form->getData();
+            $data->keepOnlyRelevantSafeguardingData();
 
-                    $this->get('apiclient')->putC('report/' .  $report->getId(),$data);
-                    $translator = $this->get('translator');
+            $this->get('apiclient')->putC('safeguarding/' . $report->getId(),$data);
+            $translator = $this->get('translator');
 
-                    $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
+            $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
 
-                    return $this->redirect($this->generateUrl('safeguarding', ['reportId'=>$reportId]) . "#pageBody");
-                }
-            }
+            return $this->redirect($this->generateUrl('safeguarding', ['reportId'=>$reportId]) . "#pageBody");
         }
+
 
         return[ 'report' => $report,
                 'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
