@@ -1,4 +1,4 @@
-Feature: edit/remove contact
+Feature: deputy / report / edit user contact
 
     @deputy
     Scenario: edit remove contact
@@ -31,6 +31,7 @@ Feature: edit/remove contact
             | contact_explanation |
             | contact_address |  |
             | contact_postcode |
+        # edit contact
         When I fill in the following:
             | contact_contactName | Andy Brown |
             | contact_relationship | brother |
@@ -44,11 +45,11 @@ Feature: edit/remove contact
         And I should see "46 Noth Road" in the "list-contacts" region
         And I click on "contact-n1"
         And I click on "delete-confirm"
-        And the URL should match "/report/\d+/contacts/delete-confirm/\d+#delete-confirm"
         And I click on "delete-confirm-cancel"
-        And the URL should match "/report/\d+/contacts/edit/\d+#edit-\d+"
         And I click on "delete-confirm"
         And I click on "delete"
+        Then the response status code should be 200
         And the URL should match "/report/\d+/contacts"
+        Then I should not see the "list-contacts" region
 
 

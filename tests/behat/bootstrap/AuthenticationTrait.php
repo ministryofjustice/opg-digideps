@@ -2,6 +2,8 @@
 
 namespace DigidepsBehat;
 
+use Behat\Gherkin\Node\TableNode;
+
 trait AuthenticationTrait
 {
     
@@ -83,5 +85,16 @@ trait AuthenticationTrait
     {
         $this->getSession()->setCookie($this->sessionName, null);
     }   
+    
+     /**
+     * @Then the following pages should return the following status:
+     */
+    public function theFollowingPagesShouldReturnTheFollowingStatus(TableNode $table)
+    {
+        foreach($table->getRowsHash() as $url => $expectedReturnCode) {
+           $this->visitPath($url);
+           $this->assertResponseStatus($expectedReturnCode);
+        }
+    }
     
 }

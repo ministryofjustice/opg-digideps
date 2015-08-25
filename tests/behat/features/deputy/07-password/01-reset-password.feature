@@ -1,4 +1,4 @@
-Feature: password reset
+Feature: deputy / password reset
     
     @deputy
     Scenario: Password reset

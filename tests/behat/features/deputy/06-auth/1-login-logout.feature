@@ -1,4 +1,4 @@
-Feature: login and logout functionalities
+Feature: deputy / login and logout functionalities
     
     @deputy
     Scenario: test login goes to previous page

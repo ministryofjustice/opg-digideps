@@ -1,4 +1,4 @@
-Feature: report explanations
+Feature: deputy / report / edit user explanations
 
     @deputy
     Scenario: add explanation for no contacts
@@ -133,16 +133,9 @@ Feature: report explanations
       And I save the page as "report-no-asset-added"
       And I should see the "no-assets-selected" region
       # add asset 
-      When I click on "add-an-asset"
-      And I fill in the following:
-          | asset_title       | Vehicles | 
-          | asset_value       | 13000.00 | 
-          | asset_description | Alfa Romeo 156 JTD | 
-          | asset_valuationDate_day | 10 | 
-          | asset_valuationDate_month | 11 | 
-          | asset_valuationDate_year | 2015 |
-      And I press "asset_save"
-      # delete asset
+      When I add the following assets:
+        | title        | value       |  description        | valuationDate | 
+        | Vehicles    | 13000.00    |  Alfa Romeo 156 JTD | 10/11/2015 | 
       And I follow "tab-assets"
       And I click on "asset-alfa-romeo-156-jtd"
       And I click on "delete-confirm"

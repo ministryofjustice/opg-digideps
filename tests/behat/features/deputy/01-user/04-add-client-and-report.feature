@@ -1,4 +1,4 @@
-Feature: add client and report
+Feature: deputy / user / add client and report
     
     @deputy
     Scenario: add client
@@ -64,12 +64,21 @@ Feature: add client and report
             | client_phone | 
         And I save the page as "deputy-step3-errors"
         # right values
-        When I fill in the following:
+       When I set the client details to:
+            | name | Peter | White | 
+            | caseNumber | 123456ABC |
+            | courtDate | 1 | 1 | 2015 |
+            | allowedCourtOrderTypes_1 | 1 |
+            | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
+            | phone | 0123456789  |
+        Then the URL should match "report/create/\d+"
+        When I go to "client/add"
+        Then the following fields should have the corresponding values:
             | client_firstname | Peter |
             | client_lastname | White |
             | client_caseNumber | 123456ABC |
-            | client_courtDate_day | 1 |
-            | client_courtDate_month | 1 |
+            | client_courtDate_day | 01 |
+            | client_courtDate_month | 01 |
             | client_courtDate_year | 2015 |
             | client_allowedCourtOrderTypes_1 | 1 |
             | client_address |  1 South Parade |
@@ -78,10 +87,7 @@ Feature: add client and report
             | client_postcode | NG1 2HT  |
             | client_country | GB |
             | client_phone | 0123456789  |
-        And I press "client_save"
-        Then the form should be valid
-        # assert you are on create report page
-        And the URL should match "report/create/\d+"
+       
 
     @deputy    
     Scenario: create report
@@ -127,14 +133,8 @@ Feature: add client and report
         Then the form should be invalid
         And I save the page as "deputy-step4-error"
         # valid form
-        When I fill in the following:
-            | report_endDate_day | 31 |
-            | report_endDate_month | 12 |
-            | report_endDate_year | 2015 |
-        And I press "report_save"
-        Then the form should be valid
-        # assert you are on dashboard
-        And the URL should match "report/\d+/overview"
+        When I set the report end date to "31/12/2015"
+        Then the URL should match "report/\d+/overview"
 
 
     @deputy
