@@ -347,7 +347,6 @@ class ReportController extends RestController
             $report->setFurtherInformation($data['further_information']);
         }
 
-        $report = $this->updateSafeguardingInfo($data,$report);
         
         $this->getEntityManager()->flush($report);
         
@@ -403,63 +402,6 @@ class ReportController extends RestController
         return ['id'=>$report->getId()];
     }
 
-    /**
-     * @param  array $data   
-     * @param  AppBundle\Entity\Report $report
-     * @return AppBundle\Entity\Report $report  
-     */
-    private function updateSafeguardingInfo($data,\AppBundle\Entity\Report $report)
-    {
-        if(array_key_exists('do_you_live_with_client', $data)) {
-            $report->setDoYouLiveWithClient($data['do_you_live_with_client']);
-        }
 
-        if(array_key_exists('how_often_do_you_visit', $data)) {
-            $report->setHowOftenDoYouVisit($data['how_often_do_you_visit']);
-        }
-
-        if(array_key_exists('how_often_do_you_phone_or_video_call', $data)) {
-            $report->setHowOftenDoYouPhoneOrVideoCall($data['how_often_do_you_phone_or_video_call']);
-        }
-
-        if(array_key_exists('how_often_do_you_write_email_or_letter', $data)) {
-            $report->setHowOftenDoYouWriteEmailOrLetter($data['how_often_do_you_write_email_or_letter']);
-        }
-
-        if(array_key_exists('how_often_does_client_see_other_people', $data)) {
-            $report->setHowOftenDoesClientSeeOtherPeople($data['how_often_does_client_see_other_people']);
-        }
-
-        if(array_key_exists('anything_else_to_tell', $data)) {
-            $report->setAnythingElseToTell($data['anything_else_to_tell']);
-        }
-
-        if(array_key_exists('does_client_receive_paid_care', $data)) {
-            $report->setDoesClientReceivePaidCare($data['does_client_receive_paid_care']);
-        }
-
-        if(array_key_exists('how_is_care_funded', $data)) {
-            $report->setHowIsCareFunded($data['how_is_care_funded']);
-        }
-
-        if(array_key_exists('who_is_doing_the_caring', $data)) {
-            $report->setWhoIsDoingTheCaring($data['who_is_doing_the_caring']);
-        }
-
-        if(array_key_exists('does_client_have_a_care_plan', $data)) {
-            $report->setDoesClientHaveACarePlan($data['does_client_have_a_care_plan']);
-        }
-
-        if(array_key_exists('when_was_care_plan_last_reviewed', $data)) {
-
-            if(!empty($data['when_was_care_plan_last_reviewed'])){
-                $report->setWhenWasCarePlanLastReviewed(new \DateTime($data['when_was_care_plan_last_reviewed']));
-            }else{
-                $report->setWhenWasCarePlanLastReviewed(null);
-            }
-        }
-
-        return $report;
-    }
     
 }
