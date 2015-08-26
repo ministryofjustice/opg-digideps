@@ -5,6 +5,8 @@ report-paa:
         label: Decisions
     tab-contacts:
         label: Contacts
+    tab-safeguarding:
+        label: Safeguarding
     tab-accounts:
         label: Accounts
     tab-assets:
@@ -16,4 +18,6 @@ report-pw:
         label: Decisions
     tab-contacts:
         label: Contacts
+    tab-safeguarding:
+        label: Safeguarding
     

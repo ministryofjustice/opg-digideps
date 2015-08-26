@@ -1,5 +1,5 @@
 Feature: deputy / report / Formatted Report
-    
+
     @formatted-report @accounts @deputy
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
@@ -11,7 +11,7 @@ Feature: deputy / report / Formatted Report
           | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
           | phone | 020 3334 3555 | 020 1234 5678  |
       And I set the client details to:
-            | name | Peter | White | 
+            | name | Peter | White |
             | caseNumber | 123456ABC |
             | courtDate | 1 | 1 | 2014 |
             | allowedCourtOrderTypes_0 | 2 |
@@ -22,14 +22,14 @@ Feature: deputy / report / Formatted Report
       Then I am on "/logout"
       And I reset the email log
       Then I save the application status into "reportuser"
-      
-    
+
+
     @formatted-report @deputy
     Scenario: Enter a report
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following decisions:
-          | description  | clientInvolved | clientInvolvedDetails | 
+          | description  | clientInvolved | clientInvolvedDetails |
           | 3 beds      | yes           | the client was able to decide at 85% |
           | 2 televisions | yes           | the client said he doesnt want a tv anymore |
         And I add the following contacts:
@@ -37,14 +37,14 @@ Feature: deputy / report / Formatted Report
           | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
           | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
         And I add the following assets:
-            | title        | value       |  description       | valuationDate | 
+            | title        | value       |  description       | valuationDate |
             | Vehicles    | 12000.00    |  Mini cooper       | 10/11/2015 |
             | Property    | 250000.0    | 2 beds flat in HA2 |            |
             | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2015 |
         Then I save the application status into "reportwithoutmoney"
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
@@ -88,11 +88,18 @@ Feature: deputy / report / Formatted Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 | 
+            | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         When I submit the report with further info "More info."
         Then I save the application status into "reportsubmitted"
-                
+
     @formatted-report @deputy
     Scenario: A report lists decisions
         When I load the application status from "reportsubmitted"
@@ -119,8 +126,8 @@ Feature: deputy / report / Formatted Report
           | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
           | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
@@ -164,13 +171,20 @@ Feature: deputy / report / Formatted Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 | 
+            | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
         # Finally, Assets
         When I add the following assets:
-          | title        | value       |  description        | valuationDate | 
-          | Property    | 250000.00    |  2 beds flat in HA2 |               | 
-          | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  | 
+          | title        | value       |  description        | valuationDate |
+          | Property    | 250000.00    |  2 beds flat in HA2 |               |
+          | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+          | safeguarding_doYouLiveWithClient_0 | yes |
+          | safeguarding_doesClientReceivePaidCare_1 | no |
+          | safeguarding_doesClientHaveACarePlan_1 | no |
+          | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         And I view the formatted report
         Then the response status code should be 200
@@ -194,8 +208,8 @@ Feature: deputy / report / Formatted Report
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "tab-decisions"
         # Start by adding some decisions
-        And I add the following decisions:  
-           | description   | clientInvolved | clientInvolvedDetails | 
+        And I add the following decisions:
+           | description   | clientInvolved | clientInvolvedDetails |
            | 3 beds      | yes            | the client was able to decide at 85% |
            | 2 televisions | yes            | the client said he doesnt want a tv anymore |
         # Next, some contacts
@@ -204,8 +218,8 @@ Feature: deputy / report / Formatted Report
         And I press "reason_for_no_contact_saveReason"
         Then the form should be valid
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
@@ -249,12 +263,19 @@ Feature: deputy / report / Formatted Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 | 
+            | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
         When I add the following assets:
-          | title        | value       |  description        | valuationDate | 
-          | Property    | 250000.00    |  2 beds flat in HA2 |               | 
-          | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  | 
+          | title        | value       |  description        | valuationDate |
+          | Property    | 250000.00    |  2 beds flat in HA2 |               |
+          | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+          | safeguarding_doYouLiveWithClient_0 | yes |
+          | safeguarding_doesClientReceivePaidCare_1 | no |
+          | safeguarding_doesClientHaveACarePlan_1 | no |
+          | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -272,8 +293,8 @@ Feature: deputy / report / Formatted Report
         And I should see "88" in "accounts-section"
         And I should see "77" in "accounts-section"
         And I should see "66" in "accounts-section"
-        And I should see "8765" in "accounts-section"    
-        
+        And I should see "8765" in "accounts-section"
+
     @formatted-report @deputy
     Scenario: A report lists money paid out for an account
         When I load the application status from "reportsubmitted"
@@ -293,14 +314,14 @@ Feature: deputy / report / Formatted Report
         And I should see "Care fees or local authority charges for care" in "money-out"
         And I should see "£ 10,000.01" in "money-in"
         And I should see "more-details-in-15" in "money-in"
-    
+
     @formatted-report @deputy
     Scenario: A report lists total money in, out, the different and the actual
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
@@ -344,8 +365,15 @@ Feature: deputy / report / Formatted Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,200.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 | 
+            | closingDate    | 1 /1/2015 |
             | closingBalance | 4855.19 |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -356,14 +384,14 @@ Feature: deputy / report / Formatted Report
         And I should see "23,200.00" in "balancing-total-out"
         And I should see "4,855.19" in "balancing-sub-total-2"
         And I should see "4,855.19" in "balancing-closing-balance"
-            
+
     @formatted-report @deputy
     Scenario: A report explains why the balance doesnt match the statement
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
@@ -410,21 +438,28 @@ Feature: deputy / report / Formatted Report
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             #
-            | closingDate    | 1 /1/2015 | 
-            | closingBalance | 155.00 | 
+            | closingDate    | 1 /1/2015 |
+            | closingBalance | 155.00 |
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         And I view the formatted report
         And I should see "£ 100.50 moved to other account" in "accountBalance_closingBalanceExplanation"
-        
-    @formatted-report @deputy    
+
+    @formatted-report @deputy
     Scenario: A report explains why the opening date is off
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingDateExplanation    | earlier transaction made with other account |
@@ -472,22 +507,29 @@ Feature: deputy / report / Formatted Report
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             #
-            | closingDate    | 1 /1/2015 | 
-            | closingBalance | 155.00 | 
+            | closingDate    | 1 /1/2015 |
+            | closingBalance | 155.00 |
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
         And I should see "earlier transaction made with other account" in "account-date-explanation"
 
-    @formatted-report @deputy    
+    @formatted-report @deputy
     Scenario: A report explains why the closing date is off
         When I load the application status from "reportwithoutmoney"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/2/2014 |
             | openingDateExplanation  | earlier transaction made with other account |
@@ -535,11 +577,18 @@ Feature: deputy / report / Formatted Report
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             #
-            | closingDate    | 11 /11/2014 | 
-            | closingDateExplanation    | closing date explanation | 
-            | closingBalance | 4855.19 | 
+            | closingDate    | 11 /11/2014 |
+            | closingDateExplanation    | closing date explanation |
+            | closingBalance | 4855.19 |
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -562,7 +611,7 @@ Feature: deputy / report / Formatted Report
         And the 1 asset in the "Vehicles" asset group should have a "description" "Mini cooper"
         And the 1 asset in the "Vehicles" asset group should have a "valuationDate" "10 / 11 / 2015"
         And the 1 asset in the "Vehicles" asset group should have a "value" "£12,000.00"
-        
+
     @formatted-report @deputy
     Scenario: A report shows blank valuation date if there isn't one
         When I load the application status from "reportsubmitted"
@@ -586,10 +635,9 @@ Feature: deputy / report / Formatted Report
         And I press "reason_for_no_contact_saveReason"
         Then the form should be valid
         # Bank account
-
         And I add the following bank account:
-            | bank    | HSBC - main account | 
-            | accountNumber | 8 | 7 | 6 | 5 | 
+            | bank    | HSBC - main account |
+            | accountNumber | 8 | 7 | 6 | 5 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/2/2014 |
             | openingDateExplanation   | earlier transaction made with other account |
@@ -637,8 +685,15 @@ Feature: deputy / report / Formatted Report
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             #
-            | closingDate    | 1 /1/2015 | 
-            | closingBalance | 5855.19 | 
+            | closingDate    | 1 /1/2015 |
+            | closingBalance | 5855.19 |
+        And I follow "tab-safeguarding"
+        Then I fill in the following:
+            | safeguarding_doYouLiveWithClient_0 | yes |
+            | safeguarding_doesClientReceivePaidCare_1 | no |
+            | safeguarding_doesClientHaveACarePlan_1 | no |
+            | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        And I press "safeguarding_save"
         # Finally, Assets
         Then I follow "tab-assets"
         And I check "report_no_assets_no_assets"
@@ -647,5 +702,4 @@ Feature: deputy / report / Formatted Report
         And I submit the report with further info "More info."
         And I view the formatted report
         Then the response status code should be 200
-        And I should see "My client has no assets" in "assets-section" 
-        
+        And I should see "My client has no assets" in "assets-section"

@@ -15,6 +15,7 @@ class Report
     const PROPERTY_AND_AFFAIRS = 2;
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"safeguarding"})
      * @var integer
      */
     private $id;
@@ -97,6 +98,12 @@ class Report
      * @var array $decisions
      */
     private $decisions;
+    
+    /**
+     * @JMS\Type("AppBundle\Entity\Safeguarding")
+     * @var \AppBundle\Entity\Safeguarding
+     */
+    private $safeguarding;
     
     /**
      * @JMS\Exclude
@@ -498,17 +505,30 @@ class Report
     }
     
     /**
+     * 
+     * @return boolean
+     */
+    public function missingSafeguarding()
+    {
+        if (!isset($this->safeguarding) || $this->safeguarding->missingSafeguardingInfo() == true) {
+            return true;
+        } 
+        
+        return false;
+    }
+    
+    /**
      * @return boolean
      * @Assert\True(message="report.submissionExceptions.readyForSubmission", groups={"readyforSubmission"})
      */
     public function isReadyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions()){
+            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions() || $this->missingSafeguarding()){
                 return false;
             }
         }else{
-            if($this->missingContacts() || $this->missingDecisions()){
+            if($this->missingContacts() || $this->missingDecisions() || $this->missingSafeguarding()){
                 return false;
             }
         }
@@ -598,6 +618,23 @@ class Report
     public function getReasonForNoDecisions()
     {
         return $this->reasonForNoDecisions;
+    }
+    
+
+    /**
+     * @return \AppBundle\Entity\Safeguarding
+     */
+    public function getSafeguarding()
+    {
+        return $this->safeguarding;
+    }
+
+    /**
+     * @param \AppBundle\Entity\Safeguarding $safeguarding
+     */
+    public function setSafeguarding($safeguarding)
+    {
+        $this->safeguarding = $safeguarding;
     }
     
     /**

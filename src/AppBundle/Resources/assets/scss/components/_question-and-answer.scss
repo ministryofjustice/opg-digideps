@@ -1,0 +1,13 @@
+.question-and-answer {
+    margin-bottom: 30px;
+    .question {
+        @include core-19();
+        color: $grey-1;
+        margin-bottom: 5px;
+    }
+    .answer {
+        @include core-19();
+        color: #000;
+        text-transform: capitalize;
+    }
+}

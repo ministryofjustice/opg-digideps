@@ -130,6 +130,12 @@ activeTab: "tab-decisions"
           } %}
         {% endif %}
 
+        <script type="text/javascript">
+            $(document).ready(function() {
+                new GOVUK.SelectionButtons(":radio");
+            });
+        </script>
+
     {% endblock %}
 
 {% endembed %}
