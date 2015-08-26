@@ -30,9 +30,12 @@ class AccountControllerTest extends WebTestCase
     public function addAccount()
     {
         $client = new \AppBundle\Entity\Client;
+        $client->setEmail('temp@temp.com');
+        
         $this->em->persist($client);
         
         $cot = new \AppBundle\Entity\CourtOrderType;
+        $cot->setName('test');
         $this->em->persist($cot);
         
         $report = new \AppBundle\Entity\Report;

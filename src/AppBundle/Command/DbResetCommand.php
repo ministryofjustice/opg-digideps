@@ -41,6 +41,5 @@ class DbResetCommand extends ContainerAwareCommand
         $arguments = [ 'command' => 'doctrine:schema:drop', '--dump-sql' => true ];
         $input = new ArrayInput($arguments); 
         $returnCode = $command->run($input,$output);
-        var_dump(get_class($command)); die('sfdsfds');
     }
 }

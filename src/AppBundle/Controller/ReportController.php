@@ -117,7 +117,7 @@ class ReportController extends RestController
      * @param integer $id
      * @param integer $userId to check the record is accessible by this user
      */
-    public function get($id, $userId)
+    public function getById($id, $userId)
     {   
         $request = $this->getRequest();
         
