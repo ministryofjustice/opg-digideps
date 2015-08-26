@@ -28,9 +28,8 @@ class Safeguarding implements UserFilterInterface
     private $id;
 
     /**
-     * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="safeguarding")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="safeguarding")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;

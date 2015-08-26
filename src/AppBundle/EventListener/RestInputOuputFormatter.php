@@ -98,7 +98,7 @@ class RestInputOuputFormatter
         
         $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
-        $response->headers->set('content_type', 'application/' . $format);
+        $response->headers->set('Content-Type', 'application/' . $format);
         
         return $response;
     }

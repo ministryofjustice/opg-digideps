@@ -11,22 +11,31 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class SafeguardingController extends RestController
 {
     /**
-     * @Route("/upsert")
-     * @Method({"POST", "PUT"})
+     * @Route("")
+     * @Method({"POST"})
      */
-    public function upsertAction()
+    public function addAction()
     {
+        $safeguarding = new Safeguarding();
+        return $this->persistEntity($safeguarding);
+    }
+    
+    /**
+     * @Route("/{id}")
+     * @Method({"PUT"})
+     */
+    public function updateAction($id)
+    {
+        $safeguarding = $this->findEntityBy('Safeguarding', $id);
+        return $this->persistEntity($safeguarding);
+    }
+
+    public function persistEntity($safeguarding) {
         $data = $this->deserializeBodyContent();
-
-        $report = $this->findEntityBy('Report', $data['report_id'], 'Report not found');
-        $safeguarding = $report->getSafeguarding();
-
         $this->updateSafeguardingInfo($data, $safeguarding);
-
         $this->getEntityManager()->persist($safeguarding);
         $this->getEntityManager()->flush();
-
-        return ['id' => $safeguarding->getId() ];
+        return ['id' => $safeguarding->getId() ];    
     }
 
     /**
@@ -37,8 +46,7 @@ class SafeguardingController extends RestController
      */
     public function findByReportIdAction($reportId)
     {
-        $report = $this->findEntityBy('Report', $reportId);
-        return $this->getRepository('Safeguarding')->findBy(['report'=>$report]);
+        return $this->getRepository('Safeguarding')->findBy(['report'=>$reportId]);
     }
 
     /**
@@ -79,6 +87,12 @@ class SafeguardingController extends RestController
      */
     private function updateSafeguardingInfo($data,\AppBundle\Entity\Safeguarding $safeguarding)
     {
+        
+        $reportId = $data['report']['id'];
+        $report = $this->getRepository('Report')->find($reportId);
+        
+        $safeguarding->setReport($report);
+        
         if(array_key_exists('do_you_live_with_client', $data)) {
             $safeguarding->setDoYouLiveWithClient($data['do_you_live_with_client']);
         }
@@ -127,7 +141,7 @@ class SafeguardingController extends RestController
                 $safeguarding->setWhenWasCarePlanLastReviewed(null);
             }
         }
-
+    
         return $safeguarding;
     }
 }

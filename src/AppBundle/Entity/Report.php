@@ -80,8 +80,7 @@ class Report implements UserFilterInterface
     /**
      * @JMS\Groups({"transactions","basic"})
      * @JMS\Type("AppBundle\Entity\Safeguarding")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding", inversedBy="report", cascade={"persist"})
-     * @ORM\JoinColumn(name="safeguarding_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
     private $safeguarding;
 
@@ -216,7 +215,6 @@ class Report implements UserFilterInterface
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->safeguarding = new Safeguarding();
     }
     
     /**
