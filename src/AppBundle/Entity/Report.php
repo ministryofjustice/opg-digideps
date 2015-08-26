@@ -80,7 +80,7 @@ class Report implements UserFilterInterface
     /**
      * @var integer
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding", inversedBy="report")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding", inversedBy="report", cascade={"persist"})
      * @ORM\JoinColumn(name="safeguarding_id", referencedColumnName="id")
      **/
     private $safeguarding;
