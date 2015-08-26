@@ -75,42 +75,43 @@ class AssetController extends Controller
 
         $form->handleRequest($request);
 
+        // handle submit report
         $reportSubmit->handleRequest($request);
-        $noAssetsToAdd->handleRequest($request);
-
-        if ($form->get('save')->isClicked()) {
-            if ($form->isValid()) {
-                $asset = $form->getData();
-
-                if ($action == 'add') {
-
-                    $asset->setReport($reportId);
-                    $apiClient->postC('add_report_asset', $asset);
-
-                    //lets clear no assets selected if the previously selected this
-                    $report->setNoAssetToAdd(0);
-                    $apiClient->putC('report/' . $report->getId(), $report);
-                } else {// edit
-                    $apiClient->putC('update_report_asset', $asset);
-                }
-                
-                return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
-            }
-        } elseif ($noAssetsToAdd->get('saveNoAsset')->isClicked()) {
-
-            if ($noAssetsToAdd->isValid()) {
-                $report->setNoAssetToAdd(true);
-                $apiClient->putC('report/' . $report->getId(), $report);
-                return $this->redirect($this->generateUrl('assets', [ 'reportId' => $report->getId()]));
-            }
-        } else {
-
-            if ($reportSubmit->isValid()) {
-                if ($report->readyToSubmit()) {
-                    return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId()]));
-                }
+        if ($reportSubmit->isValid()) {
+            if ($report->readyToSubmit()) {
+                return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId()]));
             }
         }
+            
+        // handle no asset form
+        $noAssetsToAdd->handleRequest($request);
+        if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
+            $report->setNoAssetToAdd(true);
+            $apiClient->putC('report/' . $report->getId(), $report);
+
+            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $report->getId()]));
+        }
+            
+        // handle add
+        if ($action == 'add' && $form->get('save')->isClicked() && $form->isValid()) {
+            $asset = $form->getData();
+            $asset->setReport($reportId);
+            $apiClient->postC('add_report_asset', $asset);
+
+            //lets clear no assets selected if the previously selected this
+            $report->setNoAssetToAdd(0);
+            $apiClient->putC('report/' . $report->getId(), $report);
+
+            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
+        }
+        
+        // handle edit
+        if ($action == 'edit' && $form->get('save')->isClicked() && $form->isValid()) {
+            $asset = $form->getData();
+            $apiClient->putC('update_report_asset', $asset);
+
+            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
+        } 
 
         return [
             'report' => $report,
