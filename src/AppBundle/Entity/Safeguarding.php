@@ -20,69 +20,78 @@ class Safeguarding
 
     /**
      * Only used to hold the Report object, needed by the validators for date range reasons
-     * @JMS\Exclude
+     * @JMS\Type("AppBundle\Entity\Report")
+     * @JMS\Groups({"safeguarding"})
      * @var Report
      */
     private $report;
     
-    
-    
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"safeguarding"})
      */
     private $doYouLiveWithClient;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouVisit.notBlank", groups={"safeguarding-no"} )
+     * @JMS\Groups({"safeguarding"})     
      */
     private $howOftenDoYouVisit;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouPhoneOrVideoCall.notBlank", groups={"safeguarding-no"})
+     * @JMS\Groups({"safeguarding"})     
      */
     private $howOftenDoYouPhoneOrVideoCall;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouWriteEmailOrLetter.notBlank", groups={"safeguarding-no"})
+     * @JMS\Groups({"safeguarding"})    
      */
     private $howOftenDoYouWriteEmailOrLetter;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoesClientSeeOtherPeople.notBlank", groups={"safeguarding-no"})
+     * @JMS\Groups({"safeguarding"})     
      */
     private $howOftenDoesClientSeeOtherPeople;
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"safeguarding"})     
      */
     private $anythingElseToTell;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"safeguarding"})     
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
+     * @JMS\Groups({"safeguarding"})     
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"safeguarding"})     
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
+     * @JMS\Groups({"safeguarding"})     
      */
     private $doesClientHaveACarePlan;
 
@@ -90,6 +99,7 @@ class Safeguarding
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
      * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
+     * @JMS\Groups({"safeguarding"})     
      */
     private $whenWasCarePlanLastReviewed;
 
@@ -129,7 +139,7 @@ class Safeguarding
 
 
     /**
-     * @return Report
+     * @return Safeguarding
      */
     public function getReport()
     {
@@ -148,7 +158,7 @@ class Safeguarding
      * Set doYouLiveWithClient
      *
      * @param string $doYouLiveWithClient
-     * @return Report
+     * @return Safeguarding
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
     {
@@ -171,7 +181,7 @@ class Safeguarding
      * Set howOftenDoYouVisit
      *
      * @param string $howOftenDoYouVisit
-     * @return Report
+     * @return Safeguarding
      */
     public function setHowOftenDoYouVisit($howOftenDoYouVisit)
     {
@@ -194,7 +204,7 @@ class Safeguarding
      * Set howOftenDoYouPhoneOrVideoCall
      *
      * @param string $howOftenDoYouPhoneOrVideoCall
-     * @return Report
+     * @return Safeguarding
      */
     public function setHowOftenDoYouPhoneOrVideoCall($howOftenDoYouPhoneOrVideoCall)
     {
@@ -217,7 +227,7 @@ class Safeguarding
      * Set howOftenDoYouWriteEmailOrLetter
      *
      * @param string $howOftenDoYouWriteEmailOrLetter
-     * @return Report
+     * @return Safeguarding
      */
     public function setHowOftenDoYouWriteEmailOrLetter($howOftenDoYouWriteEmailOrLetter)
     {
@@ -240,7 +250,7 @@ class Safeguarding
      * Set howOftenDoesClientSeeOtherPeople
      *
      * @param string $howOftenDoesClientSeeOtherPeople
-     * @return Report
+     * @return Safeguarding
      */
     public function setHowOftenDoesClientSeeOtherPeople($howOftenDoesClientSeeOtherPeople)
     {
@@ -263,7 +273,7 @@ class Safeguarding
      * Set anythingElseToTell
      *
      * @param string $anythingElseToTell
-     * @return Report
+     * @return Safeguarding
      */
     public function setAnythingElseToTell($anythingElseToTell)
     {
@@ -286,7 +296,7 @@ class Safeguarding
      * Set doesClientReceivePaidCare
      *
      * @param string $doesClientReceivePaidCare
-     * @return Report
+     * @return Safeguarding
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
     {
@@ -309,7 +319,7 @@ class Safeguarding
      * Set whoIsDoingTheCaring
      *
      * @param string $whoIsDoingTheCaring
-     * @return Report
+     * @return Safeguarding
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
     {
@@ -332,7 +342,7 @@ class Safeguarding
      * Set doesClientHaveACarePlan
      *
      * @param string $doesClientHaveACarePlan
-     * @return Report
+     * @return Safeguarding
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
     {
@@ -355,7 +365,7 @@ class Safeguarding
      * Set whenWasCarePlanLastReviewed
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
-     * @return Report
+     * @return Safeguarding
      */
     public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
     {
@@ -378,7 +388,7 @@ class Safeguarding
      * Set howIsCareFunded
      *
      * @param string $howIsCareFunded
-     * @return Report
+     * @return Safeguarding
      */
     public function setHowIsCareFunded($howIsCareFunded)
     {

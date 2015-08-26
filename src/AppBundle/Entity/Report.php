@@ -15,6 +15,7 @@ class Report
     const PROPERTY_AND_AFFAIRS = 2;
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"safeguarding"})
      * @var integer
      */
     private $id;
@@ -504,17 +505,30 @@ class Report
     }
     
     /**
+     * 
+     * @return boolean
+     */
+    public function missingSafeguarding()
+    {
+        if (!isset($this->safeguarding) || $this->safeguarding->missingSafeguardingInfo() == true) {
+            return true;
+        } 
+        
+        return false;
+    }
+    
+    /**
      * @return boolean
      * @Assert\True(message="report.submissionExceptions.readyForSubmission", groups={"readyforSubmission"})
      */
     public function isReadyToSubmit()
     {
         if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions() || $this->safeguarding->missingSafeguardingInfo()){
+            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions() || $this->missingSafeguarding()){
                 return false;
             }
         }else{
-            if($this->missingContacts() || $this->missingDecisions() || $this->safeguarding->missingSafeguardingInfo()){
+            if($this->missingContacts() || $this->missingDecisions() || $this->missingSafeguarding()){
                 return false;
             }
         }

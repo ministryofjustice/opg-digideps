@@ -17,16 +17,20 @@ class SafeguardController extends Controller{
     public function editAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        $safeguard = $report->getSafeguard();
-        $request = $this->getRequest();
-
-        // just needed for title etc,
+        $report = $util->getReport($reportId, $this->getUser()->getId()); // check the report is owned by this user.
+        
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
+        
+        if ($report->getSafeguarding() == null) {
+            $safeguarding = new EntityDir\Safeguarding();
+        } else {
+            $safeguarding = $report->getSafeguarding();
+        }
 
-        $form = $this->createForm(new FormDir\SafeguardingType(), $safeguard);
+        $request = $this->getRequest();
+        $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
 
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
@@ -37,10 +41,14 @@ class SafeguardController extends Controller{
 
         if($form->get('save')->isClicked() && $form->isValid()){
             $data = $form->getData();
+            $data->setReport($report);
             $data->keepOnlyRelevantSafeguardingData();
 
-            $this->get('apiclient')->putC('safeguarding/' . $report->getId(),$data);
-            $translator = $this->get('translator');
+            if ($safeguarding->getId() == null) {
+                $this->get('apiclient')->postC('safeguarding' , $data, ['deserialise_group' => 'safeguarding']);
+            } else {
+                $this->get('apiclient')->putC('safeguarding/'. $safeguarding->getId() ,$data, ['deserialise_group' => 'safeguarding']);
+            }
 
             $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
 

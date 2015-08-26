@@ -63,7 +63,9 @@
     {% if reportType is sameas("propertyAndAffairs") %}
 
         <div class="external-report-section" id="safeguarding-section">
-            {% include 'AppBundle:Safeguard:summary.html.twig' %}
+            {% include 'AppBundle:Safeguard:summary.html.twig' with {
+                'safeguarding': report.safeguarding
+            } %}
         </div>
 
         <div class="external-report-section" id="accounts-section">

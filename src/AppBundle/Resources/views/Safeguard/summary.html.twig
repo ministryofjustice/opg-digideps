@@ -9,37 +9,37 @@
 <div id="safeguarding-contact">
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
         question: 'doYouLiveWithClient',
-        answer: report.doYouLiveWithClient
+        answer: safeguarding.doYouLiveWithClient
     } %}
 </div>
 
-{% if report.doYouLiveWithClient == 'no' %}
+{% if safeguarding.doYouLiveWithClient == 'no' %}
     <div id="safeguarding-contact-intervals">
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
             question: 'howOftenDoYouVisit',
-            answer: report.howOftenDoYouVisit
+            answer: safeguarding.howOftenDoYouVisit
         } %}
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
             question: 'howOftenDoYouPhoneOrVideoCall',
-            answer: report.howOftenDoYouPhoneOrVideoCall
+            answer: safeguarding.howOftenDoYouPhoneOrVideoCall
         } %}
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
             question: 'howOftenDoYouWriteEmailOrLetter',
-            answer: report.howOftenDoYouWriteEmailOrLetter
+            answer: safeguarding.howOftenDoYouWriteEmailOrLetter
         } %}
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
             question: 'howOftenDoesClientSeeOtherPeople',
-            answer: report.howOftenDoesClientSeeOtherPeople
+            answer: safeguarding.howOftenDoesClientSeeOtherPeople
         } %}
 
-        {% if report.anythingElseToTell %}
+        {% if safeguarding.anythingElseToTell %}
             {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
                 question: 'anythingElseToTell',
-                answer: report.anythingElseToTell
+                answer: safeguarding.anythingElseToTell
             } %}
         {% endif %}
     </div>
@@ -48,28 +48,28 @@
 
 {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
     question: 'doesClientReceivePaidCare',
-    answer: report.doesClientReceivePaidCare
+    answer: safeguarding.doesClientReceivePaidCare
 } %}
-{% if report.doesClientReceivePaidCare == 'yes' %}
+{% if safeguarding.doesClientReceivePaidCare == 'yes' %}
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
         question: 'howIsCareFunded',
-        answer: report.howIsCareFunded
+        answer: safeguarding.howIsCareFunded
     } %}
 {% endif %}
 
 
 {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
     question: 'whoIsDoingTheCaring',
-    answer: report.whoIsDoingTheCaring
+    answer: safeguarding.whoIsDoingTheCaring
 } %}
 
 
 {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
     question: 'doesClientHaveACarePlan',
-    answer: report.doesClientHaveACarePlan
+    answer: safeguarding.doesClientHaveACarePlan
 } %}
-{% if report.doesClientHaveACarePlan == 'yes' %}
-    {% set carePlanDate = report.whenWasCarePlanLastReviewed.format("m/Y") %}
+{% if safeguarding.doesClientHaveACarePlan == 'yes' %}
+    {% set carePlanDate = safeguarding.whenWasCarePlanLastReviewed.format("m/Y") %}
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
         question: 'whenWasCarePlanLastReviewed',
         answer: carePlanDate
