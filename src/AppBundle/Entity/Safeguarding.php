@@ -23,7 +23,7 @@ class Safeguarding implements UserFilterInterface
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="report_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="safeguarding_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 

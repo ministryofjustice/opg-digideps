@@ -78,8 +78,8 @@ class Report implements UserFilterInterface
     private $assets;
 
     /**
-     * @var integer
-     *
+     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Type("AppBundle\Entity\Safeguarding")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding", inversedBy="report", cascade={"persist"})
      * @ORM\JoinColumn(name="safeguarding_id", referencedColumnName="id")
      **/

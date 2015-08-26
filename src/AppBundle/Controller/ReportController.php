@@ -38,7 +38,6 @@ class ReportController extends RestController
         // add other stuff
         $report->setStartDate(new \DateTime($reportData['start_date']));
         $report->setEndDate(new \DateTime($reportData['end_date']));
-        $report->setWhenWasCarePlanLastReviewed(null);
         $report->setReportSeen(true);
         
         // persist
@@ -69,7 +68,6 @@ class ReportController extends RestController
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);
         $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
-        $newReport->setWhenWasCarePlanLastReviewed(null);
         
         //lets clone the assets
         $assets = $report->getAssets();
