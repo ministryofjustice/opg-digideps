@@ -9,14 +9,14 @@
         {% endif %}
         {% for key,choiceElement in element %}
 
-            {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
+            {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}
             {% set elementClass = items[key].elementClass is defined ?  items[key].elementClass : '' %}
             {% set description = items[key].description is defined ?  items[key].description : null %}
 
             {% if description is not null %}
                 <p class="form-hint description">{{ description }}</p>
             {% endif %}
-            <label class="{{ labelClasss }}" for="{{ choiceElement.vars.id }}">
+            <label class="{{ labelClass }}" for="{{ choiceElement.vars.id }}">
                 {{ form_widget(choiceElement, {'attr': {'class': elementClass }}) }}
                 {{ choiceElement.vars.label }}
             </label>

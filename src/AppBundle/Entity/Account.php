@@ -6,12 +6,14 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
- * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"basic"})
+ * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"opening_balance"})
  * @Assert\Callback(methods={"isClosingDateValidOrExplanationIsGiven"}, groups={"closing_balance"})
  * @Assert\Callback(methods={"isClosingBalanceMatchingTransactionsSum"}, groups={"closing_balance"})
  */
 class Account
 {
+    const OPENING_DATE_SAME_YES = 'yes';
+    const OPENING_DATE_SAME_NO = 'no';
     /**
      * @JMS\Type("integer")
      * @var integer $id
@@ -54,13 +56,26 @@ class Account
     
     /**
      * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"basic"})
-     * @Assert\Date(message="account.openingDate.date", groups={"basic"})
+     * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"opening_balance"})
+     * @Assert\Date(message="account.openingDate.date", groups={"opening_balance"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var \DateTime 
      */
     private $openingDate;
+    
+    /**
+     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"basic"})
+     * 
+     * @var string OPENING_DATE_SAME_* values
+     */
+    private $openingDateMatchesReportDate;
+      
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
+     */
+    private $openingDateExplanation;
     
     /**
      * @JMS\Type("string")
@@ -72,12 +87,7 @@ class Account
      * @var decimal
      */
     private $openingBalance;
-    
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
-     */
-    private $openingDateExplanation;
+  
     
     /**
      * @JMS\Type("string")
@@ -362,8 +372,12 @@ class Account
     /**
      * @return Report
      */
-    public function getReportObject()
+    public function getReportObject($validate = false)
     {
+        if ($validate && !$this->reportObject instanceof Report) {
+            throw new \RuntimeException("Report object not found.");
+        }
+        
         return $this->reportObject;
     }
     
@@ -539,5 +553,21 @@ class Account
     {
         return $this->moneyTotal;
     }
-
+    
+    
+    /**
+     * @return string
+     */
+    public function getOpeningDateMatchesReportDate()
+    {
+        return $this->openingDateMatchesReportDate;
+    }
+    
+    /**
+     * @param string $openingDateMatchesReportDate
+     */
+    public function setOpeningDateMatchesReportDate($openingDateMatchesReportDate)
+    {
+        $this->openingDateMatchesReportDate = $openingDateMatchesReportDate;
+    }
 }
