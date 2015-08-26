@@ -2,7 +2,7 @@
 <div class="form-group form-date {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}" id="{{ id }}">
     <fieldset>
         <legend class="form-label">
-            {% if legendTextJS is defined %}
+            {% if legendTextJS %}
                 <span class="legend-none-js">
                     {% if legendTextRaw is defined %}
                         {{ legendText | raw }}
