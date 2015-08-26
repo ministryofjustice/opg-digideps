@@ -38,6 +38,7 @@ class ReportController extends RestController
         // add other stuff
         $report->setStartDate(new \DateTime($reportData['start_date']));
         $report->setEndDate(new \DateTime($reportData['end_date']));
+        $report->setReportSeen(true);
         
         // persist
         $this->getEntityManager()->persist($report);
@@ -336,14 +337,14 @@ class ReportController extends RestController
             $report->setNoAssetToAdd($data['no_asset_to_add']);
         }
         
-        
-         if (array_key_exists('reason_for_no_decisions', $data)) {
+        if (array_key_exists('reason_for_no_decisions', $data)) {
             $report->setReasonForNoDecisions($data['reason_for_no_decisions']);
         }
         
         if (array_key_exists('further_information', $data)) {
             $report->setFurtherInformation($data['further_information']);
         }
+
         
         $this->getEntityManager()->flush($report);
         
@@ -398,5 +399,7 @@ class ReportController extends RestController
         
         return ['id'=>$report->getId()];
     }
+
+
     
 }
