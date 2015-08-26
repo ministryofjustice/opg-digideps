@@ -76,7 +76,15 @@ class Report implements UserFilterInterface
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
      */
     private $assets;
-    
+
+    /**
+     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Type("AppBundle\Entity\Safeguarding")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
+     **/
+    private $safeguarding;
+
+
     /**
      * @JMS\Groups({"transactions", "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
@@ -167,6 +175,11 @@ class Report implements UserFilterInterface
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
+
+
+    /**
+     * @var
+     */
 
     /**
      * @var boolean
@@ -622,6 +635,30 @@ class Report implements UserFilterInterface
         return $this->noAssetToAdd;
     }
 
+
+    /**
+     * Get Safeguarding
+     *
+     * @return \AppBundle\Entity\Safeguarding
+     */
+    public function getSafeguarding()
+    {
+        return $this->safeguarding;
+    }
+
+    /**
+     * Set Safeguarding
+     *
+     * @param \AppBundle\Entity\Safeguarding $safeguarding
+     * @return \AppBundle\Entity\Report
+     */
+    public function setSafeguarding(\AppBundle\Entity\Safeguarding $safeguarding = null)
+    {
+        $this->safeguarding = $safeguarding;
+
+        return $this;
+    }
+
     /**
      * Set reasonForNoContact
      *
@@ -735,4 +772,6 @@ class Report implements UserFilterInterface
     {
         return $this->reportSeen;
     }
+
+
 }
