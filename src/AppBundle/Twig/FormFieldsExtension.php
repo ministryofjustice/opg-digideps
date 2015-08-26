@@ -84,6 +84,7 @@ class FormFieldsExtension extends \Twig_Extension
      * form_checkbox_group(element, 'allowedCourtOrderTypes', {
        'legendClass' : 'form-label-bold',
        'fieldSetClass' : 'inline',
+       'vertical': true,
        'items': [
            {'labelClass': 'block-label', 'elementClass': 'checkbox' },
            {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
@@ -100,10 +101,19 @@ class FormFieldsExtension extends \Twig_Extension
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
         
-        //get legendText translation
+        //get legendText translation. Look for a .legend value, if there isn't one then try the top level
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
         
-        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+        if ($legendTextTrans != $translationKey.'.legend') {
+            $legendText = $legendTextTrans;
+        } else {
+            $legendTextTrans = $this->translator->trans($translationKey . '.label', [],$domain);
+            if ($legendTextTrans != $translationKey.'.label') {
+                $legendText = $legendTextTrans;
+            } else {
+                $legendText = null;
+            }
+        }
         
          //generate input field html using variables supplied
         echo $this->environment->render( 'AppBundle:Components/Form:_checkboxgroup.html.twig', [
@@ -113,7 +123,9 @@ class FormFieldsExtension extends \Twig_Extension
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass']: null,
             'hintText' => $hintText,
             'element'  => $element,
+            'vertical' => isset($vars['vertical']) ? $vars['vertical']: false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
+            'translationDomain' => $domain
         ]);
     }
     
@@ -141,6 +153,13 @@ class FormFieldsExtension extends \Twig_Extension
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
         
+        $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
+        if (isset($vars['showDay'])) {
+            $showDay = $vars['showDay'];
+        } else {
+            $showDay = 'true';
+        }
+        
         //sort hint text translation
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
@@ -149,18 +168,27 @@ class FormFieldsExtension extends \Twig_Extension
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
         
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);    
-        $legendTextTransJS = $this->translator->trans($translationKey.'.legendjs', $legendParams, $domain); 
-        
-        $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
+
+        if ($legendTextTrans != $translationKey.'.legend') {
+            $legendText = $legendTextTrans;
+        } else {
+            $legendTextTrans = $this->translator->trans($translationKey . '.label', [],$domain);
+            if ($legendTextTrans != $translationKey.'.label') {
+                $legendText = $legendTextTrans;
+            } else {
+                $legendText = null;
+            }
+        }
+
+        $legendTextTransJS = $this->translator->trans($translationKey.'.legendjs', $legendParams, $domain);
         $legendTextJS =  ($legendTextTransJS != $translationKey.'.legendjs')? $legendTextTransJS: null;
-        
         
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
                                                                                                 'legendTextJS' => $legendTextJS,
                                                                                                 'hintText' => $hintText,
                                                                                                 'element' => $element,
-                                                                                                'legendTextRaw' => !empty($vars['legendRaw'])
-                                                                                              ]);
+                                                                                                'showDay' => $showDay,
+                                                                                                'legendTextRaw' => !empty($vars['legendRaw'])]);
         echo $html;
     }
     

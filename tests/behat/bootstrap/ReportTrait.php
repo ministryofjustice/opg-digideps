@@ -158,7 +158,7 @@ trait ReportTrait
     /**
      * Click on contacts tab and add a contact
      * If the form is not shown, click first on "add-a-contact" button (with no exception thrown)
-     * 
+     *
      * @When I add the following contacts:
      */
     public function IAddtheFollowingContact(TableNode $table)
@@ -189,7 +189,7 @@ trait ReportTrait
     /**
      * Click on decisions tab and add a decision
      * If the form is not shown, click first on "add-a-decision" button (with no exception thrown)
-     * 
+     *
      * @When I add the following decisions:
      */
     public function IAddtheFollowingDecision(TableNode $table)
@@ -256,7 +256,7 @@ trait ReportTrait
     /**
      * @When I add the following bank account:
      */
-    public function iAddTheFollowingBankAccountAssets(TableNode $table)
+    public function iAddTheFollowingBankAccount(TableNode $table)
     {
         $this->clickLink("tab-accounts");
 
@@ -346,7 +346,7 @@ trait ReportTrait
     /**
      * @param array $rows
      * @param string $needle
-     * 
+     *
      * @return array
      */
     private function getRowsMatching(array $rows, $needle)
@@ -360,7 +360,7 @@ trait ReportTrait
 
         return $ret;
     }
-    
+
      /**
      * @When I submit the report with further info :moreInfo
      */
@@ -369,7 +369,7 @@ trait ReportTrait
         // checkbox top page
         $this->checkOption("report_submit_reviewed_n_checked");
         $this->pressButton("report_submit_submitReport");
-        
+
         # more info page
         $this->fillField('report_add_info_furtherInformation', $moreInfo);
         $this->pressButton("report_add_info_saveAndContinue");
@@ -377,9 +377,179 @@ trait ReportTrait
         # declaration page
         $this->checkOption("report_declaration_agree");
         $this->pressButton("report_declaration_save");
-        
+
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
+
+    private function replace_dashes($string) {
+        $string = str_replace(" ", "-", $string);
+        return strtolower($string);
+    }
+
+
+    /**
+     * @Then the report should indicate that the :checkboxvalue checkbox for :checkboxname is checked
+     */
+    public function theReportShouldIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]';
+        $element = $this->getSession()->getPage()->find('css',$css);
+
+        if(!isset($element)) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        }
+
+        if ($element->getText() != "X") {
+            throw new \RuntimeException("Checkbox not checked");
+        }
+
+    }
+
+    /**
+     * @Then the report should not indicate that the :checkboxvalue checkbox for :checkboxname is checked
+     */
+    public function theReportShouldNotIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]';
+        $element = $this->getSession()->getPage()->find('css',$css);
+
+        if(!isset($element)) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        }
+
+        if ($element->getText() == "X") {
+            throw new \RuntimeException("Checkbox not unchecked");
+        }
+
+    }
+
+    /**
+     * @Then the report should indicate that the :checkbox checkbox is checked
+     */
+    public function theReportShouldIndicateThatTheCheckboxIsChecked($checkbox)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]';
+        $element = $this->getSession()->getPage()->find('css',$css);
+
+        if(!isset($element)) {
+            throw new \RuntimeException("Checkbox not found:$css");
+        }
+
+        if ($element->getText() != "X") {
+            throw new \RuntimeException("Checkbox not checked");
+        }
+    }
+
+    /**
+     * @Then the report should not indicate that the :checkbox checkbox is checked
+     */
+    public function theReportShouldNotIndicateThatTheCheckboxIsChecked($checkbox)
+    {
+        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]';
+        $element = $this->getSession()->getPage()->find('css',$css);
+
+        if(!isset($element)) {
+            throw new \RuntimeException("Checkbox not found: $css");
+        }
+
+        if ($element->getText() == "X") {
+            throw new \RuntimeException("Checkbox checked");
+        }
+    }
+
+    /**
+     * @When I view the users latest report
+     */
+    public function iViewTheUsersLatestReport()
+    {
+        $this->visit('/client/show');
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.view-report-link');
+
+        if (count($linksElementsFound) === 0) {
+            throw new \RuntimeException("Element .view-report-link not found");
+        }
+
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Returned multiple elements");
+        }
+
+        $url = $linksElementsFound[0]->getAttribute('href');
+        $epos = strpos($url, '/display');
+        $length = $epos - 8;
+        $reportNumber = substr($url, 8, $length);
+        $reportNumberSplit = explode('/', $reportNumber);
+
+        if (count($reportNumberSplit) > 1) {
+            $reportNumber = $reportNumberSplit[count($reportNumberSplit) - 1];
+        }
+        $newUrl = '/report/' . $reportNumber . '/display';
+
+        $this->visit($newUrl);
+    }
+
+
+    /**
+     * @Then the :question question should be answered with :answer
+     */
+    public function theQuestionShouldBeAnsweredWith($question, $answer)
+    {
+
+        $questionElement = $this->getSession()->getPage()->find('xpath', '//div[text()="' . $question . '"]');
+
+        if (!isset($questionElement)) {
+            throw new \RuntimeException("Can't find element with: $question");
+        }
+
+        $parent = $questionElement->getParent();
+        $answerElement = $parent->find('css', '.answer');
+
+        if (!isset($answerElement)) {
+            throw new \RuntimeException("This question has no answers");
+        }
+
+        $text = strtolower($answerElement->getText());
+        $answer = strtolower($answer);
+
+        if ($text != $answer) {
+            throw new \RuntimeException("Not the answer I had hoped for :(  $text -  $$answer");
+        }
+
+    }
+
+    /**
+     * @Then the :question question, in the :section section, should be answered with :answer
+     */
+    public function theQuestionInSectionShouldBeAnsweredWith($question, $section, $answer)
+    {
+        $section = $this->getSession()->getPage()->find('css', '#' . $section . '-section');
+        if (!isset($section)) {
+            throw new \RuntimeException("Can't find section with: $section");
+        }
+
+        $questionElement = $section->find('xpath', '//div[text()="' . $question . '"]');
+
+        if (!isset($questionElement)) {
+            throw new \RuntimeException("Can't find element with: $question");
+        }
+
+
+        $parent = $questionElement->getParent();
+        $answerElement = $parent->find('css', '.answer');
+
+        if (!isset($answerElement)) {
+            throw new \RuntimeException("This question has no answers");
+        }
+
+        $text = strtolower($answerElement->getText());
+        $answer = strtolower($answer);
+
+        if ($text != $answer) {
+            throw new \RuntimeException("Not the answer I had hoped for :(  $text -  $$answer");
+        }
+
+    }
+
+
 
 }
