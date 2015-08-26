@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 #let's configure environment
 run-parts /etc/my_init.d
 chown app:app /tmp/behat

@@ -27,6 +27,7 @@ class AccountType extends AbstractType
         'showClosingBalance' => false,
         'showSubmitButton' => true,
         'showDeleteButton' => false,
+        'jsEnabled' => false,
     ];
 
 
@@ -170,17 +171,23 @@ class AccountType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $showClosingBalance = $this->options['showClosingBalance'];
+        $jsEnabled = $this->options['jsEnabled'];
         
         $resolver->setDefaults([
             'translation_domain' => 'report-accounts',
             'data_class' => 'AppBundle\Entity\Account',
-            'validation_groups' => function(FormInterface $form) use ($showClosingBalance) {
+            'validation_groups' => function(FormInterface $form) use ($showClosingBalance, $jsEnabled) {
             	$validationGroups = ['basic', 'opening_balance'];
                 
                 //$account = $form->getData(); /* @var $account Account */
                 
                 if ($showClosingBalance) {
                    $validationGroups[] = 'closing_balance'; 
+                }
+
+                // skip validation for checkbox in non-JS mode
+                if ($jsEnabled) {
+                    $validationGroups[] = 'checkbox_matches_date'; 
                 }
                 
             	return $validationGroups;

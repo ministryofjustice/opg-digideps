@@ -62,6 +62,8 @@
                 content: '#account_opening_date_not_same',
                 hideOnYes: true
             });
+       // tell the form that JS is enabled
        $('#account_js-enabled').val('yes');
+       $('#account_add_form').attr('action',  '{{ path('accounts', {'reportId': report.id, 'action': 'jsadd'}) }}#pageBody');
     })
 </script>
