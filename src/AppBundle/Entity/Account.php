@@ -65,7 +65,7 @@ class Account
     private $openingDate;
     
     /**
-     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"basic"})
+     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"checkbox_matches_date"})
      * 
      * @var string OPENING_DATE_SAME_* values
      */

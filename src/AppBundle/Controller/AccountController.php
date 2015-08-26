@@ -14,7 +14,7 @@ class AccountController extends Controller
 
     /**
      * @Route("/report/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"}, requirements={
-     *   "action" = "(add|list)"
+     *   "action" = "(add|jsadd|list)"
      * })
      * @Template()
      */
@@ -35,8 +35,8 @@ class AccountController extends Controller
         $account = new EntityDir\Account();
         $account->setReportObject($report);
 
-        $form = $this->createForm(new FormDir\AccountType(), $account, [
-            'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
+        $form = $this->createForm(new FormDir\AccountType(['jsEnabled'=>('jsadd' === $action)]), $account, [
+             'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
         ]);
         
         // report submit logic
@@ -61,6 +61,10 @@ class AccountController extends Controller
             return $this->redirect(
                 $this->generateUrl('accounts', [ 'reportId' => $reportId ]) . "#pageBody"
             );
+        }
+        
+        if ($form->get('save')->isClicked() && !$form->isValid()) {
+            echo $form->getErrorsAsString();
         }
 
         return [
