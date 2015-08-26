@@ -31,29 +31,18 @@ class AssetController extends Controller
     
     /**
      * --action [ list, add, edit, delete-confirm ]
-     * @Route("/report/{reportId}/assets/{action}/{id}", name="assets", defaults={ "action" = "list", "id" = " "})
+     * @Route("/report/{reportId}/assets/{action}/{id}", 
+     *        name="assets", 
+     *        defaults={ "action" = "list", "id" = " "},
+     *        requirements={"action"="(list|add|edit|delete-confirm)"}
+     * )
      * @Template()
      */
     public function assetsAction($reportId, $action,$id)
     {
         $util = $this->get('util');
-        $translator =  $this->get('translator');
-        $dropdownKeys = $this->container->getParameter('asset_dropdown');
         $apiClient = $this->get('apiclient');
         $request = $this->getRequest();
-        
-        $titles = [];
-        
-        foreach($dropdownKeys as $key ){
-            $translation = $translator->trans($key,[],'report-assets');
-            $titles[$translation] = $translation;
-        }
-
-        $other = $titles['Other assets'];
-        unset($titles['Other assets']);
-        
-        asort($titles);
-        $titles['Other assets'] = $other;
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
         
@@ -62,15 +51,15 @@ class AssetController extends Controller
         }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
-        if(in_array($action, [ 'edit', 'delete-confirm'])){
+        if (in_array($action, [ 'edit', 'delete-confirm'])){
             $asset = $apiClient->getEntity('Asset','get_report_asset', [ 'parameters' => ['id' => $id ]]);
             if (!in_array($id, $report->getAssets())) {
                throw new \RuntimeException("Asset not found.");
             }
-            $form = $this->createForm(new FormDir\AssetType($titles),$asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $asset->getId() ])]);
-        }else{
+            $form = $this->createForm('asset', $asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $asset->getId() ])]);
+        } else {
             $asset = new EntityDir\Asset();
-            $form = $this->createForm(new FormDir\AssetType($titles),$asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'add'])]);
+            $form = $this->createForm('asset', $asset, [ 'action' => $this->generateUrl('assets', [ 'reportId' => $reportId, 'action' => 'add'])]);
         }
         
         // report submit logic
