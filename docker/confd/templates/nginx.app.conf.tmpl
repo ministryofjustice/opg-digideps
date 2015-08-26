@@ -31,7 +31,7 @@ server {
     fastcgi_temp_file_write_size 256k;
 
     # serve static files directly
-    location ~* ^.+.(jpg|jpeg|gif|css|png|js|ico|htm|html|xml|txt|woff|eot|ttf)$ {
+    location ~* ^.+\.(jpg|jpeg|gif|css|png|js|ico|htm|html|xml|txt|woff|eot|ttf)$ {
         access_log        off;
         expires           24h;
     }
