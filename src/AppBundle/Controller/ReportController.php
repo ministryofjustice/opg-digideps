@@ -274,7 +274,7 @@ class ReportController extends Controller
             'deputy' => $this->getUser(),
         ];
     }
-    
+
     private function groupAssets($assets)
     {
         $assetGroups = array();

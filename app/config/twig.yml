@@ -11,6 +11,8 @@ parameters:
           path: "decisions"
         tab-contacts:
           path: "contacts"
+        tab-safeguarding:
+          path: "safeguarding"
         tab-accounts:
           path: "accounts"
         tab-assets:
@@ -22,3 +24,5 @@ parameters:
               path: "decisions"
           tab-contacts:
               path: "contacts"
+          tab-safeguarding:
+              path: "safeguarding"

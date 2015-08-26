@@ -1,0 +1,6 @@
+{% set questionLabel = question ~ '.label' %}
+
+<div class="question-and-answer" id="{{question | escape('css')}}">
+    <div class="question">{{questionLabel | trans({}, translationDomain)}}</div>
+    <div class="answer">{{answer | trans({}, translationDomain)}}</div>
+</div>

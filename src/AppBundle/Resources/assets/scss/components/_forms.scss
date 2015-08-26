@@ -36,6 +36,16 @@ form {
         width: 22%;
       }      
 
+      fieldset.stacked {
+          label.block-label {
+              width: 85%;
+          }
+      }
+      
+      label.block-label {
+          @include core-19();
+      }
+
     }
 
     .report-list__item & {
@@ -78,10 +88,15 @@ form {
 
 }
 
-.form {
-  &--client-add-report {
+.form-section {
+    @extend %contain-floats;
+    border-left: 3px solid $grey-2;
+    padding-left: 15px;
+    margin-bottom: 40px
+}
+
+.form--client-add-report {
     margin: 40px 0 20px 0;
-  }
 }
 
 .form-group {
@@ -118,6 +133,10 @@ form {
     width: 65%;
   }
 
+}
+
+.form-group.sub-section-title {
+    padding-left: 15px;
 }
 
 .form-group_button-bar {
@@ -195,13 +214,13 @@ form {
   }
 }
 legend .form-label {
-    width: 100%;
+    width: 85%;
 }
 
 
 .form-hint {
   margin-top: 0;
-  width: 50%;
+  width: 85%;
   margin-bottom: 5px;
 }
 ul.form-hint {

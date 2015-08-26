@@ -1,5 +1,7 @@
 FROM registry.service.dsd.io/opguk/php-fpm:0.1.50
 
+RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
+
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis \
      nodejs dos2unix && \
@@ -8,9 +10,6 @@ RUN  apt-get update && apt-get install -y \
 
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-#npm, nodejs, sass libs
-#TODO: zac freeze gem versions
-RUN  ln -s /usr/bin/nodejs /usr/bin/node
 RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  npm install -g grunt
 RUN  npm install -g grunt-cli

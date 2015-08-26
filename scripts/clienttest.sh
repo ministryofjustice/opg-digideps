@@ -6,6 +6,7 @@ chown app:app /tmp/behat
 
 cd /app
 /sbin/setuser app mkdir -p /tmp/behat
+apt-get update > /dev/null 2>&1
 apt-get install postgresql -y > /dev/null 2>&1
 export PGHOST=postgres
 export PGPASSWORD=api
@@ -14,6 +15,5 @@ export PGUSER=api
 rm -rf app/cache/*
 suitename=${1:-deputy}
 
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=$suitename --stop-on-failure
 /sbin/setuser app php vendor/phpunit/phpunit/phpunit -c app/
-
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=$suitename --stop-on-failure

@@ -40,3 +40,5 @@ parameters:
         update_report_asset: report/upsert-asset
         get_report_asset: report/get-asset
         delete_report_asset: report/delete-asset
+        add_safeguarding: safeguarding
+        edit_safeguarding: safeguarding
