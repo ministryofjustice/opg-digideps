@@ -100,17 +100,16 @@ class ReportTest extends \PHPUnit_Framework_TestCase
        $contact = m::mock('AppBundle\Entity\Contact');
        $decision = m::mock('AppBundle\Entity\Decision');
        $asset = m::mock('AppBundle\Entity\Asset');
+       $safeguarding = m::mock('AppBundle\Entity\Safeguarding');
        
+       $safeguarding->shouldReceive('missingSafeguardingInfo')->times(1)->andReturn(false);
+
        $this->report->setAccounts([ $this->account]);
        $this->report->setContacts([ $contact ]); 
        $this->report->setDecisions([ $decision ]);
        $this->report->setAssets([ $asset ]);
+       $this->report->setSafeguarding($safeguarding);
        
-       $this->report->setDoYouLiveWithClient('yes');
-       $this->report->setDoesClientReceivePaidCare('no');
-       $this->report->setWhoIsDoingTheCaring('I am doing all the caring');
-       $this->report->setDoesClientHaveACarePlan('no');
-
        $this->assertTrue($this->report->isReadyToSubmit());
     }
 }
