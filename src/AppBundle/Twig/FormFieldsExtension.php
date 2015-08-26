@@ -164,9 +164,11 @@ class FormFieldsExtension extends \Twig_Extension
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
         
-        //get legendText translation. Look for a .legend value, if there isn't one then try the top level
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        //get legendText translation
+        $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
         
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);    
+
         if ($legendTextTrans != $translationKey.'.legend') {
             $legendText = $legendTextTrans;
         } else {
@@ -177,12 +179,16 @@ class FormFieldsExtension extends \Twig_Extension
                 $legendText = null;
             }
         }
+
+        $legendTextTransJS = $this->translator->trans($translationKey.'.legendjs', $legendParams, $domain);
+        $legendTextJS =  ($legendTextTransJS != $translationKey.'.legendjs')? $legendTextTransJS: null;
         
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
+                                                                                                'legendTextJS' => $legendTextJS,
                                                                                                 'hintText' => $hintText,
                                                                                                 'element' => $element,
-                                                                                                'showDay' => $showDay
-                                                                                              ]);
+                                                                                                'showDay' => $showDay,
+                                                                                                'legendTextRaw' => !empty($vars['legendRaw'])]);
         echo $html;
     }
     
@@ -321,7 +327,8 @@ class FormFieldsExtension extends \Twig_Extension
         $hintListEntriesText = ($hintListTextTrans != $translationKey.'.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
         
         //sort out labelText translation
-        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label',[],$domain);
+        $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+        $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label', $labelParams, $domain);
 
         //inputPrefix
         $inputPrefix = isset($vars['inputPrefix'])? $this->translator->trans($vars['inputPrefix'],[],$domain): null;
@@ -338,7 +345,8 @@ class FormFieldsExtension extends \Twig_Extension
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
-            'formGroupClass' => $formGroupClass
+            'formGroupClass' => $formGroupClass,
+            'labelRaw' => !empty($vars['labelRaw'])
         ];
     }
     

@@ -7,10 +7,10 @@
     
     {% set class = element.vars.attr.class | default('') ~ '' ~ inputClass | default('') %}
 
-    {% set labelClasss = 'block-label ' ~ (labelClass is defined ?  labelClass : '') %}
+    {% set labelClass = 'block-label ' ~ (labelClass is defined ?  labelClass : '') %}
     {% set elementClass = elementClass is defined ?  elementClass : '' %}
 
-    <label class="{{ labelClasss }}" for="{{ element.vars.id }}">
+    <label class="{{ labelClass }}" for="{{ element.vars.id }}">
         {% if element.vars.valid %}
             {{ form_widget(element, {'attr': {'class': class }}) }}
         {% else %}

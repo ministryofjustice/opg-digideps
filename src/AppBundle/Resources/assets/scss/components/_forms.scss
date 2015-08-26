@@ -165,6 +165,14 @@ form {
     }
 
   }
+  
+  .horizontal {
+      
+    .block-label {
+      clear: none;
+      margin-right: 20px;
+    }
+  }
 
 }
 
@@ -200,6 +208,10 @@ form {
 .form-label {
   margin-bottom: 5px;
   width: 50%;
+  
+  .bold {
+    font-weight: bold;
+  }
 }
 legend .form-label {
     width: 85%;
@@ -244,5 +256,21 @@ form.single-texta-area {
     .error-message {
         color: $error-colour;
         width: auto;
+    }
+}
+
+.form-label {
+    .legend-none-js {
+        display: block;
+    }
+    .legend-js {
+        display: none;
+    }
+    
+    .js-enabled & .legend-none-js {
+        display: none;
+    }
+    .js-enabled & .legend-js {
+        display: block;
     }
 }
