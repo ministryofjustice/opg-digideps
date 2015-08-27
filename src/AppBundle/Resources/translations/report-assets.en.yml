@@ -48,6 +48,7 @@ save:
 defaultDropDownOption:
     option: Please select ...  
 dropdown:
+    # values will be automatically ordered alphabetically. other_assets will always be kept last
     property: Property
     savings_accounts: Savings accounts
     investment_bonds: Investment bonds

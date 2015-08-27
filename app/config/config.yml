@@ -88,6 +88,8 @@ snc_redis:
     
 parameters:
     # translation key must be present in report-assets.en.yml, dropdown.<value>
+    # keep "other_assets" last
+    # key is ignored
     asset_dropdown:
         1:  property 
         2:  savings_accounts
