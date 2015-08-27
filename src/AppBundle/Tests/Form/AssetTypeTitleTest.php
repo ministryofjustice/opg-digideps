@@ -4,7 +4,7 @@ namespace AppBundle\Tests\Form;
 use Mockery as m;
 use AppBundle\Form\AssetType;
 
-class AssetTypeTest extends \PHPUnit_Framework_TestCase
+class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
@@ -29,7 +29,7 @@ class AssetTypeTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetTitleChoices($input, $expectedOutput)
     {
-        $this->object = new AssetType($input, $this->translator, 'domain');
+        $this->object = new AssetTypeTitleTest($input, $this->translator, 'domain');
         
         $this->assertEquals($expectedOutput,  $this->object->getTitleChoices());
     }
