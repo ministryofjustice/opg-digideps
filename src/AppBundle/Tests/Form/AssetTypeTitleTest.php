@@ -29,7 +29,7 @@ class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetTitleChoices($input, $expectedOutput)
     {
-        $this->object = new AssetTypeTitleTest($input, $this->translator, 'domain');
+        $this->object = new AssetTypeTitle($input, $this->translator, 'domain');
         
         $this->assertEquals($expectedOutput,  $this->object->getTitleChoices());
     }
