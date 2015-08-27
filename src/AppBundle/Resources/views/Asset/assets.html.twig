@@ -78,10 +78,13 @@ activeTab: "tab-assets"
         'showMoreLink': showMoreLink
         } %}
 
-        {% include 'AppBundle:Asset:_asset_form.html.twig' with {
-        'showAddForm': showAddForm,
-        'form': form
-        } %}
+        
+        {% if (showAddForm) %}
+          {% include 'AppBundle:Asset:_asset_form.html.twig' with {
+          'showAddForm': showAddForm,
+          'form': form
+          } %}
+        {% endif %}
 
         {% if showListData %}
             {% include 'AppBundle:Asset:_listAsset.html.twig' with {
@@ -98,9 +101,7 @@ activeTab: "tab-assets"
           {% if reportHasNoAssetExplanation %}
             <p class="no-assets-selected nothing-selected page-section-description behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</p>
           {% else %}
-              {% include 'AppBundle:Asset:_no_asset_form.html.twig' with {
-                  'showNoAssetToAddForm': showNoAssetToAddForm
-              } %}
+              {% include 'AppBundle:Asset:_no_asset_form.html.twig'%}
           {% endif %}
         {% endif %}
 
