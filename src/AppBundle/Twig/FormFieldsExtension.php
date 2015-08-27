@@ -317,7 +317,7 @@ class FormFieldsExtension extends \Twig_Extension
         //lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
-
+        
         //sort hint text translation
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;

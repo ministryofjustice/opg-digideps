@@ -10,11 +10,11 @@ form:
       label: "Add an asset"
       moreLabel: "Add another asset"
   newAsset:
-    subSectionTitleAdd: "Add an asset"
+    subSectionTitleAdd: Add an asset
     subSectionTitleEdit: "Edit this asset"
     controls:
       title:
-        label: "Asset title"
+        label: Select an asset category, such as ‘Property’.
         hint: ""
       value:
         label: "Value"
@@ -26,6 +26,8 @@ form:
       valuationDate:
         legend: Valuation date (optional)
         hint: "(DD/MM/YYYY)"
+      next:
+        label: Next
       save:
         label: Save
       cancel:

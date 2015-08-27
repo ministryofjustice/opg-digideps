@@ -89,8 +89,8 @@ services:
     auditLogger:
         class: AppBundle\Service\AuditLogger
         arguments: [@apiclient, @security.context, @service_container]
-    app.form.type.report.asset:
-        class: AppBundle\Form\AssetType
+    app.form.type.report.assetTitle:
+        class: AppBundle\Form\AssetTypeTitle
         arguments: [%asset_dropdown%, @translator, "report-assets", "other_assets"]
         tags:
-            - { name: form.type, alias: asset }
+            - { name: form.type, alias: asset_title }

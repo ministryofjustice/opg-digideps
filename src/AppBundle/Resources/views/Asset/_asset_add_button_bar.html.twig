@@ -1,33 +1,25 @@
 {#
 Component parameters
 --------------------
-
-showAddForm (true/false)
 showMoreLink (true/false)
 #}
 
-{% if (not showAddForm) %}
-    {# Then we need to show the Add Button Link instead of the Add Form #}
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
+buttonBarClass: 'add-bar js-add-assets-button-bar'
+} %}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
-        buttonBarClass: 'add-bar js-add-assets-button-bar'
-        } %}
-
-        {% set  params = app.request.attributes.get('_route_params') %}
-
-        {% if showMoreLink %}
-            {% set label = 'form.listing.addButton.moreLabel' %}
-        {% else %}
-            {% set label = 'form.listing.addButton.label' %}
-        {% endif %}
-
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-        transDomain: translationDomain,
-        linkButtonLabel: label,
-        linkClass: 'button-secondary behat-link-add-an-asset behat-region-add-an-asset',
-        linkHref: path('assets', {'reportId': params['reportId'], 'action': 'add' })
-        } %}
-
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
+{% if showMoreLink %}
+    {% set label = 'form.listing.addButton.moreLabel' %}
+{% else %}
+    {% set label = 'form.listing.addButton.label' %}
 {% endif %}
+
+{% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+transDomain: translationDomain,
+linkButtonLabel: label,
+linkClass: 'button-secondary behat-link-add-an-asset behat-region-add-an-asset',
+linkHref: path('asset_add_select_title', {'reportId': report.id })
+} %}
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+
