@@ -226,15 +226,17 @@
             margin: 0;
             padding: 5px 0 5px 0;
             border-bottom: 1px solid #000;
-            *height: 45px;
-
-            dl {
-                @extend %contain-floats;
-            }
+            
 
             &:first-child {
                 margin-top: 0;
             }
+
+            .transaction-label {
+                width: 80%;
+                float: left;
+            }
+
 
             .amount {
                 @include inline-block();
@@ -251,6 +253,7 @@
                 font-family: Helvetica, Arial;
                 font-size: 20px;
                 color: #454572;
+                float: none;
             }
         }
 
