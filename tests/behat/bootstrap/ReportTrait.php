@@ -231,12 +231,16 @@ trait ReportTrait
         foreach ($table->getHash() as $row) {
             $this->clickLink("tab-assets");
 
-            // expand form if collapsed
-            if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title'))) {
+            // click on "Add" if form not present
+            if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title_title'))) {
                 $this->clickOnBehatLink('add-an-asset');
             }
 
-            $this->fillField('asset_title', $row['title']);
+            $this->fillField('asset_title_title', $row['title']);
+            $this->pressButton("asset_title_next");
+            $this->theFormShouldBeValid();
+            $this->assertResponseStatus(200);
+            
             $this->fillField('asset_value', $row['value']);
             $this->fillField('asset_description', $row['description']);
 

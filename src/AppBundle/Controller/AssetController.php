@@ -132,7 +132,7 @@ class AssetController extends Controller
     }
     
     /**
-     * @Route("/report/{reportId}/asset/{assetId}/delete/{confirmed}", name="asset_delete")
+     * @Route("/report/{reportId}/assets/{assetId}/delete/{confirmed}", name="asset_delete")
      * @Template("AppBundle:Asset:list.html.twig")
      */
     public function deleteAction($reportId, $assetId, $confirmed = false)
@@ -174,14 +174,10 @@ class AssetController extends Controller
     
     /**
      * --action [ list, add, edit, delete-confirm ]
-     * @Route("/report/{reportId}/assets/{action}/{id}", 
-     *        name="assets", 
-     *        defaults={ "action" = "list", "id" = " "},
-     *        requirements={"action"="(list|add|edit|delete-confirm)"}
-     * )
+     * @Route("/report/{reportId}/assets", name="assets")
      * @Template()
      */
-    public function listAction($reportId, $action, $id)
+    public function listAction($reportId)
     {
         $util = $this->get('util');
         $apiClient = $this->get('apiclient');
@@ -223,7 +219,6 @@ class AssetController extends Controller
         return [
             'report' => $report,
             'client' => $client,
-            'action' => $action,
             'no_assets_to_add' => $noAssetsToAdd->createView(),
             'assets' => $assets,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
