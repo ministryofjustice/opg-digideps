@@ -1,8 +1,7 @@
 <?php
-namespace AppBundle\Tests\Form;
+namespace AppBundle\Form;
 
 use Mockery as m;
-use AppBundle\Form\AssetTypeTitle;
 
 class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
 {
