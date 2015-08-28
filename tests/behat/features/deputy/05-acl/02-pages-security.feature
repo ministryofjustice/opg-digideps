@@ -30,7 +30,7 @@ Feature: deputy / acl / security on pages
     Scenario: User cannot access other's pages
       # behat-user can access report n.2
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I store the application stauts into "deputy-acl-before"
+      And I save the application status into "deputy-acl-before"
       Then the following pages should return the following status:
         | /report/1/overview  | 200 | 
         # decisions
@@ -91,7 +91,7 @@ Feature: deputy / acl / security on pages
         | /report/1/add_further_information | 500 | 
         | /report/1/declaration | 500 | 
         | /report/1/submitted | 500 | 
-      And I load the application stauts from "deputy-acl-before"
+      And I load the application status from "deputy-acl-before"
 
     @deputy
     Scenario: restore backup
