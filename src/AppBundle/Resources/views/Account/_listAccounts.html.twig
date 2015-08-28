@@ -12,7 +12,7 @@
               {% set linkToAccountPage = linkToAccountPage ~ '#closing-balance' %}
             {% else %}
               {% set warningMessage = 'listing.addTotalsWarning' %}    
-              {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'money-both'}) ~ '#tab-overview' %}
+              {% set linkToAccountPage = path('account', {'reportId': report.id, 'accountId': account.id, 'action': 'money-both'}) ~ '#pageBody' %}
           {% endif %}
         {% endif %}
         

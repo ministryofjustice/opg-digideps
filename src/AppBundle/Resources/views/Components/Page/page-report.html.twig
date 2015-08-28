@@ -16,6 +16,8 @@
         {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
     {% endblock %}
 
+    <a name="pageBody"></a>
+
     {% if showNav == true %}
         {% block pageNavigation %}
             {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
@@ -29,7 +31,6 @@
     {% endblock %}
 
     <div id="page-body">
-        <a name="pageBody"></a>
         {% block pageBody %}{% endblock %}
         {% if showHelp %}
             {% include 'AppBundle:Components/Page:_help.html.twig' %}

@@ -1,23 +1,6 @@
-.page-body {
-  margin-top: 0;
+#page-body {
+  margin-top: 40px;
   overflow: hidden;
   position: relative;
-
-  .page-service-content & {
-    margin-top: 40px;
-  }
-
-  .page-admin-content & {
-    margin-top: 60px;
-  }
-
-  .page-report-content & {
-    margin-top: 60px;
-  }
-
-  .report-money-input & {
-    margin-top: 0;
-  }
-
 }
 
