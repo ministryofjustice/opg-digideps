@@ -26,7 +26,7 @@ activeTab: "tab-assets"
         {% endblock %}
 
         
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'asset-form-add-select-title' } }) }}
         
           {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
           transDomain: translationDomain,
@@ -35,7 +35,7 @@ activeTab: "tab-assets"
 
           {{ form_select(form.title, 'form.newAsset.controls.title') }}
 
-          {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+          {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
             {{ form_submit(form.next,'form.newAsset.controls.next', { 'buttonClass': '' }) }}
             
             {% if showCancelLink %}
@@ -51,7 +51,30 @@ activeTab: "tab-assets"
 
         {{ form_end(form) }}
         
-
+         <script type="text/javascript">
+            $(document).ready(function () {
+              // remove next and cancel button
+              $('#asset-add-title-next-group').remove();
+              
+              // when the dropdown changes, replace the pageBodyLeftContent with the result of the next page (add-complete)
+              $('#asset_title_title').change(function() {
+                 var selectedTitle = $(this).val();
+                 if (selectedTitle === '') {
+                   return;
+                 }
+                 //$("#pageBodyLeftContent" ).fadeOut();
+                 var urlToLoadPattern = '{{ path('asset_add_complete', {'reportId': report.id, 'title' : '--placeholder--'}) }}';
+                 var urlToLoad = urlToLoadPattern.replace('--placeholder--', selectedTitle);
+                 
+                 $.get(urlToLoad, function( data ) {
+                     $("#pageBodyLeftContent" ).html( data );
+                     //$("#pageBodyLeftContent" ).fadeIn();
+                 });
+                 
+               });
+            });
+        </script>
+        
     {% endblock %}
 
 {% endembed %}

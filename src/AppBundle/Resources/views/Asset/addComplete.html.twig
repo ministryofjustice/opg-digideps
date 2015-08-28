@@ -1,6 +1,10 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
-activeTab: "tab-assets"
+{# when loaded with AJAX, only load pageBody block #}
+{% embed app.request.xmlHttpRequest  ? 
+  'AppBundle:Layouts:ajaxPageBody.html.twig' :
+  'AppBundle:Components/Page:page-report.html.twig' with {
+    activeTab: "tab-assets"
 } %}
+
     {% set translationDomain = "report-assets" %}
     {% trans_default_domain translationDomain %}
 

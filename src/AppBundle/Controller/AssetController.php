@@ -60,9 +60,12 @@ class AssetController extends Controller
         }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
+        // [.. change form and template (or forward) depending on the asset title ]
         $asset = new EntityDir\Asset();
         $asset->setTitle($title);
-        $form = $this->createForm(new FormDir\AssetType(), $asset);
+        $form = $this->createForm(new FormDir\AssetType(), $asset, [
+            'action' => $this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title'=>$title])
+        ]);
 
         $form->handleRequest($request);
 
