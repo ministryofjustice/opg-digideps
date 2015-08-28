@@ -1,6 +1,6 @@
 .report-submission {
 
-  .tab-content .tab-pane{
+  #page-body {
     border-top: 0;
     padding-bottom: 40px;
     border-bottom: 1px solid $grey-2;
@@ -17,6 +17,6 @@
 
 }
 
-.page-report-content.report-submission .page-body {
+.page-report-content.report-submission #page-body {
     margin-top: 30px;
 }

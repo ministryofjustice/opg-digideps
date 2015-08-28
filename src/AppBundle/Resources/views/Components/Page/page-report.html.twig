@@ -2,33 +2,12 @@
 {% block pageTitle %}Deputyship Report{% endblock %}
 {% block contentClass %}page-report-content{% endblock %}
 
-{# Build up the tab icons #}
-{% if activeTab is not defined %}
-    {% set activeTab = "tab-overview" %}
+{% if (showNav is not defined) %}
+{%     set showNav = true %}
 {% endif %}
-{% set tabNotificationClass = {} %}
-{% if report.isDue() %}
 
-    {% if report.missingDecisions() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-decisions': 'icon icon__notification behat-region-tab-decisions-warning'}) %}
-    {% endif %}
-    
-    {% if report.missingContacts() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-contacts': 'icon icon__notification behat-region-tab-contacts-warning'}) %}
-    {% endif %}
-
-    {% if report.missingAccounts() or report.hasOutstandingAccounts() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-accounts': 'icon icon__notification behat-region-tab-accounts-warning'}) %}
-    {% endif %}
-
-    {% if report.missingAssets() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-assets': 'icon icon__notification behat-region-tab-assets-warning'}) %}
-    {% endif %}
-
-    {% if report.missingSafeguarding() %}
-        {% set tabNotificationClass = tabNotificationClass| merge({'tab-safeguarding': 'icon icon__notification behat-region-tab-safeguarding-warning'}) %}
-    {% endif %}
-
+{% if (showHelp is not defined) %}
+{%     set showHelp = true %}
 {% endif %}
 
 
@@ -37,27 +16,24 @@
         {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
     {% endblock %}
 
-    {% block pageNavigation %}
-        {% include 'AppBundle:Report/Helper:_report-nav.html.twig' with {
-        'report': report,
-        tab: activeTab,
-        notifications: tabNotificationClass
-        } %}
-    {% endblock %}
+    {% if showNav == true %}
+        {% block pageNavigation %}
+            {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+                'report': report
+            } %}
+        {% endblock %}
+    {% endif %}
 
     {% block errorSummary %}
         {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
     {% endblock %}
 
-    <div class="js-tab-content tab-content tabs-body">
-        <div class="js-tab-pane tab-pane tabs-panel tabs-panel-selected" role="tabpanel" aria-hidden="false"
-             aria-expanded="true" aria-labelledby="tab-overview-panel">
-            <div class="page-body">
-                <a name="pageBody"></a>
-                {% block pageBody %}{% endblock %}
-                {% include 'AppBundle:Components/Page:_help.html.twig' %}
-            </div>
-        </div>
+    <div id="page-body">
+        <a name="pageBody"></a>
+        {% block pageBody %}{% endblock %}
+        {% if showHelp %}
+            {% include 'AppBundle:Components/Page:_help.html.twig' %}
+        {% endif %}
     </div>
 
 {% endblock %}

@@ -1,6 +1,9 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig' with {
-activeTab: "tab-overview"
+    showNav: false,
+    showHelp: false
 } %}
+
+    {% set page = 'reportPeriod' %}
     {% set translationDomain = "report-overview" %}
     {% trans_default_domain translationDomain %}
 
@@ -12,14 +15,57 @@ activeTab: "tab-overview"
 
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-    {% block contentClass %}{{ parent() }} report-overview js-report-overview{% endblock %}
+    {% block contentClass %}{{ parent() }} report-overview{% endblock %}
 
     {% block pageBody %}
       
-      {% include 'AppBundle:Report/Overview:_report-overview.html.twig' with {
-      'translationDomain': translationDomain,
-      'reportType': reportType
-      } %}
+        <ul id="overview-sections" class="overview-sections">
+            
+            <li id="planning-section" class="overview-section">
+                <h2 class="heading">Planning</h2>
+                <div id="decisions-sub-section" class="sub-section">
+                    <h3 class="heading">Decisions</h3>
+                    <a class="edit-link" href="{{ path('decisions', {reportId: report.id}) }}" >
+                        {{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}
+                    </a>
+                </div>
+                <div id="contacts-sub-section" class="sub-section">
+                    <h3 class="heading">Contacts</h3>
+                    <a class="edit-link" href="{{ path('contacts', {reportId: report.id}) }}">
+                        {{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}
+                    </a>
+                </div>
+            </li>
+            
+            <li id="welfare-section" class="overview-section">
+                <h2 class="heading">Care and welfare</h2>
+                <div id="safeguarding-sub-section" class="sub-section">
+                    <h3 class="heading">Safeguarding</h3>
+                    <a class="edit-link" href="{{ path('safeguarding', {reportId: report.id}) }}">
+                        {{ ('pages.' ~ page ~ '.safeguradingLink') | trans({}, translationDomain) }}
+                    </a>
+                </div>
+            </li>
+            
+            <li id="finances-section" class="overview-section">
+                <h2 class="heading">Finances</h2>
+                <div id="account-sub-section" class="sub-section">
+                    <h3 class="heading">Accounts</h3>
+                    <a class="edit-link" href="{{ path('accounts', {reportId: report.id}) }}">
+                        {{ ('pages.' ~ page ~ '.accountsLink') | trans({}, translationDomain) }}
+                    </a>
+                </div>
+                <div id="asset-sub-section" class="sub-section">
+                    <h3 class="heading">Assets</h3>
+                    <a class="edit-link" href="{{ path('assets', {reportId: report.id}) }}">
+                        {{ ('pages.' ~ page ~ '.assetsLink') | trans({}, translationDomain) }}
+                    </a>
+                </div>
+            </li>
+            
+        </ul>
+
+
 
     {% endblock %}
 
