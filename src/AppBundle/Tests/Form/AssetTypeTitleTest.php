@@ -2,7 +2,7 @@
 namespace AppBundle\Tests\Form;
 
 use Mockery as m;
-use AppBundle\Form\AssetType;
+use AppBundle\Form\AssetTypeTitle;
 
 class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
 {
