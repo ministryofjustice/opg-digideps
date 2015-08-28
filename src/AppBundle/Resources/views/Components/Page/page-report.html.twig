@@ -54,7 +54,9 @@
              aria-expanded="true" aria-labelledby="tab-overview-panel">
             <div class="page-body">
                 <a name="pageBody"></a>
-                {% block pageBody %}{% endblock %}
+                <div id="pageBodyLeftContent">
+                  {% block pageBody %}{% endblock %}
+                </div>
                 {% include 'AppBundle:Components/Page:_help.html.twig' %}
             </div>
         </div>
