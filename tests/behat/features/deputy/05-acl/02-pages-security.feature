@@ -4,7 +4,7 @@ Feature: deputy / acl / security on pages
     Scenario: create backup
        Given I save the application status into "pages-security-init"
 
-    @deputy
+    @deputy 
     Scenario: create another user with client and report with data
       # restore status of first report before submitting
       Given I load the application status from "report-submit-pre"
@@ -26,8 +26,8 @@ Feature: deputy / acl / security on pages
       Then the URL should match "report/\d+/overview"
       
     
-    @deputy
-    Scenario: User cannot access other's pages
+    @deputy 
+    Scenario: Malicious User cannot access other's pages
       # behat-user can access report n.2
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I save the application status into "deputy-acl-before"
@@ -45,10 +45,11 @@ Feature: deputy / acl / security on pages
         | /report/1/contacts/add | 200 | 
         # assets
         | /report/1/assets | 200 | 
-        | /report/1/assets/edit/1 | 200 | 
+        | /report/1/assets/1/edit | 200 | 
         | /report/1/assets/1/delete | 200 | 
         | /report/1/assets/1/delete/1 | 200 | 
-        | /report/1/assets/add | 200 | 
+        | /report/1/assets/add-select-title | 200 | 
+        | /report/1/assets/add-complete/Antiques | 200 | 
         # accounts
         | /report/1/accounts | 200 | 
         | /report/1/account/1 | 200 | 
@@ -57,6 +58,8 @@ Feature: deputy / acl / security on pages
         | /report/1/accounts/add | 200 | 
       # behat-malicious CANNOT access the same URLs
       Given I am logged in as "behat-malicious@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      # reload the status (as some URLs calls might have deleted data)
+      And I load the application status from "deputy-acl-before"
       When I go to "/report/2/overview"
       Then the following pages should return the following status:
         | /report/2/overview  | 200 | 
@@ -76,10 +79,11 @@ Feature: deputy / acl / security on pages
         # assets
         | /report/2/assets | 200 | 
         | /report/1/assets | 500 | 
-        | /report/1/assets/edit/1 | 500 | 
+        | /report/1/assets/1/edit | 500 | 
         | /report/1/assets/1/delete | 500 | 
         | /report/1/assets/1/delete/1 | 500 | 
-        | /report/1/assets/add | 500 | 
+        | /report/1/assets/add-select-title | 500 | 
+        | /report/1/assets/add-complete/Antiques | 500 | 
         # accounts
         | /report/2/accounts | 200 | 
         | /report/1/accounts | 500 | 
