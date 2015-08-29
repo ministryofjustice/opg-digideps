@@ -28,7 +28,7 @@ Feature: deputy / report / edit accounts
     Scenario: change opening balance explanation
         When I load the application status from "accountuser"
         And I am logged in as "behat-account@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I follow "tab-accounts"
+        Then I follow "edit-accounts"
         # Create an account with an opening balance explanation
         And I fill in the following:
             | account_bank    | HSBC - main account | 

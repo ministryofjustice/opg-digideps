@@ -25,13 +25,13 @@
                 <h2 class="heading">Planning</h2>
                 <div id="decisions-sub-section" class="sub-section">
                     <h3 class="heading">Decisions</h3>
-                    <a class="edit-link" href="{{ path('decisions', {reportId: report.id}) }}" >
+                    <a id="edit-decisions" class="edit-link" href="{{ path('decisions', {reportId: report.id}) }}" >
                         {{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}
                     </a>
                 </div>
                 <div id="contacts-sub-section" class="sub-section">
                     <h3 class="heading">Contacts</h3>
-                    <a class="edit-link" href="{{ path('contacts', {reportId: report.id}) }}">
+                    <a id="edit-contacts" class="edit-link" href="{{ path('contacts', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}
                     </a>
                 </div>
@@ -41,28 +41,29 @@
                 <h2 class="heading">Care and welfare</h2>
                 <div id="safeguarding-sub-section" class="sub-section">
                     <h3 class="heading">Safeguarding</h3>
-                    <a class="edit-link" href="{{ path('safeguarding', {reportId: report.id}) }}">
+                    <a id="edit-safeguarding" class="edit-link" href="{{ path('safeguarding', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.safeguradingLink') | trans({}, translationDomain) }}
                     </a>
                 </div>
             </li>
             
+        {% if reportType == "propertyAndAffairs" %}
             <li id="finances-section" class="overview-section">
                 <h2 class="heading">Finances</h2>
                 <div id="account-sub-section" class="sub-section">
                     <h3 class="heading">Accounts</h3>
-                    <a class="edit-link" href="{{ path('accounts', {reportId: report.id}) }}">
+                    <a id="edit-accounts" class="edit-link" href="{{ path('accounts', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.accountsLink') | trans({}, translationDomain) }}
                     </a>
                 </div>
                 <div id="asset-sub-section" class="sub-section">
                     <h3 class="heading">Assets</h3>
-                    <a class="edit-link" href="{{ path('assets', {reportId: report.id}) }}">
+                    <a id="edit-assets" class="edit-link" href="{{ path('assets', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.assetsLink') | trans({}, translationDomain) }}
                     </a>
                 </div>
             </li>
-            
+        {% endif %}
         </ul>
 
 

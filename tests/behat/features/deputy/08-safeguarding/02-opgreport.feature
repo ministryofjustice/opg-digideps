@@ -27,7 +27,6 @@ Feature: Safeguarding OPG Report
     Scenario: Enter a report
         When I load the application status from "safereportuser"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-decisions"
         And I add the following decisions:
             | description  | clientInvolved | clientInvolvedDetails |
             | 3 beds      | yes           | the client was able to decide at 85% |
@@ -89,14 +88,11 @@ Feature: Safeguarding OPG Report
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
-        Then I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be valid
         Then I save the application status into "safeguardingreadytosubmit"
         When I check "report_submit_reviewed_n_checked"
         And I press "report_submit_submitReport"
@@ -132,8 +128,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, expect to see further answers
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -143,7 +138,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         Then I should see "Do you live with the client?"
@@ -157,8 +151,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, all visits are every day
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -168,7 +161,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "Every day" checkbox for "Visits" is checked
@@ -180,8 +172,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, all visits are once a week
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -191,7 +182,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | once_a_week |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | once_a_week |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "At least once a week" checkbox for "Visits" is checked
@@ -203,8 +193,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, all visits are once a month
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -214,7 +203,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | once_a_month |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | once_a_month |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "At least once a month" checkbox for "Visits" is checked
@@ -226,8 +214,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, all visits are twice a year
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -237,7 +224,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | more_than_twice_a_year |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | more_than_twice_a_year |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "More than twice a year" checkbox for "Visits" is checked
@@ -249,8 +235,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, all visits are once a year
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -260,7 +245,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | once_a_year |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | once_a_year |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "Once a year" checkbox for "Visits" is checked
@@ -272,8 +256,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, all visits are less than once a year
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -283,7 +266,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | less_than_once_a_year |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | less_than_once_a_year |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "Less than once a year" checkbox for "Visits" is checked
@@ -295,8 +277,7 @@ Feature: Safeguarding OPG Report
     Scenario: When dont live with the client, provide extra info
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -306,7 +287,6 @@ Feature: Safeguarding OPG Report
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And I should see "Is there anything else you want to tell us?" in "safeguarding" section
@@ -316,14 +296,12 @@ Feature: Safeguarding OPG Report
     Scenario: When care is not funded, indicate this
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_howIsCareFunded_0 | client_pays_for_all |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "No" checkbox for "Does the client receive care which is paid for" is checked
@@ -334,14 +312,12 @@ Feature: Safeguarding OPG Report
     Scenario: When care is funded, and client pays for all
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | yes |
             | safeguarding_howIsCareFunded_0 | client_pays_for_all |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
@@ -352,14 +328,12 @@ Feature: Safeguarding OPG Report
     Scenario: When care is funded, and client gets some help
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | yes |
             | safeguarding_howIsCareFunded_0 | client_gets_financial_help |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
@@ -369,14 +343,12 @@ Feature: Safeguarding OPG Report
     Scenario: When care is funded, and all funded from someone else
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | yes |
             | safeguarding_howIsCareFunded_0 | all_care_is_paid_by_someone_else |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
@@ -386,15 +358,13 @@ Feature: Safeguarding OPG Report
     Scenario: When there is no care plan
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should indicate that the "There is no care plan" checkbox is checked
@@ -405,15 +375,13 @@ Feature: Safeguarding OPG Report
     Scenario: When there is acare plan
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whenWasCarePlanLastReviewed_month | 2 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         Then I view the formatted report
         And the report should not indicate that the "There is no care plan" checkbox is checked

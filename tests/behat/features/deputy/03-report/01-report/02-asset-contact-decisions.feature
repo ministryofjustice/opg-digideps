@@ -4,7 +4,7 @@ Feature: deputy / report / add contact, decision, assets
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the first report overview page
-        And I follow "tab-contacts"
+        And I follow "edit-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
         And I press "contact_save"
@@ -31,7 +31,7 @@ Feature: deputy / report / add contact, decision, assets
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the first report overview page
-        And I follow "tab-decisions"
+        And I follow "edit-decisions"
         And I save the page as "report-decision-empty"
         # form errors
         When I press "decision_save"
@@ -64,7 +64,7 @@ Feature: deputy / report / add contact, decision, assets
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the first report overview page
-        And I follow "tab-assets"
+        And I follow "edit-assets"
         And I save the page as "report-assets-empty"
         # wrong form
         And I press "asset_save"
@@ -103,7 +103,7 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: provide safeguarding info
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
+        And I follow "edit-safeguarding"
         Then I fill in the following:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |

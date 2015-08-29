@@ -4,7 +4,7 @@ Feature: deputy / report / account
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the first report overview page
-        And I follow "tab-accounts"
+        And I follow "edit-accounts"
         And I save the page as "report-account-empty"
         # empty form
         And I press "account_save"
@@ -81,7 +81,8 @@ Feature: deputy / report / account
         When I click on "account-8765"
         Then I should not see the "opening-balance-explanation" region
         # refresh page and check values
-        When I follow "tab-accounts"
+        When I follow "overview-button"
+        Then I follow "edit-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
         And I should see "8765" in the "list-accounts" region
         And I should see "£1,155.00" in the "list-accounts" region
@@ -164,14 +165,14 @@ Feature: deputy / report / account
             | account_openingDate_day   | 01 |
             | account_openingDate_month | 02 |
             | account_openingDate_year  | 2015 |
-            | account_openingBalance  | 1,150.00 | 
+            | account_openingBalance  | 1,150.00 |
         And I save the page as "report-account-edit-reloaded"
     
 
     @deputy
     Scenario: add account with no default opening date
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      When I follow "tab-accounts"
+      When I follow "edit-accounts"
       And I fill in the following:
         | account_bank    | openingdate default values | 
         | account_accountNumber_part_1 | 9 | 
