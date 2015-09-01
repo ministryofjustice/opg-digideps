@@ -6,7 +6,7 @@
     <h3 class="fieldset-outer-title">Contact with client</h3>
     <fieldset id="safeguarding-contact">
         <div id="do-you-live-with-the-client" class="checkboxes horizontal">
-            <h3>Do you live with the client?</h3>
+            <div class="question">Do you live with the client?</div>
 
             <table class="yesno">
                 <tr>
@@ -73,7 +73,7 @@
 
     <fieldset id="safeguarding-visitors-subsection">
         <div class="checkboxes horizontal">
-            <h3>How often does the client see other people</h3>
+            <div class="question">How often does the client see other people</div>
             <table>
                 <tr>
                     <td>
@@ -126,7 +126,7 @@
     <fieldset id="care-arrangements-subsection">
 
         <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
-            <h3>Does the client receive care which is paid for?</h3>
+            <div class="question">Does the client receive care which is paid for?</div>
 
             <table class="yesno">
                 <tr>
@@ -174,7 +174,7 @@
         </div>
 
         <div class="form-group form-group-vertical">
-            <h3>Who is doing the caring?</h3>
+            <div class="question">Who is doing the caring?</div>
             <div class="textarea">{{ safeguarding.whoIsDoingTheCaring }}</div>
         </div>
 
@@ -182,7 +182,7 @@
 
     <fieldset id="care-plan-subsection">
         <div class="checkboxes horizontal">
-            <h3>If there is a care plan, when was it last reviewed?</h3>
+            <div class="question">If there is a care plan, when was it last reviewed?</div>
             <div class="form-group form-group-vertical two-thirds-width">
                 <div class="value" id="safeguarding-last-review-date">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</div>
                 <div class="label">Review date</div>

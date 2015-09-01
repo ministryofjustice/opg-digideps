@@ -3,9 +3,14 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <title>OPG Report</title>
-        <style type="text/css">
+        <style type="text/css"> 
             {% include 'AppBundle:Email/css:emailreport.html.twig' %}
         </style>
+        
+        <style type="text/css" media="print">
+            {% include 'AppBundle:Email/css:emailreport-print.html.twig' %}
+        </style>
+        
     </head>
     <body>
         <div id="wrapper">
