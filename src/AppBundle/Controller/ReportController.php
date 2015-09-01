@@ -227,14 +227,12 @@ class ReportController extends Controller
         }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
-        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
         $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
         
         return [
             'report' => $report,
             'client' => $client,
-            'assets' => $assets,
             'contacts' => $contacts,
             'decisions' => $decisions,
             'isEmailAttachment' => $isEmailAttachment,

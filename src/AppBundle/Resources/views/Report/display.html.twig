@@ -92,12 +92,16 @@
             {% if report.assets | length == 0 %}
                 <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
             {% else %}
-                {% include 'AppBundle:Asset:_listAsset.html.twig' with {
-                    'formEditShow': false,
+                {{ render(controller('AppBundle:Asset:_list', { 
+                    'reportId': report.id, 
+                    'showEditLink': false }))
+                }}
+                
+              {#  {% include 'AppBundle:Asset:_list.html.twig' with {
+                    'assetToEdit': false,
                     'showDeleteConfirm': false,
-                    'form': report.assets,
-                    'showEditLink': false
-                } %}
+                    
+                } %}#}
             {% endif %}
         </div>
 

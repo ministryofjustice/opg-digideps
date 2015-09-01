@@ -4,19 +4,22 @@
 {#
 Component parameters
 --------------------
-
+assets
 assetToEdit Asset to edit if present
 showDeleteConfirm (true/false)
-form
+showEditLink default false
+editForm
 #}
 
-<ul class="behat-region-list-assets report-list report-list--assets">
+{% if assets is not empty  %}
+
+  <ul class="behat-region-list-assets report-list report-list--assets">
     {% for asset in assets %}
         <li id="asset-edit-{{ asset.id }}" class="report-list__item">
 
-            {% if assetToEdit is defined and (asset.id == assetToEdit.id) %}
+            {% if assetToEdit and (asset.id == assetToEdit.id) %}
 
-                {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+                {{ form_start(editForm, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
                 <div>
 
                     {% set subSectionTitleText = 'form.newAsset.subSectionTitleEdit' %}
@@ -26,12 +29,12 @@ form
                     subSectionTitle: subSectionTitleText
                     } %}
 
-                    {{ form_input(form.value, 'form.newAsset.controls.value', {
+                    {{ form_input(editForm.value, 'form.newAsset.controls.value', {
                     'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
                     'inputClass' : 'form-control__number'
                     } ) }}
-                    {{ form_input(form.description, 'form.newAsset.controls.description') }}
-                    {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
+                    {{ form_input(editForm.description, 'form.newAsset.controls.description') }}
+                    {{ form_known_date(editForm.valuationDate, 'form.newAsset.controls.valuationDate') }}
 
                     {% if (showDeleteConfirm) %}
 
@@ -48,13 +51,13 @@ form
                         cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
                         } %}
 
-                        {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': 'visuallyhidden' }) }}
+                        {{ form_submit(editForm.save,'form.newAsset.controls.save', { 'buttonClass': 'visuallyhidden' }) }}
 
                     {% else %}
 
                         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
-                        {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': '' }) }}
+                        {{ form_submit(editForm.save,'form.newAsset.controls.save', { 'buttonClass': '' }) }}
 
                         {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                         transDomain: translationDomain,
@@ -76,13 +79,15 @@ form
 
                   </div>
 
-                {{ form_end(form) }}
+                {{ form_end(editForm) }}
 
             {% else %}
                 <div class="report-list__item-header">
                     <h3>{{ asset.title }}</h3>
+                    {% if showEditLink %}
                       <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}"
                          class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-{{ asset.description | behat_namify }}">{{ 'listing.editLink'| trans }}</a>
+                    {% endif %}
                 </div>
                 <dl class="report-list__item-fields">
                     <div class="report-list__item-fields-row">
@@ -105,4 +110,5 @@ form
 
         </li>
     {% endfor %}
-</ul>
+  </ul>
+{% endif %}

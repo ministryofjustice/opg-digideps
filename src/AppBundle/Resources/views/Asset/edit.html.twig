@@ -34,8 +34,12 @@ activeTab: "tab-assets"
         'report': report
         } %}
 
-        {{ render(controller('AppBundle:Asset:_list', { 'reportId': report.id })) }}
-
+        {{ render(controller('AppBundle:Asset:_list', { 
+          'reportId': report.id, 
+          'assetToEdit': assetToEdit,
+          'editForm': form
+        })) }}
+        
         {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
         
 

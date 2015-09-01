@@ -6,65 +6,65 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @Route("/report")
+ */
 class AssetController extends Controller
 {
 
+
     /**
-     * @Route("/report/{reportId}/assets/add-select-title", name="asset_add_select_title")
-     * @Template()
+     * Form to select asset title (dropdown only)
+     * when submitted and valid, redirects to 'asset_add_complete'.
+     * 
+     * When JS is enabled, there the content of that page is auto-loaded via AJAX
+     *  
+     * @Route("/{reportId}/assets/add-select-title", name="asset_add_select_title")
+     * @Template("AppBundle:Asset:addSelectTitle.html.twig")
      */
-    public function addSelectTitleAction($reportId)
+    public function addSelectTitleAction(Request $request, $reportId)
     {
-        $util = $this->get('util');
-        $request = $this->getRequest();
-        
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
-        }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
         $form = $this->createForm('asset_title', new EntityDir\Asset, [
             'action' => $this->generateUrl('asset_add_select_title', [ 'reportId' => $reportId])
         ]);
-        
+
         $form->handleRequest($request);
         if ($form->isValid()) {
-            return $this->redirect($this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title'=>$form->getData()->getTitle()]));
+            return $this->redirect($this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title' => $form->getData()->getTitle()]));
         }
 
-
+        
         return [
             'report' => $report,
-            'client' => $client,
+            'client' => $report->getClientObject(),
             'form' => $form->createView(),
-            'showCancelLink' => count($report->getAssets()) > 0
+            'showCancelLink' => count($report->getAssets()) > 0,
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
-    
+
+
     /**
-     * @Route("/report/{reportId}/assets/add-complete/{title}", name="asset_add_complete")
-     * @Template()
+     * Shows the full add asset form
+     * 
+     * @Route("/{reportId}/assets/add-complete/{title}", name="asset_add_complete")
+     * @Template("AppBundle:Asset:addComplete.html.twig")
      */
-    public function addCompleteAction($reportId, $title)
+    public function addCompleteAction(Request $request, $reportId, $title)
     {
-        $util = $this->get('util');
-        $apiClient = $this->get('apiclient');
-        $request = $this->getRequest();
-        
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
-        }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
         // [.. change form and template (or forward) depending on the asset title ]
         $asset = new EntityDir\Asset();
         $asset->setTitle($title);
         $form = $this->createForm(new FormDir\AssetType(), $asset, [
-            'action' => $this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title'=>$title])
+            'action' => $this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title' => $title])
         ]);
 
         $form->handleRequest($request);
@@ -73,46 +73,35 @@ class AssetController extends Controller
         if ($form->isValid()) {
             $asset = $form->getData();
             $asset->setReport($reportId);
-            $apiClient->postC('add_report_asset', $asset);
-
-            //lets clear no assets selected if the previously selected this
-            $report->setNoAssetToAdd(0);
-            $apiClient->putC('report/' . $report->getId(), $report);
+            $this->get('apiclient')->postC('report/upsert-asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
-        
+
         return [
             'report' => $report,
-            'client' => $client,
+            'client' => $report->getClientObject(),
             'form' => $form->createView(),
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
-    
+
+
     /**
      * Edit a record
-     * Still uses the list view as the edit form is displayed "inline" along with the other records
+     * the edit form is "inline" so it needs 
      * 
-     * @Route("/report/{reportId}/assets/{assetId}/edit", name="asset_edit")
-     * @Template("AppBundle:Asset:list.html.twig")
+     * @Route("/{reportId}/assets/{assetId}/edit", name="asset_edit")
+     * @Template("AppBundle:Asset:edit.html.twig")
      */
-    public function editAction($reportId, $assetId)
+    public function editAction(Request $request, $reportId, $assetId)
     {
-        $util = $this->get('util');
-        $apiClient = $this->get('apiclient');
-        $request = $this->getRequest();
-        
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
-        }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
-        $assets = $apiClient->getEntities('Asset', 'get_report_assets', [ 'parameters' => ['id' => $reportId]]);
-        $asset = $apiClient->getEntity('Asset', 'get_report_asset', [ 'parameters' => ['id' => $assetId]]);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
+        $asset = $this->get('apiclient')->getEntity('Asset', 'get_report_asset', [ 'parameters' => ['id' => $assetId]]);
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         $form->handleRequest($request);
@@ -120,112 +109,184 @@ class AssetController extends Controller
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $apiClient->putC('update_report_asset', $asset);
+            $this->get('apiclient')->putC('update_report_asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
-        
-        return [
-            'report' => $report,
-            'assets' => $assets,
-            'assetToEdit' => $asset,
-            'client' => $client,
-            'form' => $form->createView()
-        ];
-    }
-    
-    /**
-     * @Route("/report/{reportId}/assets/{assetId}/delete/{confirmed}", name="asset_delete")
-     * @Template("AppBundle:Asset:list.html.twig")
-     */
-    public function deleteAction($reportId, $assetId, $confirmed = false)
-    {
-        $util = $this->get('util');
-        $apiClient = $this->get('apiclient');
-        $request = $this->getRequest();
-        
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
-        }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
-        $assets = $apiClient->getEntities('Asset', 'get_report_assets', [ 'parameters' => ['id' => $reportId]]);
-        $asset = $apiClient->getEntity('Asset', 'get_report_asset', [ 'parameters' => ['id' => $assetId]]);
-        if (!in_array($assetId, $report->getAssets())) {
-            throw new \RuntimeException("Asset not found.");
-        }
-        $form = $this->createForm(new FormDir\AssetType(), $asset);
-
-        // handle submit report
-        if ($confirmed) {
-            $apiClient->delete('delete_report_asset', [ 'parameters' => [ 'id' => $assetId]]);
-            
-            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
-            
-        }
-        
-        return [
-            'report' => $report,
-            'assets' => $assets,
-            'assetToEdit' => $asset,
-            'client' => $client,
-            'form' => $form->createView(),
-            'showDeleteConfirm' => true
-        ];
-    }
-    
-    /**
-     * --action [ list, add, edit, delete-confirm ]
-     * @Route("/report/{reportId}/assets", name="assets")
-     * @Template()
-     */
-    public function listAction($reportId)
-    {
-        $util = $this->get('util');
-        $apiClient = $this->get('apiclient');
-        $request = $this->getRequest();
-
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
-        }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
 
-        $assets = $apiClient->getEntities('Asset', 'get_report_assets', [ 'parameters' => ['id' => $reportId]]);
-        
-        // if there are no assets and the report is not due, show new asset form
-        if (empty($assets) && !$report->isDue()) {
-            return $this->forward('AppBundle:Asset:addSelectTitle', array(
-                'reportId'  => $reportId,
-            ));
+        return [
+            'report' => $report,
+            'assetToEdit' => $asset,
+            'client' => $report->getClientObject(),
+            'form' => $form->createView(),
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
+        ];
+    }
 
+
+    /**
+     * Delete asset
+     * Inline
+     * similar to Edit
+     * 
+     * @Route("/{reportId}/assets/{assetId}/delete/{confirmed}", name="asset_delete")
+     * @Template("AppBundle:Asset:delete.html.twig")
+     */
+    public function deleteAction($reportId, $assetId, $confirmed = false)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
+        if (!in_array($assetId, $report->getAssets())) {
+            throw new \RuntimeException("Asset not found.");
         }
-        
+        $asset = $this->get('apiclient')->getEntity('Asset', 'get_report_asset', [ 'parameters' => ['id' => $assetId]]);
+        $form = $this->createForm(new FormDir\AssetType(), $asset);
+
+        // handle delete
+        if ($confirmed) {
+            $this->get('apiclient')->delete('delete_report_asset', [ 'parameters' => [ 'id' => $assetId]]);
+
+            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
+        }
+
+        return [
+            'report' => $report,
+            'assetToEdit' => $asset,
+            'client' => $report->getClientObject(),
+            'form' => $form->createView(),
+        ];
+    }
+
+
+    /**
+     * List assets and also handle no-asset checkbox-form
+     * 
+     * @Route("/{reportId}/assets", name="assets")
+     * @Template("AppBundle:Asset:list.html.twig")
+     */
+    public function listAction($reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
+        // if there are no assets and the report is not due, show new asset form
+        if (empty($report->getAssets()) && !$report->isDue()) {
+            return $this->forward('AppBundle:Asset:addSelectTitle', array(
+                    'reportId' => $reportId,
+            ));
+        }
+
+        // report submit logic
+        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
+            return $redirectResponse;
+        }
+
+        return [
+            'report' => $report,
+            'client' => $report->getClientObject(),
+            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
+        ];
+    }
+
+
+    /**
+     * Receive the submit of no-assets form, and redirects
+     * 
+     * @Route("/{reportId}/no_assets", name="no_assets_post")
+     * @Template("AppBundle:Asset:list.html.twig")
+     * @Method({"POST"})
+     */
+    public function noAssetsSubmitAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
         $noAssetsToAdd = $this->createForm(new FormDir\NoAssetToAddType());
 
         // handle no asset form
         $noAssetsToAdd->handleRequest($request);
         if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
             $report->setNoAssetToAdd(true);
-            $apiClient->putC('report/' . $report->getId(), $report);
+            $this->get('apiclient')->putC('report/' . $report->getId(), $report);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $report->getId()]));
         }
 
         return [
             'report' => $report,
-            'client' => $client,
-            'no_assets_to_add' => $noAssetsToAdd->createView(),
-            'assets' => $assets,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
+            'client' => $report->getClientObject(),
         ];
+    }
+
+
+    /**
+     * List assets and also handle no-asset checkbox-form
+     * 
+     * @Template("AppBundle:Asset:_list.html.twig")
+     */
+    public function _listAction($reportId, $assetToEdit = null, $editForm = null, $showDeleteConfirm = false, $showEditLink = true)
+    {
+        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
+
+        $assets = $this->get('apiclient')->getEntities('Asset', 'get_report_assets', [ 'parameters' => ['id' => $reportId]]);
+
+        return [
+            'report' => $report,
+            'assetToEdit' => $assetToEdit,
+            'assets' => $assets,
+            'editForm' => $editForm,
+            'showDeleteConfirm' => $showDeleteConfirm,
+            'showEditLink' => $showEditLink
+        ];
+    }
+
+
+    /**
+     * List assets and also handle no-asset checkbox-form
+     * 
+     * @Template("AppBundle:Asset:_noAssets.html.twig")
+     */
+    public function _noAssetsAction($reportId)
+    {
+        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
+
+        $noAssetsToAdd = $this->createForm(new FormDir\NoAssetToAddType(), null, [
+            'action' => $this->generateUrl('no_assets_post', [ 'reportId' => $report->getId()])
+        ]);
+
+
+        return [
+            'report' => $report,
+            'no_assets_to_add' => $noAssetsToAdd->createView(),
+        ];
+    }
+
+
+    /**
+     * 
+     * @param integer $reportId
+     * @return EntityDir\Report
+     * 
+     * @throws \RuntimeException if report is submitted
+     */
+    private function getReportIfReportNotSubmitted($reportId, $addClient = true)
+    {
+        $util = $this->get('util');
+
+        $report = $util->getReport($reportId, $this->getUser()->getId());
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+        
+        if ($addClient) {
+            $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+            $report->setClientObject($client);
+        }
+
+        return $report;
     }
 
 }

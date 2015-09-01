@@ -51,6 +51,11 @@ activeTab: "tab-assets"
 
         {{ form_end(form) }}
         
+        {{ render(controller('AppBundle:Asset:_list', { 'reportId': report.id })) }}
+
+        {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
+        
+        
          <script type="text/javascript">
             $(document).ready(function () {
               // remove next and cancel button

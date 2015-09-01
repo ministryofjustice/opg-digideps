@@ -1,4 +1,4 @@
-{# when loaded with AJAX, only load pageBody block #}
+{# when loaded with AJAX, only return the "pageBody" block content #}
 {% embed app.request.xmlHttpRequest  ? 
   'AppBundle:Layouts:ajaxPageBody.html.twig' :
   'AppBundle:Components/Page:page-report.html.twig' with {
@@ -57,7 +57,14 @@
           {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
       {{ form_end(form) }}
+      
+      
+      {{ render(controller('AppBundle:Asset:_list', { 'reportId': report.id })) }}
 
+      
+      {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
+      
+      
     {% endblock %}
 
 {% endembed %}
