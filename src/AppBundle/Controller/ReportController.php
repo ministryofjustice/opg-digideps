@@ -221,10 +221,6 @@ class ReportController extends Controller
         $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
-        }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
@@ -252,10 +248,6 @@ class ReportController extends Controller
         $util = $this->get('util');
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
-        }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
