@@ -1,6 +1,6 @@
 Feature: deputy / report / edit user explanations
 
-    @deputy
+
     Scenario: add explanation for no contacts
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I click on "client-home"
@@ -52,7 +52,6 @@ Feature: deputy / report / edit user explanations
       And the following fields should have the corresponding values:
         | reason_for_no_contact_reason | |
 
-    @deputy
     Scenario: add explanation for no decisions
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       #And I am on the first report overview page
@@ -109,14 +108,13 @@ Feature: deputy / report / edit user explanations
       And the following fields should have the corresponding values:
         | reason_for_no_decision_reason | |
       
-    @deputy
     Scenario: add explanation for no assets
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       #And I am on the first report overview page
       And I click on "client-home"
       And I click on "report-n2"
       # delete current asset
-      And I follow "tab-assets"
+      And I follow "edit-assets"
       And I click on "asset-2-beds-flat-in-ha2"
       And I click on "delete-confirm"
       And I click on "delete"
@@ -135,7 +133,7 @@ Feature: deputy / report / edit user explanations
       # add asset 
       When I add the following assets:
         | title        | value       |  description        | valuationDate | 
-        | Vehicles    | 13000.00    |  Alfa Romeo 156 JTD | 10/11/2015 | 
+        | Vehicles    | 13000.00    |  Alfa Romeo 156 JTD | 10/11/2015 |
       And I follow "tab-assets"
       And I click on "asset-alfa-romeo-156-jtd"
       And I click on "delete-confirm"

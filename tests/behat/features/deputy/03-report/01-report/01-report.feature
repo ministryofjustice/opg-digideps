@@ -5,12 +5,11 @@ Feature: deputy / report / edit and test tabs
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
         #And I am on the first report overview page
-        Then I should see a "#tab-overview" element
-        And I should see a "#tab-decisions" element
-        And I should see a "#tab-contacts" element
-        But I should not see a "#tab-accounts" element
-        And I should not see a "#tab-assets" element
-        And I should see a ".report_submission_period" element
+        And I should see a "#edit-decisions" element
+        And I should see a "#edit-contacts" element
+        But I should not see a "#edit-accounts" element
+        And I should not see a "#edit-assets" element
+        And I should see a "#edit-safeguarding" element
 
     @deputy
     Scenario: change report type to "Property and Affairs"
@@ -69,10 +68,10 @@ Feature: deputy / report / edit and test tabs
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the first report overview page
         And I save the page as "report-property-affairs-homepage"
-        Then I should see a "#tab-contacts" element
-        And I should see a "#tab-decisions" element
-        And I should see a "#tab-accounts" element
-        And I should see a "#tab-assets" element
+        Then I should see a "#edit-contacts" element
+        And I should see a "#edit-decisions" element
+        And I should see a "#edit-accounts" element
+        And I should see a "#edit-assets" element
         And I should see a ".report_submission_period" element
 
     @deputy
@@ -80,11 +79,6 @@ Feature: deputy / report / edit and test tabs
         # set report due
         Given I set the report 1 end date to 3 days ago
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the first report overview page
-        Then I should see the "tab-contacts-warning" region
-        Then I should see the "tab-decisions-warning" region
-        Then I should see the "tab-accounts-warning" region
-        Then I should see the "tab-assets-warning" region
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
         And I should not see a ".report_submission_period" element

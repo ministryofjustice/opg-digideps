@@ -90,15 +90,13 @@ Feature: deputy / report / Formatted Report
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
             | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        When I submit the report with further info "More info."
-        Then I save the application status into "reportsubmitted"
+        Then I submit the report with further info "More info."
+        And I save the application status into "reportsubmitted"
 
     @formatted-report @deputy
     Scenario: A report lists decisions
@@ -116,11 +114,7 @@ Feature: deputy / report / Formatted Report
     Scenario: A report says why no decisions were made
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-decisions"
-        Then I fill in the following:
-          | reason_for_no_decision_reason | small budget |
-        And I press "reason_for_no_decision_saveReason"
-        Then the form should be valid
+        Then I say there were no decisions made because "small budget"
         When I add the following contacts:
           | contactName | relationship | explanation                    | address       | address2  | county    | postcode | country |
           | Andy White  | brother      |  no explanation                | 45 Noth Road | Islington  | London    | N2 5JF   | GB      |
@@ -178,13 +172,11 @@ Feature: deputy / report / Formatted Report
           | title        | value       |  description        | valuationDate |
           | Property    | 250000.00    |  2 beds flat in HA2 |               |
           | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
           | safeguarding_doYouLiveWithClient_0 | yes |
           | safeguarding_doesClientReceivePaidCare_1 | no |
           | safeguarding_doesClientHaveACarePlan_1 | no |
           | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         And I view the formatted report
         Then the response status code should be 200
@@ -206,17 +198,12 @@ Feature: deputy / report / Formatted Report
     Scenario: A report describes why there are no contacts
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-decisions"
-        # Start by adding some decisions
         And I add the following decisions:
            | description   | clientInvolved | clientInvolvedDetails |
            | 3 beds      | yes            | the client was able to decide at 85% |
            | 2 televisions | yes            | the client said he doesnt want a tv anymore |
         # Next, some contacts
-        Then I follow "tab-contacts"
-        When I fill in "reason_for_no_contact_reason" with "kept in the book"
-        And I press "reason_for_no_contact_saveReason"
-        Then the form should be valid
+        Then I say there were no contacts because "kept in the book"
         And I add the following bank account:
             | bank    | HSBC - main account |
             | accountNumber | 8 | 7 | 6 | 5 |
@@ -269,13 +256,11 @@ Feature: deputy / report / Formatted Report
           | title        | value       |  description        | valuationDate |
           | Property    | 250000.00    |  2 beds flat in HA2 |               |
           | Vehicles    | 13000.00     |  Alfa Romeo 156 JTD |    10/11/2015  |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
           | safeguarding_doYouLiveWithClient_0 | yes |
           | safeguarding_doesClientReceivePaidCare_1 | no |
           | safeguarding_doesClientHaveACarePlan_1 | no |
           | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -367,13 +352,11 @@ Feature: deputy / report / Formatted Report
             | moneyOut_20  | 2,200.00 | more-details-out-20 |
             | closingDate    | 1 /1/2015 |
             | closingBalance | 4855.19 |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -442,13 +425,11 @@ Feature: deputy / report / Formatted Report
             | closingBalance | 155.00 |
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         And I view the formatted report
         And I should see "£ 100.50 moved to other account" in "accountBalance_closingBalanceExplanation"
@@ -511,13 +492,11 @@ Feature: deputy / report / Formatted Report
             | closingBalance | 155.00 |
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -582,13 +561,11 @@ Feature: deputy / report / Formatted Report
             | closingBalance | 4855.19 |
             #∑
             | closingBalanceExplanation | £ 100.50 moved to other account |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         And I submit the report with further info "More info."
         # Now view the report
         And I view the formatted report
@@ -623,17 +600,8 @@ Feature: deputy / report / Formatted Report
     Scenario: A report says why there are no assets
         When I load the application status from "reportuser"
         And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        # No Decisions
-        And I follow "tab-decisions"
-        Then I fill in the following:
-          | reason_for_no_decision_reason | small budget |
-        And I press "reason_for_no_decision_saveReason"
-        Then the form should be valid
-        # No Contacts
-        Then I follow "tab-contacts"
-        When I fill in "reason_for_no_contact_reason" with "kept in the book"
-        And I press "reason_for_no_contact_saveReason"
-        Then the form should be valid
+        Then I say there were no decisions made because "small budget"
+        Then I say there were no contacts because "kept in the book"
         # Bank account
         And I add the following bank account:
             | bank    | HSBC - main account |
@@ -687,18 +655,13 @@ Feature: deputy / report / Formatted Report
             #
             | closingDate    | 1 /1/2015 |
             | closingBalance | 5855.19 |
-        And I follow "tab-safeguarding"
-        Then I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
         # Finally, Assets
-        Then I follow "tab-assets"
-        And I check "report_no_assets_no_assets"
-        And I press "report_no_assets_saveNoAsset"
-        Then the form should be valid
+        Then I say there no assets
         And I submit the report with further info "More info."
         And I view the formatted report
         Then the response status code should be 200

@@ -6,7 +6,7 @@ Feature: deputy / report / edit asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         And I click on "report-n2"
-        And I follow "tab-assets"
+        And I follow "edit-assets"
         And I save the page as "report-assets-remove-init"
         And I click on "asset-alfa-romeo-156-jtd"
         Then the following fields should have the corresponding values:

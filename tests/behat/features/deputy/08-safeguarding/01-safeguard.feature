@@ -27,23 +27,18 @@ Feature: Safeguarding Data entry
     Scenario: Lives with client
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doYouLiveWithClient_0" should be checked
 
     @safeguarding @entry @deputy
     Scenario: Does not live with client
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
@@ -53,9 +48,6 @@ Feature: Safeguarding Data entry
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
             | safeguarding_anythingElseToTell | nothing to report |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doYouLiveWithClient_1" should be checked
         Then the checkbox "safeguarding_howOftenDoYouVisit_0" should be checked
         Then the checkbox "safeguarding_howOftenDoYouPhoneOrVideoCall_0" should be checked
@@ -68,14 +60,11 @@ Feature: Safeguarding Data entry
     Scenario: User must answer sub questions when not living with client
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_1 | no |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be invalid
         And the following fields should have an error:
             | safeguarding_howOftenDoYouVisit_0 |
             | safeguarding_howOftenDoYouVisit_1 |
@@ -106,31 +95,23 @@ Feature: Safeguarding Data entry
     Scenario: Client does not receive care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientReceivePaidCare_1" should be checked
 
     @safeguarding @entry @deputy
     Scenario: Client does receive care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_0 | yes |
             | safeguarding_howIsCareFunded_0 | client_pays_for_all |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientReceivePaidCare_0" should be checked
         And the checkbox "safeguarding_howIsCareFunded_0" should be checked
 
@@ -138,14 +119,11 @@ Feature: Safeguarding Data entry
     Scenario: User must answer sub questions when receiving care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_0 | yes |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be invalid
         And the following fields should have an error:
             | safeguarding_howIsCareFunded_0 |
             | safeguarding_howIsCareFunded_1 |
@@ -155,32 +133,24 @@ Feature: Safeguarding Data entry
     Scenario: Who is doing the caring?
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones"
 
     @safeguarding @entry @deputy
     Scenario: Client has care plan
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_0" should be checked
         And the "safeguarding_whenWasCarePlanLastReviewed_month" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2015"
@@ -189,29 +159,22 @@ Feature: Safeguarding Data entry
     Scenario: Client does not have care plan
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be valid
-        Then I follow "tab-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_1" should be checked
 
     @safeguarding @entry @deputy
     Scenario: Client must answer sub questions when there is a care plan
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
-        And I fill in the following:
+        And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
-        And I press "safeguarding_save"
-        Then the form should be invalid
         And the following fields should have an error:
             | safeguarding_whenWasCarePlanLastReviewed_day |
             | safeguarding_whenWasCarePlanLastReviewed_month |
@@ -221,7 +184,7 @@ Feature: Safeguarding Data entry
     Scenario: Deputy must answer top level questions
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "tab-safeguarding"
+        And I follow "edit-safeguarding"
         And I press "safeguarding_save"
         Then the form should be invalid
         And the following fields should have an error:

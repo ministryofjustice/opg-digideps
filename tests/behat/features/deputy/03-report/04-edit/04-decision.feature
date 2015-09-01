@@ -5,7 +5,7 @@ Feature:deputy / report / edit decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         And I click on "report-n2"
-        And I follow "tab-decisions"
+        And I follow "edit-decisions"
         And the URL should match "/report/\d+/decisions"
         And I click on "decision-2-beds"
         Then the following fields should have the corresponding values:
