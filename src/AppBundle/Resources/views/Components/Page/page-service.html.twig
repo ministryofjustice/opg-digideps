@@ -16,6 +16,7 @@
         </header>
     {% endblock %}
 
+    <a name="pageBody"></a>
     {% block pageNavigation %}{% endblock %}
 
     {% block validationSummary %}{% endblock %}
@@ -26,8 +27,7 @@
         {% include 'AppBundle:Components/Alerts:_notification-message.html.twig' %}
     {% endblock %}
 
-    <div class="page-body">
-        <a name="pageBody"></a>
+    <div id="page-body">
         {% block pageBody %}{% endblock %}
     </div>
 {% endblock %}

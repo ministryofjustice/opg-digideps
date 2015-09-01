@@ -41,7 +41,6 @@ class ComponentsExtension extends \Twig_Extension
     {
         return [
             'progress_bar' => new \Twig_Function_Method($this, 'progressBar'),
-            'tab' => new \Twig_Function_Method($this, 'renderTab'),
             'accordionLinks' => new \Twig_Function_Method($this, 'renderAccordionLinks'),
         ];
     }
@@ -194,54 +193,6 @@ class ComponentsExtension extends \Twig_Extension
         
         echo $this->environment->render('AppBundle:Components/Navigation:_progress-indicator.html.twig', [
             'progressSteps' => $steps
-        ]);
-    }
-
-    
-    /**
-     * Render tab component (used in report page)
-     * - Reads elements from twig.yml, tabs section
-     * - Translations taken from tabs.yml
-     * - Active tab has class "active"
-     * 
-     * @param string $tabGroup
-     * @param string $activeTab ID of the active tab (
-     * @param array $pathOptions contains the params for all the URL in the tab
-     * 
-     * @return string
-     */
-    public function renderTab($tabGroup, $activeTab, array $pathOptions = [], $notifications = [])
-    {
-        $activeClass ='active';
-        
-        if (empty($this->params['tabs'][$tabGroup])) {
-            return "[ Tab $tabGroup not found or empty, check your configuration files ]";
-        }
-        
-        $tabDataProvider = [];
-        $counter = 0;
-        
-        // set classes and labels from translation
-        foreach ($this->params['tabs'][$tabGroup] as $tabId => $tabData) {
-            $tabDataProvider[$counter] = [
-                'label' => $this->translator->trans($tabGroup . '.' . $tabId . '.label', [], 'tabs'),
-                'class' => $activeTab == $tabId ? $activeClass : '',
-                'tabId' => $tabId,
-                'href' => [
-                    'path' => $tabData['path'],
-                    'params' => $pathOptions,
-                ]
-            ];
-            
-            //check if there's notification icon class
-            if(array_key_exists($tabId, $notifications)){ 
-                $tabDataProvider[$counter]['iconClass'] = $notifications[$tabId];
-            }
-            $counter++;
-        }
-        
-        echo $this->environment->render('AppBundle:Components/Navigation:_tab-bar.html.twig', [
-            'tabDataProvider' => $tabDataProvider
         ]);
     }
     

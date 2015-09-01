@@ -155,6 +155,17 @@ trait ReportTrait
         $this->assertResponseStatus(200);
     }
 
+
+    private function gotoOverview() {
+
+        $overviewButton = $this->getSession()->getPage()->find('css', '#overview-button');
+        
+        if (isset($overviewButton)) {
+            $overviewButton->click();
+        }
+        
+    }
+
     /**
      * Click on contacts tab and add a contact
      * If the form is not shown, click first on "add-a-contact" button (with no exception thrown)
@@ -164,7 +175,8 @@ trait ReportTrait
     public function IAddtheFollowingContact(TableNode $table)
     {
         foreach ($table->getHash() as $row) {
-            $this->clickLink('tab-contacts');
+            $this->gotoOverview();
+            $this->clickLink('edit-contacts');
 
             // expand form if collapsed
             if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
@@ -195,7 +207,8 @@ trait ReportTrait
     public function IAddtheFollowingDecision(TableNode $table)
     {
         foreach ($table->getHash() as $row) {
-            $this->clickLink("tab-decisions");
+            $this->gotoOverview();
+            $this->clickLink("edit-decisions");
 
             // expand form if collapsed
             if (0 === count($this->getSession()->getPage()->findAll('css', '#decision_clientInvolvedBoolean_0'))) {
@@ -229,7 +242,8 @@ trait ReportTrait
     public function iAddTheFollowingAssets(TableNode $table)
     {
         foreach ($table->getHash() as $row) {
-            $this->clickLink("tab-assets");
+            $this->gotoOverview();
+            $this->clickLink("edit-assets");
 
             // expand form if collapsed
             if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title'))) {
@@ -252,13 +266,31 @@ trait ReportTrait
             $this->assertResponseStatus(200);
         }
     }
+    
+    /**
+     * @When I set the following safeguarding information:
+     */
+    public function iSetTheFollowingSafeguarding(TableNode $table)
+    {
+        $this->gotoOverview();
+        $this->clickLink("edit-safeguarding");
+
+        $rows = $table->getRowsHash();
+
+        foreach ($rows as $key => $value) {
+            $this->fillField($key, $value);
+        }
+
+        $this->pressButton("safeguarding_save");
+    }
 
     /**
      * @When I add the following bank account:
      */
     public function iAddTheFollowingBankAccount(TableNode $table)
     {
-        $this->clickLink("tab-accounts");
+        $this->gotoOverview();
+        $this->clickLink("edit-accounts");
 
         // expand form if collapsed
         if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
@@ -550,6 +582,44 @@ trait ReportTrait
 
     }
 
+    /**
+     * @Then I say there were no decisions made because :text
+     */
+    public function noDecisionsMade($text)
+    {
+        $this->gotoOverview();
+        $this->clickLink('edit-decisions');
+        $this->fillField('reason_for_no_decision_reason', $text);
+        $this->pressButton("reason_for_no_decision_saveReason");
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
 
+
+    /**
+     * @Then I say there were no contacts because :text
+     */
+    public function noContacts($text)
+    {
+        $this->gotoOverview();
+        $this->clickLink('edit-contacts');
+        $this->fillField('reason_for_no_contact_reason', $text);
+        $this->pressButton("reason_for_no_contact_saveReason");
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
+    
+    /**
+     * @Then I say there no assets
+     */
+    public function noAssets()
+    {
+        $this->gotoOverview();
+        $this->clickLink('edit-assets');
+        $this->checkOption("report_no_assets_no_assets");
+        $this->pressButton("report_no_assets_saveNoAsset");
+        $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+    }
 
 }

@@ -10,3 +10,11 @@
   }
 
 }
+
+#back-bar {
+    margin: 40px 0;
+    padding: 10px;
+    background-color: $grey-3;
+    @include core-19();
+    
+}
