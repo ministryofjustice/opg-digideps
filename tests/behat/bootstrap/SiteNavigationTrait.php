@@ -60,7 +60,7 @@ trait SiteNavigationTrait
     public function iAmOnTheReport1AccountsPage()
     {
         $this->iAmOnTheReport1Page();
-        $this->clickLink('tab-accounts');
+        $this->clickLink('edit-accounts');
     }
     
     /**

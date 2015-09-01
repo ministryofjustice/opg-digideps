@@ -282,8 +282,6 @@ trait ReportTrait
         }
 
         $this->pressButton("safeguarding_save");
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
     }
 
     /**
@@ -614,7 +612,7 @@ trait ReportTrait
     /**
      * @Then I say there no assets
      */
-    public function noAssets($text)
+    public function noAssets()
     {
         $this->gotoOverview();
         $this->clickLink('edit-assets');
