@@ -184,6 +184,11 @@ class AssetController extends Controller
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
             return $redirectResponse;
         }
+        
+        list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
+        if ($isFormValid) {
+            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
+        }
 
         return [
             'report' => $report,
@@ -216,30 +221,47 @@ class AssetController extends Controller
 
 
     /**
-     * List assets and also handle no-asset checkbox-form
+     * Return the small template with the checkbox or the string indicating the selection
      * 
      * @Template("AppBundle:Asset:_noAssets.html.twig")
      */
-    public function _noAssetsAction(REquest $request, $reportId)
+    public function _noAssetsAction(Request $request, $reportId)
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
 
+        list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
+
+        return [
+            'report' => $report,
+            'no_assets_to_add' => $noAssetsToAdd->createView(),
+        ];
+    }
+    
+    /**
+     * create and handle request for noAssets form
+     * The form posts into "list" action.
+     * 
+     * @param Request $request
+     * @param EntityDir\Report $report
+     * 
+     * @return array [FormDir\NoAssetToAddType, null]
+     */
+    private function handleNoAssetsForm(Request $request, EntityDir\Report $report)
+    {
         $noAssetsToAdd = $this->createForm(new FormDir\NoAssetToAddType(), null, [
             'action' => $this->generateUrl('assets', [ 'reportId' => $report->getId()])
         ]);
 
         // handle no asset form
         $noAssetsToAdd->handleRequest($request);
+        $isFormValid = false;
         if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
             $report->setNoAssetToAdd(true);
             $this->get('apiclient')->putC('report/' . $report->getId(), $report);
+            $isFormValid = true;
         }
         
-
-        return [
-            'report' => $report,
-            'no_assets_to_add' => $noAssetsToAdd->createView(),
-        ];
+        return [$noAssetsToAdd, $isFormValid];
     }
 
 
