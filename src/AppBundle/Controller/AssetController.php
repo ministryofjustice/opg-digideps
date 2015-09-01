@@ -169,7 +169,7 @@ class AssetController extends Controller
      * @Route("/{reportId}/assets", name="assets")
      * @Template("AppBundle:Asset:list.html.twig")
      */
-    public function listAction($reportId)
+    public function listAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId);
 
@@ -189,35 +189,6 @@ class AssetController extends Controller
             'report' => $report,
             'client' => $report->getClientObject(),
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
-        ];
-    }
-
-
-    /**
-     * Receive the submit of no-assets form, and redirects
-     * 
-     * @Route("/{reportId}/no_assets", name="no_assets_post")
-     * @Template("AppBundle:Asset:list.html.twig")
-     * @Method({"POST"})
-     */
-    public function noAssetsSubmitAction(Request $request, $reportId)
-    {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
-
-        $noAssetsToAdd = $this->createForm(new FormDir\NoAssetToAddType());
-
-        // handle no asset form
-        $noAssetsToAdd->handleRequest($request);
-        if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
-            $report->setNoAssetToAdd(true);
-            $this->get('apiclient')->putC('report/' . $report->getId(), $report);
-
-            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $report->getId()]));
-        }
-
-        return [
-            'report' => $report,
-            'client' => $report->getClientObject(),
         ];
     }
 
@@ -249,14 +220,21 @@ class AssetController extends Controller
      * 
      * @Template("AppBundle:Asset:_noAssets.html.twig")
      */
-    public function _noAssetsAction($reportId)
+    public function _noAssetsAction(REquest $request, $reportId)
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
 
         $noAssetsToAdd = $this->createForm(new FormDir\NoAssetToAddType(), null, [
-            'action' => $this->generateUrl('no_assets_post', [ 'reportId' => $report->getId()])
+            'action' => $this->generateUrl('assets', [ 'reportId' => $report->getId()])
         ]);
 
+        // handle no asset form
+        $noAssetsToAdd->handleRequest($request);
+        if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
+            $report->setNoAssetToAdd(true);
+            $this->get('apiclient')->putC('report/' . $report->getId(), $report);
+        }
+        
 
         return [
             'report' => $report,

@@ -36,7 +36,7 @@ activeTab: "tab-assets"
 
         {{ render(controller('AppBundle:Asset:_list', { 'reportId': report.id })) }}
 
-        {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
+        {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id, 'request': app.request })) }}
         
 
     {% endblock %}
