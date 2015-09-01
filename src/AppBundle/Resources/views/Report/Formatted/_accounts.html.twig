@@ -49,84 +49,72 @@
         
         <h3>Balancing the account</h3>
         
-        <ol id="balancing">
+        <ul id="balancing">
             <li class="balancing-item transaction">
-                <dl>
-                    <dt class="transaction-label">
-                        Opening balance for reporting period
-                        <span class="sub-label">(as shown on bank statement)</span>
-                    </dt>
-                    <dd class="transaction-value">
-                        <span class="currency">£</span>
-                        <span id="balancing-opening-balance" class="amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
-                    </dd>
-                </dl>
+                <div class="transaction-label">
+                    Opening balance for reporting period
+                    <span class="sub-label">(as shown on bank statement)</span>
+                </div>
+                <div class="transaction-value">
+                    <span class="currency">£</span>
+                    <span id="balancing-opening-balance" class="amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
+                </div>
                 <div class="box-right">Box 1</div>
             </li>
             <li class="balancing-item transaction">
-                <dl>
-                    <dt class="transaction-label">
-                        Total money paid in
-                    </dt>
-                    <dd class="transaction-value">
-                        <span class="currency">£</span>
-                        <span id="balancing-total-in" class="amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
-                    </dd>
-                </dl>
+                <div class="transaction-label">
+                    Total money paid in
+                </div>
+                <div class="transaction-value">
+                    <span class="currency">£</span>
+                    <span id="balancing-total-in" class="amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
+                </div>
                 <div class="box-right">Box 2</div>
             </li>
             <li class="balancing-item transaction">
-                <dl>
-                    <dt class="transaction-label">
-                        Sub-total 1
-                        <span class="sub-label">(box 1 plus box 2)</span>
-                    </dt>
-                    <dd class="transaction-value">
-                        <span class="currency">£</span>
-                        <span id="balancing-sub-total" class="amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
-                    </dd>
-                </dl>
+                <div class="transaction-label">
+                    Sub-total 1
+                    <span class="sub-label">(box 1 plus box 2)</span>
+                </div>
+                <div class="transaction-value">
+                    <span class="currency">£</span>
+                    <span id="balancing-sub-total" class="amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
+                </div>
                 <div class="box-right">Box 3</div>
             </li>
             <li class="balancing-item transaction">
-                <dl>
-                    <dt class="transaction-label">
-                        Total money paid out
-                    </dt>
-                    <dd class="transaction-value">
-                        <span class="currency">£</span>
-                        <span id="balancing-total-out" class="amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
-                    </dd>
-                </dl>
+                <div class="transaction-label">
+                    Total money paid out
+                </div>
+                <div class="transaction-value">
+                    <span class="currency">£</span>
+                    <span id="balancing-total-out" class="amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
+                </div>
                 <div class="box-right">Box 4</div>
             </li>
             <li class="balancing-item transaction">
-                <dl>
-                    <dt class="transaction-label">
-                        Sub-total 2
-                        <span class="sub-label">(box 3 minus box 4)</span>
-                    </dt>
-                    <dd class="transaction-value">
-                        <span class="currency">£</span>
-                        <span id="balancing-sub-total-2" class="amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
-                    </dd>
-                </dl>
+                <div class="transaction-label">
+                    Sub-total 2
+                    <span class="sub-label">(box 3 minus box 4)</span>
+                </div>
+                <div class="transaction-value">
+                    <span class="currency">£</span>
+                    <span id="balancing-sub-total-2" class="amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
+                </div>
                 <div class="box-right">Box 5</div>
             </li>
             <li class="balancing-item transaction">
-                <dl>
-                    <dt class="transaction-label">
-                        Closing balance for reporting period
-                        <span class="sub-label">(as shown on bank statement)</span>
-                    </dt>
-                    <dd class="transaction-value">
-                        <span class="currency">£</span>
-                        <span id="balancing-closing-balance" class="amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
-                    </dd>
-                </dl>
+                <div class="transaction-label">
+                    Closing balance for reporting period
+                    <span class="sub-label">(as shown on bank statement)</span>
+                </div>
+                <div class="transaction-value">
+                    <span class="currency">£</span>
+                    <span id="balancing-closing-balance" class="amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
+                </div>
                 <div class="box-right">Box 6</div>
             </li>
-        </ol>
+        </ul>
         
         <fieldset id="accountBalance_closingBalanceExplanation">
             <div class="form-group form-group-vertical">
