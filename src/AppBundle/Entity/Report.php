@@ -162,6 +162,11 @@ class Report
     private $reportSeen;
     
     /**
+     * @var Client 
+     */
+    private $clientObject;
+    
+    /**
      * 
      * @return integer $id
      */
@@ -740,5 +745,19 @@ class Report
             return 'submitted';
         }
         return null;
+    }
+    
+    /**
+     * @return Client
+     */
+    public function getClientObject()
+    {
+        return $this->clientObject;
+    }
+
+
+    public function setClientObject(Client $clientObject)
+    {
+        $this->clientObject = $clientObject;
     }
 }
