@@ -85,6 +85,8 @@ class ReportController extends Controller
             return $redirectResponse;
         }
         
+        $this->get('session')->getFlashBag()->add('news', 'report.header.announcement');
+        
         return [
             'report' => $report,
             'client' => $client,
