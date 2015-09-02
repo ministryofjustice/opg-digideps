@@ -93,7 +93,11 @@ trait AuthenticationTrait
     {
         foreach($table->getRowsHash() as $url => $expectedReturnCode) {
            $this->visitPath($url);
-           $this->assertResponseStatus($expectedReturnCode);
+           $actual = $this->getSession()->getStatusCode();
+           
+           if (intval($expectedReturnCode) !== intval($actual)) {
+               throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
+           }
         }
     }
     

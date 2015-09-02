@@ -1,0 +1,48 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+activeTab: "tab-assets"
+} %}
+    {% set translationDomain = "report-assets" %}
+    {% trans_default_domain translationDomain %}
+
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
+
+    {% block pageBody %}
+
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'page.pageSectionTitle'
+        } %}
+        
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription'
+        } %}
+
+        {% if report.assets is not empty %}
+            {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+            transDomain: translationDomain,
+            pageSectionDescription: 'page.pageSectionEditInfo'
+            } %}
+        {% endif %}
+
+
+        {% include 'AppBundle:Asset:_addButton.html.twig' with {
+        'showMoreLink': report.assets is not empty,
+        'report': report
+        } %}
+
+        {{ render(controller('AppBundle:Asset:_list', { 
+          'reportId': report.id, 
+          'assetToEdit': assetToEdit,
+          'editForm': form
+        })) }}
+        
+        {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
+        
+
+    {% endblock %}
+
+{% endembed %}
