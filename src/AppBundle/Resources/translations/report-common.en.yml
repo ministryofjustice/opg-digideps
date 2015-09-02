@@ -14,3 +14,6 @@ report:
           label: "I have reviewed and checked this report"
         submit:
           label: "Ready to submit report"
+    announcement: |
+      We’ve made some changes to the layout of this page.<br/>
+      Use the links on this page to view and edit the different sections of your report.
