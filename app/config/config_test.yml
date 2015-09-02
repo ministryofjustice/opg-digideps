@@ -14,3 +14,9 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+assetic:
+    use_controller: false
+    
+twig:
+    cache:  false
