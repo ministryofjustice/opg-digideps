@@ -2,7 +2,7 @@ page:
   htmlTitle: Report Accounts
   pageSectionTitle: "Bank or building society accounts"
   pageSectionDescription: |
-    Tell us about the main bank account or accounts you use regularly to receive money and make payments 
+    Tell us about the main bank account or accounts you use regularly to receive money and make payments
     on behalf of the client. For most people, this is their  current account, and they usually just have one.
   pageSectionWarning: "Do not include savings or investment accounts, such as ISAs - add these to the assets section."
   accountAdded: "We’ve added your account"
@@ -23,11 +23,11 @@ form:
         legendjs: "End date of reporting period"
         hint: "(DD/MM/YYYY)"
       closingDateExplanation:
-        label: Please tell us why the closing dates do not match    
+        label: Please tell us why the closing dates do not match
       closingBalance:
-        label: "Closing Balance"
+        label: "Closing balance"
       closingBalanceExplanation:
-        label: Please tell us why the balance does not match
+        label: Please tell us why the balances does not match
       cancel:
         label: Cancel
       save:
@@ -48,7 +48,7 @@ form:
     subSectionTitle: Add your account details
     controls:
       bank:
-        label: Enter the Bank/Building Society name
+        label: Enter the bank or building society name
       accountNumber:
         label: Last four digits of the account number
         hint: ""
@@ -62,9 +62,9 @@ form:
       openingDateMatchesReportDate:
         labelYes: " "
         labelNo: " "
-        legend: Is the start date of your reporting period and the opening balance date the same ?
+        legend: Is the start date of your reporting period and the opening balance date the same?
       openingDate:
-        legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ? 
+        legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ?
         legendjs: Add the opening balance date for this account
         hint: (DD/MM/YYYY)
       openingBalancePrefix:
@@ -78,7 +78,7 @@ form:
       cancel:
         label: Cancel
 listing:
-  bank: "Bank/Building Society name"
+  bank: "Bank or building society name"
   accountNumber: "Last four digits of account number"
   balance: "Opening balance:"
   totalBalance: "Total balance:"
@@ -87,5 +87,5 @@ listing:
   currencySymbol: "£"
   closingBalance: "Closing balance:"
   closingDate: "End of year:"
-  addTotalsWarning: Add Money paid in and Money paid out
+  addTotalsWarning: Add Money paid in or Money paid out
   addClosingBalanceWarning: Add the closing balance of the account

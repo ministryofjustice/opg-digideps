@@ -32,8 +32,8 @@ class Asset
     
     /**
      *
-     * @Assert\NotBlank(message="asset.title.notBlank")
-     * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage")
+     * @Assert\NotBlank(message="asset.title.notBlank", groups={"title_only"})
+     * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage", groups={"title_only"})
      * @JMS\Type("string")
      */
     private $title;

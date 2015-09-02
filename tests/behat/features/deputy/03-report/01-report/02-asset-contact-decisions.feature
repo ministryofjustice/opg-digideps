@@ -67,15 +67,20 @@ Feature: deputy / report / add contact, decision, assets
         And I follow "edit-assets"
         And I save the page as "report-assets-empty"
         # wrong form
-        And I press "asset_save"
-        And I save the page as "report-assets-add-error-empty"
+        And I press "asset_title_next"
+        And I save the page as "report-assets-title-add-error-empty"
         Then the following fields should have an error:
-            | asset_title |
+            | asset_title_title |
+        Then I fill in "asset_title_title" with "Vehicles"
+        And I press "asset_title_next"
+        Then the form should be valid
+        And I save the page as "report-assets-title-added"
+        # rest of the form
+        When I press "asset_save"
+          Then the following fields should have an error:
             | asset_value |
             | asset_description |
-        # invalid date
         When I fill in the following:
-            | asset_title       | Vehicles |
             | asset_value       | 10000000001 |
             | asset_description | Alfa Romeo 156 JTD |
             | asset_valuationDate_day | 99 |

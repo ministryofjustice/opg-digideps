@@ -175,6 +175,12 @@ class Account
     private $moneyTotal;
     
     
+    public function __construct()
+    {
+        $this->moneyIn = [];
+        $this->moneyOut = [];
+    }
+
     public function getId()
     {
         return $this->id;
@@ -446,8 +452,7 @@ class Account
         }
         if (!$this->reportObject) {
             // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
-            error_log(__METHOD__ . ' : account reportObject not available', E_WARNING);
-            return false;
+            throw new \RuntimeException(__METHOD__ . ' : account reportObject not available');
         }
         return $this->reportObject->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
     }
@@ -494,19 +499,21 @@ class Account
     }
     
     /**
-     * @return true
+     * @return integer
      */
-    public function hasAtLeastOneTotalOutAndIn()
+    public function getCountValidTotals()
     {
-        $moneyInTotalTranactions = array_filter($this->getMoneyIn(), function (AccountTransaction $t) {
-           return $t->getAmount() !== null;
-        });
-       
-        $moneyOutTotalTranactions = array_filter($this->getMoneyOut(), function (AccountTransaction $t) {
-           return $t->getAmount() !== null;
-        });
+        $ret = 0;
+        
+        foreach ($this->getMoneyIn() as $t) {
+            $ret += $t->getAmount() === null ? 0 : 1;
+        }
+        
+        foreach ($this->getMoneyOut() as $t) {
+            $ret += $t->getAmount() === null ? 0 : 1;
+        }
 
-        return count($moneyInTotalTranactions) > 0 && count($moneyOutTotalTranactions) > 0;
+        return $ret;
     }
     
     

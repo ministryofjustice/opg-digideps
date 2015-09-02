@@ -137,15 +137,15 @@ account:
         type: The sort code must be numbers
         length: The sort code must be at least {{ limit }} numbers long
     accountNumber:
-        notBlank: Enter the last 4 numbers of the account number
+        notBlank: Enter the last four numbers of the account number
         type: The account number must be numbers
-        length: Enter the last 4 digits of the account number
+        length: Enter the last four digits of the account number
     openingDate:
         notBlank: Enter the opening balance date
         notSameAsReport: The start date of the report and the date here is different. Tell us why below.
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     openingDateSameAsReportDate:
-        notBlank: Please select an option
+        notBlank: Choose Yes or No
     closingDate:
         notBlank: You must enter the closing balance date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
@@ -217,22 +217,22 @@ sendEmail:
 safeguarding:
     doYouLiveWithClient:
         notBlank: Please select one option
-    howOftenDoYouVisit: 
+    howOftenDoYouVisit:
         notBlank: Please select one option
-    howOftenDoYouPhoneOrVideoCall: 
+    howOftenDoYouPhoneOrVideoCall:
         notBlank: Please select one option
-    howOftenDoYouWriteEmailOrLetter: 
+    howOftenDoYouWriteEmailOrLetter:
         notBlank: Please select one option
-    howOftenDoesClientSeeOtherPeople: 
+    howOftenDoesClientSeeOtherPeople:
         notBlank: Please select one option
-    doesClientReceivePaidCare: 
+    doesClientReceivePaidCare:
         notBlank: Please select one option
-    howIsCareFunded: 
+    howIsCareFunded:
         notBlank: Please select one option
-    whoIsDoingTheCaring: 
-        notBlank: Please select one option 
+    whoIsDoingTheCaring:
+        notBlank: Please select one option
     whenWasCarePlanLastReviewed:
         notBlank: Please enter last review date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
-        notBlank: Please select one option 
+        notBlank: Please select one option

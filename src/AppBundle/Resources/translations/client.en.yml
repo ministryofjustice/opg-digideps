@@ -2,17 +2,17 @@ page:
   htmlTitle: "Deputyship - My Client"
   pageSectionTitle: "My client"
   pageSectionDescription: "You can update your client's details and the deputy reporting period below."
-  lastLoggedIn: "Last Logged in:"
+  lastLoggedIn: "Last logged in:"
 clientDetails:
   editClient: "Edit Client"
-  edit: "Edit Client's details"
+  edit: "Edit client's details"
   clientName: "Client Name"
   caseReference: "Case reference"
   address: "Client's address"
 reportDataList:
   editReportingPeriod: "Edit Report dates"
   edit: "Edit reporting period"
-  downloadThisReportLink: View this report  
+  downloadThisReportLink: View this report
   name: "Report Name"
   nameSuffix: " report"
   status: "Status:"
@@ -21,7 +21,7 @@ reportDataList:
   submitted: "Submitted %date%"
   submitDateNotSet: "(Date Not Set)"
   type: "Type:"
-  hw: "Health and Welfare"
+  hw: "Health and welfare"
   pa: "Property and affairs"
   dueDate: "Due date:"
   open: "Open report"
@@ -49,4 +49,3 @@ form:
     controls:
       cancel:
         label: "Cancel"
-
