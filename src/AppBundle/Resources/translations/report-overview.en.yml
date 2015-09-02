@@ -3,11 +3,11 @@ page:
 pages:
   reportPeriod:
     pageSectionTitle: "The deputy report"
-    contactsLink: "Go to the Contacts section"
-    decisionsLink: "Go to the Decisions section"
-    accountsLink: "Go to the Accounts section"
-    assetsLink: "Go to the Assets section"
-    safeguradingLink: "Go to the Safeguarding section"
+    contactsLink: "Edit contacts"
+    decisionsLink: "Edit decisions"
+    accountsLink: "Edit accounts"
+    assetsLink: "Edit assets"
+    safeguradingLink: "Edit safeguarding"
     healthAndWelfare:
       pageSectionDescription: "Your report tells the Office of the Public Guardian (OPG) about decisions you've made on behalf of the client and who you've consulted with."
       pageSectionInfo: "Use the deputy service to complete your report at the end of the reporting period or you can add information throughout the reporting period."
@@ -40,7 +40,7 @@ pages:
       accounts:
         subSectionTitle: "Accounts"
         subSectionDescription: "Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."
-        subSectionWarning: "You can only sign off the accounts' section at the end of the reporting period when you know the final totals."
+        subSectionWarning: "You can only sign off the accounts section at the end of the reporting period when you know the final totals."
       safeguarding:
         subSectionTitle: "Safeguarding"
         subSectionDescription: "Let us know how the client is cared for and what contact they have with you and other people."

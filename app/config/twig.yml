@@ -3,26 +3,3 @@ parameters:
     progress_bars:
       registration: [1,2,3,4]
       registration_admin: [1,2]
-    tabs:
-      report-paa: 
-        tab-overview:
-          path: "report_overview"
-        tab-decisions:
-          path: "decisions"
-        tab-contacts:
-          path: "contacts"
-        tab-safeguarding:
-          path: "safeguarding"
-        tab-accounts:
-          path: "accounts"
-        tab-assets:
-          path: "assets"
-      report-pw:
-          tab-overview:
-              path: "report_overview"
-          tab-decisions:
-              path: "decisions"
-          tab-contacts:
-              path: "contacts"
-          tab-safeguarding:
-              path: "safeguarding"

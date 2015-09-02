@@ -85,6 +85,8 @@ class ReportController extends Controller
             return $redirectResponse;
         }
         
+        $this->get('session')->getFlashBag()->add('news', 'report.header.announcement');
+        
         return [
             'report' => $report,
             'client' => $client,
@@ -221,10 +223,6 @@ class ReportController extends Controller
         $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
-        }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
         $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
@@ -250,10 +248,6 @@ class ReportController extends Controller
         $util = $this->get('util');
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
-        }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
         $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);

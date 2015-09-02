@@ -62,11 +62,13 @@
 
     {% if reportType is sameas("propertyAndAffairs") %}
 
+        {% if report.safeguarding is not null %}
         <div class="external-report-section" id="safeguarding-section">
             {% include 'AppBundle:Safeguard:summary.html.twig' with {
                 'safeguarding': report.safeguarding
             } %}
         </div>
+        {% endif %}
 
         <div class="external-report-section" id="accounts-section">
             {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {

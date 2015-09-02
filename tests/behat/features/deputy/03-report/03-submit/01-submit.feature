@@ -6,15 +6,9 @@ Feature: deputy / report / submit
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
         When I click on "report-n1"
-        # check there are no notifications
-        Then I should not see the "tab-contacts-warning" region
-        Then I should not see the "tab-decisions-warning" region
-        Then I should not see the "tab-accounts-warning" region
-        Then I should not see the "tab-assets-warning" region
         # set report due
         Given I set the report 1 end date to 3 days ago
         And I am on the first report overview page
-        Then I should not see a "tab-contact-notification" element
         # assert I cannot access the following steps
         Then The URL "/report/1/add_further_information" should not be accessible
         Then The URL "/report/1/add_further_information/edit" should not be accessible
@@ -56,17 +50,17 @@ Feature: deputy / report / submit
         Then the URL should match "/report/\d+/declaration"
         # test submitting from contacts page
         When I click on "report-preview-go-back"
-        And I follow "tab-contacts"
+        And I follow "edit-contacts"
         And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from decisions page
-        When I follow "tab-decisions"
+        When I follow "edit-decisions"
         And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from accounts page
-        When I follow "tab-accounts"
+        When I follow "edit-accounts"
         And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
@@ -76,7 +70,7 @@ Feature: deputy / report / submit
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from assets page
-        When I follow "tab-assets"
+        When I follow "edit-assets"
         And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
 
@@ -140,10 +134,10 @@ Feature: deputy / report / submit
         When I click on "client-home"
         And I click on "report-n1"
         And I save the page as "report-property-affairs-homepage"
-        Then I should see a "#tab-contacts" element
-        And I should see a "#tab-decisions" element
-        And I should see a "#tab-accounts" element
-        And I should see a "#tab-assets" element
+        Then I should see a "#edit-contacts" element
+        And I should see a "#edit-decisions" element
+        And I should see a "#edit-accounts" element
+        And I should see a "#edit-assets" element
         When I am on the account "1234" page of the first report
         And I click on "edit-account-details"
         Then the following fields should have the corresponding values:

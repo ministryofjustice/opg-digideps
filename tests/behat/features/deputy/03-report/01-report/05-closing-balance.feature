@@ -134,7 +134,8 @@ Feature: deputy / report / closing balance
         And I should see "not possible to login to homebanking before" in the "closing-date-explanation" region
         And I should see "100.50 moved to other account" in the "closing-balance-explanation" region
         # refresh page and check values
-        When I follow "tab-accounts"
+        When I follow "overview-button"
+        Then I follow "edit-accounts"
         Then I should see "3,000.00" in the "account-1-closing-balance" region
         And I should see the value of "30 days ahead, DD/MM/YYYY" in the "account-1-closing-date" region
 

@@ -1,12 +1,43 @@
-.report-overview {
+.overview-sections {
 
-  .overview-link{
+    padding-top: 10px;
+    border-top: 1px solid $grey-3;
 
-    display: block;
-    position: relative;
-    top: -20px;
-    margin-bottom: 10px;
+    .overview-section {
+        
+        padding-top: 18px;
 
-  }
+        .heading {
+            @include core-19();
+            color: #000000;
+            background: #ecefef;
+            padding: 7px 10px 5px 10px;
+        }
+                
+        .sub-section {
+            @extend %contain-floats;
+
+            border-top: 1px solid $grey-3;
+
+            &:first-of-type {
+                border-top: none;
+            }
+            
+            .heading {
+                @include bold-24();
+                background: transparent;
+                padding: 20px 10px 15px 10px;
+                float: left;        
+            }
+    
+            .edit-link {
+                @include core-19();
+                float: right;
+                padding-top: 23px;
+            }
+
+        }
+
+    }
 
 }

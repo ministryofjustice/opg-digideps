@@ -35,6 +35,16 @@
     max-width: 540px;
 }
 
-#content .page-body p.flash {
+#page-body p.flash {
     width: 65%;
+}
+
+#content p.flash.flash-news {
+    background: #e8f4fd url(/images/icons/info.png) 10px 10px no-repeat;
+    border-left: 3px solid #1d8feb;
+    margin-bottom: 0;
+    width: 53%;
+    padding-left: 50px;
+    position: absolute;
+    bottom: 0;
 }

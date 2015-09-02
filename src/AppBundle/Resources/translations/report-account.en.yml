@@ -1,11 +1,11 @@
 page:
   htmlTitle: Report Account - Money
-  totalBalance: Total Balance
+  totalBalance: Total balance
   pageSectionWarning: Add and edit totals for the reporting period for the client's account.
   currencySymbol: "£"
   header:
     bankBuildingSociety:
-      label: "Bank or Building Society name"
+      label: "Bank or building society name"
     accounNumber:
       label: "Account no."
     openingBalanceDate:
@@ -125,7 +125,7 @@ moneyOut:
       label: Investments, eg shares, bonds, savings
       further_guidance: Please give more details
     transfers_out_to_other_client_s_accounts:
-      label: Transfers out to other client’s accounts
+      label: Transfers out to client’s other accounts
       further_guidance: Please give more details
     any_other_money_paid_out_and_not_listed_above:
       label: Any other money paid out and not listed above

@@ -62,10 +62,6 @@ class AccountController extends Controller
                 $this->generateUrl('accounts', [ 'reportId' => $reportId ]) . "#pageBody"
             );
         }
-        
-        if ($form->get('save')->isClicked() && !$form->isValid()) {
-            echo $form->getErrorsAsString();
-        }
 
         return [
             'report' => $report,
