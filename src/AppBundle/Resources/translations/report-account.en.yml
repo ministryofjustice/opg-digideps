@@ -5,7 +5,7 @@ page:
   currencySymbol: "£"
   header:
     bankBuildingSociety:
-      label: "Bank or Building Society name"
+      label: "Bank or building society name"
     accounNumber:
       label: "Account no."
     openingBalanceDate:

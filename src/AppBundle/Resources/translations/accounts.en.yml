@@ -1,6 +1,6 @@
 totalBalance: Total balance
 currencySymbol: £
-bankBuildingSociety: Bank or Building Society name
+bankBuildingSociety: Bank or building society name
 moneyInPrefix: "+"
 moneyOutPrefix: "-"
 
