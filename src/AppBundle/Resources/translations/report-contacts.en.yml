@@ -27,7 +27,7 @@ postcode:
     label: Postcode
     hint: ''
 country:
-    label: Country (Optional)
+    label: Country (optional)
     hint: ''
     defaultOption: Please select ...
 contact_form:
