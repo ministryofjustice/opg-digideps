@@ -62,7 +62,7 @@ form:
       openingDateMatchesReportDate:
         labelYes: " "
         labelNo: " "
-        legend: Is the start date of your reporting period and the opening balance date the same ?
+        legend: Is the start date of your reporting period and the opening balance date the same?
       openingDate:
         legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ?
         legendjs: Add the opening balance date for this account
