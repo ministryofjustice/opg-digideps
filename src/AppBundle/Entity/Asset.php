@@ -193,7 +193,7 @@ class Asset implements UserFilterInterface
     }
 
     /**
-     * Set report
+     * Set report and set to false the report.noAssetToAdd status
      *
      * @param \AppBundle\Entity\Report $report
      * @return Asset
@@ -201,7 +201,9 @@ class Asset implements UserFilterInterface
     public function setReport(\AppBundle\Entity\Report $report = null)
     {
         $this->report = $report;
-
+        
+        $report->setNoAssetToAdd(false);
+        
         return $this;
     }
 
