@@ -48,7 +48,7 @@ form:
     subSectionTitle: Add your account details
     controls:
       bank:
-        label: Enter the Bank/Building Society name
+        label: Enter the bank or building society name
       accountNumber:
         label: Last four digits of the account number
         hint: ""
@@ -78,7 +78,7 @@ form:
       cancel:
         label: Cancel
 listing:
-  bank: "Bank/Building Society name"
+  bank: "Bank or building society name"
   accountNumber: "Last four digits of account number"
   balance: "Opening balance:"
   totalBalance: "Total balance:"
