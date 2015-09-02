@@ -1,6 +1,6 @@
-totalBalance: Total Balance
+totalBalance: Total balance
 currencySymbol: £
-bankBuildingSociety: Bank or Building Society name
+bankBuildingSociety: Bank or building society name
 moneyInPrefix: "+"
 moneyOutPrefix: "-"
 
@@ -57,5 +57,5 @@ gifts: Gifts
 major_purchases_eg_property_vehicles: Major purchases, eg property, vehicles
 property_maintenance_or_improvement: Property maintenance or improvement
 investments_eg_shares_bonds_savings: Investments, eg shares, bonds, savings
-transfers_out_to_other_client_s_accounts: Transfers out to other client’s accounts
+transfers_out_to_other_client_s_accounts: Transfers out to client’s other accounts
 any_other_money_paid_out_and_not_listed_above: Any other money paid out and not listed above
