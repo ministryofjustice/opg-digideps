@@ -1,6 +1,6 @@
 page:
   htmlTitle: Report Account - Money
-  totalBalance: Total Balance
+  totalBalance: Total balance
   pageSectionWarning: Add and edit totals for the reporting period for the client's account.
   currencySymbol: "£"
   header:
