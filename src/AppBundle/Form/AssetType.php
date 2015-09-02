@@ -5,21 +5,17 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
+/**
+ * Asset form
+ * 
+ * note: title is hidden (filled from the controller based on AssetTypeTitle form)
+ */
 class AssetType extends AbstractType
 {
-    private $titles;
-    
-    /** 
-     * @param array $titles
-     */
-    public function __construct($titles) 
-    {
-        $this->titles = $titles;
-    }
     
     public function buildForm(FormBuilderInterface $builder, array $options) 
     {
-        $builder->add('title', 'choice', [ 'choices' => $this->titles, 'empty_value' => 'Please select' ])
+        $builder->add('title', 'hidden') //use the AssetTypeTile to display the title
                 ->add('value', 'number', [ 
                     'grouping' => true, 
                     'precision' => 2, 
@@ -32,18 +28,18 @@ class AssetType extends AbstractType
                                                  'invalid_message' => 'invalid date'
                                               ])
                 ->add('id', 'hidden')
-            ->add('save', 'submit');
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
-    {
-        $resolver->setDefaults( [
-            'translation_domain' => 'report-assets',
-        ]);
+                ->add('save', 'submit');
     }
     
     public function getName() 
     {
         return 'asset';
+    }
+    
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults( [
+            'translation_domain' => 'report-assets',
+        ]);
     }
 }

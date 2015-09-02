@@ -31,7 +31,9 @@
     {% endblock %}
 
     <div id="page-body">
-        {% block pageBody %}{% endblock %}
+        <div id="pageBodyLeftContent">
+           {% block pageBody %}{% endblock %}
+        </div>
         {% if showHelp %}
             {% include 'AppBundle:Components/Page:_help.html.twig' %}
         {% endif %}

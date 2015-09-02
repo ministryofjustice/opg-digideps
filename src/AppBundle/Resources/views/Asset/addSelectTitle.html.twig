@@ -1,0 +1,85 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+activeTab: "tab-assets"
+} %}
+    {% set translationDomain = "report-assets" %}
+    {% trans_default_domain translationDomain %}
+
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
+
+    {% block pageBody %}
+
+        
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'page.pageSectionTitle'
+        } %}
+        
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription'
+        } %}
+
+        {% block validationSummary %}
+            {{ form_errors_list(form) }}
+        {% endblock %}
+
+        
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'asset-form-add-select-title' } }) }}
+        
+          {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+          transDomain: translationDomain,
+          subSectionTitle: 'form.newAsset.subSectionTitleAdd'
+          } %}
+
+          {{ form_select(form.title, 'form.newAsset.controls.title') }}
+
+          {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
+            {{ form_submit(form.next,'form.newAsset.controls.next', { 'buttonClass': '' }) }}
+            
+            {% if showCancelLink %}
+              {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+              transDomain: translationDomain,
+              linkButtonLabel: 'form.newAsset.controls.cancel.label',
+              linkClass: 'button-link',
+              linkHref: path('assets', {'reportId': report.id})
+              } %}
+            {% endif %}
+
+          {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}
+        
+        {{ render(controller('AppBundle:Asset:_list', { 'reportId': report.id })) }}
+
+        {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
+        
+        
+         <script type="text/javascript">
+            $(document).ready(function () {
+              // remove next and cancel button
+              $('#asset-add-title-next-group').remove();
+              
+              // when the dropdown changes, replace the pageBodyLeftContent with the result of the next page (add-complete)
+              $('#asset_title_title').change(function() {
+                 var selectedTitle = $(this).val();
+                 if (selectedTitle === '') {
+                   return;
+                 }
+                 //$("#pageBodyLeftContent" ).fadeOut();
+                 var urlToLoadPattern = '{{ path('asset_add_complete', {'reportId': report.id, 'title' : '--placeholder--'}) }}';
+                 var urlToLoad = urlToLoadPattern.replace('--placeholder--', selectedTitle);
+                 
+                 $.get(urlToLoad, function( data ) {
+                     $("#pageBodyLeftContent" ).html( data );
+                     //$("#pageBodyLeftContent" ).fadeIn();
+                 });
+                 
+               });
+            });
+        </script>
+        
+    {% endblock %}
+
+{% endembed %}

@@ -1,0 +1,114 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+{#
+Component parameters
+--------------------
+assets
+assetToEdit Asset to edit if present
+showDeleteConfirm (true/false)
+showEditLink default false
+editForm
+#}
+
+{% if assets is not empty  %}
+
+  <ul class="behat-region-list-assets report-list report-list--assets">
+    {% for asset in assets %}
+        <li id="asset-edit-{{ asset.id }}" class="report-list__item">
+
+            {% if assetToEdit and (asset.id == assetToEdit.id) %}
+
+                {{ form_start(editForm, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+                <div>
+
+                    {% set subSectionTitleText = 'form.newAsset.subSectionTitleEdit' %}
+
+                    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+                    transDomain: translationDomain,
+                    subSectionTitle: subSectionTitleText
+                    } %}
+
+                    {{ form_input(editForm.value, 'form.newAsset.controls.value', {
+                    'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
+                    'inputClass' : 'form-control__number'
+                    } ) }}
+                    {{ form_input(editForm.description, 'form.newAsset.controls.description') }}
+                    {{ form_known_date(editForm.valuationDate, 'form.newAsset.controls.valuationDate') }}
+
+                    {% if (showDeleteConfirm) %}
+
+                        {% include 'AppBundle:Components/Alerts:_delete-confirmation.html.twig' with
+                        {
+                        'translationDomain': translationDomain,
+                        componentID: 'asset-delete-confirm',
+                        deleteMessageText: 'form.newAsset.controls.delete.message' | trans,
+                        deleteButtonType: path('asset_delete', {'reportId': report.id, 'assetId': assetToEdit.id, 'confirmed': 1}),
+                        deleteButtonText: 'form.newAsset.controls.delete.label' | trans,
+                        deleteButtonClass: 'button-warning behat-link-delete',
+                        cancelButtonLink: url('asset_edit', {'reportId': report.id, 'assetId': asset.id}) ~ '#asset-edit-' ~ asset.id,
+                        cancelButtonText: 'form.newAsset.controls.cancel.label' | trans,
+                        cancelButtonClass: 'behat-link-delete-confirm-cancel' | trans
+                        } %}
+
+                        {{ form_submit(editForm.save,'form.newAsset.controls.save', { 'buttonClass': 'visuallyhidden' }) }}
+
+                    {% else %}
+
+                        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+                        {{ form_submit(editForm.save,'form.newAsset.controls.save', { 'buttonClass': '' }) }}
+
+                        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                        transDomain: translationDomain,
+                        linkButtonLabel: 'form.newAsset.controls.cancel.label',
+                        linkClass: 'button-link behat-link-cancel-edit',
+                        linkHref: path('assets', {'reportId': report.id}) ~ "#asset-edit-" ~ asset.id
+                        } %}
+
+                        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                        transDomain: translationDomain,
+                        linkButtonLabel: 'form.newAsset.controls.delete.label',
+                        linkClass: 'button-warning behat-link-delete-confirm',
+                        linkHref: path('asset_delete', {'reportId': report.id, 'assetId': assetToEdit.id}) ~ '#asset-delete-confirm'
+                        } %}
+
+                        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+                    {% endif %}
+
+                  </div>
+
+                {{ form_end(editForm) }}
+
+            {% else %}
+                <div class="report-list__item-header">
+                    <h3>{{ asset.title }}</h3>
+                    {% if showEditLink %}
+                      <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}"
+                         class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-{{ asset.description | behat_namify }}">{{ 'listing.editLink'| trans }}</a>
+                    {% endif %}
+                </div>
+                <dl class="report-list__item-fields">
+                    <div class="report-list__item-fields-row">
+                        <dt class="report-list__item-fields-term">{{ 'listing.value' | trans }}</dt>
+                        <dd class="report-list__item-fields-description">{{ 'listing.currencySymbol' | trans }}{{ asset.value | number_format(2, '.', ',') }}</dd>
+                    </div>
+                    <div class="report-list__item-fields-row">
+                        <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
+                        <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ asset.description }}</dd>
+                    </div>
+                    {% if asset.valuationDate is not null %}
+                        <div class="report-list__item-fields-row">
+                            <dt class="report-list__item-fields-term">{{ 'listing.date' | trans }}</dt>
+                            <dd class="report-list__item-fields-description">{{ asset.valuationDate | date("d F Y") }}</dd>
+                        </div>
+                    {% endif %}
+                </dl>
+
+            {% endif %}
+
+        </li>
+    {% endfor %}
+  </ul>
+{% endif %}
