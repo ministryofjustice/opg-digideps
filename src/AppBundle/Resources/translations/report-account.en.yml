@@ -125,7 +125,7 @@ moneyOut:
       label: Investments, eg shares, bonds, savings
       further_guidance: Please give more details
     transfers_out_to_other_client_s_accounts:
-      label: Transfers out to other client’s accounts
+      label: Transfers out to client’s other accounts
       further_guidance: Please give more details
     any_other_money_paid_out_and_not_listed_above:
       label: Any other money paid out and not listed above
