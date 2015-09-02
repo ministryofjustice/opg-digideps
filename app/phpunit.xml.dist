@@ -6,6 +6,9 @@
          backupGlobals="false"
          colors="true"
          bootstrap="bootstrap.php.cache"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
 >
     <testsuites>
         <testsuite name="Project Test Suite">
@@ -33,4 +36,8 @@
             </exclude>
         </whitelist>
     </filter>
+    
+    <php>
+        <ini name="error_log" value="/dev/stdout"/>
+    </php>
 </phpunit>
