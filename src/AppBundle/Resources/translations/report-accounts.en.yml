@@ -87,5 +87,5 @@ listing:
   currencySymbol: "£"
   closingBalance: "Closing balance:"
   closingDate: "End of year:"
-  addTotalsWarning: Add Money paid in and Money paid out
+  addTotalsWarning: Add Money paid in or Money paid out
   addClosingBalanceWarning: Add the closing balance of the account

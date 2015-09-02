@@ -494,19 +494,18 @@ class Account
     }
     
     /**
-     * @return true
+     * @return integer
      */
-    public function hasAtLeastOneTotalOutAndIn()
+    public function getCountValidTotals()
     {
-        $moneyInTotalTranactions = array_filter($this->getMoneyIn(), function (AccountTransaction $t) {
+        $filterOutInvalidAmounts = function (AccountTransaction $t) {
            return $t->getAmount() !== null;
-        });
-       
-        $moneyOutTotalTranactions = array_filter($this->getMoneyOut(), function (AccountTransaction $t) {
-           return $t->getAmount() !== null;
-        });
+        };
+        
+        $validMoneyIn = array_filter($this->getMoneyIn(), $filterOutInvalidAmounts);
+        $validMoneyOut = array_filter($this->getMoneyOut(), $filterOutInvalidAmounts);
 
-        return count($moneyInTotalTranactions) > 0 && count($moneyOutTotalTranactions) > 0;
+        return count($validMoneyIn) + count($validMoneyOut);
     }
     
     
