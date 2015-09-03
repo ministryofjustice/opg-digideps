@@ -1,6 +1,8 @@
 <?php
 
-use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Account;
+use AppBundle\Entity\AccountTransaction;
+use AppBundle\Entity\Report;
 
 /**
  * Used for unit testing
@@ -8,44 +10,41 @@ use AppBundle\Entity as EntityDir;
 class Fixtures extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @return EntityDir\Report
+     * @return Report
      */
-    public static function createReport(array $options)
+    public static function fillReport(Report $report, array $options)
     {
         $id = isset($options['id']) ? $options['id'] : rand(10000, 11000);
         
-        $report = new EntityDir\Report;
         $report->setId($id);
-        
         
         return $report;
     }
     
     /**
-     * @return EntityDir\Account
+     * @return Account
      */
-    public static function createAccount(array $options)
+    public static function fillAccount(Account $account, array $data)
     {
-        $id = isset($options['id']) ? $options['id'] : rand(10000, 11000);
+        $id = isset($data['id']) ? $data['id'] : rand(10000, 11000);
         
-        $account = new EntityDir\Account;
         $account->setId($id);
-        $account->setBank(isset($options['bank']) ? $options['bank'] : "account {$id}");
-        isset($options['report']) && $account->setReportObject($options['report']);
+        $account->setBank(isset($data['bank']) ? $data['bank'] : "account {$id}");
+        isset($data['report']) && $account->setReportObject($data['report']);
         
         foreach(['moneyIn'=>'setMoneyIn', 'moneyOut'=>'setMoneyOut'] as $key=>$setter) {
-            if (!isset($options[$key])) {
+            if (!isset($data[$key])) {
                 continue;
             }
             $transactions = [];
-            foreach($options[$key] as $id=>$amount) {
-                $transactions[] = new EntityDir\AccountTransaction($id, $amount);
+            foreach($data[$key] as $id=>$amount) {
+                $transactions[] = new AccountTransaction($id, $amount);
             }
             $account->$setter($transactions);
         }
         
-        if (isset($options['closing'])) {
-             $closingOptions = $options['closing'];
+        if (isset($data['closing'])) {
+             $closingOptions = $data['closing'];
              $account->setClosingBalance($closingOptions['balance']);
              $account->setClosingBalanceExplanation($closingOptions['balanceExplanation']);
              $account->setClosingDate($closingOptions['date']);

@@ -3,7 +3,8 @@
 namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity as EntityDir;
+use AppBundle\Entity\Account;
+use AppBundle\Entity\Report;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Fixtures;
@@ -25,18 +26,15 @@ class ListAccountsNotDueTest extends WebTestCase
         $this->client = static::createClient([ 'environment' => 'test',
                                                'debug' => false ]);
         
-        //$this->client->getContainer()->enterScope('request');
-        //$this->client->getContainer()->set('request', new Request(), 'request');
-        
         $this->twig = $this->client->getContainer()->get('templating');
         
-        $report = Fixtures::createReport(['id'=>1, 'due'=>false]);
+        $report = Fixtures::fillReport(new Report, ['id'=>1, 'due'=>false]);
         
         $html = $this->twig->render('AppBundle:Account:_listAccounts.html.twig', [
             'report' =>  $report,
             'accounts' => [
-                Fixtures::createAccount(['id'=>1, 'bank'=>'hsbc bank']), 
-                Fixtures::createAccount(['id'=>2, 'bank'=>'halifax bank'])
+                Fixtures::fillAccount(new Account, ['id'=>1, 'bank'=>'hsbc bank']), 
+                Fixtures::fillAccount(new Account, ['id'=>2, 'bank'=>'halifax bank'])
             ]
         ]);
         
