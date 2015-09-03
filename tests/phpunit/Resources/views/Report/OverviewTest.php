@@ -22,16 +22,12 @@ class OverviewTest extends WebTestCase
 
     public function setUp()
     {
-
         $this->client = static::createClient([ 'environment' => 'test','debug' => false ]);
         $this->client->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
         $this->client->getContainer()->set('request', $request, 'request');
         
-        $this->report = m::mock('AppBundle\Entity\Report');
-        $this->report->shouldIgnoreMissing();
-
     }
 
     public function tearDown()
@@ -58,9 +54,12 @@ class OverviewTest extends WebTestCase
     
     private function setupReport() 
     {
-        $this->report->shouldReceive('getSubmitted')->andReturn(false);
-        $this->report->shouldReceive('getId')->andReturn(1);
-        $this->report->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS);
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getSubmitted')->andReturn(false)
+            ->shouldReceive('getId')->andReturn(1)
+            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
+            ->getMock();
     }   
     
 
