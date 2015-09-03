@@ -30,7 +30,7 @@
     </target>
     
     <target name="phpunit">
-        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c app/" checkreturn="true"></exec>
+        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c tests/phpunit/" checkreturn="true"></exec>
     </target>
     
     <target name="optimise">
