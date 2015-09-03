@@ -15,5 +15,5 @@ export PGUSER=api
 rm -rf app/cache/*
 suitename=${1:-deputy}
 
-/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c app/ --testdox
+/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/ --testdox
 /sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=$suitename --stop-on-failure
