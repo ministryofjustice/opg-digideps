@@ -10,34 +10,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Fixtures;
 use Mockery as m;
 
-class ListAccountsDueTest extends WebTestCase
+class ListAccountsTest extends WebTestCase
 {
     public function setUp()
     {
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
             ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('isDue')->andReturn(true)
+            ->shouldReceive('isDue')->andReturn(false)
             ->getMock();
 
         $account1 = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(true)
+            ->shouldReceive('getBank')->andReturn('hsbc bank')
+            ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(false)
             ->shouldReceive('getCountValidTotals')->andReturn(0)
             ->getMock();
         
         $account2 = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(true)
-            ->shouldReceive('getCountValidTotals')->andReturn(1)
-            ->getMock();
-        
-        $account3 = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing()
-            ->shouldReceive('getId')->andReturn(1)
+            ->shouldReceive('getBank')->andReturn('halifax bank')
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(false)
+            ->shouldReceive('getCountValidTotals')->andReturn(0)
             ->getMock();
 
         // create WebClient and Crawler
@@ -52,31 +48,30 @@ class ListAccountsDueTest extends WebTestCase
             'accounts' => [
                 $account1,
                 $account2,
-                $account3,
             ]
         ]);
 
         $crawler = new Crawler($html);
          
         // prepare html nodes used for testing
-        $this->bank1Node = $crawler->filter('ul.report-list li.report-list__item')->eq(0);
-        $this->bank2Node = $crawler->filter('ul.report-list li.report-list__item')->eq(1);
-        $this->bank3Node = $crawler->filter('ul.report-list li.report-list__item')->eq(2);
+        $this->hsbcNode = $crawler->filter('ul.report-list li.report-list__item')->eq(0);
+        $this->halifaxNode = $crawler->filter('ul.report-list li.report-list__item')->eq(1);
     }
 
 
-    public function testWarningsForAddMoneyClosingBalanceAndNoWarnings()
+    public function testBankNamesAreDisplayed()
     {
-        // no transaction: expect no money warning
-        $this->assertContains('add money', $this->bank1Node->filter('.page-section-warning p')->html(), '', true);
-
-        // 1 transaction: expect add closing balance warning
-        $this->assertContains('closing balance', $this->bank2Node->filter('.page-section-warning p')->html(), '', true);
-        
-        // closing balance added: expect no warnings
-        $this->assertCount(0, $this->bank3Node->filter('.page-section-warning'), '', true);
+        $this->assertEquals('hsbc bank', trim($this->hsbcNode->filter('dd.report-list__item-fields-description')->text(), "\n "));
+        $this->assertEquals('halifax bank', trim($this->halifaxNode->filter('dd.report-list__item-fields-description')->text(), "\n "));
     }
-
+    
+    public function testWarningsAreNotDisplayed()
+    {
+        $this->assertCount(0, $this->hsbcNode->filter('.page-section-warning'));
+        $this->assertCount(0, $this->halifaxNode->filter('.page-section-warning'));
+    }
+    
+    
     public function tearDown()
     {
         m::close();
