@@ -1,8 +1,8 @@
 page:
-  htmlTitle: "Sign in"
+  htmlTitle: "Deputy report - sign in | GOV.UK"
 pageTitle: Sign in
 header: Sign in to the admin area
-subtitle: Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, aperiam!
+subtitle: " "
 email:
     label: Email address
     hint: We sent your registration link to this email address.
