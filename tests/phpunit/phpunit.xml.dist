@@ -5,7 +5,7 @@
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="../../app/bootstrap.php.cache"
+         bootstrap="bootstrap.php"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
@@ -16,9 +16,9 @@
         </testsuite>
     </testsuites>
 
-<!--    <php>
-        <server name="KERNEL_DIR" value="../../" />
-    </php>-->
+    <php>
+        <server name="KERNEL_DIR" value="/app/app/" />
+    </php>
     
     <php>
         <ini name="error_log" value="/dev/stdout"/>

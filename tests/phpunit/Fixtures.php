@@ -1,13 +1,11 @@
 <?php
-namespace AppBundle\Service;
 
 use AppBundle\Entity as EntityDir;
-use DateTime;
 
 /**
  * Used for unit testing
  */
-class EntityFactory extends \PHPUnit_Framework_TestCase
+class Fixtures extends \PHPUnit_Framework_TestCase
 {
     /**
      * @return EntityDir\Report

@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity as EntityDir;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Service\EntityFactory;
+use Fixtures;
 
 class ListAccountsNotDueTest extends WebTestCase
 {
@@ -30,13 +30,13 @@ class ListAccountsNotDueTest extends WebTestCase
         
         $this->twig = $this->client->getContainer()->get('templating');
         
-        $report = EntityFactory::createReport(['id'=>1, 'due'=>false]);
+        $report = Fixtures::createReport(['id'=>1, 'due'=>false]);
         
         $html = $this->twig->render('AppBundle:Account:_listAccounts.html.twig', [
             'report' =>  $report,
             'accounts' => [
-                EntityFactory::createAccount(['id'=>1, 'bank'=>'hsbc bank']), 
-                EntityFactory::createAccount(['id'=>2, 'bank'=>'halifax bank'])
+                Fixtures::createAccount(['id'=>1, 'bank'=>'hsbc bank']), 
+                Fixtures::createAccount(['id'=>2, 'bank'=>'halifax bank'])
             ]
         ]);
         

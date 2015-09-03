@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity as EntityDir;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Service\EntityFactory;
+use Fixtures;
 
 class ListAccountsDueTest extends WebTestCase
 {
@@ -30,13 +30,13 @@ class ListAccountsDueTest extends WebTestCase
         
         $this->twig = $this->client->getContainer()->get('templating');
         
-        $this->report = EntityFactory::createReport(['id'=>1, 'due'=>false]);
+        $this->report = Fixtures::createReport(['id'=>1, 'due'=>false]);
         
         $html = $this->twig->render('AppBundle:Account:_listAccounts.html.twig', [
             'report' =>  $this->report,
             'accounts' => [
-                EntityFactory::createAccount(['id'=>1, 'bank'=>'hsbc bank']), 
-                EntityFactory::createAccount(['id'=>2, 'bank'=>'halifax bank'])
+                Fixtures::createAccount(['id'=>1, 'bank'=>'hsbc bank']), 
+                Fixtures::createAccount(['id'=>2, 'bank'=>'halifax bank'])
             ]
         ]);
         
@@ -47,16 +47,16 @@ class ListAccountsDueTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Account:_listAccounts.html.twig', [
             'report' =>  $this->report,
             'accounts' => [
-                $this->account1 = EntityFactory::createAccount([
+                $this->account1 = Fixtures::createAccount([
                     'id'=>1, 
                     'bank'=>'bank1'
                 ]), 
-                $this->account2 = EntityFactory::createAccount([
+                $this->account2 = Fixtures::createAccount([
                     'id'=>2, 
                     'bank'=>'bank2 with one transaction', 
                     'moneyIn'=>[ 'in1'=> 1 ]
                 ]),
-                $this->account3 = EntityFactory::createAccount([
+                $this->account3 = Fixtures::createAccount([
                     'id'=>3, 
                     'report'=>$this->report,
                     'bank'=> 'bank with one transaction and closing balance', 
