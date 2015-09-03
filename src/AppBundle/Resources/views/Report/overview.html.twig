@@ -28,13 +28,36 @@
                     <a id="edit-decisions" class="edit-link" href="{{ path('decisions', {reportId: report.id}) }}" >
                         {{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}
                     </a>
-                    <p id="decisions-guidance">This is a test</p>
+                    <div id="decisions-guidance" class="guidance">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionDescription'
+                        } %}
+                        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                            transDomain: translationDomain,
+                            pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionList'
+                        } %}
+                    </div>
                 </div>
                 <div id="contacts-sub-section" class="sub-section">
                     <h3 class="heading">Contacts</h3>
                     <a id="edit-contacts" class="edit-link" href="{{ path('contacts', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="contacts-guidance" class="guidance">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionDescription'
+                        } %}
+                        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                        transDomain: translationDomain,
+                        pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionList'
+                        } %}
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionInfo'
+                        } %}
+                    </div>
                 </div>
             </li>
             
@@ -45,6 +68,17 @@
                     <a id="edit-safeguarding" class="edit-link" href="{{ path('safeguarding', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.safeguradingLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="safeguarding-guidance" class="guidance">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionDescription'
+                        } %}
+    
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionInfo'
+                        } %}
+                    </div>
                 </div>
             </li>
             
@@ -56,19 +90,39 @@
                     <a id="edit-accounts" class="edit-link" href="{{ path('accounts', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.accountsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="accounts-guidance" class="guidance">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.accounts.subSectionDescription'
+                        } %}
+
+                        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+                        transDomain: translationDomain,
+                        pageSectionWarning: 'pages.' ~ page ~ '.' ~ reportType ~ '.accounts.subSectionWarning'
+                        } %}
+                    </div>
                 </div>
                 <div id="asset-sub-section" class="sub-section">
                     <h3 class="heading">Assets</h3>
                     <a id="edit-assets" class="edit-link" href="{{ path('assets', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.assetsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="assets-guidance" class="guidance">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.assets.subSectionDescription'
+                        } %}
+
+                        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                        transDomain: translationDomain,
+                        pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.assets.subSectionList'
+                        } %}
+                    </div>
                 </div>
             </li>
         {% endif %}
         </ul>
-
-
-
+        
     {% endblock %}
 
 {% endembed %}
