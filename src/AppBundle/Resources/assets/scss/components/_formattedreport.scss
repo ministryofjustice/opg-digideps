@@ -188,6 +188,9 @@
     fieldset.extended-down {
         padding-bottom: 20px;
     }
+    fieldset.assets-total-value {
+        margin-top: 50px;
+    }
 
     .form-group {
         @extend %contain-floats;
@@ -400,6 +403,9 @@
                 padding-right: 3%;
                 *width: 30%;
                 float: left;
+            }
+            .form-group.assets-total-value {
+                float: right;
             }
         }
     }
