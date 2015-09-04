@@ -1,29 +1,26 @@
 <?php
+namespace AppBundle\Resources\views\Report\Formatted;
 
-namespace AppBundle\Controller;
-
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use AppBundle\Resources\views\Report\AbstractReportTest;
 use Mockery as m;
 
-class FormattedAssetsTest extends WebTestCase
+class AssetsTest extends AbstractReportTest
 {
+    private $groupAssets;
+
+    private $templateName = 'AppBundle:Report:Formatted/_client_information.html.twig';
+
     public function setUp()
     {
-        // mock data
-        $this->report = m::mock('AppBundle\Entity\Report');
+        parent::setUp();
+        $this->setupReport();
         $this->groupAssets = [];
-
-        // create WebClient and Crawler
-        $client = static::createClient([ 'environment' => 'test',
-                'debug' => true]);
-
-        $this->twig = $client->getContainer()->get('templating');
     }
 
     private function getDom()
     {
-        $html = $this->twig->render('AppBundle:Report/Formatted:_assets.html.twig', [
+        $html = $this->twig->render($this->templateName, [
             'report' => $this->report,
             'groupAssets' => $this->groupAssets,
         ]);
@@ -90,12 +87,6 @@ class FormattedAssetsTest extends WebTestCase
         
         // assert totals
         $this->assertContains("£382,001.02", $ul->filter('fieldset.assets-total-value .assets-total-value .value')->text());
-    }
-    
-    
-    public function tearDown()
-    {
-        m::close();
     }
 
 }
