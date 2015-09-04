@@ -6,8 +6,8 @@ parameters:
     non_admin_host: {{ getv "/nonadmin/host" }}
     admin_host: http://digideps-admin.local
     env: {{ getv "/role" }}
-    session_expire_seconds: 1500
-    session_popup_show_after: 1200
+    session_expire_seconds: 3900
+    session_popup_show_after: 3600
     session_cookie_secure: {{ getv "/session/cookie/secure" }}
     session_memcached_host: {{ getv "/session/memcache" }}
     session_memcached_port: 11211
