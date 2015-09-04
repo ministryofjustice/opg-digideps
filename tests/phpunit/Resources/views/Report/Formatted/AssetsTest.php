@@ -9,7 +9,7 @@ class AssetsTest extends AbstractReportTest
 {
     private $groupAssets;
 
-    private $templateName = 'AppBundle:Report:Formatted/_client_information.html.twig';
+    private $templateName = 'AppBundle:Report:Formatted/_assets.html.twig';
 
     public function setUp()
     {
@@ -30,7 +30,7 @@ class AssetsTest extends AbstractReportTest
         return $crawler->filter('#assets-section');
     }
 
-    public function testEmtpty()
+    public function testEmpty()
     {
         $this->report->shouldReceive('getAssets')->atLeast(1)->andReturn([]);
         

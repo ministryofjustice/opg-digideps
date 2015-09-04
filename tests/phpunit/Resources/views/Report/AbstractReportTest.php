@@ -129,5 +129,9 @@ class AbstractReportTest extends WebTestCase
             ->getMock();
     }
 
+    public function testEmpty() {
+        $this->assertEquals(1,1);
+        // Dumb test to get rid of warning until I figure why changing the name didn't work.
+    }
 
 }
