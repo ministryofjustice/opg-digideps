@@ -1,4 +1,4 @@
-pageTitle: Enter your details
+pageTitle: "Deputy report - enter your details | GOV.UK"
 headerTitle: Step 2 - Enter your details
 headerInstructions: ""
 firstname:
@@ -38,7 +38,7 @@ confirmNewPassword:
 view:
     pageTitle: My details
 page:
-  htmlTitle: "Deputyship - Your Details"
+  htmlTitle: "Deputy report - your details | GOV.UK"
   pageSectionTitle: "Your details"
   pageSectionDescription: "You can update your contact details below."
   passwordChangedNotification: "You have changed your password. We have sent you an email to confirm this change."
