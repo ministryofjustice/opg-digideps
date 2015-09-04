@@ -55,7 +55,7 @@ Feature: deputy / report / closing balance
             | accountBalance_closingBalance    |
             | accountBalance_closingBalanceExplanation    |
         # only date mismatch (30 days ago instead of 3 days ago)
-        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ahead, DD"
         And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
         And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
         And I fill in "accountBalance_closingBalance" with "-3100.50"
@@ -77,7 +77,7 @@ Feature: deputy / report / closing balance
             | accountBalance_closingBalanceExplanation    |
         And I should not see a "accountBalance_closingDateExplanation" element
         # both date and balance mismatch: assert submit fails
-        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ahead, DD"
         And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
         And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
         And I fill in "accountBalance_closingBalance" with "-3000"
@@ -102,7 +102,7 @@ Feature: deputy / report / closing balance
             | accountBalance_closingBalance    |
             | accountBalance_closingBalanceExplanation    |
         # make date invalid, fix balance. assert only date fails and balance explanation disappear
-        When I fill in "accountBalance_closingDate_day" with the value of "30 days ago, DD"
+        When I fill in "accountBalance_closingDate_day" with the value of "30 days ahead, DD"
         And I fill in "accountBalance_closingDate_month" with the value of "30 days ahead, MM"
         And I fill in "accountBalance_closingDate_year" with the value of "30 days ahead, YYYY"
         And I fill in "accountBalance_closingBalance" with "-3100.50"
@@ -170,7 +170,7 @@ Feature: deputy / report / closing balance
         And I save the page as "report-account-edit-after-closing-errors"
         # assert explanations disappear when values are ok (bank empties to avoid submissions)
         When go to "/report/1/account/1/edit"
-        And I fill in "account_closingDate_day" with the value of "3 days ago, DD"
+        And I fill in "account_closingDate_day" with the value of "3 days ahead, DD"
         And I fill in "account_closingDate_month" with the value of "3 days ahead, MM"
         And I fill in "account_closingDate_year" with the value of "3 days ahead, YYYY"
         And I fill in the following:
