@@ -15,10 +15,6 @@
             <directory>.</directory>
         </testsuite>
     </testsuites>
-
-    <php>
-        <server name="KERNEL_DIR" value="/app/app/" />
-    </php>
     
     <php>
         <ini name="error_log" value="/dev/stdout"/>
