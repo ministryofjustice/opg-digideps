@@ -7,8 +7,8 @@ parameters:
     non_admin_host: http://digideps-client.local
     admin_host: http://digideps-admin.local
     # for the following two settings, use a multiple of 60
-    session_expire_seconds: 1500
-    session_popup_show_after: 1200
+    session_expire_seconds: 3900
+    session_popup_show_after: 3600
     session_memcached_host: localhost
     session_memcached_port: 11211
     use_memcached: false
