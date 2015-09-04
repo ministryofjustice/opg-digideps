@@ -206,13 +206,52 @@ class ReportController extends Controller
             throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
+
+
+        $form = $this->createForm(new FormDir\FeedbackType(), new ModelDir\Feedback());
+        $request = $this->getRequest();
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $feedbackEmail = $this->get('mailFactory')->createFeedbackEmail($form->getData());
+            echo $feedbackEmail->getBodyHtml();die;
+            $this->get('mailSender')->send($feedbackEmail, [ 'html']);
+
+            return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
+        }
+
+
+        return [
+            'report' => $report,
+            'client' => $client,
+            'form' => $form->createView()
+        ];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/submit_feedback", name="report_submit_feedback")
+     * @Template()
+     */
+    public function submitFeedbackAction($reportId)
+    {
+        $util = $this->get('util');
+        $report = $util->getReport($reportId, $this->getUser()->getId());
+        // check status
+        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
+        if (count($violations)) {
+            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        }
+        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+
         return [
             'report' => $report,
             'client' => $client,
         ];
     }
-    
+
+
     /**
      * @Route("/report/{reportId}/display", name="report_display")
      * @Template()

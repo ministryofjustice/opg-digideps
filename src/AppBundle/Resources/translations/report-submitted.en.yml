@@ -5,3 +5,8 @@ page:
   youCanDownloadCopy: "You can also view a copy of this report on your computer by clicking the link below:"
   downloadLink: View %reportName% report
   returnToCliendPage: Return to your client page
+  feedback:
+    title: Give us your feedback
+thanks:
+  thankYouForsubmitting: Thank you for your feedback
+  more: If you want to give us more detailed feedback, use %linkStart%this form%linkEnd% to contact us
