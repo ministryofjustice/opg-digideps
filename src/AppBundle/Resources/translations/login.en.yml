@@ -2,7 +2,6 @@ page:
   htmlTitle: "Deputy report - sign in | GOV.UK"
 pageTitle: Sign in
 header: Sign in to the admin area
-subtitle: " "
 email:
     label: Email address
     hint: We sent your registration link to this email address.
