@@ -110,25 +110,6 @@ Feature: deputy / report / Formatted Report
         And I should see "66" in "accounts-section"
         And I should see "8765" in "accounts-section"
 
-    @formatted-report @deputy
-    Scenario: A report lists money paid out for an account
-        When I load the application status from "reportsubmitted"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I view the formatted report
-        Then I should see "Summary of money paid out"
-        And I should see "Care fees or local authority charges for care" in "money-out"
-        And I should see "£ 100.00" in "money-out"
-        And I should see "more-details-out-11" in "money-out"
-
-    @formatted-report @deputy
-    Scenario: A report lists money paid in to an account
-        When I load the application status from "reportsubmitted"
-        And I am logged in as "behat-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I view the formatted report
-        Then I should see "Summary of money paid out"
-        And I should see "Care fees or local authority charges for care" in "money-out"
-        And I should see "£ 10,000.01" in "money-in"
-        And I should see "more-details-in-15" in "money-in"
 
     @formatted-report @deputy
     Scenario: A report lists total money in, out, the different and the actual
