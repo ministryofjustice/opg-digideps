@@ -148,18 +148,17 @@ class AbstractReportTest extends WebTestCase
             ->shouldReceive('getSortCode')->andReturn('444444')
             ->shouldReceive('getAccountNumber')->andReturn('7999')
             ->shouldReceive('getOpeningDate')->andReturn($startDate)
-            ->shouldReceive('getOpeningDateMatchesReportDate')->andReturn(true)
-            ->shouldReceive('getOpeningDateExplanation')->andReturn(null)
             ->shouldReceive('getOpeningBalance')->andReturn(100.00)
             ->shouldReceive('getClosingBalance')->andReturn(100.00)
-            ->shouldReceive('getClosingBalanceExplanation')->andReturn(null)
-            ->shouldReceive('getClosingBalanceDate')->andReturn($endDate)
-            ->shouldReceive('getClosingDateExplanation')->andReturn(null)
+            ->shouldReceive('getClosingDate')->andReturn($endDate)
             ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
             ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
             ->shouldReceive('getMoneyTotal')->andReturn(0.00)
             ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
             ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
+            ->shouldReceive('getOpeningDateExplanation')->andReturn(null)
+            ->shouldReceive('getClosingDateExplanation')->andReturn(null)
+            ->shouldReceive('getClosingBalanceExplanation')->andReturn(null)
             ->getMock();
 
         return $account1;

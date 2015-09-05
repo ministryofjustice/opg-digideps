@@ -124,12 +124,51 @@ class AccountsTest extends AbstractReportTest
         ]);
 
         $crawler = new Crawler($html);
+
+        $accountTotals = $crawler->filter('#accounts-section .balancing')->eq(0);
+
+        $openingBalance = $accountTotals->filter('.balancing-opening-balance')->eq(0)->text();
+        $totalIn = $accountTotals->filter('.balancing-total-in')->eq(0)->text();
+        $subTotal1 = $accountTotals->filter('.balancing-sub-total')->eq(0)->text();
+        $totalOut = $accountTotals->filter('.balancing-total-out')->eq(0)->text();
+        $subTotal2 = $accountTotals->filter('.balancing-sub-total-2')->eq(0)->text();
+        $closingBalance = $accountTotals->filter('.balancing-closing-balance')->eq(0)->text();
+
+        $this->assertContains('100.00', $openingBalance);
+        $this->assertContains('10,000.00', $totalIn);
+        $this->assertContains('10,100.00', $subTotal1);
+        $this->assertContains('10,000.00', $totalOut);
+        $this->assertContains('100.00', $subTotal2);
+        $this->assertContains('100.00', $closingBalance);
     }
 
     public function testExplainWhyClosingBalanceDoesntMatch()
     {
-        $account = $this->getAccountMock();
-        $account->shouldReceive('getClosingBalanceExplanation')->andReturn("I lost some of the money");
+        $startDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
+        $endDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2015');
+
+        $moneyIn = $this->getMoneyIn();
+        $moneyOut = $this->getMoneyOut();
+
+        $account1 = m::mock('AppBundle\Entity\Account')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getBank')->andReturn('HSBC')
+            ->shouldReceive('getSortCode')->andReturn('444444')
+            ->shouldReceive('getAccountNumber')->andReturn('7999')
+            ->shouldReceive('getOpeningDate')->andReturn($startDate)
+            ->shouldReceive('getOpeningBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingDate')->andReturn($endDate)
+            ->shouldReceive('getClosingBalanceExplanation')->andReturn("one two three five")
+            ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyTotal')->andReturn(0.00)
+            ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
+            ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
+            ->getMock();
+
+        $this->report->shouldReceive('getAccounts')->andReturn([$account1]);
+
 
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report
@@ -137,16 +176,39 @@ class AccountsTest extends AbstractReportTest
 
         $crawler = new Crawler($html);
 
-        // look for the closing explanation
+        // look for the closing explanation and start and end date
+        $accountBalanceExplanation = $crawler->filter('#accounts-section .accountBalance_closingBalanceExplanation')->eq(0)->text();
+        $this->assertContains('one two three five', $accountBalanceExplanation);
 
     }
 
     public function testExplainWhyOpeningDateDiffers()
     {
-        $account = $this->getAccountMock();
-        $account
-            ->shouldReceive('getOpeningDateMatchesReportDate')->andReturn(false)
-            ->shouldReceive('getOpeningDateExplanation')->andReturn("ipsum lorem");
+        $startDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
+        $endDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2015');
+
+        $moneyIn = $this->getMoneyIn();
+        $moneyOut = $this->getMoneyOut();
+
+        $account1 = m::mock('AppBundle\Entity\Account')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getBank')->andReturn('HSBC')
+            ->shouldReceive('getSortCode')->andReturn('444444')
+            ->shouldReceive('getAccountNumber')->andReturn('7999')
+            ->shouldReceive('getOpeningDate')->andReturn($startDate)
+            ->shouldReceive('getOpeningDateMatchesReportDate')->andReturn(true)
+            ->shouldReceive('getOpeningDateExplanation')->andReturn("one two three five")
+            ->shouldReceive('getOpeningBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingDate')->andReturn($endDate)
+            ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyTotal')->andReturn(0.00)
+            ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
+            ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
+            ->getMock();
+
+        $this->report->shouldReceive('getAccounts')->andReturn([$account1]);
 
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report
@@ -154,13 +216,40 @@ class AccountsTest extends AbstractReportTest
 
         $crawler = new Crawler($html);
 
-        // look for the closing explanation
+        // look for the closing explanation and start and end date
+        $accountDateExplanation = $crawler->filter('#accounts-section .account-date-explanation')->eq(0)->text();
+
+        $this->assertContains('01/01/2014', $accountDateExplanation);
+        $this->assertContains('01/01/2015', $accountDateExplanation);
+        $this->assertContains('one two three five', $accountDateExplanation);
     }
 
     public function testExplainWhyClosingDateDiffers()
     {
-        $account = $this->getAccountMock();
-        $account->shouldReceive('getClosingDateExplanation')->andReturn("one two three five");
+        $startDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
+        $endDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2015');
+
+        $moneyIn = $this->getMoneyIn();
+        $moneyOut = $this->getMoneyOut();
+
+        $account1 = m::mock('AppBundle\Entity\Account')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getBank')->andReturn('HSBC')
+            ->shouldReceive('getSortCode')->andReturn('444444')
+            ->shouldReceive('getAccountNumber')->andReturn('7999')
+            ->shouldReceive('getOpeningDate')->andReturn($startDate)
+            ->shouldReceive('getOpeningBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingDate')->andReturn($endDate)
+            ->shouldReceive('getClosingDateExplanation')->andReturn("one two three five")
+            ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyTotal')->andReturn(0.00)
+            ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
+            ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
+            ->getMock();
+
+        $this->report->shouldReceive('getAccounts')->andReturn([$account1]);
 
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report
@@ -168,7 +257,85 @@ class AccountsTest extends AbstractReportTest
 
         $crawler = new Crawler($html);
 
-        // look for the closing explanation
+        // look for the closing explanation and start and end date
+        $accountDateExplanation = $crawler->filter('#accounts-section .account-date-explanation')->eq(0)->text();
+
+        $this->assertContains('01/01/2014', $accountDateExplanation);
+        $this->assertContains('01/01/2015', $accountDateExplanation);
+        $this->assertContains('one two three five', $accountDateExplanation);
+
+
+    }
+
+    public function testDontShowOpeningDateIfNoOpeningOrClosingDateExplanation()
+    {
+        $this->setupAccounts();
+
+        $html = $this->twig->render($this->templateName, [
+            'report' => $this->report
+        ]);
+
+        $crawler = new Crawler($html);
+        $accountDates = $crawler->filter('#accounts-section .account-date-explanation')->eq(0)->text();
+
+        $this->assertNotContains('01/01/2014', $accountDates);
+        $this->assertNotContains('01/01/2015', $accountDates);
+    }
+
+    public function testListMultipleAccounts()
+    {
+        $startDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
+        $endDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2015');
+
+        $moneyIn = $this->getMoneyIn();
+        $moneyOut = $this->getMoneyOut();
+
+        $account1 = m::mock('AppBundle\Entity\Account')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getBank')->andReturn('HSBC')
+            ->shouldReceive('getSortCode')->andReturn('444444')
+            ->shouldReceive('getAccountNumber')->andReturn('7999')
+            ->shouldReceive('getOpeningDate')->andReturn($startDate)
+            ->shouldReceive('getOpeningBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingBalance')->andReturn(100.00)
+            ->shouldReceive('getClosingDate')->andReturn($endDate)
+            ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
+            ->shouldReceive('getMoneyTotal')->andReturn(0.00)
+            ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
+            ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
+            ->getMock();
+
+
+        $account2 = m::mock('AppBundle\Entity\Account')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getBank')->andReturn('Smile')
+            ->shouldReceive('getSortCode')->andReturn('111111')
+            ->shouldReceive('getAccountNumber')->andReturn('3333')
+            ->shouldReceive('getOpeningDate')->andReturn($startDate)
+            ->shouldReceive('getOpeningBalance')->andReturn(200.00)
+            ->shouldReceive('getClosingBalance')->andReturn(200.00)
+            ->shouldReceive('getClosingDate')->andReturn($endDate)
+            ->shouldReceive('getMoneyInTotal')->andReturn(20000.00)
+            ->shouldReceive('getMoneyOutTotal')->andReturn(20000.00)
+            ->shouldReceive('getMoneyTotal')->andReturn(0.00)
+            ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
+            ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
+            ->getMock();
+
+
+        $this->report->shouldReceive('getAccounts')->andReturn([$account1, $account2]);
+
+        $html = $this->twig->render($this->templateName, [
+            'report' => $this->report
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $accountsSections = $crawler->filter('#accounts-section .account-details');
+
+        $this->assertEquals(2, $accountsSections->count());
+
     }
 
 
