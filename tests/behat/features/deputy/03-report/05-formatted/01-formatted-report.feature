@@ -1,6 +1,6 @@
 Feature: deputy / report / Formatted Report
 
-    @deputy
+    @deputy @wip
     Scenario: The opg report should contain all the required sections
         When I load the application status from "report-submit-post"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -11,19 +11,17 @@ Feature: deputy / report / Formatted Report
         And I should see "Section 2"
         And I should see "3 beds" in "decisions-section"
         And I should see "the client was able to decide at 85%" in "decisions-section"
-        And I should see "2 televisions" in "decisions-section"
-        And I should see "the client said he doesnt want a tv anymore" in "decisions-section"
         And I should see "Section 3"
         And I should see "Andy White" in "contacts-section"
-        And I should see "Fred Smith" in "contacts-section"
         Then I should see "Section 4"
         And I should see "Safeguarding"
         And the report should indicate that the "Yes" checkbox for "Do you live with the client" is checked
-        And I should see "Section  6"
-        And I should see "HSBC - main account" in "accounts-section"
-        And I should see "Section  7"
+        And I should see "Section 6"
+        And I should see "Bank accounts"
+        And I should see "HSBC main account" in "accounts-section"
+        And I should see "Section 7"
         And I should see "Client’s assets and debts"
         Then the 1 asset group should be "Property"
         And the 2 asset group should be "Vehicles"
-        And I should see "More info."
+        And I should see "no further info to add"
   
