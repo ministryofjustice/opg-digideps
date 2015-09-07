@@ -24,6 +24,7 @@
             </a>
         </div>
 
+        {# feedback form #}
         <p class="feedback">{{ 'page.feedback.title' | trans }}</p>    
             
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form feedback-form feedback-report-form' } }) }}
@@ -47,7 +48,7 @@
             {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
         {{ form_end(form) }}    
-
+        {# end feedback form #}
 
         <div class="link">
             <a href="{{ path('client_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>
