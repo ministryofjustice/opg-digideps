@@ -143,9 +143,11 @@
         </ul>
         <script>
             $( document ).ready(function() {
-                opg.accordian({
-                    target: $('#contacts-sub-section'),
-                    open: false
+                $('.sub-section').each(function(index,element) {
+                    opg.accordian({
+                        target: element,
+                        open: false
+                    });
                 });
             });
         </script>

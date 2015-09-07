@@ -26,23 +26,31 @@
             }
             
             .heading {
-                box-sizing: border-box;
+                @include box-sizing(border-box);
                 @include bold-24();
-                display: inline-block;
-                padding: 20px 10px 15px 10px;
+                @include inline-block();
+                padding: 20px 10px 15px 0px;
                 width: 35%;
                 float: left;
                 background: transparent;
+                
+                @include media($max-width: $phablet) {
+                    width: 50%;
+                }
             }
     
             .edit-link {
-                box-sizing: border-box;
-                display: inline-block;
+                @include box-sizing(border-box);
                 @include core-19(1.6);
+                @include inline-block();
                 padding: 20px 0 15px 0;
                 float: right;
-                width: 25%;
+                width: 35%;
                 text-align: right;
+                
+                @include media($max-width: $phablet) {
+                    width: 50%;
+                }
             }
 
             .help-link {
@@ -51,22 +59,34 @@
             
             .guidance {
                 border-top: 1px solid $grey-3;
-                padding-top: 20px;
+                padding: 20px 0 0 20px;
                 clear: both;
                 display: none;
+                
+                p {
+                    width: 80%;
+                }
+                
+                .page-section-list {
+                    margin-left: 10px;
+                    width: 75%;
+                }
             }
-
 
             &.accordian {
 
                 .help-link {
-                    box-sizing: border-box;
-                    display: inline-block;
+                    @include box-sizing(border-box);
                     @include core-19(1.6);
+                    @include inline-block();
                     padding: 20px 10px 15px 20px;
                     width: 20%;
                     float: left;
                     color: $link-colour;
+
+                    @include media($max-width: $phablet) {
+                        display: none;
+                    }
                 }
 
                 .summary {
@@ -102,7 +122,4 @@
         }
     }
     
-    
-    
-
 }
