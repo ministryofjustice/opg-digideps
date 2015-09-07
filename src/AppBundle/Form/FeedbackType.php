@@ -7,24 +7,22 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FeedbackType extends AbstractType
 {
+    use Traits\HasTranslatorTrait;
+    
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $satisfactionLevelChoices = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
+        $helpChoices = array_filter(explode("\n", $this->translate('helpChoices', [], 'feedback')));
+
         $builder->add('difficulty', 'textarea')
                 ->add('ideas', 'textarea')
                  ->add('satisfactionLevel', 'choice', array(
-                    'choices' => [ 'very satisfied'=>'Very satisfied', 
-                                   'satisfied' =>'Satisfied', 
-                                   'neither satisfied or dissatisfied' => 'Neither satisfied or dissatisfied',
-                                   'dissatisfied' => 'Dissatisfied',
-                                   'very dissatisfied' => 'Very dissatisfied' ],
+                    'choices' => array_combine($satisfactionLevelChoices, $satisfactionLevelChoices),
                     'expanded' => true,
                     'multiple' => false
                   ))
                   ->add('help', 'choice', array(
-                     'choices' => [ 'No, I filled in this form myself'=>'No, I filled in this form myself', 
-                                    'I have difficulty using computers so someone filled in this form for me' =>'I have difficulty using computers so someone filled in this form for me', 
-                                    'I used an accessibility tool such as a screen reader' => 'I used an accessibility tool such as a screen reader',
-                                    'I had some other kind of help' => 'I had some other kind of help'],
+                     'choices' => array_combine($helpChoices, $helpChoices),
                      'expanded' => true,
                      'multiple' => false
                    ))

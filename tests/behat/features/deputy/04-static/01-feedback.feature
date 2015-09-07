@@ -14,13 +14,13 @@ Feature:  provide feedback
             | feedback_difficulty | I found it to be really easy |
             | feedback_ideas | I think it needs an iPhone app |
             | feedback_help_3 | No, I filled in this form myself |
-            | feedback_satisfactionLevel_1 | satisfied |
+            | feedback_satisfactionLevel_1 | Satisfied |
         And I press "feedback_save"
         Then the form should be valid
         And the last email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
         And the last email should contain "I found it to be really easy"
         And the last email should contain "I think it needs an iPhone app"
-        And the last email should contain "satisfied"
+        And the last email should contain "Satisfied"
         And the last email should contain "No, I filled in this form myself"
         
     @feedback @deputy
