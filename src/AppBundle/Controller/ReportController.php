@@ -207,8 +207,7 @@ class ReportController extends Controller
         }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
-
-        $form = $this->createForm(new FormDir\FeedbackReportType(), new ModelDir\FeedbackReport());
+        $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
         $request = $this->getRequest();
 
         $form->handleRequest($request);
