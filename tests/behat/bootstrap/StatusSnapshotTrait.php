@@ -3,6 +3,7 @@
 namespace DigidepsBehat;
 
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 trait StatusSnapshotTrait
@@ -47,7 +48,7 @@ trait StatusSnapshotTrait
      */
     public function dbSnapshotBeforeScenario(BeforeScenarioScope $scope)
     {
-        if (!self::$saveSnaphotBeforeEachScenario) {
+        if (!self::$autoDbSnapshot) {
             return;
         }
         
@@ -62,7 +63,7 @@ trait StatusSnapshotTrait
      */
     public function dbSnapshotAFterScenario(AfterScenarioScope $scope)
     {
-        if (!self::$saveSnaphotAfterEachScenario) {
+        if (!self::$autoDbSnapshot) {
             return;
         }
         
