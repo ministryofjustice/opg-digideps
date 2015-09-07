@@ -51,12 +51,23 @@ trait StatusSnapshotTrait
             return;
         }
         
-        $file = $scope->getFeature()->getFile();
-        $expectedPrefix = '/behat/features/';
+        $snapshotName = preg_replace('/([^a-z0-9])/i', '-', $scope->getScenario()->getTitle()) 
+                        . '-before-auto';
         
-        $snapshotName = substr($file, strpos($file, $expectedPrefix) + strlen($expectedPrefix))
-                   . '-' 
-                   . str_pad($scope->getScenario()->getLine(), 4, '0', STR_PAD_LEFT);
+        self::iSaveTheApplicationStatusInto($snapshotName);
+    }
+    
+    /**
+     * @AfterScenario
+     */
+    public function dbSnapshotAFterScenario(AfterScenarioScope $scope)
+    {
+        if (!self::$saveSnaphotAfterEachScenario) {
+            return;
+        }
+        
+        $snapshotName = preg_replace('/([^a-z0-9])/i', '-', $scope->getScenario()->getTitle()) 
+                        . '-after-auto';
         
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
