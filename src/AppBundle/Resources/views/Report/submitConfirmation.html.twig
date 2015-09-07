@@ -27,8 +27,6 @@
         <p class="feedback">{{ 'page.feedback.title' | trans }}</p>    
             
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form feedback-form feedback-report-form' } }) }}
-            {% do form.difficulty.setRendered() %}
-            {% do form.ideas.setRendered() %}
 
             {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
 
@@ -43,8 +41,6 @@
                     {'labelClass': 'block-label' },
                 ]
             }) }}
-
-            {% do form.help.setRendered() %}
 
             {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
             {{ form_submit(form.save,'send') }}

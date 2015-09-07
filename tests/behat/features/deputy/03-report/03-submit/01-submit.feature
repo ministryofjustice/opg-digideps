@@ -132,8 +132,10 @@ Feature: deputy / report / submit
         Given I reset the email log
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/report/1/submitted"
-        And fill in "feedback_satisfactionLevel_2" with "neither satisfied or dissatisfied"
-        And I press "feedback_save"
+        And I press "feedback_report_save"
+        Then the form should be invalid
+        And fill in "feedback_report_satisfactionLevel_2" with "neither satisfied or dissatisfied"
+        And I press "feedback_report_save"
         Then the form should be valid
         And I should be on "/report/1/submit_feedback"
         And the last email should contain "neither satisfied or dissatisfied"

@@ -236,3 +236,7 @@ safeguarding:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
         notBlank: Please select one option
+        
+feedbackAfterReport:
+    satisfactionLevel:
+        notEmpty: Please selection an option
