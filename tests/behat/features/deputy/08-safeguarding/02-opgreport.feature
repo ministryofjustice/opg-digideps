@@ -1,6 +1,6 @@
 Feature: Safeguarding OPG Report
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
@@ -23,7 +23,7 @@ Feature: Safeguarding OPG Report
       And I reset the email log
       Then I save the application status into "safereportuser"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: Enter a report
         When I load the application status from "safereportuser"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -106,7 +106,7 @@ Feature: Safeguarding OPG Report
         And the URL should match "/report/\d+/submitted"
         Then I save the application status into "safereportsubmitted"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: Report contains a safeguarding section
         When I load the application status from "safereportsubmitted"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -114,7 +114,7 @@ Feature: Safeguarding OPG Report
         Then I should see "Section 4"
         And I should see "Safeguarding"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When I live with the client dont show further answers
         When I load the application status from "safereportsubmitted"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -124,7 +124,7 @@ Feature: Safeguarding OPG Report
         And I should not see the "visits" subsection
         And I save the page as "safeguarding-opgreport-live-with-client"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, expect to see further answers
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -147,7 +147,7 @@ Feature: Safeguarding OPG Report
         And I should see a subsection called "safeguarding-furtherinfo"
         And I save the page as "safeguarding-opgreport-dont-live-with-client"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, all visits are every day
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -168,7 +168,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Every day" checkbox for "Letters and emails" is checked
         And the report should indicate that the "Every day" checkbox for "How often does the client see other people" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, all visits are once a week
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -189,7 +189,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "At least once a week" checkbox for "Letters and emails" is checked
         And the report should indicate that the "At least once a week" checkbox for "How often does the client see other people" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, all visits are once a month
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -210,7 +210,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "At least once a month" checkbox for "Letters and emails" is checked
         And the report should indicate that the "At least once a month" checkbox for "How often does the client see other people" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, all visits are twice a year
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -231,7 +231,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "More than twice a year" checkbox for "Letters and emails" is checked
         And the report should indicate that the "More than twice a year" checkbox for "How often does the client see other people" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, all visits are once a year
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -252,7 +252,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Once a year" checkbox for "Letters and emails" is checked
         And the report should indicate that the "Once a year" checkbox for "How often does the client see other people" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, all visits are less than once a year
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -273,7 +273,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Less than once a year" checkbox for "Letters and emails" is checked
         And the report should indicate that the "Less than once a year" checkbox for "How often does the client see other people" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When dont live with the client, provide extra info
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -292,7 +292,7 @@ Feature: Safeguarding OPG Report
         And I should see "Is there anything else you want to tell us?" in "safeguarding" section
         And I should see "nothing to report" in "safeguarding-furtherinfo-field"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When care is not funded, indicate this
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -308,7 +308,7 @@ Feature: Safeguarding OPG Report
         And the report should not indicate that the "Client pays for all their own care" checkbox for "How is care funded" is checked
         And I save the page as "safeguarding-opgreport-care-not-funded"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When care is funded, and client pays for all
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -324,7 +324,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Client pays for all their own care" checkbox for "How is care funded" is checked
         And I save the page as "safeguarding-opgreport-care-is-funded"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When care is funded, and client gets some help
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -339,7 +339,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
         And the report should indicate that the "Client gets financial help" checkbox for "How is care funded" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When care is funded, and all funded from someone else
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -354,7 +354,7 @@ Feature: Safeguarding OPG Report
         And the report should indicate that the "Yes" checkbox for "Does the client receive care which is paid for" is checked
         And the report should indicate that the "All care is paid by someone else" checkbox for "How is care funded" is checked
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When there is no care plan
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -371,7 +371,7 @@ Feature: Safeguarding OPG Report
         And the "safeguarding-last-review-date" element should be empty
         And I save the page as "safeguarding-opgreport-no-care-plan"
 
-    @safeguarding @formatted-report @deputy
+    @safeguarding @deputy
     Scenario: When there is acare plan
         When I load the application status from "safeguardingreadytosubmit"
         And I am logged in as "behat-safe-report@publicguardian.gsi.gov.uk" with password "Abcd1234"

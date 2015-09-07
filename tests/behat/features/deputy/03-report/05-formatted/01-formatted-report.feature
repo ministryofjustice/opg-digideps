@@ -2,6 +2,7 @@ Feature: deputy / report / Formatted Report
 
     @deputy
     Scenario: The opg report should contain all the required sections
+        When I load the application status from "report-submit-post"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I view the formatted report
         Then I should see "Deputy report for property and financial decisions"

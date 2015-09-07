@@ -18,32 +18,91 @@
             @extend %contain-floats;
 
             border-top: 1px solid $grey-3;
-
+            clear: both;
+            
+            
             &:first-of-type {
                 border-top: none;
             }
             
             .heading {
+                box-sizing: border-box;
                 @include bold-24();
-                background: transparent;
+                display: inline-block;
                 padding: 20px 10px 15px 10px;
-                float: left;        
+                width: 35%;
+                float: left;
+                background: transparent;
             }
     
             .edit-link {
-                @include core-19();
+                box-sizing: border-box;
+                display: inline-block;
+                @include core-19(1.6);
+                padding: 20px 0 15px 0;
                 float: right;
-                padding-top: 23px;
+                width: 25%;
+                text-align: right;
             }
 
-        }
+            .help-link {
+                display: none;
+            }
+            
+            .guidance {
+                border-top: 1px solid $grey-3;
+                padding-top: 20px;
+                clear: both;
+                display: none;
+            }
 
-        .guidance {
-            border-top: 1px solid $grey-3;
-            padding-top: 20px;
-            clear: both;
+
+            &.accordian {
+
+                .help-link {
+                    box-sizing: border-box;
+                    display: inline-block;
+                    @include core-19(1.6);
+                    padding: 20px 10px 15px 20px;
+                    width: 20%;
+                    float: left;
+                    color: $link-colour;
+                }
+
+                .summary {
+                    background: url(/images/icons/accordian-closed.png) 0 27px no-repeat;
+                }
+
+                &.open {
+                    .open-text {
+                        display: inline;
+                        text-decoration: underline;
+                    }
+                    .closed-text {
+                        display: none;
+                    }
+                    .summary {
+                        background-image: url(/images/icons/accordian-open.png)
+                    }
+                }
+
+                &.closed {
+                    .open-text {
+                        display: none;
+                    }
+                    .closed-text {
+                        display: inline;
+                        text-decoration: underline;
+                    }
+                }
+
+            }
+            
+            
         }
-        
     }
+    
+    
+    
 
 }
