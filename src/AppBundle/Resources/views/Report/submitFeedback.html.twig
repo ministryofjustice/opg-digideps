@@ -15,8 +15,8 @@
         <p class="flash">{{ 'thanks.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
 
         <p class="page-section-description">{{ 'thanks.more' | trans({
-            '%linkStart%': '<a href="' ~ path('feedback') ~ '">',
-            '%linkEnd%': '</a>'
+            '[linkStart]': '<a href="' ~ path('feedback') ~ '">',
+            '[linkEnd]': '</a>'
         
         }) | raw }}</p>
 

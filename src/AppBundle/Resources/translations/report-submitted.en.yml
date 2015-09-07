@@ -9,4 +9,4 @@ page:
     title: Give us your feedback
 thanks:
   thankYouForsubmitting: Thank you for your feedback
-  more: If you want to give us more detailed feedback, use %linkStart%this form%linkEnd% to contact us
+  more: If you want to give us more detailed feedback, use [linkStart]this form[linkEnd] to contact us

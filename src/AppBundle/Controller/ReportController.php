@@ -216,7 +216,6 @@ class ReportController extends Controller
         if ($form->isValid()) {
 
             $feedbackEmail = $this->get('mailFactory')->createFeedbackEmail($form->getData());
-            echo $feedbackEmail->getBodyHtml();die;
             $this->get('mailSender')->send($feedbackEmail, [ 'html']);
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));

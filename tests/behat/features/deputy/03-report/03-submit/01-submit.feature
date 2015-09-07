@@ -125,6 +125,19 @@ Feature: deputy / report / submit
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
         And I save the application status into "report-submit-post"
+    
+
+    @deputy
+    Scenario: submit feedback after report
+        Given I reset the email log
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I go to "/report/1/submitted"
+        And fill in "feedback_satisfactionLevel_2" with "neither satisfied or dissatisfied"
+        And I press "feedback_save"
+        Then the form should be valid
+        And I should be on "/report/1/submit_feedback"
+        And the last email should contain "neither satisfied or dissatisfied"
+
 
     @deputy
     Scenario: assert 2nd year report has been created

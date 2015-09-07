@@ -2,6 +2,7 @@
 namespace AppBundle\Model;
 
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Feedback
 {
