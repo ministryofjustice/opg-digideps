@@ -33,7 +33,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     
     private static $dbName;
     
-    private static $saveSnaphotBeforeEachScenario;
+    private static $autoDbSnapshot;
     
     public function __construct($options = [])
     {
@@ -43,7 +43,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         ini_set('max_nesting_level', $maxNestingLevel);
         $this->sessionName = empty($options['sessionName']) ? 'digideps' : $options['sessionName'];
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
-        self::$saveSnaphotBeforeEachScenario = isset($options['saveSnaphotBeforeEachScenario']) ? $options['saveSnaphotBeforeEachScenario'] : true;
+        self::$autoDbSnapshot = isset($options['autoDbSnapshot']) ? $options['autoDbSnapshot'] : false;
     }
         
     

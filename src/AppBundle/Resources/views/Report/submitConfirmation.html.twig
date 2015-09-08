@@ -1,6 +1,6 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig' %}
-{% set translationDomain = "report-submitted" %}
-{% trans_default_domain translationDomain %}
+    {% set translationDomain = "report-submitted" %}
+    {% trans_default_domain translationDomain %}
 
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -23,6 +23,33 @@
                 {{ 'page.downloadLink' | trans({'%reportName%': report.getPeriod()}) }}
             </a>
         </div>
+
+        {# feedback form #}
+        <p class="feedback">{{ 'page.feedback.title' | trans }}</p>    
+            
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form feedback-form feedback-report-form' } }) }}
+
+            {{ form_checkbox_group(form.satisfactionLevel, 'satisfactionLevel', {
+
+                'fieldSetClass' : 'vertical',
+                'legendClass' : 'form-label',
+                'legend': 'satisfactionLevel',
+                'items': [
+                    {'labelClass': 'block-label' },
+                    {'labelClass': 'block-label' },
+                    {'labelClass': 'block-label' },
+                    {'labelClass': 'block-label' },
+                    {'labelClass': 'block-label' },
+                ]
+            }) }}
+
+            {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+            {{ form_submit(form.save,'send') }}
+            {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+        {{ form_end(form) }}    
+        {# end feedback form #}
+
         <div class="link">
             <a href="{{ path('client_home')}}" class="behat-link-return-to-client-page">{{ 'page.returnToCliendPage' | trans }}</a>
         </div>

@@ -5,27 +5,20 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FeedbackType extends AbstractType
+class FeedbackReportType extends AbstractType 
 {
     use Traits\HasTranslatorTrait;
-    
+   
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $satisfactionLevelChoices = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
-        $helpChoices = array_filter(explode("\n", $this->translate('helpChoices', [], 'feedback')));
+        $satisfactionLevel = array_filter(explode("\n", $this->translate('satisfactionLevelsChoices', [], 'feedback')));
 
-        $builder->add('difficulty', 'textarea')
-                ->add('ideas', 'textarea')
+        $builder
                  ->add('satisfactionLevel', 'choice', array(
-                    'choices' => array_combine($satisfactionLevelChoices, $satisfactionLevelChoices),
+                    'choices' => array_combine($satisfactionLevel, $satisfactionLevel),
                     'expanded' => true,
                     'multiple' => false
                   ))
-                  ->add('help', 'choice', array(
-                     'choices' => array_combine($helpChoices, $helpChoices),
-                     'expanded' => true,
-                     'multiple' => false
-                   ))
                    ->add('save', 'submit');
     }
     
@@ -38,6 +31,6 @@ class FeedbackType extends AbstractType
     
     public function getName()
     {
-        return 'feedback';
+        return 'feedback_report';
     }
 }

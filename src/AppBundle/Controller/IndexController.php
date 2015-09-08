@@ -206,7 +206,7 @@ class IndexController extends Controller
      */
     public function feedbackAction()
     {
-        $form = $this->createForm(new FormDir\FeedbackType(), new ModelDir\Feedback());
+        $form = $this->createForm('feedback', new ModelDir\Feedback());
         $request = $this->getRequest();
         
         if($request->getMethod() == 'POST'){
