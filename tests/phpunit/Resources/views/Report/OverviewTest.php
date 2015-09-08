@@ -51,7 +51,6 @@ class OverviewTest extends WebTestCase
         $this->assertContains("Let us know the significant decisions you make over the reporting period. A significant decision is any important decision you make for the client during the reporting period. A significant decision might be:", $guidanceElementText);
         $this->assertContains("buying or selling or renting property", $guidanceElementText);
         $this->assertContains("buying or selling investments or shares", $guidanceElementText);
-        $this->assertContains("loans", $guidanceElementText);
         $this->assertContains("making gifts", $guidanceElementText);
         $this->assertContains("moving the client to another nursing or care home", $guidanceElementText);
     }
@@ -76,7 +75,7 @@ class OverviewTest extends WebTestCase
         $this->assertContains("family members", $guidanceElementText);
         $this->assertContains("close friends", $guidanceElementText);
         $this->assertContains("GP and other health staff", $guidanceElementText);
-        $this->assertContains("We need to know the the client's general situation. You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions.", $guidanceElementText);
+        $this->assertContains("You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions.", $guidanceElementText);
     }
 
     public function testSafeguardingSectionContainsOverview()
