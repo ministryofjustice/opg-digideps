@@ -1,5 +1,6 @@
 addClient:
-    pageTitle: Add your client's details
+    pageTitle: "Deputy report - Add your client's details | GOV.UK"
+    h1Title: Add your client's details
 courtDate:
     legend: Court order date
     hint: (DD/MM/YYYY)
@@ -33,7 +34,8 @@ save:
 saveAndContinue:
     label: Save and continue
 createReport:
-    pageTitle: Step 4 - Create a report
+    pageTitle: "Deputy report - Create a report | GOV.UK"
+    h1Title: Create a report
 startDate:
     legend: Start date
     hint: (DD/MM/YYYY)
