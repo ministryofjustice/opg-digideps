@@ -4,7 +4,7 @@
 
 {% block pageTitle %}{{ 'addClient.pageTitle' | trans }} {% endblock %}
 {% block contentClass %}{{ parent() }} registration-client-add behat-region-client-add{% endblock %}
-{% block title %}{% trans %}addClient.pageTitle{% endtrans %}{% endblock %}
+{% block title %}{{ 'addClient.h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     {% if is_granted('ROLE_ADMIN') %}
