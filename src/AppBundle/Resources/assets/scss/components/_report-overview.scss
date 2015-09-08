@@ -18,26 +18,108 @@
             @extend %contain-floats;
 
             border-top: 1px solid $grey-3;
-
+            clear: both;
+            
+            
             &:first-of-type {
                 border-top: none;
             }
             
             .heading {
+                @include box-sizing(border-box);
                 @include bold-24();
+                @include inline-block();
+                padding: 20px 10px 15px 0px;
+                width: 35%;
+                float: left;
                 background: transparent;
-                padding: 20px 10px 15px 10px;
-                float: left;        
+                
+                @include media($max-width: $phablet) {
+                    width: 50%;
+                }
             }
     
             .edit-link {
-                @include core-19();
+                @include box-sizing(border-box);
+                @include core-19(1.6);
+                @include inline-block();
+                padding: 20px 0 15px 0;
                 float: right;
-                padding-top: 23px;
+                width: 35%;
+                text-align: right;
+                
+                @include media($max-width: $phablet) {
+                    width: 50%;
+                }
             }
 
+            .help-link {
+                display: none;
+            }
+            
+            .guidance {
+                border-top: 1px solid $grey-3;
+                padding: 20px 0 0 20px;
+                clear: both;
+                display: none;
+                
+                p {
+                    width: 80%;
+                }
+                
+                .page-section-list {
+                    margin-left: 10px;
+                    width: 75%;
+                }
+            }
+
+            &.accordian {
+
+                .help-link {
+                    @include box-sizing(border-box);
+                    @include core-19(1.6);
+                    @include inline-block();
+                    padding: 20px 10px 15px 20px;
+                    width: 20%;
+                    float: left;
+                    color: $link-colour;
+
+                    @include media($max-width: $phablet) {
+                        display: none;
+                    }
+                }
+
+                .summary {
+                    background: url(/images/icons/accordian-closed.png) 0 27px no-repeat;
+                }
+
+                &.open {
+                    .open-text {
+                        display: inline;
+                        text-decoration: underline;
+                    }
+                    .closed-text {
+                        display: none;
+                    }
+                    .summary {
+                        background-image: url(/images/icons/accordian-open.png)
+                    }
+                }
+
+                &.closed {
+                    .open-text {
+                        display: none;
+                    }
+                    .closed-text {
+                        display: inline;
+                        text-decoration: underline;
+                    }
+                }
+
+            }
+            
+            
         }
-
     }
-
+    
 }
