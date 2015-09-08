@@ -94,3 +94,15 @@ services:
         arguments: [%asset_dropdown%, @translator, "report-assets", "other_assets"]
         tags:
             - { name: form.type, alias: asset_title }
+    app.form.type.feedback:
+        class: AppBundle\Form\FeedbackType
+        calls:
+            - [ setTranslator, [@translator] ]
+        tags:
+            - { name: form.type, alias: feedback }
+    app.form.type.feedbackReport:
+        class: AppBundle\Form\FeedbackReportType
+        calls:
+            - [ setTranslator, [@translator] ]
+        tags:
+            - { name: form.type, alias: feedback_report }

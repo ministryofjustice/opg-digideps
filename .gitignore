@@ -27,3 +27,4 @@ npm-debug.log
 .cache
 .composer
 .config
+tests/behat/behat.yml

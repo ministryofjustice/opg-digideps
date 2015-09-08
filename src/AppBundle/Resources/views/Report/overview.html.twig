@@ -18,22 +18,53 @@
     {% block contentClass %}{{ parent() }} report-overview{% endblock %}
 
     {% block pageBody %}
-      
         <ul id="overview-sections" class="overview-sections">
             
             <li id="planning-section" class="overview-section">
                 <h2 class="heading">Planning</h2>
                 <div id="decisions-sub-section" class="sub-section">
                     <h3 class="heading">Decisions</h3>
+                    <a id="help-contacts" class="help-link summary">
+                        <span class="open-text">Close</span>
+                        <span class="closed-text">Help</span>
+                    </a>
                     <a id="edit-decisions" class="edit-link" href="{{ path('decisions', {reportId: report.id}) }}" >
                         {{ ('pages.' ~ page ~ '.decisionsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="decisions-guidance" class="guidance content">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionDescription'
+                        } %}
+                        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                            transDomain: translationDomain,
+                            pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.decisions.subSectionList'
+                        } %}
+                    </div>
                 </div>
                 <div id="contacts-sub-section" class="sub-section">
                     <h3 class="heading">Contacts</h3>
+                    <a id="help-contacts" class="help-link summary">
+                        <span class="open-text">Close</span>
+                        <span class="closed-text">Help</span>
+                    </a>
                     <a id="edit-contacts" class="edit-link" href="{{ path('contacts', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.contactsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="contacts-guidance" class="guidance content">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionDescription'
+                        } %}
+                        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                        transDomain: translationDomain,
+                        pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionList'
+                        } %}
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.contacts.subSectionInfo'
+                        } %}
+                    </div>
                 </div>
             </li>
             
@@ -41,9 +72,24 @@
                 <h2 class="heading">Care and welfare</h2>
                 <div id="safeguarding-sub-section" class="sub-section">
                     <h3 class="heading">Safeguarding</h3>
+                    <a id="help-contacts" class="help-link summary">
+                        <span class="open-text">Close</span>
+                        <span class="closed-text">Help</span>
+                    </a>
                     <a id="edit-safeguarding" class="edit-link" href="{{ path('safeguarding', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.safeguradingLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="safeguarding-guidance" class="guidance content">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionDescription'
+                        } %}
+    
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.safeguarding.subSectionInfo'
+                        } %}
+                    </div>
                 </div>
             </li>
             
@@ -52,22 +98,60 @@
                 <h2 class="heading">Finances</h2>
                 <div id="account-sub-section" class="sub-section">
                     <h3 class="heading">Accounts</h3>
+                    <a id="help-contacts" class="help-link summary">
+                        <span class="open-text">Close</span>
+                        <span class="closed-text">Help</span>
+                    </a>
                     <a id="edit-accounts" class="edit-link" href="{{ path('accounts', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.accountsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="accounts-guidance" class="guidance content">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.accounts.subSectionDescription'
+                        } %}
+
+                        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+                        transDomain: translationDomain,
+                        pageSectionWarning: 'pages.' ~ page ~ '.' ~ reportType ~ '.accounts.subSectionWarning'
+                        } %}
+                    </div>
                 </div>
                 <div id="asset-sub-section" class="sub-section">
                     <h3 class="heading">Assets</h3>
+                    <a id="help-contacts" class="help-link summary">
+                        <span class="open-text">Close</span>
+                        <span class="closed-text">Help</span>
+                    </a>
                     <a id="edit-assets" class="edit-link" href="{{ path('assets', {reportId: report.id}) }}">
                         {{ ('pages.' ~ page ~ '.assetsLink') | trans({}, translationDomain) }}
                     </a>
+                    <div id="assets-guidance" class="guidance content">
+                        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                        transDomain: translationDomain,
+                        subSectionDescription: 'pages.' ~ page ~ '.' ~ reportType ~ '.assets.subSectionDescription'
+                        } %}
+
+                        {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                        transDomain: translationDomain,
+                        pageSectionList: 'pages.' ~ page ~ '.' ~ reportType ~ '.assets.subSectionList'
+                        } %}
+                    </div>
                 </div>
             </li>
         {% endif %}
         </ul>
-
-
-
+        <script>
+            $( document ).ready(function() {
+                $('.sub-section').each(function(index,element) {
+                    opg.accordian({
+                        target: element,
+                        open: false
+                    });
+                });
+            });
+        </script>
+        
     {% endblock %}
 
 {% endembed %}

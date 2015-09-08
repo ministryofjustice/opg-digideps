@@ -1,5 +1,5 @@
 pageTitle: Your feedback
-htmlTitle: Complete the deputy report - Your feedback
+htmlTitle: "Deputy report - feedback | GOV.UK"
 
 difficulty.label: Did you have any difficulty with this service?
 ideas.label: Do you have any ideas for how it could be improved?
@@ -12,6 +12,16 @@ send.label: Send feedback
 thankYou: Thank you for sending your feedback
 
 
-#_security:
-#    403_error:
-#    last_error: sec last error
+# keep values in different lines
+helpChoices: |
+    No, I filled in this form myself
+    I have difficulty using computers so someone filled in this form for me
+    I used an accessibility tool such as a screen reader
+    I had some other kind of help
+
+satisfactionLevelsChoices: |
+    Very satisfied
+    Satisfied
+    Neither satisfied or dissatisfied
+    Dissatisfied
+    Very dissatisfied

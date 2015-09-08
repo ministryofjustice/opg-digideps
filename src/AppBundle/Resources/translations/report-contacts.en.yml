@@ -51,7 +51,7 @@ no_contact:
     controls:
       reason:
         label: "Reason for no contacts"
-pageTitle: contacts
+pageTitle: "Deputy report - contacts | GOV.UK"
 view_contact:
     edit: Edit this contact
     relationship: Relationship to the client
