@@ -226,4 +226,63 @@ class AbstractReportTest extends WebTestCase
 
     }
 
+    // Find a checkbox in the given container (css) in a form with a given name and a 
+    // look for a checkbox with the label give and check it's state matches
+    // e.g. assertCheckboxChecked($crawler, '#safeguarding-section','Do you live with the client?', 'yes')
+    protected function assertCheckboxChecked($crawler, $container, $checkBoxLegend, $checkedValue = null)
+    {
+        $containerElement = $crawler->filter($container)->eq(0);
+        $this->assertEquals(1, $containerElement->count());
+        $checkBoxLegend = preg_replace("/[^A-Za-z0-9 ]/", '', $checkBoxLegend);
+        
+        if($checkedValue == null) {
+            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '"]';
+        } else {
+            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '--' . $this->replace_dashes($checkedValue) . '"]';
+        }
+        
+        $element = $containerElement->filter($css);
+        $this->assertEquals(1, $element->count());
+        $this->assertContains('X', $element->eq(0)->text());
+    }
+
+    protected function assertCheckboxNotChecked($crawler, $container, $checkBoxLegend, $checkedValue = null)
+    {
+        $containerElement = $crawler->filter($container)->eq(0);
+        $this->assertEquals(1, $containerElement->count());
+        $checkBoxLegend = preg_replace("/[^A-Za-z0-9 ]/", '', $checkBoxLegend);
+
+        if($checkedValue == null) {
+            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '"]';
+        } else {
+            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '--' . $this->replace_dashes($checkedValue) . '"]';
+        }
+
+        $element = $containerElement->filter($css);
+        $this->assertEquals(1, $element->count());
+        $this->assertNotContains('X', $element->eq(0)->text());
+    }
+    
+    private function replace_dashes($string) {
+        $string = str_replace(" ", "-", $string);
+        return strtolower($string);
+    }
+    
+    protected function assertSectionDoesntExist($crawler, $section)
+    {
+        $elements = $crawler->filter($section);
+        $this->assertEquals(0, $elements->count());
+    }
+
+    protected function assertSectionDoesExist($crawler, $section)
+    {
+        $elements = $crawler->filter($section);
+        $this->assertEquals(1, $elements->count());
+    }
+    
+    protected function assertSectionContainsText($crawler, $section, $text)
+    {
+        $this->assertContains($text, $crawler->filter($section)->eq(0)->text());
+    }
+    
 }

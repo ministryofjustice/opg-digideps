@@ -36,7 +36,7 @@ pages:
       decisions:
         subSectionTitle: "Decisions"
         subSectionDescription: "Let us know the significant decisions you make over the reporting period. A significant decision is <strong>any</strong> important decision you make for the client during the reporting period. A significant decision might be:"
-        subSectionList: "*buying or selling or renting property *buying or selling investments or shares *loans *making gifts *moving the client to another nursing or care home"
+        subSectionList: "*buying or selling or renting property *buying or selling investments or shares *making gifts *moving the client to another nursing or care home"
       accounts:
         subSectionTitle: "Accounts"
         subSectionDescription: "Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."

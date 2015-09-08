@@ -15,7 +15,10 @@ Feature: deputy / report / Formatted Report
         And I should see "Andy White" in "contacts-section"
         Then I should see "Section 4"
         And I should see "Safeguarding"
+        Then I should see "Do you live with the client?"
         And the report should indicate that the "Yes" checkbox for "Do you live with the client" is checked
+        And the report should indicate that the "No" checkbox for "Does the client receive care which is paid for" is checked
+        And the report should indicate that the "There is no care plan" checkbox is checked
         And I should see "Section 6"
         And I should see "Bank accounts"
         And I should see "HSBC main account" in "accounts-section"
