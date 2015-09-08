@@ -3,7 +3,7 @@
 {% trans_default_domain translationDomain %}
 
 {% block pageTitle %}{{ 'pageTitle' | trans }}{% endblock %}
-{% block title %}{% trans %}pageTitle{% endtrans %}{% endblock %}
+{% block title %}{{ 'h1Title' | trans }}{% endblock %}
 
 {% block pageNavigation %}
     {% if isAdmin %}
