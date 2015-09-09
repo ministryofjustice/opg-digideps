@@ -51,7 +51,7 @@ class ManageController extends Controller
         
         $response = $this->render('AppBundle:Manage:health-check.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERROR: ' . $errors,
-            'time' => $time
+            'time' => $time * 1000
         ]);
         $response->setStatusCode($healthy ? 200 : 500);
         $response->headers->set('Content-Type', 'text/xml');
@@ -60,7 +60,7 @@ class ManageController extends Controller
     }
     
     /**
-     * @return array [boolean isHealty, string errors, array services]
+     * @return array [boolean isHealty, string errors, array services, time in secs]
      */
     private function servicesHealth()
     {
