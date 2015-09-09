@@ -58,25 +58,36 @@ activeTab: "tab-assets"
         
          <script type="text/javascript">
             $(document).ready(function () {
-              // remove next and cancel button
-              $('#asset-add-title-next-group').remove();
-              
-              // when the dropdown changes, replace the pageBodyLeftContent with the result of the next page (add-complete)
-              $('#asset_title_title').change(function() {
-                 var selectedTitle = $(this).val();
-                 if (selectedTitle === '') {
-                   return;
-                 }
-                 //$("#pageBodyLeftContent" ).fadeOut();
-                 var urlToLoadPattern = '{{ path('asset_add_complete', {'reportId': report.id, 'title' : '--placeholder--'}) }}';
-                 var urlToLoad = urlToLoadPattern.replace('--placeholder--', selectedTitle);
+                
+                var bodyLeftContent = $("#pagebody-left-content"),
+                    assetTitleTitle = $('#asset_title_title'),
+                    urlToLoadPattern,
+                    urlToLoad,
+                    selectedTitle;
+                
+                // when the dropdown changes, replace the pagebody-left-content with the result of the next page (add-complete)
+                assetTitleTitle.change(function(event) {
+                    selectedTitle = $(event.target).val();
+                    if (selectedTitle === '') {
+                        return;
+                    }
+                    
+                    urlToLoadPattern = '{{ path('asset_add_complete', {'reportId': report.id, 'title' : '--placeholder--'}) }}';
+                    urlToLoad = urlToLoadPattern.replace('--placeholder--', selectedTitle);
                  
-                 $.get(urlToLoad, function( data ) {
-                     $("#pageBodyLeftContent" ).html( data );
-                     //$("#pageBodyLeftContent" ).fadeIn();
-                 });
-                 
-               });
+                    $.get(urlToLoad, function( html ) {
+                        var $element = $(html);
+                     
+                        $element.find('.form-date').each(function(index,dateElement) {
+                            new opg.DateValidate(dateElement);
+                        });
+                        
+                        bodyLeftContent.text('').append($element);
+                        $element.find('textarea').expanding();
+                        $element.find('input')[0].eq(0).focus();
+                    });
+                    
+                });
             });
         </script>
         
