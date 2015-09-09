@@ -14,9 +14,9 @@
 
         <p class="flash">{{ 'page.thankYouForsubmitting' | trans({'%reportName%': report.getPeriod()}) }}</p>
 
-        <p class="page-section-description">{{ 'page.yourReportWillBeSaved' | trans }}</p>
+        <p class="page-section-description">{{ 'page.yourReportWillBeSent' | trans }}</p>
 
-        <p class="page-section-description">{{ 'page.youCanDownloadCopy' | trans }}</p>
+        <p class="page-section-description">{{ 'page.weWillSendReminder' | trans }}</p>
 
         <div class="link">
             <a href="{{ path('report_display', {'reportId': report.id}) }}" class="behat-link-download-report">
