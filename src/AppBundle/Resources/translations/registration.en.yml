@@ -1,5 +1,5 @@
 addClient:
-    pageTitle: "Deputy report - Add your client's details | GOV.UK"
+    pageTitle: "Deputy report - add your client's details | GOV.UK"
     h1Title: Add your client's details
 courtDate:
     legend: Court order date
@@ -34,7 +34,7 @@ save:
 saveAndContinue:
     label: Save and continue
 createReport:
-    pageTitle: "Deputy report - Create a report | GOV.UK"
+    pageTitle: "Deputy report - create a report | GOV.UK"
     h1Title: Create a report
 startDate:
     legend: Start date
