@@ -57,7 +57,7 @@ client:
     county:
         maxMessage: The county can't be longer than {{ limit }} characters
     allowedCourtOrderTypes:
-        notBlank: You must select either property and finance or health and welfare
+        notBlank: You must select either Property and Affairs or Personal Welfare
     postcode:
         notBlank: Enter your client's postcode
         minMessage: The postcode must be at least {{ limit }} characters
@@ -72,7 +72,7 @@ report:
         beforeStart: Check the end date: it can't be before the start date
         greaterThan12Months: Check the end date: your reporting period can't be more than 12 months
     courtOrderType:
-        notBlank: You must select either property and finance or health and welfare
+        notBlank: You must select either Property and Affairs or Personal Welfare
     submissionExceptions:
         due: Report not due
         submitted: Report not submitted
@@ -236,7 +236,7 @@ safeguarding:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
         notBlank: Please select one option
-        
+
 feedbackAfterReport:
     satisfactionLevel:
         notEmpty: Please selection an option
