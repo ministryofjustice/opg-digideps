@@ -31,6 +31,27 @@ class BehatController extends RestController
         return file_get_contents($mailPath);
     }
     
+    
+    
+     /**
+     * @Route("/check-app-params")
+     * @Method({"GET"})
+     */
+    public function checkParamsAction()
+    {
+        $param = $this->container->getParameter('email_report_submit')['to_email'];
+        if (!preg_match('/^behat\-/', $param)) {
+            throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");
+        }
+        
+        $param = $this->container->getParameter('email_feedback_send')['to_email'];
+        if (!preg_match('/^behat\-/', $param)) {
+            throw new DisplayableException("email_feedback_send.to_email must be a behat- email in order to test emails, $param given.");
+        }
+        
+        return "valid";
+    }
+    
     /**
      * @Route("/email")
      * @Method({"DELETE"})
@@ -70,4 +91,7 @@ class BehatController extends RestController
     {
         return $this->container->getParameter('email_mock_path');
     }
+    
+    
+    
 }

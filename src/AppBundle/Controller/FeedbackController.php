@@ -19,9 +19,10 @@ class FeedbackController extends RestController
         $feedbackData = $this->deserializeBodyContent();
        
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
-        echo $feedbackEmail->getBodyHtml();die;
         
-        $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+        $ret = $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+        
+        return $ret;
     }
     
     /**
@@ -33,7 +34,9 @@ class FeedbackController extends RestController
        $feedbackData = $this->deserializeBodyContent();
          
        $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
-       $this->get('mailSender')->send($feedbackEmail, [ 'html']);
+       $ret = $this->get('mailSender')->send($feedbackEmail, [ 'html']);
+       
+       return $ret;
     }
     
 }
