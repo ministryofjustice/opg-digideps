@@ -1,0 +1,48 @@
+.alert {
+
+  &__delete-confirmation {
+    width: 60%;
+    background-color: $grey-3;
+    margin-bottom: 10px;
+
+    padding: 10px 13px 15px 10px;
+
+    .button-bar {
+
+      margin-bottom: 0;
+
+      .button-warning {
+        margin-left: 0;
+      }
+    }
+
+  }
+
+}
+
+#content p.flash {
+    border-left: 3px solid $turquoise;
+    padding: 15px 10px 15px 40px;
+    width: 85%;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+    background: rgba( $turquoise, .1 ) url(/images/icons/tick.png) 10px 13px no-repeat;
+}
+
+#content .report-submission  p.flash {
+    max-width: 540px;
+}
+
+#page-body p.flash {
+    width: 65%;
+}
+
+#content p.flash.flash-news {
+    background: #e8f4fd url(/images/icons/info.png) 10px 10px no-repeat;
+    border-left: 3px solid #1d8feb;
+    margin-bottom: 0;
+    width: 95%;
+    padding-left: 50px;
+}
