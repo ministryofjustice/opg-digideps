@@ -24,19 +24,4 @@ class FeedbackController extends RestController
         
         return $ret;
     }
-    
-    /**
-     * @Route("/report")
-     * @Method({"POST"})
-     */
-    public function sendReportFeedback()
-    {
-       $feedbackData = $this->deserializeBodyContent();
-         
-       $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
-       $ret = $this->get('mailSender')->send($feedbackEmail, [ 'html']);
-       
-       return $ret;
-    }
-    
 }

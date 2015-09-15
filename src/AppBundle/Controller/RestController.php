@@ -93,7 +93,7 @@ abstract class RestController extends Controller
     }
     
     /**
-     * @return \AppBundle\Service\MailFactory
+     * @return \AppBundle\Service\Mailer\MailFactory
      */
     protected function getMailFactory()
     {
@@ -102,7 +102,7 @@ abstract class RestController extends Controller
     
     
     /**
-     * @return \AppBundle\Service\MailSender
+     * @return \AppBundle\Service\Mailer\MailSender
      */
     protected function getMailSender()
     {
