@@ -1,8 +1,9 @@
 Feature: deputy / report / edit user
-
+    
     @deputy
     Scenario: edit user details
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I load the application status from "report-submit-pre"
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "my-details"
         And I click on "edit-user-details"
         Then I should be on "user/edit-your-details#edit-your-details"

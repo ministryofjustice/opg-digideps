@@ -148,7 +148,7 @@ class UserController extends Controller
         // recreate token
         // the endpoint will also send the activation email
         $user->setRecreateRegistrationToken(true);
-        $apiClient->putC('user/' .  $user->getId(), $user, [
+        $apiClient->putC('user/' .  $user->getId() . '/activate', $user, [
             'deserialise_group' => 'recreateRegistrationToken',
         ]);
         
@@ -306,7 +306,7 @@ class UserController extends Controller
                 /* @var $user EntityDir\User */
                 $user = $this->get('deputyprovider')->loadUserByUsername($form->getData()->getEmail());
                 $user->setRecreateRegistrationToken(true);
-                $apiClient->putC('user/pass-reset' .  $user->getId(), $user, [
+                $apiClient->putC('user/' .  $user->getId() . '/pass-reset', $user, [
                     'deserialise_group' => 'recreateRegistrationToken',
                 ]);
                 

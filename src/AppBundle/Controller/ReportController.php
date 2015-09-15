@@ -201,8 +201,7 @@ class ReportController extends Controller
         if ($form->isValid()) {
             
             $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-            
-            $apiClient->postC('/feedback/report', $form->getData());
+            $apiClient->postC('/feedback', $form->getData());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }

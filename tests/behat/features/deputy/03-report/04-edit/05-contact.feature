@@ -1,10 +1,11 @@
 Feature: deputy / report / edit user contact
 
     @deputy
-    Scenario: edit remove contact
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+    Scenario: edit and remove contacts
+        Given I load the application status from "report-submit-pre"
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
-        And I click on "report-n2"
+        And I click on "report-2015"
         And I follow "edit-contacts"
         And the URL should match "/report/\d+/contacts"
         And I click on "contact-n1"
@@ -52,4 +53,54 @@ Feature: deputy / report / edit user contact
         And the URL should match "/report/\d+/contacts"
         Then I should not see the "list-contacts" region
 
-
+    @deputy
+    Scenario: add explanation for no contacts
+      Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+      And I click on "client-home"
+      And I click on "report-2015"
+      #delete current contact
+      And I follow "edit-contacts"
+      And I save the page as "report-no-contact-empty"
+      # add explanation
+      Then the "reason_for_no_contact_reason" field is expandable
+      # empty form throws error
+      When I fill in "reason_for_no_contact_reason" with ""
+      And I press "reason_for_no_contact_saveReason"
+      Then the form should be invalid
+      And I save the page as "report-no-contact-error"
+      # add reason
+      When I fill in "reason_for_no_contact_reason" with "kept in the book"
+      And I press "reason_for_no_contact_saveReason"
+      Then the form should be valid
+      And I should see "kept in the book" in the "reason-no-contacts" region
+      And I save the page as "report-no-contact-added"
+      # edit reason, and cancel
+      When I click on "edit-reason-no-contacts"
+      Then the following fields should have the corresponding values:
+        | reason_for_no_contact_reason | kept in the book |
+      When I click on "cancel-edit-reason"
+      Then the URL should match "/report/\d+/contacts"
+      # edit reason, and save
+      When I click on "edit-reason-no-contacts"
+      And I save the page as "report-no-contact-edit"
+      And I fill in the following:
+        | reason_for_no_contact_reason | |
+      And I press "reason_for_no_contact_saveReason"
+      Then the form should be invalid
+      And I save the page as "report-no-contact-error"
+      And I fill in the following:
+        | reason_for_no_contact_reason | nothing relevant contact added |
+      And I press "reason_for_no_contact_saveReason"
+      And I save the page as "report-no-contact-edit"
+      And I should see "nothing relevant contact added" in the "reason-no-contacts" region
+      # delete reason and cancel
+      When I click on "edit-reason-no-contacts"
+      And I click on "delete-confirm"
+      And I click on "delete-reason-confirm-cancel"
+      Then the URL should match "/report/\d+/contacts/edit-reason"
+      # delete reason and confirm
+      When I click on "delete-confirm"
+      When I click on "delete-reason"
+      Then the URL should match "/report/\d+/contacts"
+      And the following fields should have the corresponding values:
+        | reason_for_no_contact_reason | |

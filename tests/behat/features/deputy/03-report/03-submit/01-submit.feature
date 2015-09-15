@@ -5,7 +5,7 @@ Feature: deputy / report / submit
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
-        When I click on "report-n1"
+        When I click on "report-2015"
         # set report due
         Given I set the report 1 end date to 3 days ago
         And I am on the first report overview page
@@ -79,7 +79,7 @@ Feature: deputy / report / submit
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
-        When I click on "report-n1"    
+        When I click on "report-2015"    
         And I confirm the report is ready to be submitted
         And I click on "next"
         # test "go back" link from declaration page
@@ -147,7 +147,7 @@ Feature: deputy / report / submit
         And I click on "client-home"
         And I edit lastest active report
         When I click on "client-home"
-        And I click on "report-n1"
+        And I click on "report-2015-to-2016"
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -183,7 +183,7 @@ Feature: deputy / report / submit
         # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
         Then I should be on "/client/show"
         Then I should not see the "edit-report-period-2015-report" link
-        And I should not see the "report-n2" link
+        And I should not see the "report-2015" link
         And I should see the "report-2015-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/contacts" should not be accessible
