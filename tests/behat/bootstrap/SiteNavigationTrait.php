@@ -44,32 +44,32 @@ trait SiteNavigationTrait
     }
     
     /**
-     * @Given I am on the first report overview page
-     * @Given I go to the first report overview page
+     * @Given I am on the :report report overview page
+     * @Given I go to the :report report overview page
      */
-    public function iAmOnTheReport1Page()
+    public function iAmOnTheReport1Page($report)
     {
         $this->clickOnBehatLink('client-home');
-        $this->clickOnBehatLink('report-n1');
+        $this->clickOnBehatLink('report-' . $report);
     }
     
     /**
-     * @Given I am on the accounts page of the first report
-     * @Given I go to the accounts page of the first report
+     * @Given I am on the accounts page of the :report report
+     * @Given I go to the accounts page of the :report report
      */
-    public function iAmOnTheReport1AccountsPage()
+    public function iAmOnTheReportAccountsPage($report)
     {
-        $this->iAmOnTheReport1Page();
+        $this->iAmOnTheReport1Page($report);
         $this->clickLink('edit-accounts');
     }
     
     /**
-     * @Given I am on the account :accountNumber page of the first report
-     * @Given I go to the account :accountNumber page of the first report
+     * @Given I am on the account :accountNumber page of the :report report
+     * @Given I go to the account :accountNumber page of the :report report
      */
-    public function iAmOnTheReport1AccountPageByAccNumber($accountNumber)
+    public function iAmOnTheReport1AccountPageByAccNumber($accountNumber, $report)
     {
-        $this->iAmOnTheReport1AccountsPage();
+        $this->iAmOnTheReportAccountsPage($report);
         $this->clickOnBehatLink('account-' . $accountNumber);
     }
     

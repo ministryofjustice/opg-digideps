@@ -119,13 +119,6 @@ class User implements AdvancedUserInterface
     private $registrationToken;
     
     /**
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"recreateRegistrationToken"})
-     * @var boolean $recreateRegistrationToken
-     */
-    private $recreateRegistrationToken;
-    
-    /**
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\Groups({"registrationToken"})
      * @var \DateTime $tokenDate
@@ -211,11 +204,6 @@ class User implements AdvancedUserInterface
      * @var \DateTime $tokenDate
      */
     private $lastLoggedIn;
-    
-    public function __construct()
-    {
-        $this->recreateRegistrationToken = false;
-    }
     
     /**
      * @return integer $id
@@ -638,17 +626,6 @@ class User implements AdvancedUserInterface
     {
         $this->lastLoggedIn = $lastLoggedIn;
     }
-        
-    public function setRecreateRegistrationToken($recreateRegistrationToken)
-    {
-        $this->recreateRegistrationToken = $recreateRegistrationToken;
-    }
-
-    public function getRecreateRegistrationToken()
-    {
-        return $this->recreateRegistrationToken;
-    }
-
     
     /**
      * @return boolean

@@ -193,6 +193,8 @@ class BehatController extends Controller
     }
     
     /**
+     * set token_date and registration_token on the user
+     * 
      * @Route("/{secret}/user/{email}/token/{token}/token-date/{date}")
      * @Method({"GET"})
      */
@@ -200,13 +202,16 @@ class BehatController extends Controller
     {
         $this->checkIsBehatBrowser();
         
-        $user = $this->get('apiclient')->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
-        $user->setTokenDate(new \DateTime($date));
-        $user->setRegistrationToken($token);
+        $user = $this->get('apiclient')->getEntity('User', 'user/get-user-by-email/' . $email);
         
         $this->get('apiclient')->putC('user/' . $user->getId(), $user, [
             'deserialise_group' => 'registrationToken',
         ]);
+        
+        $this->get('apiclient')->putC('user/' . $user->getId(), json_encode([
+            'token_date' => $date,
+            'registration_token' => $token
+        ]));
         
         return new Response('done');
     }

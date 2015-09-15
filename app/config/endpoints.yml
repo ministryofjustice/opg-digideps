@@ -1,10 +1,6 @@
 parameters:
     api_endpoints:
         # user
-        find_user_by_email: user/get-user-by-email
-        find_admin_by_email: user/get-admin-by-email
-        find_by_email: user/get-by-email
-        edit_user: user
         list_users: user/get-all
         find_user_by_token: user/get-by-token/hybrid
         find_user_by_token_deputy: user/get-by-token/deputy

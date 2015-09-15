@@ -45,7 +45,7 @@ Feature:deputy / report / edit decision
     @deputy
     Scenario: add explanation for no decisions
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      #And I am on the first report overview page
+      #And I am on the "2015" report overview page
       And I click on "client-home"
       And I click on "report-2015"
       # delete current decision

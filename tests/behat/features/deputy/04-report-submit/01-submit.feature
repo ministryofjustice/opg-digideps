@@ -8,19 +8,19 @@ Feature: deputy / report / submit
         When I click on "report-2015"
         # set report due
         Given I set the report 1 end date to 3 days ago
-        And I am on the first report overview page
+        And I am on the "2015" report overview page
         # assert I cannot access the following steps
         Then The URL "/report/1/add_further_information" should not be accessible
         Then The URL "/report/1/add_further_information/edit" should not be accessible
         Then The URL "/report/1/declaration" should not be accessible
         Then The URL "/report/1/submitted" should not be accessible
         # wrong declaration form
-        When I go to the first report overview page
+        When I go to the "2015" report overview page
         When I press "report_submit_submitReport"
         Then the following fields should have an error:
             | report_submit_reviewed_n_checked   |
         # correct declaration form
-        When I am on the first report overview page
+        When I am on the "2015" report overview page
         When I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I save the page as "report-submit-further-info-empty"
@@ -65,7 +65,7 @@ Feature: deputy / report / submit
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
         # test submit from account page
-        When I am on the account "1234" page of the first report
+        When I am on the account "1234" page of the "2015" report
         And I confirm the report is ready to be submitted
         Then the URL should match "/report/\d+/add_further_information"
         And I click on "report-preview-go-back"
@@ -103,7 +103,7 @@ Feature: deputy / report / submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        And I go to the first report overview page
+        And I go to the "2015" report overview page
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"
@@ -153,7 +153,18 @@ Feature: deputy / report / submit
         And I should see a "#edit-decisions" element
         And I should see a "#edit-accounts" element
         And I should see a "#edit-assets" element
-        When I am on the account "1234" page of the first report
+        When I follow "edit-accounts"
+        And I click on "account-1234"
+        # check no data was previously saved
+        Then the following fields should have the corresponding values:
+            | transactions_moneyIn_0_amount        |  | 
+            | transactions_moneyIn_15_amount       |  | 
+            | transactions_moneyIn_15_moreDetails  |  | 
+            | transactions_moneyOut_0_amount       |  | 
+            | transactions_moneyOut_11_amount      |  | 
+            | transactions_moneyOut_11_moreDetails |  | 
+        And I save the page as "report-account-transactions-empty"
+        #check account details
         And I click on "edit-account-details"
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC main account | 
@@ -165,16 +176,7 @@ Feature: deputy / report / submit
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
             | account_openingBalance  | -3,000.50 |
-        And I am on the account "1234" page of the first report
-        # check no data was previously saved
-        Then the following fields should have the corresponding values:
-            | transactions_moneyIn_0_amount        |  | 
-            | transactions_moneyIn_15_amount       |  | 
-            | transactions_moneyIn_15_moreDetails  |  | 
-            | transactions_moneyOut_0_amount       |  | 
-            | transactions_moneyOut_11_amount      |  | 
-            | transactions_moneyOut_11_moreDetails |  | 
-        And I save the page as "report-account-transactions-empty"
+        
 
     @deputy
     Scenario: assert report is not editable after submission

@@ -4,7 +4,7 @@ Feature: deputy / report / edit and test tabs
     Scenario: test tabs for "Health & Welfare" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the page as "report-health-welfare-homepage"
-        #And I am on the first report overview page
+        #And I am on the "2015" report overview page
         And I should see a "#edit-decisions" element
         And I should see a "#edit-contacts" element
         But I should not see a "#edit-accounts" element
@@ -66,7 +66,7 @@ Feature: deputy / report / edit and test tabs
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the first report overview page
+        #And I am on the "2015" report overview page
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element

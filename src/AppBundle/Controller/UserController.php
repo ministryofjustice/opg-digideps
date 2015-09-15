@@ -18,6 +18,8 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class UserController extends Controller
 {
     /**
+     * Landing page to let the user access the app and selecting a password
+     * 
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
      * 
      * @Route("/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
@@ -71,7 +73,7 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
                 ]);
                 $template = 'AppBundle:User:passwordReset.html.twig';
-                $email = 'pass-reset';
+                $email = 'password-reset';
                 break;
             
             default:
@@ -80,52 +82,33 @@ class UserController extends Controller
         
         $form = $this->createForm($formType, $user);
         
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                
-                // calculated hashed password
-                $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
-                        ->encodePassword($user->getPassword(), $user->getSalt());
-                if ($action)
-                $apiClient->putC('user/' . $user->getId() . '/' . $email, json_encode([
-                    'password' => $encodedPassword,
-                    'active' => true
-                ]));
-                
-                // log in user
-                $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
-                $this->get("security.context")->setToken($token); //now the user is logged in
-                
-                $session = $this->get('session');
-                $session->set('_security_secured_area', serialize($token));
-                 
-                if($oauth2Enabled){
-                    //cache hashed password to use in oauth2 calls
-                    if($useRedis){
-                        $redis = $this->get('snc_redis.default');
-                        $redis->set($session->getId().'_user_credentials', serialize([ 'email' => $user->getEmail(), 'password' => $encodedPassword ]));
-                        $redis->expire($session->getId().'_user_credentials',3600);
-                    }elseif($useMemcached){
-                        //cache hashed password to use in oauth2 calls
-                        $memcached = $this->get('oauth.memcached');
-                        $userApiKey = $memcached->get($session->getId().'_user_credentials');
-                        if(!$userApiKey){
-                            $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword ],3600);
-                        }else{
-                            $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword ],3600);
-                        }
-                    }
-                }
-                 
-                 $request = $this->get("request");
-                 $event = new InteractiveLoginEvent($request, $token);
-                 $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-                 
-                 // the following should not be triggered
-                 return $this->redirect($this->generateUrl('user_details'));
-            }
-        } 
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+
+            // calculated hashed password
+            $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
+                    ->encodePassword($user->getPassword(), $user->getSalt());
+
+            $apiClient->putC('user/' . $user->getId() . '/set-password', json_encode([
+                'password' => $encodedPassword,
+                'set_active' => true,
+                'send_email' => false //not sent on this "landing" pages
+            ]));
+
+            // log in user
+            $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+            $this->get("security.context")->setToken($token); //now the user is logged in
+
+            $session = $this->get('session');
+            $session->set('_security_secured_area', serialize($token));
+
+             $request = $this->get("request");
+             $event = new InteractiveLoginEvent($request, $token);
+             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+
+             // the following should not be triggered
+             return $this->redirect($this->generateUrl('user_details'));
+        }
 
         return $this->render($template, [
             'token'=>$token, 
@@ -147,10 +130,10 @@ class UserController extends Controller
         
         // recreate token
         // the endpoint will also send the activation email
-        $user->setRecreateRegistrationToken(true);
-        $apiClient->putC('user/' .  $user->getId() . '/activate', $user, [
-            'deserialise_group' => 'recreateRegistrationToken',
-        ]);
+        $apiClient->putC('user/' .  $user->getId() . '/recreate-token/email/activate', $user);
+        
+//        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
+//        $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
         
         return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
     }
@@ -164,7 +147,6 @@ class UserController extends Controller
         return [
             'token'=>$token,
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-            'senderEmail'=> $this->container->getParameter('email_send')['from_email']
         ];
     }
     
@@ -209,6 +191,8 @@ class UserController extends Controller
     }
     
     /**
+     * change user
+     * 
      * @Route("/{action}", name="user_view", defaults={ "action" = ""})
      * @Template()
      **/
@@ -230,58 +214,39 @@ class UserController extends Controller
         
         $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
-        if($request->getMethod() == 'POST'){
-            $formEditDetails->handleRequest($request);
-            $apiClient = $this->get('apiclient');
-            
-            if($formEditDetails->isValid()){
-                $formData = $formEditDetails->getData();
-                $formRawData = $request->request->get('user_details');
-                
-                /**
-                 * if new password has been set then we need to encode this using the encoder and pass it to
-                 * the api
-                 */
-                if(!empty($formRawData['password']['plain_password']['first'])){
-                    $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
-                        ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
-                    $formData->setPassword($encodedPassword);
-                    
-//                    $changePasswordEmail = $this->get('mailFactory')->createChangePasswordEmail($user);
-//                    $this->get('mailSender')->send($changePasswordEmail,[ 'html']);
-                    
-                    //reset user api key
-                    $session = $this->get('session');
-                    
-                    if($oauth2Enabled){
-                        if($useRedis){
-                            $redis = $this->get('snc_redis.default');
-                            $redis->set($session->getId().'_user_credentials', serialize([ 'email' => $user->getEmail(), 'password' => $encodedPassword ]));
-                            $redis->expire($session->getId().'_user_credentials',3600);
-                        }elseif($useMemcached){
-                             //cache hashed password to use in oauth2 calls
-                            $memcached = $this->get('oauth.memcached');
-                            $userApiKey = $memcached->get($session->getId().'_user_credentials');
-                            if(!$userApiKey){
-                                $memcached->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
-                            }else{
-                                $memcached->replace($session->getId().'_user_credentials', [ 'email' => $user->getEmail(), 'password' => $encodedPassword],3600);
-                            }
-                        }
-                    }
-                    
-                    $request->getSession()->getFlashBag()->add(
-                                'notification',
-                                'page.passwordChangedNotification'
-                            );
-                    
-                }
-                $apiClient->putC('edit_user',$formData, [ 'parameters' => [ 'id' => $user->getId() ]]);
+        $formEditDetails->handleRequest($request);
+        $apiClient = $this->get('apiclient');
 
-                return $this->redirect($this->generateUrl('user_view'));
+        if($formEditDetails->isValid()){
+            $formData = $formEditDetails->getData();
+            $formRawData = $request->request->get('user_details');
+
+            /**
+             * if new password has been set then we need to encode this using the encoder and pass it to
+             * the api
+             */
+            if(!empty($formRawData['password']['plain_password']['first'])){
+                $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
+                    ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
+                $formData->setPassword($encodedPassword);
+
+                $apiClient->putC('user/' . $user->getId() . '/set-password', json_encode([
+                    'password' => $encodedPassword,
+                    'send_email' => true
+                ]));
+                
+                $request->getSession()->getFlashBag()->add(
+                    'notification',
+                    'page.passwordChangedNotification'
+                );
+
             }
             
+            $apiClient->putC('user/' . $user->getId(), $formData);
+
+            return $this->redirect($this->generateUrl('user_view'));
         }
+            
 
         return [
             'action' => $action,
@@ -305,13 +270,9 @@ class UserController extends Controller
                 $apiClient = $this->get('apiclient');
                 /* @var $user EntityDir\User */
                 $user = $this->get('deputyprovider')->loadUserByUsername($form->getData()->getEmail());
-                $user->setRecreateRegistrationToken(true);
-                $apiClient->putC('user/' .  $user->getId() . '/pass-reset', $user, [
-                    'deserialise_group' => 'recreateRegistrationToken',
-                ]);
+                $apiClient->putC('user/' .  $user->getId() . '/recreate-token/email/pass-reset', $user);
                 
             } catch (\Exception $e) {
-                // if the user it not found, the user must not be told, 
                 $this->get('logger')->debug($e->getMessage());
             }
 
