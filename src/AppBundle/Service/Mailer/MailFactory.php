@@ -105,11 +105,10 @@ class MailFactory
         
         $viewParams = [
             'name' => $user->getFullName(),
-            'domain' => $this->generateAbsoluteLink($area, 'homepage'),
-            'link' => $this->generateAbsoluteLink($area, 'user_activate', [
-                'action' => 'password-reset',
+            'link' => $this->generateAbsoluteLink($area, 'password_reset', [
                 'token' => $user->getRegistrationToken()
-                ], true),
+            ]),
+            'domain' => $this->generateAbsoluteLink($area, 'homepage'),
             'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage')
         ];
 

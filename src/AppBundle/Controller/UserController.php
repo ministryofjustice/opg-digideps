@@ -58,11 +58,44 @@ class UserController extends RestController
         return ['id'=>$user->getId()];
     }
     
-    /**
-     * @Route("/{id}/{email}", defaults={ "email" = "activate"})
+    
+     /**
+     * @Route("/{userId}/recreate-token/email/{email}", defaults={"email": "none"})
      * @Method({"PUT"})
      */
-    public function update($id, $email = 'activate')
+    public function recreateToken($userId, $email)
+    {
+        if (!in_array($email, ['activate', 'pass-reset'])) {
+            throw new \InvalidArgumentException(__METHOD__ . ' invalid email template');
+        }
+        $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $user User */
+
+        $user->recreateRegistrationToken();
+        
+        $this->getEntityManager()->flush($user);
+
+        switch ($email) {
+            case 'activate':
+                // send acivation email to user
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
+                break;
+
+            case 'pass-reset':
+                // send reset password email
+                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+                $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
+                break;
+        }
+        
+        return $user->getId();
+    }
+    
+    /**
+     * @Route("/{id}")
+     * @Method({"PUT"})
+     */
+    public function update($id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
 
@@ -72,30 +105,45 @@ class UserController extends RestController
         
         $this->getEntityManager()->flush($user);
         
-        
-        if (!empty($data['recreate_registration_token'])) {
-            $user->recreateRegistrationToken();
-            
-            //need to understand which one here
-            
-            switch ($email) {
-                case 'activate':
-                    // send acivation email to user
-                    $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                    $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
-                    break;
-                
-                case 'pass-reset':
-                    // send reset password email
-                    $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
-                    $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
-                    break;
-            }
-        }
-        
         return ['id'=>$user->getId()];
     }
-
+    
+    
+    /**
+     * change password, activate user and send remind email
+     * @Route("/{id}/set-password")
+     * @Method({"PUT"})
+     */
+    public function changePassword($id)
+    {
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        
+        $data = $this->deserializeBodyContent();
+        if (empty($data['password'])) {
+            throw new \InvalidArgumentException('missing password');
+        }
+        $user->setPassword($data['password']);
+        
+        if (array_key_exists('set_active', $data)) {
+           $user->setActive($data['set_active']);
+        }
+        
+        // send change password email
+        if (empty($data['send_email'])) {
+            // no emails
+        } else if ($data['send_email'] == 'activate') {
+            $email = $this->getMailFactory()->createChangePasswordEmail($user);
+            $this->getMailSender()->send($email,[ 'html']);
+            
+        } else if ($data['send_email'] == 'password-reset') {
+            $email = $this->getMailFactory()->createChangePasswordEmail($user);
+            $this->getMailSender()->send($email,[ 'html']);
+        }
+        
+        $this->getEntityManager()->flush();
+        
+        return $user;
+    }
     
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
@@ -235,6 +283,7 @@ class UserController extends RestController
         return $user;
     }
     
+    
     /**
      * call setters on User when $data contains values
      * 
@@ -252,8 +301,6 @@ class UserController extends RestController
             'firstname' => 'setFirstname', 
             'lastname' => 'setLastname', 
             'email' => 'setEmail', 
-//            'password' => 'setPassword', 
-            'active' => 'setActive', 
             'address1' => 'setAddress1', 
             'address2' => 'setAddress2', 
             'address3' => 'setAddress3', 
@@ -263,14 +310,6 @@ class UserController extends RestController
             'phone_main' => 'setPhoneMain', 
         ]);
         
-        
-        if (array_key_exists('password', $data)) {
-            $user->setPassword($data['password']);
-            // send change password email
-            $changePasswordEmail = $this->getMailFactory()->createChangePasswordEmail($user);
-            $this->getMailSender()->send($changePasswordEmail,[ 'html']);
-        }
-        
         if (array_key_exists('role_id', $data)) {
             $role = $this->findEntityBy('Role', $data['role_id'], 'Role not found');
             $user->setRole($role);
@@ -279,8 +318,6 @@ class UserController extends RestController
         if (array_key_exists('last_logged_in', $data)) {
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
         }
-        
-        
         
         if (!empty($data['registration_token'])) {
             $user->setRegistrationToken($data['registration_token']);
