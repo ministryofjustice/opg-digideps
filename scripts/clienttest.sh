@@ -16,4 +16,10 @@ rm -rf app/cache/*
 suitename=${1:-deputy}
 
 /sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/ --testdox
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=$suitename --stop-on-failure
+
+if [ -f tests/behat/behat.yml ]; then
+    behatConfigFile=tests/behat/behat.yml
+else
+    behatConfigFile=tests/behat/behat.yml.dist
+fi
+/sbin/setuser app bin/behat --config=$behatConfigFile --suite=$suitename --stop-on-failure
