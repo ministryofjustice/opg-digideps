@@ -219,16 +219,13 @@ class BehatController extends Controller
     {
         $this->checkIsBehatBrowser();
         
-        $param = $this->container->getParameter('email_report_submit')['to_email'];
-        if (!preg_match('/^behat\-/', $param)) {
-            throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");
+        $content = $this->get('apiclient')->get('behat/check-app-params')->getBody();
+        $contentDecoded = json_decode($content, 1);
+        
+        if ($contentDecoded['data'] !='valid') {
+            throw new \RuntimeException('Invalid API params. Response: '.print_r($contentDecoded, 1));
         }
         
-        $param = $this->container->getParameter('email_feedback_send')['to_email'];
-        if (!preg_match('/^behat\-/', $param)) {
-            throw new DisplayableException("email_feedback_send.to_email must be a behat- email in order to test emails, $param given.");
-        }
-        
-        return new Response('ok');
+        return new Response($content);
     }
 }

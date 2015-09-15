@@ -54,8 +54,8 @@ class AddUserCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
                 continue;
             }
 
-            // add user
-            $response = $apiClient->postC('add_user', $user, [
+            // add user (skip email sending)
+            $response = $apiClient->postC('/user?skip-mail=1', $user, [
                 'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
             ]);
             if ($data['activated']) {

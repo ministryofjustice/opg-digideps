@@ -6,7 +6,6 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\ApiClient;
-use AppBundle\Service\MailSender;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -37,14 +36,11 @@ class AdminController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $apiClient->postC('add_user', $form->getData(), [
+                $response = $apiClient->postC('/user', $form->getData(), [
                     'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
                 ]);
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 
-                $activationEmail = $this->get('mailFactory')->createActivationEmail($user, 'activate');
-                $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
-
                 $request->getSession()->getFlashBag()->add(
                     'notice', 
                     'An activation email has been sent to the user.'

@@ -4,7 +4,6 @@ parameters:
         find_user_by_email: user/get-user-by-email
         find_admin_by_email: user/get-admin-by-email
         find_by_email: user/get-by-email
-        add_user: user
         edit_user: user
         list_users: user/get-all
         find_user_by_token: user/get-by-token/hybrid
@@ -20,7 +19,6 @@ parameters:
         find_client_by_id: client/find-by-id
         # report
         add_report: report/upsert
-        clone_report: report/clone
         find_report_by_id: report/find-by-id
         add_decision: decision/upsert
         update_decision: decision/upsert

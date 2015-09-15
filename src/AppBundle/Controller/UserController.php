@@ -63,6 +63,7 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
                 ]);
                 $template = 'AppBundle:User:activate.html.twig';
+                $email = 'activate';
                 break;
             
             case 'password-reset':
@@ -70,6 +71,7 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
                 ]);
                 $template = 'AppBundle:User:passwordReset.html.twig';
+                $email = 'pass-reset';
                 break;
             
             default:
@@ -85,7 +87,8 @@ class UserController extends Controller
                 // calculated hashed password
                 $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
                         ->encodePassword($user->getPassword(), $user->getSalt());
-                $apiClient->putC('user/' . $user->getId(), json_encode([
+                if ($action)
+                $apiClient->putC('user/' . $user->getId() . '/' . $email, json_encode([
                     'password' => $encodedPassword,
                     'active' => true
                 ]));
@@ -143,16 +146,11 @@ class UserController extends Controller
         $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
         
         // recreate token
+        // the endpoint will also send the activation email
         $user->setRecreateRegistrationToken(true);
         $apiClient->putC('user/' .  $user->getId(), $user, [
             'deserialise_group' => 'recreateRegistrationToken',
         ]);
-        
-        // refresh user
-        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $user->getId() ] ]);
-        
-        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
-        $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
         
         return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
     }
@@ -249,8 +247,8 @@ class UserController extends Controller
                         ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
                     $formData->setPassword($encodedPassword);
                     
-                    $changePasswordEmail = $this->get('mailFactory')->createChangePasswordEmail($user);
-                    $this->get('mailSender')->send($changePasswordEmail,[ 'html']);
+//                    $changePasswordEmail = $this->get('mailFactory')->createChangePasswordEmail($user);
+//                    $this->get('mailSender')->send($changePasswordEmail,[ 'html']);
                     
                     //reset user api key
                     $session = $this->get('session');
@@ -308,15 +306,9 @@ class UserController extends Controller
                 /* @var $user EntityDir\User */
                 $user = $this->get('deputyprovider')->loadUserByUsername($form->getData()->getEmail());
                 $user->setRecreateRegistrationToken(true);
-                $apiClient->putC('user/' .  $user->getId(), $user, [
+                $apiClient->putC('user/pass-reset' .  $user->getId(), $user, [
                     'deserialise_group' => 'recreateRegistrationToken',
                 ]);
-                // get refreshed user
-                $user = $apiClient->getEntity('User', 'user/' . $user->getId());
-                
-                // send reset password email
-                $resetPasswordEmail = $this->get('mailFactory')->createResetPasswordEmail($user);
-                $this->get('mailSender')->send($resetPasswordEmail, [ 'text', 'html']);
                 
             } catch (\Exception $e) {
                 // if the user it not found, the user must not be told, 
