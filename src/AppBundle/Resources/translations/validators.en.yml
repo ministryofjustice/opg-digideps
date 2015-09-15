@@ -218,17 +218,17 @@ safeguarding:
     doYouLiveWithClient:
         notBlank: Choose Yes or No
     howOftenDoYouVisit:
-        notBlank: Please select one option
+        notBlank: Select one option
     howOftenDoYouPhoneOrVideoCall:
-        notBlank: Please select one option
+        notBlank: Select one option
     howOftenDoYouWriteEmailOrLetter:
-        notBlank: Please select one option
+        notBlank: Select one option
     howOftenDoesClientSeeOtherPeople:
-        notBlank: Please select one option
+        notBlank: Select one option
     doesClientReceivePaidCare:
         notBlank: Choose Yes or No
     howIsCareFunded:
-        notBlank: Please select one option
+        notBlank: Select one option
     whoIsDoingTheCaring:
         notBlank: Give us more details about who is caring for the client
     whenWasCarePlanLastReviewed:
