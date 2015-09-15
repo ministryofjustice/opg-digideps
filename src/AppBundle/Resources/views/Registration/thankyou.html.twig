@@ -6,9 +6,9 @@
 
 {% block pageBody %}
 
-   <h3>{{ 'thankyou.subheading' | trans }}</h3>
-    <div class="page-section-description">
-        {{ 'thankyou.body' | trans }}
-    </div>
+    <h2 class="heading-medium-large">{{ 'thankyou.subheading' | trans }}</h2>
+
+    {{ bodyText |raw }}
+
     
 {% endblock %}

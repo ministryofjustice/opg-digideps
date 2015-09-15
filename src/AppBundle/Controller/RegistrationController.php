@@ -34,9 +34,20 @@ class RegistrationController extends Controller
 
                 $data = $form->getData();
 
-                //$this->get('apiclient')->postC('selfregister' , $data);
+                $this->get('apiclient')->postC('selfregister' , $data);
+
+                $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
+                $email = $data->getEmail();
+                $bodyText = str_replace("{{ email }}", $email, $bodyText);
                 
-                return $this->render('AppBundle:Registration:thankyou.html.twig');
+                
+                $signInText = $this->get('translator')->trans('signin', [], 'register');
+                $signIn = '<a href="' . $this->generateUrl("login") . '">' . $signInText . '</a>';
+                $bodyText = str_replace("{{ sign_in }}", $signIn, $bodyText);
+                
+                return $this->render('AppBundle:Registration:thankyou.html.twig',[
+                    'bodyText' => $bodyText
+                ]);
             }
         }
         return $this->render('AppBundle:Registration:register.html.twig', [ 'form' => $form->createView() ]);
