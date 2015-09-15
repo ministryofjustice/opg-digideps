@@ -1,5 +1,6 @@
 <?php
-namespace AppBundle\Mailer\Transport;
+namespace AppBundle\Service\Mailer\Transport;
+
 
 class TransportMockTest extends \PHPUnit_Framework_TestCase
 {

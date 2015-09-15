@@ -70,3 +70,6 @@ snc_redis:
             type: predis
             alias: default
             dsn: %redis_dsn%
+            
+twig:
+    cache:  true

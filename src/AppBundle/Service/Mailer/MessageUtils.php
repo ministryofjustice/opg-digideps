@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Mailer\Utils;
+namespace AppBundle\Service\Mailer;
 
 /**
  * \Swift_Message utils

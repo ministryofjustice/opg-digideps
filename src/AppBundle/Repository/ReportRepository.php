@@ -1,6 +1,8 @@
 <?php
 namespace AppBundle\Repository;
 
+use AppBundle\Entity as EntityDir;
+
 /**
  * ReportRepository
  *
@@ -9,5 +11,59 @@ namespace AppBundle\Repository;
  */
 class ReportRepository extends DDBaseRepository
 {
-    
+    /**
+     * Create new year's report copying data over (and set start/endDate accordingly)
+     * 
+     * @param EntityDir\Report $report
+     * 
+     * @return EntityDir\Report
+     */
+    public function createNextYearReport(EntityDir\Report $report)
+    {
+        //lets clone the report
+        $newReport = new EntityDir\Report();
+        $newReport->setClient($report->getClient());
+        $newReport->setCourtOrderType($report->getCourtOrderType());
+        $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
+        $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
+        $newReport->setReportSeen(false);
+        $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
+        
+        //lets clone the assets
+        $assets = $report->getAssets();
+        
+        foreach($assets as $asset){
+            $newAsset = new EntityDir\Asset();
+            $newAsset->setDescription($asset->getDescription());
+            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setValuationDate($asset->getValuationDate());
+            $newAsset->setValue($asset->getValue());
+            $newAsset->setReport($newReport);
+            
+            $this->_em->persist($newAsset);
+        }
+        
+        //lets clone accounts
+        $accounts = $report->getAccounts();
+        
+        foreach($accounts as $account){
+            $newAccount = new EntityDir\Account();
+            $newAccount->setBank($account->getBank());
+            $newAccount->setSortCode($account->getSortCode());
+            $newAccount->setAccountNumber($account->getAccountNumber());
+            $newAccount->setOpeningBalance($account->getClosingBalance());
+            $newAccount->setOpeningDate($account->getClosingDate());
+            $newAccount->setCreatedAt(new \DateTime());
+            $newAccount->setReport($newReport);
+
+            $this->_em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($newAccount);
+            
+            $this->_em->persist($newAccount);
+        }
+        // persist
+        $this->_em->persist($newReport);
+        $this->_em->flush();
+        
+        return $newReport;
+    }
 }

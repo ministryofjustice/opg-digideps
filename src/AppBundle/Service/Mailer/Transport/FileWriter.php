@@ -1,10 +1,10 @@
 <?php
-namespace AppBundle\Mailer\Transport;
+namespace AppBundle\Service\Mailer\Transport;
 
 use Swift_Transport;
 use Swift_Events_EventListener;
 use Swift_Mime_Message;
-use AppBundle\Mailer\Utils\MessageUtils;
+use AppBundle\Service\Mailer\MessageUtils;
 
 /**
  * Mock transport used for BDD testing

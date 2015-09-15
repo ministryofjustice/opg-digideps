@@ -48,6 +48,8 @@ class ReportController extends RestController
     }
     
     /**
+     * deprecated. only kept as a useful test for written for it.
+     * move the test to the repository method, then delete this
      * @Route("/report/clone")
      * @Method({"POST"})
      */
@@ -60,49 +62,8 @@ class ReportController extends RestController
         if(empty($report)){
             throw new \Exception("Report id: ".$reportData['id']." does not exists");
         }
-        //lets clone the report
-        $newReport = new EntityDir\Report();
-        $newReport->setClient($report->getClient());
-        $newReport->setCourtOrderType($report->getCourtOrderType());
-        $newReport->setStartDate($report->getEndDate()->modify('+1 day'));
-        $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
-        $newReport->setReportSeen(false);
-        $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
         
-        //lets clone the assets
-        $assets = $report->getAssets();
-        
-        foreach($assets as $asset){
-            $newAsset = new EntityDir\Asset();
-            $newAsset->setDescription($asset->getDescription());
-            $newAsset->setTitle($asset->getTitle());
-            $newAsset->setValuationDate($asset->getValuationDate());
-            $newAsset->setValue($asset->getValue());
-            $newAsset->setReport($newReport);
-            
-            $this->getEntityManager()->persist($newAsset);
-        }
-        
-        //lets clone accounts
-        $accounts = $report->getAccounts();
-        
-        foreach($accounts as $account){
-            $newAccount = new EntityDir\Account();
-            $newAccount->setBank($account->getBank());
-            $newAccount->setSortCode($account->getSortCode());
-            $newAccount->setAccountNumber($account->getAccountNumber());
-            $newAccount->setOpeningBalance($account->getClosingBalance());
-            $newAccount->setOpeningDate($account->getClosingDate());
-            $newAccount->setCreatedAt(new \DateTime());
-            $newAccount->setReport($newReport);
-
-            $this->getRepository('Account')->addEmptyTransactionsToAccount($newAccount);
-            
-            $this->getEntityManager()->persist($newAccount);
-        }
-        // persist
-        $this->getEntityManager()->persist($newReport);
-        $this->getEntityManager()->flush();
+        $newReport = $this->getRepository('Report')->createNextYearReport($report);
         
         return [ 'report' => $newReport->getId()] ;
     }
@@ -291,6 +252,42 @@ class ReportController extends RestController
     }
     
     /**
+     * @Route("/report/{id}/user/{userId}/submit")
+     * @Method({"PUT"})
+     */
+    public function submit($id, $userId)
+    { 
+        $currentReport = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $currentReport EntityDir\Report */
+        $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $currentReport EntityDir\Report */
+        $client = $currentReport->getClient();
+        $data = $this->deserializeBodyContent();
+        
+        if (empty($data['submit_date'])) {
+            throw new \InvalidArgumentException("Missing submit_date");
+        }
+        
+        $currentReport->setSubmitted(true);
+        $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
+            
+            
+        // send report if submitted
+        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId'=>$currentReport->getId(), 'isEmailAttachment'=>true])->getContent();
+        $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
+        $this->getMailSender()->send($reportEmail,[ 'html'], 'secure-smtp');
+
+        //lets create subsequent year's report
+        $nextYearReport = $this->getRepository('Report')->createNextYearReport($currentReport);
+
+        //send confirmation email
+        $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($user, $currentReport, $nextYearReport);
+        $this->getMailSender()->send($reportConfirmEmail, [ 'text', 'html']);
+
+        //response to pass back
+        return ['newReportId' =>  $nextYearReport->getId()];
+    }
+    
+    
+    /**
      * @Route("/report/{id}")
      * @Method({"PUT"})
      */
@@ -313,20 +310,12 @@ class ReportController extends RestController
             $report->setEndDate(new \DateTime($data['end_date']));
         }
         
-        if (array_key_exists('submitted', $data)) {
-            $report->setSubmitted((boolean)$data['submitted']);
-        }
-        
         if (array_key_exists('reviewed', $data)) {
             $report->setReviewed((boolean)$data['reviewed']);
         }
         
         if (array_key_exists('report_seen', $data)) {
             $report->setReportSeen((boolean)$data['report_seen']);
-        }
-        
-        if (array_key_exists('submit_date', $data)) {
-            $report->setSubmitDate(new \DateTime($data['submit_date']));
         }
         
         if (array_key_exists('reason_for_no_contacts', $data)) {

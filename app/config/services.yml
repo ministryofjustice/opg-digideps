@@ -9,8 +9,14 @@ services:
     em:
         alias: doctrine.orm.entity_manager    
     # pass it into Swift_Mailer to always write email into disk rather than sending them
+    mailSender:
+        class: AppBundle\Service\Mailer\MailSender
+        arguments: [ @service_container ]
+    mailFactory:
+        class: AppBundle\Service\Mailer\MailFactory
+        arguments: [ @service_container ]
     mailer.transport.fileWriter:
-        class: AppBundle\Mailer\Transport\FileWriter
+        class: AppBundle\Service\Mailer\Transport\FileWriter
         arguments: [ "/tmp/dd_mail_mock" ]
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport

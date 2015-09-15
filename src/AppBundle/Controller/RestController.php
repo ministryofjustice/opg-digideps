@@ -91,5 +91,24 @@ abstract class RestController extends Controller
     {
         RestInputOuputFormatter::addJmsSerialiserGroupToRequest($this->getRequest(), $group);
     }
+    
+    /**
+     * @return \AppBundle\Service\MailFactory
+     */
+    protected function getMailFactory()
+    {
+        return $this->get('mailFactory');
+    }
+    
+    
+    /**
+     * @return \AppBundle\Service\MailSender
+     */
+    protected function getMailSender()
+    {
+        return $this->get('mailSender');
+    }
+    
+    
    
 }

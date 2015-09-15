@@ -14,6 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class User implements AdvancedUserInterface
 {
+    const TOKEN_EXPIRE_HOURS = 48;
+    
     /**
      * @var integer
      * @JMS\Type("integer")

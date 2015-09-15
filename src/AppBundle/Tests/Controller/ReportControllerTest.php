@@ -66,7 +66,6 @@ class ReportControllerTest extends WebTestCase
         );
         
         $responseArray = json_decode($this->client->getResponse()->getContent(),true);
-        
         $reportId = $responseArray['data']['report'];
     
         $this->em->clear();

@@ -23,7 +23,7 @@ class UserControllerTest extends WebTestCase
     {
         // create user
          $this->client->request(
-            'POST', '/user', 
+            'POST', '/user?skip-mail=1', 
             array(), array(), 
             array('CONTENT_TYPE' => 'application/json'), 
             json_encode(array(
@@ -34,9 +34,7 @@ class UserControllerTest extends WebTestCase
         );
         $response =  $this->client->getResponse();
         $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type');
-//        echo $response->getContent();die;
         $return = json_decode($response->getContent(), true);
-//        print_r($return);die;
         $this->assertNotEmpty($return, 'Response not json');
         $this->assertTrue($return['success'], $return['message']);
         $this->assertArrayHasKey('message', $return);

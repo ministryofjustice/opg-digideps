@@ -1,5 +1,6 @@
 <?php
-namespace AppBundle\Mailer\Utils;
+namespace AppBundle\Service\Mailer;
+
 
 use \Mockery as m;
 
