@@ -124,6 +124,14 @@ Feature: deputy / report / submit
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-deputyshipservice@publicguardian.gsi.gov.uk"
+        And the second_last email "application/xml" part should contain the following:
+            | caseNumber | 123456ABC |
+            | ClientLastName | White |
+            | moneyInTotal |  3,250.00 | 
+            | moneyOutTotal | 7,500.50 |
+            | assetsTotal | 263,000.00 |
+            | statusString | Deputy agreed |
+            | statusDeputyName | John Doe |
         And I save the application status into "report-submit-post"
     
 
