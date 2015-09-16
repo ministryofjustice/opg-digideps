@@ -1,8 +1,9 @@
 Feature: deputy / report / edit accounts
 
-    @accounts @deputy
+    @deputy
     Scenario: Setup the test user
-      Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
+      Given I load the application status from "report-submit-pre"
+      And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
       When I create a new "Lay Deputy" user "Account" "Smith" with email "behat-account@publicguardian.gsi.gov.uk"
       And I activate the user with password "Abcd1234"
@@ -24,7 +25,7 @@ Feature: deputy / report / edit accounts
       And I reset the email log
       Then I save the application status into "accountuser"
       
-    @accounts @deputy
+    @deputy
     Scenario: change opening balance explanation
         When I load the application status from "accountuser"
         And I am logged in as "behat-account@publicguardian.gsi.gov.uk" with password "Abcd1234"

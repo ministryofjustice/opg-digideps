@@ -33,6 +33,7 @@ trait UserTrait
     public function iChangeTheUserToken($userId, $token)
     {
         $this->visitBehatLink("user/{$userId}/token/{$token}/token-date/-7days");
+        $this->assertResponseStatus(200);
     }
     
     /**

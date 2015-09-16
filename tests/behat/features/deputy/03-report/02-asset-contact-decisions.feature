@@ -3,7 +3,7 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: add contact
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the first report overview page
+        #And I am on the "2015" report overview page
         And I follow "edit-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
@@ -30,7 +30,7 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the first report overview page
+        #And I am on the "2015" report overview page
         And I follow "edit-decisions"
         And I save the page as "report-decision-empty"
         # form errors
@@ -63,7 +63,7 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the first report overview page
+        #And I am on the "2015" report overview page
         And I follow "edit-assets"
         And I save the page as "report-assets-empty"
         # wrong form

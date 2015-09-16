@@ -3,7 +3,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the first report overview page
+        #And I am on the "2015" report overview page
         And I follow "edit-accounts"
         And I save the page as "report-account-empty"
         # empty form
@@ -90,7 +90,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: edit 1st account (HSBC - main account) 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the account "8765" page of the first report
+        And I am on the account "8765" page of the "2015" report
         And I click on "edit-account-details"
         And I save the page as "report-account-edit-start"
         # assert fields are filled in from db correctly
@@ -197,7 +197,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: edit account with no default opening date
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I am on the account "9999" page of the first report
+      And I am on the account "9999" page of the "2015" report
       And I click on "edit-account-details"
       Then the following fields should have the corresponding values:
             | account_openingDate_day   | 01 |
@@ -219,7 +219,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: delete account 9999 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the first report
+        And I am on the accounts page of the "2015" report
         When I click on "account-9999"
         And I click on "edit-account-details"
         # delete and cancel
@@ -235,7 +235,7 @@ Feature: deputy / report / account
         Given I save the application status into "report-no-totals"
         Given I set the report 1 end date to 3 days ago
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the first report
+        And I am on the accounts page of the "2015" report
         Then I should not see the "account-closing-balance-form" region
         Then I load the application status from "report-no-totals"
     
