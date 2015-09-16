@@ -9,5 +9,6 @@ keys = [
     "/security",
     "/email",
     "/email_settings",
-    "/redis"
+    "/redis",
+    "/url"
 ]

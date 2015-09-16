@@ -32,8 +32,8 @@ parameters:
         to_email: {{ getv "/email/feedback/to" }}
     email:
       base_url:
-        frontend: http://digideps-client.local
-        admin: http://digideps-admin.local
+        frontend:  {{ getv "/url/frontend" }}
+        admin:  {{ getv "/url/admin" }}
       routes:
         user_activate:  /user/activate/{token}
         password_reset:  /user/password-reset/{token}
