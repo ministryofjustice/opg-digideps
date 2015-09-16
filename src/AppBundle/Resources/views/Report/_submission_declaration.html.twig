@@ -1,0 +1,27 @@
+{% set translationDomain = "report-declaration" %}
+{% trans_default_domain translationDomain %}
+
+<div class="external-report-section external-report-section-declaration">
+
+    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: "report-declaration",
+        pageSectionTitle: 'page.pageSectionTitle'
+    } %}
+
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: "report-declaration",
+        pageSectionDescription: 'page.pageSectionDescription',
+        transOptions: {'%separator%': '<br/><br/>'}
+    } %}
+
+    <div class="item">
+        <dl class="item-data item-data-fixed">
+            <dt class="item-label">{{ 'status' | trans() }}</dt>
+            <dd class="item-value" id="statusString">{{ 'deputyAgreed' | trans() }}</dd>
+            <dt class="item-label">{{ 'declarationTime' | trans() }}</dt>
+            <dd class="item-value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
+            <dt class="item-label">{{ 'deputyName' | trans() }}</dt>
+            <dd class="item-value" id="statusDeputyName">{{ deputy.fullname }}</dd>
+        </dl>
+    </div>
+</div>

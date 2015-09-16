@@ -77,6 +77,16 @@ class AccountTransaction
         $this->amount = $amount;
     }
     
+     /**
+     * added for compatibility with formatted report partials from CLIENT
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->getTransactionType()->getId();
+    }
+
+    
     public function getAccount()
     {
         return $this->account;
