@@ -45,3 +45,9 @@ services:
             - "@fos_oauth_server.access_token_manager.default"
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    componentsExtension:
+        class: AppBundle\Twig\ComponentsExtension
+        public: false
+        arguments: [  @translator ]
+        tags:
+            - { name: twig.extension }

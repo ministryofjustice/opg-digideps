@@ -600,6 +600,33 @@ class Report implements UserFilterInterface
     {
         return $this->assets;
     }
+    
+    
+    /**
+     * Get array of assets grouped by title
+     *
+     * @return array of Asset[]
+     */
+    public function getAssetsGroupedByTitle()
+    {
+        $ret = array();
+        
+        foreach ($this->getAssets() as $asset) {
+        
+            $type = $asset->getTitle();
+        
+            if (isset($ret[$type])) {
+                $ret[$type][] = $asset;
+            } else {
+                $ret[$type] = array($asset);
+            }
+        }
+    
+        // sort the assets by their type now.
+        ksort($ret);
+    
+        return $ret;
+    }
 
     public function getAssetIds()
     {

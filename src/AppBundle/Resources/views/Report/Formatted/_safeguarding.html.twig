@@ -1,0 +1,183 @@
+<div class="section" id="safeguarding-section">
+    <h2>
+        <span class="section-number">Section 4</span>
+        Safeguarding
+    </h2>
+    <h3 class="fieldset-outer-title">Contact with client</h3>
+    <fieldset id="safeguarding-contact">
+        <div id="do-you-live-with-the-client" class="checkboxes horizontal">
+            <div class="question">Do you live with the client?</div>
+
+            <table class="yesno">
+                <tr>
+                    <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if safeguarding.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Yes</div>
+                    <td class="checkbox" data-checkbox="do-you-live-with-the-client--no">{% if safeguarding.doYouLiveWithClient == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
+
+        </div>
+
+{% if safeguarding.doYouLiveWithClient == 'no' %}
+        <div class="intro">If ‘No’, how often do you or other deputies contact the client?</div>
+        <table id="safeguarding-visits-subsection">
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Visits</th>
+                    <th>Phone and video calls</th>
+                    <th>Letters and emails</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>Every Day</th>
+                    <td><div class="checkbox" data-checkbox="visits--every-day">{% if safeguarding.howOftenDoYouVisit == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--every-day">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--every-day">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>At least once a week</th>
+                    <td><div class="checkbox" data-checkbox="visits--at-least-once-a-week">{% if safeguarding.howOftenDoYouVisit == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--at-least-once-a-week">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--at-least-once-a-week">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>At least once a month</th>
+                    <td><div class="checkbox" data-checkbox="visits--at-least-once-a-month">{% if safeguarding.howOftenDoYouVisit == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--at-least-once-a-month">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--at-least-once-a-month">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>More than twice a year</th>
+                    <td><div class="checkbox" data-checkbox="visits--more-than-twice-a-year">{% if safeguarding.howOftenDoYouVisit == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--more-than-twice-a-year">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--more-than-twice-a-year">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>Once a year</th>
+                    <td><div class="checkbox" data-checkbox="visits--once-a-year">{% if safeguarding.howOftenDoYouVisit == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--once-a-year">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--once-a-year">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+                <tr>
+                    <th>Less than once a year</th>
+                    <td><div class="checkbox" data-checkbox="visits--less-than-once-a-year">{% if safeguarding.howOftenDoYouVisit == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--less-than-once-a-year">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                    <td><div class="checkbox" data-checkbox="letters-and-emails--less-than-once-a-year">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </fieldset>
+
+    <fieldset id="safeguarding-visitors-subsection">
+        <div class="checkboxes horizontal">
+            <div class="question">How often does the client see other people</div>
+            <table>
+                <tr>
+                    <td>
+                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--every-day">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'everyday' %}X{% else %}&nbsp;{% endif %}</div>
+                    </td>
+                    <td  class="label">Every day</td>
+                    <td>
+                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--at-least-once-a-week">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'once_a_week' %}X{% else %}&nbsp;{% endif %}</div>
+                    </td>
+                    <td  class="label">At least once a week</td>
+                    <td>
+                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--at-least-once-a-month">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'once_a_month' %}X{% else %}&nbsp;{% endif %}</div>
+                    </td>
+                    <td class="label">At least once a month</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--more-than-twice-a-year">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'more_than_twice_a_year' %}X{% else %}&nbsp;{% endif %}</div>
+                    </td>
+                    <td class="label">More than twice a year</td>
+                    <td>
+                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--once-a-year">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'once_a_year' %}X{% else %}&nbsp;{% endif %}</div>
+                    </td>
+                    <td class="label">Once a year</td>
+                    <td>
+                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--less-than-once-a-year">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'less_than_once_a_year' %}X{% else %}&nbsp;{% endif %}</div>
+                    </td>
+                    <td class="label">Less than once a year</td>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+
+    <fieldset id="safeguarding-furtherinfo-subsection">
+        <div class="form-group form-group-vertical">
+            <div class="label intro">Is there anything else you want to tell us? (optional)</div>
+            <div class="textarea safeguarding-furtherinfo-field">{{safeguarding.anythingElseToTell}}</div>
+        </div>
+
+{% endif %}
+    </fieldset>
+
+    <h3 class="fieldset-outer-title">Care arrangements</h3>
+    <fieldset id="care-arrangements-subsection">
+
+        <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
+            <div class="question">Does the client receive care which is paid for?</div>
+
+            <table class="yesno">
+                <tr>
+                    <td class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--yes">{% if safeguarding.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">Yes</td>
+                    <td class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--no">{% if safeguarding.doesClientReceivePaidCare == 'no' %}X{% else %}&nbsp;{% endif %}</td>
+                    <td class="label">No</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="checkboxes horizontal" id="safeguarding-care-funding">
+            <div class="label intro">If yes, how is the care funded?</div>
+            <div class="form-group right-label">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="checkbox" data-checkbox="how-is-care-funded--client-pays-for-all-their-own-care">{% if safeguarding.doesClientReceivePaidCare == 'yes' and safeguarding.howIsCareFunded == 'client_pays_for_all' %}X{% else %}&nbsp;{% endif %}</div>
+                        </td>
+                        <td class="label">Client pays for all their own care</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox" data-checkbox="how-is-care-funded--client-gets-financial-help">{% if safeguarding.doesClientReceivePaidCare == 'yes' and safeguarding.howIsCareFunded == 'client_gets_financial_help' %}X{% else %}&nbsp;{% endif %}</div>
+                        </td>
+                        <td class="label">Client gets some financial help (for example, from the local authority or council, or NHS)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="checkbox" data-checkbox="how-is-care-funded--all-care-is-paid-by-someone-else">{% if safeguarding.doesClientReceivePaidCare == 'yes' and safeguarding.howIsCareFunded == 'all_care_is_paid_by_someone_else' %}X{% else %}&nbsp;{% endif %}</div>
+                        </td>
+                        <td class="label">All care is paid for by someone else (for example, by the local authority or council, or NHS)</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group form-group-vertical">
+            <div class="question">Who is doing the caring?</div>
+            <div class="textarea">{{ safeguarding.whoIsDoingTheCaring }}</div>
+        </div>
+
+    </fieldset>
+
+    <fieldset id="care-plan-subsection">
+        <div class="checkboxes horizontal">
+            <div class="question">If there is a care plan, when was it last reviewed?</div>
+            <div class="form-group form-group-vertical two-thirds-width">
+                <div class="value" id="safeguarding-last-review-date">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</div>
+                <div class="label">Review date</div>
+            </div>
+            <div class="form-group right-label one-third-width">
+                <div class="checkbox" data-checkbox="there-is-no-care-plan">
+                        {% if safeguarding.doesClientHaveACarePlan == 'no' %}X{% else %}&nbsp;{% endif %}</div>
+                <div class="label">There is no care plan</div>
+            </div>
+    </fieldset>
+
+
+</div>

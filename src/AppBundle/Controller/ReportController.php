@@ -271,7 +271,8 @@ class ReportController extends RestController
             
             
         // send report if submitted
-        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId'=>$currentReport->getId(), 'isEmailAttachment'=>true])->getContent();
+        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId'=>$currentReport->getId()])->getContent();
+        
         $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
         $this->getMailSender()->send($reportEmail,[ 'html'], 'secure-smtp');
 
@@ -284,6 +285,25 @@ class ReportController extends RestController
 
         //response to pass back
         return ['newReportId' =>  $nextYearReport->getId()];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/formatted")
+     */
+    public function formattedAction($reportId)
+    {
+        $report = $this->getRepository('Report')->find($reportId); /*@var $report EntityDir\Report */
+        
+        return $this->render('AppBundle:Report:formatted.html.twig', [
+            'report' => $report,
+            'client' =>  $report->getClient(),
+            'assets' => $report->getAssets(),
+            'groupAssets' => $report->getAssetsGroupedByTitle(),
+            'contacts' => $report->getContacts(),
+            'decisions' => $report->getDecisions(),
+            'isEmailAttachment' => true,
+            'deputy' => $report->getClient()->getUsers()->first(),
+        ]);
     }
     
     
