@@ -5,7 +5,7 @@ Feature: deputy / password reset
       Given I save the application status into "reset-password-start"
       And I reset the email log
       And I go to "/logout"
-      And I go to "/"
+      And I go to "/login"
       And I save the page as "forgotten-password-login"
       When I click on "forgotten-password"
       And I save the page as "forgotten-password"
@@ -24,7 +24,7 @@ Feature: deputy / password reset
       And I click on "return-to-login"
       And no email should have been sent
       # existing email (email is now sent)
-      When I go to "/" 
+      When I go to "/login" 
       And I click on "forgotten-password"
       And I fill in "password_forgotten_email" with "behat-user@publicguardian.gsi.gov.uk"
       And I press "password_forgotten_submit"

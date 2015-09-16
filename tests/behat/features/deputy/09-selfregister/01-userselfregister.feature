@@ -12,5 +12,5 @@ Feature: User Self Registration
         And I press "self_registration_save"
         Then I should see "Please check your email"
         And I should see "We've sent you a link to zac@thetolleys.com"
-        And There should be a lay deputy account with id "zac@thetolleys.com awaiting activation
+        And There should be a lay deputy account with id "zac@thetolleys.com" awaiting activation
         

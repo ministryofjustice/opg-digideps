@@ -1,6 +1,6 @@
 Feature: deputy / report / Formatted Report
 
-    @deputy @wip
+    @deputy
     Scenario: The opg report should contain all the required sections
         When I load the application status from "report-submit-post"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"

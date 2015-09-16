@@ -112,5 +112,15 @@ trait UserTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
-    
+
+    /**
+     * @Then There should be a lay deputy account with id :userid awaiting activation
+     */
+    public function thereShouldBeAwaitingActivation($userid)
+    {
+        throw new PendingException();
+        // Login to admin
+        // The Find the line that has this user
+        // confirm the type is lay deputy
+    }
 }
