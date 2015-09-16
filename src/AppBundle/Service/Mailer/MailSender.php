@@ -128,7 +128,7 @@ class MailSender
 
         return preg_match($this->addressToMockRegexp, $emailAddress);
     }
-
+    
     /**
      * @param Swift_Mime_Message $swiftMessage
      * 
@@ -170,6 +170,17 @@ class MailSender
         }
         
         return $ret;
+    }
+    
+    /**
+     * For debuggin purposes
+     * 
+     * @param string $file file path
+     * @param Swift_Message $swiftMessage
+     */
+    private function logEmailToDisk($file, Swift_Message $swiftMessage)
+    {
+        file_put_contents($file,  MessageUtils::messageToString($swiftMessage));
     }
 
 }
