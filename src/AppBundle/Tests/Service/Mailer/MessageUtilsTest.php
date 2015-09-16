@@ -45,4 +45,31 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $message->getChildren()[0]->getContentType());
     }
     
+    public function testarrayToString()
+    {
+        $message = $this->getMockForAbstractClass('\Swift_Mime_Message', array('getSubject'));
+        
+        $child1 = $this->getMock('stdClass', array('getBody', 'getContentType'));
+        $child1->expects($this->once())->method('getBody')->will($this->returnValue('<b>test</b>'));
+        $child1->expects($this->once())->method('getContentType')->will($this->returnValue('text/html'));
+        
+        $child2 = $this->getMock('stdClass', array('getBody', 'getContentType'));
+        $child2->expects($this->once())->method('getBody')->will($this->returnValue('testPlain'));
+        $child2->expects($this->once())->method('getContentType')->will($this->returnValue('text/plain'));
+        
+        $message->expects($this->once())
+                ->method('getSubject')
+                ->will($this->returnValue('subject1'));
+        
+        $message->expects($this->once())
+                ->method('getChildren')
+                ->will($this->returnValue([$child1, $child2]));
+                
+        $messageString = MessageUtils::messageToString($message);
+        
+        $this->assertContains('subject1', $messageString);
+        $this->assertContains('<b>test</b>', $messageString);
+        $this->assertContains('testPlain', $messageString);
+    }
+    
 }

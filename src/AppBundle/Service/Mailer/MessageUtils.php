@@ -68,4 +68,31 @@ class MessageUtils
         return $message;
     }
     
+    
+    /**
+     * @param Swift_Mime_Message $message
+     *
+     * @return string
+     */
+    public static function messageToString(\Swift_Mime_Message $message)
+    {
+        $ret = '';
+        foreach (self::$fieldsToSerialize as $field) {
+            $method = "get".ucfirst($field);
+            $ret .= sprintf("%s: %s\n", $field, $message->$method());
+        }
+        
+        // add parts
+        foreach ($message->getChildren() as $k => $child) {
+            $ret .= sprintf("PART $k -----\n Body: %s\n ContentType:%s\n",
+                $child->getBody(),
+                $child->getContentType()
+            );
+        }
+        
+        $ret .= "--------------------------\n";
+        
+        return $ret;
+    }
+    
 }
