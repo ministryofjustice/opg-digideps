@@ -18,7 +18,7 @@
                 {{ footerTitle | trans }}
             {% endif %}
         </dt>
-        <dd class="financial-transactions-total-value">
+        <dd class="financial-transactions-total-value" id="{{ moneyType }}Total">
             {% if footerTotalPrefix is defined %}{{ footerTotalPrefix | trans }}{% endif %}
             {{ 'currencySymbol' | trans }}
             {{ total | number_format(2, '.', ',') }}

@@ -33,7 +33,8 @@
             {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
                 transactions: account.moneyIn,
                 total: account.moneyInTotal,
-                footerTitle: 'moneyInFooter'
+                footerTitle: 'moneyInFooter',
+                moneyType: "moneyIn"
             } %}                        
         </fieldset>
         
@@ -42,7 +43,8 @@
             {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
                 transactions: account.moneyOut,
                 total: account.moneyOutTotal,
-                footerTitle: 'moneyOutFooter'
+                footerTitle: 'moneyOutFooter',
+                moneyType: "moneyOut"
             } %}
         </fieldset>
 
@@ -57,7 +59,7 @@
                 </div>
                 <div class="transaction-value">
                     <span class="currency">£</span>
-                    <span class="balancing-opening-balance" class="amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
+                    <span class="balancing-opening-balance amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
                 </div>
                 <div class="box-right">Box 1</div>
             </li>
@@ -67,7 +69,7 @@
                 </div>
                 <div class="transaction-value">
                     <span class="currency">£</span>
-                    <span class="balancing-total-in" class="amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
+                    <span class="balancing-total-in amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
                 </div>
                 <div class="box-right">Box 2</div>
             </li>
@@ -78,7 +80,7 @@
                 </div>
                 <div class="transaction-value">
                     <span class="currency">£</span>
-                    <span class="balancing-sub-total" class="amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
+                    <span class="balancing-sub-total amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
                 </div>
                 <div class="box-right">Box 3</div>
             </li>
@@ -88,7 +90,7 @@
                 </div>
                 <div class="transaction-value">
                     <span class="currency">£</span>
-                    <span class="balancing-total-out" class="amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
+                    <span class="balancing-total-out amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
                 </div>
                 <div class="box-right">Box 4</div>
             </li>
@@ -99,7 +101,7 @@
                 </div>
                 <div class="transaction-value">
                     <span class="currency">£</span>
-                    <span class="balancing-sub-total-2" class="amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
+                    <span class="balancing-sub-total-2 amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
                 </div>
                 <div class="box-right">Box 5</div>
             </li>
@@ -110,7 +112,7 @@
                 </div>
                 <div class="transaction-value">
                     <span class="currency">£</span>
-                    <span class="balancing-closing-balance" class="amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
+                    <span class="balancing-closing-balance amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
                 </div>
                 <div class="box-right">Box 6</div>
             </li>

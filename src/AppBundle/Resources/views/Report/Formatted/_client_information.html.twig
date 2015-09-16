@@ -5,7 +5,7 @@
     </h2>            
     <fieldset class="single-field-fieldset three-quarter-width" id="case-number">
         <div class="label left-label">Case number</div>
-        <div class="value right-value">{{ client.getCaseNumber }}</div>
+        <div class="value right-value" id="caseNumber">{{ client.getCaseNumber }}</div>
     </fieldset>
     <fieldset class="case-number-subsection three-quarter-width">
         <h3>Reporting period</h3>
@@ -58,7 +58,7 @@
         
         <div class="form-group form-group-vertical">
             <div class="label">Last name</div>
-            <div class="value">{{ client.lastname }}</div>
+            <div class="value" id="ClientLastName">{{ client.lastname }}</div>
         </div>
         
         <div class="form-group form-group-vertical">
