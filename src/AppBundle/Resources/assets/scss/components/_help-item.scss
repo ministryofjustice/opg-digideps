@@ -12,7 +12,11 @@
     }
     
     &.closed .summary {
-        background-position: 0 -30px;
-    }   
+        background-position: 0 -80px;
+    }
+    
+    .content {
+        margin-left: 30px;
+    }
 }
 

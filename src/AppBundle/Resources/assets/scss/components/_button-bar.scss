@@ -1,7 +1,6 @@
 .button-bar {  
     margin-top: 10px;  
     margin-bottom: 10px;
-    @include core-19();
     
     &.add-bar{  
         margin-left: 50%;
@@ -17,4 +16,8 @@
     background-color: $grey-3;
     @include core-19();
     
+}
+
+.button {
+    @include core-19();
 }

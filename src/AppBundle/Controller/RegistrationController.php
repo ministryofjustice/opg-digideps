@@ -19,7 +19,7 @@ class RegistrationController extends Controller
 {
     
     /**
-     * @Route("", name="registration")
+     * @Route("", name="register")
      */
     public function registrationAction()
     {
