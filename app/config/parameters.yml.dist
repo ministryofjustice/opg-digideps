@@ -26,9 +26,6 @@ parameters:
         password: Abcd1234
         roleId: 2
         activated: true
-    oauth2_client_id: setme
-    oauth2_client_secret: setme
-    oauth2_enabled: false # if set to true, at lease one of use_redis or use_memcached must also be true and anonymous on api application must be set to false
     redis_dsn: redis://localhost
     use_redis: true
     session_prefix: application_session
