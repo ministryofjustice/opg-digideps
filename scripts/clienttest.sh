@@ -6,8 +6,8 @@ chown app:app /tmp/behat
 
 cd /app
 /sbin/setuser app mkdir -p /tmp/behat
-apt-get update > /dev/null 2>&1
-apt-get install postgresql -y > /dev/null 2>&1
+apt-get update
+apt-get install postgresql-common postgresql -y
 export PGHOST=postgres
 export PGPASSWORD=api
 export PGDATABASE=api

@@ -12,5 +12,9 @@ Feature: User Self Registration
         And I press "self_registration_save"
         Then I should see "Please check your email"
         And I should see "We've sent you a link to zac@thetolleys.com"
-        And There should be a lay deputy account with id "zac@thetolleys.com" awaiting activation
-        
+        Then I am on admin login page
+        And I fill in the following:
+            | login_email     | admin@publicguardian.gsi.gov.uk |
+            | login_password  | Abcd1234 |
+        Then I click on "login"
+        Then I should see "zac@thetolleys.com" in the "users" region

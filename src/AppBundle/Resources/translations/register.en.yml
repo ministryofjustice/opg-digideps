@@ -21,7 +21,7 @@ save:
 thankyou:
     subheading: Please check your email
     body: |
-        <p class="page-section-description">We've send you a link to <b>{{ email }}</b> that you need to click to activate your deputy service account</p>
+        <p class="page-section-description">We've sent you a link to <b>{{ email }}</b> that you need to click to activate your deputy service account</p>
         <p class="page-section-description">You'll need to use this link within 24 hours, or enter your details again.</p>
         <p class="page-section-description">If you haven't received the email within a few minutes, please check your spam, bulk or 
             junk email folder - it may have been mistakenly blocked by your email system.</p>

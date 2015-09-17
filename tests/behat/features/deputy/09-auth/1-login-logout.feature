@@ -1,6 +1,6 @@
 Feature: deputy / login and logout functionalities
     
-    @deputy @wip
+    @deputy
     Scenario: test login goes to previous page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to the homepage
