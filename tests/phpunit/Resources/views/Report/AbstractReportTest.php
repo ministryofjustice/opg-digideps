@@ -110,7 +110,7 @@ class AbstractReportTest extends WebTestCase
             ->shouldReceive('getAddress2')->andReturn('Chawridge Lane')
             ->shouldReceive('getCounty')->andReturn('Berkshire')
             ->shouldReceive('getPostcode')->andReturn('SL4 4QR')
-            ->shouldReceive('getPhone')->andReturn('07814 013561')
+            ->shouldReceive('getPhone')->andReturn('07814 011111')
             ->getMock();
     }
 
@@ -124,8 +124,8 @@ class AbstractReportTest extends WebTestCase
             ->shouldReceive('getAddress2')->andReturn('Chawridge Lane')
             ->shouldReceive('getAddress3')->andReturn('Berkshire')
             ->shouldReceive('getAddressPostcode')->andReturn('SL4 4QR')
-            ->shouldReceive('getPhoneMain')->andReturn('07814 013561')
-            ->shouldReceive('getEmail')->andReturn('zac@thetolleys.com')
+            ->shouldReceive('getPhoneMain')->andReturn('07814 011111')
+            ->shouldReceive('getEmail')->andReturn('behat-zac.tolley@digital.justice.gov.uk')
             ->getMock();
     }
 

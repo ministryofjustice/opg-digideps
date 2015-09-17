@@ -59,10 +59,10 @@ class ClientInformationTest extends AbstractReportTest
         $this->assertContains('Chawridge Lane', $deputy);
         $this->assertContains('Berkshire', $deputy);
         $this->assertContains('SL4 4QR', $deputy);
-        $this->assertContains('07814 013561', $deputy);
+        $this->assertContains('07814 011111', $deputy);
 
         $email = $crawler->filter('#deputy-email')->eq(0)->text();
-        $this->assertContains('zac@thetolleys.com', $email);
+        $this->assertContains('behat-zac.tolley@digital.justice.gov.uk', $email);
 
 
     }
@@ -79,7 +79,7 @@ class ClientInformationTest extends AbstractReportTest
             ->shouldReceive('getAddress1')->andReturn('Blackthorn Cottage')
             ->shouldReceive('getAddress3')->andReturn('Berkshire')
             ->shouldReceive('getAddressPostcode')->andReturn('SL4 4QR')
-            ->shouldReceive('getEmail')->andReturn('zac@thetolleys.com')
+            ->shouldReceive('getEmail')->andReturn('behat-zac.tolley@digital.justice.gov.uk')
             ->getMock();
 
         $html = $this->twig->render($this->templateName, [
@@ -99,7 +99,7 @@ class ClientInformationTest extends AbstractReportTest
         $this->assertContains('SL4 4QR', $deputy);
 
         $email = $crawler->filter('#deputy-email')->eq(0)->text();
-        $this->assertContains('zac@thetolleys.com', $email);
+        $this->assertContains('behat-zac.tolley@digital.justice.gov.uk', $email);
     }
 
     public function testShowClientInformation()
@@ -125,7 +125,7 @@ class ClientInformationTest extends AbstractReportTest
         $this->assertContains('Chawridge Lane', $client);
         $this->assertContains('Berkshire', $client);
         $this->assertContains('SL4 4QR', $client);
-        $this->assertContains('07814 013561', $client);
+        $this->assertContains('07814 011111', $client);
 
     }
 
