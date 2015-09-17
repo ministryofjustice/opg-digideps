@@ -8,7 +8,6 @@ keys = [
     "/ga",
     "/secret",
     "/api",
-    "/email",
     "/oauth2",
     "/fixtures",
     "/nonadmin"

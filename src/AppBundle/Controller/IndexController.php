@@ -214,8 +214,9 @@ class IndexController extends Controller
             
             if($form->isValid()){
                 
-                $feedbackEmail = $this->get('mailFactory')->createFeedbackEmail($form->getData());
-                $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+                $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+                
+                $apiClient->postC('/feedback', $form->getData());
                 
                 return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
             }

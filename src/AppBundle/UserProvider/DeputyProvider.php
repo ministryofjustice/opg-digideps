@@ -40,11 +40,11 @@ class DeputyProvider implements UserProviderInterface
             $apiclient = $this->container->get('apiclient');
             
             if($this->env == 'admin'){
-                return $apiclient->getEntity('User', 'find_admin_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+                return $apiclient->getEntity('User', 'user/get-admin-by-email/' . $email);
             } elseif(in_array($this->env,[ 'develop','staging','ci','prod'])){
-                return $apiclient->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+                return $apiclient->getEntity('User', 'user/get-user-by-email/' . $email);
             } else{
-                return $apiclient->getEntity('User', 'find_by_email', [ 'parameters' => [ 'email' => $email ] ]);
+                return $apiclient->getEntity('User', 'user/get-by-email/' . $email);
             }
         } catch (\Exception $e) {
             throw new UsernameNotFoundException("We can't log you in at this time.");

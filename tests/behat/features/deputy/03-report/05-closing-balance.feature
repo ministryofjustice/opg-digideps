@@ -5,7 +5,7 @@ Feature: deputy / report / closing balance
     Scenario: edit bank account, check edit account does not show closing balance
         Given I set the report 1 end date to 3 days ahead
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the account "1234" page of the first report
+        And I am on the account "1234" page of the "2015" report
         And I click on "edit-account-details"
         #TODO
 
@@ -13,10 +13,10 @@ Feature: deputy / report / closing balance
     Scenario: add closing balance to account
         Given I set the report 1 end date to 3 days ahead
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the first report
+        And I am on the accounts page of the "2015" report
         Then I should not see the "account-1-add-closing-balance" link
         When I set the report 1 end date to 3 days ago
-        And I am on the accounts page of the first report
+        And I am on the accounts page of the "2015" report
         Then I should see the "account-1234-warning" region
         And I save the page as "report-account-closing-balance-overview"
         When I click on "account-1234"
@@ -143,7 +143,7 @@ Feature: deputy / report / closing balance
     @deputy
       Scenario: edit closing balance
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the account "1234" page of the first report
+        And I am on the account "1234" page of the "2015" report
         And I click on "edit-account-details"
         Then I save the page as "report-account-edit-after-closing"
         Then the field "account_closingDate_day" has value of "30 days ahead, DD"

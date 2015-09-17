@@ -155,7 +155,7 @@ Feature: deputy / user / add client and report
         And I should see the "edit-client-details" link
         And I should see "123456ABC" in the "case-number" region
         And I should see "1 South Parade" in the "client-address" region
-        And I should see the "report-n1" link
+        And I should see the "report-2015" link
         And I should not see the "create-new-report" link
         And I save the page as "deputy-client-home"
         
@@ -168,6 +168,6 @@ Feature: deputy / user / add client and report
     @deputy
     Scenario: report-overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-n1"
+        Given I am on client home "client-home" and I click first report "report-2015"
         Then the URL should match "report/\d+/overview"
         And I save the page as "deputy-report-overview"

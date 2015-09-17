@@ -54,17 +54,18 @@ class AddUserCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
                 continue;
             }
 
-            // add user
-            $response = $apiClient->postC('add_user', $user, [
+            // add user (skip email sending)
+            $response = $apiClient->postC('/user?skip-mail=1', $user, [
                 'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
             ]);
             if ($data['activated']) {
                 // refresh from aPI
                 $user = $apiClient->getEntity('User', 'user/' . $response['id']);
                 // set password and activate
-                $response = $apiClient->putC('user/' . $user->getId(), json_encode([
+                $response = $apiClient->putC('user/' . $user->getId() . '/set-password', json_encode([
                     'password' => $this->encodePassword($user, $data['password']),
-                    'active' => true
+                    'set_active' => true,
+                    'send_reminder_email' => false
                 ]));
             }
 
@@ -76,7 +77,7 @@ class AddUserCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAw
     {
         $apiClient = $this->getContainer()->get('apiclient'); /* @var $apiClient ApiClient */
         try {
-            $apiClient->getEntity('User', 'find_by_email', [ 'parameters' => [ 'email' => $email]]);
+            $apiClient->getEntity('User', 'user/get-by-email/' . $email);
             return true;
         } catch (\Exception $e) {
             return false;
