@@ -15,7 +15,7 @@ export PGUSER=api
 rm -rf app/cache/*
 suitename=${1:-deputy}
 
-/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/ --testdox
+/sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/
 
 if [ -f tests/behat/behat.yml ]; then
     behatConfigFile=tests/behat/behat.yml
