@@ -31,20 +31,8 @@ services:
     userprovider:
         class: AppBundle\UserProvider\UserProvider
         arguments: [@doctrine.orm.entity_manager]
-    granttype.apikey:
-        class: AppBundle\OAuth\ApiKeyGrantExtension
-        arguments: [ @doctrine.orm.entity_manager ]
-        tags:
-            - { name: fos_oauth_server.grant_extension, uri: http://digideps.local }
     user.query.filter:
         class: AppBundle\Service\UserQueryFilter
-    app.doctrine.filter.configurator:
-        class: AppBundle\Filter\Configurator
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@fos_oauth_server.access_token_manager.default"
-        tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     componentsExtension:
         class: AppBundle\Twig\ComponentsExtension
         public: false

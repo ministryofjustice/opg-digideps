@@ -23,17 +23,7 @@ abstract class RestController extends Controller
     
     protected function getRepository($entityClass)
     {
-        $session = $this->container->get('session');
-        $user = $session->has('currentUser')? $session->get('currentUser') : null;
-        $entityRepository = $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\' . $entityClass);
-        $interfacesImplemented = class_implements($entityRepository->getClassName());
-       
-        if(!empty($user) && in_array('AppBundle\Filter\UserFilterInterface',$interfacesImplemented) && !$this->container->getParameter('anonymous')){
-                $userFilterService = $this->container->get('user.query.filter');
-                $userFilterService->setUser($user);
-                $entityRepository->setQueryFilter($userFilterService);
-        }
-        return $entityRepository;
+        return $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\' . $entityClass);
     }
     
     /**

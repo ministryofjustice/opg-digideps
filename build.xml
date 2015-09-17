@@ -71,12 +71,6 @@
         <exec command="php app/console doctrine:migrations:migrate ${dbversion} --no-interaction" checkreturn="false" passthru="true" level="info"></exec>
     </target>
     
-    <target name="add-oauth2-client">
-        <echo msg="Adding OAuth2 client"></echo>
-        <exec command='app/console digideps:oauth-server:create-client --redirect-uri="http://no-redirect.com" --grant-type="client_credentials" --grant-type="refresh_token" --grant-type="token" --grant-type="http://digideps.local"' checkreturn="false" passthru="true" level="info"></exec>
-        <echo msg="Please make a note of your pubic_id and secret as you need to add them to your client application parameters.yml"></echo>
-    </target>
-    
     <target name="behat" depends="db-reset,db-migrate">
     </target>
     

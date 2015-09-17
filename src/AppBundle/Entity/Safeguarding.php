@@ -3,7 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Filter\UserFilterInterface;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -11,9 +11,9 @@ use Doctrine\ORM\QueryBuilder;
  * @JMS\XmlRoot("safeguarding")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="safeguarding")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ReportRepository")
+ * @ORM\Entity
  */
-class Safeguarding implements UserFilterInterface
+class Safeguarding 
 {
     /**
      * @var integer
@@ -423,21 +423,5 @@ class Safeguarding implements UserFilterInterface
         return $this->howIsCareFunded;
     }
 
-
-    /**
-     * Filter every query run on report entity by user
-     *
-     * @param QueryBuilder $qb
-     * @param integer $userId
-     * @return QueryBuilder
-     */
-    public static function applyUserFilter(QueryBuilder $qb,$userId)
-    {
-        $alias = $qb->getRootAliases()[0];
-        $qb->join($alias.'.report ', 'r')->join('r.client','c');
-        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
-
-        return $qb;
-    }
 
 }

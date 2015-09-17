@@ -27,9 +27,8 @@
         "phpunit/phpunit": "4.4.*",
         "mockery/mockery": "*",
         "sendgrid/sendgrid": "2.2.1",
-        "friendsofsymfony/oauth-server-bundle": "dev-master",
-        "snc/redis-bundle": "1.1.*",
-        "predis/predis": "dev-master"
+        "snc/redis-bundle": "^1.1",
+        "predis/predis": "1.0.3"
     },
     "scripts": {
         "post-install-cmd": [

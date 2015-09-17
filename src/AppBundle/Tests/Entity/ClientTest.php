@@ -33,15 +33,4 @@ class CasesTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('123456', $this->object->setPhone('123456')->getPhone());
         $this->assertEquals('n4', $this->object->setPostcode('n4')->getPostcode());
     }
-    
-    public function testApplyUserFilter()
-    {
-        $mockQueryBuilder = m::mock('Doctrine\ORM\QueryBuilder');
-        $mockQueryBuilder->shouldReceive([ 'getRootAliases' => [ 0 => 'q'],
-                                           'andWhere' => $mockQueryBuilder,
-                                           'setParameter' => $mockQueryBuilder, 
-                                           'join' => $mockQueryBuilder ]);
-        
-        $this->assertInstanceOf('Doctrine\ORM\QueryBuilder',  Client::applyUserFilter($mockQueryBuilder, 1));
-    }
 }
