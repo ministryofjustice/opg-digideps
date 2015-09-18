@@ -10,6 +10,9 @@
         <testsuite name="application">
             <directory>src/*Bundle/Tests</directory>
         </testsuite>
+         <testsuite name="res">
+            <directory>tests/phpunit/Resources</directory>
+        </testsuite>
     </testsuites>
     <php>
         <server name="KERNEL_DIR" value="app" />
