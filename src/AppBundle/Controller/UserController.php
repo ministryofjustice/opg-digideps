@@ -31,9 +31,6 @@ class UserController extends Controller
     {
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
         $translator = $this->get('translator');
-        $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
-        $useRedis = $this->container->getParameter('use_redis');
-        $useMemcached = $this->container->getParameter('use_memcached');
         
         // check $token is correct
         try {
@@ -200,10 +197,6 @@ class UserController extends Controller
     {
         $request = $this->getRequest();
         $user = $this->getUser();
-        $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
-        $useMemcached = $this->container->getParameter('use_memcached');
-        $useRedis = $this->container->getParameter('use_redis');
-        
         
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([

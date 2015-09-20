@@ -19,9 +19,6 @@ parameters:
     session_engine: redis
     ga: {{ getv "/ga" }}
     
-    oauth2_client_id: {{ getv "/oauth2/client/id" }}
-    oauth2_client_secret: {{ getv "/oauth2/client/secret" }}
-    oauth2_enabled: {{ getv "/oauth2/enabled" }}
 {{ if lsdir "/fixtures" }}
     fixtures:
 {{ range lsdir "/fixtures" }}

@@ -33,9 +33,6 @@ class IndexController extends Controller
     public function loginAction()
     {
         $request = $this->getRequest();
-        $oauth2Enabled = $this->container->getParameter('oauth2_enabled');
-        $useMemcached = $this->container->getParameter('use_memcached');
-        $useRedis = $this->container->getParameter('use_redis');
 
         $form = $this->createForm(new FormDir\LoginType(), null, [
             'action' => $this->generateUrl('login'),
@@ -48,16 +45,6 @@ class IndexController extends Controller
         if ($form->isValid()){
             $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
-            
-            if($oauth2Enabled){
-                if($useRedis){
-                    $storage = $this->get('snc_redis.default');
-                }elseif($useMemcached){
-                    $storage = $this->get('oauth.memcached');
-                }else{
-                    $oauth2Enabled = false;
-                }
-            }
             
             try{
                 $user = $deputyProvider->loadUserByUsername($data['email']);
@@ -82,24 +69,6 @@ class IndexController extends Controller
             
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
-            
-            if($oauth2Enabled){
-                if($useRedis){
-                    $storage->set($session->getId().'_user_credentials', serialize([ 'email' => $user->getEmail(), 'password' => $user->getPassword() ]));
-                    //$storage->hset($session->getId().'_user_credentials','email', $user->getEmail());
-                    //$storage->hset($session->getId().'_user_credentials','password', $user->getPassword());
-                    $storage->expire($session->getId().'_user_credentials',3600);
-                    
-                }elseif($useMemcached){
-                    $credentials = $storage->get($session->getId().'_user_credentials');
-                    
-                    if(!$credentials){
-                        $storage->add($session->getId().'_user_credentials',[ 'email' => $user->getEmail(),'password' => $user->getPassword()],3600);
-                    }else{
-                        $storage->replace($session->getId().'_user_credentials',[ 'email' => $user->getEmail(), 'password' => $user->getPassword()],3600);
-                    }
-                }
-            }
             
             $request = $this->get("request");
             $event = new InteractiveLoginEvent($request, $token);
