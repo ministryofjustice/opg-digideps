@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as JMS;
  * Roles
  *
  * @ORM\Table(name="role")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
+ * @ORM\Entity
  */
 class Role implements RoleInterface
 { 

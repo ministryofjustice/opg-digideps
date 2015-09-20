@@ -3,16 +3,16 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Filter\UserFilterInterface;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
  * Decisions
  *
  * @ORM\Table(name="decision")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\DecisionRepository")
+ * @ORM\Entity
  */
-class Decision implements UserFilterInterface
+class Decision 
 {
     /**
      * @var integer
@@ -147,21 +147,5 @@ class Decision implements UserFilterInterface
     public function getReport()
     {
         return $this->report;
-    }
-    
-    /**
-     * Filter every query run on decision entity by user
-     * 
-     * @param QueryBuilder $qb
-     * @param integer $userId
-     * @return QueryBuilder
-     */
-    public static function applyUserFilter(QueryBuilder $qb,$userId)
-    {
-        $alias = $qb->getRootAliases()[0];
-        $qb->join($alias.'.report ', 'r')->join('r.client','c');
-        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
-        
-        return $qb;
     }
 }

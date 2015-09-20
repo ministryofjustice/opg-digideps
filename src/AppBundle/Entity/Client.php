@@ -3,7 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Filter\UserFilterInterface;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -12,9 +12,9 @@ use Doctrine\ORM\QueryBuilder;
  * @JMS\XmlRoot("client")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="client")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ClientRepository")
+ * @ORM\Entity
  */
-class Client implements UserFilterInterface
+class Client 
 {
     /**
      * @var integer
@@ -602,18 +602,4 @@ class Client implements UserFilterInterface
         return $this->country;
     }
     
-    /**
-     * Filter every query run on client entity by user
-     * 
-     * @param QueryBuilder $qb
-     * @param integer $userId
-     * @return QueryBuilder
-     */
-    public static function applyUserFilter(QueryBuilder $qb,$userId)
-    {
-        $alias = $qb->getRootAliases()[0];
-        $qb->join($alias.'.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
-        
-        return $qb;
-    }
 }
