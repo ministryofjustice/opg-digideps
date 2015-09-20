@@ -15,6 +15,8 @@ use Doctrine\ORM\QueryBuilder;
  */
 class Report 
 {
+    const PROPERTY_AND_AFFAIRS = 2;
+    
     /**
      * @var integer
      *

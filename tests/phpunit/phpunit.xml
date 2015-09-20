@@ -4,11 +4,11 @@
     stopOnFailure="true"
     backupGlobals="false"
     colors="true"
-    bootstrap="tests/phpunit/bootstrap.php"
+    bootstrap="bootstrap.php"
 >
     <testsuites>
-        <testsuite name="application">
-            <directory>src/*Bundle/Tests</directory>
+        <testsuite name="tests">
+            <directory>.</directory>
         </testsuite>
     </testsuites>
     <php>
