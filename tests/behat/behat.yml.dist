@@ -52,14 +52,6 @@ default:
             tags: "@textarea"
         contexts: [ DigidepsBehat\FeatureContext ]
 
-      formatted:
-        description: Tests related to formatted report
-        paths:    [ %paths.base%/features/deputy ]
-        filters:
-            tags: "@formatted-report&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
       safeguarding:
         description: Tests related to the safeguarding section
         paths:    [ %paths.base%/features ]
