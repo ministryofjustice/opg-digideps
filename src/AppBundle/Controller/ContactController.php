@@ -40,7 +40,7 @@ class ContactController extends Controller{
         $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getContacts())){
-            $this->get('apiclient')->delete('delete_report_contact', [ 'parameters' => [ 'id' => $id ]]);
+            $this->get('apiclient')->delete('report/delete-contact/' . $id);
         }
         return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
     }
@@ -64,13 +64,13 @@ class ContactController extends Controller{
         $request = $this->getRequest();
 
         $apiClient = $this->get('apiclient');
-        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
+        $contacts = $apiClient->getEntities('Contact', 'report/get-contacts/' . $reportId);
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             if (!in_array($id, $report->getContacts())) {
                throw new \RuntimeException("Contact not found.");
             }
-            $contact = $apiClient->getEntity('Contact','get_report_contact', [ 'parameters' => ['id' => $id ]]);
+            $contact = $apiClient->getEntity('Contact','report/get-contact/' . $id);
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
         }else{
              //set up add contact form
@@ -138,14 +138,14 @@ class ContactController extends Controller{
                 $contact->setReport($reportId);
 
                 if($action == 'add'){
-                    $apiClient->postC('add_report_contact', $contact);
+                    $apiClient->postC('report/upsert-contact', $contact);
                     
                     //lets clear any reason for no decisions they might have added previously
                     $report->setReasonForNoContacts(null);
                     $apiClient->putC('report/'.$report->getId(),$report);
             
                 }else{
-                    $apiClient->putC('update_report_contact', $contact);
+                    $apiClient->putC('report/upsert-contact', $contact);
                 }
 
                 return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));

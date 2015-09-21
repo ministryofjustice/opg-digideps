@@ -43,7 +43,7 @@ class ClientController extends Controller
         // edit client form
         if ($clientForm->isValid()) {
             $clientUpdated = $clientForm->getData();
-            $apiClient->putC('update_client', $clientUpdated);
+            $apiClient->putC('client/upsert', $clientUpdated);
 
             return $this->redirect($this->generateUrl('client_home'));
         }
@@ -119,8 +119,8 @@ class ClientController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $response = ($method === 'post') 
-                      ? $apiClient->postC('add_client', $form->getData())
-                      : $apiClient->putC('add_client', $form->getData());
+                      ? $apiClient->postC('client/upsert', $form->getData())
+                      : $apiClient->putC('client/upsert', $form->getData());
 
             return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id']]));
         }
