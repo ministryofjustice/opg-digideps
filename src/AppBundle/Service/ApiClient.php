@@ -13,13 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ApiClient extends GuzzleClient
 {
     /**
-     * endpoints map
-     *
-     * @var array
-     */
-    private $endpoints;
-
-    /**
      * @var SerializerInterface
      */
     private $serialiser;
@@ -37,19 +30,7 @@ class ApiClient extends GuzzleClient
 
     private $session;
     
-    private $redis;
-    
-    private $memcached;
-    
-    /**
-     * OAuth2 Subscriber
-     * 
-     * @var type 
-     */
-    private $subscriber;
-    
     private $options;
-
 
      /**
      * @var string
@@ -65,19 +46,13 @@ class ApiClient extends GuzzleClient
     public function __construct(ContainerInterface $container, array $options)
     {
         $this->serialiser = $container->get('jms_serializer');
-        $this->redis = $container->get('snc_redis.default');
-        $this->memcached = $container->get('oauth.memcached');
-        $this->session = $container->get('session');
-        
-        $oauth2Client = $container->get('oauth2Client');
-        $this->subscriber = $oauth2Client->getSubscriber();
         
         // check arguments
         array_map(function($k) use ($options) {
             if (!array_key_exists($k, $options)) {
                 throw new \InvalidArgumentException(__METHOD__ . " missing value for $k");
             }
-        }, ['base_url', 'endpoints', 'format', 'debug']);
+        }, ['base_url', 'format', 'debug']);
 
         // set internal properties
         $this->format = $options['format'];
@@ -86,20 +61,11 @@ class ApiClient extends GuzzleClient
                 __CLASS__ . ': '. $this->format . ' not valid. Accepted formats:' . implode(',', $this->acceptedFormats
             ));
         }
-        $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         $this->options = $options;
         $this->collectData = $options['collectData'];
-       
-        //lets get session id
-        $sessionId = $this->session->getId();
-
-        //if session has not started then start it
-        if(empty($sessionId)){
-            $this->session->start();
-        }
         
-        $config = $this->getGuzzleClientConfig($oauth2Client);
+        $config = $this->getGuzzleClientConfig();
         
         parent::__construct($config);
     }
@@ -326,92 +292,18 @@ class ApiClient extends GuzzleClient
     }
 
     /**
-     * Search through our route map and if this route exists then use that
-     *
-     * @param string $method
-     * @param string $url
-     * @param array $options
-     * @return type
-     */
-    public function createRequest($method, $url = null, array $options = array())
-    {
-
-        if (!empty($url) && array_key_exists($url, $this->endpoints)) {
-
-            $url = $this->endpoints[$url];
-
-            $methods = [ 'GET', 'DELETE', 'PUT', 'POST'];
-
-            if(in_array($method,$methods) && array_key_exists('parameters', $options)){
-
-                foreach($options['parameters'] as $param){
-                    $url = $url.'/'.$param;
-                }
-                unset($options['parameters']);
-            }
-        }
-        return parent::createRequest($method, $url, $options);
-    }
-    
-    /**
-     * @param type $oauth2Client
      * @return array $config
      */
-    private function getGuzzleClientConfig($oauth2Client)
+    private function getGuzzleClientConfig()
     {
         $config = [ 'base_url' =>  $this->options['base_url'],
                     'defaults' => ['headers' => [ 'Content-Type' => 'application/' . $this->format ],
                                    'verify' => false ]];
         
-        // construct parent (GuzzleClient)
-        if($this->options['use_oauth2'] && ($this->options['use_redis'] || $this->options['use_memcached'])){
-            $this->updateSubscriber($oauth2Client);
-            
-            $config['defaults']['auth'] = 'oauth2';
-            $config['defaults']['subscribers'] = [ $this->subscriber ];
-        }
-        
         // use HTTP 1.0 to avoid "cURL error 56: Problem (2) in the Chunked-Encoded data"
         $config['defaults']['version'] = 1.0;
         
         return $config;
-    }
-    
-    /**
-     * Update Oauth subscriber
-     * 
-     * @return type
-     */
-    private function updateSubscriber($oauth2Client)
-    {
-        $sessionId = $this->session->getId();
-        
-        if($this->options['use_redis']){
-            $accessToken = unserialize($this->redis->get($sessionId.'_access_token'));
-            $credentials = unserialize($this->redis->get($sessionId.'_user_credentials'));
-        }elseif($this->options['use_memcached']){
-            $accessToken = $this->memcached->get($sessionId.'_access_token'); 
-            $credentials = $this->memcached->get($sessionId.'_user_credentials');
-        }
-        
-        if(!empty($credentials['email']) && !empty($credentials['password']) && (empty($accessToken) || !is_object($accessToken->getRefreshToken()))){
-                $oauth2Client->setUserCredentials($credentials['email'],$credentials['password']);
-                $this->subscriber = $oauth2Client->getSubscriber();
-         }
-            
-        if(empty($accessToken) || $accessToken->isExpired()){
-            $newAccessToken = $this->subscriber->getAccessToken();
-       
-            if($this->options['use_redis']){
-                $this->redis->set($this->session->getId().'_access_token',serialize($newAccessToken));   
-            }elseif($this->options['use_memcached']){
-                $this->memcached->set($this->session->getId().'_access_token',$newAccessToken); 
-            }
-            $accessToken = $newAccessToken;
-        }
-        $this->subscriber->setAccessToken($accessToken);
-        
-        return $this->subscriber;
     }
     
     /**

@@ -28,7 +28,7 @@ class AdminController extends Controller
 
         
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
+            'roles' => $this->get('apiclient')->getEntities('Role', 'role'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), new EntityDir\User());
         
@@ -52,7 +52,7 @@ class AdminController extends Controller
             } 
         }
 
-        $users = $this->get('apiclient')->getEntities('User', 'list_users', [ 'parameters' => [$orderBy, $sortOrder]]);
+        $users = $this->get('apiclient')->getEntities('User', "user/get-all/{$orderBy}/{$sortOrder}");
         $newSortOrder = $sortOrder == "ASC"? "DESC": "ASC";
 
         return [
@@ -74,7 +74,7 @@ class AdminController extends Controller
         $apiClient = $this->get('apiclient');
         $request = $this->getRequest();
         
-        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]);
+        $user = $apiClient->getEntity('User', "user/{$id}");
        
         if(empty($user)){
             throw new \Exception('User does not exists');
@@ -82,7 +82,7 @@ class AdminController extends Controller
         
         
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->get('apiclient')->getEntities('Role', 'list_roles'),
+            'roles' => $this->get('apiclient')->getEntities('Role', 'role'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), $user );
     
@@ -113,7 +113,7 @@ class AdminController extends Controller
     {
        $apiClient = $this->get('apiclient');
         
-       $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]); 
+       $user = $apiClient->getEntity('User', "user/{$id}"); 
        
        return [ 'user' => $user ];
     }
@@ -129,11 +129,11 @@ class AdminController extends Controller
     {
         $apiClient = $this->get('apiclient');
         
-        $user = $apiClient->getEntity('User','find_user_by_id', [ 'parameters' => [ $id ] ]); 
+        $user = $apiClient->getEntity('User', "user/{$id}"); 
         
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
         
-        $apiClient->delete('delete_user_by_id',[ 'parameters' => ['adminId' => $this->getUser()->getId(), 'id' => $id ]]);
+        $apiClient->delete('user/' . $this->getUser()->getId() . '/' . $id);
         
         return $this->redirect($this->generateUrl('admin_homepage'));
     }

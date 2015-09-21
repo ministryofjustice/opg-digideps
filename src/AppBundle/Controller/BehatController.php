@@ -137,54 +137,6 @@ class BehatController extends Controller
     }
     
     /**
-     * @Route("/oauth-check-pass")
-     */
-    public function checkOAuth2PassAction()
-    {
-        if($this->container->getParameter('oauth2_enabled')){
-            $oauth2Client = $this->get('oauth2client');
-            $oauth2Client->setUserCredentials('behat-user@publicguardian.gsi.gov.uk','9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==');
-
-            $config = [ 'base_url' =>  $this->container->getParameter('api_base_url'),
-                        'defaults' => ['headers' => [ 'Content-Type' => 'application/json'],
-                                       'verify' => false,
-                                       'auth' => 'oauth2',
-                                       'subscribers' => [ $oauth2Client->getSubscriber() ]
-                                       ]];
-
-            $guzzleClient = new Client($config);
-            $response = $guzzleClient->get('report/find-by-id/1');
-
-            return new JsonResponse($response->json());
-        }
-        return new JsonResponse();
-    }
-    
-    /**
-     * @Route("/oauth-check-fail")
-     */
-    public function checkOAuth2FailAction()
-    {
-        if($this->container->getParameter('oauth2_enabled')){
-            $oauth2Client = $this->get('oauth2client');
-            $oauth2Client->setUserCredentials('wrong-email@publicguardian.gsi.gov.uk','9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==');
-
-            $config = [ 'base_url' =>  $this->container->getParameter('api_base_url'),
-                        'defaults' => ['headers' => [ 'Content-Type' => 'application/json'],
-                                       'verify' => false,
-                                       'auth' => 'oauth2',
-                                       'subscribers' => [ $oauth2Client->getSubscriber() ]
-                                       ]];
-
-            $guzzleClient = new Client($config);
-            $response = $guzzleClient->get('report/find-by-id/1');
-
-            return new JsonResponse($response->json());
-        }
-        return new JsonResponse();
-    }
-    
-    /**
      * @Route("/textarea")
      */
     public function textAreaTestPage()

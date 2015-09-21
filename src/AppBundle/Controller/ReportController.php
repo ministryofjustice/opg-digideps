@@ -60,7 +60,7 @@ class ReportController extends Controller
        
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                $response = $apiClient->postC('add_report', $form->getData());
+                $response = $apiClient->postC('report/upsert', $form->getData());
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
@@ -248,41 +248,12 @@ class ReportController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
-        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
-        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
+        $contacts = $apiClient->getEntities('Contact', 'report/get-contacts/' . $reportId);
+        $decisions = $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId);
         
         return [
             'report' => $report,
             'client' => $client,
-            'contacts' => $contacts,
-            'decisions' => $decisions,
-            'isEmailAttachment' => $isEmailAttachment,
-            'deputy' => $this->getUser(),
-        ];
-    }
-    
-    /**
-     * @Route("/report/{reportId}/formatted", name="formatted_report_display")
-     * @Template()
-     */
-    public function formattedAction($reportId, $isEmailAttachment = false)
-    {
-        $apiClient = $this->get('apiclient');
-        $util = $this->get('util');
-        
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
-        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
-        $groupAssets = $this->groupAssets($assets);
-        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
-        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
-        
-        return [
-            'report' => $report,
-            'client' => $client,
-            'assets' => $assets,
-            'groupAssets' => $groupAssets,
             'contacts' => $contacts,
             'decisions' => $decisions,
             'isEmailAttachment' => $isEmailAttachment,

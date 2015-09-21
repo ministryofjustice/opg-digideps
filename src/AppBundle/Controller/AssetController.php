@@ -101,7 +101,7 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('apiclient')->getEntity('Asset', 'get_report_asset', [ 'parameters' => ['id' => $assetId]]);
+        $asset = $this->get('apiclient')->getEntity('Asset', 'report/get-asset/' . $assetId);
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         $form->handleRequest($request);
@@ -109,7 +109,7 @@ class AssetController extends Controller
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('apiclient')->putC('update_report_asset', $asset);
+            $this->get('apiclient')->putC('report/upsert-asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -144,12 +144,12 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('apiclient')->getEntity('Asset', 'get_report_asset', [ 'parameters' => ['id' => $assetId]]);
+        $asset = $this->get('apiclient')->getEntity('Asset', 'report/get-asset/' . $assetId);
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         // handle delete
         if ($confirmed) {
-            $this->get('apiclient')->delete('delete_report_asset', [ 'parameters' => [ 'id' => $assetId]]);
+            $this->get('apiclient')->delete('report/delete-asset/' . $assetId);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -207,7 +207,7 @@ class AssetController extends Controller
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
 
-        $assets = $this->get('apiclient')->getEntities('Asset', 'get_report_assets', [ 'parameters' => ['id' => $reportId]]);
+        $assets = $this->get('apiclient')->getEntities('Asset', 'report/get-assets/' . $reportId);
 
         return [
             'report' => $report,
