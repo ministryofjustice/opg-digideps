@@ -58,7 +58,7 @@ class DeputyProvider implements UserProviderInterface
             $endpoint = isset(self::$envToEndpoint[$this->env]) 
                         ? self::$envToEndpoint[$this->env] : 'user/get-by-email';
             
-            return $apiclient->getEntity('User', $endpoint . $email);
+            return $apiclient->getEntity('User', "{$endpoint}/{$email}");
         } catch (\Exception $e) {
             $this->logger->info(__METHOD__ . ': ' . $apiclient->getLastErrorMessage());
 
