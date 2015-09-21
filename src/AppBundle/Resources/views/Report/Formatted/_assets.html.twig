@@ -1,0 +1,58 @@
+<div class="section" id="assets-section">
+    <h2>
+        <span class="section-number">Section 7</span>
+        Client’s assets and debts
+    </h2>
+
+    {% if report.assets | length == 0 %}
+        <fieldset class="contact-item no-contact">
+            <div class="form-group right-label">
+                <div class="checkbox">X</div>
+                <label>My client has no assets</label>
+            </div>
+        </fieldset>
+    {% else %}
+        {% set assetsTotalValue = 0 %}    
+        <ul class="asset-list">
+            {% for title, assets in groupAssets %}
+                <li class="asset-group" data-group="{{ title }}">
+                    <h3>{{ title }}</h3>
+                    <fieldset>
+                        <ul class="asset-group-items">
+                            {% for asset in assets %}
+                                {% set assetsTotalValue = assetsTotalValue + asset.value %}
+                                <li class="asset-item">
+                                    <div class="form-group form-group-vertical asset-description">
+                                        <div class="label">Description</div>
+                                        <div class="textarea value">{{ asset.description }}</div>
+                                    </div>
+                                    <div class="form-group form-group-vertical asset-valuationDate">
+                                        
+                                        <div class="label">Date of evaluation</div>
+                                        <div class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</div>
+                                    </div>
+                                    <div class="form-group form-group-vertical asset-value">
+                                        <div class="label">Value</div>
+                                        <div class="value">£{{ asset.value | number_format(2, '.', ',') }}</div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </fieldset>
+                </li>
+           {% endfor %}
+           
+           {# total value #}
+           <fieldset class="assets-total-value">
+               <li class="asset-item">
+                   <div class="form-group form-group-vertical asset-value assets-total-value" >
+                       <div class="label">Assets Total Value</div>
+                       <div class="value" id="assetsTotal">£{{ assetsTotalValue | number_format(2, '.', ',') }}</div>
+                   </div>
+               </li>
+           </fieldset>
+           
+       </ul>
+    
+    {% endif %}
+</div>

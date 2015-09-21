@@ -5,10 +5,6 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-//use Symfony\Component\HttpFoundation\JsonResponse;
-//use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use FOS\RestBundle\Controller\FOSRestController;
-//use FOS\RestBundle\Controller\Annotations\Post;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
@@ -23,6 +19,8 @@ use AppBundle\Exception\NotFound;
 class UserController extends RestController
 {
     /**
+     * @param queryString skip-mail 
+     * 
      * @Route("")
      * @Method({"POST"})
      */
@@ -31,7 +29,7 @@ class UserController extends RestController
         $data = $this->deserializeBodyContent();
 
         $user = new \AppBundle\Entity\User();
-        
+       
         $this->populateUser($user, $data);
         
         /**
@@ -42,15 +40,52 @@ class UserController extends RestController
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.");
         }
         
+        // send activation email
+        if (empty($request->query->get('skip-mail'))) {
+            $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
+            $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
+        }
+        
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush($user);
         
          //TODO return status code
         
-        return array('id'=>$user->getId());
+        return ['id'=>$user->getId()];
     }
     
     
+     /**
+     * @Route("/{userId}/recreate-token/email/{email}", defaults={"email": "none"})
+     * @Method({"PUT"})
+     */
+    public function recreateToken($userId, $email)
+    {
+        if (!in_array($email, ['activate', 'pass-reset'])) {
+            throw new \InvalidArgumentException(__METHOD__ . ' invalid email template');
+        }
+        $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $user User */
+
+        $user->recreateRegistrationToken();
+        
+        $this->getEntityManager()->flush($user);
+
+        switch ($email) {
+            case 'activate':
+                // send acivation email to user
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
+                break;
+
+            case 'pass-reset':
+                // send reset password email
+                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+                $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
+                break;
+        }
+        
+        return $user->getId();
+    }
     
     /**
      * @Route("/{id}")
@@ -66,17 +101,51 @@ class UserController extends RestController
         
         $this->getEntityManager()->flush($user);
         
-        //TODO return status code
-        
         return ['id'=>$user->getId()];
     }
-
+    
+    
+    /**
+     * change password, activate user and send remind email
+     * @Route("/{id}/set-password")
+     * @Method({"PUT"})
+     */
+    public function changePassword($id)
+    {
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        
+        $data = $this->deserializeBodyContent();
+        if (empty($data['password'])) {
+            throw new \InvalidArgumentException('missing password');
+        }
+        $user->setPassword($data['password']);
+        
+        if (array_key_exists('set_active', $data)) {
+           $user->setActive($data['set_active']);
+        }
+        
+        // send change password email
+        if (empty($data['send_email'])) {
+            // no emails
+        } else if ($data['send_email'] == 'activate') {
+            $email = $this->getMailFactory()->createChangePasswordEmail($user);
+            $this->getMailSender()->send($email,[ 'html']);
+            
+        } else if ($data['send_email'] == 'password-reset') {
+            $email = $this->getMailFactory()->createChangePasswordEmail($user);
+            $this->getMailSender()->send($email,[ 'html']);
+        }
+        
+        $this->getEntityManager()->flush();
+        
+        return $user;
+    }
     
     /**
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
      */
-    public function get($id)
+    public function getOneById($id)
     {
         return $this->findEntityBy('User', $id, 'User not found');
     }
@@ -210,6 +279,7 @@ class UserController extends RestController
         return $user;
     }
     
+    
     /**
      * call setters on User when $data contains values
      * 
@@ -227,8 +297,6 @@ class UserController extends RestController
             'firstname' => 'setFirstname', 
             'lastname' => 'setLastname', 
             'email' => 'setEmail', 
-            'password' => 'setPassword', 
-            'active' => 'setActive', 
             'address1' => 'setAddress1', 
             'address2' => 'setAddress2', 
             'address3' => 'setAddress3', 
@@ -245,10 +313,6 @@ class UserController extends RestController
         
         if (array_key_exists('last_logged_in', $data)) {
             $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
-        }
-        
-        if (!empty($data['recreate_registration_token'])) {
-            $user->recreateRegistrationToken();
         }
         
         if (!empty($data['registration_token'])) {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit 
+    stopOnFailure="true"
+    backupGlobals="false"
+    colors="true"
+    bootstrap="bootstrap.php"
+>
+    <testsuites>
+        <testsuite name="tests">
+            <directory>./</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <server name="KERNEL_DIR" value="app" />
+    </php>
+
+</phpunit>

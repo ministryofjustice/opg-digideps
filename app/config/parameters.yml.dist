@@ -19,3 +19,26 @@ parameters:
     email_mock_path:  "/tmp/dd_behat_last_sent_email.json"
     anonymous: true
     redis_dsn: redis://localhost
+    # activation, change password, reset password emails (Amazon SES, needs @digideps.dsd.io sender )
+    email_send:
+      from_email: no-reply@digideps.dsd.io
+      # the following two params are only for avoid misbehaving after the config is applied but the branch is not yet released
+    # report submit email with attachment, uses local secure SMTP (no auth needed)
+    email_report_submit:
+      from_email: no-reply@digideps.dsd.io
+      to_email: behat-deputyshipservice@publicguardian.gsi.gov.uk 
+    # feedback email (Amazon SES, needs @digideps.dsd.io sender )  
+    email_feedback_send:
+      from_email: no-reply@digideps.dsd.io
+      to_email: behat-deputyshipfeedback@publicguardian.gsi.gov.uk
+    email:
+      base_url:
+        frontend: http://digideps-client.local
+        admin: http://digideps-admin.local
+        routes:
+          user_activate:  /user/activate/{token}
+          password_reset:  /user/password-reset/{token}
+          homepage: /
+          report_overview: /report/{reportId|}/overview
+          
+         

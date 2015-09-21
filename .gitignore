@@ -16,3 +16,4 @@ web/elb_healthcheck.html
 .idea/*
 *.iml
 *~
+junit.xml

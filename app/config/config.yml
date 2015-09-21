@@ -42,22 +42,6 @@ doctrine:
 doctrine_migrations:
     table_name: migrations
 
-            
-fos_oauth_server:
-    db_driver: orm       # Driver availables: orm, mongodb, or propel
-    client_class:        AppBundle\Entity\OAuth2Client
-    access_token_class:  AppBundle\Entity\AccessToken
-    refresh_token_class: AppBundle\Entity\RefreshToken
-    auth_code_class:     AppBundle\Entity\AuthCode
-    service:
-        user_provider: userprovider
-        options:
-            supported_scopes: user
-            access_token_lifetime: 300
-            refresh_token_lifetime: 600
-            #auth_code_lifetime: 5
-        
-        
 #jms_serializer:
 #    metadata:
 ##        cache: none

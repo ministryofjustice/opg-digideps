@@ -21,3 +21,22 @@ parameters:
     email_mock_address: {{ getv "/email/mock/address" }}
     email_mock_path:  {{ getv "/email/mock/path" }}
     redis_dsn: '{{getv "/redis/dsn" }}'
+    email_send:
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: -
+    email_report_submit:
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: {{ getv "/email/report/to" }}
+    email_feedback_send:
+        from_email: noreply-opgdeputyservice@{{ getv "/email/domain" }}
+        to_email: {{ getv "/email/feedback/to" }}
+    email:
+      base_url:
+        frontend:  {{ getv "/url/frontend" }}
+        admin:  {{ getv "/url/admin" }}
+      routes:
+        user_activate:  /user/activate/{token}
+        password_reset:  /user/password-reset/{token}
+        homepage: /
+        report_overview: /report/{reportId}/overview
+          

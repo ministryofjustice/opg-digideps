@@ -3,7 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use AppBundle\Filter\UserFilterInterface;
+
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -11,10 +11,12 @@ use Doctrine\ORM\QueryBuilder;
  * @JMS\XmlRoot("report")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ReportRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  */
-class Report implements UserFilterInterface
+class Report 
 {
+    const PROPERTY_AND_AFFAIRS = 2;
+    
     /**
      * @var integer
      *
@@ -600,6 +602,33 @@ class Report implements UserFilterInterface
     {
         return $this->assets;
     }
+    
+    
+    /**
+     * Get array of assets grouped by title
+     *
+     * @return array of Asset[]
+     */
+    public function getAssetsGroupedByTitle()
+    {
+        $ret = array();
+        
+        foreach ($this->getAssets() as $asset) {
+        
+            $type = $asset->getTitle();
+        
+            if (isset($ret[$type])) {
+                $ret[$type][] = $asset;
+            } else {
+                $ret[$type] = array($asset);
+            }
+        }
+    
+        // sort the assets by their type now.
+        ksort($ret);
+    
+        return $ret;
+    }
 
     public function getAssetIds()
     {
@@ -732,22 +761,6 @@ class Report implements UserFilterInterface
     public function getCourtOrderTypeId()
     {
         return $this->courtOrderType->getId();
-    }
-    
-    /**
-     * Filter every query run on report entity by user
-     * 
-     * @param QueryBuilder $qb
-     * @param integer $userId
-     * @return QueryBuilder
-     */
-    public static function applyUserFilter(QueryBuilder $qb,$userId)
-    {
-        $alias = $qb->getRootAliases()[0];
-        $qb->join($alias.'.client ', 'c');
-        $qb->join('c.users','u')->andWhere('u.id = :user_id')->setParameter('user_id', $userId);
-        
-        return $qb;
     }
 
     /**

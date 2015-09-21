@@ -9,8 +9,14 @@ services:
     em:
         alias: doctrine.orm.entity_manager    
     # pass it into Swift_Mailer to always write email into disk rather than sending them
+    mailSender:
+        class: AppBundle\Service\Mailer\MailSender
+        arguments: [ @service_container ]
+    mailFactory:
+        class: AppBundle\Service\Mailer\MailFactory
+        arguments: [ @service_container ]
     mailer.transport.fileWriter:
-        class: AppBundle\Mailer\Transport\FileWriter
+        class: AppBundle\Service\Mailer\Transport\FileWriter
         arguments: [ "/tmp/dd_mail_mock" ]
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
@@ -25,17 +31,11 @@ services:
     userprovider:
         class: AppBundle\UserProvider\UserProvider
         arguments: [@doctrine.orm.entity_manager]
-    granttype.apikey:
-        class: AppBundle\OAuth\ApiKeyGrantExtension
-        arguments: [ @doctrine.orm.entity_manager ]
-        tags:
-            - { name: fos_oauth_server.grant_extension, uri: http://digideps.local }
     user.query.filter:
         class: AppBundle\Service\UserQueryFilter
-    app.doctrine.filter.configurator:
-        class: AppBundle\Filter\Configurator
-        arguments:
-            - "@doctrine.orm.entity_manager"
-            - "@fos_oauth_server.access_token_manager.default"
+    componentsExtension:
+        class: AppBundle\Twig\ComponentsExtension
+        public: false
+        arguments: [  @translator ]
         tags:
-            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+            - { name: twig.extension }

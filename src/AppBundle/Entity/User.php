@@ -10,10 +10,12 @@ use JMS\Serializer\Annotation as JMS;
  * Users
  *
  * @ORM\Table(name="dd_user")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
  */
 class User implements AdvancedUserInterface
 {
+    const TOKEN_EXPIRE_HOURS = 48;
+    
     /**
      * @var integer
      * @JMS\Type("integer")
