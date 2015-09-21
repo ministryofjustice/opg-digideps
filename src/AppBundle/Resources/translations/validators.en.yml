@@ -109,7 +109,7 @@ contact:
         notBlank: Enter a reason why you contacted this person
         length: This reason is too short
     no-contact-reason:
-        notBlank: Enter a reason why you contacted this person
+        notBlank: Enter a reason why you haven't added any contacts
     phone:
         maxMessage: The phone number can't be longer than {{ limit }} numbers
 decision:
@@ -189,7 +189,7 @@ asset:
         notBlank: Enter the date the asset was valued
         date: Enter a valid date
     no_assets:
-        notBlank: Tell us if you have no assets to add
+        notBlank: Tell us if the client has no assets to add
 # validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:
@@ -216,26 +216,26 @@ sendEmail:
         notBlank: Please supply message for your email
 safeguarding:
     doYouLiveWithClient:
-        notBlank: Please select one option
+        notBlank: Choose Yes or No
     howOftenDoYouVisit:
-        notBlank: Please select one option
+        notBlank: Select one option
     howOftenDoYouPhoneOrVideoCall:
-        notBlank: Please select one option
+        notBlank: Select one option
     howOftenDoYouWriteEmailOrLetter:
-        notBlank: Please select one option
+        notBlank: Select one option
     howOftenDoesClientSeeOtherPeople:
-        notBlank: Please select one option
+        notBlank: Select one option
     doesClientReceivePaidCare:
-        notBlank: Please select one option
+        notBlank: Choose Yes or No
     howIsCareFunded:
-        notBlank: Please select one option
+        notBlank: Select one option
     whoIsDoingTheCaring:
-        notBlank: Please select one option
+        notBlank: Give us more details about who is caring for the client
     whenWasCarePlanLastReviewed:
         notBlank: Please enter last review date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
-        notBlank: Please select one option
+        notBlank: Choose Yes or No
 
 feedbackAfterReport:
     satisfactionLevel:
