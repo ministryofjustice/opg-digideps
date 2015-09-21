@@ -6,12 +6,12 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\ApiClient;
 use AppBundle\Model as ModelDir;
-use AppBundle\Service\MailSender;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+
+
 /**
  * @Route("/register")
  */
@@ -25,6 +25,8 @@ class RegistrationController extends Controller
     {
         $selfRegisterData = new ModelDir\SelfRegisterData();
         $form = $this->createForm(new FormDir\SelfRegisterDataType(), $selfRegisterData);
+
+        /** @var Request $request */
         $request = $this->getRequest();
 
         if($request->getMethod() == 'POST') {
@@ -34,20 +36,29 @@ class RegistrationController extends Controller
 
                 $data = $form->getData();
 
-                $this->get('apiclient')->postC('selfregister' , $data);
-
-                $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
-                $email = $data->getEmail();
-                $bodyText = str_replace("{{ email }}", $email, $bodyText);
+                try {
                 
+                    $this->get('apiclient')->postC('selfregister' , $data);
+                    
+                    $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
+                    $email = $data->getEmail();
+                    $bodyText = str_replace("{{ email }}", $email, $bodyText);
+                    
+                    
+                    $signInText = $this->get('translator')->trans('signin', [], 'register');
+                    $signIn = '<a href="' . $this->generateUrl("login") . '">' . $signInText . '</a>';
+                    $bodyText = str_replace("{{ sign_in }}", $signIn, $bodyText);
+                    
+                    return $this->render('AppBundle:Registration:thankyou.html.twig',[
+                        'bodyText' => $bodyText
+                    ]);
                 
-                $signInText = $this->get('translator')->trans('signin', [], 'register');
-                $signIn = '<a href="' . $this->generateUrl("login") . '">' . $signInText . '</a>';
-                $bodyText = str_replace("{{ sign_in }}", $signIn, $bodyText);
-                
-                return $this->render('AppBundle:Registration:thankyou.html.twig',[
-                    'bodyText' => $bodyText
-                ]);
+                } catch(\Exception $e) {
+                    if ($e->getCode() == 422)
+                    {
+                        $form->get('email')->addError(new FormError("That email has already been registered with this service."));
+                    }
+                }
             }
         }
         return $this->render('AppBundle:Registration:register.html.twig', [ 'form' => $form->createView() ]);
