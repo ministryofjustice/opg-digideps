@@ -21,7 +21,7 @@ services:
               collectData: "%kernel.debug%"
     deputyprovider:
         class:  AppBundle\UserProvider\DeputyProvider
-        arguments: [ @service_container,%env% ]
+        arguments: [ @service_container, @logger, %env% ]
     userService:
         class:  AppBundle\Service\UserService
         arguments: [ @apiclient, %env% ]

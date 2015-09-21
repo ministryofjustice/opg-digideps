@@ -6,7 +6,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use AppBundle\Service\ApiClient;
+use Symfony\Bridge\Monolog\Logger;
 
 class DeputyProvider implements UserProviderInterface
 {
@@ -16,14 +16,30 @@ class DeputyProvider implements UserProviderInterface
     private $container;
     
     /**
-     * @var string $env
+     * @var string
      */
     private $env;
     
+     /**
+     * @var Logger
+     */
+    private $logger;
     
-    public function __construct(ContainerInterface $container, $env)
+    /**
+     * @var array 
+     */
+    private static $envToEndpoint = [
+        'admin' => 'user/get-admin-by-email',
+        'develop' => 'user/get-user-by-email',
+        'staging' => 'user/get-user-by-email',
+        'ci' => 'user/get-user-by-email',
+        'prod' => 'user/get-user-by-email'
+    ];
+    
+    public function __construct(ContainerInterface $container, Logger $logger, $env)
     {
         $this->container = $container;
+        $this->logger = $logger;
         $this->env = $env;
     }
     
@@ -36,17 +52,16 @@ class DeputyProvider implements UserProviderInterface
      */
     public function loadUserByUsername($email) 
     {
+        $apiclient = $this->container->get('apiclient');
+        
         try {
-            $apiclient = $this->container->get('apiclient');
+            $endpoint = isset(self::$envToEndpoint[$this->env]) 
+                        ? self::$envToEndpoint[$this->env] : 'user/get-by-email';
             
-            if($this->env == 'admin'){
-                return $apiclient->getEntity('User', 'user/get-admin-by-email/' . $email);
-            } elseif(in_array($this->env,[ 'develop','staging','ci','prod'])){
-                return $apiclient->getEntity('User', 'user/get-user-by-email/' . $email);
-            } else{
-                return $apiclient->getEntity('User', 'user/get-by-email/' . $email);
-            }
+            return $apiclient->getEntity('User', $endpoint . $email);
         } catch (\Exception $e) {
+            $this->logger->info(__METHOD__ . ': ' . $apiclient->getLastErrorMessage());
+
             throw new UsernameNotFoundException("We can't log you in at this time.");
         }
         
