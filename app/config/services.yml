@@ -8,18 +8,9 @@ services:
         arguments: [ @security.context, @security.encoder_factory ]
         tags:
             - { name: validator.constraint_validator, alias: security.validator.d_user_password }
-    oauth2client:
-        class: AppBundle\Service\OAuth\OAuth2
-        arguments: [ "%api_base_url%", %oauth2_client_id%, %oauth2_client_secret%]
     dd_session.memcached_handler:
         class: AppBundle\Service\MemcachedSessionHandler
         arguments: [ "%session_memcached_host%", "%session_memcached_port%" ]
-    oauth.memcached:
-        class: Memcached
-        arguments:
-            persistent_id: 'api_oauth2'
-        calls:
-            - [ addServer, [ %session_memcached_host%, %session_memcached_port%]]
     apiclient:
         class:  AppBundle\Service\ApiClient
         arguments: 
@@ -27,9 +18,6 @@ services:
           - 
               format: "json"
               base_url: "%api_base_url%"
-              use_redis: "%use_redis%"
-              use_memcached: "%use_memcached%"
-              use_oauth2: "%oauth2_enabled%"
               endpoints: "%api_endpoints%"
               debug: "%kernel.debug%"
               collectData: "%kernel.debug%"
@@ -54,12 +42,6 @@ services:
         arguments: [  @translator, "%twig_components_extension%" ]
         tags:
             - { name: twig.extension }
-    mailSender:
-        class: AppBundle\Service\MailSender
-        arguments: [ @apiclient, @translator, @router,@validator ]
-    mailFactory:
-        class: AppBundle\Service\MailFactory
-        arguments: [ @service_container ]
     redirectorService:
         class: AppBundle\Service\Redirector
         arguments: [ @security.context, @router, @session, @util ]

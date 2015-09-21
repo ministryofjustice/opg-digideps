@@ -4,7 +4,6 @@ namespace AppBundle\Tests\Service;
 //use AppBundle\Service\ApiClient;
 use Mockery as m;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Service\OAuth\OAuth2;
 use GuzzleHttp\Client;
 
 
@@ -12,44 +11,24 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
 {
     private $jsonSerializer;
     private $apiClientMock;
-    private $memcached;
-    private $oauth2ClientMock;
     private $session;
     private $options;
-    private $redis;
-    private $subscriber;
     
     public function setUp()
     {
-        $this->subscriber = m::mock('CommerceGuys\Guzzle\Oauth2\Oauth2Subscriber');
-        $this->subscriber->shouldReceive([ 'getAccessToken' => new \stdClass(), 'setAccessToken' => null, 'getRefreshToken' => new \stdClass() ]);
-        
         $this->jsonSerializer = m::mock('JMS\Serializer\Serializer');
         
         $this->options = [ 'base_url' => 'https://digideps.api/',
                             'endpoints' => [ 'find_user_by_email' => 'find-user-by-email'],
                             'format' => 'json',
                             'debug' => null,
-                            'collectData' => false,
-                            'use_oauth2' => false ];
-        
-        $this->oauth2ClientMock = m::mock('AppBundle\Service\OAuth\OAuth2', ['https://digideps.api/app_dev.php', 'sfsfsdfdsfds', 'fsfsfsdfs']);
-        $this->oauth2ClientMock->shouldReceive(['setUserCredentials' => null, 'getSubscriber' => $this->subscriber ]);
+                            'collectData' => false];
         
         $this->session = m::mock('session', [ 'start' => 1, 'getId' => 'test_session_id']);
-        
-        $this->memcached = m::mock('\Memcached');
-        $this->memcached->shouldReceive('get')->andReturn([ 'email' => 'paul.oforduru@digital.justice.gov.uk', 'password' => 'dfdsfdsfsdfsffs']);
-        
-        $this->redis = m::mock('Predis\Client');
-        $this->redis->shouldReceive([ 'get' => 'trash']);
         
         
         $containerMock = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
             ->shouldReceive('get')->with('jms_serializer')->andReturn($this->jsonSerializer)
-            ->shouldReceive('get')->with('oauth2Client')->andReturn($this->oauth2ClientMock)
-            ->shouldReceive('get')->with('snc_redis.default')->andReturn($this->redis)
-            ->shouldReceive('get')->with('oauth.memcached')->andReturn($this->memcached)
             ->shouldReceive('get')->with('session')->andReturn($this->session)
             ->getMock();
             

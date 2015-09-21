@@ -162,25 +162,11 @@ class ReportController extends Controller
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+            $this->get('apiclient')->putC('report/' .  $report->getId() . '/user/' . $this->getUser()->getId() . '/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
             
-            // send report by email
-            $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId'=>$report->getId(), 'isEmailAttachment'=>true])->getContent();
-            $reportEmail = $this->get('mailFactory')->createReportEmail($client, $reportContent);
-            $this->get('mailSender')->send($reportEmail,[ 'html'], 'secure-smtp');
-            
-            //lets create subsequent year's report
-            $response = $this->get('apiclient')->postC('clone_report', $report);
-            
-            $newReport = $this->get('util')->getReport($response['report'], $this->getUser()->getId()); /* @var $report EntityDir\Report */
-            
-            //send confirmation email
-            $reportConfirmEmail = $this->get('mailFactory')->createReportSubmissionConfirmationEmail($this->getUser(), $report, $newReport);
-            $this->get('mailSender')->send($reportConfirmEmail, [ 'text', 'html']);
-            
-            return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$reportId]));
+            return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId'=>$report->getId()]));
         }
         
         return [
@@ -213,9 +199,9 @@ class ReportController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-
-            $feedbackEmail = $this->get('mailFactory')->createFeedbackEmail($form->getData());
-            $this->get('mailSender')->send($feedbackEmail, [ 'html']);
+            
+            $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+            $apiClient->postC('/feedback', $form->getData());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
@@ -268,35 +254,6 @@ class ReportController extends Controller
         return [
             'report' => $report,
             'client' => $client,
-            'contacts' => $contacts,
-            'decisions' => $decisions,
-            'isEmailAttachment' => $isEmailAttachment,
-            'deputy' => $this->getUser(),
-        ];
-    }
-    
-    /**
-     * @Route("/report/{reportId}/formatted", name="formatted_report_display")
-     * @Template()
-     */
-    public function formattedAction($reportId, $isEmailAttachment = false)
-    {
-        $apiClient = $this->get('apiclient');
-        $util = $this->get('util');
-        
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
-        
-        $assets = $apiClient->getEntities('Asset','get_report_assets', [ 'parameters' => ['id' => $reportId ]]);
-        $groupAssets = $this->groupAssets($assets);
-        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
-        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
-        
-        return [
-            'report' => $report,
-            'client' => $client,
-            'assets' => $assets,
-            'groupAssets' => $groupAssets,
             'contacts' => $contacts,
             'decisions' => $decisions,
             'isEmailAttachment' => $isEmailAttachment,

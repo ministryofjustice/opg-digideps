@@ -33,6 +33,11 @@ trait DebugTrait
         echo "- Url: " . $session->getCurrentUrl() . "\n";
         echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
+        if (200 != (int)$session->getStatusCode()) {
+            //read page H1
+            preg_match('#<h1>[\n\s]*(.+)[\n\s]*</h1>#is', $data, $matches);
+            echo "- Error: ". (isset($matches[1]) ? $matches[1] : '[not readable]');
+        }
     }
     
     

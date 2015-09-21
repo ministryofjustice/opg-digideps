@@ -137,54 +137,6 @@ class BehatController extends Controller
     }
     
     /**
-     * @Route("/oauth-check-pass")
-     */
-    public function checkOAuth2PassAction()
-    {
-        if($this->container->getParameter('oauth2_enabled')){
-            $oauth2Client = $this->get('oauth2client');
-            $oauth2Client->setUserCredentials('behat-user@publicguardian.gsi.gov.uk','9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==');
-
-            $config = [ 'base_url' =>  $this->container->getParameter('api_base_url'),
-                        'defaults' => ['headers' => [ 'Content-Type' => 'application/json'],
-                                       'verify' => false,
-                                       'auth' => 'oauth2',
-                                       'subscribers' => [ $oauth2Client->getSubscriber() ]
-                                       ]];
-
-            $guzzleClient = new Client($config);
-            $response = $guzzleClient->get('report/find-by-id/1');
-
-            return new JsonResponse($response->json());
-        }
-        return new JsonResponse();
-    }
-    
-    /**
-     * @Route("/oauth-check-fail")
-     */
-    public function checkOAuth2FailAction()
-    {
-        if($this->container->getParameter('oauth2_enabled')){
-            $oauth2Client = $this->get('oauth2client');
-            $oauth2Client->setUserCredentials('wrong-email@publicguardian.gsi.gov.uk','9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==');
-
-            $config = [ 'base_url' =>  $this->container->getParameter('api_base_url'),
-                        'defaults' => ['headers' => [ 'Content-Type' => 'application/json'],
-                                       'verify' => false,
-                                       'auth' => 'oauth2',
-                                       'subscribers' => [ $oauth2Client->getSubscriber() ]
-                                       ]];
-
-            $guzzleClient = new Client($config);
-            $response = $guzzleClient->get('report/find-by-id/1');
-
-            return new JsonResponse($response->json());
-        }
-        return new JsonResponse();
-    }
-    
-    /**
      * @Route("/textarea")
      */
     public function textAreaTestPage()
@@ -193,6 +145,8 @@ class BehatController extends Controller
     }
     
     /**
+     * set token_date and registration_token on the user
+     * 
      * @Route("/{secret}/user/{email}/token/{token}/token-date/{date}")
      * @Method({"GET"})
      */
@@ -200,13 +154,16 @@ class BehatController extends Controller
     {
         $this->checkIsBehatBrowser();
         
-        $user = $this->get('apiclient')->getEntity('User', 'find_user_by_email', [ 'parameters' => [ 'email' => $email ] ]);
-        $user->setTokenDate(new \DateTime($date));
-        $user->setRegistrationToken($token);
+        $user = $this->get('apiclient')->getEntity('User', 'user/get-user-by-email/' . $email);
         
         $this->get('apiclient')->putC('user/' . $user->getId(), $user, [
             'deserialise_group' => 'registrationToken',
         ]);
+        
+        $this->get('apiclient')->putC('user/' . $user->getId(), json_encode([
+            'token_date' => $date,
+            'registration_token' => $token
+        ]));
         
         return new Response('done');
     }
@@ -219,16 +176,13 @@ class BehatController extends Controller
     {
         $this->checkIsBehatBrowser();
         
-        $param = $this->container->getParameter('email_report_submit')['to_email'];
-        if (!preg_match('/^behat\-/', $param)) {
-            throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");
+        $content = $this->get('apiclient')->get('behat/check-app-params')->getBody();
+        $contentDecoded = json_decode($content, 1);
+        
+        if ($contentDecoded['data'] !='valid') {
+            throw new \RuntimeException('Invalid API params. Response: '.print_r($contentDecoded, 1));
         }
         
-        $param = $this->container->getParameter('email_feedback_send')['to_email'];
-        if (!preg_match('/^behat\-/', $param)) {
-            throw new DisplayableException("email_feedback_send.to_email must be a behat- email in order to test emails, $param given.");
-        }
-        
-        return new Response('ok');
+        return new Response($content);
     }
 }

@@ -2,16 +2,18 @@
 
 namespace DigidepsBehat;
 
+use Behat\Gherkin\Node\TableNode;
+
 trait EmailTrait
 {
 
     /**
      * @param boolean $throwExceptionIfNotFound
-     * @param integer $index 0 = last (default), 1=second last
+     * @param integer $index = last (default), 1=second last
      * 
      * @return array|null
      */
-    private function getEmailMockFromApi($throwExceptionIfNotFound = true, $index = 0)
+    private function getEmailMockFromApi($throwExceptionIfNotFound = true, $index ='last')
     {
         $this->visitBehatLink('email-get-last');
 
@@ -21,8 +23,15 @@ trait EmailTrait
         if ($throwExceptionIfNotFound && empty($emailsArray[0]['to'])) {
             throw new \RuntimeException("No email has been sent. Api returned: " . $emailsJson );
         }
-
-        return isset($emailsArray[$index]) ? $emailsArray[$index] : null;
+        
+        // translate index into number
+        $map = ['last'=>0, 'second_last'=>1];
+        if (!isset($map[$index])) {
+             throw new \RuntimeException("position $index not recognised");
+        }
+        $indexNumber = $map[$index];
+        
+        return isset($emailsArray[$indexNumber]) ? $emailsArray[$indexNumber] : null;
     }
 
     /**
@@ -122,17 +131,10 @@ trait EmailTrait
     }
     
     /**
-     * @Then the :which email should have been sent to :to
+     * @Then the :index email should have been sent to :to
      */
-    public function anEmailShouldHaveBeenSentTo($which, $to)
+    public function theWhichEmailShouldHaveBeenSentTo($index, $to)
     {
-        if ($which=='last') {
-            $index = 0;
-        } else if ($which=='second_last') {
-            $index = 1;
-        } else {
-             throw new \RuntimeException("position $which not regognised");
-        }
         $mail = $this->getEmailMockFromApi(true, $index);
         $mailTo = key($mail['to']);
 
@@ -140,7 +142,38 @@ trait EmailTrait
             throw new \RuntimeException("Addressee '" . $mailTo . "' does not match the expected '" . $to . "'");
         }
     }
-
+    
+    
+    /**
+     * @Then the :index email :contentType part should contain the following:
+     */
+    public function theEmailAttachmentShouldContain($index, $contentType, TableNode $table)
+    {
+        $mail = $this->getEmailMockFromApi(true, $index);
+        
+        // find body of the part with the given contentType
+        $part = array_filter($mail['parts'], function($part) use ($contentType) {
+            return $part["contentType"] === $contentType;
+        });
+        if (empty($part)) {
+            throw new \RuntimeException("part $contentType not found in $index email");
+        }
+        $html = array_shift($part)['body'];
+        
+        $doc = new \DOMDocument();    
+        $doc->loadHtml($html);
+        
+        foreach($table->getRowsHash() as $id => $mustContain) {
+           $element = $doc->getElementById($id);
+           if (!$element) {
+               throw new \RuntimeException("node #$id not found");
+           }
+           $textContent = $element->textContent;
+           if (strpos($textContent, $mustContain) === false) {
+               throw new \RuntimeException("#$id element: $mustContain' not found inside '$textContent'");
+           }
+        }
+    }
 
     /**
      * @return array[array links, string mailContent]

@@ -31,6 +31,7 @@ trait AuthenticationTrait
         $this->fillField('login_email',$email);
         $this->fillField('login_password', $password);
         $this->pressButton('login_login');
+        $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
     
