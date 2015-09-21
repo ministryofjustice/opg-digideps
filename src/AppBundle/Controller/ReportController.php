@@ -60,7 +60,7 @@ class ReportController extends Controller
        
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                $response = $apiClient->postC('add_report', $form->getData());
+                $response = $apiClient->postC('report/upsert', $form->getData());
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
@@ -248,8 +248,8 @@ class ReportController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
-        $contacts = $apiClient->getEntities('Contact','get_report_contacts', [ 'parameters' => ['id' => $reportId ]]);
-        $decisions = $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]);
+        $contacts = $apiClient->getEntities('Contact', 'report/get-contacts/' . $reportId);
+        $decisions = $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId);
         
         return [
             'report' => $report,

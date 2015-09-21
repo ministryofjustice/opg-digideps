@@ -26,7 +26,7 @@ class Util
      */
     public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
     {
-        $response = $this->apiClient->get('get_all_court_order_type');
+        $response = $this->apiClient->get('court-order-type/all');
        
         if($response->getStatusCode() == 200){
             $arrayData = $response->json();
@@ -58,9 +58,9 @@ class Util
      * 
      * @return Client
      */
-    public function getClient($clientId, $userId, array $groups = [])
+    public function getClient($clientId, $userId)
     {
-        return $this->apiClient->getEntity('Client','find_client_by_id', [ 'parameters' => [ 'id' => $clientId, 'userId'=>$userId ], 'query' => ['groups' => $groups ] ]);
+        return $this->apiClient->getEntity('Client', 'client/find-by-id/' . $clientId . '/' . $userId);
     }
     
     /**
@@ -72,7 +72,7 @@ class Util
      */
     public function getReport($reportId, $userId, array $groups = [ "transactions", "basic"])
     {
-        return $this->apiClient->getEntity('Report', 'find_report_by_id', [ 'parameters' => [ 'id' => $reportId, 'userId'=>$userId ], 'query' => [ 'groups' => $groups ]]);
+        return $this->apiClient->getEntity('Report', "report/find-by-id/{$reportId}/{$userId}", [ 'query' => [ 'groups' => $groups ]]);
     }
     
     /**

@@ -19,7 +19,6 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         $this->jsonSerializer = m::mock('JMS\Serializer\Serializer');
         
         $this->options = [ 'base_url' => 'https://digideps.api/',
-                            'endpoints' => [ 'find_user_by_email' => 'find-user-by-email'],
                             'format' => 'json',
                             'debug' => null,
                             'collectData' => false];
@@ -65,7 +64,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         
         $this->apiClientMock->shouldReceive('get')->times(1)->andReturn($mockGuzzleResponse);
         
-        $this->assertInstanceOf('\AppBundle\Entity\User',$this->apiClientMock->getEntity('User', 'find_user_by_email'));
+        $this->assertInstanceOf('\AppBundle\Entity\User',$this->apiClientMock->getEntity('User', 'find-user-by-email'));
     }
     
     /**
@@ -100,7 +99,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         
        $this->apiClientMock->shouldReceive('get')->times(1)->andReturn($mockGuzzleResponse);
         
-       $this->assertInternalType('array',$this->apiClientMock->getEntities('User', 'find_user_by_email'));
+       $this->assertInternalType('array',$this->apiClientMock->getEntities('User', 'find-user-by-email'));
     }
     
     /**
@@ -126,7 +125,7 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         
         $this->apiClientMock->shouldReceive('post')->with(m::any(),m::any())->times(1)->andReturn($mockGuzzleResponse);
         
-        $this->assertInternalType('array', $this->apiClientMock->postC('find_user_by_email', $userObject));
+        $this->assertInternalType('array', $this->apiClientMock->postC('find-user-by-email', $userObject));
     }
     
     
@@ -153,11 +152,11 @@ class ApiClientTest extends \PHPUnit_Framework_TestCase
         
         $this->apiClientMock->shouldReceive('put')->with(m::any(),m::any())->times(1)->andReturn($mockGuzzleResponse);
         
-        $this->assertInternalType('array', $this->apiClientMock->putC('find_user_by_email', $userObject));
+        $this->assertInternalType('array', $this->apiClientMock->putC('find-user-by-email', $userObject));
     }
     
     /*public function testCreateRequest()
     {
-        $this->assertInstanceOf('GuzzleHttp\Message\Request', $this->apiClientMock->createRequest('GET','find_user_by_email', [ 'query' => [ 'test']]));
+        $this->assertInstanceOf('GuzzleHttp\Message\Request', $this->apiClientMock->createRequest('GET','find-user-by-email', [ 'query' => [ 'test']]));
     }*/
 }

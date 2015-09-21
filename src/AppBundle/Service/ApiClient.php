@@ -13,13 +13,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ApiClient extends GuzzleClient
 {
     /**
-     * endpoints map
-     *
-     * @var array
-     */
-    private $endpoints;
-
-    /**
      * @var SerializerInterface
      */
     private $serialiser;
@@ -59,7 +52,7 @@ class ApiClient extends GuzzleClient
             if (!array_key_exists($k, $options)) {
                 throw new \InvalidArgumentException(__METHOD__ . " missing value for $k");
             }
-        }, ['base_url', 'endpoints', 'format', 'debug']);
+        }, ['base_url', 'format', 'debug']);
 
         // set internal properties
         $this->format = $options['format'];
@@ -68,7 +61,6 @@ class ApiClient extends GuzzleClient
                 __CLASS__ . ': '. $this->format . ' not valid. Accepted formats:' . implode(',', $this->acceptedFormats
             ));
         }
-        $this->endpoints = $options['endpoints'];
         $this->debug = $options['debug'];
         $this->options = $options;
         $this->collectData = $options['collectData'];
@@ -299,34 +291,6 @@ class ApiClient extends GuzzleClient
         return $bodyorEntity;
     }
 
-    /**
-     * Search through our route map and if this route exists then use that
-     *
-     * @param string $method
-     * @param string $url
-     * @param array $options
-     * @return type
-     */
-    public function createRequest($method, $url = null, array $options = array())
-    {
-
-        if (!empty($url) && array_key_exists($url, $this->endpoints)) {
-
-            $url = $this->endpoints[$url];
-
-            $methods = [ 'GET', 'DELETE', 'PUT', 'POST'];
-
-            if(in_array($method,$methods) && array_key_exists('parameters', $options)){
-
-                foreach($options['parameters'] as $param){
-                    $url = $url.'/'.$param;
-                }
-                unset($options['parameters']);
-            }
-        }
-        return parent::createRequest($method, $url, $options);
-    }
-    
     /**
      * @return array $config
      */
