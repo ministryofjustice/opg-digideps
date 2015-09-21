@@ -42,6 +42,13 @@ class ApiClient extends GuzzleClient
      */
     private $history = [];
 
+    /**
+     * Contains debug information about the last failed call. 
+     * To use for loggin, not meant to be displayed to the user
+     * 
+     * @var string 
+     */
+    private $lastErrorMessage;
     
     public function __construct(ContainerInterface $container, array $options)
     {
@@ -127,6 +134,7 @@ class ApiClient extends GuzzleClient
         ];
     }
 
+    
     /**
      * Override send() to recognise and re-throw error messages in a more understandable format
      *
@@ -143,7 +151,7 @@ class ApiClient extends GuzzleClient
             
             return $response;
         } catch (\Exception $e) {
-
+            
             if ($e instanceof RequestException) {
 
                 // try to unserialize response
@@ -153,11 +161,13 @@ class ApiClient extends GuzzleClient
                 }
                 try {
                     $responseArray = $this->serialiser->deserialize($response->getBody(), 'array', $this->format);
+                    $this->lastErrorMessage = $responseArray['message'];
                 } catch (\Exception $e) {
+                    $this->lastErrorMessage = $e->getMessage();
                     throw new RuntimeException("Error from API: malformed message. " . $e->getMessage());
                 }
 
-                // regognise specific error codes and launche specific exception classes
+                // regognise specific error codes and launch specific exception classes
                 
                 if(!isset($responseArray['code'])){
                    $responseArray['code'] = 401;
@@ -176,6 +186,8 @@ class ApiClient extends GuzzleClient
                     default:
                         throw new RuntimeException($responseArray['message'] . ' ' . $this->getDebugRequestExceptionData($e));
                 }
+            } else {
+                $this->lastErrorMessage = $e->getMessage();
             }
 
             throw new RuntimeException($e->getMessage() ?: 'Generic error from API');
@@ -313,6 +325,14 @@ class ApiClient extends GuzzleClient
     {
         return $this->history;
     }
-
+    
+    
+    /**
+     * @return string
+     */
+    public function getLastErrorMessage()
+    {
+        return $this->lastErrorMessage;
+    }
 
 }
