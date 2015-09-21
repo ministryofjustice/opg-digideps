@@ -62,7 +62,6 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
                 ]);
                 $template = 'AppBundle:User:activate.html.twig';
-                $email = 'activate';
                 break;
             
             case 'password-reset':
@@ -70,7 +69,6 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
                 ]);
                 $template = 'AppBundle:User:passwordReset.html.twig';
-                $email = 'password-reset';
                 break;
             
             default:
