@@ -21,10 +21,11 @@ Feature: User Self Registration
 
     @deputy @wip
     Scenario: Inform the use that email already exists
+        Given I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
@@ -33,10 +34,9 @@ Feature: User Self Registration
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
-            | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
         Then the following fields should have an error:
-            | email |
-        
+            | self_registration_email |
