@@ -1,5 +1,4 @@
 imports:
-    - { resource: endpoints.yml }
     - { resource: twig.yml }
     
 services:
@@ -18,7 +17,6 @@ services:
           - 
               format: "json"
               base_url: "%api_base_url%"
-              endpoints: "%api_endpoints%"
               debug: "%kernel.debug%"
               collectData: "%kernel.debug%"
     deputyprovider:

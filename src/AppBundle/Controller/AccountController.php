@@ -49,7 +49,7 @@ class AccountController extends Controller
             $account = $form->getData();
             $account->setReport($reportId);
 
-            $response = $apiClient->postC('add_report_account', $account, [
+            $response = $apiClient->postC('report/add-account', $account, [
                 'deserialise_group' => 'add'
             ]);
             
@@ -98,7 +98,7 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
         $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $account = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => [ 'transactions' ]]]);
+        $account = $apiClient->getEntity('Account', 'report/find-account-by-id/' . $accountId, ['query' => [ 'groups' => [ 'transactions' ]]]);
         $account->setReportObject($report);
         
         // closing balance logic
@@ -144,7 +144,7 @@ class AccountController extends Controller
         }
         
         // get account from db
-        $refreshedAccount = $apiClient->getEntity('Account', 'find_account_by_id', [ 'parameters' => ['id' => $accountId ], 'query' => [ 'groups' => 'transactions']]);
+        $refreshedAccount = $apiClient->getEntity('Account', 'report/find-account-by-id/' . $accountId, [ 'query' => [ 'groups' => 'transactions']]);
         $refreshedAccount->setReportObject($report);
         
         // refresh account data after forms have altered the account's data

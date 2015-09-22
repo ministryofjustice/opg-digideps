@@ -32,15 +32,15 @@ class UserService
      */
     public function loadUserByToken($token)
     {
-        $endpoint = 'find_user_by_token';
+        $endpoint = 'user/get-by-token/hybrid/' . $token;
         
         if ($this->env == 'admin') {
-            $endpoint = 'find_user_by_token_admin';
+            $endpoint = 'user/get-by-token/admin/'. $token;
         } elseif (in_array($this->env, [ 'develop', 'staging', 'ci', 'prod'])) {
-            $endpoint = 'find_user_by_token_deputy';    
+            $endpoint = 'user/get-by-token/deputy/'. $token;
         } 
 
-        return $this->apiclient->getEntity('User', $endpoint, [ 'parameters' => [ 'token' => $token]]);
+        return $this->apiclient->getEntity('User', $endpoint);
     }
 
 }

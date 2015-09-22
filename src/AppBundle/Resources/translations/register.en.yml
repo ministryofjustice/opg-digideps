@@ -1,0 +1,28 @@
+pageTitle: Registration details
+htmlTitle: "Deputy report - feedback | GOV.UK"
+
+intro: "You need to give your name, your email address, your client's postcode and case number. This is so you can create your secure deputy account."
+signin: "sign in"
+ifyoualready: "If you already have an account please"
+
+firstname:
+    label: "Your first name"
+lastname:
+    label: "Your last name"
+email:
+    label: "Your email"
+clientLastname:
+    label: "Client's last name"
+caseNumber:
+    label: "Case number"
+save:
+    label: "Sign up"
+
+thankyou:
+    subheading: Please check your email
+    body: |
+        <p class="page-section-description">We've sent you a link to <b>{{ email }}</b> that you need to click to activate your deputy service account.</p>
+        <p class="page-section-description">You'll need to use this link within 24 hours, or enter your details again.</p>
+        <p class="page-section-description">If you haven't received the email within a few minutes, please check your spam, bulk or 
+            junk email folder - it may have been mistakenly blocked by your email system.</p>
+        <p class="page-section-description">If you've already activated your account, you can {{ sign_in }}<p>

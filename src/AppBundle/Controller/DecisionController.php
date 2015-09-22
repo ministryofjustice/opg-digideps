@@ -38,7 +38,7 @@ class DecisionController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getDecisions())){
-            $this->get('apiclient')->delete('delete_decision', [ 'parameters' => [ 'id' => $id ]]);
+            $this->get('apiclient')->delete("decision/{$id}");
         }
         return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
     }
@@ -64,7 +64,7 @@ class DecisionController extends Controller
             if (!in_array($id, $report->getDecisions())) {
                throw new \RuntimeException("Decision not found.");
             }
-            $decision = $apiClient->getEntity('Decision','get_report_decision', [ 'parameters' => ['id' => $id ] ]);
+            $decision = $apiClient->getEntity('Decision', 'decision/' . $id);
 
             $form = $this->createForm(new FormDir\DecisionType([
                 'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
@@ -122,7 +122,7 @@ class DecisionController extends Controller
         }
 
         return [
-            'decisions' => $apiClient->getEntities('Decision', 'find_decision_by_report_id', [ 'parameters' => [ 'reportId' => $reportId ]]),
+            'decisions' => $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId),
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
@@ -142,14 +142,14 @@ class DecisionController extends Controller
 
          if($action == 'add'){
             // add decision
-            $apiClient->postC('add_decision', $form->getData());
+            $apiClient->postC('decision/upsert', $form->getData());
 
             //lets clear any reason for no decisions they might have added previously
             $report->setReasonForNoDecisions(null);
             $this->get('apiclient')->putC('report/'.$report->getId(),$report);
         }else{
             // edit decision
-            $apiClient->putC('update_decision', $form->getData());
+            $apiClient->putC('decision/upsert', $form->getData());
         }
     }
 
