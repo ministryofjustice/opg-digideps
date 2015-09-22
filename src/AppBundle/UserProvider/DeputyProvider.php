@@ -44,6 +44,24 @@ class DeputyProvider implements UserProviderInterface
     }
     
     /**
+     * 
+     * @param array $credentials
+     * @return type
+     */
+    public function login(array $credentials) 
+    {
+        $restclient = $this->container->get('restClient');
+        
+        try {
+           return $restclient->login($credentials['email'], $credentials['password']);
+        } catch(\Exception $e) {
+            $this->logger->info(__METHOD__ . ': ' . $e);
+            
+            throw new UsernameNotFoundException("We can't log you in at this time.");
+        }
+    }
+    
+    /**
      * Finds user by email
      * 
      * @param string $email
