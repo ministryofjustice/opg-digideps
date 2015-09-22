@@ -42,7 +42,7 @@ client:
         minMessage: The first name must be at least {{ limit }} letters
         maxMessage: The first name can't be longer than {{ limit }} letters
     lastname:
-        notBlank: Enter your clients' last name
+        notBlank: Enter your client's last name
         minMessage: The last name must be at least {{ limit }} letters
         maxMessage: The last name can't be longer than {{ limit }} letters
     caseNumber:
