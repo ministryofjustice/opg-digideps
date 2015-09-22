@@ -60,6 +60,8 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/manage, roles: IS_AUTHENTICATED_ANONYMOUSLY }  
         - { path: ^/feedback, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }    

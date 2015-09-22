@@ -1,0 +1,14 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% trans_default_domain "register" %}
+
+{% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+
+{% block pageBody %}
+
+    <h2 class="heading-medium-large">{{ 'thankyou.subheading' | trans }}</h2>
+
+    {{ bodyText |raw }}
+
+    
+{% endblock %}
