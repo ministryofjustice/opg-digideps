@@ -43,19 +43,9 @@ class IndexController extends Controller
         ];
        
         if ($form->isValid()){
-            $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
-            
-            try{
-                $user = $deputyProvider->loadUserByUsername($data['email']);
-                
-                $encoder = $this->get('security.encoder_factory')->getEncoder($user);
-
-                // exception if credentials not valid
-                if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
-                    $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
-                    throw new \Exception($message);
-                }
+            try {
+                $user = $this->get('deputyprovider')->login($data);
             } catch(\Exception $e){
                 return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
             }
