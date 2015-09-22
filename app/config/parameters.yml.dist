@@ -33,7 +33,7 @@ parameters:
       to_email: behat-deputyshipfeedback@publicguardian.gsi.gov.uk
     email:
       base_url:
-        frontend: http://digideps-client.local
+        frontend: https://digideps-client.local
         admin: http://digideps-admin.local
         routes:
           user_activate:  /user/activate/{token}

@@ -4,6 +4,8 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Client;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
+use AppBundle\Service\Mailer\MailFactory;
+use AppBundle\Service\Mailer\MailSender;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Exception;
 
