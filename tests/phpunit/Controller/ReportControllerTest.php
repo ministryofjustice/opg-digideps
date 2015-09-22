@@ -1,34 +1,17 @@
 <?php
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity as EntityDir;
 
-class ReportControllerTest extends WebTestCase
+class ReportControllerTest extends AbstractTestController
 {
-    private $client;
-    private $em;
-    
-    public function setUp()
-    {
-        $this->client = static::createClient([ 'environment' => 'test', 
-                                               'debug' => false ]);
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
-    }
-    
     public function testCloneAction()
     {
-        $client = new EntityDir\Client();
-        $this->em->persist($client);
-        
-        $courtOrderType = new EntityDir\CourtOrderType();
-        $this->em->persist($courtOrderType);
-        
-        $report = new EntityDir\Report();
-        $report->setClient($client);
-        $report->setCourtOrderType($courtOrderType);
-        $report->setStartDate(new \DateTime('01 January 2014'));
-        $report->setEndDate(new \DateTime('31 December 2014'));
+        $client = $this->fixtures->createClient();
+        $report = $this->fixtures->createReport($client, [
+            'setStartDate' => new \DateTime('01 January 2014'),
+            'setEndDate' => new \DateTime('31 December 2014')
+        ]);
         
         $asset = new EntityDir\Asset();
         $asset->setReport($report);
@@ -36,25 +19,21 @@ class ReportControllerTest extends WebTestCase
         $asset->setDescription('test');
         $asset->setValue(100);
         $asset->setValuationDate(new \DateTime('10 June 2013'));
-        $this->em->persist($asset);
         
         $account = new EntityDir\Account();
-        $account->setOpeningDate(new \DateTime('01 January 2014'));
-        $account->setClosingDate(new \DateTime('31 December 2014'));
-        $account->setReport($report);
-        $account->setBank('NATWEST');
-        $account->setSortCode('120044');
-        $account->setAccountNumber('0012');
-        $account->setCreatedAt(new \DateTime());
+        $account->setOpeningDate(new \DateTime('01 January 2014'))
+            ->setClosingDate(new \DateTime('31 December 2014'))
+            ->setReport($report)
+            ->setBank('NATWEST')
+            ->setSortCode('120044')
+            ->setAccountNumber('0012')
+            ->setCreatedAt(new \DateTime());
 
-        $this->em->getRepository('AppBundle:Account')->addEmptyTransactionsToAccount($account);
-        $this->em->persist($account);
-        
-        $this->em->persist($report);
+        $this->fixtures->getRepo('Account')->addEmptyTransactionsToAccount($account);
 
-        $this->em->flush();
-        
-        $this->em->clear();
+        $this->fixtures->persist($asset, $account);
+        $this->fixtures->flush();
+        $this->fixtures->clear();
 
         $this->client->request(
             'POST', '/report/clone',
@@ -68,9 +47,9 @@ class ReportControllerTest extends WebTestCase
         $responseArray = json_decode($this->client->getResponse()->getContent(),true);
         $reportId = $responseArray['data']['report'];
     
-        $this->em->clear();
+        $this->fixtures->clear();
 
-        $newReport = $this->em->getRepository('AppBundle:Report')->find($reportId);
+        $newReport = $this->fixtures->getRepo('Report')->find($reportId);
     
         $this->assertEquals($newReport->getStartDate()->format('Y-m-d'),'2015-01-01');
         $this->assertEquals($newReport->getEndDate()->format('Y-m-d'), '2015-12-31');

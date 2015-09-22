@@ -24,6 +24,7 @@ abstract class AbstractTestController extends WebTestCase
         
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         
+        $em->clear();
         $this->fixtures = new \Fixtures($em);
     }
     
@@ -31,10 +32,10 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @return array
      */
-    public function assertPostRequest($url, array $data)
+    public function assertPostPutRequest($url, array $data, $method = "POST")
     {
         $this->client->request(
-            'POST', 
+            $method, 
             $url,
             array(), array(),
             array('CONTENT_TYPE' => 'application/json'),
@@ -50,7 +51,6 @@ abstract class AbstractTestController extends WebTestCase
         
         return $return['data'];
     }
-
     
     /**
      * @return array
@@ -63,9 +63,9 @@ abstract class AbstractTestController extends WebTestCase
         $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type');
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
-        $this->assertTrue($return['success'], $return['message']);
         
-        return $return['data'];
+        
+        return $return;
     }
     
     

@@ -35,7 +35,7 @@ class Fixtures extends \PHPUnit_Framework_TestCase
     /**
      * @return EntityDir\Report
      */
-    public function createReport(EntityDir\Client $client)
+    public function createReport(EntityDir\Client $client, array $settersMap = [])
     {
         $cot = new EntityDir\CourtOrderType;
         $cot->setName('test');
@@ -44,14 +44,24 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         $report = new EntityDir\Report;
         $report->setClient($client);
         $report->setCourtOrderType($cot);
+        foreach ($settersMap as $k=>$v) {
+            $report->$k($v);
+        }
         $this->em->persist($report);
         
         return $report;
     }
     
-    public function flush()
+    public function flush($e = null)
     {
-        $this->em->flush();
+        $this->em->flush($e);
+    }
+    
+    public function persist()
+    {
+        foreach (func_get_args() as $e) {
+            $this->em->persist($e);
+        }
     }
     
     public function clear()
