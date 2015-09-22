@@ -10,5 +10,6 @@ keys = [
     "/email",
     "/email_settings",
     "/redis",
-    "/url"
+    "/url",
+    "/fixtures"
 ]

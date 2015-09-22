@@ -40,5 +40,18 @@ parameters:
           password_reset:  /user/password-reset/{token}
           homepage: /
           report_overview: /report/{reportId|}/overview
+    fixtures:
+        admin@publicguardian.gsi.gov.uk:
+            firstname: Admin
+            lastname: User
+            password: Abcd1234
+            roleId: 1
+            activated: true
+        laydeputy@publicguardian.gsi.gov.uk:
+            firstname: "Lay Deputy"
+            lastname: User
+            password: PDEtnLay1234
+            roleId: 2
+            activated: true
           
          
