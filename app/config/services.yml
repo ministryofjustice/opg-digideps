@@ -39,3 +39,6 @@ services:
         arguments: [  @translator ]
         tags:
             - { name: twig.extension }
+    user.selfRegistration:
+        class: AppBundle\Service\UserRegistrationService
+        arguments: [@doctrine.orm.entity_manager, @mailFactory, @mailSender]
