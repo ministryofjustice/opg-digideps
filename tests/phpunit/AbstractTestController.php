@@ -33,11 +33,11 @@ abstract class AbstractTestController extends WebTestCase
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      * @return type
      */
-    public function assertRequest(array $options)
+    public function assertRequest($method, $uri, array $options = [])
     {
         $this->client->request(
-            $options['method'], 
-            $options['uri'],
+            $method, 
+            $uri,
             array(), array(),
             array('CONTENT_TYPE' => 'application/json'),
             isset($options['data']) ? json_encode($options['data']) : null
@@ -65,23 +65,19 @@ abstract class AbstractTestController extends WebTestCase
     
     public function login($email, $password = 'Abcd1234')
     {
-        $data = $this->assertRequest([
-            'uri' => '/auth/login',
-            'method' => 'POST',
+        $data = $this->assertRequest('POST', '/auth/login', [
+            'mustSucceed' => true,
             'data' => [
                 'email' => $email,
-                'password' => $password,
-            ],
-            'mustSucceed' => true
+                'password' => $password
+            ]
         ])['data'];
         $this->assertEquals($email, $data['email']);
     }
     
     public function logout()
     {
-        $data = $this->assertRequest([
-            'uri' => '/auth/logout',
-            'method' => 'POST',
+       $this->assertRequest('POST', '/auth/logout', [
             'mustSucceed' => true
         ]);
     }

@@ -15,18 +15,16 @@ class AccountControllerTest extends AbstractTestController
         $report = $this->fixtures->createReport($client);
         $this->fixtures->flush();
         
-        $return = $this->assertRequest([
-            'uri'=>'/report/add-account',
-            'method'=>'POST',
-            'data' => [
+        $return = $this->assertRequest('POST', '/report/add-account', [
+            'mustSucceed'=>true,
+            'data'=> [
                 'report' => $report->getId(),
                 'bank' => 'hsbc',
                 'sort_code' => '123456',
                 'account_number' => '1234',
                 'opening_date' => '01/01/2015',
                 'opening_balance' => '500'
-            ],
-            'mustSucceed'=>true
+            ]
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         

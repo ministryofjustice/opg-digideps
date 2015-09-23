@@ -9,9 +9,7 @@ class ManageControllerTest extends AbstractTestController
     
     public function testAvailability()
     {
-        $ret = $this->assertRequest([
-            'method' => 'GET', 
-            'uri' => '/manage/availability',
+        $ret = $this->assertRequest('GET', '/manage/availability',[
             'assertResponseCode' => 200
         ])['data'];
     
@@ -20,9 +18,7 @@ class ManageControllerTest extends AbstractTestController
     
     public function testElb()
     {
-        $ret = $this->assertRequest([
-            'method' => 'GET', 
-            'uri' => '/manage/elb',
+        $ret = $this->assertRequest('GET','/manage/elb', [
             'assertResponseCode' => 200
         ])['data'];
 

@@ -11,14 +11,13 @@ class UserControllerTest extends AbstractTestController
     {
         $this->login('deputy@example.org');
         
-        $return = $this->assertRequest([
-            'uri'=>'/user?skip-mail=1', 
-            'method' => 'POST',
-            'data'=>[
+        $return = $this->assertRequest('POST', '/user?skip-mail=1', [
+            'data' => [
                 'firstname' => 'n',
                 'lastname' => 's',
                 'email' => 'n.s.justice.gov.uk'
-            ]
+            ],
+            'mustSucceed' => true
         ]);
         
         return $return['data']['id'];
@@ -32,9 +31,8 @@ class UserControllerTest extends AbstractTestController
     {
         $this->login('deputy@example.org');
         
-        $return = $this->assertRequest([
-            'uri'=>'/user/' . $id,
-            'method'=>'GET'
+        $return = $this->assertRequest('GET', '/user/' . $id, [
+            'mustSucceed' => true
         ]);
         $this->assertTrue($return['success'], $return['message']);
         $this->assertEquals('n', $return['data']['firstname']);
@@ -47,13 +45,10 @@ class UserControllerTest extends AbstractTestController
     {
         $this->login('deputy@example.org');
         
-        $return = $this->assertRequest([
-            'uri'=>'/user/0',
-            'method'=>'GET'
+        $return = $this->assertRequest('GET', '/user/0', [
+            'mustFail' => true
         ]);
-        $this->assertFalse($return['success']);
         $this->assertEmpty($return['data']);
         $this->assertContains('not found', $return['message']);
-        
     }
 }
