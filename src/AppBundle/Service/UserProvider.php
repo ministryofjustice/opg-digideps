@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\UserProvider;
+namespace AppBundle\Service;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;

@@ -29,7 +29,7 @@ services:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_secure_hostname%", "%smtp_secure_port%" ]
     userprovider:
-        class: AppBundle\UserProvider\UserProvider
+        class: AppBundle\Service\UserProvider
         arguments: [@doctrine.orm.entity_manager]
     user.query.filter:
         class: AppBundle\Service\UserQueryFilter
