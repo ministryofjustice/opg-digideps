@@ -717,5 +717,15 @@ class User implements AdvancedUserInterface
         $this->lastLoggedIn = $lastLoggedIn;
         return $this;
     }
+    
+    /**
+     * Get random string based on user data, time and random data
+     * 
+     * @return string
+     */
+    public function getRandomTokenBasedOnInternalData()
+    {
+        return $this->getId() . '_' . sha1(microtime() . spl_object_hash($this) . rand(1,999));
+    }
 
 }

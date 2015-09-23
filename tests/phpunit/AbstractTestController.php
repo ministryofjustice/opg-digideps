@@ -48,13 +48,13 @@ abstract class AbstractTestController extends WebTestCase
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
-            $this->assertTrue($return['success'], $return['message']);
+            $this->assertTrue($return['success'], "Endpoint didn't return TRUE as expected. Response: " . $return['message']);
             if (!empty($options['assertId'])) {
                 $this->assertTrue($return['data']['id'] > 0);
             }
         }
         if (!empty($options['mustFail'])) {
-            $this->assertFalse($return['success']);
+            $this->assertFalse($return['success'], "Endpoint didn't return FALSE as expected. Response: " . $return['message']);
         }
         
         return $return;

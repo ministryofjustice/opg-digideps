@@ -69,7 +69,7 @@ abstract class RestController extends Controller
     {
         $repo = $this->getRepository($entityClass);
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
-
+        
         if (!$entity) {
             throw new AppExceptions\NotFound($errorMessage ? : $entityClass . ' not found');
         }
