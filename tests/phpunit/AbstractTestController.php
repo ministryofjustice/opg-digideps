@@ -63,6 +63,28 @@ abstract class AbstractTestController extends WebTestCase
         return $return;
     }
     
+    public function login($email, $password = 'Abcd1234')
+    {
+        $data = $this->assertRequest([
+            'uri' => '/auth/login',
+            'method' => 'POST',
+            'data' => [
+                'email' => $email,
+                'password' => $password,
+            ],
+            'mustSucceed' => true
+        ])['data'];
+        $this->assertEquals($email, $data['email']);
+    }
+    
+    public function logout()
+    {
+        $data = $this->assertRequest([
+            'uri' => '/auth/logout',
+            'method' => 'POST',
+            'mustSucceed' => true
+        ]);
+    }
     
     public function tearDown()
     {

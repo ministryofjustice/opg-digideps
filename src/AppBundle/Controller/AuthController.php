@@ -26,32 +26,48 @@ class AuthController extends RestController
             'password' => 'notEmpty',
         ]);
         
-        // log the user in using symfony stuff
+        // get user by email
         $user = $this->findEntityBy('User', [
-            'email'=> $data['email'],
-            'password'=> $data['password']
+            'email'=> $data['email']
         ], 'User not found');
         
-        if (!$user) {
+        // check hashed password matching
+        $encodedPass = $this->get('security.encoder_factory')
+            ->getEncoder($user)
+            ->encodePassword($data['password'], $user->getSalt());
+        if (!$user->getPassword() || $user->getPassword() != $encodedPass) {
             throw new \RuntimeException('Cannot find user with the given username and password');
         }
         
-        $randomToken = $user->getRandomTokenBasedOnInternalData();
+        // log user in
+        $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+        $this->get("security.context")->setToken($token);
         
+        // add random token into response
+        $randomToken = $user->getRandomTokenBasedOnInternalData();
         $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($request) use ($randomToken) {
             $request->headers->set('AuthToken', $randomToken);
         });
         
-        // manually set session token into security context (manual login)
-        $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
-        $this->get("security.context")->setToken($token);
-        
-        // TODO store (tandomToken, user) into the DB
-        // TODO each endpoint performs check after having read the "auth" header
-        // - no token => 404
-        // - get the user and perform ACL
+        // store token into the database for following requests
+        // TODO
         
         return $user;
+    }
+    
+    /**
+     * Return the user by email and hashed password (or exception if not found)
+     * 
+     * 
+     * @Route("/logout")
+     * @Method({"POST"})
+     */
+    public function logout()
+    {
+        $this->get('security.context')->setToken(null);
+        $this->get('request')->getSession()->invalidate();
+        
+        return true;
     }
     
     /**

@@ -6,20 +6,6 @@ use AppBundle\Entity\Role;
 
 class AuthControllerTest extends AbstractTestController
 {
-    public function testCreateUser()
-    {
-        $user = $this->fixtures->createUser([
-            'setEmail' => 'user@mail.com',
-            'setPassword' => 'plainPassword',
-            'setRole'=> $this->fixtures->getRepo('Role')->find(Role::ROLE_LAY_DEPUTY)
-        ]);
-        $this->fixtures->flush($user);
-        $this->fixtures->clear();
-        
-        return $user;
-    }
-
-
     public function testProtectedAreaIsNotAccessibleWhenNotLogged()
     {
         $this->assertRequest([
@@ -29,10 +15,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
     
-    /**
-     * @depends testCreateUser
-     */
-    public function testLoginFail(User $user)
+    public function testLoginFail()
     {
         $return = $this->assertRequest([
             'uri' => '/auth/login',
@@ -46,36 +29,31 @@ class AuthControllerTest extends AbstractTestController
         $this->assertContains('not found', $return['message']);
         
         // assert I'm still not logged
-        $this->assertRequest([
-            'method' => 'GET',
-            'uri' => '/auth/get-logged-user',
+        $this->assertRequest([ 'method' => 'GET', 'uri' => '/auth/get-logged-user',
             'mustFail' => true
         ]);
     }
     
-    /**
-     * @depends testCreateUser
-     */
-    public function testLoginSuccess(User $user)
+    public function testLoginSuccess()
     {
-        $data = $this->assertRequest([
-            'uri' => '/auth/login',
-            'method' => 'POST',
-            'data' => [
-                'email' => $user->getEmail(),
-                'password' => $user->getPassword(),
-            ],
+        $this->login('deputy@example.org');
+        
+        // assert I'm logged
+        $data = $this->assertRequest(['method' => 'GET', 'uri' => '/auth/get-logged-user',
             'mustSucceed' => true
         ])['data'];
+        $this->assertEquals('deputy@example.org', $data['email']);
+    }
+    
+    public function testLogout()
+    {
+        $this->testLoginSuccess();
         
-        $this->assertEquals($user->getId(), $data['id']);
-        $this->assertEquals($user->getEmail(), $data['email']);
+        $this->logout();
         
-        // assert I'm not logged
-        $this->assertRequest([
-            'method' => 'GET',
-            'uri' => '/auth/get-logged-user',
-            'mustSucceed' => true
+        // assert I'm still not logged
+        $this->assertRequest([ 'method' => 'GET', 'uri' => '/auth/get-logged-user',
+            'mustFail' => true
         ]);
     }
 }

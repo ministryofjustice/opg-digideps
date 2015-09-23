@@ -7,6 +7,8 @@ class ReportControllerTest extends AbstractTestController
 {
     public function testCloneAction()
     {
+        $this->login('deputy@example.org');
+        
         $client = $this->fixtures->createClient();
         $report = $this->fixtures->createReport($client, [
             'setStartDate' => new \DateTime('01 January 2014'),

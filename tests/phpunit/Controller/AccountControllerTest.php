@@ -9,6 +9,8 @@ class AccountControllerTest extends AbstractTestController
      */
     public function addAccount()
     {
+        $this->login('deputy@example.org');
+        
         $client = $this->fixtures->createClient();
         $report = $this->fixtures->createReport($client);
         $this->fixtures->flush();
@@ -24,6 +26,7 @@ class AccountControllerTest extends AbstractTestController
                 'opening_date' => '01/01/2015',
                 'opening_balance' => '500'
             ],
+            'mustSucceed'=>true
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         

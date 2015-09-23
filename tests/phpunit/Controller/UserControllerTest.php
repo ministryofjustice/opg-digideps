@@ -9,6 +9,8 @@ class UserControllerTest extends AbstractTestController
      */
     public function addJson()
     {
+        $this->login('deputy@example.org');
+        
         $return = $this->assertRequest([
             'uri'=>'/user?skip-mail=1', 
             'method' => 'POST',
@@ -28,6 +30,8 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJson($id)
     {
+        $this->login('deputy@example.org');
+        
         $return = $this->assertRequest([
             'uri'=>'/user/' . $id,
             'method'=>'GET'
@@ -41,6 +45,8 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJsonException()
     {
+        $this->login('deputy@example.org');
+        
         $return = $this->assertRequest([
             'uri'=>'/user/0',
             'method'=>'GET'
