@@ -174,6 +174,9 @@ class RestInputOuputFormatter
 
         register_shutdown_function(function () use ($event) {
             $lastError = error_get_last();
+            if (!$lastError) {
+                return;
+            }
             echo json_encode(array(
                 'success' => false, 
                 'data' => '', 
