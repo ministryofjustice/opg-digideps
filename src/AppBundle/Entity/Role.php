@@ -13,6 +13,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Role implements RoleInterface
 { 
+    const ROLE_ADMIN = 1;
+    const ROLE_LAY_DEPUTY = 2;
+    
     /**
      * @var integer
      *

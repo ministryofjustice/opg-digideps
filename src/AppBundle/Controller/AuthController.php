@@ -5,6 +5,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception as AppExceptions;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @Route("/auth")
@@ -41,6 +42,10 @@ class AuthController extends RestController
             $request->headers->set('AuthToken', $randomToken);
         });
         
+        // manually set session token into security context (manual login)
+        $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+        $this->get("security.context")->setToken($token);
+        
         // TODO store (tandomToken, user) into the DB
         // TODO each endpoint performs check after having read the "auth" header
         // - no token => 404
@@ -52,12 +57,12 @@ class AuthController extends RestController
     /**
      * Test endpoint used for testing to check auth permissions
      * 
-     * @Route("/test")
+     * @Route("/get-logged-user")
      * @Method({"GET"})
      */
     public function test()
     {
-        return true;
+        return $this->get('security.context')->getToken()->getUser();
     }
    
 }

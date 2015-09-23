@@ -43,8 +43,8 @@ abstract class AbstractTestController extends WebTestCase
             isset($options['data']) ? json_encode($options['data']) : null
         );
         $response =  $this->client->getResponse();
-        
-        $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type');
+
+        $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type. Headers: ' . $response->headers);
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
