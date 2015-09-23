@@ -1,6 +1,1 @@
-#!/bin/bash
-#let's configure environment
-run-parts /etc/my_init.d
-
-cd /app
-/sbin/setuser app php app/console digideps:fixtures
+echo "deprecated. remove when dd-1130 is fully merged to master"

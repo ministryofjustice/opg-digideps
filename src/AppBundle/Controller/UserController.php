@@ -80,12 +80,8 @@ class UserController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
 
-            // calculated hashed password
-            $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
-                    ->encodePassword($user->getPassword(), $user->getSalt());
-
             $apiClient->putC('user/' . $user->getId() . '/set-password', json_encode([
-                'password' => $encodedPassword,
+                'password_plain' => $user->getPassword(),
                 'set_active' => true,
                 'send_email' => false //not sent on this "landing" pages
             ]));
