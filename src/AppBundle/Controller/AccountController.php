@@ -3,8 +3,9 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
-
+use AppBundle\Exception as AppExceptions;
 
 class AccountController extends RestController
 {
@@ -13,13 +14,11 @@ class AccountController extends RestController
      * @Route("/report/get-accounts/{id}")
      * @Method({"GET"})
      */
-    public function getAccountsAction($id)
+    public function getAccountsAction(Request $request, $id)
     {
-        $request = $this->getRequest();
-        
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : null;
-        
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups($request->query->get('groups'));
+        }
         
         $report = $this->findEntityBy('Report', $id);
       
@@ -39,18 +38,16 @@ class AccountController extends RestController
      */
     public function addAccountAction()
     {
-        $data = $this->deserializeBodyContent();
-   
-         // assert mandatory params
-        foreach (['bank', 'sort_code', 'opening_date', 'opening_balance'] as $k) {
-            if (!array_key_exists($k, $data)) {
-                throw new \InvalidArgumentException("Bank account creation: parameter '$k' missing");
-            }
-        }
+        $data = $this->deserializeBodyContent([
+           'bank' => 'notEmpty', 
+           'sort_code' => 'notEmpty', 
+           'opening_date' => 'notEmpty', 
+           'opening_balance' => 'notEmpty'
+        ]);
         
         $report = $this->findEntityBy('Report', $data['report']);
         if (empty($report)) {
-            throw new \Exception("Report id: " . $data['report'] . " does not exists");
+            throw new AppExceptions\NotFound("Report id: " . $data['report'] . " does not exists");
         }
         
         $account = new EntityDir\Account();
@@ -70,13 +67,11 @@ class AccountController extends RestController
      * @Route("/report/find-account-by-id/{id}")
      * @Method({"GET"})
      */
-    public function get($id)
+    public function getOneById(Request $request, $id)
     {
-        $request = $this->getRequest();
-        
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : null;
-        
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups($request->query->get('groups'));
+        }
         
         $account = $this->findEntityBy('Account', $id, 'Account not found');
 
@@ -103,9 +98,8 @@ class AccountController extends RestController
                     ->setAmount($transactionRow['amount'])
                     ->setMoreDetails($transactionRow['more_details']);
             }, array_merge($data['money_in'], $data['money_out']));
-            $this->setJmsSerialiserGroup('transactions');
+            $this->setJmsSerialiserGroups('transactions');
         }
-        
         
         
         $account->setLastEdit(new \DateTime());

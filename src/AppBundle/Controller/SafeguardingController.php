@@ -4,6 +4,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Safeguarding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Exception as AppExceptions;
+
 
 /**
  * @Route("/safeguarding")
@@ -55,11 +58,10 @@ class SafeguardingController extends RestController
      * @param integer $id
      * @return \AppBundle\Entity\Safeguarding
      */
-    public function get($id)
+    public function getOneBydId(Request $request, $id)
     {
-        $request = $this->getRequest();
         $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        $this->setJmsSerialiserGroups($serialiseGroups);
 
         $safeguarding = $this->findEntityBy('Safeguarding', $id, "Safeguarding with id:".$id." not found");
 

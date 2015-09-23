@@ -4,11 +4,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\User;
-use AppBundle\Exception\NotFound;
+use AppBundle\Exception as AppExceptions;
+
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -114,11 +113,13 @@ class UserController extends RestController
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
         
-        $data = $this->deserializeBodyContent();
-        if (empty($data['password'])) {
-            throw new \InvalidArgumentException('missing password');
-        }
-        $user->setPassword($data['password']);
+        $data = $this->deserializeBodyContent([
+            'password_plain' => 'NotEmpty'
+        ]);
+        
+        $password = $this->get('security.encoder_factory')->getEncoder($user)
+                    ->encodePassword($data['password_plain'], $user->getSalt());
+        $user->setPassword($password);
         
         if (array_key_exists('set_active', $data)) {
            $user->setActive($data['set_active']);
@@ -164,13 +165,13 @@ class UserController extends RestController
         $adminUser = $this->getRepository('User')->find($adminId);
         
         if(empty($adminUser) || ($adminUser->getRole()->getRole() != "ROLE_ADMIN") || ($adminId == $id)){
-            throw new \RuntimeException("You are not authorized to perform this action");
+            throw new AppExceptions\Auth("You are not authorized to perform this action");
         }
         
         $user = $this->getRepository('User')->find($id);
         
         if(empty($user)){
-            throw new \RuntimeException("User not found");
+            throw new AppExceptions\NotFound("User not found");
         }
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
@@ -192,22 +193,15 @@ class UserController extends RestController
      * @Route("/get-user-by-email/{email}")
      * @Method({"GET"})
      */
-    public function getUserByEmail($email)
+    public function getUserByEmail(Request $request, $email)
     {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
-        }
-        
-        $this->setJmsSerialiserGroup($serialisedGroups);
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
+        $this->setJmsSerialiserGroups($serialiseGroups);
         
         $user = $this->getRepository('User')->getByEmail(strtolower($email));
         
         if(empty($user)){
-            throw new \Exception('User not found');
+            throw new AppExceptions\NotFound('User not found');
         }
         
         return $user;
@@ -217,22 +211,15 @@ class UserController extends RestController
      * @Route("/get-admin-by-email/{email}")
      * @Method({"GET"})
      */
-    public function getAdminByEmail($email)
+    public function getAdminByEmail(Request $request, $email)
     {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
-        }
-        
-        $this->setJmsSerialiserGroup($serialisedGroups);
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
+        $this->setJmsSerialiserGroups($serialiseGroups);
         
         $user = $this->getRepository('User')->getAdminByEmail(strtolower($email));
         
         if(empty($user)){
-            throw new \Exception('User not found');
+            throw new AppExceptions\NotFound('User not found');
         }
         
         return $user;
@@ -243,17 +230,10 @@ class UserController extends RestController
      * @Route("/get-by-email/{email}")
      * @Method({"GET"})
      */
-    public function getByEmail($email)
+    public function getByEmail(Request $request, $email)
     {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
-        }
-        
-        $this->setJmsSerialiserGroup($serialisedGroups);
+        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
+        $this->setJmsSerialiserGroups($serialiseGroups);
         
         return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
@@ -270,10 +250,10 @@ class UserController extends RestController
         $role = $user->getRole()->getRole();
         
         if ($domain ==='admin' && $role != 'ROLE_ADMIN') {
-            throw new NotFound('User not found');
+            throw new AppExceptions\NotFound('User not found');
         }
         if ($domain ==='deputy' && $role == 'ROLE_ADMIN') {
-            throw new NotFound('User not found');
+            throw new AppExceptions\NotFound('User not found');
         }
         
         return $user;

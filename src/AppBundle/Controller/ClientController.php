@@ -3,8 +3,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
-use AppBundle\Exception\NotFound;
+use AppBundle\Exception as AppExceptions;
+
 
 /**
  * @Route("/client")
@@ -17,10 +19,9 @@ class ClientController extends RestController
      * @Route("/upsert")
      * @Method({"POST", "PUT"})
      */
-    public function  upsertAction()
+    public function  upsertAction(Request $request)
     {
         $data = $this->deserializeBodyContent();
-        $request = $this->getRequest();
       
         if($request->getMethod() == "POST"){
             $client = $this->add($data['users'][0]);
@@ -80,23 +81,17 @@ class ClientController extends RestController
      * @param integer $id
      * @param integer $userId to check the record is accessible by this user
      */
-    public function findByIdAction($id, $userId)
+    public function findByIdAction(Request $request, $id, $userId)
     {
-        $request = $this->getRequest();
-        
-        $serialisedGroups = null;
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups($request->query->get('groups'));
         }
-        
-        $this->setJmsSerialiserGroup($serialisedGroups);
         
         $client = $this->getRepository('Client')->find($id);
         
         //  throw exception if the client does not exist or it's not accessible by the given user
         if(empty($client) || !in_array($userId, $client->getUserIds())) {
-            throw new \Exception("Client with id: $id does not exist");
+            throw new \Exception("Client with id: $id does not exist", 404);
         }
         
         return $client;
@@ -111,7 +106,7 @@ class ClientController extends RestController
         $user = $this->findEntityBy('User', $userId, "User not found");
         
         if (count($user->getClients()) === 0) {
-            throw new NotFound("User has no clients");
+            throw new AppExceptions\NotFound("User has no clients", 404);
         }
         
         return $this->findEntityBy('Client', $user->getClients()->first()->getId(), "Client not found");

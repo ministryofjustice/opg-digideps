@@ -3,7 +3,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception as AppExceptions;
+
 
 class ReportController extends RestController
 {
@@ -22,7 +25,7 @@ class ReportController extends RestController
             // new report
              $client = $this->findEntityBy('Client', $reportData['client']);
             if(empty($client)){
-                throw new \Exception("Client id: ".$reportData['client']." does not exists");
+                throw new AppExceptions\NotFound("Client id: ".$reportData['client']." does not exists", 404);
             }
             $report = new EntityDir\Report();
             $report->setClient($client);
@@ -31,7 +34,7 @@ class ReportController extends RestController
         // add court order type
         $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
         if(empty($courtOrderType)){
-            throw new \Exception("Court Order Type id: ".$reportData['court_order_type']." does not exists");
+            throw new AppExceptions\NotFound("Court Order Type id: ".$reportData['court_order_type']." does not exists", 404);
         }
         $report->setCourtOrderType($courtOrderType);
         
@@ -60,7 +63,7 @@ class ReportController extends RestController
         $report = $this->findEntityBy('Report', $reportData['id']);
         
         if(empty($report)){
-            throw new \Exception("Report id: ".$reportData['id']." does not exists");
+            throw new AppExceptions\NotFound("Report id: ".$reportData['id']." does not exists", 404);
         }
         
         $newReport = $this->getRepository('Report')->createNextYearReport($report);
@@ -76,19 +79,17 @@ class ReportController extends RestController
      * @param integer $id
      * @param integer $userId to check the record is accessible by this user
      */
-    public function getById($id, $userId)
+    public function getById(Request $request, $id, $userId)
     {   
-        $request = $this->getRequest();
-        
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
-        
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups($request->query->get('groups'));
+        }
         
         $report = $this->getRepository('Report')->find($id); /* @var $report EntityDir\Report */
         
         // throw exception if the report does not exist or it's not accessible from the given user
         if (empty($report) || !in_array($userId, $report->getClient()->getUserIds())) {
-            throw new \Exception("Report not found");
+            throw new AppExceptions\NotFound("Report not found", 404);
         }
         
         return $report;
@@ -98,15 +99,14 @@ class ReportController extends RestController
      * @Route("/report/upsert-contact")
      * @Method({"POST", "PUT"})
      **/
-    public function upsertContactAction()
+    public function upsertContactAction(Request $request)
     {
         $contactData = $this->deserializeBodyContent();
-        $request = $this->getRequest();
        
         $report = $this->findEntityBy('Report',$contactData['report']);
         
         if(empty($report)){
-            throw new \Exception("Report id: ".$contactData['report']." does not exists");
+            throw new AppExceptions\NotFound("Report id: ".$contactData['report']." does not exists", 404);
         }
         
         if($request->getMethod() == "POST"){
@@ -116,7 +116,7 @@ class ReportController extends RestController
             $contact = $this->findEntityBy('Contact', $contactData['id']);
             
             if(empty($contact)){
-                throw new \Exception("Contact with id: ".$contactData['id']);
+                throw new AppExceptions\NotFound("Contact with id: ".$contactData['id'], 404);
             }
         }
         $contact->setContactName($contactData['contact_name']);
@@ -145,7 +145,7 @@ class ReportController extends RestController
         $contacts = $this->getRepository('Contact')->findByReport($report);
         
         if(count($contacts) == 0){
-            //throw new \Exception("No contacts found for report id: $id");
+            //throw new AppExceptions\NotFound("No contacts found for report id: $id", 404);
             return [];
         }
         return $contacts;
@@ -155,21 +155,15 @@ class ReportController extends RestController
      * @Route("/report/get-contact/{id}")
      * @Method({"GET"})
      */
-    public function getContactAction($id)
+    public function getContactAction(Request $request, $id)
     {
-        $request = $this->getRequest();
-        
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
-        }
-        $this->setJmsSerialiserGroup($serialisedGroups);
+        $serialisedGroups = $request->query->has('groups') ? $request->query->get('groups') : ['basic'];
+        $this->setJmsSerialiserGroups($serialisedGroups);
         
         $contact = $this->findEntityBy('Contact', $id);
         
         if(empty($contact)){
-            throw new \Exception("Contact with id: $id does not exist");
+            throw new AppExceptions\NotFound("Contact with id: $id does not exist", 404);
         }
         return $contact;
     }
@@ -201,7 +195,7 @@ class ReportController extends RestController
         $asset = $this->findEntityBy('Asset', $id);
         
         if(empty($asset)){
-            throw new \Exception("Asset with id: $id does not exist");
+            throw new AppExceptions\NotFound("Asset with id: $id does not exist", 404);
         }
         return $asset;
     }
@@ -210,16 +204,14 @@ class ReportController extends RestController
      * @Route("/report/upsert-asset")
      * @Method({"POST", "PUT"})
      */
-    public function upsertAssetAction()
+    public function upsertAssetAction(Request $request)
     {
-        $request = $this->getRequest();
-        
         $assetData = $this->deserializeBodyContent();
         
         $report = $this->findEntityBy('Report', $assetData['report']);
         
         if(empty($report)){
-            throw new \Exception("Report id: ".$assetData['report']." does not exists");
+            throw new AppExceptions\NotFound("Report id: ".$assetData['report']." does not exists", 404);
         }
         
         if($request->getMethod() == 'POST'){
@@ -229,7 +221,7 @@ class ReportController extends RestController
             $asset = $this->findEntityBy('Asset', $assetData['id']);
             
             if(empty($asset)){
-                throw new \Exception("Asset with id:".$assetData['id'].' was not found');
+                throw new AppExceptions\NotFound("Asset with id:".$assetData['id'].' was not found', 404);
             }
         }
         

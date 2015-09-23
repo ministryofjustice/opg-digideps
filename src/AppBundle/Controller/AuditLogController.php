@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception as AppExceptions;
 
 /**
  * @Route("/audit-log")
@@ -22,14 +24,13 @@ class AuditLogController extends RestController
      */
     public function addAction()
     {
-        $data = $this->deserializeBodyContent();
-
-        // assert mandatory params
-        foreach (['performed_by_user', 'ip_address', 'created_at', 'action'] as $k) {
-            if (!array_key_exists($k, $data)) {
-                throw new \InvalidArgumentException("Missing parameter $k");
-            }
-        }
+        $data = $this->deserializeBodyContent([
+            'performed_by_user' => 'mustExist', 
+            'ip_address' => 'mustExist', 
+            'created_at' => 'mustExist', 
+            'action' => 'mustExits'
+        ]);
+        
         if (!array_key_exists('id', $data['performed_by_user'])) {
             throw new \InvalidArgumentException("Missing parameter performed_by_user.id");
         }
@@ -57,7 +58,7 @@ class AuditLogController extends RestController
      */
     public function getAll()
     {
-        $this->setJmsSerialiserGroup(['audit_log']);
+        $this->setJmsSerialiserGroups(['audit_log']);
 
         return $this->getRepository('AuditLogEntry')->findBy([], ['id'=>'DESC']);
     }

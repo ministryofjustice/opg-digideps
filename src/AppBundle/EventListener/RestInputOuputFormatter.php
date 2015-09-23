@@ -15,8 +15,6 @@ use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class RestInputOuputFormatter
 {
-    const HEADER_JMS_GROUP = 'JmsSerialiseGroup';
-    
     /**
      * @var Serializer
      */
@@ -42,7 +40,16 @@ class RestInputOuputFormatter
      */
     private $debug;
 
-
+    /**
+     * @var Closure
+     */
+    private $responseModifiers = [];
+    
+    /**
+     * @var Closure
+     */
+    private $contextModifiers = [];
+    
     public function __construct(Serializer $serializer, LoggerInterface $logger, array $supportedFormats, $defaultFormat, $debug)
     {
         $this->serializer = $serializer;
@@ -88,24 +95,20 @@ class RestInputOuputFormatter
         }
 
         $context = SerializationContext::create(); //->setSerializeNull(true);
-        $serialiseGroups = $request->headers->get(self::HEADER_JMS_GROUP);
-        
-        if (!empty($serialiseGroups)) {
-            if(is_array($serialiseGroups)){
-                $context->setGroups($serialiseGroups);
-            }
+        // context modifier
+        foreach ($this->contextModifiers as $modifier) {
+            $modifier($context);
         }
         
         $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
         $response->headers->set('Content-Type', 'application/' . $format);
+        // response modifier
+        foreach ($this->responseModifiers as $modifier) {
+            $modifier($response);
+        }
         
         return $response;
-    }
-    
-    public static function addJmsSerialiserGroupToRequest($request, $group)
-    {
-        $request->headers->set(self::HEADER_JMS_GROUP, [$group]);
     }
 
     /**
@@ -125,7 +128,7 @@ class RestInputOuputFormatter
             'data' => $event->getControllerResult(), 
             'message' => ''
         );
-        
+
         $response = $this->arrayToResponse($data, $event->getRequest());
         
         $event->setResponse($response);
@@ -180,6 +183,22 @@ class RestInputOuputFormatter
             //TODO find a way to use kernely temrinate instead, usgin 
         });
 
+    }
+    
+    /**
+     * @param \Closure $f
+     */
+    public function addResponseModifier(\Closure $f)
+    {
+        $this->responseModifiers[] = $f;
+    }
+    
+     /**
+     * @param \Closure $f
+     */
+    public function addContextModifier(\Closure $f)
+    {
+        $this->contextModifiers[] = $f;
     }
     
 }

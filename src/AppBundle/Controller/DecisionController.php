@@ -3,7 +3,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Decision;
+use AppBundle\Exception as AppExceptions;
+
 
 /**
  * @Route("/decision")
@@ -14,10 +17,9 @@ class DecisionController extends RestController
      * @Route("/upsert")
      * @Method({"POST", "PUT"})
      */
-    public function upsertAction()
+    public function upsertAction(Request $request)
     {
         $data = $this->deserializeBodyContent();
-        $request = $this->getRequest();
 
         if($request->getMethod() == "PUT"){
             $decision = $this->findEntityBy('Decision', $data['id']);
@@ -58,11 +60,11 @@ class DecisionController extends RestController
      * @Method({"GET"})
      * @param integer $id
      */
-    public function get($id)
+    public function getOneById(Request $request, $id)
     {
-        $request = $this->getRequest();
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups($request->query->get('groups'));
+        }
         
         $decision = $this->findEntityBy('Decision', $id, "Decision with id:".$id." not found");
         
