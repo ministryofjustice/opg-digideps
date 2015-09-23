@@ -12,12 +12,12 @@
         "symfony/symfony": "2.3.*",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "1.2.*",
-        "twig/extensions": "1.3.*",
+        "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
         "symfony/monolog-bundle": "2.3.*",
         "friendsofsymfony/rest-bundle" : "1.*",
-        "jms/serializer-bundle": "^1.0.0",
+        "jms/serializer-bundle": "*",
         "sensio/distribution-bundle": "2.3.*",
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
@@ -27,8 +27,9 @@
         "phpunit/phpunit": "4.4.*",
         "mockery/mockery": "*",
         "sendgrid/sendgrid": "2.2.1",
-        "snc/redis-bundle": "^1.1",
-        "predis/predis": "1.0.3"
+        "friendsofsymfony/oauth-server-bundle": "dev-master",
+        "snc/redis-bundle": "1.1.*",
+        "predis/predis": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
