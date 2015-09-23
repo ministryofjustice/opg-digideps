@@ -35,16 +35,12 @@ class ReportControllerTest extends AbstractTestController
         $this->fixtures->flush();
         $this->fixtures->clear();
 
-        $this->client->request(
-            'POST', '/report/clone',
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode(array(
-                'id' => $report->getId()
-            ))
-        );
+        $responseArray = $this->assertRequest([
+            'method'=>'POST',
+            'uri' => '/report/clone',
+            'data'=>['id' => $report->getId()]
+        ]);
         
-        $responseArray = json_decode($this->client->getResponse()->getContent(),true);
         $reportId = $responseArray['data']['report'];
     
         $this->fixtures->clear();

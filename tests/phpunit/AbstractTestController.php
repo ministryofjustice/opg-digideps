@@ -28,42 +28,34 @@ abstract class AbstractTestController extends WebTestCase
         $this->fixtures = new \Fixtures($em);
     }
     
-    
     /**
-     * @return array
+     * 
+     * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
+     * @return type
      */
-    public function assertPostPutRequest($url, array $data, $method = "POST")
+    public function assertRequest(array $options)
     {
         $this->client->request(
-            $method, 
-            $url,
+            $options['method'], 
+            $options['uri'],
             array(), array(),
             array('CONTENT_TYPE' => 'application/json'),
-            json_encode($data)
+            isset($options['data']) ? json_encode($options['data']) : null
         );
         $response =  $this->client->getResponse();
         
         $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type');
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
-        $this->assertTrue($return['success'], $return['message']);
-        $this->assertTrue($return['data']['id'] > 0);
-        
-        return $return['data'];
-    }
-    
-    /**
-     * @return array
-     */
-    public function assertGetRequest($url)
-    {
-        $this->client->request('GET', $url);
-        $response =  $this->client->getResponse();
-        
-        $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type');
-        $return = json_decode($response->getContent(), true);
-        $this->assertNotEmpty($return, 'Response not json');
-        
+        if (!empty($options['mustSucceed'])) {
+            $this->assertTrue($return['success'], $return['message']);
+            if (!empty($options['assertId'])) {
+                $this->assertTrue($return['data']['id'] > 0);
+            }
+        }
+        if (!empty($options['mustFail'])) {
+            $this->assertFalse($return['success']);
+        }
         
         return $return;
     }

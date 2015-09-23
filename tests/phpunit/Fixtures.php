@@ -18,18 +18,39 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         $this->em = $em;
     }
 
+    /**
+     * @return EntityDir\User
+     */
+    public function createUser(array $settersMap = [])
+    {
+        // add clent, cot, report, needed for assets
+        $ret = new EntityDir\User;
+        $ret->setEmail('temp@temp.com');
+        $ret->setPassword('temp@temp.com');
+        $ret->setFirstname('name');
+        $ret->setLastname('surname');
+        foreach ($settersMap as $k=>$v) {
+            $ret->$k($v);
+        }
+        $this->em->persist($ret);
+        
+        return $ret;
+    }
 
     /**
      * @return EntityDir\Client
      */
-    public function createClient()
+    public function createClient(array $settersMap = [])
     {
         // add clent, cot, report, needed for assets
-        $client = new EntityDir\Client;
-        $client->setEmail('temp@temp.com');
-        $this->em->persist($client);
+        $ret = new EntityDir\Client;
+        $ret->setEmail('temp@temp.com');
+        foreach ($settersMap as $k=>$v) {
+            $ret->$k($v);
+        }
+        $this->em->persist($ret);
         
-        return $client;
+        return $ret;
     }
     
     /**
@@ -41,15 +62,15 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         $cot->setName('test');
         $this->em->persist($cot);
         
-        $report = new EntityDir\Report;
-        $report->setClient($client);
-        $report->setCourtOrderType($cot);
+        $ret = new EntityDir\Report;
+        $ret->setClient($client);
+        $ret->setCourtOrderType($cot);
         foreach ($settersMap as $k=>$v) {
-            $report->$k($v);
+            $ret->$k($v);
         }
-        $this->em->persist($report);
+        $this->em->persist($ret);
         
-        return $report;
+        return $ret;
     }
     
     public function flush($e = null)

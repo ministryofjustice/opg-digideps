@@ -9,13 +9,17 @@ class UserControllerTest extends AbstractTestController
      */
     public function addJson()
     {
-        $user = $this->assertPostPutRequest('/user?skip-mail=1', [
-            'firstname' => 'n',
-            'lastname' => 's',
-            'email' => 'n.s.justice.gov.uk'
-        ], 'POST');
+        $return = $this->assertRequest([
+            'uri'=>'/user?skip-mail=1', 
+            'method' => 'POST',
+            'data'=>[
+                'firstname' => 'n',
+                'lastname' => 's',
+                'email' => 'n.s.justice.gov.uk'
+            ]
+        ]);
         
-        return $user['id'];
+        return $return['data']['id'];
     }
     
     /**
@@ -24,7 +28,10 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJson($id)
     {
-        $return = $this->assertGetRequest('/user/' . $id);
+        $return = $this->assertRequest([
+            'uri'=>'/user/' . $id,
+            'method'=>'GET'
+        ]);
         $this->assertTrue($return['success'], $return['message']);
         $this->assertEquals('n', $return['data']['firstname']);
     }
@@ -34,7 +41,10 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJsonException()
     {
-        $return = $this->assertGetRequest('/user/0');
+        $return = $this->assertRequest([
+            'uri'=>'/user/0',
+            'method'=>'GET'
+        ]);
         $this->assertFalse($return['success']);
         $this->assertEmpty($return['data']);
         $this->assertContains('not found', $return['message']);
