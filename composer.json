@@ -8,15 +8,14 @@
         "psr-4": {"ApplicationTest\\": "tests/phpunit" }
     },
     "require": {
-        "php": ">=5.3.3",
-        "symfony/symfony": "2.3.*",
+        "php": ">=5.4",
+        "symfony/symfony": "2.7.*",
         "doctrine/orm": "~2.2,>=2.2.3",
         "doctrine/doctrine-bundle": "1.2.*",
         "twig/extensions": "1.0.*",
-        "symfony/assetic-bundle": "2.3.*",
-        "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "2.3.*",
-        "friendsofsymfony/rest-bundle" : "1.*",
+        "symfony/assetic-bundle": "2.7.*",
+        "symfony/swiftmailer-bundle": "2.3.8",
+        "symfony/monolog-bundle": "2.7.*",
         "jms/serializer-bundle": "*",
         "sensio/distribution-bundle": "2.3.*",
         "sensio/framework-extra-bundle": "2.3.*",
@@ -27,7 +26,6 @@
         "phpunit/phpunit": "4.4.*",
         "mockery/mockery": "*",
         "sendgrid/sendgrid": "2.2.1",
-        "friendsofsymfony/oauth-server-bundle": "dev-master",
         "snc/redis-bundle": "1.1.*",
         "predis/predis": "dev-master"
     },
