@@ -22,9 +22,9 @@ class AuditLogController extends RestController
      * @Route("")
      * @Method({"POST"})
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
-        $data = $this->deserializeBodyContent([
+        $data = $this->deserializeBodyContent($request, [
             'performed_by_user' => 'mustExist', 
             'ip_address' => 'mustExist', 
             'created_at' => 'mustExist', 

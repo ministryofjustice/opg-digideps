@@ -36,9 +36,9 @@ class AccountController extends RestController
      * @Route("/report/add-account")
      * @Method({"POST"})
      */
-    public function addAccountAction()
+    public function addAccountAction(Request $request)
     {
-        $data = $this->deserializeBodyContent([
+        $data = $this->deserializeBodyContent($request, [
            'bank' => 'notEmpty', 
            'sort_code' => 'notEmpty', 
            'opening_date' => 'notEmpty', 
@@ -82,11 +82,11 @@ class AccountController extends RestController
      * @Route("/account/{id}")
      * @Method({"PUT"})
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account*/ 
         
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
         
         $this->fillAccountData($account, $data);
         

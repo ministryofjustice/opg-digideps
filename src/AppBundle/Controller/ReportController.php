@@ -14,9 +14,9 @@ class ReportController extends RestController
      * @Route("/report/upsert")
      * @Method({"POST"})
      */
-    public function upsertAction()
+    public function upsertAction(Request $request)
     {
-        $reportData = $this->deserializeBodyContent();
+        $reportData = $this->deserializeBodyContent($request);
        
         if (!empty($reportData['id'])) { 
             // get existing report
@@ -56,9 +56,9 @@ class ReportController extends RestController
      * @Route("/report/clone")
      * @Method({"POST"})
      */
-    public function cloneAction()
+    public function cloneAction(Request $request)
     {
-        $reportData = $this->deserializeBodyContent();
+        $reportData = $this->deserializeBodyContent($request);
         
         $report = $this->findEntityBy('Report', $reportData['id']);
         
@@ -101,7 +101,7 @@ class ReportController extends RestController
      **/
     public function upsertContactAction(Request $request)
     {
-        $contactData = $this->deserializeBodyContent();
+        $contactData = $this->deserializeBodyContent($request);
        
         $report = $this->findEntityBy('Report',$contactData['report']);
         
@@ -206,7 +206,7 @@ class ReportController extends RestController
      */
     public function upsertAssetAction(Request $request)
     {
-        $assetData = $this->deserializeBodyContent();
+        $assetData = $this->deserializeBodyContent($request);
         
         $report = $this->findEntityBy('Report', $assetData['report']);
         
@@ -247,12 +247,12 @@ class ReportController extends RestController
      * @Route("/report/{id}/user/{userId}/submit")
      * @Method({"PUT"})
      */
-    public function submit($id, $userId)
+    public function submit(Request $request, $id, $userId)
     { 
         $currentReport = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $currentReport EntityDir\Report */
         $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $currentReport EntityDir\Report */
         $client = $currentReport->getClient();
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
         
         if (empty($data['submit_date'])) {
             throw new \InvalidArgumentException("Missing submit_date");
@@ -303,11 +303,11 @@ class ReportController extends RestController
      * @Route("/report/{id}")
      * @Method({"PUT"})
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
 
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
         
         if (array_key_exists('cot_id', $data)) {
             $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);

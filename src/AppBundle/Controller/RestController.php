@@ -13,17 +13,17 @@ abstract class RestController extends Controller
     /**
      * @return array
      */
-    protected function deserializeBodyContent(array $assertions = [])
+    protected function deserializeBodyContent(Request $request, array $assertions = [])
     {
         if ($this->container->has('kernel.listener.responseConverter')) {
-            $return = $this->container->get('kernel.listener.responseConverter')->requestContentToArray($this->getRequest());
+            $return = $this->container->get('kernel.listener.responseConverter')->requestContentToArray($request);
 
             $this->validateArray($return, $assertions);
 
             return $return;
         }
 
-        return $this->getRequest()->getContent();
+        return $request->getContent();
     }
 
     /**

@@ -16,9 +16,9 @@ class FeedbackController extends RestController
      * @Route("")
      * @Method({"POST"})
      */
-    public function sendFeedback()
+    public function sendFeedback(Request $request)
     {
-        $feedbackData = $this->deserializeBodyContent();
+        $feedbackData = $this->deserializeBodyContent($request);
        
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
         

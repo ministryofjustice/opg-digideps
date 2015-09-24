@@ -21,7 +21,7 @@ class ClientController extends RestController
      */
     public function  upsertAction(Request $request)
     {
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
       
         if($request->getMethod() == "POST"){
             $client = $this->add($data['users'][0]);

@@ -25,7 +25,7 @@ class UserController extends RestController
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
 
         $user = new \AppBundle\Entity\User();
        
@@ -90,11 +90,11 @@ class UserController extends RestController
      * @Route("/{id}")
      * @Method({"PUT"})
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
 
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
         
         $this->populateUser($user, $data);
         
@@ -109,11 +109,11 @@ class UserController extends RestController
      * @Route("/{id}/set-password")
      * @Method({"PUT"})
      */
-    public function changePassword($id)
+    public function changePassword(Request $request, $id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
         
-        $data = $this->deserializeBodyContent([
+        $data = $this->deserializeBodyContent($request, [
             'password_plain' => 'NotEmpty'
         ]);
         

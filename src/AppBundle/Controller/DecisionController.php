@@ -19,7 +19,7 @@ class DecisionController extends RestController
      */
     public function upsertAction(Request $request)
     {
-        $data = $this->deserializeBodyContent();
+        $data = $this->deserializeBodyContent($request);
 
         if($request->getMethod() == "PUT"){
             $decision = $this->findEntityBy('Decision', $data['id']);
