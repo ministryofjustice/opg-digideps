@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception as AppExceptions;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use AppBundle\Service\HeaderTokenAuthenticator;
 
 /**
  * @Route("/auth")
@@ -19,9 +20,9 @@ class AuthController extends RestController
      * @Route("/login")
      * @Method({"POST"})
      */
-    public function login()
+    public function login(Request $request)
     {
-        $data = $this->deserializeBodyContent([
+        $data = $this->deserializeBodyContent($request, [
             'email' => 'notEmpty',
             'password' => 'notEmpty',
         ]);
@@ -39,18 +40,12 @@ class AuthController extends RestController
             throw new \RuntimeException('Cannot find user with the given username and password');
         }
         
-        // log user in
-        $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
-        $this->get("security.context")->setToken($token);
+        $randomToken = $this->get('get_user_by_token_provider')->generateAndStoreToken($user);
         
-        // add random token into response
-        $randomToken = $user->getRandomTokenBasedOnInternalData();
+        // add token into response
         $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($request) use ($randomToken) {
-            $request->headers->set('AuthToken', $randomToken);
+            $request->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
         });
-        
-        // store token into the database for following requests
-        // TODO
         
         return $user;
     }
@@ -62,12 +57,11 @@ class AuthController extends RestController
      * @Route("/logout")
      * @Method({"POST"})
      */
-    public function logout()
+    public function logout(Request $request)
     {
-        $this->get('security.context')->setToken(null);
-        $this->get('request')->getSession()->invalidate();
-        
-        return true;
+       $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
+       
+       return $this->get('get_user_by_token_provider')->removeToken($authToken);
     }
     
     /**

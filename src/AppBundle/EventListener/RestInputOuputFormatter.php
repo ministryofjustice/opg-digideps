@@ -12,6 +12,7 @@ use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 class RestInputOuputFormatter
 {
@@ -133,7 +134,7 @@ class RestInputOuputFormatter
         
         $event->setResponse($response);
     }
-
+    
     /**
      * Attach the following with
        services:
@@ -145,25 +146,32 @@ class RestInputOuputFormatter
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $exceptionMessage = $event->getException()->getMessage();
-        $exceptionCode = $event->getException()->getCode();
+        $e = $event->getException();
+        $message = $e->getMessage();
+        $code = $e->getCode() ?: 500;
+        
+        if ($e instanceof AuthenticationCredentialsNotFoundException) {
+            $message = 'Auth failed';
+            $code = 401;
+        }
         
         $data = array(
             'success' => false, 
             'data' => '', 
-            'message' => $exceptionMessage,
+            'message' => $message,
             'stacktrace' => 'enable debug mode to see it',
-            'code' => $exceptionCode
+            'code' => $code
         );
         
         if ($this->debug) {
-            $data['stacktrace'] = $exceptionMessage;
+            $data['stacktrace'] = get_class($e) . ': ' . substr($e->getTraceAsString(), 0, 1000);
         }
         
-        $this->logger->warn($exceptionMessage);
+        $this->logger->warning($message);
         
         $response = $this->arrayToResponse($data, $event->getRequest());
-
+        $response->setStatusCode($code);
+        
         $event->setResponse($response);
     }
     
