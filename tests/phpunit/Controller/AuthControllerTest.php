@@ -6,11 +6,12 @@ use AppBundle\Entity\Role;
 
 class AuthControllerTest extends AbstractTestController
 {
-    public function testProtectedAreaIsNotAccessibleWhenNotLogged()
+     /**
+     * @test
+     */
+    public function endpointAuthChecks()
     {
-        $this->assertRequest('GET', '/auth/get-logged-user',[
-            'mustFail' => true
-        ]);
+        $this->assertEndpointReturnAuthError('GET', '/auth/get-logged-user');
     }
     
     public function testLoginFail()
@@ -32,24 +33,36 @@ class AuthControllerTest extends AbstractTestController
     
     public function testLoginSuccess()
     {
-        $this->login('deputy@example.org');
+        $authToken = $this->login('deputy@example.org');
         
-        // assert I'm logged
+        $this->assertTrue(strlen($authToken)> 5, "Token $authToken not valid");
+        
+        // assert fail without token
         $data = $this->assertRequest('GET', '/auth/get-logged-user', [
-            'mustSucceed' => true
+            'mustFail' => true
+        ])['data'];
+        
+        // assert succeed with token
+        $data = $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustSucceed' => true,
+            'AuthToken' => $authToken
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
+        
+        return $authToken;
     }
     
-    public function testLogout()
+    /**
+     * @depends testLoginSuccess
+     */
+    public function testLogout($authToken)
     {
-        $this->testLoginSuccess();
-        
-        $this->logout();
-        
-        // assert I'm still not logged
-        $this->assertRequest('GET', '/auth/get-logged-user', [
-            'mustFail' => true
+        $this->assertRequest('POST', '/auth/logout', [
+            'mustSucceed' => true,
+            'AuthToken' => $authToken
         ]);
+
+        // assert the request with the old token fails
+        $this->assertEndpointReturnAuthError('GET', '/auth/get-logged-user');
     }
 }

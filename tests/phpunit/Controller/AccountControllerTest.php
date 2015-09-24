@@ -9,7 +9,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function addAccount()
     {
-        $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org');
         
         $client = $this->fixtures->createClient();
         $report = $this->fixtures->createReport($client);
@@ -17,6 +17,7 @@ class AccountControllerTest extends AbstractTestController
         
         $return = $this->assertRequest('POST', '/report/add-account', [
             'mustSucceed'=>true,
+            'AuthToken' => $token,
             'data'=> [
                 'report' => $report->getId(),
                 'bank' => 'hsbc',
@@ -36,6 +37,15 @@ class AccountControllerTest extends AbstractTestController
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         
         return $account->getId();
+    }
+    
+     
+    /**
+     * @test
+     */
+    public function acl()
+    {
+        $this->assertEndpointReturnAuthError('POST', '/report/add-account');
     }
     
 }

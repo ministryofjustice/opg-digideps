@@ -35,11 +35,16 @@ abstract class AbstractTestController extends WebTestCase
      */
     public function assertRequest($method, $uri, array $options = [])
     {
+        $headers = ['CONTENT_TYPE' => 'application/json'];
+        if (isset($options['AuthToken'])) {
+            $headers['HTTP_AuthToken'] = $options['AuthToken'];
+        }
+        
         $this->client->request(
             $method, 
             $uri,
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
+            [], [],
+            $headers,
             isset($options['data']) ? json_encode($options['data']) : null
         );
         $response =  $this->client->getResponse();
@@ -56,30 +61,38 @@ abstract class AbstractTestController extends WebTestCase
         if (!empty($options['mustFail'])) {
             $this->assertFalse($return['success'], "Endpoint didn't return FALSE as expected. Response: " . print_r($return, true));
         }
+         if (!empty($options['assertCode'])) {
+            $this->assertEquals($options['assertResponseCode'], $return['code'], "Response: " . print_r($return, true));
+        }
         if (!empty($options['assertResponseCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode());
+            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), "Response: " .  $response->getStatusCode() . print_r($return, true));
         }
         
         return $return;
     }
     
+    
+    /**
+     * @param string $email
+     * @param string $password
+     * 
+     * @return string token
+     */
     public function login($email, $password = 'Abcd1234')
     {
-        $data = $this->assertRequest('POST', '/auth/login', [
+        $responseArray = $this->assertRequest('POST', '/auth/login', [
             'mustSucceed' => true,
             'data' => [
                 'email' => $email,
                 'password' => $password
-            ]
+            ],
         ])['data'];
-        $this->assertEquals($email, $data['email']);
-    }
-    
-    public function logout()
-    {
-       $this->assertRequest('POST', '/auth/logout', [
-            'mustSucceed' => true
-        ]);
+        $this->assertEquals($email, $responseArray['email']);
+        
+        // check token
+        $token = $this->client->getResponse()->headers->get('AuthToken');
+        
+        return $token;
     }
     
     public function tearDown()
@@ -92,6 +105,16 @@ abstract class AbstractTestController extends WebTestCase
         foreach ($subset as $k=>$v) {
             $this->assertEquals($v, $array[$k]);
         }
+    }
+    
+    protected function assertEndpointReturnAuthError($method, $uri)
+    {
+        $response = $this->assertRequest($method, $uri, [
+            'mustFail' => true,
+            'AuthToken' => 'WRONG',
+            'assertResponseCode' => 401
+        ]);
+        $this->assertEquals(401, $response['code']);
     }
     
 }

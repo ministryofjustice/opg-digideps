@@ -4,12 +4,14 @@ namespace AppBundle\Controller;
 
 class UserControllerTest extends AbstractTestController
 {
+    
+    
     /**
      * @test
      */
     public function addJson()
     {
-        $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org');
         
         $return = $this->assertRequest('POST', '/user?skip-mail=1', [
             'data' => [
@@ -17,7 +19,8 @@ class UserControllerTest extends AbstractTestController
                 'lastname' => 's',
                 'email' => 'n.s.justice.gov.uk'
             ],
-            'mustSucceed' => true
+            'mustSucceed' => true,
+            'AuthToken' => $token
         ]);
         
         return $return['data']['id'];
@@ -29,10 +32,11 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJson($id)
     {
-        $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org');
         
         $return = $this->assertRequest('GET', '/user/' . $id, [
-            'mustSucceed' => true
+            'mustSucceed' => true,
+            'AuthToken' => $token
         ]);
         $this->assertTrue($return['success'], $return['message']);
         $this->assertEquals('n', $return['data']['firstname']);
@@ -43,12 +47,22 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJsonException()
     {
-        $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org');
         
         $return = $this->assertRequest('GET', '/user/0', [
-            'mustFail' => true
+            'mustFail' => true,
+            'AuthToken' => $token
         ]);
         $this->assertEmpty($return['data']);
         $this->assertContains('not found', $return['message']);
+    }
+    
+    /**
+     * @test
+     */
+    public function acl()
+    {
+        $this->assertEndpointReturnAuthError('POST', '/user');
+        $this->assertEndpointReturnAuthError('GET', '/user/1');
     }
 }

@@ -7,7 +7,7 @@ class ReportControllerTest extends AbstractTestController
 {
     public function testCloneAction()
     {
-        $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org');
         
         $client = $this->fixtures->createClient();
         $report = $this->fixtures->createReport($client, [
@@ -41,7 +41,8 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed'=>true,
             'data'=> [
                 'id' => $report->getId()
-            ]
+            ],
+            'AuthToken' => $token,
         ]);
         
         $reportId = $responseArray['data']['report'];
