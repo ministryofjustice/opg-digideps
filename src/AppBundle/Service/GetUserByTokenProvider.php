@@ -1,58 +1,105 @@
 <?php
 namespace AppBundle\Service;
 
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\User;
 
-
-class UserProvider implements UserProviderInterface
+/**
+ * Get the user from a token (=username) looking at the AuthToken store info
+ * throw exception if not found, or the token expired 
+ */
+class GetUserByTokenProvider implements UserProviderInterface
 {
-    protected $userRepository;
-
-    public function __construct($entityManager)
+     /**
+     * @var EntityManager 
+     */
+    private $em;
+    
+    /**
+     * @var integer 
+     */
+    private $timeoutSeconds;
+    
+    /**
+     * @var EntityRepository
+     */
+    private $authTokenRepo;
+    
+    public function __construct(EntityManager $em, array $options)
     {
-        $this->userRepository = $entityManager->getRepository('AppBundle:User');
-    }
-
-    public function loadUserByUsername($email) 
-    {
-        $user = $this->userRepository->createQueryBuilder('u')
-                                    ->where('u.email = :email')
-                                    ->setParameter('email', $email)
-                                    ->getQuery()
-                                    ->getOneOrNullResult();
-        
-        if (null === $user) {
-            $message = sprintf(
-                'Unable to find an active admin AppBundle:User object identified by "%s".',
-                $email
-            );
-            throw new UsernameNotFoundException($message);
-        }
-        return $user;
+        $this->em = $em;
+        $this->timeoutSeconds = $options['timeout_seconds'];
+        $this->authTokenRepo = $this->em->getRepository('AppBundle\Entity\AuthToken');
     }
     
-    public function refreshUser(UserInterface $user) 
+    public function loadUserByUsername($username)
     {
-        $class = get_class($user);
-        
-        if (!$this->supportsClass($class)) {
-            throw new UnsupportedUserException(
-                sprintf(
-                    'Instances of "%s" are not supported.',
-                    $class
-                )
-            );
+        $authTokenValue = $username;
+        $authTokenEntity = $this->authTokenRepo->find($authTokenValue);
+
+        /** @var $token  AuthToken */
+        if (!$authTokenEntity) {
+            throw new BadCredentialsException('Token invalid');
+        }
+        if ($authTokenEntity->isExpired($this->timeoutSeconds)) {
+            throw new CredentialsExpiredException('Token expired');
         }
         
-        return $this->userRepository->find($user->getId());
+        return $authTokenEntity->getUser();
     }
-    
+
+
+    public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user)
+    {
+        var_dump(__METHOD__);die;
+//        $authTokenEntity = $this->authTokenRepo->findOneBy(['user'=>$user]);
+//        
+//        $authTokenEntity->refreshToken();
+//        
+//        $this->em->persist($authTokenEntity);
+//        $this->em->flush($authTokenEntity);
+    }
+
+
     public function supportsClass($class)
     {
-        return $this->userRepository->getClassName() === $class
-            || is_subclass_of($class, $this->userRepository->getClassName());
+       return 'AppBundle\Entity\User' === $class
+            || is_subclass_of($class, 'AppBundle\Entity\User');
     }
+    
+    /**
+     * @param string $randomToken
+     * @param User $user
+     * 
+     * @return string
+     */
+    public function generateAndStoreToken(User $user)
+    {
+        // remove existing tokens
+        $this->em->createQuery('DELETE FROM AppBundle\Entity\AuthToken at WHERE at.user = :user')
+            ->setParameter(':user', $user)
+            ->execute();
+        
+        // recreate and persist token
+        $randomToken = $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1,999));
+        $authTokenEntity = new \AppBundle\Entity\AuthToken($randomToken, $user);
+        $this->em->persist($authTokenEntity);
+        $this->em->flush($authTokenEntity);
+        
+        return $authTokenEntity->getToken();
+    }
+    
+    public function removeToken($token)
+    {
+        // remove existing tokens
+        return $this->em
+            ->createQuery('DELETE FROM AppBundle\Entity\AuthToken at WHERE at.token = :token')
+            ->setParameter(':token', $token)
+            ->execute();
+    }
+
 }
