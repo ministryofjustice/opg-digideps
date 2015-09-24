@@ -217,6 +217,8 @@ class Report
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->noAssetToAdd = false;
+        $this->reportSeen = true;
     }
     
     /**

@@ -3,7 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="dd_user")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
  */
-class User implements AdvancedUserInterface
+class User implements UserInterface
 {
     const TOKEN_EXPIRE_HOURS = 48;
     
@@ -546,26 +546,6 @@ class User implements AdvancedUserInterface
     {
     }
     
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
-    
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-    
-    public function isCredentialsNonExpired()
-    {
-        return true;
-    }
-    
-    public function isEnabled()
-    {
-        return $this->active;
-    }
-    
     /**
      * Get gaTrackingId
      * 
@@ -716,16 +696,6 @@ class User implements AdvancedUserInterface
     {
         $this->lastLoggedIn = $lastLoggedIn;
         return $this;
-    }
-    
-    /**
-     * Get random string based on user data, time and random data
-     * 
-     * @return string
-     */
-    public function getRandomTokenBasedOnInternalData()
-    {
-        return $this->getId() . '_' . sha1(microtime() . spl_object_hash($this) . rand(1,999));
     }
 
 }
