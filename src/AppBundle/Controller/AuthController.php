@@ -40,7 +40,7 @@ class AuthController extends RestController
             throw new \RuntimeException('Cannot find user with the given username and password');
         }
         
-        $randomToken = $this->UserByTokenProvider()->generateAndStoreToken($user);
+        $randomToken = $this->getProvider()->generateAndStoreToken($user);
         
         // add token into response
         $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($request) use ($randomToken) {
@@ -53,7 +53,7 @@ class AuthController extends RestController
     /**
      * @return UserByTokenProviderInterface
      */
-    private function UserByTokenProvider()
+    private function getProvider()
     {
         $service = $this->container->getParameter('get_user_by_token_provider.class');
         
@@ -71,7 +71,7 @@ class AuthController extends RestController
     {
        $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
        
-       return $this->UserByTokenProvider()->removeToken($authToken);
+       return $this->getProvider()->removeToken($authToken);
     }
     
     /**
