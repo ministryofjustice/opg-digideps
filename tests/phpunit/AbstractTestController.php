@@ -39,6 +39,9 @@ abstract class AbstractTestController extends WebTestCase
         if (isset($options['AuthToken'])) {
             $headers['HTTP_AuthToken'] = $options['AuthToken'];
         }
+        if (isset($options['ClientSecret'])) {
+            $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
+        }
         
         $this->client->request(
             $method, 
@@ -82,6 +85,7 @@ abstract class AbstractTestController extends WebTestCase
     {
         $responseArray = $this->assertRequest('POST', '/auth/login', [
             'mustSucceed' => true,
+            'ClientSecret' => '123abc-deputy',
             'data' => [
                 'email' => $email,
                 'password' => $password
