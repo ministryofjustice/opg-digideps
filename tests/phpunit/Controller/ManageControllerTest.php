@@ -7,14 +7,15 @@ use AppBundle\Entity\User;
 class ManageControllerTest extends AbstractTestController
 {
     
-    public function testAvailability()
-    {
-        $ret = $this->assertRequest('GET', '/manage/availability',[
-            'assertResponseCode' => 200
-        ])['data'];
-    
-        $this->assertEquals(1, $ret['healthy']);
-    }
+//    public function testAvailability()
+//    {
+//        $this->markTestSkipped('cannot call network from unit test');
+//        $ret = $this->assertRequest('GET', '/manage/availability',[
+//            'assertResponseCode' => 200
+//        ])['data'];
+//    
+//        $this->assertEquals(1, $ret['healthy']);
+//    }
     
     public function testElb()
     {
