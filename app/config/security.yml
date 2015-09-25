@@ -1,12 +1,18 @@
 services:
-    # authenticator using key from request headers
-    token_header_authenticator:
-        class: AppBundle\Service\HeaderTokenAuthenticator
+    # authenticator
+    authenticator.token_header:
+        class: AppBundle\Service\Auth\HeaderTokenAuthenticator
         public: false
-    # provider
-    get_user_by_token_provider:
-        class: AppBundle\Service\GetUserByTokenProvider
-        arguments: [  @em, { "timeout_seconds": 1800 } ]
+    # user providers
+#    user_provider.by_token.doctrine:
+#        class: AppBundle\Service\Auth\UserProviders\UserByTokenDoctrine
+#        arguments: [  @em, { "timeout_seconds": 1800 } ]
+    user_provider.by_token.redis:
+        class: AppBundle\Service\Auth\UserProviders\UserByTokenRedis
+        arguments: [ @em, @snc_redis.default, { "timeout_seconds": 1800 } ]
+
+parameters:
+    get_user_by_token_provider.class: "user_provider.by_token.redis"
 
 security:
     encoders:
@@ -21,7 +27,7 @@ security:
 
     providers:
         get_user_by_token_provider:
-            id: get_user_by_token_provider
+            id: %get_user_by_token_provider.class%
 
     firewalls:
         dev:
@@ -38,7 +44,7 @@ security:
             pattern: .*
             security: true
             simple_preauth:
-                authenticator: token_header_authenticator
+                authenticator: authenticator.token_header
             provider: get_user_by_token_provider
             stateless:   true
             

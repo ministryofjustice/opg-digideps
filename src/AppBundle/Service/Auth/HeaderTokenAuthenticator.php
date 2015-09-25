@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Service\Auth;
 
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -10,12 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
-use AppBundle\Entity\AuthToken;
 use AppBundle\Entity\User;
 
 /**
  * Authenticator that reads "AuthToken" token in request
- * and uses GetUserByTokenProvider to get the user from that value
+ * and uses UserByTokenProvider to get the user from that value
  */
 class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
 {
@@ -47,7 +46,7 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
 
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
-        if ($userProvider instanceof GetUserByTokenProvider) {
+        if ($userProvider instanceof UserProviders\UserByTokenProviderInterface) {
             $authTokenValue = $token->getCredentials();
             $user = $userProvider->loadUserByUsername($authTokenValue);
 
@@ -56,7 +55,7 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
             );
         } else {
             throw new \InvalidArgumentException('The user provider must be an instance '
-            . 'of GetUserByTokenProvider (' . get_class($userProvider) . ' was given).');
+            . 'of UserByTokenProvider (' . get_class($userProvider) . ' was given).');
         }
     }
 

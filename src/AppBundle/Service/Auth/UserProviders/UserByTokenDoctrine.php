@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Service;
+namespace AppBundle\Service\Auth\UserProviders;
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -12,7 +12,7 @@ use AppBundle\Entity\User;
  * Get the user from a token (=username) looking at the AuthToken store info
  * throw exception if not found, or the token expired 
  */
-class GetUserByTokenProvider implements UserProviderInterface
+class UserByTokenDoctrine implements UserByTokenProviderInterface
 {
      /**
      * @var EntityManager 
@@ -36,6 +36,13 @@ class GetUserByTokenProvider implements UserProviderInterface
         $this->authTokenRepo = $this->em->getRepository('AppBundle\Entity\AuthToken');
     }
     
+    /**
+     * @param string $username token (String)
+     * @return User
+     * 
+     * @throws BadCredentialsException
+     * @throws CredentialsExpiredException
+     */
     public function loadUserByUsername($username)
     {
         $authTokenValue = $username;
@@ -52,16 +59,11 @@ class GetUserByTokenProvider implements UserProviderInterface
         return $authTokenEntity->getUser();
     }
 
-
+    /**
+     * not implemented
+     */
     public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user)
     {
-        var_dump(__METHOD__);die;
-//        $authTokenEntity = $this->authTokenRepo->findOneBy(['user'=>$user]);
-//        
-//        $authTokenEntity->refreshToken();
-//        
-//        $this->em->persist($authTokenEntity);
-//        $this->em->flush($authTokenEntity);
     }
 
 

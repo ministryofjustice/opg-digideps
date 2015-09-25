@@ -5,8 +5,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception as AppExceptions;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use AppBundle\Service\HeaderTokenAuthenticator;
+use AppBundle\Service\Auth\HeaderTokenAuthenticator;
+use AppBundle\Service\Auth\UserProviders\UserByTokenProviderInterface;
 
 /**
  * @Route("/auth")
@@ -40,7 +40,7 @@ class AuthController extends RestController
             throw new \RuntimeException('Cannot find user with the given username and password');
         }
         
-        $randomToken = $this->get('get_user_by_token_provider')->generateAndStoreToken($user);
+        $randomToken = $this->UserByTokenProvider()->generateAndStoreToken($user);
         
         // add token into response
         $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($request) use ($randomToken) {
@@ -48,6 +48,16 @@ class AuthController extends RestController
         });
         
         return $user;
+    }
+    
+    /**
+     * @return UserByTokenProviderInterface
+     */
+    private function UserByTokenProvider()
+    {
+        $service = $this->container->getParameter('get_user_by_token_provider.class');
+        
+        return $this->get($service);
     }
     
     /**
@@ -61,7 +71,7 @@ class AuthController extends RestController
     {
        $authToken = HeaderTokenAuthenticator::getTokenFromRequest($request);
        
-       return $this->get('get_user_by_token_provider')->removeToken($authToken);
+       return $this->UserByTokenProvider()->removeToken($authToken);
     }
     
     /**
