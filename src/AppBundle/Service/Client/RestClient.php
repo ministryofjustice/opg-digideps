@@ -37,17 +37,26 @@ class RestClient
      */
     private $logger;
     
-    const TOKEN_KEY = 'token';
+     /**
+     * @var string
+     */
+    private $clientSecret;
+    
+    const HEADER_AUTH_TOKEN = 'AuthToken';
+    const HEADER_CLIENT_SECRET = 'ClientSecret';
+    
+    const STORAGE_KEY = 'token';
     const FORMAT = 'json';
     const ERROR_CONNECT = 'API not available.';
     const ERROR_FORMAT = 'Cannot decode message.';
     
     
-    public function __construct(ContainerInterface $container) {
+    public function __construct(ContainerInterface $container, $clientSecret) {
         $this->client = $container->get('guzzleJsonHttpClient');
         $this->serialiser = $container->get('jms_serializer');
         $this->tokenStorage = $container->get('redisTokenStorage');
         $this->logger = $container->get('logger');
+        $this->clientSecret = $clientSecret;
     }
     
     /**
@@ -62,10 +71,13 @@ class RestClient
     public function login($email, $password)
     {
         $response = $this->safeClientCall('post', '/auth/login', [
-            'body' => $this->serialiser->serialize(['email' => $email, 'password' => $password], self::FORMAT)
+            'body' => $this->serialiser->serialize(['email' => $email, 'password' => $password], self::FORMAT),
+            'headers' => [
+                self::HEADER_CLIENT_SECRET => $this->clientSecret
+            ]
         ]);
 
-        $this->tokenStorage->set(self::TOKEN_KEY, $response->getHeader('AuthToken'));
+        $this->tokenStorage->set(self::STORAGE_KEY, $response->getHeader(self::HEADER_AUTH_TOKEN));
         
         return $this->dataToEntity('AppBundle\Entity\User', $this->responseToData($response));
     }
@@ -73,7 +85,9 @@ class RestClient
     public function logout()
     {
         $this->safeClientCall('post', '/auth/logout', [
-            'token' => $this->tokenStorage->get(self::TOKEN_KEY)
+            'headers' => [
+                self::HEADER_AUTH_TOKEN => $this->tokenStorage->get(self::STORAGE_KEY)
+            ]
         ]);
     }
     

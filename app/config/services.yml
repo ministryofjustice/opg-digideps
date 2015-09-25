@@ -26,7 +26,7 @@ services:
         arguments: [@snc_redis.default, "redis_token_storage_dd"]
     restClient:
         class:  AppBundle\Service\Client\RestClient
-        arguments: [@service_container]
+        arguments: [@service_container, "%api_client_secret%"]
     # deprecated
     apiclient:
         class:  AppBundle\Service\ApiClient
