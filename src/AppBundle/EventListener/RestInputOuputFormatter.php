@@ -148,12 +148,17 @@ class RestInputOuputFormatter
     {
         $e = $event->getException();
         $message = $e->getMessage();
-        $code = $e->getCode() ?: 500;
+        $code = $e->getCode();
+        if ($code < 400 || $code > 599) {
+            $code = 500;
+        }
         
         if ($e instanceof AuthenticationCredentialsNotFoundException) {
             $message = 'Auth failed';
             $code = 401;
         }
+        
+        //TODO 419 for token timeout
         
         $data = array(
             'success' => false, 
