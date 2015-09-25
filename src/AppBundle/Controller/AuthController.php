@@ -72,7 +72,7 @@ class AuthController extends RestController
      */
     public function test()
     {
-        return $this->get('security.context')->getToken()->getUser();
+        return $this->get('security.token_storage')->getToken()->getUser();
     }
    
 }
