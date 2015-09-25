@@ -13,6 +13,8 @@ use AppBundle\Service\Auth\UserProviders\UserByTokenProviderInterface;
  */
 class AuthController extends RestController
 {
+    const HEADER_CLIENT_SECRET = 'ClientSecret';
+    
     /**
      * Return the user by email and hashed password (or exception if not found)
      * 
@@ -22,6 +24,16 @@ class AuthController extends RestController
      */
     public function login(Request $request)
     {
+        // check client secret
+        //TODO consider moving into provider or authmanager ?
+        $clientSecrets = $this->container->getParameter('client_secrets');
+        $clientSecretGiven = $request->headers->get(self::HEADER_CLIENT_SECRET);
+        $permissions = isset($clientSecrets[$clientSecretGiven]) ?
+            $clientSecrets[$clientSecretGiven]['permissions'] : null;
+        if (null === $permissions) {
+            throw new \RuntimeException('client secret not accepted.');
+        }
+        
         $data = $this->deserializeBodyContent($request, [
             'email' => 'notEmpty',
             'password' => 'notEmpty',
@@ -38,6 +50,14 @@ class AuthController extends RestController
             ->encodePassword($data['password'], $user->getSalt());
         if (!$user->getPassword() || $user->getPassword() != $encodedPass) {
             throw new \RuntimeException('Cannot find user with the given username and password');
+        }
+        
+        $userRole = $user->getRole()->getRole();
+        if (!in_array($userRole, $permissions)) {
+            throw new \RuntimeException(sprintf('Given client secret only allows roles %s, %s given.',
+                implode(',', $permissions),
+                $userRole
+            ));
         }
         
         $randomToken = $this->getProvider()->generateAndStoreToken($user);

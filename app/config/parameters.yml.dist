@@ -53,5 +53,12 @@ parameters:
             password: PDEtnLay1234
             roleId: 2
             activated: true
-          
+
+    client_secrets:
+        123abc-deputy:
+            permissions: [ROLE_LAY_DEPUTY]
+        123abc-admin:
+            permissions: [ROLE_ADMIN]
+        123abc-both:
+            permissions: [ROLE_ADMIN, ROLE_LAY_DEPUTY]
          
