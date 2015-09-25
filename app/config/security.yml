@@ -13,7 +13,6 @@ security:
         Symfony\Component\Security\Core\User\User: plaintext
         AppBundle\Entity\User: sha512
        
-
 #    role_hierarchy:
 #        ROLE_LAY_DEPUTY: []
 #        ROLE_PROFESSIONAL_DEPUTY: []
@@ -25,22 +24,15 @@ security:
             id: get_user_by_token_provider
 
     firewalls:
-        # all the request goes through the token_header_authenticator that needs the HEADER token
-        # the provider gets the user by token from the db/redis
-       
-            
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        
         elb:
             pattern: ^/manage/
             security: false
-            
         login:
             pattern:  ^/auth/login$
             security: false
-        
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
