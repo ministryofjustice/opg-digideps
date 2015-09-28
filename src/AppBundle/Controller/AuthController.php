@@ -24,11 +24,6 @@ class AuthController extends RestController
      */
     public function login(Request $request)
     {
-        $data = $this->deserializeBodyContent($request, [
-            'email' => 'notEmpty',
-            'password' => 'notEmpty',
-        ]);
-        
         $authService = $this->get('authService'); /* @var $authService AuthService */
         
         $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
@@ -36,6 +31,10 @@ class AuthController extends RestController
             throw new \RuntimeException('client secret not accepted.');
         }
         
+        $data = $this->deserializeBodyContent($request, [
+            'email' => 'notEmpty',
+            'password' => 'notEmpty',
+        ]);
         $user = $authService->getUserByEmailAndPassword($data['email'], $data['password']);
         if (!$user) {
             throw new \RuntimeException('Cannot find user with the given username and password');
