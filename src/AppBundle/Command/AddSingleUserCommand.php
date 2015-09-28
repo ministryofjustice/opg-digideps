@@ -48,9 +48,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
      * @param string $email
      * @param array $data keys: firstname lastname roleId password
      */
-    protected function addSingleUser(OutputInterface $output, array $data)
+    protected function addSingleUser(OutputInterface $output, array $data, $flush = true)
     {
-        $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityRepository */
+        $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
         $roleRepo = $em->getRepository('AppBundle\Entity\Role');
         $email = $data['email'];
@@ -78,7 +78,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
         }
 
         $em->persist($user);
-        $em->flush($user);
+        if ($flush) {
+            $em->flush($user);
+        }
 
         $output->writeln("User $email created.");
     }

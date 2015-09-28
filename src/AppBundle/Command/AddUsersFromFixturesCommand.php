@@ -23,10 +23,15 @@ class AddUsersFromFixturesCommand extends AddSingleUserCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
+        $em->beginTransaction();
+        
         $fixtures = (array) $this->getContainer()->getParameter('fixtures');
         foreach ($fixtures as $email => $data) {
-            $this->addSingleUser($output, ['email'=>$email] + $data);
+            $this->addSingleUser($output, ['email'=>$email] + $data, false);
         }
+        $em->commit();
+        $em->flush();
     }
 
 }
