@@ -18,11 +18,11 @@ class AuthControllerTest extends AbstractTestController
     {
         $return = $this->assertRequest('POST', '/auth/login', [
             'mustFail' => true,
-            'ClientSecret' => '123abc-deputyWRONG'
+            'ClientSecret' => 'WRONG CLIENT SECRET'
         ]);
         $this->assertContains('client secret not accepted', $return['message']);
         
-        // assert I'm still not logged
+        // assert I'm not logged
         $this->assertRequest('GET','/auth/get-logged-user', [
             'mustFail' => true
         ]);
@@ -38,7 +38,7 @@ class AuthControllerTest extends AbstractTestController
             ],
             'ClientSecret' => '123abc-deputy'
         ]);
-        $this->assertContains('not found', $return['message']);
+        $this->assertContains('Cannot find user', $return['message']);
         
         // assert I'm still not logged
         $this->assertRequest('GET','/auth/get-logged-user', [
@@ -46,7 +46,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
     
-    public function testLoginFailWhenAdminUSesDeputySecret()
+    public function testLoginFailSecretPermissions()
     {
         $return = $this->assertRequest('POST', '/auth/login', [
             'mustFail' => true,
@@ -56,7 +56,7 @@ class AuthControllerTest extends AbstractTestController
             ],
             'ClientSecret' => '123abc-deputy'
         ]);
-        $this->assertContains('client secret only allows', $return['message']);
+        $this->assertContains('not allowed from this client', $return['message']);
         
         // assert I'm still not logged
         $this->assertRequest('GET','/auth/get-logged-user', [

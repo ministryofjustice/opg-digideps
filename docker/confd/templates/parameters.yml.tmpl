@@ -51,3 +51,12 @@ parameters:
             activated: {{ getv (printf "/fixtures/%s/activated" .) }}
 {{ end }}
 {{ end }}
+
+# TODO. script this into API_CLIENT_SECRET_1_KEY, API_CLIENT_SECRET_1_PERMISSIONS etc...
+    client_secrets:
+        123abc-deputy:
+            permissions: [ROLE_LAY_DEPUTY]
+        123abc-admin:
+            permissions: [ROLE_ADMIN]
+        123abc-both:
+            permissions: [ROLE_ADMIN, ROLE_LAY_DEPUTY]
