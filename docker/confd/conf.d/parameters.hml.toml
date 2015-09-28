@@ -12,5 +12,5 @@ keys = [
     "/redis",
     "/url",
     "/fixtures",
-    "/client_secrets"
+    "/secrets"
 ]
