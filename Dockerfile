@@ -1,8 +1,8 @@
-FROM registry.service.dsd.io/opguk/php-fpm:0.1.50
+FROM registry.service.dsd.io/opguk/php-fpm:0.1.70
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis php5-pgsql \
-     nodejs dos2unix && \
+     nodejs dos2unix postgresql-client && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 

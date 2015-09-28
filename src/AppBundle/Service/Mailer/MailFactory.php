@@ -49,7 +49,7 @@ class MailFactory
         if (!in_array($area, ['frontend', 'admin'])) {
             throw new \InvalidArgumentException(__METHOD__ . ": area must be frontend or admin, $area given");
         }
-        $baseUrl = $this->container->getParameter('email')['base_url'][$area];
+        $baseUrl = trim($this->container->getParameter('email')['base_url'][$area]);
         
         $route = $this->container->getParameter('email')['routes'][$routeName];
         
