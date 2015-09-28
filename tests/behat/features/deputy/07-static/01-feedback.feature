@@ -17,7 +17,7 @@ Feature:  provide feedback
             | feedback_satisfactionLevel_1 | Satisfied |
         And I press "feedback_save"
         Then the form should be valid
-        And the last email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
+        And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "I found it to be really easy"
         And the last email should contain "I think it needs an iPhone app"
         And the last email should contain "Satisfied"
@@ -31,7 +31,7 @@ Feature:  provide feedback
             | feedback_help_3 | No, I filled in this form myself |
         And I press "feedback_save"
         Then the form should be valid
-        And the last email should have been sent to "behat-deputyshipfeedback@publicguardian.gsi.gov.uk"
+        And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "No, I filled in this form myself"
     
     @feedback @deputy

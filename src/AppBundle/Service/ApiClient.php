@@ -184,7 +184,7 @@ class ApiClient extends GuzzleClient
                     case 404:
                         throw new DisplayableException('Record not found.' . $this->getDebugRequestExceptionData($e));
                     default:
-                        throw new RuntimeException($responseArray['message'] . ' ' . $this->getDebugRequestExceptionData($e));
+                        throw new RuntimeException($responseArray['message'] . ' ' . $this->getDebugRequestExceptionData($e), $responseArray['code']);
                 }
             } else {
                 $this->lastErrorMessage = $e->getMessage();

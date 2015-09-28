@@ -1,14 +1,13 @@
-.button-bar {
-  margin-top: 10px;
-  margin-bottom: 10px;
-
-  &.add-bar{
-    margin-left: 50%;
-    @include media(tablet) {
-        margin-left: 45%;
+.button-bar {  
+    margin-top: 10px;  
+    margin-bottom: 10px;
+    
+    &.add-bar{  
+        margin-left: 50%;
+        @include media(tablet) {
+            margin-left: 45%;
+        }
     }
-  }
-
 }
 
 #back-bar {
@@ -17,4 +16,8 @@
     background-color: $grey-3;
     @include core-19();
     
+}
+
+.button {
+    @include core-19();
 }

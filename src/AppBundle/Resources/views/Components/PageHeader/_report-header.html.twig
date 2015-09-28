@@ -13,7 +13,7 @@
         {% endfor %}
     </div>
     <div class="page-header-meta-data">
-        <div class="report-meta-data">
+        <div class="report-meta-data" id="report-meta-data" data-id="{{ report.id }}">
             <div class="report-meta report-meta__label">{{ 'report.header.reportingPeriod' | trans }}</div>
             <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }}
                 {{ 'report.header.to' | trans }} {{ report.endDate | date("d F Y") }}</span>

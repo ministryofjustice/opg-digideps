@@ -334,7 +334,7 @@ Feature: Safeguarding OPG Report
         Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
         Then the "How is the care funded?" question should be answered with "All care is paid for by someone else (for example, by the local authority or NHS)"
 
-    @safeguarding @user-report @deputy @wip
+    @safeguarding @user-report @deputy
     Scenario: Who is doing the caring?
         When I load the application status from "safeguardingreadytosubmit2"
         And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"

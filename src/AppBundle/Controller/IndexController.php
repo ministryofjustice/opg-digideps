@@ -23,7 +23,7 @@ class IndexController extends Controller
      */
     public function indexAction()
     {
-        return new RedirectResponse($this->get('redirectorService')->getUserFirstPage(false));
+        return $this->render('AppBundle:Index:index.html.twig');
     }
     
     /**

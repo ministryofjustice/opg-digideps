@@ -171,10 +171,3 @@ Feature: deputy / user / add client and report
         Given I am on client home "client-home" and I click first report "report-2015"
         Then the URL should match "report/\d+/overview"
         And I save the page as "deputy-report-overview"
-
-    @deputy
-    Scenario: check homepage redirect
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #Then the URL should match "report/\d+/overview"
-        When I go to "/"
-        #Then the URL should match "report/\d+/overview"
