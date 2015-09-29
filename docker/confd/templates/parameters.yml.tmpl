@@ -3,6 +3,7 @@ parameters:
     locale: en
     secret: {{ getv "/secret" }}
     api_base_url: {{ getv "/api/url" }}
+    api_client_secret: {{ getv "/api/client/secret" }}
     non_admin_host: {{ getv "/nonadmin/host" }}
     admin_host: http://digideps-admin.local
     env: {{ getv "/role" }}

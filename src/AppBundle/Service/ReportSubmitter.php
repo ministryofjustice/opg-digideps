@@ -48,7 +48,7 @@ class ReportSubmitter
 
         if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $report->isReadyToSubmit()) {
             $report->setReviewed(true);
-            $this->container->get('apiclient')->putC('report/' . $report->getId(), $report, [
+            $this->container->get('restClient')->put('report/' . $report->getId(), $report, [
                 'deserialise_group' => 'reviewed',
             ]);
             return new RedirectResponse($this->container->get('router')->generate('report_add_further_info', ['reportId' => $report->getId()]));

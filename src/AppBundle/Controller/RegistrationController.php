@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 use AppBundle\Model as ModelDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -38,7 +38,7 @@ class RegistrationController extends Controller
 
                 try {
                 
-                    $this->get('apiclient')->postC('selfregister' , $data);
+                    $this->get('restClient')->post('selfregister' , $data);
                     
                     $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
                     $email = $data->getEmail();

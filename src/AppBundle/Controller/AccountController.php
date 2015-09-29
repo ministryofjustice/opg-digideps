@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -21,7 +21,7 @@ class AccountController extends Controller
     public function accountsAction($reportId, $action)
     {
         $util = $this->get('util');
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
@@ -49,7 +49,7 @@ class AccountController extends Controller
             $account = $form->getData();
             $account->setReport($reportId);
 
-            $response = $apiClient->postC('report/add-account', $account, [
+            $response = $restClient->post('report/add-account', $account, [
                 'deserialise_group' => 'add'
             ]);
             
@@ -97,15 +97,15 @@ class AccountController extends Controller
         }
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
 
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-        $account = $apiClient->getEntity('Account', 'report/find-account-by-id/' . $accountId, ['query' => [ 'groups' => [ 'transactions' ]]]);
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+        $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);
         $account->setReportObject($report);
         
         // closing balance logic
         list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
 //        if ($action == "list") {
             if ($closingBalanceFormIsSubmitted && $formBalanceIsValid) {
-                $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
+                $this->get('restClient')->put('account/' .  $account->getId(), $formClosingBalance->getData(), [
                     'deserialise_group' => 'balance',
                 ]);
 
@@ -116,7 +116,7 @@ class AccountController extends Controller
         // money in/out logic
         list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
         if ($formMoneyIsValid) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formMoneyInOut->getData(), [
+            $this->get('restClient')->put('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
         }
@@ -134,17 +134,17 @@ class AccountController extends Controller
             'showDeleteButton' => $action == 'delete'
         ]);
         if ($formEditIsValid) {
-            $this->get('apiclient')->putC('account/' .  $account->getId(), $formClosingBalance->getData(), [
+            $this->get('restClient')->put('account/' .  $account->getId(), $formClosingBalance->getData(), [
                 'deserialise_group' => $editFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
             ]);
             return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
         } else if ($formDeleteIsValid) {
-            $this->get('apiclient')->delete('account/' .  $account->getId());
+            $this->get('restClient')->delete('account/' .  $account->getId());
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
         // get account from db
-        $refreshedAccount = $apiClient->getEntity('Account', 'report/find-account-by-id/' . $accountId, [ 'query' => [ 'groups' => 'transactions']]);
+        $refreshedAccount = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
         $refreshedAccount->setReportObject($report);
         
         // refresh account data after forms have altered the account's data

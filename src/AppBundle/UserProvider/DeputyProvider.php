@@ -7,40 +7,24 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Bridge\Monolog\Logger;
+use AppBundle\Service\Client\RestClient;
 
 class DeputyProvider implements UserProviderInterface
 {
     /**
-     * @var ContainerInterface
+     * @var RestClient
      */
-    private $container;
-    
-    /**
-     * @var string
-     */
-    private $env;
-    
+    private $restClient;
+
      /**
      * @var Logger
      */
     private $logger;
     
-    /**
-     * @var array 
-     */
-    private static $envToEndpoint = [
-        'admin' => 'user/get-admin-by-email',
-        'develop' => 'user/get-user-by-email',
-        'staging' => 'user/get-user-by-email',
-        'ci' => 'user/get-user-by-email',
-        'prod' => 'user/get-user-by-email'
-    ];
-    
-    public function __construct(ContainerInterface $container, Logger $logger, $env)
+    public function __construct(RestClient $restClient, Logger $logger)
     {
-        $this->container = $container;
+        $this->restClient = $restClient;
         $this->logger = $logger;
-        $this->env = $env;
     }
     
     /**
@@ -50,11 +34,10 @@ class DeputyProvider implements UserProviderInterface
      */
     public function login(array $credentials) 
     {
-        $restclient = $this->container->get('restClient');
-        
         try {
-           return $restclient->login($credentials['email'], $credentials['password']);
+           return $this->restClient->login(strtolower($credentials['email']), $credentials['password']);
         } catch(\Exception $e) {
+            echo $e->getMessage(); //REMOVEME
             $this->logger->info(__METHOD__ . ': ' . $e);
             
             throw new UsernameNotFoundException("We can't log you in at this time.");
@@ -62,28 +45,15 @@ class DeputyProvider implements UserProviderInterface
     }
     
     /**
-     * Finds user by email
+     * Finds user by id
      * 
-     * @param string $email
-     * @return \AppBundle\Entity\User $user
-     * @throws UsernameNotFoundException
+     * @param integer $id
      */
-    public function loadUserByUsername($email) 
+    public function loadUserByUsername($id) 
     {
-        $apiclient = $this->container->get('apiclient');
-        
-        try {
-            $endpoint = isset(self::$envToEndpoint[$this->env]) 
-                        ? self::$envToEndpoint[$this->env] : 'user/get-by-email';
-            
-            return $apiclient->getEntity('User', "{$endpoint}/{$email}");
-        } catch (\Exception $e) {
-            $this->logger->info(__METHOD__ . ': ' . $apiclient->getLastErrorMessage());
-
-            throw new UsernameNotFoundException("We can't log you in at this time.");
-        }
-        
+        return $this->restClient->get('/user/'.$id, 'User');
     }
+    
     
     /**
      * @param UserInterface $user
@@ -101,7 +71,7 @@ class DeputyProvider implements UserProviderInterface
                 )
             );
         }
-        return $this->loadUserByUsername($user->getEmail());
+        return $this->loadUserByUsername($user->getId());
     }
     
     /**

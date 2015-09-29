@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -44,6 +44,7 @@ class IndexController extends Controller
        
         if ($form->isValid()){
             $data = $form->getData();
+
             try {
                 $user = $this->get('deputyprovider')->login($data);
             } catch(\Exception $e){
@@ -64,13 +65,7 @@ class IndexController extends Controller
             $event = new InteractiveLoginEvent($request, $token);
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
             
-            $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-
             $session->set('lastLoggedIn', $user->getLastLoggedIn());
-            $user->setLastLoggedIn(new \DateTime()); //save for future access
-            $apiClient->putC('user/' .  $user->getId(), $user, [
-                'deserialise_group' => 'lastLoggedIn',
-            ]);
             
             $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
         }
@@ -173,9 +168,9 @@ class IndexController extends Controller
             
             if($form->isValid()){
                 
-                $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+                $restClient = $this->get('restClient'); /* @var $restClient RestClient */
                 
-                $apiClient->postC('/feedback', $form->getData());
+                $restClient->post('/feedback', $form->getData());
                 
                 return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
             }

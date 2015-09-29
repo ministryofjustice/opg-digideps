@@ -7,17 +7,19 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
+use AppBundle\Service\Client\RestClient;
 
 class DUserPasswordValidator extends UserPasswordValidator
 {
-    private $securityContext;
-    private $encoderFactory;
+    /**
+     * @var RestClient
+     */
+    private $restClient;
     
-    public function __construct(SecurityContextInterface $securityContext,EncoderFactoryInterface $encoderFactory) 
+    public function __construct($securityContext, $restClient) 
     {
+        $this->restClient = $restClient;
         $this->securityContext = $securityContext;
-        $this->encoderFactory = $encoderFactory;
-        parent::__construct($securityContext, $encoderFactory);
     }
     
     public function validate($password, Constraint $constraint)
@@ -28,12 +30,17 @@ class DUserPasswordValidator extends UserPasswordValidator
             throw new ConstraintDefinitionException('The User object must implement the UserInterface interface.');
         }
         
-        $encoder = $this->encoderFactory->getEncoder($user);
-        
         if(!empty($password)){
-            if (!$encoder->isPasswordValid($user->getPassword(), $password, $user->getSalt())) {
+            if (!$this->isOldPasswordValid($user, $password)) {
                 $this->context->addViolation($constraint->message);
             }
         }
+    }
+    
+    private function isOldPasswordValid($user, $password)
+    {
+        return $this->restClient->post('/user/'.$user->getId().'/is-password-correct', [
+            'password'=>$password
+        ]);
     }
 }

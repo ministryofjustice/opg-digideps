@@ -73,7 +73,7 @@ class AssetController extends Controller
         if ($form->isValid()) {
             $asset = $form->getData();
             $asset->setReport($reportId);
-            $this->get('apiclient')->postC('report/upsert-asset', $asset);
+            $this->get('restClient')->post('report/upsert-asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -101,7 +101,7 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('apiclient')->getEntity('Asset', 'report/get-asset/' . $assetId);
+        $asset = $this->get('restClient')->get('Asset', 'report/get-asset/' . $assetId);
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         $form->handleRequest($request);
@@ -109,7 +109,7 @@ class AssetController extends Controller
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('apiclient')->putC('report/upsert-asset', $asset);
+            $this->get('restClient')->put('report/upsert-asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -144,12 +144,12 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('apiclient')->getEntity('Asset', 'report/get-asset/' . $assetId);
+        $asset = $this->get('restClient')->get('Asset', 'report/get-asset/' . $assetId);
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         // handle delete
         if ($confirmed) {
-            $this->get('apiclient')->delete('report/delete-asset/' . $assetId);
+            $this->get('restClient')->delete('report/delete-asset/' . $assetId);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -207,7 +207,7 @@ class AssetController extends Controller
     {
         $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
 
-        $assets = $this->get('apiclient')->getEntities('Asset', 'report/get-assets/' . $reportId);
+        $assets = $this->get('restClient')->get('report/get-assets/' . $reportId, 'Asset[]');
 
         return [
             'report' => $report,
@@ -257,7 +257,7 @@ class AssetController extends Controller
         $isFormValid = false;
         if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
             $report->setNoAssetToAdd(true);
-            $this->get('apiclient')->putC('report/' . $report->getId(), $report);
+            $this->get('restClient')->put('report/' . $report->getId(), $report);
             $isFormValid = true;
         }
         

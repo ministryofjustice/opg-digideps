@@ -9,22 +9,21 @@ class ApiAvailability extends ServiceAvailabilityAbstract
     public function __construct(ContainerInterface $container)
     {
         try {
-            $content = $container->get('apiclient')->get('/manage/availability')->getBody();
-            $contentArray = json_decode($content, 1);
+            $data = $container->get('restClient')->get('/manage/availability', 'array');
             // API not healtyh
-            if (json_last_error() !== JSON_ERROR_NONE || !isset($contentArray['data']['healthy'])) {
+            if (json_last_error() !== JSON_ERROR_NONE || !isset($data['healthy'])) {
                 $this->isHealthy = false;
                 $this->errors = 'Cannot read API status. ' . json_last_error_msg();
                 return;
             } 
             
             // API healthy
-            $this->isHealthy = $contentArray['data']['healthy'];
-            $this->errors = $contentArray['data']['errors'];
+            $this->isHealthy = $data['healthy'];
+            $this->errors = $data['errors'];
             
         } catch (\Exception $e) {
             $this->isHealthy = false;
-            $this->errors = 'Error when using ApiClient to connect to API . ' . $e->getMessage();
+            $this->errors = 'Error when using RestClient to connect to API . ' . $e->getMessage();
         }
         
     }

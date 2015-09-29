@@ -21,7 +21,7 @@ class DecisionController extends Controller
 
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
-            $this->get('apiclient')->putC('report/'.$report->getId(),$report);
+            $this->get('restClient')->put('report/'.$report->getId(),$report);
         }
         return $this->redirect($this->generateUrl('decisions', ['reportId' => $report->getId()]));
     }
@@ -38,7 +38,7 @@ class DecisionController extends Controller
         $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getDecisions())){
-            $this->get('apiclient')->delete("decision/{$id}");
+            $this->get('restClient')->delete("decision/{$id}");
         }
         return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
     }
@@ -51,7 +51,7 @@ class DecisionController extends Controller
     public function decisionsAction($reportId,$action,$id)
     {
         $request = $this->getRequest();
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $util = $this->get('util');
 
         // just needed for title etc,
@@ -64,7 +64,7 @@ class DecisionController extends Controller
             if (!in_array($id, $report->getDecisions())) {
                throw new \RuntimeException("Decision not found.");
             }
-            $decision = $apiClient->getEntity('Decision', 'decision/' . $id);
+            $decision = $restClient->get('decision/' . $id, 'Decision[]');
 
             $form = $this->createForm(new FormDir\DecisionType([
                 'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
@@ -122,7 +122,7 @@ class DecisionController extends Controller
         }
 
         return [
-            'decisions' => $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId),
+            'decisions' => $restClient->get('decision/find-by-report-id/' . $reportId, 'Decision[]'),
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
@@ -138,18 +138,18 @@ class DecisionController extends Controller
      */
     protected function handleAddEditDecision($action,$form,$report)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
 
          if($action == 'add'){
             // add decision
-            $apiClient->postC('decision/upsert', $form->getData());
+            $restClient->post('decision/upsert', $form->getData());
 
             //lets clear any reason for no decisions they might have added previously
             $report->setReasonForNoDecisions(null);
-            $this->get('apiclient')->putC('report/'.$report->getId(),$report);
+            $this->get('restClient')->put('report/'.$report->getId(),$report);
         }else{
             // edit decision
-            $apiClient->putC('decision/upsert', $form->getData());
+            $restClient->put('decision/upsert', $form->getData());
         }
     }
 
@@ -161,13 +161,13 @@ class DecisionController extends Controller
      */
     protected function handleReasonForNoDecision($action,$noDecision,$reportId)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $util = $this->get('util');
 
         $formData = $noDecision->getData();
 
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $report->setReasonForNoDecisions($formData['reason']);
-        $apiClient->putC('report/'.$report->getId(),$report);
+        $restClient->put('report/'.$report->getId(),$report);
     }
 }

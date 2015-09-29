@@ -26,7 +26,7 @@ class ReportController extends Controller
     public function createAction($clientId, $action = false)
     {
         $request = $this->getRequest();
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $util = $this->get('util');
        
         $client = $util->getClient($clientId, $this->getUser()->getId());
@@ -60,7 +60,7 @@ class ReportController extends Controller
        
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                $response = $apiClient->postC('report/upsert', $form->getData());
+                $response = $restClient->post('report/upsert', $form->getData());
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
@@ -119,7 +119,7 @@ class ReportController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+            $this->get('restClient')->put('report/' .  $report->getId(), $report, [
                 'deserialise_group' => 'furtherInformation',
             ]);
             
@@ -162,7 +162,7 @@ class ReportController extends Controller
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->get('apiclient')->putC('report/' .  $report->getId() . '/user/' . $this->getUser()->getId() . '/submit', $report, [
+            $this->get('restClient')->put('report/' .  $report->getId() . '/user/' . $this->getUser()->getId() . '/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
             
@@ -200,8 +200,8 @@ class ReportController extends Controller
 
         if ($form->isValid()) {
             
-            $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-            $apiClient->postC('/feedback', $form->getData());
+            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+            $restClient->post('/feedback', $form->getData());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
@@ -242,14 +242,14 @@ class ReportController extends Controller
      */
     public function displayAction($reportId, $isEmailAttachment = false)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
         $client = $util->getClient($report->getClient(), $this->getUser()->getId());
         
-        $contacts = $apiClient->getEntities('Contact', 'report/get-contacts/' . $reportId);
-        $decisions = $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId);
+        $contacts = $restClient->get('report/get-contacts/' . $reportId, 'Contact[]');
+        $decisions = $restClient->get('decision/find-by-report-id/' . $reportId, 'Decision[]');
         
         return [
             'report' => $report,

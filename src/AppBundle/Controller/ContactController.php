@@ -22,7 +22,7 @@ class ContactController extends Controller{
 
         if(!empty($report)){
             $report->setReasonForNoContacts(null);
-            $this->get('apiclient')->putC('report/'.$report->getId(),$report);
+            $this->get('restClient')->put('report/'.$report->getId(),$report);
         }
         
         return $this->redirect($this->generateUrl('contacts', ['reportId' => $report->getId()]));
@@ -40,7 +40,7 @@ class ContactController extends Controller{
         $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getContacts())){
-            $this->get('apiclient')->delete('report/delete-contact/' . $id);
+            $this->get('restClient')->delete('report/delete-contact/' . $id);
         }
         return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
     }
@@ -63,14 +63,14 @@ class ContactController extends Controller{
 
         $request = $this->getRequest();
 
-        $apiClient = $this->get('apiclient');
-        $contacts = $apiClient->getEntities('Contact', 'report/get-contacts/' . $reportId);
+        $restClient = $this->get('restClient');
+        $contacts = $restClient->get('report/get-contacts/' . $reportId, 'Contact[]');
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             if (!in_array($id, $report->getContacts())) {
                throw new \RuntimeException("Contact not found.");
             }
-            $contact = $apiClient->getEntity('Contact','report/get-contact/' . $id);
+            $contact = $restClient->get('report/get-contact/' . $id, 'Contact[]');
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
         }else{
              //set up add contact form
@@ -121,7 +121,7 @@ class ContactController extends Controller{
         $util = $this->get('util');
 
         $request = $this->getRequest();
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
 
         $form = $forms['contactForm'];
         $noContact    = $forms['noContact'];
@@ -138,14 +138,14 @@ class ContactController extends Controller{
                 $contact->setReport($reportId);
 
                 if($action == 'add'){
-                    $apiClient->postC('report/upsert-contact', $contact);
+                    $restClient->post('report/upsert-contact', $contact);
                     
                     //lets clear any reason for no decisions they might have added previously
                     $report->setReasonForNoContacts(null);
-                    $apiClient->putC('report/'.$report->getId(),$report);
+                    $restClient->put('report/'.$report->getId(),$report);
             
                 }else{
-                    $apiClient->putC('report/upsert-contact', $contact);
+                    $restClient->put('report/upsert-contact', $contact);
                 }
 
                 return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
@@ -158,7 +158,7 @@ class ContactController extends Controller{
 
                  $report->setReasonForNoContacts($formData['reason']);
 
-                 $apiClient->putC('report/'.$report->getId(),$report);
+                 $restClient->put('report/'.$report->getId(),$report);
 
                  return $this->redirect($this->generateUrl('contacts',[ 'reportId' => $report->getId()]));
             }

@@ -20,7 +20,7 @@ class ClientController extends Controller
     public function indexAction($action, $reportId)
     {   
         $util = $this->get('util');  /* @var $util \AppBundle\Service\Util */
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         
         $clients = $this->getUser()->getClients(); 
         $request = $this->getRequest();
@@ -43,7 +43,7 @@ class ClientController extends Controller
         // edit client form
         if ($clientForm->isValid()) {
             $clientUpdated = $clientForm->getData();
-            $apiClient->putC('client/upsert', $clientUpdated);
+            $restClient->put('client/upsert', $clientUpdated);
 
             return $this->redirect($this->generateUrl('client_home'));
         }
@@ -56,7 +56,7 @@ class ClientController extends Controller
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
-                $apiClient->putC('report/' . $reportId, $report, [
+                $restClient->put('report/' . $reportId, $report, [
                      'deserialise_group' => 'startEndDates',
                 ]);
                 return $this->redirect($this->generateUrl('client_home'));
@@ -73,7 +73,7 @@ class ClientController extends Controller
               //update report to say message has been seen
               $reportObj->setReportSeen(true);
               
-              $apiClient->putC('report/' . $report->getId(), $reportObj);
+              $restClient->put('report/' . $report->getId(), $reportObj);
           }   
         }
         
@@ -100,7 +100,7 @@ class ClientController extends Controller
     {
         $request = $this->getRequest();
         $util = $this->get('util');
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         
         $clients = $this->getUser()->getClients();
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
@@ -119,8 +119,8 @@ class ClientController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $response = ($method === 'post') 
-                      ? $apiClient->postC('client/upsert', $form->getData())
-                      : $apiClient->putC('client/upsert', $form->getData());
+                      ? $restClient->post('client/upsert', $form->getData())
+                      : $restClient->put('client/upsert', $form->getData());
 
             return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id']]));
         }
