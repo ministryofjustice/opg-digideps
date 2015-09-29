@@ -39,7 +39,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             throw new \RuntimeException('Missing params');
         }
         
-        $this->addSingleUser($output, $data);
+        $this->addSingleUser($output, $data, ['flush'=>true]);
     }
 
 
@@ -48,7 +48,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
      * @param string $email
      * @param array $data keys: firstname lastname roleId password
      */
-    protected function addSingleUser(OutputInterface $output, array $data, $flush = true)
+    protected function addSingleUser(OutputInterface $output, array $data, array $options)
     {
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $userRepo = $em->getRepository('AppBundle\Entity\User');
@@ -60,7 +60,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             return;
         }
 
-        $em->clear();
+        
         $user = (new User)
             ->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
@@ -76,9 +76,9 @@ class AddSingleUserCommand extends ContainerAwareCommand
             $output->writeln("Cannot add user $email: $violations");
             return;
         }
-
+        
         $em->persist($user);
-        if ($flush) {
+        if ($options['flush']) {
             $em->flush($user);
         }
 
