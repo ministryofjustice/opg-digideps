@@ -129,6 +129,14 @@ activeTab: "tab-accounts"
             $(window).bind("beforeunload",function(event) {
                 if (transactionHasChanged) return message;
             });
+
+            new opg.GrandTotal({
+                moneyIn: '#moneyIn .transaction-total',
+                moneyOut: '#moneyOut .transaction-total',
+                grandTotal: '.account-transactions__footer .account-transactions__total-balance-total',
+                startBalance: {{ account.openingBalance}},
+                currency: '{{ 'page.currencySymbol' | trans }}'
+            });
         });
     </script>
 
