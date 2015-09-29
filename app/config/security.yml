@@ -9,7 +9,7 @@ services:
 #        arguments: [  @em, { "timeout_seconds": 1800 } ]
     user_provider.by_token.redis:
         class: AppBundle\Service\Auth\UserProviders\UserByTokenRedis
-        arguments: [ @em, @snc_redis.default, { "timeout_seconds": 1800 } ]
+        arguments: [ @em, @snc_redis.default, @logger, { "timeout_seconds": 1800 } ]
     authService:
         class: AppBundle\Service\Auth\AuthService
         arguments: [ @service_container ]
@@ -39,8 +39,17 @@ security:
         elb:
             pattern: ^/manage/
             security: false
+        behat:
+            pattern: ^/behat/
+            security: false
         login:
             pattern:  ^/auth/login$
+            security: false
+        userRecreateToken:
+            pattern: ^/user/recreate-token
+            security: false
+        userGetByToken:
+            pattern: ^/user/get-by-token
             security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:

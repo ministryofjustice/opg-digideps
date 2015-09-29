@@ -149,30 +149,26 @@ class RestInputOuputFormatter
         $e = $event->getException();
         $message = $e->getMessage();
         $code = $e->getCode();
+        
+        // log exception
+        $this->logger->warning($message);
+        
+        // transform message and code 
         if ($code < 400 || $code > 599) {
             $code = 500;
         }
-        
         if ($e instanceof AuthenticationCredentialsNotFoundException) {
             $message = 'Auth failed';
             $code = 401;
         }
         
-        //TODO 419 for token timeout
-        
         $data = array(
             'success' => false, 
             'data' => '', 
             'message' => $message,
-            'stacktrace' => 'enable debug mode to see it',
+            'stacktrace' => ($this->debug) ? get_class($e) . ': ' . substr($e->getTraceAsString(), 0, 1000) : 'enable debug mode to see it',
             'code' => $code
         );
-        
-        if ($this->debug) {
-            $data['stacktrace'] = get_class($e) . ': ' . substr($e->getTraceAsString(), 0, 1000);
-        }
-        
-        $this->logger->warning($message);
         
         $response = $this->arrayToResponse($data, $event->getRequest());
         $response->setStatusCode($code);

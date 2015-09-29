@@ -57,8 +57,7 @@ class User implements UserInterface
     /**
      * @var string
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
-     * @JMS\Groups({"basic"})
-     * @JMS\Type("string")
+     * @JMS\Exclude
      */
     private $password;
 

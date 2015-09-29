@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 
@@ -32,8 +33,38 @@ class BehatController extends RestController
     }
     
     
+    /**
+     * @Route("/report/{reportId}")
+     * @Method({"PUT"})
+     */
+    public function reportChangeCotAction(Request $request, $reportId)
+    {
+        $report = $this->findEntityBy('Report', $reportId);
+        
+        $data = $this->deserializeBodyContent($request);
+        
+        if (!empty($data['cotId'])) {
+            $cot = $this->findEntityBy('CourtOrderType', $data['cotId']);
+            $report->setCourtOrderType($cot);
+        }
+        
+        if (array_key_exists('submitted', $data)) {
+            $report->setSubmitted($data['submitted']);
+            $report->setSubmitDate($data['submitted'] ? new \DateTime : null);
+        }
+        
+        if (array_key_exists('end_date', $data)) {
+            $report->setEndDate(new \DateTime($data['end_date']));
+        }
+        
+        $this->get('em')->flush($report);
+        
+        return true;
+    }
     
-     /**
+    
+    
+    /**
      * @Route("/check-app-params")
      * @Method({"GET"})
      */
@@ -50,6 +81,37 @@ class BehatController extends RestController
         }
         
         return "valid";
+    }
+    
+    /**
+     * @Route("/audit-log")
+     * @Method({"GET"})
+     */
+    public function auditLogGetAllAction()
+    {
+        $this->setJmsSerialiserGroups(['audit_log']);
+
+        return $this->getRepository('AuditLogEntry')->findBy([], ['id'=>'DESC']);
+    }
+    
+     /**
+     * @Route("/user/{email}")
+     * @Method({"PUT"})
+     */
+    public function editUser(Request $request, $email)
+    {
+        $data = $this->deserializeBodyContent($request);
+        $user = $this->getRepository('User')->findBy(['email'=>$email]);
+        
+        if (!empty($data['registration_token'])) {
+            $user->setRegistrationToken($data['registration_token']);
+        }
+        
+        if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
+            $user->setTokenDate(new \DateTime($data['token_date']));
+        }
+        
+        return "done";
     }
     
     /**

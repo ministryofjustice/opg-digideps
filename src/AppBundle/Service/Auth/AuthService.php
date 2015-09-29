@@ -6,10 +6,16 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\User;
+use Symfony\Bridge\Monolog\Logger;
 
 class AuthService
 {
     const HEADER_CLIENT_SECRET = 'ClientSecret';
+    
+    /**
+     * @var Logger
+     */
+    private $logger;
     
     /**
      * @param Container $container
@@ -22,6 +28,7 @@ class AuthService
         }
         $this->container = $container;
         $this->userRepo = $container->get('em')->getRepository('AppBundle\Entity\User');
+        $this->logger = $container->get('logger');
         $this->securityEncoderFactory = $container->get('security.encoder_factory');
     }
     
@@ -51,6 +58,8 @@ class AuthService
      */
     public function getUserByEmailAndPassword($email, $pass)
     {
+        $this->logger->info(__METHOD__." called with $email and $pass ");
+        
         if (!$email || !$pass) {
             return null;
         }
@@ -59,6 +68,7 @@ class AuthService
             'email'=> $email
         ]);
         if (!$user instanceof User) {
+            $this->logger->info(__METHOD__." user not found ");
             return false;
         }
         
@@ -67,8 +77,12 @@ class AuthService
             ->encodePassword($pass, $user->getSalt());
         
         if ($user->getPassword() == $encodedPass) {
+            $this->logger->info(__METHOD__." password match ");
             return $user;
         } 
+        
+        $this->logger->info(__METHOD__." password mismatch ");
+        
         
         return null;
     }
@@ -81,10 +95,16 @@ class AuthService
      */
     public function isSecretValidForUser(User $user, $clientSecretFromRequest)
     {
+        $this->logger->info(__METHOD__." with user Id {$user->getId()} and $clientSecretFromRequest ");
+        
         $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
         
         $userRole = $user->getRole()->getRole();
         
-        return in_array($userRole, $permissions);
+        $valid = in_array($userRole, $permissions);
+        
+        $this->logger->info(__METHOD__ . ' ' . ($valid ? 'valid' : 'NOT valid'));
+        
+        return $valid;
     }
 }

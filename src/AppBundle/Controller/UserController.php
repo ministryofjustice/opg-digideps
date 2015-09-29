@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Exception as AppExceptions;
-
+use AppBundle\Service\Auth\AuthService;
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -54,38 +54,7 @@ class UserController extends RestController
     }
     
     
-     /**
-     * @Route("/{userId}/recreate-token/email/{email}", defaults={"email": "none"})
-     * @Method({"PUT"})
-     */
-    public function recreateToken($userId, $email)
-    {
-        if (!in_array($email, ['activate', 'pass-reset'])) {
-            throw new \InvalidArgumentException(__METHOD__ . ' invalid email template');
-        }
-        $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $user User */
-
-        $user->recreateRegistrationToken();
-        
-        $this->getEntityManager()->flush($user);
-
-        switch ($email) {
-            case 'activate':
-                // send acivation email to user
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
-                break;
-
-            case 'pass-reset':
-                // send reset password email
-                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
-                $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
-                break;
-        }
-        
-        return $user->getId();
-    }
-    
+     
     /**
      * @Route("/{id}")
      * @Method({"PUT"})
@@ -105,6 +74,28 @@ class UserController extends RestController
     
     
     /**
+     * @Route("/{id}/is-password-correct")
+     * @Method({"POST"})
+     */
+    public function isPasswordCorrect(Request $request, $id)
+    {
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        
+        $data = $this->deserializeBodyContent($request, [
+            'password' => 'NotEmpty',
+        ]);
+        
+        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        
+        $oldPassword = $encoder->encodePassword($data['password'], $user->getSalt());
+        if ($oldPassword == $user->getPassword()) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * change password, activate user and send remind email
      * @Route("/{id}/set-password")
      * @Method({"PUT"})
@@ -114,12 +105,13 @@ class UserController extends RestController
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
         
         $data = $this->deserializeBodyContent($request, [
-            'password_plain' => 'NotEmpty'
+            'password_plain' => 'NotEmpty',
         ]);
         
-        $password = $this->get('security.encoder_factory')->getEncoder($user)
-                    ->encodePassword($data['password_plain'], $user->getSalt());
-        $user->setPassword($password);
+        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        $newPassword = $encoder->encodePassword($data['password_plain'], $user->getSalt());
+        
+        $user->setPassword($newPassword);
         
         if (array_key_exists('set_active', $data)) {
            $user->setActive($data['set_active']);
@@ -238,22 +230,60 @@ class UserController extends RestController
         return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
     }
     
+    /**
+     * Requires client secret 
+     * 
+     * @Route("/recreate-token/{email}/{type}", defaults={"email": "none"}, requirements={
+     *   "type" = "(activate|pass-reset)"
+     * })
+     * @Method({"PUT"})
+     */
+    public function recreateToken(Request $request, $email, $type)
+    {
+        $user = $this->findEntityBy('User', ['email'=>$email]);
+
+        //check client secret
+        $authService = $this->get('authService'); /* @var $authService AuthService */
+        $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
+        if (!$authService->isSecretValidForUser($user, $clientSecretFromRequest)) {
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.');
+        }
+        
+        $user->recreateRegistrationToken();
+        
+        $this->getEntityManager()->flush($user);
+
+        switch ($type) {
+            case 'activate':
+                // send acivation email to user
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
+                break;
+
+            case 'pass-reset':
+                // send reset password email
+                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+                $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
+                break;
+        }
+        
+        return $user->getId();
+    }
+    
     
     /**
-     * @Route("/get-by-token/{domain}/{token}",defaults={ "domain" = "hybrid"}, requirements={"domain" = "(admin|deputy|hybrid)"})
+     * @Route("/get-by-token/{token}")
      * @Method({"GET"})
      */
-    public function getByToken($token, $domain)
+    public function getByToken(Request $request, $token)
     {
         $user = $this->findEntityBy('User', ['registrationToken'=>$token], "User not found"); /* @var $user User */
         
-        $role = $user->getRole()->getRole();
-        
-        if ($domain ==='admin' && $role != 'ROLE_ADMIN') {
-            throw new AppExceptions\NotFound('User not found');
-        }
-        if ($domain ==='deputy' && $role == 'ROLE_ADMIN') {
-            throw new AppExceptions\NotFound('User not found');
+        //check client secret
+        $authService = $this->get('authService'); /* @var $authService AuthService */
+        $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
+        if (!$authService->isSecretValidForUser($user, $clientSecretFromRequest)) {
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.');
         }
         
         return $user;

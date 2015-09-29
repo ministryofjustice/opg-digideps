@@ -44,6 +44,8 @@ class AuthController extends RestController
         }
         
         $randomToken = $this->getProvider()->generateAndStoreToken($user);
+        $user->setLastLoggedIn(new \DateTime);
+        $this->get('em')->flush($user);
         
         // add token into response
         $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($request) use ($randomToken) {

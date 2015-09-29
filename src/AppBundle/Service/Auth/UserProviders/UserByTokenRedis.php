@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Predis\Client as PredisClient;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
+use Symfony\Bridge\Monolog\Logger;
 
 /**
  * Get the user from a token (=username) looking at the AuthToken store info
@@ -25,6 +26,11 @@ class UserByTokenRedis implements UserByTokenProviderInterface
      * @var EntityManager 
      */
     private $em;
+    
+     /**
+     * @var Logger 
+     */
+    private $logger;
 
     /**
      * @var integer 
@@ -32,10 +38,11 @@ class UserByTokenRedis implements UserByTokenProviderInterface
     private $timeoutSeconds;
 
 
-    public function __construct(EntityManager $em, PredisClient $redis, array $options)
+    public function __construct(EntityManager $em, PredisClient $redis, Logger $logger, array $options)
     {
         $this->em = $em;
         $this->redis = $redis;
+        $this->logger = $logger;
         $this->timeoutSeconds = $options['timeout_seconds'];
     }
 
@@ -51,16 +58,21 @@ class UserByTokenRedis implements UserByTokenProviderInterface
     {
         $token = $username;
 
+        $this->logger->info("Trying login with token $token ");
+        
         list ($userId, $createdAt) = $this->redisGet($token);
         if (!$userId) {
+            $this->logger->warning("token $username  not found");
             throw new BadCredentialsException('Token non existing or not valid');
         }
         if (($createdAt + $this->timeoutSeconds) < time()) {
+            $this->logger->warning("token $username expired");
             throw new CredentialsExpiredException('Token expired');
         }
 
         $user = $this->em->getRepository('AppBundle\Entity\User')->find($userId);
         if (!$user) {
+            $this->logger->warning("user $userId not found");
             throw new BadCredentialsException('User associated to token not found');
         }
 
