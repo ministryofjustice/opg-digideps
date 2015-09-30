@@ -11,6 +11,7 @@ use Symfony\Bridge\Monolog\Logger;
 use AppBundle\Exception\DisplayableException;
 use AppBundle\Entity\User;
 use GuzzleHttp\Message\ResponseInterface;
+use AppBundle\Model\SelfRegisterData;
 
 /**
  * Connects to RESTful Server (API)
@@ -83,15 +84,14 @@ class RestClient
      * Stores AuthToken in storage
      * Returns user
      * 
-     * @param string $email
-     * @param string $password
+     * @param array $credentials with keys "token" or "email" and "password"
      * 
      * @return User
      */
-    public function login($email, $password)
+    public function login(array $credentials)
     {
         $response = $this->rawSafeCall('post', '/auth/login', [
-            'body' => $this->toJson(['email' => $email, 'password' => $password]),
+            'body' => $this->toJson($credentials),
             'addClientSecret' => true,
         ]);
 
@@ -144,6 +144,25 @@ class RestClient
         $response = $this->rawSafeCall('put', 'user/recreate-token/' .  $user->getEmail() . '/' . $type, [
             'addAuthToken' => false, 
             'addClientSecret' => true,
+        ]);
+        
+        return $this->extractDataArray($response);
+    }
+    
+    
+    /**
+     * Call POST /selfregister passing client secret
+     * 
+     * @param SelfRegisterData $selfRegData
+     * 
+     * @return array
+     */
+    public function registerUser(SelfRegisterData $selfRegData)
+    {
+        $response = $this->rawSafeCall('post', 'selfregister', [
+            'addAuthToken' => false, 
+            'addClientSecret' => true,
+            'body' => $this->toJson($selfRegData)
         ]);
         
         return $this->extractDataArray($response);
@@ -233,10 +252,11 @@ class RestClient
 
     /**
      * Performs HTTP client call
+     * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret
      * 
      * In case of connect/HTTP failure:
      * - throws DisplayableException using self::ERROR_CONNECT as a message
-     * - logs the full error message with with emergency priority
+     * - logs the full error message with with warning priority
      * 
      * @return ResponseInterface
      */
@@ -246,6 +266,7 @@ class RestClient
             throw new \InvalidArgumentException("Method $method does not exist on " . get_class($this->client));
         }
 
+        // process special header options
         if (!empty($options['addAuthToken'])) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get();
         }
@@ -256,11 +277,12 @@ class RestClient
         }
         unset($options['addClientSecret']);
         
+        
         try {
             return $this->client->$method($url, $options);
         } catch (\Exception $e) {
-            $this->logger->error('RestClient | ' . $url . ' | ' . $e->getMessage());
-            throw new DisplayableException(self::ERROR_CONNECT);
+            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
         }
     }
 
