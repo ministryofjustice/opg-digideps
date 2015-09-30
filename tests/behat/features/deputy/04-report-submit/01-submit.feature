@@ -14,6 +14,7 @@ Feature: deputy / report / submit
         Then The URL "/report/1/add_further_information/edit" should not be accessible
         Then The URL "/report/1/declaration" should not be accessible
         Then The URL "/report/1/submitted" should not be accessible
+        And I save the application status into "report-submit-pre"
         # wrong declaration form
         When I go to the "2015" report overview page
         When I press "report_submit_submitReport"
@@ -92,10 +93,10 @@ Feature: deputy / report / submit
         
 
     @deputy
-    Scenario: report submission
+    Scenario: report submission (full successful journey)
         Given I reset the email log
+        And I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I save the application status into "report-submit-pre"
         # assert after login I'm redirected to report page
         Then the URL should match "/report/\d+/overview"
         # assert I cannot access the sumbmitted page directly
@@ -103,9 +104,26 @@ Feature: deputy / report / submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
+        #
+        # Submit steps
+        #
+        When I go to "/report/1/overview"
         And I go to the "2015" report overview page
+        #
+        # checkbox top page
+        #
+        And I check "report_submit_reviewed_n_checked"
+        And I press "report_submit_submitReport"
+        #
+        # further info
+        #
+        And I fill in "report_add_info_furtherInformation" with "    nothing to add     "
+        And I press "report_add_info_saveAndContinue"
+        #
+        # declaration page
+        #
+        Then I should be on "/report/1/declaration"
         # submit without ticking "agree"
-        When I go to "/report/1/declaration"
         And I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
@@ -114,13 +132,18 @@ Feature: deputy / report / submit
         And I press "report_declaration_save"
         And the form should be valid
         And the response status code should be 200
+        #
+        # submitted page  
+        #
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
         When I go to "/report/1/display"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        # assert email has been sent/wrote into the disk
+        #
+        # Assert emails (both confirmation to the user, and email to OPG)
+        #
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
@@ -138,6 +161,7 @@ Feature: deputy / report / submit
     @deputy
     Scenario: submit feedback after report
         Given I reset the email log
+        And I load the application status from "report-submit-post"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/report/1/submitted"
         And I press "feedback_report_save"

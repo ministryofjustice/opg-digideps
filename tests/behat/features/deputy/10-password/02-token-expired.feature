@@ -4,6 +4,7 @@ Feature: deputy / Activation link resending
     @deputy
     Scenario: Activation link: resend expired link and restart from activation step
         Given I reset the email log
+        And I load the application status from "report-submit-pre" 
         And I change the user "behat-user@publicguardian.gsi.gov.uk" token to "behatuser123abc" dated last week
         When I go to "/user/activate/behatuser123abc"
         And I save the page as "user-activate-token-expired"
