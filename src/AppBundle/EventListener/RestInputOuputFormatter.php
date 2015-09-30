@@ -157,20 +157,14 @@ class RestInputOuputFormatter
         if ($code < 400 || $code > 599) {
             $code = 500;
         }
-        if ($e instanceof AuthenticationCredentialsNotFoundException) {
-            $message = 'Auth failed';
-            $code = 401;
-        }
-        if ($e instanceof ExpiredToken) {
-            $message = 'dfdf'; //TODO
-            $code = 434; //TODO
-        }
         
         $data = array(
             'success' => false, 
             'data' => '', 
             'message' => $message,
-            'stacktrace' => ($this->debug) ? get_class($e) . ': ' . substr($e->getTraceAsString(), 0, 1000) : 'enable debug mode to see it',
+            'stacktrace' => ($this->debug) ? 
+                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 1000))
+                    : 'enable debug mode to see it',
             'code' => $code
         );
         

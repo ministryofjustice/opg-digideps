@@ -33,7 +33,7 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
         // $apiKey = $request->headers->get('apikey');
 
         if (!$authTokenValue) {
-            throw new BadCredentialsException('No Token found in Request Headers');
+            throw new \RuntimeException('No Token found in Request Headers', 401);
         }
 
         $credentials = $authTokenValue;

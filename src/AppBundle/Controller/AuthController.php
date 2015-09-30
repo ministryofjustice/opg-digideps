@@ -30,7 +30,7 @@ class AuthController extends RestController
         
         $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
         if (!$authService->isSecretValid($clientSecretFromRequest)) {
-            throw new \RuntimeException('client secret not accepted.');
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
         
         $data = $this->deserializeBodyContent($request);
@@ -42,10 +42,10 @@ class AuthController extends RestController
             $user = $authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
         }
         if (!$user) {
-            throw new \RuntimeException('Cannot find user with the given credentials');
+            throw new \RuntimeException('Cannot find user with the given credentials', 498);
         }
         if (!$authService->isSecretValidForUser($user, $clientSecretFromRequest)) {
-            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.');
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         
         $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);

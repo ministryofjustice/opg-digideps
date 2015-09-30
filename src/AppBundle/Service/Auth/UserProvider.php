@@ -59,8 +59,7 @@ class UserProvider implements UserProviderInterface
      * @param string $username token (String)
      * @return User
      * 
-     * @throws BadCredentialsException
-     * @throws CredentialsExpiredException
+     * @throws RuntimeException with specific codes, in order to avoid being wrapped and losing their` type
      */
     public function loadUserByUsername($username)
     {
@@ -71,17 +70,17 @@ class UserProvider implements UserProviderInterface
         list ($userId, $createdAt) = $this->redisGet($token);
         if (!$userId) {
             $this->logger->warning("token $username  not found");
-            throw new BadCredentialsException('Token non existing or not valid');
+            throw new \RuntimeException('Token non existing or not valid', 401);
         }
         if (($createdAt + $this->timeoutSeconds) < time()) {
             $this->logger->warning("token $username expired");
-            throw new CredentialsExpiredException('Token expired');
+            throw new \RuntimeException('Token expired', 419);
         }
 
         $user = $this->em->getRepository('AppBundle\Entity\User')->find($userId);
         if (!$user) {
             $this->logger->warning("user $userId not found");
-            throw new BadCredentialsException('User associated to token not found');
+            throw new \RuntimeException('User associated to token not found', 401);
         }
 
         // refresh token creation time
