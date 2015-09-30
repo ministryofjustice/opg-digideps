@@ -11,7 +11,7 @@ class UserControllerTest extends AbstractTestController
      */
     public function addJson()
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $return = $this->assertRequest('POST', '/user?skip-mail=1', [
             'data' => [
@@ -32,7 +32,7 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJson($id)
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $return = $this->assertRequest('GET', '/user/' . $id, [
             'mustSucceed' => true,
@@ -47,7 +47,7 @@ class UserControllerTest extends AbstractTestController
      */
     public function getOneJsonException()
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $return = $this->assertRequest('GET', '/user/0', [
             'mustFail' => true,

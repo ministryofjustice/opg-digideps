@@ -66,7 +66,7 @@ class AuthControllerTest extends AbstractTestController
     
     public function testLoginSuccess()
     {
-        $authToken = $this->login('deputy@example.org');
+        $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $this->assertTrue(strlen($authToken)> 5, "Token $authToken not valid");
         
@@ -97,5 +97,44 @@ class AuthControllerTest extends AbstractTestController
 
         // assert the request with the old token fails
         $this->assertEndpointReturnAuthError('GET', '/auth/get-logged-user');
+    }
+    
+    /**
+     * @depends testLoginSuccess
+     */
+    public function testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference()
+    {
+        $authTokenDeputy = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $authTokenAdmin = $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
+        
+        // assert deputy can access
+        $data = $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenDeputy
+        ])['data'];
+        $this->assertEquals('deputy@example.org', $data['email']);
+        
+        
+        // assert admin can access
+        $data = $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenAdmin
+        ])['data'];
+        $this->assertEquals('admin@example.org', $data['email']);
+        
+        //logout admin and test deputy can still acess
+        $this->assertRequest('POST', '/auth/logout', [
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenAdmin
+        ]);
+        $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustFail' => true,
+            'AuthToken' => $authTokenAdmin
+        ]);
+        $data = $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustSucceed' => true,
+            'AuthToken' => $authTokenDeputy
+        ])['data'];
+        $this->assertEquals('deputy@example.org', $data['email']);
     }
 }

@@ -81,11 +81,11 @@ abstract class AbstractTestController extends WebTestCase
      * 
      * @return string token
      */
-    public function login($email, $password = 'Abcd1234')
+    public function login($email, $password, $clientSecret)
     {
         $responseArray = $this->assertRequest('POST', '/auth/login', [
             'mustSucceed' => true,
-            'ClientSecret' => '123abc-deputy',
+            'ClientSecret' => $clientSecret,
             'data' => [
                 'email' => $email,
                 'password' => $password
@@ -111,11 +111,11 @@ abstract class AbstractTestController extends WebTestCase
         }
     }
     
-    protected function assertEndpointReturnAuthError($method, $uri)
+    protected function assertEndpointReturnAuthError($method, $uri, $authToken = 'WRONG')
     {
         $response = $this->assertRequest($method, $uri, [
             'mustFail' => true,
-            'AuthToken' => 'WRONG',
+            'AuthToken' => $authToken,
             'assertResponseCode' => 401
         ]);
         $this->assertEquals(401, $response['code']);

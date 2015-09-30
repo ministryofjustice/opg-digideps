@@ -90,7 +90,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @test */
     public function dontSaveUnvalidUserToDB()
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $this->assertRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -115,7 +115,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function savesValidUserToDb()
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         $responseArray = $this->assertRequest('POST', '/selfregister', [
             'mustSucceed' => true,
             'AuthToken' => $token,
@@ -149,7 +149,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @test */
     public function throwErrorForDuplicate()
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $data = [
             'firstname' => 'Zac',

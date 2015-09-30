@@ -9,7 +9,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function addAccount()
     {
-        $token = $this->login('deputy@example.org');
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $client = $this->fixtures->createClient();
         $report = $this->fixtures->createReport($client);
