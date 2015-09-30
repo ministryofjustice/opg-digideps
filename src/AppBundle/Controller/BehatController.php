@@ -101,7 +101,7 @@ class BehatController extends RestController
     public function editUser(Request $request, $email)
     {
         $data = $this->deserializeBodyContent($request);
-        $user = $this->getRepository('User')->findBy(['email'=>$email]);
+        $user = $this->findEntityBy('User', ['email'=>$email]);
         
         if (!empty($data['registration_token'])) {
             $user->setRegistrationToken($data['registration_token']);
@@ -110,6 +110,8 @@ class BehatController extends RestController
         if (!empty($data['token_date'])) { //important, keep this after "setRegistrationToken" otherwise date will be reset
             $user->setTokenDate(new \DateTime($data['token_date']));
         }
+        
+        $this->get('em')->flush($user);
         
         return "done";
     }
