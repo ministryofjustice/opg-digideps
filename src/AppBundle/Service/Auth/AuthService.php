@@ -88,6 +88,18 @@ class AuthService
     }
     
     /**
+     * @param string $token
+     * 
+     * @return User|null
+     */
+    public function getUserByToken($token)
+    {
+       return $this->userRepo->findOneBy([
+            'registrationToken'=> $token
+        ]) ?: null;
+    }
+    
+    /**
      * @param User $user
      * @param string $clientSecretFromRequest
      * 
