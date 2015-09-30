@@ -21,6 +21,8 @@ services:
                 headers:
                     Content-Type: application/json
                 verify: false
+                timeout: 10
+                allow_redirects: false
     redisTokenStorage:
         class: AppBundle\Service\Client\TokenStorage\RedisStorage
         arguments: [@snc_redis.default, "redis_token_storage_dd"]
