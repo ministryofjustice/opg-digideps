@@ -161,6 +161,10 @@ class RestInputOuputFormatter
             $message = 'Auth failed';
             $code = 401;
         }
+        if ($e instanceof ExpiredToken) {
+            $message = 'dfdf'; //TODO
+            $code = 434; //TODO
+        }
         
         $data = array(
             'success' => false, 

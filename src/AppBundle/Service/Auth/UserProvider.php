@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Service\Auth\UserProviders;
+namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -9,12 +9,13 @@ use Predis\Client as PredisClient;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Bridge\Monolog\Logger;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Get the user from a token (=username) looking at the AuthToken store info
  * throw exception if not found, or the token expired 
  */
-class UserByTokenRedis implements UserByTokenProviderInterface
+class UserProvider implements UserProviderInterface
 {
 
     /**
@@ -26,8 +27,8 @@ class UserByTokenRedis implements UserByTokenProviderInterface
      * @var EntityManager 
      */
     private $em;
-    
-     /**
+
+    /**
      * @var Logger 
      */
     private $logger;
@@ -43,7 +44,16 @@ class UserByTokenRedis implements UserByTokenProviderInterface
         $this->em = $em;
         $this->redis = $redis;
         $this->logger = $logger;
-        $this->timeoutSeconds = $options['timeout_seconds'];
+        $this->setTimeoutSeconds($options['timeout_seconds']);
+    }
+
+
+    /**
+     * @param integer $timeoutSeconds
+     */
+    public function setTimeoutSeconds($timeoutSeconds)
+    {
+        $this->timeoutSeconds = $timeoutSeconds;
     }
 
 
@@ -59,7 +69,7 @@ class UserByTokenRedis implements UserByTokenProviderInterface
         $token = $username;
 
         $this->logger->info("Trying login with token $token ");
-        
+
         list ($userId, $createdAt) = $this->redisGet($token);
         if (!$userId) {
             $this->logger->warning("token $username  not found");
@@ -104,9 +114,8 @@ class UserByTokenRedis implements UserByTokenProviderInterface
      * 
      * @return string
      */
-    public function generateAndStoreToken(User $user)
+    public function generateRandomTokenAndStore(User $user)
     {
-        // recreate and persist token
         $token = $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
 
         $this->redisStore($token, $user->getId());

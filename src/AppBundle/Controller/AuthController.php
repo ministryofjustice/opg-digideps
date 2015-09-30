@@ -6,7 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception as AppExceptions;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
-use AppBundle\Service\Auth\UserProviders\UserByTokenProviderInterface;
+use AppBundle\Service\Auth\UserProvider;
 use AppBundle\Service\Auth\AuthService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -48,7 +48,7 @@ class AuthController extends RestController
             throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.');
         }
         
-        $randomToken = $this->getProvider()->generateAndStoreToken($user);
+        $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime);
         $this->get('em')->flush($user);
         
@@ -61,13 +61,11 @@ class AuthController extends RestController
     }
     
     /**
-     * @return UserByTokenProviderInterface
+     * @return UserProvider
      */
     private function getProvider()
     {
-        $service = $this->container->getParameter('get_user_by_token_provider.class');
-        
-        return $this->get($service);
+        return $this->container->get('user_provider');
     }
     
     /**

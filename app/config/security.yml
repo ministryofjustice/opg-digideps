@@ -3,20 +3,13 @@ services:
     authenticator.token_header:
         class: AppBundle\Service\Auth\HeaderTokenAuthenticator
         public: false
-    # user providers
-#    user_provider.by_token.doctrine:
-#        class: AppBundle\Service\Auth\UserProviders\UserByTokenDoctrine
-#        arguments: [  @em, { "timeout_seconds": 1800 } ]
-    user_provider.by_token.redis:
-        class: AppBundle\Service\Auth\UserProviders\UserByTokenRedis
+    user_provider:
+        class: AppBundle\Service\Auth\UserProvider
         arguments: [ @em, @snc_redis.default, @logger, { "timeout_seconds": 1800 } ]
     authService:
         class: AppBundle\Service\Auth\AuthService
         arguments: [ @service_container ]
     
-parameters:
-    get_user_by_token_provider.class: "user_provider.by_token.redis"
-
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
@@ -29,8 +22,8 @@ security:
 #        ROLE_ADMIN: [ ROLE_ALLOWED_TO_SWITCH, ROLE_GUEST, ROLE_LAY_DEPUTY, ROLE_PROFESSIONAL_DEPUTY, ROLE_LOCAL_AUTHORITY_DEPUTY, ROLE_VISITOR ]
 
     providers:
-        get_user_by_token_provider:
-            id: %get_user_by_token_provider.class%
+        user_provider_redis:
+            id: user_provider
 
     firewalls:
         elb:
@@ -57,7 +50,7 @@ security:
             security: true
             simple_preauth:
                 authenticator: authenticator.token_header
-            provider: get_user_by_token_provider
+            provider: user_provider_redis
             stateless:   true
             
 #    access_control:
