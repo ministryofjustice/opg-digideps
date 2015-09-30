@@ -133,7 +133,7 @@ activeTab: "tab-accounts"
             new opg.GrandTotal({
                 moneyIn: '#moneyIn .transaction-total',
                 moneyOut: '#moneyOut .transaction-total',
-                grandTotal: '.account-transactions__footer .account-transactions__total-balance-total',
+                grandTotal: '.account-transactions__total-balance-total',
                 startBalance: {{ account.openingBalance}},
                 currency: '{{ 'page.currencySymbol' | trans }}'
             });
