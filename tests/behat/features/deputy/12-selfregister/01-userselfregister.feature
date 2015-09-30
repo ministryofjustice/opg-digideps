@@ -2,7 +2,8 @@ Feature: User Self Registration
     
     @deputy @wip
     Scenario: A user can enter their self registration information
-        Given I am on "/register"
+        Given I load the application status from "init" 
+        And I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |

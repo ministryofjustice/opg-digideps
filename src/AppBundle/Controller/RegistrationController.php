@@ -29,38 +29,36 @@ class RegistrationController extends Controller
         /** @var Request $request */
         $request = $this->getRequest();
 
-        if($request->getMethod() == 'POST') {
-            $form->handleRequest($request);
+        $form->handleRequest($request);
 
-            if($form->isValid()){
+        if($form->isValid()){
 
-                $data = $form->getData();
+            $data = $form->getData();
+            try {
 
-                try {
-                
-                    $this->get('restClient')->post('selfregister' , $data);
-                    
-                    $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
-                    $email = $data->getEmail();
-                    $bodyText = str_replace("{{ email }}", $email, $bodyText);
-                    
-                    
-                    $signInText = $this->get('translator')->trans('signin', [], 'register');
-                    $signIn = '<a href="' . $this->generateUrl("login") . '">' . $signInText . '</a>';
-                    $bodyText = str_replace("{{ sign_in }}", $signIn, $bodyText);
-                    
-                    return $this->render('AppBundle:Registration:thankyou.html.twig',[
-                        'bodyText' => $bodyText
-                    ]);
-                
-                } catch(\Exception $e) {
-                    if ($e->getCode() == 422)
-                    {
-                        $form->get('email')->addError(new FormError("That email has already been registered with this service."));
-                    }
+                $this->get('restClient')->registerUser($data);
+
+                $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
+                $email = $data->getEmail();
+                $bodyText = str_replace("{{ email }}", $email, $bodyText);
+
+
+                $signInText = $this->get('translator')->trans('signin', [], 'register');
+                $signIn = '<a href="' . $this->generateUrl("login") . '">' . $signInText . '</a>';
+                $bodyText = str_replace("{{ sign_in }}", $signIn, $bodyText);
+
+                return $this->render('AppBundle:Registration:thankyou.html.twig',[
+                    'bodyText' => $bodyText
+                ]);
+
+            } catch(\Exception $e) {
+                if ($e->getCode() == 422) {
+                    //move this logic to a separate form field contraint (see existing password validator as example)
+                    $form->get('email')->addError(new FormError("That email has already been registered with this service."));
                 }
             }
         }
+            
         return $this->render('AppBundle:Registration:register.html.twig', [ 'form' => $form->createView() ]);
     }
 }
