@@ -33,9 +33,6 @@ security:
             id: %get_user_by_token_provider.class%
 
     firewalls:
-        dev:
-            pattern:  ^/(_(profiler|wdt)|css|images|js)/
-            security: false
         elb:
             pattern: ^/manage/
             security: false
