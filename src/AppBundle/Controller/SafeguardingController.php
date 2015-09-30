@@ -71,7 +71,7 @@ class SafeguardingController extends RestController
      */
     public function getOneBydId(Request $request, $id)
     {
-        $serialiseGroups = $request->query->has('groups') ? $request->query->get('groups') : [ 'basic'];
+        $serialiseGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : [ 'basic'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
         $safeguarding = $this->findEntityBy('Safeguarding', $id, "Safeguarding with id:" . $id . " not found");

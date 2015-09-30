@@ -84,7 +84,7 @@ class ClientController extends RestController
     public function findByIdAction(Request $request, $id, $userId)
     {
         if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups($request->query->get('groups'));
+            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
         $client = $this->getRepository('Client')->find($id);

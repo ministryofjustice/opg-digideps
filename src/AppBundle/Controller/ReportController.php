@@ -82,7 +82,7 @@ class ReportController extends RestController
     public function getById(Request $request, $id, $userId)
     {   
         if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups($request->query->get('groups'));
+            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
         $report = $this->getRepository('Report')->find($id); /* @var $report EntityDir\Report */
@@ -157,7 +157,7 @@ class ReportController extends RestController
      */
     public function getContactAction(Request $request, $id)
     {
-        $serialisedGroups = $request->query->has('groups') ? $request->query->get('groups') : ['basic'];
+        $serialisedGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['basic'];
         $this->setJmsSerialiserGroups($serialisedGroups);
         
         $contact = $this->findEntityBy('Contact', $id);

@@ -17,7 +17,7 @@ class AccountController extends RestController
     public function getAccountsAction(Request $request, $id)
     {
         if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups($request->query->get('groups'));
+            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
         $report = $this->findEntityBy('Report', $id);
@@ -70,7 +70,7 @@ class AccountController extends RestController
     public function getOneById(Request $request, $id)
     {
         if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups($request->query->get('groups'));
+            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
         $account = $this->findEntityBy('Account', $id, 'Account not found');
@@ -98,7 +98,7 @@ class AccountController extends RestController
                     ->setAmount($transactionRow['amount'])
                     ->setMoreDetails($transactionRow['more_details']);
             }, array_merge($data['money_in'], $data['money_out']));
-            $this->setJmsSerialiserGroups('transactions');
+            $this->setJmsSerialiserGroups(['transactions']);
         }
         
         
