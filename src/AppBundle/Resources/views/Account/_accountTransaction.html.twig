@@ -10,7 +10,7 @@
     <div class="summary">
         <span class="icon icon__accordion"></span>
         <h3 class="{{ summaryClass }}">{{ (section ~ '.panelTitle') | trans }}</h3>
-        <div class="transaction-total behat-region-{{ href }}-total">
+        <div class="transaction-total behat-region-{{ href }}-total sub-total" data-total="{{ transactionTotal | number_format(2, '.', ',') }}">
             {{ (section ~ '.totalPrefix') | trans }} {{ (section ~ '.currencySymbol') | trans }}{{ transactionTotal | number_format(2, '.', ',') }}
         </div>
     </div>
@@ -88,5 +88,13 @@
         opg.accordian({
             target: '#{{ href }}'
         });
+        
+        new opg.AccountAutoTotal({
+            valueSelector: '#{{ href }} .form-control__number',
+            totalSelector: '#{{ href }} .sub-total',
+            valuePrefix: '{{ (section ~ '.totalPrefix') | trans }}',
+            currency: '{{ (section ~ '.currencySymbol') | trans }}'
+        });
+        
     });
 </script>
