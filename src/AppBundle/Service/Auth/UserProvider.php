@@ -38,6 +38,11 @@ class UserProvider implements UserProviderInterface
      */
     private $timeoutSeconds;
 
+    /**
+     * @var integer 
+     */
+    private static $timeoutOverride = null;
+
 
     public function __construct(EntityManager $em, PredisClient $redis, Logger $logger, array $options)
     {
@@ -49,15 +54,8 @@ class UserProvider implements UserProviderInterface
 
 
     /**
-     * @param integer $timeoutSeconds
-     */
-    public function setTimeoutSeconds($timeoutSeconds)
-    {
-        $this->timeoutSeconds = $timeoutSeconds;
-    }
-
-
-    /**
+     * Called by HeaderTokenAuthenticator::authenticateToken() for each request
+     * 
      * @param string $username token (String)
      * @return User
      * 
@@ -152,6 +150,33 @@ class UserProvider implements UserProviderInterface
         }
 
         return $storedData;
+    }
+    
+    
+    /**
+     * @param integer $timeoutSeconds
+     */
+    private function setTimeoutSeconds($timeoutSeconds)
+    {
+        $this->timeoutSeconds = $timeoutSeconds;
+        // override if the static property is set
+        if (null !== self::$timeoutOverride) {
+            $this->timeoutSeconds = self::$timeoutOverride;
+        }
+    }
+    
+    private function getTimeoutSeconds()
+    {
+        return $this->timeoutSeconds;
+    }
+
+
+    /**
+     * @param integer $timeoutSeconds
+     */
+    public static function overrideTimeoutSeconds($timeoutSeconds)
+    {
+        self::$timeoutOverride = $timeoutSeconds;
     }
 
 }

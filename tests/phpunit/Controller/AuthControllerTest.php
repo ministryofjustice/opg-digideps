@@ -137,4 +137,25 @@ class AuthControllerTest extends AbstractTestController
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
     }
+    
+    public function testLoginTimeout()
+    {
+        $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
+        $data = $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustSucceed' => true,
+            'AuthToken' => $authToken
+        ])['data'];
+        
+        // statically override timeout
+        \AppBundle\Service\Auth\UserProvider::overrideTimeoutSeconds(-3600);
+        
+        $data = $this->assertRequest('GET', '/auth/get-logged-user', [
+            'mustFail' => true,
+            'AuthToken' => $authToken
+        ])['data'];
+        
+        // remove timeout override
+        \AppBundle\Service\Auth\UserProvider::overrideTimeoutSeconds(null);
+    }
 }

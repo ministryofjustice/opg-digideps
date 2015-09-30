@@ -21,7 +21,6 @@ abstract class AbstractTestController extends WebTestCase
     {
         $this->client = static::createClient([ 'environment' => 'test',
                                                'debug' => true ]);
-        
         $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
         
         $em->clear();

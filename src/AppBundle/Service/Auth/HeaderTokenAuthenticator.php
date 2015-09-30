@@ -43,7 +43,9 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
         );
     }
 
-
+    /**
+     * Called at each request
+     */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
         if ($userProvider instanceof UserProvider) {
