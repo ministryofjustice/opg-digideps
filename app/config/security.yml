@@ -51,6 +51,9 @@ security:
         userGetByToken:
             pattern: ^/user/get-by-token
             security: false
+        selfregister:
+            pattern: ^/selfregister
+            security: false
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
