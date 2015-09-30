@@ -64,7 +64,7 @@ class DecisionController extends Controller
             if (!in_array($id, $report->getDecisions())) {
                throw new \RuntimeException("Decision not found.");
             }
-            $decision = $restClient->get('decision/' . $id, 'Decision[]');
+            $decision = $restClient->get('decision/' . $id, 'Decision');
 
             $form = $this->createForm(new FormDir\DecisionType([
                 'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')

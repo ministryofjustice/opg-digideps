@@ -70,7 +70,7 @@ class ContactController extends Controller{
             if (!in_array($id, $report->getContacts())) {
                throw new \RuntimeException("Contact not found.");
             }
-            $contact = $restClient->get('report/get-contact/' . $id, 'Contact[]');
+            $contact = $restClient->get('report/get-contact/' . $id, 'Contact');
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
         }else{
              //set up add contact form

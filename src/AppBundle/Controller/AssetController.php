@@ -101,7 +101,7 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('restClient')->get('Asset', 'report/get-asset/' . $assetId);
+        $asset = $this->get('restClient')->get('report/get-asset/' . $assetId, 'Asset');
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         $form->handleRequest($request);
@@ -144,7 +144,7 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('restClient')->get('Asset', 'report/get-asset/' . $assetId);
+        $asset = $this->get('restClient')->get('report/get-asset/' . $assetId, 'Asset');
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         // handle delete
