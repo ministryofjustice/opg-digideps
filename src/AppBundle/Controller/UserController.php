@@ -80,24 +80,26 @@ class UserController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             
-            // needs to log the user in now
-            throw new \Exception('log user in so that next works');
+            // login user into API
+            //TODO try move at the beginning
+            $this->get('deputyprovider')->login(['token'=>$token]);
             
+            // set password for user
             $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active' => true,
                 'send_email' => false //not sent on this "landing" pages
             ]));
 
-            // log in user
-            $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
-            $this->get("security.context")->setToken($token); //now the user is logged in
+            // log in user into CLIENT
+            $clientToken = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+            $this->get("security.context")->setToken($clientToken); //now the user is logged in
 
             $session = $this->get('session');
-            $session->set('_security_secured_area', serialize($token));
+            $session->set('_security_secured_area', serialize($clientToken));
 
              $request = $this->get("request");
-             $event = new InteractiveLoginEvent($request, $token);
+             $event = new InteractiveLoginEvent($request, $clientToken);
              $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
              // the following should not be triggered
