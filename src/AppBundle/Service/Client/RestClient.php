@@ -281,6 +281,9 @@ class RestClient
         try {
             return $this->client->$method($url, $options);
         } catch (\Exception $e) {
+            if ($e->getCode() == 419) {
+                header("Location: /login");die;
+            }
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
             throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
         }
