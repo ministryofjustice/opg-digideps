@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Bridge\Monolog\Logger;
+use AppBundle\Entity\User;
 use AppBundle\Service\Client\RestClient;
 
 class DeputyProvider implements UserProviderInterface
@@ -28,14 +29,16 @@ class DeputyProvider implements UserProviderInterface
     }
     
     /**
+     * Login passing params to RestClient::login()
      * 
      * @param array $credentials
-     * @return type
+     * 
+     * @return User
      */
     public function login(array $credentials) 
     {
         try {
-           return $this->restClient->login(strtolower($credentials['email']), $credentials['password']);
+           return $this->restClient->login($credentials);
         } catch(\Exception $e) {
             echo $e->getMessage(); //REMOVEME
             $this->logger->info(__METHOD__ . ': ' . $e);
