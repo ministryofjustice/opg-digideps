@@ -15,8 +15,12 @@ use AppBundle\Exception\DisplayableException;
  */
 class BehatController extends Controller
 {
-    private function checkIsBehatBrowser()
+    private function securityChecks()
     {
+        if (!$this->container->getParameter('behat_controller_enabled')) {
+            return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
+        }
+        
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
         $secret = $this->getRequest()->get('secret');
         
@@ -35,7 +39,7 @@ class BehatController extends Controller
      */
     public function getLastEmailAction()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         $content = $this->get('restClient')->get('behat/email', 'array');
         
         return new Response($content);
@@ -47,7 +51,7 @@ class BehatController extends Controller
      */
     public function resetAction()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         $content = $this->get('restClient')->delete('behat/email');
         
         return new Response($content);
@@ -59,7 +63,7 @@ class BehatController extends Controller
      */
     public function reportChangeReportCot($reportId, $cotId)
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
         $this->get('restClient')->put('behat/report/' .$reportId, [
             'cotId' => $cotId
@@ -74,7 +78,7 @@ class BehatController extends Controller
      */
     public function reportChangeSubmitted($reportId, $value)
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
         $submitted = ($value == 'true' || $value == 1) ? 1 : 0;
         
@@ -91,6 +95,8 @@ class BehatController extends Controller
      */
     public function accountChangeReportDate($reportId, $dateYmd)
     {
+        $this->securityChecks();
+        
         $this->get('restClient')->put('behat/report/' . $reportId, [
             'end_date' => $dateYmd
         ]);
@@ -104,7 +110,7 @@ class BehatController extends Controller
      */
     public function deleteBehatUser()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
         $this->get('restClient')->delete('behat/users/behat-users');
         
@@ -119,6 +125,8 @@ class BehatController extends Controller
      */
     public function resetBehatData()
     {
+        $this->securityChecks();
+        
        return new Response('done');
     }
     
@@ -129,7 +137,7 @@ class BehatController extends Controller
      */
     public function viewAuditLogAction()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
         $entities = $this->get('restClient')->get('behat/audit-log', 'AuditLogEntry[]');
    
@@ -152,7 +160,7 @@ class BehatController extends Controller
      */
     public function userSetToken($email, $token, $date)
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
         $this->get('restClient')->put('behat/user/'.$email, [
             'token_date' => $date,
@@ -168,10 +176,10 @@ class BehatController extends Controller
      */
     public function checkParamsAction()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
         $data = $this->get('restClient')->get('behat/check-app-params', 'array');
-        
+
         if ($data !='valid') {
             throw new \RuntimeException('Invalid API params. Response: '.print_r($data, 1));
         }

@@ -31,4 +31,5 @@ parameters:
     use_redis: true
     session_prefix: application_session
     ga: null
+    behat_controller_enabled: true
             
