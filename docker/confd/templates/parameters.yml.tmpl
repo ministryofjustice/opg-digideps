@@ -59,4 +59,6 @@ parameters:
             permissions: {{ getv (printf "/secrets/%s/permissions" .) }}
 {{ end }}
 {{ end }}
+    
+    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
 

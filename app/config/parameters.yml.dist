@@ -8,6 +8,7 @@ parameters:
     database_password: setme
     locale: en
     secret: setme
+    behat_controller_enabled: true
     smtp_default_hostname: localhost
     smtp_default_port: 25
     smtp_default_user: setme

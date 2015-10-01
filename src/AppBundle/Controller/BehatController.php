@@ -13,12 +13,22 @@ use AppBundle\Entity\User;
  */
 class BehatController extends RestController
 {
+    private function securityChecks()
+    {
+        if (!$this->container->getParameter('behat_controller_enabled')) {
+            return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
+        }
+    }
+    
+    
     /**
      * @Route("/email")
      * @Method({"GET"})
      */
     public function emailAction()
     {
+        $this->securityChecks();
+        
         $mailPath = $this->getBehatMailFilePath();
         
         if (!file_exists($mailPath)) {
@@ -39,6 +49,8 @@ class BehatController extends RestController
      */
     public function reportChangeCotAction(Request $request, $reportId)
     {
+        $this->securityChecks();
+        
         $report = $this->findEntityBy('Report', $reportId);
         
         $data = $this->deserializeBodyContent($request);
@@ -70,6 +82,8 @@ class BehatController extends RestController
      */
     public function checkParamsAction()
     {
+        $this->securityChecks();
+        
         $param = $this->container->getParameter('email_report_submit')['to_email'];
         if (!preg_match('/^behat\-/', $param)) {
             throw new DisplayableException("email_report_submit.to_email must be a behat- email in order to test emails, $param given.");
@@ -89,6 +103,8 @@ class BehatController extends RestController
      */
     public function auditLogGetAllAction()
     {
+        $this->securityChecks();
+        
         $this->setJmsSerialiserGroups(['audit_log']);
 
         return $this->getRepository('AuditLogEntry')->findBy([], ['id'=>'DESC']);
@@ -100,6 +116,8 @@ class BehatController extends RestController
      */
     public function editUser(Request $request, $email)
     {
+        $this->securityChecks();
+        
         $data = $this->deserializeBodyContent($request);
         $user = $this->findEntityBy('User', ['email'=>$email]);
         
@@ -122,6 +140,8 @@ class BehatController extends RestController
      */
     public function emailResetAction()
     {
+        $this->securityChecks();
+        
         $mailPath = $this->getBehatMailFilePath();
         
         file_put_contents($mailPath, '');
@@ -153,6 +173,8 @@ class BehatController extends RestController
     
     private function getBehatMailFilePath()
     {
+        $this->securityChecks();
+        
         return $this->container->getParameter('email_mock_path');
     }
     
