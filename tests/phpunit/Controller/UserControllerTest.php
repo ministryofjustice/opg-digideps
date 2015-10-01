@@ -4,13 +4,10 @@ namespace AppBundle\Controller;
 
 class UserControllerTest extends AbstractTestController
 {
-    
-    
-    /**
-     * @test
-     */
-    public function addJson()
+    public function testAdd()
     {
+        $this->assertEndpointReturnAuthError('POST', '/user');
+    
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $return = $this->assertRequest('POST', '/user?skip-mail=1', [
@@ -26,12 +23,33 @@ class UserControllerTest extends AbstractTestController
         return $return['data']['id'];
     }
     
-    /**
-     * @test
-     * @depends addJson
-     */
-    public function getOneJson($id)
+    
+    public function testupdate()
     {
+        $this->assertEndpointReturnAuthError('PUT', '/user/1');
+        
+        //
+    }
+    
+    public function testisPasswordCorrect()
+    {
+        $this->assertEndpointReturnAuthError('POST', '/user/1/is-password-correct');
+        
+    }
+    
+    public function testchangePassword()
+    {
+        $this->assertEndpointReturnAuthError('PUT', '/user/1/set-password');
+    }
+    
+    /**
+     * 
+     * @depends testAdd
+     */
+    public function testGet($id)
+    {
+        $this->assertEndpointReturnAuthError('GET', '/user/1');
+        
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         $return = $this->assertRequest('GET', '/user/' . $id, [
@@ -42,10 +60,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('n', $return['data']['firstname']);
     }
     
-    /**
-     * @test
-     */
-    public function getOneJsonException()
+    public function testGetUserNotExisting()
     {
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
@@ -57,12 +72,47 @@ class UserControllerTest extends AbstractTestController
         $this->assertContains('not found', $return['message']);
     }
     
-    /**
-     * @test
-     */
-    public function acl()
+    
+    public function testdelete()
     {
-        $this->assertEndpointReturnAuthError('POST', '/user');
-        $this->assertEndpointReturnAuthError('GET', '/user/1');
+        $this->assertEndpointReturnAuthError('DELETE', '/user/1/1');
     }
+    
+    public function testgetAll()
+    {
+        $this->assertEndpointReturnAuthError('GET', '/user/get-all/firstname/ASC');
+    }
+    
+    
+    public function testrecreateToken()
+    {
+        // assert client token
+        $this->assertRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
+            'mustFail' => true,
+            'assertResponseCode' => 403
+        ]);
+        $this->assertRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+            'ClientSecret' => 'WRONG-CLIENT_SECRET'
+        ]);
+    }
+    
+    public function testregetByToken()
+    {
+        // assert client token 
+        $this->assertRequest('GET', '/user/get-by-token/123abcd', [
+            'mustFail' => true,
+            'assertResponseCode' => 403
+        ]);
+        $this->assertRequest('GET', '/user/get-by-token/123abcd', [
+            'mustFail' => true,
+            'assertResponseCode' => 403,
+            'ClientSecret' => 'WRONG-CLIENT_SECRET'
+        ]);
+    }
+    
+    
+    
+    
 }

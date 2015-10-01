@@ -7,7 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\User;
 use AppBundle\Exception as AppExceptions;
-use AppBundle\Service\Auth\AuthService;
+
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -144,7 +144,6 @@ class UserController extends RestController
     }
     
     /**
-     * 
      * @Route("/{adminId}/{id}")
      * @Method({"DELETE"})
      * 
@@ -181,54 +180,6 @@ class UserController extends RestController
         return $this->getRepository('User')->findBy([],[ $order_by => $sort_order ]);
     }
 
-    /**
-     * @Route("/get-user-by-email/{email}")
-     * @Method({"GET"})
-     */
-    public function getUserByEmail(Request $request, $email)
-    {
-        $serialiseGroups = $request->query->has('groups')? (array)$request->query->get('groups') : [ 'basic'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
-        
-        $user = $this->getRepository('User')->getByEmail(strtolower($email));
-        
-        if(empty($user)){
-            throw new AppExceptions\NotFound('User not found');
-        }
-        
-        return $user;
-    }
-    
-    /**
-     * @Route("/get-admin-by-email/{email}")
-     * @Method({"GET"})
-     */
-    public function getAdminByEmail(Request $request, $email)
-    {
-        $serialiseGroups = $request->query->has('groups')? (array)$request->query->get('groups') : [ 'basic'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
-        
-        $user = $this->getRepository('User')->getAdminByEmail(strtolower($email));
-        
-        if(empty($user)){
-            throw new AppExceptions\NotFound('User not found');
-        }
-        
-        return $user;
-    }
-    
-    
-    /**
-     * @Route("/get-by-email/{email}")
-     * @Method({"GET"})
-     */
-    public function getByEmail(Request $request, $email)
-    {
-        $serialiseGroups = $request->query->has('groups')? (array)$request->query->get('groups') : [ 'basic'];
-        $this->setJmsSerialiserGroups($serialiseGroups);
-        
-        return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
-    }
     
     /**
      * Requires client secret 
@@ -240,13 +191,12 @@ class UserController extends RestController
      */
     public function recreateToken(Request $request, $email, $type)
     {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
         $user = $this->findEntityBy('User', ['email'=>$email]);
-
-        //check client secret
-        $authService = $this->get('authService'); /* @var $authService AuthService */
-        $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
-        if (!$authService->isSecretValidForUser($user, $clientSecretFromRequest)) {
-            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.');
+         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         
         $user->recreateRegistrationToken();
@@ -277,13 +227,12 @@ class UserController extends RestController
      */
     public function getByToken(Request $request, $token)
     {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
         $user = $this->findEntityBy('User', ['registrationToken'=>$token], "User not found"); /* @var $user User */
-        
-        //check client secret
-        $authService = $this->get('authService'); /* @var $authService AuthService */
-        $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
-        if (!$authService->isSecretValidForUser($user, $clientSecretFromRequest)) {
-            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.');
+         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         
         return $user;

@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Exception\NotFound;
-use AppBundle\EventListener\RestInputOuputFormatter;
-use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Exception as AppExceptions;
+use AppBundle\Service\Auth\AuthService;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class RestController extends Controller
 {
@@ -131,5 +131,14 @@ abstract class RestController extends Controller
     {
         return $this->get('mailSender');
     }
+    
+    /**
+     * @return AuthService
+     */
+    protected function getAuthService()
+    {
+        return $this->get('authService');
+    }
+    
 
 }

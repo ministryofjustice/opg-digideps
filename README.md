@@ -2,16 +2,21 @@
 
 beta version
 
+Auth
+----
+via    /auth/login: 
+
+Needs Client token header and credentials, responds with AuthToken to send for subsequent requests.
+
+Some endpoints are open in the firewall for special functionalities without being logged. 
+Client secret is required for those.
+    
+
 Return codes
 ------------
 * 404 not found
-* 401 auth info missing. e.g. 
-    - AuthToken not present or not valid or not matching an existing user
-    - User associated to the token doesn't exist any longer
-* 403 wrong credentials.e.g
-   - missing client secret (for login operation)
-   - password is valid but the client secret permission are not included in the user permissions
+* 403 Missing client secret, or invalid permissions (configuration error)
+* 419 AuthToken missing, expired or not matching (runtime error)
 * 498 wrong credentials at login
-* 419 auth token expired
 * 500 generic error due to internal exception (e.g. db offline)
 

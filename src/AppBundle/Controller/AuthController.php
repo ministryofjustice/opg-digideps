@@ -13,6 +13,7 @@ use AppBundle\Service\Auth\AuthService;
  */
 class AuthController extends RestController
 {
+    
     /**
      * Return the user by email&password or token
      * expected keys in body: 'token' or ('email' and 'password')
@@ -23,25 +24,21 @@ class AuthController extends RestController
      */
     public function login(Request $request)
     {
-        $authService = $this->get('authService'); /* @var $authService AuthService */
-        
-        $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
-        if (!$authService->isSecretValid($clientSecretFromRequest)) {
+        if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
-        
         $data = $this->deserializeBodyContent($request);
         
         // load user by credentials (token or usernae&password)
         if (array_key_exists('token', $data)) {
-            $user = $authService->getUserByToken($data['token']);
+            $user = $this->getAuthService()->getUserByToken($data['token']);
         } else {
-            $user = $authService->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
+            $user = $this->getAuthService()->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
         }
         if (!$user) {
             throw new \RuntimeException('Cannot find user with the given credentials', 498);
         }
-        if (!$authService->isSecretValidForUser($user, $clientSecretFromRequest)) {
+         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         

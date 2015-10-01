@@ -35,19 +35,11 @@ class AuthService
     /**
      * @return array
      */
-    public function isSecretValid($clientSecretFromRequest)
+    public function isSecretValid(Request $request)
     {
+        $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
+        
         return isset($this->clientSecrets[$clientSecretFromRequest]);
-    }
-    
-    /**
-     * @param Request $request
-     * 
-     * @return string
-     */
-    public function getClientSecretFromRequest(Request $request)
-    {
-        return $request->headers->get(self::HEADER_CLIENT_SECRET);
     }
     
     /**
@@ -101,22 +93,16 @@ class AuthService
     
     /**
      * @param User $user
-     * @param string $clientSecretFromRequest
+     * @param Request $request
      * 
      * @return boolean
      */
-    public function isSecretValidForUser(User $user, $clientSecretFromRequest)
+    public function isSecretValidForUser(User $user, Request $request)
     {
-        $this->logger->info(__METHOD__." with user Id {$user->getId()} and $clientSecretFromRequest ");
-        
+        $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
         $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
-        
         $userRole = $user->getRole()->getRole();
         
-        $valid = in_array($userRole, $permissions);
-        
-        $this->logger->info(__METHOD__ . ' ' . ($valid ? 'valid' : 'NOT valid'));
-        
-        return $valid;
+        return in_array($userRole, $permissions);
     }
 }

@@ -19,11 +19,8 @@ class SelfRegisterController extends RestController
      */
     public function register(Request $request)
     {
-        // check client secret is valid
-        $authService = $this->get('authService'); /* @var $authService AuthService */
-        $clientSecretFromRequest = $authService->getClientSecretFromRequest($request);
-        if (!$authService->isSecretValid($clientSecretFromRequest)) {
-            throw new \RuntimeException('client secret not accepted.');
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
         
         $data = $this->deserializeBodyContent($request);
