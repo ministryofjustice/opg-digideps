@@ -33,21 +33,27 @@ security:
         elb:
             pattern: ^/manage/
             security: false
+            methods: [GET]
+        # disabled at the controller level if "behat_controller_enabled" param is equal to false
         behat:
             pattern: ^/behat/
             security: false
         login:
             pattern:  ^/auth/login$
             security: false
+            methods: [POST]
         userRecreateToken:
             pattern: ^/user/recreate-token
             security: false
+            methods: [PUT]
         userGetByToken:
             pattern: ^/user/get-by-token
             security: false
+            methods: [GET]
         selfregister:
             pattern: ^/selfregister
             security: false
+            methods: [POST]
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             pattern: .*
