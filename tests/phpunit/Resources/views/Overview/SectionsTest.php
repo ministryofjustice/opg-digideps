@@ -95,7 +95,7 @@ class OverviewTest extends WebTestCase
         $guidanceElementText = $guidanceElements->eq(0)->text();
 
         $this->assertContains("Let us know how the client is cared for and what contact they have with you and other people.", $guidanceElementText);
-        $this->assertContains("We need to know how you check their needs are met. The OPG has a duty protect those that don’t have mental capacity to make decisions for themselves.", $guidanceElementText);
+        $this->assertContains("We need to know how you check their needs are met. The OPG has a duty protect those that don't have mental capacity to make decisions for themselves.", $guidanceElementText);
     }
 
     public function testAccountSectionContainsOverview()
@@ -113,7 +113,7 @@ class OverviewTest extends WebTestCase
 
         $guidanceElementText = $guidanceElements->eq(0)->text();
 
-        $this->assertContains("Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts.", $guidanceElementText);
+        $this->assertContains("Add details of your client's accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts.", $guidanceElementText);
         $this->assertContains("You can only sign off the accounts section at the end of the reporting period when you know the final totals.", $guidanceElementText);
     }
 

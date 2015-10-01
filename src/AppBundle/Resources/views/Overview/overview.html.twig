@@ -11,7 +11,7 @@
     {% block contentClass %}{{ parent() }} report-overview{% endblock %}
 
     {% block pageBody %}
-        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
+        {%include 'AppBundle:Overview:_sections.html.twig' with {
             report: report
         } %}
     {% endblock %}
