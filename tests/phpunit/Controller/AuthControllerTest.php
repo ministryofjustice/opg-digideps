@@ -88,8 +88,8 @@ class AuthControllerTest extends AbstractTestController
         $this->assertRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,
             'AuthToken' => 'WRONG_AUTH_TOKEN',
-            'assertCode' => 401,
-            'assertResponseCode' => 401
+            'assertCode' => 419,
+            'assertResponseCode' => 419
         ]);
     }
     
@@ -164,13 +164,8 @@ class AuthControllerTest extends AbstractTestController
     {
         $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
-        $this->assertRequest('GET', '/auth/get-logged-user', [
-            'mustSucceed' => true,
-            'AuthToken' => $authToken
-        ]);
-        
-        // statically override timeout
-        \AppBundle\Service\Auth\UserProvider::overrideTimeoutSeconds(-3600);
+        // manually expire token in REDIS
+        $this->client->getContainer()->get('snc_redis.default')->expire($authToken, 0);
         
         $this->assertRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,
@@ -178,8 +173,5 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 419,
             'assertResponseCode' => 419
         ]);
-        
-        // remove timeout override
-        \AppBundle\Service\Auth\UserProvider::overrideTimeoutSeconds(null);
     }
 }

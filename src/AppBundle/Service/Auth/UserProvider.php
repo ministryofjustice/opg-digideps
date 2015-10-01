@@ -38,18 +38,12 @@ class UserProvider implements UserProviderInterface
      */
     private $timeoutSeconds;
 
-    /**
-     * @var integer 
-     */
-    private static $timeoutOverride = null;
-
-
     public function __construct(EntityManager $em, PredisClient $redis, Logger $logger, array $options)
     {
         $this->em = $em;
         $this->redis = $redis;
         $this->logger = $logger;
-        $this->setTimeoutSeconds($options['timeout_seconds']);
+        $this->timeoutSeconds = $options['timeout_seconds'];
     }
 
 
@@ -67,24 +61,20 @@ class UserProvider implements UserProviderInterface
 
         $this->logger->info("Trying login with token $token ");
 
-        list ($userId, $createdAt) = $this->redisGet($token);
+        $userId = $this->redis->get($token);
         if (!$userId) {
             $this->logger->warning("token $username  not found");
-            throw new \RuntimeException('Token non existing or not valid', 401);
-        }
-        if (($createdAt + $this->timeoutSeconds) < time()) {
-            $this->logger->warning("token $username expired");
-            throw new \RuntimeException('Token expired', 419);
+            throw new \RuntimeException('Token non existing or not valid', 419);
         }
 
         $user = $this->em->getRepository('AppBundle\Entity\User')->find($userId);
         if (!$user) {
             $this->logger->warning("user $userId not found");
-            throw new \RuntimeException('User associated to token not found', 401);
+            throw new \RuntimeException('User associated to token not found', 419);
         }
 
         // refresh token creation time
-        $this->redisStore($token, $userId);
+        $this->redis->expire($token, $this->timeoutSeconds);
 
         return $user;
     }
@@ -115,7 +105,8 @@ class UserProvider implements UserProviderInterface
     {
         $token = $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
 
-        $this->redisStore($token, $user->getId());
+        $this->redis->set($token, $user->getId());
+        $this->redis->expire($token, $this->timeoutSeconds);
 
         return $token;
     }
@@ -124,58 +115,6 @@ class UserProvider implements UserProviderInterface
     public function removeToken($token)
     {
         return $this->redis->set($token, null);
-    }
-
-
-    /**
-     * @param string $token
-     * @param integer $userId
-     */
-    private function redisStore($token, $userId)
-    {
-        return $this->redis->set($token, serialize([$userId, time()]));
-    }
-
-
-    /**
-     * @param type $token
-     * @return array [userId, createdAt]
-     */
-    private function redisGet($token)
-    {
-        $storedData = unserialize($this->redis->get($token));
-        if (!$storedData || !is_array($storedData) || count($storedData) !== 2) {
-            return [null, null];
-        }
-
-        return $storedData;
-    }
-    
-    
-    /**
-     * @param integer $timeoutSeconds
-     */
-    private function setTimeoutSeconds($timeoutSeconds)
-    {
-        $this->timeoutSeconds = $timeoutSeconds;
-        // override if the static property is set
-        if (null !== self::$timeoutOverride) {
-            $this->timeoutSeconds = self::$timeoutOverride;
-        }
-    }
-    
-    private function getTimeoutSeconds()
-    {
-        return $this->timeoutSeconds;
-    }
-
-
-    /**
-     * @param integer $timeoutSeconds
-     */
-    public static function overrideTimeoutSeconds($timeoutSeconds)
-    {
-        self::$timeoutOverride = $timeoutSeconds;
     }
 
 }

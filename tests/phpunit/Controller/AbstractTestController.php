@@ -115,9 +115,9 @@ abstract class AbstractTestController extends WebTestCase
         $response = $this->assertRequest($method, $uri, [
             'mustFail' => true,
             'AuthToken' => $authToken,
-            'assertResponseCode' => 401
+            'assertResponseCode' => 419
         ]);
-        $this->assertEquals(401, $response['code']);
+        $this->assertEquals(419, $response['code']);
     }
     
 }
