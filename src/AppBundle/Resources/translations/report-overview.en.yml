@@ -1,57 +1,44 @@
-page:
-    htmlTitle: "Deputy report - overview | GOV.UK"
-pages:
-  reportPeriod:
-    pageSectionTitle: "The deputy report"
-    contactsLink: "Edit contacts"
-    decisionsLink: "Edit decisions"
-    accountsLink: "Edit accounts"
-    assetsLink: "Edit assets"
-    safeguradingLink: "Edit safeguarding"
-    healthAndWelfare:
-      pageSectionDescription: "Your report tells the Office of the Public Guardian (OPG) about decisions you've made on behalf of the client and who you've consulted with."
-      pageSectionInfo: "Use the deputy service to complete your report at the end of the reporting period or you can add information throughout the reporting period."
-      contacts:
-        subSectionTitle: "Contacts"
-        subSectionDescription: "Let us know the contact details of people you consult over the reporting period such as:"
-        subSectionList: "*care home staff or social services *family members *close friends *GP and other health staff"
-        subSectionInfo: "You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for the important decisions."
-      decisions:
-        subSectionTitle: "Decisions"
-        subSectionDescription: "Let us know the significant decisions you make over the reporting period. A significant decision is <strong>any</strong> important decision you make for the client during the reporting period. A significant decision might be:"
-        subSectionList: "*moving the client to another nursing or care home *employing carers or changing exiting carers"
-      safeguarding:
-        subSectionTitle: "Safeguarding"
-        subSectionDescription: "Let us know how the client is cared for and what contact they have with you and other people."
-        subSectionInfo: "We need to know how you check their needs are met. The OPG has a duty protect those that don’t have mental capacity to make decisions for themselves."
-    propertyAndAffairs:
-      pageSectionDescription: "Your report:"
-      pageSectionList: "*tells the Office of the Public Guardian (OPG) about decisions you've made on behalf of the client and who you've consulted with *gives OPG official accounts and details of the clients assets"
-      pageSectionInfo: "Use the deputy service to complete your report at the end of the reporting period or you can add information throughout the reporting period."
-      contacts:
-        subSectionTitle: "Contacts"
-        subSectionDescription: "Let us know the contact details of the people you consult over the reporting period, such as:"
-        subSectionList: "*solicitors or accountants while preparing the deputy report *care home staff or social services *family members *close friends *GP and other health staff"
-        subSectionInfo: "You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions."
-      decisions:
-        subSectionTitle: "Decisions"
-        subSectionDescription: "Let us know the significant decisions you make over the reporting period. A significant decision is <strong>any</strong> important decision you make for the client during the reporting period. A significant decision might be:"
-        subSectionList: "*buying or selling or renting property *buying or selling investments or shares *making gifts *moving the client to another nursing or care home"
-      accounts:
-        subSectionTitle: "Accounts"
-        subSectionDescription: "Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."
-        subSectionWarning: "You can only sign off the accounts section at the end of the reporting period when you know the final totals."
-      safeguarding:
-        subSectionTitle: "Safeguarding"
-        subSectionDescription: "Let us know how the client is cared for and what contact they have with you and other people."
-        subSectionInfo: "We need to know how you check their needs are met. The OPG has a duty protect those that don’t have mental capacity to make decisions for themselves."
-      assets:
-        subSectionTitle: "Assets"
-        subSectionDescription: "Add details of the client's assets and saving, such as:"
-        subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
-        noAssets: The client has not assets
-  additionalInformation:
-      subSectionTitle: More information
+htmlTitle: "Deputy report - overview | GOV.UK"
+
+pageSectionTitle: "The deputy report"
+pageSectionDescription: "Your report:"
+pageSectionList: "*tells the Office of the Public Guardian (OPG) about decisions you've made on behalf of the client and who you've consulted with *gives OPG official accounts and details of the clients assets"
+pageSectionInfo: "Use the deputy service to complete your report at the end of the reporting period or you can add information throughout the reporting period."
+planningTitle: "Planning"
+close: "Close"
+help: "Help"
+
+contacts:
+    subSectionTitle: "Contacts"
+    subSectionDescription: "Let us know the contact details of the people you consult over the reporting period, such as:"
+    subSectionList: "*solicitors or accountants while preparing the deputy report *care home staff or social services *family members *close friends *GP and other health staff"
+    subSectionInfo: "You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions."
+    edit: "Edit contacts"
+decisions:
+    subSectionTitle: "Decisions"
+    subSectionDescription: "Let us know the significant decisions you make over the reporting period. A significant decision is <strong>any</strong> important decision you make for the client during the reporting period. A significant decision might be:"
+    subSectionList: "*buying or selling or renting property *buying or selling investments or shares *making gifts *moving the client to another nursing or care home"
+    edit: "Edit decisions"
+accounts:
+    subSectionTitle: "Accounts"
+    subSectionDescription: "Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."
+    subSectionWarning: "You can only sign off the accounts section at the end of the reporting period when you know the final totals."
+    edit: "Edit accounts"
+safeguarding:
+    subSectionTitle: "Safeguarding"
+    subSectionDescription: "Let us know how the client is cared for and what contact they have with you and other people."
+    subSectionInfo: "We need to know how you check their needs are met. The OPG has a duty protect those that don’t have mental capacity to make decisions for themselves."
+    edit: "Edit safeguarding"
+assets:
+    subSectionTitle: "Assets"
+    subSectionDescription: "Add details of the client's assets and saving, such as:"
+    subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
+    noAssets: The client has not assets
+    edit: "Edit assets"
+
+additionalInformation:
+  subSectionTitle: More information
+
 reportSubmit:
     checkbox:
         label: I have reviewed and checked this report.

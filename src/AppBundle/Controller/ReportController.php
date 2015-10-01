@@ -69,7 +69,7 @@ class ReportController extends Controller
     
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
-     * @Template()
+     * @Template("AppBundle:Overview:overview.html.twig")
      */
     public function overviewAction($reportId)
     {

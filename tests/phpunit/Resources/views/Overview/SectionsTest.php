@@ -17,6 +17,7 @@ class OverviewTest extends WebTestCase
     
     private $report;
 
+    
     private $twig;
 
     public function setUp()
@@ -37,7 +38,7 @@ class OverviewTest extends WebTestCase
     {
         $this->setupReport();
         
-        $html = $this->twig->render('AppBundle:Report:overview.html.twig', [
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
            'report' => $this->report
         ]);
         
@@ -59,7 +60,7 @@ class OverviewTest extends WebTestCase
     {
         $this->setupReport();
         
-        $html = $this->twig->render('AppBundle:Report:overview.html.twig', [
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report
         ]);
 
@@ -82,7 +83,7 @@ class OverviewTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Report:overview.html.twig', [
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report
         ]);
 
@@ -101,7 +102,7 @@ class OverviewTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Report:overview.html.twig', [
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report
         ]);
 
@@ -120,7 +121,7 @@ class OverviewTest extends WebTestCase
     {
         $this->setupReport();
 
-        $html = $this->twig->render('AppBundle:Report:overview.html.twig', [
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report
         ]);
 
@@ -138,6 +139,9 @@ class OverviewTest extends WebTestCase
         $this->assertContains("artwork, antiques or jewellery", $guidanceElementText);
 
     }
+  
+    /* Status */
+    
     
     private function setupReport() 
     {
