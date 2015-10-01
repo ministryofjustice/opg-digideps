@@ -98,3 +98,7 @@ services:
             - [ setTranslator, [@translator] ]
         tags:
             - { name: form.type, alias: feedback_report }
+    kernel.listener.authTokenExpiredListener:
+        class: AppBundle\EventListener\AuthTokenExpiredListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }

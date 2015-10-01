@@ -79,6 +79,9 @@ class IndexController extends Controller
         } else if ($session->get('loggedOutFrom') === 'timeout') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
+        } else if ($request->query->get('from') === 'api') {
+            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+            $vars['error'] = $this->get('translator')->trans('sessionApiTimeoutOutWarning', [], 'login');
         }
             
         return $this->render('AppBundle:Index:login.html.twig', $vars);

@@ -20,7 +20,8 @@ use AppBundle\Model\SelfRegisterData;
  */
 class RestClient
 {
-
+    const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
+    
     /**
      * @var ClientInterface 
      */
@@ -255,7 +256,7 @@ class RestClient
      * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret
      * 
      * In case of connect/HTTP failure:
-     * - throws DisplayableException using self::ERROR_CONNECT as a message
+     * - throws DisplayableException using self::ERROR_CONNECT as a message, keeping exception code
      * - logs the full error message with with warning priority
      * 
      * @return ResponseInterface
@@ -281,9 +282,6 @@ class RestClient
         try {
             return $this->client->$method($url, $options);
         } catch (\Exception $e) {
-            if ($e->getCode() == 419) {
-                header("Location: /login");die;
-            }
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
             throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
         }
