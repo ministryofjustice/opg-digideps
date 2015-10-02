@@ -111,7 +111,7 @@ services:
     logstash_formatter:
         class: Monolog\Formatter\LogstashFormatter
         arguments:
-        - application.api
+        - application.client
 
 monolog:
    handlers:
