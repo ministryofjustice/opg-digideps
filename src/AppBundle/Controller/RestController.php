@@ -34,20 +34,26 @@ abstract class RestController extends Controller
      */
     private function validateArray($data, array $assertions = [])
     {
+        $errors = [];
+        
         foreach ($assertions as $requiredKey => $validation) {
             switch ($validation) {
                 case 'notEmpty':
                     if (empty($data[$requiredKey])) {
-                        throw new \InvalidArgumentException("Expected value for '$requiredKey' key");
+                        $errors[] = "Expected value for '$requiredKey' key";
                     }
                     break;
                     
                 case 'mustExist':
                     if (!array_key_exists($requiredKey, $data)) {
-                        throw new \InvalidArgumentException("Missing '$requiredKey' key");
+                        $errors[] = "Missing '$requiredKey' key";
                     }
                     break;
             }
+        }
+        
+        if (!empty($errors)) {
+            throw new \InvalidArgumentException('Errors('.count($errors).'): ' . implode(', ', $errors));
         }
     }
 
