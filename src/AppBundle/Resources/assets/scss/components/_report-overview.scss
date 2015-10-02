@@ -45,7 +45,7 @@
                 @include inline-block();
                 padding: 20px 0 15px 0;
                 float: right;
-                width: 35%;
+                width: 15%;
                 text-align: right;
                 
                 @include media($max-width: $phablet) {
@@ -53,6 +53,23 @@
                 }
             }
 
+            .status {
+                @include box-sizing(border-box);
+                @include core-16(1.6);
+                @include inline-block();
+                text-transform: uppercase;
+                padding: 2px 5px;
+                margin: 18px 0 13px 0;
+                float: left;
+                text-align: center;
+                border-radius: 5px;
+                
+                &.not-started {
+                    color: $grey-1;
+                    border: 1px solid $grey-1;
+                }
+            }
+            
             .help-link {
                 display: none;
             }

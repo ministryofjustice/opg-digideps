@@ -33,17 +33,17 @@ class ReportStatusService {
             $count = count($decisions);
             
             if ($count == 1) {
-                return "1 " . $this->translator->trans('decision');
+                return "1 " . $this->translator->trans('decision',[], 'status');
             } else if ($count > 1) {
-                return "${count} " . $this->translator->trans('decisions');
+                return "${count} " . $this->translator->trans('decisions',[], 'status');
             }
         
         }
 
         if (empty($this->report->getReasonForNoDecisions())) {
-            return $this->translator->trans('notstarted');
+            return $this->translator->trans('notstarted',[], 'status');
         } else {
-            return $this->translator->trans('nodecisions');
+            return $this->translator->trans('nodecisions',[], 'status');
         }
         
     }
@@ -58,17 +58,17 @@ class ReportStatusService {
             $count = count($contacts);
 
             if ($count == 1) {
-                return "1 " . $this->translator->trans('contact');
+                return "1 " . $this->translator->trans('contact',[], 'status');
             } else if ($count > 1) {
-                return "${count} " . $this->translator->trans('contacts');
+                return "${count} " . $this->translator->trans('contacts',[], 'status');
             }
 
         }
 
         if (empty($this->report->getReasonForNoContacts())) {
-            return $this->translator->trans('notstarted');
+            return $this->translator->trans('notstarted',[], 'status');
         } else {
-            return $this->translator->trans('nocontacts');
+            return $this->translator->trans('nocontacts',[], 'status');
         }
 
     }
@@ -76,23 +76,23 @@ class ReportStatusService {
     /** @return string */
     public function getSafeguardingStatus() {
         if ($this->missingSafeguarding()) {
-            return $this->translator->trans('notstarted');
+            return $this->translator->trans('notstarted',[], 'status');
         } else {
-            return $this->translator->trans('finished');
+            return $this->translator->trans('finished',[], 'status');
         }
     }
 
     /** @return string */
     public function getAccountsStatus() {
         if ($this->missingAccounts()) {
-            return $this->translator->trans('notstarted');
+            return $this->translator->trans('notstarted',[], 'status');
         } 
         
         $count = count($this->report->getAccounts());
         if ($count == 1) {
-            return "1 " . $this->translator->trans("account");
+            return "1 " . $this->translator->trans("account",[], 'status');
         } else {
-            return "${count} " . $this->translator->trans("accounts");
+            return "${count} " . $this->translator->trans("accounts",[], 'status');
         }
     }
 
@@ -105,17 +105,17 @@ class ReportStatusService {
             $count = count($assets);
 
             if ($count == 1) {
-                return "1 " . $this->translator->trans('asset');
+                return "1 " . $this->translator->trans('asset',[], 'status');
             } else if ($count > 1) {
-                return "${count} " . $this->translator->trans('assets');
+                return "${count} " . $this->translator->trans('assets',[], 'status');
             }
 
         }
         
         if ($this->report->getNoAssetToAdd() == true) {
-            return $this->translator->trans('noassets');
+            return $this->translator->trans('noassets',[], 'status');
         } else {
-            return $this->translator->trans('notstarted');
+            return $this->translator->trans('notstarted',[], 'status');
         }
     }
 

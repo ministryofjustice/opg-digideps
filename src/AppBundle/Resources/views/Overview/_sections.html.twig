@@ -8,8 +8,9 @@
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'decisions',
-            data: report.decisions,
             report: report,
+            state: reportStatus.decisionsState,
+            status: reportStatus.decisionsStatus,
             list: true
         } %}
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
@@ -17,7 +18,9 @@
             subSection: 'contacts',
             report: report,
             list: true,
-            info: true
+            info: true,
+            state: reportStatus.contactsState,
+            status: reportStatus.contactsStatus
         } %}
     </li>
 
@@ -27,7 +30,9 @@
         transDomain: translationDomain,
         subSection: 'safeguarding',
         report: report,
-        info: true
+        info: true,
+        state: reportStatus.safeguardingState,
+        status: reportStatus.safeguardingStatus
         } %}
     </li>
 
@@ -38,12 +43,16 @@
             transDomain: translationDomain,
             subSection: 'accounts',
             report: report,
+            state: reportStatus.accountsState,
+            status: reportStatus.accountsStatus,
             warning: true
             } %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'assets',
             report: report,
+            state: reportStatus.assetsState,
+            status: reportStatus.assetsStatus,
             list: true
             } %}
         </li>

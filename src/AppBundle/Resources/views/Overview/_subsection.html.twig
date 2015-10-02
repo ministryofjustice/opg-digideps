@@ -4,6 +4,7 @@
         <span class="open-text">{{ 'close' | trans({}, translationDomain) }}</span>
         <span class="closed-text">{{ 'help' | trans({}, translationDomain) }}</span>
     </a>
+    <span class="status {{ state }}">{{ status }}</span>
     <a id="edit-{{ subSection }}" class="edit-link" href="{{ path(subSection, {reportId: report.id}) }}" >
         {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
     </a>
@@ -31,9 +32,5 @@
             } %}
         {% endif %}
     </div>
-    
-    {%  if data is defined %}
-        <h1>{{  data | length }}</h1>
-    {% endif %}
 </div>
     
