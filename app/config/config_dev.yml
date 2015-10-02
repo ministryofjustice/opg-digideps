@@ -14,3 +14,8 @@ assetic:
 #    delivery_address: me@example.com
 twig:
     cache:  false
+
+monolog:
+   handlers:
+       main:
+           formatter: line_formatter

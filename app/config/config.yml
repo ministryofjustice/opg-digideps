@@ -60,6 +60,9 @@ services:
         class: Monolog\Formatter\LogstashFormatter
         arguments:
         - application.api
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter
+
 
 monolog:
    handlers:
