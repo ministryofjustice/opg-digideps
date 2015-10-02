@@ -157,6 +157,9 @@ class RestInputOuputFormatter
         if ($code < 400 || $code > 599) {
             $code = 500;
         }
+        if ($e instanceof \InvalidArgumentException) {
+            $code = 400;
+        }
         
         $data = array(
             'success' => false, 

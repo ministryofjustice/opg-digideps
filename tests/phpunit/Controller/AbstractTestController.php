@@ -8,7 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 abstract class AbstractTestController extends WebTestCase
 {
     /**
-     * @var Fixtures
+     * @var \Fixtures
      */
     protected $fixtures;
     

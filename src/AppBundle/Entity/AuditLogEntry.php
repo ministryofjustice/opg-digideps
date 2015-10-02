@@ -168,5 +168,56 @@ class AuditLogEntry
 
         return $this;
     }
+    
+    /**
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+
+    /**
+     * @return User
+     */
+    public function getPerformedByUser()
+    {
+        return $this->performedByUser;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIpAddress()
+    {
+        return $this->ipAddress;
+    }
+
+    /**
+     * 
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+
+    /**
+     * @return User
+     */
+    public function getUserEdited()
+    {
+        return $this->userEdited;
+    }
 
 }
