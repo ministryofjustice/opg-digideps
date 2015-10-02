@@ -73,9 +73,16 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         return $ret;
     }
     
-    public function flush($e = null)
+    public function flush()
     {
-        $this->em->flush($e);
+        $args = func_get_args();
+        if (empty($args)) {
+            $this->em->flush();
+        }
+        
+        foreach ($args as $e) {
+            $this->em->flush($e);
+        }
     }
     
     public function persist()
