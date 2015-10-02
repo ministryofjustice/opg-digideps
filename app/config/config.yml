@@ -107,9 +107,14 @@ parameters:
         15: court_funds_office_accounts 
         16: other_assets
 
+services:
+    logstash_formatter:
+        class: Monolog\Formatter\LogstashFormatter
+
 monolog:
    handlers:
        main:
            type: stream
            path: %log_path%
            level: %log_level%
+           formatter: logstash_formatter
