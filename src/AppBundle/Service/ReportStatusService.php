@@ -16,7 +16,7 @@ class ReportStatusService {
 
     /** @var TranslatorInterface */
     private $translator;
-
+    
     public function __construct(Report $report, TranslatorInterface $translator)
     {
         $this->report = $report;

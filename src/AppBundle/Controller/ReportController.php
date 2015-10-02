@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
+use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -86,10 +87,12 @@ class ReportController extends Controller
         }
         
         $this->get('session')->getFlashBag()->add('news', 'report.header.announcement');
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         return [
             'report' => $report,
             'client' => $client,
+            'reportStatus' => $reportStatusService,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
@@ -133,11 +136,14 @@ class ReportController extends Controller
             $action = 'edit';
         }
         
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'action' => $action,
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $client,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ];
     }
     

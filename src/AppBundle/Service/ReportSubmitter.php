@@ -27,6 +27,8 @@ class ReportSubmitter
      */
     protected $form;
 
+    private $translator;
+    
     /**
      * @param Container $container
      * @param ReportSubmitType $type
@@ -35,6 +37,7 @@ class ReportSubmitter
     {
         $this->container = $container;
         $this->form = $this->container->get('form.factory')->create($type);
+        $this->translator = $this->container->get('translator');
     }
 
     /**
@@ -46,7 +49,9 @@ class ReportSubmitter
     {
         $this->form->handleRequest($this->container->get('request'));
 
-        if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $reportStatus->isReadyToSubmit()) {
+        $reportStatusService = new ReportStatusService($report, $this->translator);
+        
+        if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $reportStatusService->isReadyToSubmit()) {
             $report->setReviewed(true);
             $this->container->get('apiclient')->putC('report/' . $report->getId(), $report, [
                 'deserialise_group' => 'reviewed',

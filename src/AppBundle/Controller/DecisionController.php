@@ -6,6 +6,7 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Service\ReportStatusService;
 
 class DecisionController extends Controller
 {
@@ -113,12 +114,15 @@ class DecisionController extends Controller
                 }
             }
         }
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
 
         return [
             'decisions' => $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId),
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
             'action' => $action,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()

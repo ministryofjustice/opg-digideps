@@ -7,6 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use AppBundle\Service\ReportStatusService;
+
 
 class SafeguardController extends Controller{
 
@@ -55,8 +57,10 @@ class SafeguardController extends Controller{
             return $this->redirect($this->generateUrl('safeguarding', ['reportId'=>$reportId]) . "#pageBody");
         }
 
-
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return[ 'report' => $report,
+                'reportStatus' => $reportStatusService,
                 'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
                 'form' => $form->createView(),
                 'report_form_submit' => $this->get('reportSubmitter')->getFormView()

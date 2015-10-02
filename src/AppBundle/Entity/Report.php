@@ -367,12 +367,14 @@ class Report {
      */
     public function getOutstandingAccounts()
     {  
+        $outstandingAccounts = [];
+        
         foreach ($this->accounts as $account){
             if(!$account->hasClosingBalance()){
-                    $this->outstandingAccounts[] = $account;
+                    $outstandingAccounts[] = $account;
             }
         }
-        return $this->outstandingAccounts;
+        return $outstandingAccounts;
     }
     
     /**
