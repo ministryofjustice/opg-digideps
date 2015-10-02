@@ -51,24 +51,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($expected, $actual);
     }
-    
-    public function testHasOutstandingAccountsIsTrue()
-    {
-        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(true,true,false);
-        
-        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
-        
-        $this->assertTrue($this->report->hasOutstandingAccounts());
-    }
-    
-    public function testHasOutstandingAccountsIsFalse()
-    {
-        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(true,true,true);
-        
-        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
-        
-        $this->assertFalse($this->report->hasOutstandingAccounts());
-    }
+   
     
     public function testGetOutstandingAccounts()
     {
