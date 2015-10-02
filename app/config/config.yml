@@ -54,3 +54,20 @@ snc_redis:
             type: predis
             alias: default
             dsn: %redis_dsn%
+
+services:
+    logstash_formatter:
+        class: Monolog\Formatter\LogstashFormatter
+        arguments:
+        - application.api
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter
+
+
+monolog:
+   handlers:
+       main:
+           type: stream
+           path: %log_path%
+           level: %log_level%
+           formatter: logstash_formatter

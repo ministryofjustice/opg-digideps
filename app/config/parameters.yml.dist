@@ -40,5 +40,5 @@ parameters:
           password_reset:  /user/password-reset/{token}
           homepage: /
           report_overview: /report/{reportId|}/overview
-          
-         
+    log_level: info
+    log_path: /var/log/app/application.log
