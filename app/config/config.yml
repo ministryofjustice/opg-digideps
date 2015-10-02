@@ -110,6 +110,8 @@ parameters:
 services:
     logstash_formatter:
         class: Monolog\Formatter\LogstashFormatter
+        arguments:
+        - application.api
 
 monolog:
    handlers:
