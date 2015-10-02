@@ -46,7 +46,7 @@ class ReportSubmitter
     {
         $this->form->handleRequest($this->container->get('request'));
 
-        if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $report->isReadyToSubmit()) {
+        if ($this->form->get('submitReport')->isClicked() && $this->form->isValid() && $reportStatus->isReadyToSubmit()) {
             $report->setReviewed(true);
             $this->container->get('apiclient')->putC('report/' . $report->getId(), $report, [
                 'deserialise_group' => 'reviewed',

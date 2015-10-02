@@ -10,9 +10,10 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  */
-class Report
-{
+class Report {
+    
     const PROPERTY_AND_AFFAIRS = 2;
+    
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"safeguarding"})
@@ -104,12 +105,6 @@ class Report
      * @var \AppBundle\Entity\Safeguarding
      */
     private $safeguarding;
-    
-    /**
-     * @JMS\Exclude
-     * @var array
-     */
-    private $outstandingAccounts;
     
     /**
      * @JMS\Type("string")
@@ -366,46 +361,15 @@ class Report
         return $this;
     }
     
-    public function missingAccounts()
-    {
-        if( $this->courtOrderType != self::PROPERTY_AND_AFFAIRS ){
-            return false;
-        }
-        
-        if(empty($this->accounts)){
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * @return boolean
-     */
-    public function hasOutstandingAccounts()
-    {
-        if(empty($this->accounts)){
-            return false;
-        }
-     
-        foreach($this->accounts as $account){
-            if(!$account->hasClosingBalance()){
-                return true;
-            }
-        }
-        return false;
-    }
-    
     /**
      * 
      * @return array $outstandingAccounts
      */
     public function getOutstandingAccounts()
     {  
-        if($this->hasOutstandingAccounts() && empty($this->outstandingAccounts)){
-            foreach ($this->accounts as $account){
-                if(!$account->hasClosingBalance()){
+        foreach ($this->accounts as $account){
+            if(!$account->hasClosingBalance()){
                     $this->outstandingAccounts[] = $account;
-                }
             }
         }
         return $this->outstandingAccounts;
@@ -430,18 +394,6 @@ class Report
         return $this->contacts;
     }
     
-    /**
-     * 
-     * @return boolean
-     * @return boolean@var boolean
-     */
-    public function missingContacts()
-    {
-        if(empty($this->contacts) && empty($this->reasonForNoContacts)){
-            return true;
-        }
-        return false;
-    }
     
     /**
      * @var array $decisions
@@ -464,18 +416,6 @@ class Report
     
     /**
      * 
-     * @return boolean
-     */
-    public function missingDecisions()
-    {
-        if(empty($this->decisions) && empty($this->reasonForNoDecisions)){
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * 
      * @param array $assets
      * @return \AppBundle\Entity\Report
      */
@@ -492,53 +432,7 @@ class Report
     {
         return $this->assets;
     }
-    
-    /**
-     * 
-     * @return boolean
-     */
-    public function missingAssets()
-    {
-        if( $this->courtOrderType != self::PROPERTY_AND_AFFAIRS ){
-            return false;
-        }
-        
-        if(empty($this->assets) && (!$this->noAssetToAdd)){
-            return true;
-        }
-        return false;
-    }
-    
-    /**
-     * 
-     * @return boolean
-     */
-    public function missingSafeguarding()
-    {
-        if (!isset($this->safeguarding) || $this->safeguarding->missingSafeguardingInfo() == true) {
-            return true;
-        } 
-        
-        return false;
-    }
-    
-    /**
-     * @return boolean
-     * @Assert\True(message="report.submissionExceptions.readyForSubmission", groups={"readyforSubmission"})
-     */
-    public function isReadyToSubmit()
-    {
-        if($this->courtOrderType == self::PROPERTY_AND_AFFAIRS){
-            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions() || $this->missingSafeguarding()){
-                return false;
-            }
-        }else{
-            if($this->missingContacts() || $this->missingDecisions() || $this->missingSafeguarding()){
-                return false;
-            }
-        }
-        return true;
-    }
+ 
     
     /**
      * @param ExecutionContextInterface $context

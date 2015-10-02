@@ -111,13 +111,6 @@ class DecisionController extends Controller
                     $this->handleReasonForNoDecision($action, $noDecision, $reportId);
                     return $this->redirect($this->generateUrl('decisions',[ 'reportId' => $report->getId()]));
                 }
-            }else{
-                if($reportSubmit->isValid()){
-                    if($report->readyToSubmit()){
-                        return $this->redirect($this->generateUrl('report_declaration', [ 'reportId' => $report->getId() ]));
-                    }
-                }
-
             }
         }
 
