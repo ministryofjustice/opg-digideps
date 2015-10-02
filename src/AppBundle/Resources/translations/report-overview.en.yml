@@ -23,13 +23,13 @@ decisions:
     edit: "Edit decisions"
 accounts:
     subSectionTitle: "Accounts"
-    subSectionDescription: "Add details of your client’s accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."
+    subSectionDescription: "Add details of your client's accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts."
     subSectionWarning: "You can only sign off the accounts section at the end of the reporting period when you know the final totals."
     edit: "Edit accounts"
 safeguarding:
     subSectionTitle: "Safeguarding"
     subSectionDescription: "Let us know how the client is cared for and what contact they have with you and other people."
-    subSectionInfo: "We need to know how you check their needs are met. The OPG has a duty protect those that don’t have mental capacity to make decisions for themselves."
+    subSectionInfo: "We need to know how you check their needs are met. The OPG has a duty protect those that don't have mental capacity to make decisions for themselves."
     edit: "Edit safeguarding"
 assets:
     subSectionTitle: "Assets"
