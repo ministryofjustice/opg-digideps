@@ -31,5 +31,9 @@
             } %}
         {% endif %}
     </div>
+    
+    {%  if data is defined %}
+        <h1>{{  data | length }}</h1>
+    {% endif %}
 </div>
     

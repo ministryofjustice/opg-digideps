@@ -731,21 +731,21 @@ class Report
     /**
      * @return string $status | null
      */
-    public function getStatus()
-    {
-        if(!$this->isDue()){
-            return 'in progress';
+        public function getStatus()
+        {
+            if(!$this->isDue()){
+                return 'in progress';
+            }
+            
+            if($this->isDue() && !$this->submitted){
+                return 'in review';
+            }
+            
+            if($this->submitted){
+                return 'submitted';
+            }
+            return null;
         }
-        
-        if($this->isDue() && !$this->submitted){
-            return 'in review';
-        }
-        
-        if($this->submitted){
-            return 'submitted';
-        }
-        return null;
-    }
     
     /**
      * @return Client

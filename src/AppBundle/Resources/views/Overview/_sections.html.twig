@@ -8,6 +8,7 @@
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'decisions',
+            data: report.decisions,
             report: report,
             list: true
         } %}
