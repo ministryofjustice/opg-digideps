@@ -112,6 +112,8 @@ services:
         class: Monolog\Formatter\LogstashFormatter
         arguments:
         - application.client
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter
 
 monolog:
    handlers:

@@ -24,3 +24,8 @@ services:
 
 #swiftmailer:
 #    delivery_address: me@example.com
+
+monolog:
+   handlers:
+       main:
+           formatter: line_formatter
