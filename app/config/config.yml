@@ -106,3 +106,10 @@ parameters:
         14: assets_held_outside_england_and_wales
         15: court_funds_office_accounts 
         16: other_assets
+
+monolog:
+   handlers:
+       main:
+           type: stream
+           path: %log_path%
+           level: %log_level%
