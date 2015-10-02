@@ -16,6 +16,9 @@ class Role implements RoleInterface
     const ROLE_ADMIN = 1;
     const ROLE_LAY_DEPUTY = 2;
     
+    const ROLE_ADMIN_NAME = 'ROLE_ADMIN';
+    const ROLE_LAY_DEPUTY_NAME = 'ROLE_LAY_DEPUTY';
+    
     /**
      * @var integer
      *

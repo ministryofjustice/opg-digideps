@@ -13,6 +13,7 @@ use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class RestInputOuputFormatter
 {
@@ -159,6 +160,9 @@ class RestInputOuputFormatter
         }
         if ($e instanceof \InvalidArgumentException) {
             $code = 400;
+        }
+        if ($e instanceof AccessDeniedHttpException) {
+            $code = 403;
         }
         
         $data = array(

@@ -15,7 +15,7 @@ Client secret is required for those.
 Return codes
 ------------
 * 404 not found
-* 403 Missing client secret, or invalid permissions (configuration error)
+* 403 Missing client secret, or invalid permissions (configuration error) or invalid ACL permissions for logged user
 * 419 AuthToken missing, expired or not matching (runtime error)
 * 498 wrong credentials at login
 * 500 generic error due to internal exception (e.g. db offline)
