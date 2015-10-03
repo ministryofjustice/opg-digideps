@@ -38,10 +38,6 @@
                 margin: 20px 10px 15px 5px;
                 width: 35%;
                 float: left;
-
-                @include media($max-width: $phablet) {
-                    width: auto;
-                }
                 
                 a {
                     color: $black;
@@ -66,10 +62,7 @@
                 @include media(mobile) {
                     display: none;
                 }
-                
-                @include media($max-width: $phablet) {
-                    width: 50%;
-                }
+
             }
 
             .status {
@@ -131,10 +124,6 @@
                     width: 20%;
                     float: left;
                     color: $link-colour;
-
-                    @include media($max-width: $phablet) {
-                        display: none;
-                    }
                 }
 
                 .summary {
