@@ -21,17 +21,14 @@
                 
         .sub-section {
             @extend %contain-floats;
-
             border-top: 1px solid $grey-3;
             clear: both;
-            
             
             &:first-of-type {
                 border-top: none;
             }
             
             .heading {
-
                 @include box-sizing(border-box);
                 @include bold-24();
                 @include inline-block();
@@ -155,8 +152,6 @@
 
             }
             
-            
         }
     }
-    
 }
