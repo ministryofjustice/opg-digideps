@@ -30,4 +30,6 @@ parameters:
     use_redis: true
     session_prefix: application_session
     ga: null
-            
+    log_level: info
+    log_path: /var/log/app/application.log
+
