@@ -49,7 +49,7 @@ class AccountController extends Controller
             $account = $form->getData();
             $account->setReport($reportId);
 
-            $response = $restClient->post('report/add-account', $account, [
+            $response = $restClient->post('report/'.$reportId.'/add-account', $account, [
                 'deserialise_group' => 'add'
             ]);
             
