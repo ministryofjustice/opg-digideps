@@ -51,28 +51,11 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($expected, $actual);
     }
-    
-    public function testHasOutstandingAccountsIsTrue()
-    {
-        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(true,true,false);
-        
-        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
-        
-        $this->assertTrue($this->report->hasOutstandingAccounts());
-    }
-    
-    public function testHasOutstandingAccountsIsFalse()
-    {
-        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(true,true,true);
-        
-        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
-        
-        $this->assertFalse($this->report->hasOutstandingAccounts());
-    }
+   
     
     public function testGetOutstandingAccounts()
     {
-        $this->account->shouldReceive('hasClosingBalance')->times(4)->andReturn(false,true,false);
+        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(false,true,false);
         
         $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
         
@@ -83,33 +66,4 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
     }
     
-    public function testisReadyToSubmitIsFalse()
-    {
-        $this->report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
-        $this->assertFalse($this->report->isReadyToSubmit());
-        
-        $this->report->setCourtOrderType(1);
-        $this->assertFalse($this->report->isReadyToSubmit());
-    }
-    
-    public function testisReadyToSubmitIsTrue()
-    {
-       $this->report->setCourtOrderType(Report::PROPERTY_AND_AFFAIRS);
-       
-       $this->account->shouldReceive('hasClosingBalance')->times(1)->andReturn(true);
-       $contact = m::mock('AppBundle\Entity\Contact');
-       $decision = m::mock('AppBundle\Entity\Decision');
-       $asset = m::mock('AppBundle\Entity\Asset');
-       $safeguarding = m::mock('AppBundle\Entity\Safeguarding');
-       
-       $safeguarding->shouldReceive('missingSafeguardingInfo')->times(1)->andReturn(false);
-
-       $this->report->setAccounts([ $this->account]);
-       $this->report->setContacts([ $contact ]); 
-       $this->report->setDecisions([ $decision ]);
-       $this->report->setAssets([ $asset ]);
-       $this->report->setSafeguarding($safeguarding);
-       
-       $this->assertTrue($this->report->isReadyToSubmit());
-    }
 }

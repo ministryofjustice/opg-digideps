@@ -8,6 +8,9 @@ use AppBundle\Service\ApiClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Service\ReportStatusService;
+
+
 
 class AccountController extends Controller
 {
@@ -63,8 +66,11 @@ class AccountController extends Controller
             );
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $client,
             'action' => $action,
             'form' => $form->createView(),
@@ -152,9 +158,12 @@ class AccountController extends Controller
             //TODO try tests without this
             $account = $refreshedAccount;
         }
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $client,
             // moneyIn/Out form
             'form' => $formMoneyInOut->createView(),

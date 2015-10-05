@@ -58,6 +58,7 @@ class RegistrationController extends Controller
                     {
                         $form->get('email')->addError(new FormError("That email has already been registered with this service."));
                     }
+                    $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                 }
             }
         }

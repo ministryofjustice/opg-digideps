@@ -1,0 +1,70 @@
+{% set translationDomain = "report-overview" %}
+{% trans_default_domain translationDomain %}
+
+<ul id="overview-sections" class="overview-sections">
+
+    <li id="planning-section" class="overview-section">
+        <h2 class="heading">{{ 'planningTitle' | trans() }}</h2>
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'decisions',
+            report: report,
+            state: reportStatus.decisionsState,
+            status: reportStatus.decisionsStatus,
+            list: true
+        } %}
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'contacts',
+            report: report,
+            list: true,
+            info: true,
+            state: reportStatus.contactsState,
+            status: reportStatus.contactsStatus
+        } %}
+    </li>
+
+    <li id="welfare-section" class="overview-section">
+        <h2 class="heading">{{ 'careAndWelfare' | trans() }}</h2>
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'safeguarding',
+        report: report,
+        info: true,
+        state: reportStatus.safeguardingState,
+        status: reportStatus.safeguardingStatus
+        } %}
+    </li>
+
+    {% if report.courtOrderType == constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') %}
+        <li id="finances-section" class="overview-section">
+            <h2 class="heading">{{ 'finances' | trans() }}</h2>
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'accounts',
+            report: report,
+            state: reportStatus.accountsState,
+            status: reportStatus.accountsStatus,
+            warning: true
+            } %}
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'assets',
+            report: report,
+            state: reportStatus.assetsState,
+            status: reportStatus.assetsStatus,
+            list: true
+            } %}
+        </li>
+    {% endif %}
+</ul>
+<script>
+    $( document ).ready(function() {
+        $('.sub-section').each(function(index,element) {
+            opg.accordian({
+                target: element,
+                open: false
+            });
+        });
+    });
+</script>

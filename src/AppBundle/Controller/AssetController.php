@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Service\ReportStatusService;
 
 /**
  * @Route("/report")
@@ -39,9 +40,11 @@ class AssetController extends Controller
             return $this->redirect($this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title' => $form->getData()->getTitle()]));
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
             'showCancelLink' => count($report->getAssets()) > 0,
@@ -78,8 +81,11 @@ class AssetController extends Controller
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
@@ -119,8 +125,12 @@ class AssetController extends Controller
             return $redirectResponse;
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
+        
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'assetToEdit' => $asset,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
@@ -154,8 +164,11 @@ class AssetController extends Controller
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'assetToEdit' => $asset,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
@@ -190,8 +203,11 @@ class AssetController extends Controller
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
@@ -209,8 +225,11 @@ class AssetController extends Controller
 
         $assets = $this->get('apiclient')->getEntities('Asset', 'report/get-assets/' . $reportId);
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'assetToEdit' => $assetToEdit,
             'assets' => $assets,
             'editForm' => $editForm,
@@ -231,8 +250,11 @@ class AssetController extends Controller
 
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'no_assets_to_add' => $noAssetsToAdd->createView(),
         ];
     }
