@@ -9,6 +9,7 @@
             transDomain: translationDomain,
             subSection: 'decisions',
             report: report,
+            guidance: true,
             state: reportStatus.decisionsState,
             status: reportStatus.decisionsStatus,
             list: true
@@ -17,6 +18,7 @@
             transDomain: translationDomain,
             subSection: 'contacts',
             report: report,
+            guidance: true,
             list: true,
             info: true,
             state: reportStatus.contactsState,
@@ -31,6 +33,7 @@
         subSection: 'safeguarding',
         report: report,
         info: true,
+        guidance: true,
         state: reportStatus.safeguardingState,
         status: reportStatus.safeguardingStatus
         } %}
@@ -45,7 +48,8 @@
             report: report,
             state: reportStatus.accountsState,
             status: reportStatus.accountsStatus,
-            warning: true
+            warning: true,
+            guidance: true
             } %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
@@ -53,10 +57,24 @@
             report: report,
             state: reportStatus.assetsState,
             status: reportStatus.assetsStatus,
-            list: true
+            list: true,
+            guidance: true
             } %}
         </li>
     {% endif %}
+
+    <li id="report-submit-section" class="overview-section">
+        <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+        transDomain: translationDomain,
+        subSection: 'report_add_further_info',
+        report: report,
+        guidance: false,
+        state: "not-started",
+        status: "Not started"
+        } %}
+    </li>
+
 </ul>
 <script>
     $( document ).ready(function() {

@@ -7,7 +7,8 @@ $grey-status: #8C9295;
 
     padding-top: 10px;
     border-top: 1px solid $grey-3;
-
+    color: $text-colour;
+    
     .overview-section {
         
         padding-top: 18px;
@@ -161,4 +162,32 @@ $grey-status: #8C9295;
             
         }
     }
+}
+
+#report-period-due {
+    
+    @extend %contain-floats;
+    padding: 20px 0 20px 0;
+    border-top: 1px solid $grey-3;
+    
+    #report-period {
+        float: left;
+    }
+    
+    #report-due {
+        float: right;
+    }
+
+    .label {
+        @include core-19();    
+    }
+    
+    .value {
+        @include bold-19();
+    }
+    
+    .edit-link {
+        padding-left: 20px;
+    }
+    
 }

@@ -11,6 +11,9 @@
     {% block contentClass %}{{ parent() }} report-overview{% endblock %}
 
     {% block pageBody %}
+        {%include 'AppBundle:Overview:_period.html.twig' with {
+            report: report
+        } %}
         {%include 'AppBundle:Overview:_sections.html.twig' with {
             report: report
         } %}

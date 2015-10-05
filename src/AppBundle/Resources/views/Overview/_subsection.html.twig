@@ -1,13 +1,18 @@
 <div id="{{ subSection }}-sub-section" class="sub-section">
     <h3 class="heading"><a href="{{ path(subSection, {reportId: report.id}) }}">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</a></h3>
-    <a id="help-{{ subSection }}" class="help-link summary">
-        <span class="open-text">{{ 'close' | trans({}, translationDomain) }}</span>
-        <span class="closed-text">{{ 'help' | trans({}, translationDomain) }}</span>
-    </a>
+    {%  if guidance is defined and guidance %}
+        <a id="help-{{ subSection }}" class="help-link summary">
+            <span class="open-text">{{ 'close' | trans({}, translationDomain) }}</span>
+            <span class="closed-text">{{ 'help' | trans({}, translationDomain) }}</span>
+        </a>
+    {%  else %}
+        <div class="help-link">&nbsp;</div>
+    {% endif %}
     <span class="status {{ state }}">{{ status }}</span>
     <a id="edit-{{ subSection }}" class="edit-link" href="{{ path(subSection, {reportId: report.id}) }}" >
         {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
     </a>
+    {%  if guidance is defined and guidance %}
     <div id="{{ subSection }}-guidance" class="guidance content">
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
             transDomain: translationDomain,
@@ -32,5 +37,6 @@
             } %}
         {% endif %}
     </div>
+    {% endif %}
 </div>
     
