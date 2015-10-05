@@ -1,3 +1,8 @@
+$green-status:  #35735B;
+$orange-status: #F08E53;
+$grey-status: #8C9295;
+
+
 .overview-sections {
 
     padding-top: 10px;
@@ -14,8 +19,8 @@
 
         > .heading {
             @include core-19();
-            color: #000000;
-            background: #ecefef;
+            color: $text-colour;
+            background: $grey-3;
             padding: 7px 10px 5px 10px;
         }
                 
@@ -74,18 +79,18 @@
                 float: left;
                 text-align: center;
                 border-radius: 5px;
-                border: 2px solid $grey-1;
+                border: 2px solid $grey-status;
                 
                 &.not-started {
-                    color: $grey-1;
+                    color: $grey-status;
                 }
                 &.done {
-                    color: $green;
-                    border-color: $green;
+                    color: $green-status;
+                    border-color: $green-status;
                 }
                 &.incomplete {
-                    color: $orange;
-                    border-color: $orange;
+                    color: $orange-status;
+                    border-color: $orange-status;
                 }
 
                 @include media(mobile) {
