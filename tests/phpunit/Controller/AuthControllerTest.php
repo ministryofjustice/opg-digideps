@@ -11,7 +11,7 @@ class AuthControllerTest extends AbstractTestController
      */
     public function endpointAuthChecks()
     {
-        $this->assertEndpointReturnAuthError('GET', '/auth/get-logged-user');
+        $this->assertEndpointNeedsAuth('GET', '/auth/get-logged-user');
     }
     
     public function testLoginFailWrongSecret()
@@ -118,7 +118,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
 
         // assert the request with the old token fails
-        $this->assertEndpointReturnAuthError('GET', '/auth/get-logged-user');
+        $this->assertEndpointNeedsAuth('GET', '/auth/get-logged-user');
     }
     
     /**
@@ -165,7 +165,7 @@ class AuthControllerTest extends AbstractTestController
         $authToken = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
         // manually expire token in REDIS
-        $this->client->getContainer()->get('snc_redis.default')->expire($authToken, 0);
+        $this->frameworkBundleClient->getContainer()->get('snc_redis.default')->expire($authToken, 0);
         
         $this->assertRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,

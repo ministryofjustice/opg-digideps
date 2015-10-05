@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Used for unit testing
  */
-class Fixtures extends \PHPUnit_Framework_TestCase
+class Fixtures
 {
     /**
      * @var EntityManager
@@ -24,33 +24,37 @@ class Fixtures extends \PHPUnit_Framework_TestCase
     public function createUser(array $settersMap = [])
     {
         // add clent, cot, report, needed for assets
-        $ret = new EntityDir\User;
-        $ret->setEmail('temp@temp.com');
-        $ret->setPassword('temp@temp.com');
-        $ret->setFirstname('name');
-        $ret->setLastname('surname');
+        $user = new EntityDir\User;
+        $user->setEmail('temp'.time().'@temp.com');
+        $user->setPassword('temp@temp.com');
+        $user->setFirstname('name'.time());
+        $user->setLastname('surname'.time());
         foreach ($settersMap as $k=>$v) {
-            $ret->$k($v);
+            $user->$k($v);
         }
-        $this->em->persist($ret);
         
-        return $ret;
+        $this->em->persist($user);
+        
+        return $user;
     }
 
     /**
      * @return EntityDir\Client
      */
-    public function createClient(array $settersMap = [])
+    public function createClient(EntityDir\User $user, array $settersMap = [])
     {
         // add clent, cot, report, needed for assets
-        $ret = new EntityDir\Client;
-        $ret->setEmail('temp@temp.com');
+        $client = new EntityDir\Client;
+        $client->setEmail('temp@temp.com');
         foreach ($settersMap as $k=>$v) {
-            $ret->$k($v);
+            $client->$k($v);
         }
-        $this->em->persist($ret);
         
-        return $ret;
+        $user->addClient($client);
+        
+        $this->em->persist($client);
+        
+        return $client;
     }
     
     /**
@@ -62,9 +66,29 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         $cot->setName('test');
         $this->em->persist($cot);
         
-        $ret = new EntityDir\Report;
-        $ret->setClient($client);
-        $ret->setCourtOrderType($cot);
+        $report = new EntityDir\Report;
+        $report->setClient($client);
+        $report->setCourtOrderType($cot);
+        foreach ($settersMap as $k=>$v) {
+            $report->$k($v);
+        }
+        
+        $this->em->persist($report);
+        
+        return $report;
+    }
+    
+    /**
+     * @return EntityDir\Account
+     */
+    public function createAccount(EntityDir\Report $report, array $settersMap = [])
+    {
+        $ret = new EntityDir\Account;
+        $ret->setReport($report);
+        $ret->setAccountNumber('1234')
+            ->setBank('hsbc')
+            ->setSortCode('101010');
+        
         foreach ($settersMap as $k=>$v) {
             $ret->$k($v);
         }
@@ -83,6 +107,8 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         foreach ($args as $e) {
             $this->em->flush($e);
         }
+        
+        return $this;
     }
     
     public function persist()
@@ -90,6 +116,8 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         foreach (func_get_args() as $e) {
             $this->em->persist($e);
         }
+        
+        return $this;
     }
     
     public function clear()

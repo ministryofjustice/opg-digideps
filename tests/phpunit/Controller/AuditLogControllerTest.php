@@ -12,13 +12,15 @@ class AuditLogControllerTest extends AbstractTestController
         
         $this->admin = $this->fixtures->getRepo('User')->findOneByEmail('admin@example.org');
         $this->deputy = $this->fixtures->getRepo('User')->findOneByEmail('deputy@example.org');
+        
+        $this->tokenDeputy = $this->loginAsDeputy();
+        $this->tokenAdmin = $this->loginAsAdmin();
     }
-
 
     public function testaddAction()
     {
         // assert auth
-        $this->assertEndpointReturnAuthError('POST', '/audit-log');
+        $this->assertEndpointNeedsAuth('POST', '/audit-log');
         
         $validData = [
             'performed_by_user' => [
@@ -33,34 +35,29 @@ class AuditLogControllerTest extends AbstractTestController
         ];
         
         // assert deputy not allowed
-        $tokenDeputy = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        
         $this->assertRequest('POST', '/audit-log', [
             'data' => $validData,
             'mustFail' => true,
-            'AuthToken' => $tokenDeputy,
+            'AuthToken' => $this->tokenDeputy,
             'assertResponseCode' => 403
         ]);
         
         // assert missing params
-        $tokenAdmin = $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
-        
         $errorMessage = $this->assertRequest('POST', '/audit-log', [
-            'data' => [
-            ],
+            'data' => [],
             'mustSucceed' => false,
-            'AuthToken' => $tokenAdmin,
+            'AuthToken' => $this->tokenAdmin,
             'assertResponseCode' => 400
         ])['message'];
         $this->assertContains("Missing 'performed_by_user'", $errorMessage);
         $this->assertContains("Missing 'ip_address'", $errorMessage);
         $this->assertContains("Missing 'created_at'", $errorMessage);
         
-        // assert normal requests create audit log entry
+        // assert successful POST really creates the entry
         $return = $this->assertRequest('POST', '/audit-log', [
             'data' => $validData,
             'mustSucceed' => true,
-            'AuthToken' => $tokenAdmin
+            'AuthToken' => $this->tokenAdmin
         ]);
         
         $entries = $this->fixtures->clear()->getRepo('AuditLogEntry')->findAll();
@@ -75,27 +72,26 @@ class AuditLogControllerTest extends AbstractTestController
         return $return['data']['id'];
     }
     
+    
+    
     /**
      * @depends testaddAction
      */
     public function testgetAll($entryId)
     {
-        $this->assertEndpointReturnAuthError('GET', '/audit-log');
+        $this->assertEndpointNeedsAuth('GET', '/audit-log');
         
         // assert deputy cannot access endpoint
-        $tokenDeputy = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         $this->assertRequest('GET', '/audit-log', [
             'mustFail' => true,
-            'AuthToken' => $tokenDeputy,
+            'AuthToken' => $this->tokenDeputy,
             'assertResponseCode' => 403
         ]);
         
         // assert endpoint returns expected data including previously created audit log entry
-        $tokenAdmin = $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
-        
         $return = $this->assertRequest('GET', '/audit-log', [
             'mustSucceed' => true,
-            'AuthToken' => $tokenAdmin
+            'AuthToken' => $this->tokenAdmin
         ])['data'];
         
         $this->assertEquals($entryId, $return[0]['id']);

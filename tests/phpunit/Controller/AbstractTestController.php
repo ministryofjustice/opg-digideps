@@ -19,9 +19,9 @@ abstract class AbstractTestController extends WebTestCase
     
     public function setUp()
     {
-        $this->client = static::createClient([ 'environment' => 'test',
+        $this->frameworkBundleClient = static::createClient([ 'environment' => 'test',
                                                'debug' => true ]);
-        $em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        $em = $this->frameworkBundleClient->getContainer()->get('em');
         
         $em->clear();
         $this->fixtures = new \Fixtures($em);
@@ -42,26 +42,26 @@ abstract class AbstractTestController extends WebTestCase
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
         }
         
-        $this->client->request(
+        $this->frameworkBundleClient->request(
             $method, 
             $uri,
             [], [],
             $headers,
             isset($options['data']) ? json_encode($options['data']) : null
         );
-        $response =  $this->client->getResponse();
+        $response =  $this->frameworkBundleClient->getResponse();
 
         $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type. Headers: ' . $response->headers);
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
-            $this->assertTrue($return['success'], "Endpoint didn't return TRUE as expected. Response: " . print_r($return, true));
+            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: " . print_r($return, true));
             if (!empty($options['assertId'])) {
                 $this->assertTrue($return['data']['id'] > 0);
             }
         }
         if (!empty($options['mustFail'])) {
-            $this->assertFalse($return['success'], "Endpoint didn't return FALSE as expected. Response: " . print_r($return, true));
+            $this->assertFalse($return['success'], "Endpoint didn't failE as expected. Response: " . print_r($return, true));
         }
          if (!empty($options['assertCode'])) {
             $this->assertEquals($options['assertResponseCode'], $return['code'], "Response: " . print_r($return, true));
@@ -93,7 +93,7 @@ abstract class AbstractTestController extends WebTestCase
         $this->assertEquals($email, $responseArray['email']);
         
         // check token
-        $token = $this->client->getResponse()->headers->get('AuthToken');
+        $token = $this->frameworkBundleClient->getResponse()->headers->get('AuthToken');
         
         return $token;
     }
@@ -110,7 +110,7 @@ abstract class AbstractTestController extends WebTestCase
         }
     }
     
-    protected function assertEndpointReturnAuthError($method, $uri, $authToken = 'WRONG')
+    protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
     {
         $response = $this->assertRequest($method, $uri, [
             'mustFail' => true,
@@ -119,5 +119,33 @@ abstract class AbstractTestController extends WebTestCase
         ]);
         $this->assertEquals(419, $response['code']);
     }
+    
+    
+    protected function assertEndpointNotAllowedFor($method, $uri, $token)
+    {
+        $this->assertRequest($method, $uri, [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'assertResponseCode' => 403
+        ]);
+    }
+    
+    /**
+     * @return string token
+     */
+    protected function loginAsDeputy()
+    {
+        return $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+    }
+    
+    
+    /**
+     * @return string token
+     */
+    protected function loginAsAdmin()
+    {
+        return $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
+    }
+    
     
 }

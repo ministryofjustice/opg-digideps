@@ -24,7 +24,7 @@ class AuditLogController extends RestController
      */
     public function addAction(Request $request)
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ROLE_ADMIN_NAME);
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
         
         $data = $this->deserializeBodyContent($request, [
             'performed_by_user' => 'mustExist', 
@@ -60,7 +60,7 @@ class AuditLogController extends RestController
      */
     public function getAll()
     {
-        $this->denyAccessUnlessGranted(EntityDir\Role::ROLE_ADMIN_NAME);
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
         
         $this->setJmsSerialiserGroups(['audit_log']);
 

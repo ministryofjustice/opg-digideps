@@ -8,47 +8,50 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
 class AccountController extends RestController
-{
-    
+{    
     /**
      * @Route("/report/get-accounts/{id}")
      * @Method({"GET"})
      */
     public function getAccountsAction(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         if ($request->query->has('groups')) {
             $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
         $report = $this->findEntityBy('Report', $id);
-      
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
         $accounts = $this->getRepository('Account')->findByReport($report, [
             'id' => 'DESC'
         ]);
-       
-        if(count($accounts) == 0){
+        
+        if(count($accounts) === 0){
             return [];
         }
         return $accounts;
     }
     
+    
     /**
-     * @Route("/report/add-account")
+     * @Route("/report/{reportId}/add-account")
      * @Method({"POST"})
      */
-    public function addAccountAction(Request $request)
+    public function addAccountAction(Request $request, $reportId)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
         $data = $this->deserializeBodyContent($request, [
            'bank' => 'notEmpty', 
            'sort_code' => 'notEmpty', 
            'opening_date' => 'notEmpty', 
            'opening_balance' => 'notEmpty'
         ]);
-        
-        $report = $this->findEntityBy('Report', $data['report']);
-        if (empty($report)) {
-            throw new AppExceptions\NotFound("Report id: " . $data['report'] . " does not exists");
-        }
         
         $account = new EntityDir\Account();
         $account->setReport($report);
@@ -69,12 +72,15 @@ class AccountController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         if ($request->query->has('groups')) {
             $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
         $account = $this->findEntityBy('Account', $id, 'Account not found');
-
+        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
+        
         return $account;
     }
     
@@ -84,7 +90,10 @@ class AccountController extends RestController
      */
     public function edit(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account*/ 
+        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
         
         $data = $this->deserializeBodyContent($request);
         
@@ -115,8 +124,11 @@ class AccountController extends RestController
      */
     public function accountDelete($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account */
-
+        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
+        
         foreach ($account->getTransactions() as $transaction) {
             $this->getEntityManager()->remove($transaction);
         }
@@ -169,6 +181,16 @@ class AccountController extends RestController
         
         if (array_key_exists('closing_balance_explanation', $data)) {
            $account->setClosingBalanceExplanation($data['closing_balance_explanation']);
+        }
+    }
+    
+    /**
+     * @param Report $report
+     */
+    private function denyAccessIfReportDoesNotBelongToUser($report)
+    {
+        if (!in_array($this->getUser()->getId(), $report->getClient()->getUserIds())) {
+            throw $this->createAccessDeniedException('Report does not belong to user');
         }
     }
     

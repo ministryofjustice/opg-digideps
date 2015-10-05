@@ -6,7 +6,7 @@ class UserControllerTest extends AbstractTestController
 {
     public function testAdd()
     {
-        $this->assertEndpointReturnAuthError('POST', '/user');
+        $this->assertEndpointNeedsAuth('POST', '/user');
     
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
@@ -26,20 +26,20 @@ class UserControllerTest extends AbstractTestController
     
     public function testupdate()
     {
-        $this->assertEndpointReturnAuthError('PUT', '/user/1');
+        $this->assertEndpointNeedsAuth('PUT', '/user/1');
         
         //
     }
     
     public function testisPasswordCorrect()
     {
-        $this->assertEndpointReturnAuthError('POST', '/user/1/is-password-correct');
+        $this->assertEndpointNeedsAuth('POST', '/user/1/is-password-correct');
         
     }
     
     public function testchangePassword()
     {
-        $this->assertEndpointReturnAuthError('PUT', '/user/1/set-password');
+        $this->assertEndpointNeedsAuth('PUT', '/user/1/set-password');
     }
     
     /**
@@ -48,7 +48,7 @@ class UserControllerTest extends AbstractTestController
      */
     public function testGet($id)
     {
-        $this->assertEndpointReturnAuthError('GET', '/user/1');
+        $this->assertEndpointNeedsAuth('GET', '/user/1');
         
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
@@ -75,12 +75,12 @@ class UserControllerTest extends AbstractTestController
     
     public function testdelete()
     {
-        $this->assertEndpointReturnAuthError('DELETE', '/user/1/1');
+        $this->assertEndpointNeedsAuth('DELETE', '/user/1/1');
     }
     
     public function testgetAll()
     {
-        $this->assertEndpointReturnAuthError('GET', '/user/get-all/firstname/ASC');
+        $this->assertEndpointNeedsAuth('GET', '/user/get-all/firstname/ASC');
     }
     
     
