@@ -465,12 +465,13 @@ class User implements UserInterface
     /**
      * Add clients
      *
-     * @param \AppBundle\Entity\Client $clients
+     * @param Client $client
      * @return User
      */
-    public function addClient(\AppBundle\Entity\Client $clients)
+    public function addClient(Client $client)
     {
-        $this->clients[] = $clients;
+        $client->addUser($this);
+        $this->clients[] = $client;
 
         return $this;
     }
@@ -478,9 +479,9 @@ class User implements UserInterface
     /**
      * Remove clients
      *
-     * @param \AppBundle\Entity\Client $clients
+     * @param Client $clients
      */
-    public function removeClient(\AppBundle\Entity\Client $clients)
+    public function removeClient(Client $clients)
     {
         $this->clients->removeElement($clients);
     }
@@ -498,10 +499,10 @@ class User implements UserInterface
     /**
      * Set role
      *
-     * @param \AppBundle\Entity\Role $role
+     * @param Role $role
      * @return User
      */
-    public function setRole(\AppBundle\Entity\Role $role = null)
+    public function setRole(Role $role = null)
     {
         $this->role = $role;
 
@@ -511,7 +512,7 @@ class User implements UserInterface
     /**
      * Get role
      *
-     * @return \AppBundle\Entity\Role 
+     * @return Role 
      */
     public function getRole()
     {

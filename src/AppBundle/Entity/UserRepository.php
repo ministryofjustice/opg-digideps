@@ -13,7 +13,7 @@ class UserRepository extends EntityRepository
 {
     /**
      * @param string $email
-     * @return \AppBundle\Entity\User | null
+     * @return User | null
      */
     public function getByEmail($email)
     {
@@ -26,7 +26,7 @@ class UserRepository extends EntityRepository
     
     /**
      * @param string $email
-     * @return \AppBundle\Entity\User | null
+     * @return User | null
      */
     public function getAdminByEmail($email)
     {

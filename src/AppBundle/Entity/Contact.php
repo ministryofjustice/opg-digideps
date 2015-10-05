@@ -274,10 +274,10 @@ class Contact
     /**
      * Set report
      *
-     * @param \AppBundle\Entity\Report $report
+     * @param Report $report
      * @return Contact
      */
-    public function setReport(\AppBundle\Entity\Report $report = null)
+    public function setReport(Report $report = null)
     {
         $this->report = $report;
 
@@ -287,7 +287,7 @@ class Contact
     /**
      * Get report
      *
-     * @return \AppBundle\Entity\Report 
+     * @return Report 
      */
     public function getReport()
     {

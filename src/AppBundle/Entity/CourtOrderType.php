@@ -82,10 +82,10 @@ class CourtOrderType
     /**
      * Add reports
      *
-     * @param \AppBundle\Entity\Report $reports
+     * @param Report $reports
      * @return CourtOrderType
      */
-    public function addReport(\AppBundle\Entity\Report $reports)
+    public function addReport(Report $reports)
     {
         $this->reports[] = $reports;
 
@@ -95,9 +95,9 @@ class CourtOrderType
     /**
      * Remove reports
      *
-     * @param \AppBundle\Entity\Report $reports
+     * @param Report $reports
      */
-    public function removeReport(\AppBundle\Entity\Report $reports)
+    public function removeReport(Report $reports)
     {
         $this->reports->removeElement($reports);
     }

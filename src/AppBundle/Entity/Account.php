@@ -445,10 +445,10 @@ class Account
     /**
      * Set report
      *
-     * @param \AppBundle\Entity\Report $report
+     * @param Report $report
      * @return Account
      */
-    public function setReport(\AppBundle\Entity\Report $report = null)
+    public function setReport(Report $report = null)
     {
         $this->report = $report;
 
@@ -458,7 +458,7 @@ class Account
     /**
      * Get report
      *
-     * @return \AppBundle\Entity\Report 
+     * @return Report 
      */
     public function getReport()
     {
@@ -575,9 +575,9 @@ class Account
     /**
      * Remove transactions
      *
-     * @param \AppBundle\Entity\AccountTransaction $transactions
+     * @param AccountTransaction $transactions
      */
-    public function removeTransaction(\AppBundle\Entity\AccountTransaction $transactions)
+    public function removeTransaction(AccountTransaction $transactions)
     {
         $this->transactions->removeElement($transactions);
     }

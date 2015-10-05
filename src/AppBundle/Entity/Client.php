@@ -407,12 +407,12 @@ class Client
     /**
      * Add users
      *
-     * @param \AppBundle\Entity\User $users
+     * @param User $user
      * @return Client
      */
-    public function addUser(\AppBundle\Entity\User $users)
+    public function addUser(User $user)
     {
-        $this->users[] = $users;
+        $this->users[] = $user;
 
         return $this;
     }
@@ -420,9 +420,9 @@ class Client
     /**
      * Remove users
      *
-     * @param \AppBundle\Entity\User $users
+     * @param User $users
      */
-    public function removeUser(\AppBundle\Entity\User $users)
+    public function removeUser(User $users)
     {
         $this->users->removeElement($users);
     }
@@ -456,10 +456,10 @@ class Client
     /**
      * Add reports
      *
-     * @param \AppBundle\Entity\Report $reports
+     * @param Report $reports
      * @return Client
      */
-    public function addReport(\AppBundle\Entity\Report $reports)
+    public function addReport(Report $reports)
     {
         $this->reports[] = $reports;
 
@@ -469,9 +469,9 @@ class Client
     /**
      * Remove reports
      *
-     * @param \AppBundle\Entity\Report $reports
+     * @param Report $reports
      */
-    public function removeReport(\AppBundle\Entity\Report $reports)
+    public function removeReport(Report $reports)
     {
         $this->reports->removeElement($reports);
     }
