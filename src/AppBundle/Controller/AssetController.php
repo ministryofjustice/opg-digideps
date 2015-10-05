@@ -282,7 +282,7 @@ class AssetController extends Controller
         }
         
         if ($addClient) {
-            $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+            $client = $util->getClient($report->getClient());
             $report->setClientObject($client);
         }
 

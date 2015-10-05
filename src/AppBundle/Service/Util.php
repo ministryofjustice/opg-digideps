@@ -58,9 +58,9 @@ class Util
      * 
      * @return Client
      */
-    public function getClient($clientId, $userId)
+    public function getClient($clientId)
     {
-        return $this->restClient->get('client/find-by-id/' . $clientId . '/' . $userId, 'Client');
+        return $this->restClient->get('client/' . $clientId, 'Client');
     }
 
 

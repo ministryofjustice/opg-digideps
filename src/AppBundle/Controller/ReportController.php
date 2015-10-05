@@ -29,7 +29,7 @@ class ReportController extends Controller
         $restClient = $this->get('restClient');
         $util = $this->get('util');
        
-        $client = $util->getClient($clientId, $this->getUser()->getId());
+        $client = $util->getClient($clientId);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
@@ -78,7 +78,7 @@ class ReportController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
         
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
@@ -191,7 +191,7 @@ class ReportController extends Controller
         if (count($violations)) {
             throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
         $request = $this->getRequest();
@@ -227,7 +227,7 @@ class ReportController extends Controller
         if (count($violations)) {
             throw new \RuntimeException($violations->getIterator()->current()->getMessage());
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         return [
             'report' => $report,
@@ -246,7 +246,7 @@ class ReportController extends Controller
         $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
         $report = $util->getReport($reportId, $this->getUser()->getId());
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
         
         $contacts = $restClient->get('report/get-contacts/' . $reportId, 'Contact[]');
         $decisions = $restClient->get('decision/find-by-report-id/' . $reportId, 'Decision[]');

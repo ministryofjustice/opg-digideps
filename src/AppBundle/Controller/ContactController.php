@@ -59,7 +59,7 @@ class ContactController extends Controller{
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         $request = $this->getRequest();
 

@@ -28,7 +28,7 @@ class AccountController extends Controller
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         $accounts = $report->getAccounts();
 
@@ -95,7 +95,7 @@ class AccountController extends Controller
         if (!in_array($accountId, $report->getAccountIds())) {
             throw new \RuntimeException("Bank account not found.");
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);

@@ -126,7 +126,7 @@ class DecisionController extends Controller
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
-            'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
+            'client' => $util->getClient($report->getClient()),
             'action' => $action,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
