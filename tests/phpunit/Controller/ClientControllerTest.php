@@ -4,105 +4,142 @@ namespace AppBundle\Controller;
 
 class ClientControllerTest extends AbstractTestController
 {
-     /**
-     * Add client
-     * 
-     * @Route("/upsert")
-     * @Method({"POST", "PUT"})
-     */
-    public function testupsertAction()
+    private static $deputy1;
+    private static $client1;
+    private static $report1;
+    private static $deputy2;
+    private static $client2;
+    private static $report2;
+    private static $tokenAdmin;
+    private static $tokenDeputy;
+    
+    public static function setUpBeforeClass()
     {
-//        $data = $this->deserializeBodyContent($request);
-//      
-//        if($request->getMethod() == "POST"){
-//            $client = $this->add($data['users'][0]);
-//        }else{
-//            $client = $this->update( $data['id']);
-//        }
-//        
-//        $this->hydrateEntityWithArrayData($client, $data, [
-//            'firstname' => 'setFirstname', 
-//            'lastname' => 'setLastname', 
-//            'case_number' => 'setCaseNumber', 
-//            'allowed_court_order_types' => 'setAllowedCourtOrderTypes', 
-//            'address' => 'setAddress', 
-//            'address2' => 'setAddress2', 
-//            'postcode' => 'setPostcode', 
-//            'country' => 'setCountry', 
-//            'county' => 'setCounty', 
-//            'phone' => 'setPhone', 
-//        ]);
-//        $client->setCourtDate(new \DateTime($data['court_date']));
-//        
-//        $this->getEntityManager()->persist($client);
-//        $this->getEntityManager()->flush();
-//        
-//        return ['id' => $client->getId() ];
+        parent::setUpBeforeClass();
+        
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        
+        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname'=>'c1']);
+        self::fixtures()->flush();
+        
+        self::$report1 = self::fixtures()->createReport(self::$client1);
+        
+        // deputy 2
+        self::$deputy2 = self::fixtures()->createUser();
+        self::$client2 = self::fixtures()->createClient(self::$deputy2);
+        self::$report2 = self::fixtures()->createReport(self::$client2);
+        
+        self::fixtures()->flush()->clear();
+    }
+    
+    public function setUp()
+    {
+        #if (null === self::$tokenAdmin) {
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy();
+        #}
+    }
+    
+    public function testupsertAuth()
+    {
+        $url = '/client/upsert';
+        $this->assertEndpointNeedsAuth('POST', $url); 
+        $this->assertEndpointNeedsAuth('PUT', $url); 
+        
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin); 
+    }
+    
+    public function testupsertAcl()
+    {
+        $url = '/client/upsert';
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
+            'users'=> [0=>self::$deputy2->getId()]
+        ]); 
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy, [
+            'id' => self::$client2->getId()
+        ]); 
+    }
+    
+    public  function upsertProvider()
+    {
+        return [
+            
+        ];
     }
     
     /**
-     * 
-     * @param integer $userId
-     * @return AppBundle\Entity\Client
+     * @dataProvider upsertProvider
      */
-    public function testadd()
+    public function testupsert()
     {
-//       $user = $this->findEntityBy('User', $userId, "User with id: {$userId}  does not exist");
-//        
-//       $client = new Client();
-//       $client->addUser($user);
-//        
-//       return $client;
-    }
-    
-    /**
-     * @param integer $clientId
-     * @return AppBundle\Entity\Client
-     */
-    public function testupdate()
-    {
-//        return $this->findEntityBy('Client', $clientId, 'Client not found');
-    }
-    
+        $url = '/client/upsert';
+        
+        foreach([
+           'PUT'  => ['id'=>self::$client1->getId()],
+           'POST' => ['users'=> [0=>self::$deputy1->getId()]]
+          ] as $method => $data
+        ) {
+            $return = $this->assertRequest($method, $url, [
+                'mustSucceed'=>true,
+                'AuthToken' => self::$tokenDeputy,
+                'data'=> $data + [
+                    'firstname' => 'Firstname', 
+                    'lastname' => 'Lastname', 
+                    'case_number' => 'CaseNumber', 
+                    'allowed_court_order_types' => [], 
+                    'address' => 'Address', 
+                    'address2' => 'Address2', 
+                    'postcode' => 'Postcode', 
+                    'country' => 'Country', 
+                    'county' => 'County', 
+                    'phone' => 'Phone',
+                    'court_date' => '2015-12-31'
+                ]
+            ]);
+            $this->assertTrue($return['data']['id'] > 0);
 
-    /**
-     * @Route("/find-by-id/{id}/{userId}", name="client_find_by_id" )
-     * @Method({"GET"})
-     * 
-     * @param integer $id
-     * @param integer $userId to check the record is accessible by this user
-     */
-    public function testfindByIdAction()
-    {
-        //Request $request, $id, $userId
-//        if ($request->query->has('groups')) {
-//            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
-//        }
-//        
-//        $client = $this->getRepository('Client')->find($id);
-//        
-//        //  throw exception if the client does not exist or it's not accessible by the given user
-//        if(empty($client) || !in_array($userId, $client->getUserIds())) {
-//            throw new \Exception("Client with id: $id does not exist", 404);
-//        }
-//        
-//        return $client;
+            self::fixtures()->clear();
+
+            // assert account created with transactions
+            $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
+            $this->assertEquals('Firstname', $client->getFirstname());
+            $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
+            // TODO assert other fields
+
+        }
     }
     
-     /**
-     * @Route("/get-by-user-id/{userId}")
-     * @Method({"GET"})
-     */
-    public function testgetByUserId()
+    
+    public function testfindByIdAuth()
     {
-        //$userId
-//        $user = $this->findEntityBy('User', $userId, "User not found");
-//        
-//        if (count($user->getClients()) === 0) {
-//            throw new AppExceptions\NotFound("User has no clients", 404);
-//        }
-//        
-//        return $this->findEntityBy('Client', $user->getClients()->first()->getId(), "Client not found");
+        $url = '/client/' . self::$client1->getId();
+        $this->assertEndpointNeedsAuth('GET', $url); 
+        
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
+    }
+
+    public function testfindByIdAcl()
+    {
+        $url2 = '/client/' . self::$client2->getId();
+        
+        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
+    }
+    
+    /**
+     * @depends testupsert
+     */
+    public function testfindById()
+    {
+        $url = '/client/' . self::$client1->getId();
+        
+          // assert get
+        $data = $this->assertRequest('GET', $url,[
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertEquals(self::$client1->getId(), $data['id']);
+        $this->assertEquals('Firstname', $data['firstname']);
     }
     
 }

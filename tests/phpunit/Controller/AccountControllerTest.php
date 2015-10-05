@@ -42,20 +42,20 @@ class AccountControllerTest extends AbstractTestController
         self::$tokenDeputy = $this->loginAsDeputy();
     }
     
-    public function testgetAccountsAuthAction()
+    public function testgetAccountsAuth()
     {
         $url = '/report/get-accounts/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url); 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
     }
     
-    public function testgetAccountsAclAction()
+    public function testgetAccountsAcl()
     {
         $url2 = '/report/get-accounts/' . self::$report2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
     }
     
-    public function testgetAccountsAction()
+    public function testgetAccounts()
     {
         // assert data is retrieved
         $data = $this->assertRequest('GET', '/report/get-accounts/' . self::$report1->getId(), [
