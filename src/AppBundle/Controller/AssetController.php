@@ -205,7 +205,7 @@ class AssetController extends Controller
      */
     public function _listAction($reportId, $assetToEdit = null, $editForm = null, $showDeleteConfirm = false, $showEditLink = true)
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
+        $report = $this->get('util')->getReport($reportId);
 
         $assets = $this->get('restClient')->get('report/get-assets/' . $reportId, 'Asset[]');
 
@@ -227,7 +227,7 @@ class AssetController extends Controller
      */
     public function _noAssetsAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
+        $report = $this->get('util')->getReport($reportId);
 
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
 
@@ -276,7 +276,7 @@ class AssetController extends Controller
     {
         $util = $this->get('util');
 
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }

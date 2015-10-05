@@ -33,7 +33,7 @@ class ReportController extends Controller
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
-        $existingReports = $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']);
+        $existingReports = $util->getReportsIndexedById($client, ['basic']);
        
         if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
             $report = $firstReport;
@@ -74,7 +74,7 @@ class ReportController extends Controller
     public function overviewAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -104,7 +104,7 @@ class ReportController extends Controller
      */
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
         
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
@@ -147,7 +147,7 @@ class ReportController extends Controller
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
         if (count($violations)) {
@@ -162,7 +162,7 @@ class ReportController extends Controller
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->get('restClient')->put('report/' .  $report->getId() . '/user/' . $this->getUser()->getId() . '/submit', $report, [
+            $this->get('restClient')->put('report/' .  $report->getId() . '/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
             
@@ -185,7 +185,7 @@ class ReportController extends Controller
     public function submitConfirmationAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
         if (count($violations)) {
@@ -221,7 +221,7 @@ class ReportController extends Controller
     public function submitFeedbackAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         // check status
         $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
         if (count($violations)) {
@@ -245,7 +245,7 @@ class ReportController extends Controller
         $restClient = $this->get('restClient');
         $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
         
         $contacts = $restClient->get('report/get-contacts/' . $reportId, 'Contact[]');

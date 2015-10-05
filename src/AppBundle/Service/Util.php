@@ -71,19 +71,18 @@ class Util
      * 
      * @return Report
      */
-    public function getReport($reportId, $userId, array $groups = [ "transactions", "basic"])
+    public function getReport($reportId, array $groups = [ "transactions", "basic"])
     {
-        return $this->restClient->get("report/find-by-id/{$reportId}/{$userId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->restClient->get("/report/find-by-id/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
     /**
-     * @param integer $userId userId (remove at next refactor. not needed as securty is already in the class)
      * @param Client $client
      * 
      * @return Report[]
      */
-    public function getReportsIndexedById($userId, Client $client, $groups)
+    public function getReportsIndexedById(Client $client, $groups)
     {
         $reportIds = $client->getReports();
 
@@ -93,7 +92,7 @@ class Util
 
         $ret = [];
         foreach ($reportIds as $id) {
-            $ret[$id] = $this->getReport($id, $userId, $groups);
+            $ret[$id] = $this->getReport($id,$groups);
         }
 
         return $ret;

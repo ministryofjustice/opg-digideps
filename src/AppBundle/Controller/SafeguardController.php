@@ -17,7 +17,7 @@ class SafeguardController extends Controller{
     public function editAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId()); // check the report is owned by this user.
+        $report = $util->getReport($reportId); // check the report is owned by this user.
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");

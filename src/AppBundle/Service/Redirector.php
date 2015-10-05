@@ -120,10 +120,9 @@ class Redirector
         }
    
         $reportIds = $clients[0]->getReports();
-        $userId = $this->getLoggedUser()->getId();
         
         foreach($reportIds as $reportId){
-            $report = $this->util->getReport($reportId, $userId);
+            $report = $this->util->getReport($reportId);
             
             if(!$report->getSubmitted()){
                 return $this->router->generate('report_overview', ['reportId'=>$reportId]);

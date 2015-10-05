@@ -24,7 +24,7 @@ class AccountController extends Controller
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
         
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -88,7 +88,7 @@ class AccountController extends Controller
     {
         $util = $this->get('util');
 
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }

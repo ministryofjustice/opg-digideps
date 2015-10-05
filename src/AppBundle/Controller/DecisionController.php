@@ -17,7 +17,7 @@ class DecisionController extends Controller
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to update this report
-        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
+        $report = $util->getReport($reportId, ['transactions']);
 
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
@@ -35,7 +35,7 @@ class DecisionController extends Controller
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
+        $report = $util->getReport($reportId, ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getDecisions())){
             $this->get('restClient')->delete("decision/{$id}");
@@ -55,7 +55,7 @@ class DecisionController extends Controller
         $util = $this->get('util');
 
         // just needed for title etc,
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -166,7 +166,7 @@ class DecisionController extends Controller
 
         $formData = $noDecision->getData();
 
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         $report->setReasonForNoDecisions($formData['reason']);
         $restClient->put('report/'.$report->getId(),$report);
     }

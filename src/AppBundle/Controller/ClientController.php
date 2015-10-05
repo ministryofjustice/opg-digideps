@@ -27,7 +27,7 @@ class ClientController extends Controller
         
         $client = !empty($clients)? $clients[0]: null;
         
-        $reports = $client ? $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']) : [];
+        $reports = $client ? $util->getReportsIndexedById($client, ['basic']) : [];
          arsort($reports);
         
         
@@ -50,7 +50,7 @@ class ClientController extends Controller
         
         // edit report dates
         if ($action == 'edit-report' && $reportId) {
-            $report = $util->getReport($reportId, $this->getUser()->getId());
+            $report = $util->getReport($reportId);
             $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates'
             ]);
@@ -69,7 +69,7 @@ class ClientController extends Controller
           if($report->getReportSeen() === false){
               $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
               
-              $reportObj = $util->getReport($report->getId(), $this->getUser()->getId());
+              $reportObj = $util->getReport($report->getId());
               //update report to say message has been seen
               $reportObj->setReportSeen(true);
               
