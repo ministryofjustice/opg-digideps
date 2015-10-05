@@ -10,8 +10,8 @@ class AuditLogControllerTest extends AbstractTestController
     {
         parent::setUp();
         
-        $this->admin = $this->fixtures->getRepo('User')->findOneByEmail('admin@example.org');
-        $this->deputy = $this->fixtures->getRepo('User')->findOneByEmail('deputy@example.org');
+        $this->admin = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
+        $this->deputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         
         $this->tokenDeputy = $this->loginAsDeputy();
         $this->tokenAdmin = $this->loginAsAdmin();
@@ -60,7 +60,7 @@ class AuditLogControllerTest extends AbstractTestController
             'AuthToken' => $this->tokenAdmin
         ]);
         
-        $entries = $this->fixtures->clear()->getRepo('AuditLogEntry')->findAll();
+        $entries = self::fixtures()->clear()->getRepo('AuditLogEntry')->findAll();
         $this->assertCount(1, $entries);
         $entry = array_shift($entries); /* @var $entry AuditLogEntry */
         $this->assertEquals('login', $entry->getAction());

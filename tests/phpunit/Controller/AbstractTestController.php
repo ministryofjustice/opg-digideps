@@ -10,21 +10,45 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @var \Fixtures
      */
-    protected $fixtures;
+    protected static $fixtures;
     
     /**
      * @var Client 
      */
-    protected $client;
+    protected static $frameworkBundleClient;
     
-    public function setUp()
+    /**
+     * Create static client and fixtures
+     */
+    public static function setUpBeforeClass()
     {
-        $this->frameworkBundleClient = static::createClient([ 'environment' => 'test',
+        parent::setUpBeforeClass();
+        
+        self::$frameworkBundleClient = static::createClient([ 'environment' => 'test',
                                                'debug' => true ]);
-        $em = $this->frameworkBundleClient->getContainer()->get('em');
+        $em = self::$frameworkBundleClient->getContainer()->get('em');
         
         $em->clear();
-        $this->fixtures = new \Fixtures($em);
+        
+        self::$fixtures = new \Fixtures($em);
+    }
+    
+    /**
+     * clear fixtures 
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        
+        self::fixtures()->clear();
+    }
+    
+    /**
+     * @return \Fixtures
+     */
+    public static function fixtures()
+    {
+        return self::$fixtures;
     }
     
     /**
@@ -42,14 +66,14 @@ abstract class AbstractTestController extends WebTestCase
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
         }
         
-        $this->frameworkBundleClient->request(
+        self::$frameworkBundleClient->request(
             $method, 
             $uri,
             [], [],
             $headers,
             isset($options['data']) ? json_encode($options['data']) : null
         );
-        $response =  $this->frameworkBundleClient->getResponse();
+        $response =  self::$frameworkBundleClient->getResponse();
 
         $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type. Headers: ' . $response->headers);
         $return = json_decode($response->getContent(), true);
@@ -93,17 +117,14 @@ abstract class AbstractTestController extends WebTestCase
         $this->assertEquals($email, $responseArray['email']);
         
         // check token
-        $token = $this->frameworkBundleClient->getResponse()->headers->get('AuthToken');
+        $token = self::$frameworkBundleClient->getResponse()->headers->get('AuthToken');
         
         return $token;
     }
+   
+
     
-    public function tearDown()
-    {
-        $this->fixtures->clear();
-    }
-    
-    protected function assertKeysArePresentWithTheFollowingValues($subset, $array)
+    protected static function assertKeysArePresentWithTheFollowingValues($subset, $array)
     {
         foreach ($subset as $k=>$v) {
             $this->assertEquals($v, $array[$k]);

@@ -18,8 +18,8 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $this->selfRegisterController = new SelfRegisterController();
         parent::setUp();
-//        $this->frameworkBundleClient = static::createClient([ 'environment' => 'test','debug' => true]);
-//        $this->em = $this->frameworkBundleClient->getContainer()->get('doctrine.orm.entity_manager');
+//        self::$frameworkBundleClient = static::createClient([ 'environment' => 'test','debug' => true]);
+//        $this->em = self::$frameworkBundleClient->getContainer()->get('doctrine.orm.entity_manager');
     }
 
 
@@ -105,7 +105,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => '123abc-deputy'
         ]);
 
-        $user = $this->fixtures->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@uk.gov']);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@uk.gov']);
         $this->assertNull($user);
     }
 
@@ -132,7 +132,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $id = $responseArray['data']['id'];
 
         /** @var /AppBundle/Entity/User $user */
-        $user = $this->fixtures->getRepo('User')->findOneBy(['id' => $id]);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
 
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());

@@ -4,67 +4,79 @@ namespace AppBundle\Controller;
 
 class AccountControllerTest extends AbstractTestController
 {
-    public function setUp()
+    private static $deputy1;
+    private static $report1;
+    private static $account1;
+    private static $deputy2;
+    private static $report2;
+    private static $account2;
+    private static $tokenAdmin;
+    private static $tokenDeputy;
+    private static $repo;
+    
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
         
-//        $this->admin = $this->fixtures->getRepo('User')->findOneByEmail('admin@example.org');
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         
-        // deputy1 (logged) 
-        $this->deputy1 = $this->fixtures->getRepo('User')->findOneByEmail('deputy@example.org');
+        $client1 = self::fixtures()->createClient(self::$deputy1);
+        self::fixtures()->flush();
         
-        $client1 = $this->fixtures->createClient($this->deputy1);
-        $this->fixtures->flush();
-        
-        $this->report1 = $this->fixtures->createReport($client1);
-        $this->account1 = $this->fixtures->createAccount($this->report1, ['setBank'=>'bank1']);
+        self::$report1 = self::fixtures()->createReport($client1);
+        self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank'=>'bank1']);
         
         
         // deputy 2
-        $this->deputy2 = $this->fixtures->createUser();
-        $client2 = $this->fixtures->createClient($this->deputy2);
-        $this->report2 = $this->fixtures->createReport($client2);
-        $this->account2 = $this->fixtures->createAccount($this->report2, ['setBank'=>'bank2']);
+        self::$deputy2 = self::fixtures()->createUser();
+        $client2 = self::fixtures()->createClient(self::$deputy2);
+        self::$report2 = self::fixtures()->createReport($client2);
+        self::$account2 = self::fixtures()->createAccount(self::$report2, ['setBank'=>'bank2']);
         
-        $this->fixtures->flush()->clear();
-        
-        $this->repo = $this->fixtures->getRepo('Account');
-        
-        $this->tokenAdmin = $this->loginAsAdmin();
-        $this->tokenDeputy = $this->loginAsDeputy();
+        self::fixtures()->flush()->clear();
     }
     
+    public function setUp()
+    {
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy();
+    }
+    
+    public function testgetAccountsAuthAction()
+    {
+        $url = '/report/get-accounts/' . self::$report1->getId();
+        $this->assertEndpointNeedsAuth('GET', $url); 
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
+    }
+    
+    public function testgetAccountsAclAction()
+    {
+        $url2 = '/report/get-accounts/' . self::$report2->getId();
+        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
+    }
     
     public function testgetAccountsAction()
     {
-        $url = '/report/get-accounts/' . $this->report1->getId();
-        $this->assertEndpointNeedsAuth('GET', $url); 
-        $this->assertEndpointNotAllowedFor('GET', $url, $this->tokenAdmin); 
-    
         // assert data is retrieved
-        $data = $this->assertRequest('GET', $url, [
+        $data = $this->assertRequest('GET', '/report/get-accounts/' . self::$report1->getId(), [
             'mustSucceed'=>true,
-            'AuthToken' => $this->tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertCount(1, $data);
-        $this->assertEquals($this->account1->getId(), $data[0]['id']);
-        $this->assertEquals($this->account1->getBank(), $data[0]['bank']);
-        
-        //assert I cannot get data from user that is not logged
-        $url2 = '/report/get-accounts/' . $this->report2->getId();
-        $this->assertEndpointNotAllowedFor('GET', $url2, $this->tokenDeputy); 
+        $this->assertEquals(self::$account1->getId(), $data[0]['id']);
+        $this->assertEquals(self::$account1->getBank(), $data[0]['bank']);
     }
    
     
     public function testaddAccount()
     {
-        $url = '/report/' . $this->report1->getId() . '/add-account';
+        $url = '/report/' . self::$report1->getId() . '/add-account';
         $this->assertEndpointNeedsAuth('POST', $url); 
-        $this->assertEndpointNotAllowedFor('POST', $url, $this->tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
         
         $return = $this->assertRequest('POST', $url, [
             'mustSucceed'=>true,
-            'AuthToken' => $this->tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
             'data'=> [
                 'bank' => 'hsbc',
                 'sort_code' => '123456',
@@ -75,16 +87,18 @@ class AccountControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         
+        self::fixtures()->clear();
+        
         // assert account created with transactions
-        $account = $this->repo->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
-        $transactionTypesTotal = count($this->fixtures->getRepo('AccountTransactionType')->findAll());
+        $account = self::fixtures()->getRepo('Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
+        $transactionTypesTotal = count(self::fixtures()->getRepo('AccountTransactionType')->findAll());
         $this->assertCount($transactionTypesTotal, $account->getTransactions(), "transactions not created");
 
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         
         // assert cannot create account for a report not belonging to logged user
-        $url2 = '/report/' . $this->report2->getId() . '/add-account';
-        $this->assertEndpointNotAllowedFor('POST', $url2, $this->tokenDeputy); 
+        $url2 = '/report/' . self::$report2->getId() . '/add-account';
+        $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
         
         return $account->getId();
     }
@@ -92,27 +106,27 @@ class AccountControllerTest extends AbstractTestController
     
     public function testgetOneById()
     {
-        $url = '/report/find-account-by-id/'.$this->account1->getId();
+        $url = '/report/find-account-by-id/'.self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url); 
-        $this->assertEndpointNotAllowedFor('GET', $url, $this->tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
         
         // assert get
         $data = $this->assertRequest('GET', $url,[
             'mustSucceed'=>true,
-            'AuthToken' => $this->tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertEquals('bank1', $data['bank']);
         $this->assertEquals('101010', $data['sort_code']);
         $this->assertEquals('1234', $data['account_number']);
-        $this->assertEquals($this->report1->getId(), $data['report']['id']);
+        $this->assertEquals(self::$report1->getId(), $data['report']['id']);
         $this->assertEquals('0', $data['money_total']);
         $this->assertEquals('0', $data['money_in_total']);
         $this->assertEquals('0', $data['money_out_total']);
         
         
         // asser  user2 cannot read the account
-        $url2 = '/report/find-account-by-id/'.$this->account2->getId();
-        $this->assertEndpointNotAllowedFor('GET', $url2, $this->tokenDeputy); 
+        $url2 = '/report/find-account-by-id/'.self::$account2->getId();
+        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
     }
     
     /**
@@ -120,14 +134,14 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testEdit()
     {
-        $url = '/account/' . $this->account1->getId();
+        $url = '/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointNotAllowedFor('PUT', $url, $this->tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin); 
         
         // assert put
         $data = $this->assertRequest('PUT', $url,[
             'mustSucceed'=>true,
-            'AuthToken' => $this->tokenDeputy,
+            'AuthToken' => self::$tokenDeputy,
             'data' => [
                 // 'money_in' //TODO
                 // 'money_out' //TODO
@@ -136,12 +150,12 @@ class AccountControllerTest extends AbstractTestController
             ]
         ])['data'];
         
-        $account = $this->repo->find($this->account1->getId());
+        $account = self::fixtures()->getRepo('Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         
         // assert user cannot modify another users' account
-        $url2 = '/account/'.$this->account2->getId();
-        $this->assertEndpointNotAllowedFor('PUT', $url2, $this->tokenDeputy); 
+        $url2 = '/account/'.self::$account2->getId();
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy); 
     }
     
     /**
@@ -149,21 +163,25 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testaccountDelete()
     {
-        $url = '/account/' . $this->account1->getId();
-        $url2 = '/account/' . $this->account2->getId();
+        $account1Id = self::$account1->getId();
+        $url = '/account/' . $account1Id;
+        $url2 = '/account/' .  self::$account2->getId();
         
         $this->assertEndpointNeedsAuth('DELETE', $url);
-        $this->assertEndpointNotAllowedFor('DELETE', $url, $this->tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin); 
         
         // assert user cannot delete another users' account
-        $this->assertEndpointNotAllowedFor('DELETE', $url2, $this->tokenDeputy); 
+        $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy); 
         
         // assert delete
         $this->assertRequest('DELETE', $url,[
             'mustSucceed'=>true,
-            'AuthToken' => $this->tokenDeputy,
+            'AuthToken' =>self::$tokenDeputy,
         ]);
-        $this->assertNull($this->repo->find($this->account1->getId()));
+        
+        self::fixtures()->clear();
+
+        $this->assertTrue(null === self::fixtures()->getRepo('Account')->find($account1Id));
     }
     
     
