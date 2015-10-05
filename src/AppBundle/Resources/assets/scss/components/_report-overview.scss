@@ -64,10 +64,12 @@
 
             .status {
                 @include box-sizing(border-box);
-                @include bold-16(1.6);
+                font-size: 13px;
+                font-weight: 700;
+                line-height: 1.42857;
                 @include inline-block();
                 text-transform: uppercase;
-                padding: 0 5px;
+                padding: 2px 5px 0 5px;
                 margin: 20px 0 15px 0;
                 float: left;
                 text-align: center;
