@@ -1,8 +1,9 @@
 <?php
-
 namespace AppBundle\Controller;
 
-class ClientControllerTest extends AbstractTestController
+use AppBundle\Entity as EntityDir;
+
+class ReportControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
@@ -32,6 +33,7 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
     
+    
     public function setUp()
     {
         #if (null === self::$tokenAdmin) {
@@ -42,68 +44,56 @@ class ClientControllerTest extends AbstractTestController
     
     public function testupsertAuth()
     {
-        $url = '/client/upsert';
+        $url = '/report/upsert';
         $this->assertEndpointNeedsAuth('POST', $url); 
-        $this->assertEndpointNeedsAuth('PUT', $url); 
         
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin); 
     }
     
     public function testupsertAcl()
     {
-        $url = '/client/upsert';
+        $url = '/report/upsert';
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
-            'users'=> [0=>self::$deputy2->getId()]
+            'id'=> self::$report2->getId()
         ]); 
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy, [
-            'id' => self::$client2->getId()
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
+            'client' => self::$client2->getId()
         ]); 
     }
     
     public function testupsert()
     {
-        $url = '/client/upsert';
+       $url = '/report/upsert';
         
-        foreach([
-           'PUT'  => ['id'=>self::$client1->getId()],
-           'POST' => ['users'=> [0=>self::$deputy1->getId()]]
-          ] as $method => $data
-        ) {
-            $return = $this->assertRequest($method, $url, [
-                'mustSucceed'=>true,
-                'AuthToken' => self::$tokenDeputy,
-                'data'=> $data + [
-                    'firstname' => 'Firstname', 
-                    'lastname' => 'Lastname', 
-                    'case_number' => 'CaseNumber', 
-                    'allowed_court_order_types' => [], 
-                    'address' => 'Address', 
-                    'address2' => 'Address2', 
-                    'postcode' => 'Postcode', 
-                    'country' => 'Country', 
-                    'county' => 'County', 
-                    'phone' => 'Phone',
-                    'court_date' => '2015-12-31'
-                ]
-            ]);
-            $this->assertTrue($return['data']['id'] > 0);
+       foreach([
+           ['client' => self::$client1->getId()],
+           ['id' => self::$report1->getId()],
+       ] as $data) {
+        $reportId = $this->assertRequest('POST', $url, [
+             'mustSucceed'=>true,
+             'AuthToken' => self::$tokenDeputy,
+             'data'=> $data + [
+                 'court_order_type' => 1,
+                 'start_date' => '2015-01-01',
+                 'end_date' =>  '2015-12-31',
+                 
+             ]
+         ])['data']['report'];
 
-            self::fixtures()->clear();
+         self::fixtures()->clear();
 
-            // assert account created with transactions
-            $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
-            $this->assertEquals('Firstname', $client->getFirstname());
-            $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
-            // TODO assert other fields
+         // assert account created with transactions
+         $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
+         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
+         $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
 
-        }
+       }
     }
-    
     
     public function testfindByIdAuth()
     {
-        $url = '/client/' . self::$client1->getId();
+        $url = '/report/find-by-id/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url); 
         
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
@@ -111,7 +101,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdAcl()
     {
-        $url2 = '/client/' . self::$client2->getId();
+        $url2 = '/report/find-by-id/' . self::$report2->getId();
         
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
     }
@@ -121,15 +111,18 @@ class ClientControllerTest extends AbstractTestController
      */
     public function testfindById()
     {
-        $url = '/client/' . self::$client1->getId();
+        $url = '/report/find-by-id/' . self::$report1->getId();
         
           // assert get
         $data = $this->assertRequest('GET', $url,[
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertEquals(self::$client1->getId(), $data['id']);
-        $this->assertEquals('Firstname', $data['firstname']);
+        
+        $this->assertEquals(self::$report1->getId(), $data['id']);
+        $this->assertEquals(self::$client1->getId(), $data['client']);
+        $this->assertEquals('2015-01-01', $data['start_date']);
+        $this->assertEquals('2015-12-31', $data['end_date']);
     }
-    
 }
+

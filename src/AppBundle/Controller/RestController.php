@@ -7,6 +7,7 @@ use AppBundle\Exception as AppExceptions;
 use AppBundle\Service\Auth\AuthService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity as EntityDir;
 
 abstract class RestController extends Controller
 {
@@ -144,6 +145,27 @@ abstract class RestController extends Controller
     protected function getAuthService()
     {
         return $this->get('authService');
+    }
+    
+    
+    /**
+     * @param Report $report
+     */
+    protected function denyAccessIfReportDoesNotBelongToUser(EntityDir\Report $report)
+    {
+        if (!in_array($this->getUser()->getId(), $report->getClient()->getUserIds())) {
+            throw $this->createAccessDeniedException('Report does not belong to user');
+        }
+    }
+    
+     /**
+     * @param Client $client
+     */
+    protected function denyAccessIfClientDoesNotBelongToUser(EntityDir\Client $client)
+    {
+        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+            throw $this->createAccessDeniedException('Client does not belong to user');
+        }
     }
     
 

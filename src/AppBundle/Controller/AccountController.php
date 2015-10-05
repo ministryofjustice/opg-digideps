@@ -184,14 +184,4 @@ class AccountController extends RestController
         }
     }
     
-    /**
-     * @param Report $report
-     */
-    private function denyAccessIfReportDoesNotBelongToUser($report)
-    {
-        if (!in_array($this->getUser()->getId(), $report->getClient()->getUserIds())) {
-            throw $this->createAccessDeniedException('Report does not belong to user');
-        }
-    }
-    
 }

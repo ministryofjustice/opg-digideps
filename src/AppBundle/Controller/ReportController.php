@@ -16,26 +16,25 @@ class ReportController extends RestController
      */
     public function upsertAction(Request $request)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $reportData = $this->deserializeBodyContent($request);
        
         if (!empty($reportData['id'])) { 
             // get existing report
             $report = $this->findEntityBy('Report', $reportData['id']);
+            $this->denyAccessIfReportDoesNotBelongToUser($report);
         } else {
             // new report
-             $client = $this->findEntityBy('Client', $reportData['client']);
-            if(empty($client)){
-                throw new AppExceptions\NotFound("Client id: ".$reportData['client']." does not exists", 404);
-            }
+            $client = $this->findEntityBy('Client', $reportData['client']);
+            $this->denyAccessIfClientDoesNotBelongToUser($client);
+            
             $report = new EntityDir\Report();
             $report->setClient($client);
         }
         
         // add court order type
         $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
-        if(empty($courtOrderType)){
-            throw new AppExceptions\NotFound("Court Order Type id: ".$reportData['court_order_type']." does not exists", 404);
-        }
         $report->setCourtOrderType($courtOrderType);
         
         // add other stuff
@@ -58,13 +57,12 @@ class ReportController extends RestController
      */
     public function cloneAction(Request $request)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $reportData = $this->deserializeBodyContent($request);
         
         $report = $this->findEntityBy('Report', $reportData['id']);
-        
-        if(empty($report)){
-            throw new AppExceptions\NotFound("Report id: ".$reportData['id']." does not exists", 404);
-        }
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $newReport = $this->getRepository('Report')->createNextYearReport($report);
         
@@ -73,24 +71,21 @@ class ReportController extends RestController
     
      
    /**
-     * @Route("/report/find-by-id/{id}/{userId}")
+     * @Route("/report/find-by-id/{id}")
      * @Method({"GET"})
      * 
      * @param integer $id
-     * @param integer $userId to check the record is accessible by this user
      */
-    public function getById(Request $request, $id, $userId)
+    public function getById(Request $request, $id)
     {   
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         if ($request->query->has('groups')) {
             $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
-        $report = $this->getRepository('Report')->find($id); /* @var $report EntityDir\Report */
-        
-        // throw exception if the report does not exist or it's not accessible from the given user
-        if (empty($report) || !in_array($userId, $report->getClient()->getUserIds())) {
-            throw new AppExceptions\NotFound("Report not found", 404);
-        }
+        $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         return $report;
     }
@@ -101,13 +96,12 @@ class ReportController extends RestController
      **/
     public function upsertContactAction(Request $request)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $contactData = $this->deserializeBodyContent($request);
        
         $report = $this->findEntityBy('Report',$contactData['report']);
-        
-        if(empty($report)){
-            throw new AppExceptions\NotFound("Report id: ".$contactData['report']." does not exists", 404);
-        }
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         if($request->getMethod() == "POST"){
             $contact = new EntityDir\Contact();
@@ -140,7 +134,10 @@ class ReportController extends RestController
      */
     public function getContactsAction($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $report = $this->findEntityBy('Report', $id);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $contacts = $this->getRepository('Contact')->findByReport($report);
         
@@ -157,14 +154,14 @@ class ReportController extends RestController
      */
     public function getContactAction(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $serialisedGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : ['basic'];
         $this->setJmsSerialiserGroups($serialisedGroups);
         
         $contact = $this->findEntityBy('Contact', $id);
+        $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         
-        if(empty($contact)){
-            throw new AppExceptions\NotFound("Contact with id: $id does not exist", 404);
-        }
         return $contact;
     }
     
@@ -175,7 +172,11 @@ class ReportController extends RestController
      */
     public function getAssetsAction($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $report = $this->findEntityBy('Report', $id);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
         $assets = $this->getRepository('Asset')->findByReport($report);
         
         if(count($assets) == 0){
@@ -192,11 +193,11 @@ class ReportController extends RestController
      */
     public function getAssetAction($id)
     { 
-        $asset = $this->findEntityBy('Asset', $id);
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        if(empty($asset)){
-            throw new AppExceptions\NotFound("Asset with id: $id does not exist", 404);
-        }
+        $asset = $this->findEntityBy('Asset', $id);
+        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
+        
         return $asset;
     }
     
@@ -206,13 +207,12 @@ class ReportController extends RestController
      */
     public function upsertAssetAction(Request $request)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $assetData = $this->deserializeBodyContent($request);
         
         $report = $this->findEntityBy('Report', $assetData['report']);
-        
-        if(empty($report)){
-            throw new AppExceptions\NotFound("Report id: ".$assetData['report']." does not exists", 404);
-        }
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         if($request->getMethod() == 'POST'){
             $asset = new EntityDir\Asset();
@@ -247,11 +247,15 @@ class ReportController extends RestController
      * @Route("/report/{id}/user/{userId}/submit")
      * @Method({"PUT"})
      */
-    public function submit(Request $request, $id, $userId)
+    public function submit(Request $request, $id)
     { 
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $currentReport = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $currentReport EntityDir\Report */
-        $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $currentReport EntityDir\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($currentReport);
+        $user = $this->getUser(); 
         $client = $currentReport->getClient();
+        
         $data = $this->deserializeBodyContent($request);
         
         if (empty($data['submit_date'])) {
@@ -284,7 +288,10 @@ class ReportController extends RestController
      */
     public function formattedAction($reportId)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $report = $this->getRepository('Report')->find($reportId); /*@var $report EntityDir\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         return $this->render('AppBundle:Report:formatted.html.twig', [
             'report' => $report,
@@ -305,7 +312,10 @@ class ReportController extends RestController
      */
     public function update(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
         
@@ -359,7 +369,10 @@ class ReportController extends RestController
      */
     public function deleteContactAction($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $contact = $this->findEntityBy('Contact', $id, 'Contact not found');
+        $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         
         $this->getEntityManager()->remove($contact);
         $this->getEntityManager()->flush();
@@ -375,32 +388,15 @@ class ReportController extends RestController
      */
     public function deleteAssetAction($id)
     { 
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $asset = $this->findEntityBy('Asset', $id, 'Asset not found');
+        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
         
         $this->getEntityManager()->remove($asset);
         $this->getEntityManager()->flush();
         
         return [ ];
     }
-    
-    /**
-     * @Route("/report/{id}/contacts")
-     * @Method({"DELETE"})
-     */
-    public function contactsDelete($id)
-    {
-        $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
-
-        foreach ($report->getContacts() as $contact) {
-            $this->getEntityManager()->remove($contact);
-        }
-        $report->setReasonForNoContacts(null);
-        
-        $this->getEntityManager()->flush();
-        
-        return ['id'=>$report->getId()];
-    }
-
-
     
 }
