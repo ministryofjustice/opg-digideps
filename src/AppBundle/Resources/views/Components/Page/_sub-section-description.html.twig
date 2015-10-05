@@ -1,9 +1,2 @@
 <!--Component: Page/sub-section-description-->
-{% if iconClass is defined %}
-    <div class="sub-section-description sub-section-description-with-icon">
-        <span class="{{ iconClass }}"></span>
-        <p>{{ subSectionDescription|trans(transOptions | default({}), transDomain)|raw }}</p>
-    </div>
-{% else %}
-    <p class="sub-section-description">{{ subSectionDescription|trans(transOptions | default({}), transDomain)|raw }}</p>
-{% endif %}
+<p class="sub-section-description">{{ subSectionDescription|trans(transOptions | default({}), transDomain)|raw }}</p>

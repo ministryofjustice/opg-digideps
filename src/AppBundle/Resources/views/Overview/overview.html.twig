@@ -1,0 +1,19 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+    showNav: false,
+    showHelp: false
+} %}
+
+    {% set page = 'reportPeriod' %}
+    {% set translationDomain = "report-overview" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+    {% block contentClass %}{{ parent() }} report-overview{% endblock %}
+
+    {% block pageBody %}
+        {%include 'AppBundle:Overview:_sections.html.twig' with {
+            report: report
+        } %}
+    {% endblock %}
+
+{% endembed %}
