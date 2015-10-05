@@ -4,9 +4,8 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\Client;
 use AppBundle\Exception as AppExceptions;
-
+use AppBundle\Entity as EntityDir;
 
 /**
  * @Route("/client")
@@ -19,14 +18,26 @@ class ClientController extends RestController
      * @Route("/upsert")
      * @Method({"POST", "PUT"})
      */
-    public function  upsertAction(Request $request)
+    public function upsertAction(Request $request)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $data = $this->deserializeBodyContent($request);
       
-        if($request->getMethod() == "POST"){
-            $client = $this->add($data['users'][0]);
-        }else{
-            $client = $this->update( $data['id']);
+        if ($request->getMethod() == "POST"){
+            $userId = $data['users'][0];
+            if (!in_array($this->getUser()->getId(), [$userId])) {
+                throw $this->createAccessDeniedException('User not allowed');
+            }
+            $user = $this->findEntityBy('User', $userId, "User with id: {$userId}  does not exist");
+            $client = new EntityDir\Client();
+            $client->addUser($user);
+            
+        } else {
+            $client = $this->findEntityBy('Client', $data['id'], 'Client not found');
+            if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+                throw $this->createAccessDeniedException('Client does not belong to user');
+            }
         }
         
         $this->hydrateEntityWithArrayData($client, $data, [
@@ -50,65 +61,42 @@ class ClientController extends RestController
     }
     
     /**
-     * 
      * @param integer $userId
-     * @return AppBundle\Entity\Client
+     * 
+     * @return EntityDir\Client
      */
     private function add($userId)
     {
        $user = $this->findEntityBy('User', $userId, "User with id: {$userId}  does not exist");
         
-       $client = new Client();
+       $client = new EntityDir\Client();
        $client->addUser($user);
         
        return $client;
     }
     
-    /**
-     * @param integer $clientId
-     * @return AppBundle\Entity\Client
-     */
-    private function update($clientId)
-    {
-        return $this->findEntityBy('Client', $clientId, 'Client not found');
-    }
-    
 
     /**
-     * @Route("/find-by-id/{id}/{userId}", name="client_find_by_id" )
+     * @Route("/{id}", name="client_find_by_id" )
      * @Method({"GET"})
      * 
      * @param integer $id
-     * @param integer $userId to check the record is accessible by this user
      */
-    public function findByIdAction(Request $request, $id, $userId)
+    public function findByIdAction(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         if ($request->query->has('groups')) {
             $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
         }
         
-        $client = $this->getRepository('Client')->find($id);
+        $client = $this->findEntityBy('Client', $id);
         
-        //  throw exception if the client does not exist or it's not accessible by the given user
-        if(empty($client) || !in_array($userId, $client->getUserIds())) {
-            throw new \Exception("Client with id: $id does not exist", 404);
+        if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
+            throw $this->createAccessDeniedException('Client does not belong to user');
         }
         
         return $client;
     }
     
-     /**
-     * @Route("/get-by-user-id/{userId}")
-     * @Method({"GET"})
-     */
-    public function getByUserId($userId)
-    {
-        $user = $this->findEntityBy('User', $userId, "User not found");
-        
-        if (count($user->getClients()) === 0) {
-            throw new AppExceptions\NotFound("User has no clients", 404);
-        }
-        
-        return $this->findEntityBy('Client', $user->getClients()->first()->getId(), "Client not found");
-    }
 }
