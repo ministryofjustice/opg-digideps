@@ -15,7 +15,7 @@
         > .heading {
             @include core-19();
             color: #000000;
-            background: #ecefef;
+            background: $grey-3;
             padding: 7px 10px 5px 10px;
         }
                 
@@ -80,8 +80,8 @@
                     color: $grey-1;
                 }
                 &.done {
-                    color: $green;
-                    border-color: $green;
+                    color: $button-colour;
+                    border-color: $button-colour;
                 }
                 &.incomplete {
                     color: $orange;
