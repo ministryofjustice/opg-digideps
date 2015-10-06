@@ -73,7 +73,7 @@ class Util
      */
     public function getReport($reportId, array $groups = [ "transactions", "basic"])
     {
-        return $this->restClient->get("/report/find-by-id/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->restClient->get("/report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
