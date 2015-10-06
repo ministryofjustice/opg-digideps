@@ -30,7 +30,7 @@ class Util
      */
     public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
     {
-        $responseArray = $this->restClient->get('court-order-type/all', 'array');
+        $responseArray = $this->restClient->get('court-order-type', 'array');
 
         if (!empty($filter)) {
             foreach ($responseArray['court_order_types'] as $value) {
