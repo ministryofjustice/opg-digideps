@@ -60,7 +60,7 @@ class ReportController extends Controller
        
         if($request->getMethod() == 'POST'){
             if($form->isValid()){
-                $response = $restClient->post('report/upsert', $form->getData());
+                $response = $restClient->post('report', $form->getData());
                 return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
             }
         }
