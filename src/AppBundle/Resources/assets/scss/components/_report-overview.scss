@@ -41,6 +41,7 @@ $grey-status: #8C9295;
                 margin: 20px 10px 15px 5px;
                 width: 35%;
                 float: left;
+                color: $grey-status;
                 
                 a {
                     color: $black;
@@ -61,11 +62,15 @@ $grey-status: #8C9295;
                 float: right;
                 width: auto;
                 text-align: right;
+                text-decoration: underline;
 
                 @include media(mobile) {
                     display: none;
                 }
 
+                &.disabled {
+                    color: $grey-status;
+                }
             }
 
             .status {

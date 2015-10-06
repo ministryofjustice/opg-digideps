@@ -16,7 +16,8 @@ class OverviewTest extends WebTestCase
     private $client;
     
     private $report;
-
+    
+    private $reportStatus;
     
     private $twig;
 
@@ -39,7 +40,8 @@ class OverviewTest extends WebTestCase
         $this->setupReport();
         
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-           'report' => $this->report
+           'report' => $this->report,
+            'reportStatus' => $this->reportStatus
         ]);
         
         $crawler = new Crawler($html);
@@ -61,7 +63,8 @@ class OverviewTest extends WebTestCase
         $this->setupReport();
         
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -84,7 +87,8 @@ class OverviewTest extends WebTestCase
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -103,7 +107,8 @@ class OverviewTest extends WebTestCase
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -122,7 +127,8 @@ class OverviewTest extends WebTestCase
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -140,7 +146,142 @@ class OverviewTest extends WebTestCase
 
     }
   
-    /* Status */
+
+    public function testWhenAReportIsDueAndAllSectionsCompletedAllowSubmission() {
+
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(true)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+        
+        $submitReportLinkElement = $crawler->filter('#report-submit-section a');
+        $this->assertEquals(2, $submitReportLinkElement->count());
+    }
+    
+    public function testWhenAReportIsNotDueAndAllSectionsCompletedDontAllowSubmission() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(false)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#report-submit-section a');
+        $this->assertEquals(0, $submitReportLinkElement->count());       
+    }
+    
+    public function testWhenAReportIsDueAndAllSectionsCompletedIndicateActive() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(true)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
+        $this->assertEquals(0, $submitReportLinkElement->count());    
+    }
+    
+    public function testWhenAReportIsDueAndAllSectionsAreNotCompletedIndicateInactive() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(true)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(false)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
+        $this->assertEquals(1, $submitReportLinkElement->count());
+    }
+    
+    public function testWhenAReportIsNotDueAndAllSectionsCompletedIndicateInactive() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(false)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
+        $this->assertEquals(1, $submitReportLinkElement->count());
+    }
+    
+    public function testWhenAReportIsNotDueAndAllSectionsAreNotCompletedIndicateInactive() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(false)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(false)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
+        $this->assertEquals(1, $submitReportLinkElement->count());
+    }
+    
+    
+    
     
     
     private function setupReport() 
@@ -149,10 +290,25 @@ class OverviewTest extends WebTestCase
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getSubmitted')->andReturn(false)
             ->shouldReceive('getId')->andReturn(1)
+            ->shouldReceive('isDue')->andReturn(true)
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->getMock();
-    }   
-    
+        
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getDecisionsState')->andReturn("done")
+            ->shouldReceive('getDecisionsStatus')->andReturn("1 Decision")
+            ->shouldReceive('getContactsState')->andReturn("done")
+            ->shouldReceive('getContactsStatus')->andReturn("1 Contact")
+            ->shouldReceive('getSafeguardingState')->andReturn("done")
+            ->shouldReceive('getSafeguardingStatus')->andReturn("Complete")
+            ->shouldReceive('getAccountsState')->andReturn("done")
+            ->shouldReceive('getAccountsStatus')->andReturn("1 Account")
+            ->shouldReceive('getAssetsState')->andReturn("done")
+            ->shouldReceive('getAssetsStatus')->andReturn("1 Asset")
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
 
+    }   
     
 }

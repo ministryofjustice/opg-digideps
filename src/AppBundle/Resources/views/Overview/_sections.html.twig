@@ -29,13 +29,13 @@
     <li id="welfare-section" class="overview-section">
         <h2 class="heading">{{ 'careAndWelfare' | trans() }}</h2>
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
-        transDomain: translationDomain,
-        subSection: 'safeguarding',
-        report: report,
-        info: true,
-        guidance: true,
-        state: reportStatus.safeguardingState,
-        status: reportStatus.safeguardingStatus
+            transDomain: translationDomain,
+            subSection: 'safeguarding',
+            report: report,
+            info: true,
+            guidance: true,
+            state: reportStatus.safeguardingState,
+            status: reportStatus.safeguardingStatus
         } %}
     </li>
 
@@ -43,38 +43,52 @@
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'finances' | trans() }}</h2>
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'accounts',
-            report: report,
-            state: reportStatus.accountsState,
-            status: reportStatus.accountsStatus,
-            warning: true,
-            guidance: true
+                transDomain: translationDomain,
+                subSection: 'accounts',
+                report: report,
+                state: reportStatus.accountsState,
+                status: reportStatus.accountsStatus,
+                warning: true,
+                guidance: true
             } %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'assets',
-            report: report,
-            state: reportStatus.assetsState,
-            status: reportStatus.assetsStatus,
-            list: true,
-            guidance: true
+                transDomain: translationDomain,
+                subSection: 'assets',
+                report: report,
+                state: reportStatus.assetsState,
+                status: reportStatus.assetsStatus,
+                list: true,
+                guidance: true
             } %}
         </li>
     {% endif %}
-
-    <li id="report-submit-section" class="overview-section">
-        <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
-        {% include 'AppBundle:Overview:_subsection.html.twig' with {
-        transDomain: translationDomain,
-        subSection: 'report_add_further_info',
-        report: report,
-        guidance: false,
-        state: "not-started",
-        status: "Not started"
-        } %}
-    </li>
-
+    
+    {% if reportStatus.isReadyToSubmit and report.isDue %}
+        <li id="report-submit-section" class="overview-section">
+            <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'report_add_further_info',
+                report: report,
+                guidance: false,
+                state: "not-started",
+                status: "Not started"
+            } %}
+        </li>
+    {%  else %}
+        <li id="report-submit-section" class="overview-section inactive">
+            <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'report_add_further_info',
+                report: report,
+                guidance: false,
+                state: "not-started",
+                status: "Not started",
+                disableedit: true 
+            } %}
+        </li>
+    {%  endif %}
 </ul>
 <script>
     $( document ).ready(function() {
