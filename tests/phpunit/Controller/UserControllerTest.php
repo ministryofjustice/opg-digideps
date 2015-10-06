@@ -10,7 +10,7 @@ class UserControllerTest extends AbstractTestController
     
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
-        $return = $this->assertRequest('POST', '/user?skip-mail=1', [
+        $return = $this->assertJsonRequest('POST', '/user?skip-mail=1', [
             'data' => [
                 'firstname' => 'n',
                 'lastname' => 's',
@@ -52,7 +52,7 @@ class UserControllerTest extends AbstractTestController
         
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
-        $return = $this->assertRequest('GET', '/user/' . $id, [
+        $return = $this->assertJsonRequest('GET', '/user/' . $id, [
             'mustSucceed' => true,
             'AuthToken' => $token
         ]);
@@ -64,7 +64,7 @@ class UserControllerTest extends AbstractTestController
     {
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
-        $return = $this->assertRequest('GET', '/user/0', [
+        $return = $this->assertJsonRequest('GET', '/user/0', [
             'mustFail' => true,
             'AuthToken' => $token
         ]);
@@ -87,11 +87,11 @@ class UserControllerTest extends AbstractTestController
     public function testrecreateToken()
     {
         // assert client token
-        $this->assertRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
+        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
             'mustFail' => true,
             'assertResponseCode' => 403
         ]);
-        $this->assertRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
+        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
             'mustFail' => true,
             'assertResponseCode' => 403,
             'ClientSecret' => 'WRONG-CLIENT_SECRET'
@@ -101,11 +101,11 @@ class UserControllerTest extends AbstractTestController
     public function testregetByToken()
     {
         // assert client token 
-        $this->assertRequest('GET', '/user/get-by-token/123abcd', [
+        $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
             'assertResponseCode' => 403
         ]);
-        $this->assertRequest('GET', '/user/get-by-token/123abcd', [
+        $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
             'assertResponseCode' => 403,
             'ClientSecret' => 'WRONG-CLIENT_SECRET'

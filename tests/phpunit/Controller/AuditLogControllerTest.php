@@ -35,7 +35,7 @@ class AuditLogControllerTest extends AbstractTestController
         ];
         
         // assert deputy not allowed
-        $this->assertRequest('POST', '/audit-log', [
+        $this->assertJsonRequest('POST', '/audit-log', [
             'data' => $validData,
             'mustFail' => true,
             'AuthToken' => $this->tokenDeputy,
@@ -43,7 +43,7 @@ class AuditLogControllerTest extends AbstractTestController
         ]);
         
         // assert missing params
-        $errorMessage = $this->assertRequest('POST', '/audit-log', [
+        $errorMessage = $this->assertJsonRequest('POST', '/audit-log', [
             'data' => [],
             'mustSucceed' => false,
             'AuthToken' => $this->tokenAdmin,
@@ -54,7 +54,7 @@ class AuditLogControllerTest extends AbstractTestController
         $this->assertContains("Missing 'created_at'", $errorMessage);
         
         // assert successful POST really creates the entry
-        $return = $this->assertRequest('POST', '/audit-log', [
+        $return = $this->assertJsonRequest('POST', '/audit-log', [
             'data' => $validData,
             'mustSucceed' => true,
             'AuthToken' => $this->tokenAdmin
@@ -82,14 +82,14 @@ class AuditLogControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', '/audit-log');
         
         // assert deputy cannot access endpoint
-        $this->assertRequest('GET', '/audit-log', [
+        $this->assertJsonRequest('GET', '/audit-log', [
             'mustFail' => true,
             'AuthToken' => $this->tokenDeputy,
             'assertResponseCode' => 403
         ]);
         
         // assert endpoint returns expected data including previously created audit log entry
-        $return = $this->assertRequest('GET', '/audit-log', [
+        $return = $this->assertJsonRequest('GET', '/audit-log', [
             'mustSucceed' => true,
             'AuthToken' => $this->tokenAdmin
         ])['data'];

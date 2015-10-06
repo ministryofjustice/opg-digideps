@@ -70,7 +70,7 @@ class ClientControllerTest extends AbstractTestController
            'POST' => ['users'=> [0=>self::$deputy1->getId()]]
           ] as $method => $data
         ) {
-            $return = $this->assertRequest($method, $url, [
+            $return = $this->assertJsonRequest($method, $url, [
                 'mustSucceed'=>true,
                 'AuthToken' => self::$tokenDeputy,
                 'data'=> $data + [
@@ -124,7 +124,7 @@ class ClientControllerTest extends AbstractTestController
         $url = '/client/' . self::$client1->getId();
         
           // assert get
-        $data = $this->assertRequest('GET', $url,[
+        $data = $this->assertJsonRequest('GET', $url,[
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];

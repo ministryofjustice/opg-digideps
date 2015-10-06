@@ -49,30 +49,8 @@ class ReportController extends RestController
         return [ 'report' => $report->getId()];
     }
 
-
     /**
-     * deprecated. only kept as a useful test for written for it.
-     * move the test to the repository method, then delete this
-     * @Route("/report/clone")
-     * @Method({"POST"})
-     */
-    public function cloneAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
-        $reportData = $this->deserializeBodyContent($request);
-
-        $report = $this->findEntityBy('Report', $reportData['id']);
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-
-        $newReport = $this->getRepository('Report')->createNextYearReport($report);
-
-        return [ 'report' => $newReport->getId()];
-    }
-
-
-    /**
-     * @Route("/report/find-by-id/{id}")
+     * @Route("/report/{id}")
      * @Method({"GET"})
      * 
      * @param integer $id
@@ -93,7 +71,7 @@ class ReportController extends RestController
 
 
     /**
-     * @Route("/report/{id}/user/{userId}/submit")
+     * @Route("/report/{id}/submit")
      * @Method({"PUT"})
      */
     public function submit(Request $request, $id)
@@ -132,10 +110,6 @@ class ReportController extends RestController
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-
-    /**
-     * @Route("/report/{reportId}/formatted")
-     */
     public function formattedAction($reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);

@@ -58,7 +58,7 @@ class AccountControllerTest extends AbstractTestController
     public function testgetAccounts()
     {
         // assert data is retrieved
-        $data = $this->assertRequest('GET', '/report/get-accounts/' . self::$report1->getId(), [
+        $data = $this->assertJsonRequest('GET', '/report/get-accounts/' . self::$report1->getId(), [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -74,7 +74,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('POST', $url); 
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
         
-        $return = $this->assertRequest('POST', $url, [
+        $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data'=> [
@@ -111,7 +111,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
         
         // assert get
-        $data = $this->assertRequest('GET', $url,[
+        $data = $this->assertJsonRequest('GET', $url,[
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -139,7 +139,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin); 
         
         // assert put
-        $data = $this->assertRequest('PUT', $url,[
+        $data = $this->assertJsonRequest('PUT', $url,[
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
@@ -174,7 +174,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy); 
         
         // assert delete
-        $this->assertRequest('DELETE', $url,[
+        $this->assertJsonRequest('DELETE', $url,[
             'mustSucceed'=>true,
             'AuthToken' =>self::$tokenDeputy,
         ]);

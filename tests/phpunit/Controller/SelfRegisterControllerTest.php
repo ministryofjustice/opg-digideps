@@ -75,7 +75,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @test */
     public function failsWhenMissingData()
     {
-        $this->assertRequest('POST', '/selfregister', [
+        $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
             'data' => [
                 'firstname' => 'Zac',
@@ -92,7 +92,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
-        $this->assertRequest('POST', '/selfregister', [
+        $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
             'AuthToken' => $token,
             'data' => [
@@ -116,7 +116,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     public function savesValidUserToDb()
     {
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        $responseArray = $this->assertRequest('POST', '/selfregister', [
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
             'AuthToken' => $token,
             'data' => [
@@ -160,7 +160,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ];
         
         // 1st one succeed
-        $this->assertRequest('POST', '/selfregister', [
+        $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
             'AuthToken' => $token,
             'data' => $data,
@@ -168,7 +168,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
         
         //2nd fail (duplicate)
-        $this->assertRequest('POST', '/selfregister', [
+        $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
             'AuthToken' => $token,
             'data' => $data,

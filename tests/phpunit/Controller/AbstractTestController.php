@@ -52,11 +52,19 @@ abstract class AbstractTestController extends WebTestCase
     }
     
     /**
+     * @return Client
+     */
+    public function getClient()
+    {
+        return self::$frameworkBundleClient;
+    }
+    
+    /**
      * 
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
      * @return type
      */
-    public function assertRequest($method, $uri, array $options = [])
+    public function assertJsonRequest($method, $uri, array $options = [])
     {
         $headers = ['CONTENT_TYPE' => 'application/json'];
         if (isset($options['AuthToken'])) {
@@ -106,7 +114,7 @@ abstract class AbstractTestController extends WebTestCase
      */
     public function login($email, $password, $clientSecret)
     {
-        $responseArray = $this->assertRequest('POST', '/auth/login', [
+        $responseArray = $this->assertJsonRequest('POST', '/auth/login', [
             'mustSucceed' => true,
             'ClientSecret' => $clientSecret,
             'data' => [
@@ -133,7 +141,7 @@ abstract class AbstractTestController extends WebTestCase
     
     protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
     {
-        $response = $this->assertRequest($method, $uri, [
+        $response = $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
             'AuthToken' => $authToken,
             'assertResponseCode' => 419
@@ -144,7 +152,7 @@ abstract class AbstractTestController extends WebTestCase
     
     protected function assertEndpointNotAllowedFor($method, $uri, $token, $data = [])
     {
-        $this->assertRequest($method, $uri, [
+        $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
             'data' => $data,
             'AuthToken' => $token,
