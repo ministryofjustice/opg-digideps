@@ -200,7 +200,7 @@ class ReportController extends Controller
         if ($form->isValid()) {
             
             $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-            $restClient->post('/feedback', $form->getData());
+            $restClient->post('feedback', $form->getData());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }

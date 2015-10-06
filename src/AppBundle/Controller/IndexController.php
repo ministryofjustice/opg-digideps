@@ -173,7 +173,7 @@ class IndexController extends Controller
                 
                 $restClient = $this->get('restClient'); /* @var $restClient RestClient */
                 
-                $restClient->post('/feedback', $form->getData());
+                $restClient->post('feedback', $form->getData());
                 
                 return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
             }

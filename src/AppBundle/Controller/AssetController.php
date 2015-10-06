@@ -73,7 +73,7 @@ class AssetController extends Controller
         if ($form->isValid()) {
             $asset = $form->getData();
             $asset->setReport($reportId);
-            $this->get('restClient')->post('report/upsert-asset', $asset);
+            $this->get('restClient')->post('report/asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -101,7 +101,7 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('restClient')->get('report/get-asset/' . $assetId, 'Asset');
+        $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         $form->handleRequest($request);
@@ -109,7 +109,7 @@ class AssetController extends Controller
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('restClient')->put('report/upsert-asset', $asset);
+            $this->get('restClient')->put('report/asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -144,12 +144,12 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('restClient')->get('report/get-asset/' . $assetId, 'Asset');
+        $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         // handle delete
         if ($confirmed) {
-            $this->get('restClient')->delete('report/delete-asset/' . $assetId);
+            $this->get('restClient')->delete('report/asset/' . $assetId);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -207,7 +207,7 @@ class AssetController extends Controller
     {
         $report = $this->get('util')->getReport($reportId);
 
-        $assets = $this->get('restClient')->get('report/get-assets/' . $reportId, 'Asset[]');
+        $assets = $this->get('restClient')->get('report/' . $reportId . '/assets', 'Asset[]');
 
         return [
             'report' => $report,

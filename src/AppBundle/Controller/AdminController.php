@@ -36,7 +36,7 @@ class AdminController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $restClient->post('/user', $form->getData(), [
+                $response = $restClient->post('user', $form->getData(), [
                     'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
                 ]);
                 $user = $restClient->get('user/' . $response['id'], 'User');

@@ -54,7 +54,7 @@ class DeputyProvider implements UserProviderInterface
      */
     public function loadUserByUsername($id) 
     {
-        return $this->restClient->get('/user/'.$id, 'User');
+        return $this->restClient->get('user/'.$id, 'User');
     }
     
     
