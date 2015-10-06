@@ -12,7 +12,7 @@ forgotPassword: Forgotten your password?
 sessionTimeoutOutWarning: Sorry, your session has timed out either due to inactivity or because you have signed in on another browser. Please sign in again.
 manualLogout:
   title: You are now signed out
-  thankYou: Thank you for using the Complete a deputy report service.
+  thankYou: Thank you for using the Complete the deputy report service.
   startAgain: Sign in to get started again.
 
 #_security:
