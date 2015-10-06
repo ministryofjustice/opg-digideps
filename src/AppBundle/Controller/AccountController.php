@@ -60,8 +60,7 @@ class AccountController extends RestController
         
         $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
-        $this->getEntityManager()->persist($account);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($account);
         
         return [ 'id' => $account->getId() ];
     }

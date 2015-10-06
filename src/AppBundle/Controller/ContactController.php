@@ -7,14 +7,16 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
-
+/**
+ * @Route("/report")
+ */
 class ContactController extends RestController
 {
      /**
-     * @Route("/report/get-contact/{id}")
+     * @Route("/contact/{id}")
      * @Method({"GET"})
      */
-    public function getContactAction(Request $request, $id)
+    public function getOneById(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
@@ -29,10 +31,10 @@ class ContactController extends RestController
     
     /**
      * 
-     * @Route("report/delete-contact/{id}")
+     * @Route("/contact/{id}")
      * @Method({"DELETE"})
      */
-    public function deleteContactAction($id)
+    public function deleteContact($id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
@@ -46,49 +48,63 @@ class ContactController extends RestController
     }
     
      /**
-     * @Route("/report/upsert-contact")
+     * @Route("/contact")
      * @Method({"POST", "PUT"})
      **/
-    public function upsertContactAction(Request $request)
+    public function upsertContact(Request $request)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
         $contactData = $this->deserializeBodyContent($request);
-       
-        $report = $this->findEntityBy('Report',$contactData['report']);
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         if($request->getMethod() == "POST"){
+            $this->validateArray($contactData, [
+                'report' => 'mustExist'
+            ]);
+            $report = $this->findEntityBy('Report',$contactData['report']);
+            $this->denyAccessIfReportDoesNotBelongToUser($report);
             $contact = new EntityDir\Contact();
             $contact->setReport($report);
         }else{
+            $this->validateArray($contactData, [
+                'report' => 'id'
+            ]);
             $contact = $this->findEntityBy('Contact', $contactData['id']);
-            
-            if(empty($contact)){
-                throw new AppExceptions\NotFound("Contact with id: ".$contactData['id'], 404);
-            }
+            $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         }
-        $contact->setContactName($contactData['contact_name']);
-        $contact->setAddress($contactData['address']);
-        $contact->setAddress2($contactData['address2']);
-        $contact->setCounty($contactData['county']);
-        $contact->setPostcode($contactData['postcode']);
-        $contact->setCountry($contactData['country']);
-        $contact->setExplanation($contactData['explanation']);
-        $contact->setRelationship($contactData['relationship']);
-        $contact->setLastedit(new \DateTime());
-        $this->getEntityManager()->persist($contact);
-        $this->getEntityManager()->flush();
+        
+        $this->validateArray($contactData, [
+            'contact_name' => 'mustExist', 
+            'address' => 'mustExist', 
+            'address2' => 'mustExist', 
+            'county' => 'mustExist', 
+            'postcode' => 'mustExist', 
+            'country' => 'mustExist', 
+            'explanation' => 'mustExist', 
+            'relationship' => 'mustExist', 
+        ]);
+        
+        $contact->setContactName($contactData['contact_name'])
+            ->setAddress($contactData['address'])
+            ->setAddress2($contactData['address2'])
+            ->setCounty($contactData['county'])
+            ->setPostcode($contactData['postcode'])
+            ->setCountry($contactData['country'])
+            ->setExplanation($contactData['explanation'])
+            ->setRelationship($contactData['relationship'])
+            ->setLastedit(new \DateTime());
+        
+        $this->persistAndFlush($contact);
         
         return [ 'id' => $contact->getId() ];
     }
     
      
     /**
-     * @Route("/report/get-contacts/{id}")
+     * @Route("/{id}/contacts")
      * @Method({"GET"})
      */
-    public function getContactsAction($id)
+    public function getContacts($id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         

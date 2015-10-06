@@ -97,6 +97,42 @@ class Fixtures
         return $ret;
     }
     
+    
+    /**
+     * @return EntityDir\Contact
+     */
+    public function createContact(EntityDir\Report $report, array $settersMap = [])
+    {
+        $contact = new EntityDir\Contact();
+        $contact->setReport($report);
+        $contact->setAddress('address'.time());
+        
+        foreach ($settersMap as $k=>$v) {
+            $contact->$k($v);
+        }
+        $this->em->persist($contact);
+        
+        return $contact;
+    }
+    
+     /**
+     * @return EntityDir\Asset
+     */
+    public function createAsset(EntityDir\Report $report, array $settersMap = [])
+    {
+        $asset = new EntityDir\Asset();
+        $asset->setReport($report);
+        $asset->setTitle('title'.time());
+        
+        foreach ($settersMap as $k=>$v) {
+            $asset->$k($v);
+        }
+        $this->em->persist($asset);
+        
+        return $asset;
+    }
+    
+    
     public function flush()
     {
         $args = func_get_args();

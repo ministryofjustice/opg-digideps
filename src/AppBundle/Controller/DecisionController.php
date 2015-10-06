@@ -35,8 +35,7 @@ class DecisionController extends RestController
             'client_involved_details' => 'setClientInvolvedDetails',
         ]);
 
-        $this->getEntityManager()->persist($decision);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($decision);
 
         return ['id' => $decision->getId() ];
     }

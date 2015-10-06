@@ -33,7 +33,7 @@ abstract class RestController extends Controller
      * 
      * @throws \InvalidArgumentException
      */
-    private function validateArray($data, array $assertions = [])
+    protected function validateArray($data, array $assertions = [])
     {
         $errors = [];
         
@@ -166,6 +166,12 @@ abstract class RestController extends Controller
         if (!in_array($this->getUser()->getId(), $client->getUserIds())) {
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
+    }
+    
+    protected function persistAndFlush($e)
+    {
+        $this->getEntityManager()->persist($e);
+        $this->getEntityManager()->flush($e);
     }
     
 

@@ -10,9 +10,8 @@ class AccountControllerTest extends AbstractTestController
     private static $deputy2;
     private static $report2;
     private static $account2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-    private static $repo;
+    private static $tokenAdmin = null;
+    private static $tokenDeputy = null;
     
     public static function setUpBeforeClass()
     {
@@ -38,8 +37,10 @@ class AccountControllerTest extends AbstractTestController
     
     public function setUp()
     {
-        self::$tokenAdmin = $this->loginAsAdmin();
-        self::$tokenDeputy = $this->loginAsDeputy();
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
     
     public function testgetAccountsAuth()

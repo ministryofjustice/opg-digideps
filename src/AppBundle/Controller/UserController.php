@@ -45,10 +45,7 @@ class UserController extends RestController
             $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
         }
         
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush($user);
-        
-         //TODO return status code
+        $this->persistAndFlush($user);
         
         return ['id'=>$user->getId()];
     }

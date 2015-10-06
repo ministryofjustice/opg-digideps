@@ -10,18 +10,16 @@ class ClientControllerTest extends AbstractTestController
     private static $deputy2;
     private static $client2;
     private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static $tokenAdmin = null;
+    private static $tokenDeputy = null;
     
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
         
+        // deputy 1 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
-        
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname'=>'c1']);
-        self::fixtures()->flush();
-        
         self::$report1 = self::fixtures()->createReport(self::$client1);
         
         // deputy 2
@@ -34,10 +32,10 @@ class ClientControllerTest extends AbstractTestController
     
     public function setUp()
     {
-        #if (null === self::$tokenAdmin) {
-        self::$tokenAdmin = $this->loginAsAdmin();
-        self::$tokenDeputy = $this->loginAsDeputy();
-        #}
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
     
     public function testupsertAuth()
@@ -61,43 +59,59 @@ class ClientControllerTest extends AbstractTestController
         ]); 
     }
     
-    public function testupsert()
+    private $updateData = [
+        'firstname' => 'Firstname', 
+        'lastname' => 'Lastname', 
+        'case_number' => 'CaseNumber', 
+        'allowed_court_order_types' => [], 
+        'address' => 'Address', 
+        'address2' => 'Address2', 
+        'postcode' => 'Postcode', 
+        'country' => 'Country', 
+        'county' => 'County', 
+        'phone' => 'Phone',
+        'court_date' => '2015-12-31'
+    ];
+    
+    public function testupsertPost()
     {
         $url = '/client/upsert';
         
-        foreach([
-           'PUT'  => ['id'=>self::$client1->getId()],
-           'POST' => ['users'=> [0=>self::$deputy1->getId()]]
-          ] as $method => $data
-        ) {
-            $return = $this->assertJsonRequest($method, $url, [
-                'mustSucceed'=>true,
-                'AuthToken' => self::$tokenDeputy,
-                'data'=> $data + [
-                    'firstname' => 'Firstname', 
-                    'lastname' => 'Lastname', 
-                    'case_number' => 'CaseNumber', 
-                    'allowed_court_order_types' => [], 
-                    'address' => 'Address', 
-                    'address2' => 'Address2', 
-                    'postcode' => 'Postcode', 
-                    'country' => 'Country', 
-                    'county' => 'County', 
-                    'phone' => 'Phone',
-                    'court_date' => '2015-12-31'
-                ]
-            ]);
-            $this->assertTrue($return['data']['id'] > 0);
+        $return = $this->assertJsonRequest('POST', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+            'data'=> ['users'=> [0=>self::$deputy1->getId()]] + $this->updateData
+        ]);
+        $this->assertTrue($return['data']['id'] > 0);
 
-            self::fixtures()->clear();
+        self::fixtures()->clear();
 
-            // assert account created with transactions
-            $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
-            $this->assertEquals('Firstname', $client->getFirstname());
-            $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
-            // TODO assert other fields
+        // assert account created with transactions
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
+        $this->assertEquals('Firstname', $client->getFirstname());
+        $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
+        // TODO assert other fields
+    }
+    
+    public function testupsertPut()
+    {
+        $url = '/client/upsert';
+        
+        $return = $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+            'data'=> ['id'=>self::$client1->getId()] + $this->updateData
+        ]);
+        $this->assertTrue($return['data']['id'] > 0);
 
-        }
+        self::fixtures()->clear();
+
+        // assert account created with transactions
+        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client \AppBundle\Entity\Client */
+        $this->assertEquals('Firstname', $client->getFirstname());
+        $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
+        // TODO assert other fields
+
     }
     
     
@@ -117,7 +131,8 @@ class ClientControllerTest extends AbstractTestController
     }
     
     /**
-     * @depends testupsert
+     * @depends testupsertPost
+     * @depends testupsertPut
      */
     public function testfindById()
     {

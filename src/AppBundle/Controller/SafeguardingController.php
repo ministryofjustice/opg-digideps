@@ -45,8 +45,8 @@ class SafeguardingController extends RestController
 
     public function persistEntity($safeguarding)
     {
-        $this->getEntityManager()->persist($safeguarding);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($safeguarding);
+        
         return ['id' => $safeguarding->getId()];
     }
 

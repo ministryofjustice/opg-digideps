@@ -42,9 +42,7 @@ class ReportController extends RestController
         $report->setEndDate(new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
-        // persist
-        $this->getEntityManager()->persist($report);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($report);
 
         return [ 'report' => $report->getId()];
     }

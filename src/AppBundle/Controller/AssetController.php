@@ -104,8 +104,8 @@ class AssetController extends RestController
         
         $asset->setValuationDate($valuationDate);
         $asset->setLastedit(new \DateTime());
-        $this->getEntityManager()->persist($asset);
-        $this->getEntityManager()->flush();
+        
+        $this->persistAndFlush($asset);
         
         return [ 'id' => $asset->getId() ];
     }

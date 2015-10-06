@@ -48,8 +48,7 @@ class AuditLogController extends RestController
            $auditLogEntry->setUserEdited($this->findEntityBy('User', $data['user_edited']['id']));
         }
 
-        $this->getEntityManager()->persist($auditLogEntry);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($auditLogEntry);
 
         return $auditLogEntry;
     }

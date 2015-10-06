@@ -13,8 +13,8 @@ class ReportControllerTest extends AbstractTestController
     private static $deputy2;
     private static $client2;
     private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static $tokenAdmin = null;
+    private static $tokenDeputy = null;
 
 
     public static function setUpBeforeClass()
@@ -39,10 +39,10 @@ class ReportControllerTest extends AbstractTestController
 
     public function setUp()
     {
-        #if (null === self::$tokenAdmin) {
-        self::$tokenAdmin = $this->loginAsAdmin();
-        self::$tokenDeputy = $this->loginAsDeputy();
-        #}
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
 
 
@@ -66,36 +66,48 @@ class ReportControllerTest extends AbstractTestController
         ]);
     }
 
-
-    public function testAdd()
-    {
-        $url = '/report';
-        
-        $rows = [
-            ['client' => self::$client1->getId()],
-            ['id' => self::$report1->getId()],
-        ];
-        $fixedData = [
+    private $fixedData = [
             'court_order_type' => 1,
             'start_date' => '2015-01-01',
             'end_date' => '2015-12-31',
         ];
+
+    public function testAddPost()
+    {
+        $url = '/report';
         
-        foreach ($rows as $data) {
-            $reportId = $this->assertJsonRequest('POST', $url, [
-                    'mustSucceed' => true,
-                    'AuthToken' => self::$tokenDeputy,
-                    'data' => $data + $fixedData
-            ])['data']['report'];
+        $reportId = $this->assertJsonRequest('POST', $url, [
+                'mustSucceed' => true,
+                'AuthToken' => self::$tokenDeputy,
+                'data' => ['client' => self::$client1->getId()] + $this->fixedData
+        ])['data']['report'];
 
-            self::fixtures()->clear();
+        self::fixtures()->clear();
 
-            // assert account created with transactions
-            $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
-            $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
-            $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
-            $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
-        }
+        // assert account created with transactions
+        $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
+        $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
+    }
+    
+    public function testAddPut()
+    {
+        $url = '/report';
+        
+        $reportId = $this->assertJsonRequest('POST', $url, [
+                'mustSucceed' => true,
+                'AuthToken' => self::$tokenDeputy,
+                'data' => ['id' => self::$report1->getId()] + $this->fixedData
+        ])['data']['report'];
+
+        self::fixtures()->clear();
+
+        // assert account created with transactions
+        $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
+        $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
+        $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
     }
 
 
@@ -117,7 +129,8 @@ class ReportControllerTest extends AbstractTestController
 
 
     /**
-     * @depends testAdd
+     * @depends testAddPost
+     * @depends testAddPut
      */
     public function testfindById()
     {

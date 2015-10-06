@@ -54,8 +54,7 @@ class ClientController extends RestController
         ]);
         $client->setCourtDate(new \DateTime($data['court_date']));
         
-        $this->getEntityManager()->persist($client);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($client);
         
         return ['id' => $client->getId() ];
     }
