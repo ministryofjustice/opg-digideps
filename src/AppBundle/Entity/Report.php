@@ -156,7 +156,7 @@ class Report
      * @var boolean
      * @JMS\Type("boolean")
      * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false})
+     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
     
@@ -217,7 +217,7 @@ class Report
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->noAssetToAdd = false;
+        $this->noAssetToAdd = null;
         $this->reportSeen = true;
     }
     

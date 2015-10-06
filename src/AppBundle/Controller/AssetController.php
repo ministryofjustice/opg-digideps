@@ -44,8 +44,9 @@ class AssetController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
         $asset = $this->findEntityBy('Asset', $id, 'Asset not found');
-        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
-        
+        $report = $asset->getReport();
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+            
         $this->getEntityManager()->remove($asset);
         $this->getEntityManager()->flush();
         
