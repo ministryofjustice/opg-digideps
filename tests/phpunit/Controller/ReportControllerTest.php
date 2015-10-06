@@ -42,17 +42,17 @@ class ReportControllerTest extends AbstractTestController
         #}
     }
     
-    public function testupsertAuth()
+    public function testAddAuth()
     {
-        $url = '/report/upsert';
+        $url = '/report';
         $this->assertEndpointNeedsAuth('POST', $url); 
         
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
     }
     
-    public function testupsertAcl()
+    public function testAddAcl()
     {
-        $url = '/report/upsert';
+        $url = '/report';
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
             'id'=> self::$report2->getId()
         ]); 
@@ -61,9 +61,9 @@ class ReportControllerTest extends AbstractTestController
         ]); 
     }
     
-    public function testupsert()
+    public function testAdd()
     {
-       $url = '/report/upsert';
+       $url = '/report';
         
        foreach([
            ['client' => self::$client1->getId()],
@@ -107,7 +107,7 @@ class ReportControllerTest extends AbstractTestController
     }
     
     /**
-     * @depends testupsert
+     * @depends testAdd
      */
     public function testfindById()
     {
