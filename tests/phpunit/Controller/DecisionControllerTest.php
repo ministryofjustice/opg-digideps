@@ -35,6 +35,16 @@ class DecisionControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
     }
+    
+    /**
+     * clear fixtures 
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        
+        self::fixtures()->clear();
+    }
 
     private $dataUpdate = [
         'description' => 'description-changed',

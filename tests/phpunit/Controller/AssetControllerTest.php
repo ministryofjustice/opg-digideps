@@ -34,7 +34,15 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-   
+    /**
+     * clear fixtures 
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        
+        self::fixtures()->clear();
+    }
 
     public function setUp()
     {

@@ -36,6 +36,16 @@ class SafeguardingControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
+    /**
+     * clear fixtures 
+     */
+    public static function tearDownAfterClass()
+    {
+        parent::tearDownAfterClass();
+        
+        self::fixtures()->clear();
+    }
+    
     private $dataUpdate = [
         'do_you_live_with_client' => 'y-m',
         'how_often_do_you_visit' => 'ho-m',
@@ -59,7 +69,9 @@ class SafeguardingControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-
+    /**
+     * @depends testgetOneByIdAuth
+     */
     public function testgetOneByIdAcl()
     {
         $url2 = '/report/safeguarding/' . self::$safeguarding2->getId();
@@ -67,6 +79,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testgetOneByIdAcl
+     */
     public function testgetOneById()
     {
         $url = '/report/safeguarding/' . self::$safeguarding1->getId();
@@ -82,6 +97,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testgetOneById
+     */
     public function testgetSafeguardingsAuth()
     {
         $url = '/report/' . self::$report1->getId() . '/safeguardings';
@@ -91,6 +109,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testgetSafeguardingsAuth
+     */
     public function testgetSafeguardingsAcl()
     {
         $url2 = '/report/' . self::$report2->getId() . '/safeguardings';
@@ -99,6 +120,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testgetSafeguardingsAcl
+     */
     public function testgetSafeguardings()
     {
         $url = '/report/' . self::$report1->getId() . '/safeguardings';
@@ -115,6 +139,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testgetSafeguardings
+     */
     public function testAddUpdateAuth()
     {
         $url = '/report/safeguarding';
@@ -126,12 +153,12 @@ class SafeguardingControllerTest extends AbstractTestController
 
 
     /**
-     * @depends testgetSafeguardings
+     * @depends testAddUpdateAuth
      */
     public function testAddUpdateAcl()
     {
         $url2post = '/report/safeguarding';
-        $url2put = '/report/safeguarding/' . self::$report2->getId();
+        $url2put = '/report/safeguarding/' . self::$safeguarding2->getId();
 
         $this->assertEndpointNotAllowedFor('POST', $url2post, self::$tokenDeputy, [
             'report' => ['id' => self::$report2->getId()]
@@ -140,6 +167,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testAddUpdateAcl
+     */
     public function testUpdate()
     {
         $url = '/report/safeguarding/' . self::$safeguarding1->getId();
@@ -160,6 +190,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testAddUpdateAcl
+     */
     public function testDeleteSafeguardingAuth()
     {
         $url = '/report/safeguarding/' . self::$safeguarding1->getId();
@@ -169,6 +202,9 @@ class SafeguardingControllerTest extends AbstractTestController
     }
 
 
+    /**
+     * @depends testDeleteSafeguardingAuth
+     */
     public function testDeleteSafeguardingAcl()
     {
         $url2 = '/report/safeguarding/' . self::$safeguarding2->getId();
@@ -180,7 +216,7 @@ class SafeguardingControllerTest extends AbstractTestController
     /**
      * Run this last to avoid corrupting the data
      * 
-     * @depends testgetSafeguardings
+     * @depends testDeleteSafeguardingAcl
      */
     public function testDeleteSafeguarding()
     {
