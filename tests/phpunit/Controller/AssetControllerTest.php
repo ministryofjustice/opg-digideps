@@ -198,15 +198,15 @@ class AssetControllerTest extends AbstractTestController
     {
         $url = '/report/asset/' . self::$asset1->getId();
         
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+        $this->assertEndpointNeedsAuth('DELETE', $url);
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
     
     public function testDeleteAssetAcl()
     {
         $url2 = '/report/asset/' . self::$asset2->getId();
         
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
     
     

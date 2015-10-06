@@ -132,6 +132,23 @@ class Fixtures
         return $asset;
     }
     
+     /**
+     * @return EntityDir\Decision
+     */
+    public function createDecision(EntityDir\Report $report, array $settersMap = [])
+    {
+        $recision = new EntityDir\Decision();
+        $recision->setReport($report);
+        $recision->setClientInvolvedBoolean(true);
+        $recision->setDescription('description'.time());
+        
+        foreach ($settersMap as $k=>$v) {
+            $recision->$k($v);
+        }
+        $this->em->persist($recision);
+        
+        return $recision;
+    }
     
     public function flush()
     {

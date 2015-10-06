@@ -204,15 +204,15 @@ class ContactControllerTest extends AbstractTestController
     {
         $url = '/report/contact/' . self::$contact1->getId();
         
-        $this->assertEndpointNeedsAuth('GET', $url);
-        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+        $this->assertEndpointNeedsAuth('DELETE', $url);
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
     
     public function testDeleteContactAcl()
     {
         $url2 = '/report/contact/' . self::$contact2->getId();
         
-        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
     
     
