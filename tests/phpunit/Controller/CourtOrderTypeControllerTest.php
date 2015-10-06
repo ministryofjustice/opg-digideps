@@ -6,13 +6,6 @@ class CourtOrderTypeControllerTest extends AbstractTestController
 {
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-    
-    public static function setUpBeforeClass()
-    {
-        parent::setUpBeforeClass();
-
-        self::fixtures()->flush()->clear();
-    }
 
     public function setUp()
     {
@@ -24,14 +17,14 @@ class CourtOrderTypeControllerTest extends AbstractTestController
     
     public function testgetAllCourtOrderTypeActionAuth()
     {
-        $url = '/court-order-type/all';
+        $url = '/court-order-type';
         
         $this->assertEndpointNeedsAuth('GET', $url);
     }
     
     public function testgetAllCourtOrderTypeAction()
     {
-        $url = '/court-order-type/all';
+        $url = '/court-order-type';
         
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [

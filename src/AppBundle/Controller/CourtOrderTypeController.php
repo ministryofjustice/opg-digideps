@@ -14,7 +14,8 @@ use AppBundle\Entity as EntityDir;
 class CourtOrderTypeController extends RestController
 {
     /**
-     * @Route("/all")
+     * @Route("")
+     * @Method({"GET"})
      */
     public function getAllCourtOrderTypeAction()
     {
