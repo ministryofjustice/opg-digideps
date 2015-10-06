@@ -46,7 +46,9 @@ class AssetController extends RestController
         $asset = $this->findEntityBy('Asset', $id, 'Asset not found');
         $report = $asset->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-            
+        // reset asset choice
+        $report->setNoAssetToAdd(null);
+        
         $this->getEntityManager()->remove($asset);
         $this->getEntityManager()->flush();
         

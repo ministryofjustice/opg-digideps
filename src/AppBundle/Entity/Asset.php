@@ -202,7 +202,8 @@ class Asset
     {
         $this->report = $report;
         
-        $report->setNoAssetToAdd(false);
+        // reset choice
+        $report->setNoAssetToAdd(null);
         
         return $this;
     }
