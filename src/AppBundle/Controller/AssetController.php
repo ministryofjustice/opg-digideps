@@ -7,12 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
-
+/**
+ * @Route("/report")
+ */
 class AssetController extends RestController
 {
     /**
-     * 
-     * @Route("/report/get-assets/{id}")
+     * @Route("/{id}/assets")
      * @Method({"GET"})
      */
     public function getAssetsAction($id)
@@ -33,10 +34,10 @@ class AssetController extends RestController
     
     
     /**
-     * @Route("report/delete-asset/{id}")
+     * @Route("/asset/{id}")
      * @Method({"DELETE"})
      * 
-     * @param type $id
+     * @param integer $id
      */
     public function deleteAssetAction($id)
     { 
@@ -53,12 +54,12 @@ class AssetController extends RestController
     
     
      /**
-     * @Route("/report/get-asset/{id}")
+     * @Route("/asset/{id}")
      * @Method({"GET"})
      * 
      * @param integer $id
      */
-    public function getAssetAction($id)
+    public function getOneAsse($id)
     { 
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
@@ -69,10 +70,10 @@ class AssetController extends RestController
     }
     
     /**
-     * @Route("/report/upsert-asset")
+     * @Route("/asset")
      * @Method({"POST", "PUT"})
      */
-    public function upsertAssetAction(Request $request)
+    public function upsertAsset(Request $request)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
