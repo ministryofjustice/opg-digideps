@@ -3,7 +3,6 @@
 
 
 <header class="page-report-header page-header group">
-
     <div class="page-header-titles">
         <h1 class="heading-large report-title">{{ report.period }} {{ 'report.header.report' | trans }}
             <div class="heading-large client-name">{{ client.fullname }}</div>
@@ -11,41 +10,5 @@
         {% for flashMessage in app.session.flashbag.get('news') %}
             <p class="flash-news flash">{{ flashMessage |trans({}, translationDomain)|raw }}</p>
         {% endfor %}
-    </div>
-    <div class="page-header-meta-data">
-        <div class="report-meta-data" id="report-meta-data" data-id="{{ report.id }}">
-            <div class="report-meta report-meta__label">{{ 'report.header.reportingPeriod' | trans }}</div>
-            <span class="report-meta report-meta__data">{{ report.startDate | date("d F Y") }}
-                {{ 'report.header.to' | trans }} {{ report.endDate | date("d F Y") }}</span>
-        </div>
-        {% if not report.isDue() %}
-            <div class="report-meta-data">
-                <span class="report-meta report-meta__label">{{ "report.header.dueDate" | trans }}</span>
-                <span class="report-meta report-meta__data">{{ report.dueDate | date("d F Y") }}</span>
-            </div>
-
-            <div class="report-meta-data">
-                <div class="report-meta report-meta__label report_submission_period">{{ "report.header.submissionPeriod" | trans }}</div>
-                <span class="report-meta report-meta__data"> {{ report.endDate | date("d F Y") }} {{ 'report.header.and' | trans }} {{ report.dueDate | date("d F Y") }}</span>
-            </div>
-        {% else %}
-            {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionWarning: '
-            <span class="report-meta report-meta__label">' ~ ("report.header.dueDate" | trans) ~ '</span>
-            <span class="report-meta report-meta__data report-meta__data--bold">' ~ (report.dueDate | date("d F Y")) ~ '</span>',
-            iconClass: 'icon icon__notification'
-            } %}
-        {% endif %}
-
-        {% if app.request.attributes.get('_route') in ['report_declaration', 'report_add_further_info'] %}
-            <a href="{{ path('report_overview', {reportId: report.id}) }}"
-               class="report-go-back-link behat-link-report-preview-go-back">
-                {{ 'page.goBackLink' | trans({}, 'report-declaration') }}
-            </a>
-
-        {% elseif report.isDue() and report_form_submit is defined %}
-             {% include 'AppBundle:Components/PageHeader:_report-submit-form.html.twig' %}
-        {% endif %}
     </div>
 </header>

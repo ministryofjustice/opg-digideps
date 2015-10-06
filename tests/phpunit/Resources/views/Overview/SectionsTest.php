@@ -279,8 +279,95 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
-    
-    
+
+
+    public function testShowSubmitWarningIsNotDueButReady() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(false)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
+        $this->assertEquals(1, $submitReportLinkElement->count());
+    }
+
+    public function testShowSubmitWarningIsDueButNotReady() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(true)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(false)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
+        $this->assertEquals(1, $submitReportLinkElement->count());
+    }
+
+    public function testShowSubmitWarningIsNotDueAndNotReady() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(false)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(false)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
+        $this->assertEquals(1, $submitReportLinkElement->count());
+    }
+
+    public function testDontShowSubmitWarningIsDueAndReady() {
+        $this->report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isDue')->andReturn(true)
+            ->getMock();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('isReadyToSubmit')->andReturn(true)
+            ->getMock();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
+        $this->assertEquals(0, $submitReportLinkElement->count());
+    }
     
     
     

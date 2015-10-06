@@ -1,5 +1,5 @@
 <!--Component: Page/page-section-warning-->
-<div class="page-section-warning">
+<div class="page-section-warning" {% if id is defined %}id="{{ id }}{% endif %}">
     {% if iconClass is defined %}
         <span class="{{ iconClass }}"></span>
     {% endif %}

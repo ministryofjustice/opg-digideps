@@ -90,6 +90,16 @@
         </li>
     {%  endif %}
 </ul>
+
+{% if reportStatus.isReadyToSubmit == false or report.isDue == false %}
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'submitWhenReady',
+        iconClass: 'icon icon__notification',
+        id: 'cannot-submit-warning'
+    } %}
+{% endif %}
+
 <script>
     $( document ).ready(function() {
         $('.sub-section').each(function(index,element) {
