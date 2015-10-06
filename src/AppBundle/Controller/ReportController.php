@@ -58,12 +58,11 @@ class ReportController extends Controller
                                   [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
         $form->handleRequest($request);
        
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $response = $restClient->post('report', $form->getData());
-                return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
-            }
+        if($form->isValid()){
+            $response = $restClient->post('report', $form->getData());
+            return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
         }
+
         return [ 'form' => $form->createView() ];
     }
     
@@ -248,7 +247,7 @@ class ReportController extends Controller
         $report = $util->getReport($reportId);
         $client = $util->getClient($report->getClient());
         
-        $contacts = $restClient->get('report/get-contacts/' . $reportId, 'Contact[]');
+        $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
         $decisions = $restClient->get('decision/find-by-report-id/' . $reportId, 'Decision[]');
         
         return [

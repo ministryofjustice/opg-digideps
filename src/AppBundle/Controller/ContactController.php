@@ -40,7 +40,7 @@ class ContactController extends Controller{
         $report = $util->getReport($reportId, ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getContacts())){
-            $this->get('restClient')->delete('report/delete-contact/' . $id);
+            $this->get('restClient')->delete('report/contact/' . $id);
         }
         return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
     }
@@ -64,13 +64,13 @@ class ContactController extends Controller{
         $request = $this->getRequest();
 
         $restClient = $this->get('restClient');
-        $contacts = $restClient->get('report/get-contacts/' . $reportId, 'Contact[]');
+        $contacts = $restClient->get('report/' . $reportId . '/contacts/', 'Contact[]');
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             if (!in_array($id, $report->getContacts())) {
                throw new \RuntimeException("Contact not found.");
             }
-            $contact = $restClient->get('report/get-contact/' . $id, 'Contact');
+            $contact = $restClient->get('report/contact/' . $id, 'Contact');
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
         }else{
              //set up add contact form
@@ -138,14 +138,14 @@ class ContactController extends Controller{
                 $contact->setReport($reportId);
 
                 if($action == 'add'){
-                    $restClient->post('report/upsert-contact', $contact);
+                    $restClient->post('report/contact', $contact);
                     
                     //lets clear any reason for no decisions they might have added previously
                     $report->setReasonForNoContacts(null);
                     $restClient->put('report/'.$report->getId(),$report);
             
                 }else{
-                    $restClient->put('report/upsert-contact', $contact);
+                    $restClient->put('report/contact', $contact);
                 }
 
                 return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));
