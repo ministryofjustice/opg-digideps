@@ -122,7 +122,7 @@ class DecisionController extends Controller
         }
 
         return [
-            'decisions' => $restClient->get('report/' . $reportId . '/decision', 'Decision[]'),
+            'decisions' => $restClient->get('report/' . $reportId . '/decisions', 'Decision[]'),
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,

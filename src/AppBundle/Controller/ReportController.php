@@ -248,7 +248,7 @@ class ReportController extends Controller
         $client = $util->getClient($report->getClient());
         
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
-        $decisions = $restClient->get('report/' . $reportId . '/decision', 'Decision[]');
+        $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
         
         return [
             'report' => $report,
