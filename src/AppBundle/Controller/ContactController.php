@@ -64,7 +64,7 @@ class ContactController extends Controller{
         $request = $this->getRequest();
 
         $restClient = $this->get('restClient');
-        $contacts = $restClient->get('report/' . $reportId . '/contacts/', 'Contact[]');
+        $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
 
         if(in_array($action, [ 'edit', 'delete-confirm'])){
             if (!in_array($id, $report->getContacts())) {
