@@ -38,7 +38,7 @@ class DecisionController extends Controller
         $report = $util->getReport($reportId, ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getDecisions())){
-            $this->get('restClient')->delete("decision/{$id}");
+            $this->get('restClient')->delete("/report/decision/{$id}");
         }
         return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
     }
@@ -64,7 +64,7 @@ class DecisionController extends Controller
             if (!in_array($id, $report->getDecisions())) {
                throw new \RuntimeException("Decision not found.");
             }
-            $decision = $restClient->get('decision/' . $id, 'Decision');
+            $decision = $restClient->get('/report/decision/' . $id, 'Decision');
 
             $form = $this->createForm(new FormDir\DecisionType([
                 'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
@@ -122,7 +122,7 @@ class DecisionController extends Controller
         }
 
         return [
-            'decisions' => $restClient->get('decision/find-by-report-id/' . $reportId, 'Decision[]'),
+            'decisions' => $restClient->get('report/' . $reportId . '/decision', 'Decision[]'),
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
@@ -142,14 +142,14 @@ class DecisionController extends Controller
 
          if($action == 'add'){
             // add decision
-            $restClient->post('decision/upsert', $form->getData());
+            $restClient->post('report/decision', $form->getData());
 
             //lets clear any reason for no decisions they might have added previously
             $report->setReasonForNoDecisions(null);
             $this->get('restClient')->put('report/'.$report->getId(),$report);
         }else{
             // edit decision
-            $restClient->put('decision/upsert', $form->getData());
+            $restClient->put('report/decision', $form->getData());
         }
     }
 
