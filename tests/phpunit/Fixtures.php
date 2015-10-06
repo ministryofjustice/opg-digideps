@@ -116,6 +116,23 @@ class Fixtures
     }
     
      /**
+     * @return EntityDir\Safeguarding
+     */
+    public function createSafeguarding(EntityDir\Report $report, array $settersMap = [])
+    {
+        $sg = new EntityDir\Safeguarding();
+        $sg->setReport($report);
+        $sg->setDoYouLiveWithClient('yes');
+        
+        foreach ($settersMap as $k=>$v) {
+            $sg->$k($v);
+        }
+        $this->em->persist($sg);
+        
+        return $sg;
+    }
+    
+     /**
      * @return EntityDir\Asset
      */
     public function createAsset(EntityDir\Report $report, array $settersMap = [])

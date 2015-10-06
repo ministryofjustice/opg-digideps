@@ -2,49 +2,34 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Safeguarding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception as AppExceptions;
+use AppBundle\Entity as EntityDir;
 
 /**
- * @Route("/safeguarding")
+ * @Route("/report")
  */
 class SafeguardingController extends RestController
 {
-
-
     /**
-     * @Route("")
+     * @Route("/safeguarding")
      * @Method({"POST"})
      */
     public function addAction(Request $request)
     {
-        $safeguarding = new Safeguarding();
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $safeguarding = new EntityDir\Safeguarding();
         $data = $this->deserializeBodyContent($request);
+        
+        $report = $this->findEntityBy('Report', $data['report']['id']);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $safeguarding->setReport($report);
+        
         $this->updateSafeguardingInfo($data, $safeguarding);
 
-        return $this->persistEntity($safeguarding);
-    }
-
-
-    /**
-     * @Route("/{id}")
-     * @Method({"PUT"})
-     */
-    public function updateAction(Request $request, $id)
-    {
-        $safeguarding = $this->findEntityBy('Safeguarding', $id);
-        $data = $this->deserializeBodyContent($request);
-        $this->updateSafeguardingInfo($data, $safeguarding);
-
-        return $this->persistEntity($safeguarding);
-    }
-
-
-    public function persistEntity($safeguarding)
-    {
         $this->persistAndFlush($safeguarding);
         
         return ['id' => $safeguarding->getId()];
@@ -52,62 +37,90 @@ class SafeguardingController extends RestController
 
 
     /**
-     * @Route("/find-by-report-id/{reportId}")
+     * @Route("/safeguarding/{id}")
+     * @Method({"PUT"})
+     */
+    public function updateAction(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $safeguarding = $this->findEntityBy('Safeguarding', $id);
+        $this->denyAccessIfReportDoesNotBelongToUser($safeguarding->getReport());
+        
+        $data = $this->deserializeBodyContent($request);
+        $this->updateSafeguardingInfo($data, $safeguarding);
+        
+        $this->getEntityManager()->flush($safeguarding);
+        
+        return ['id' => $safeguarding->getId()];
+    }
+
+    /**
+     * @Route("/{reportId}/safeguardings")
      * @Method({"GET"})
      *
      * @param integer $reportId
      */
     public function findByReportIdAction($reportId)
     {
-        return $this->getRepository('Safeguarding')->findBy(['report' => $reportId]);
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+       
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $ret = $this->getRepository('Safeguarding')->findByReport($report);
+        
+        return $ret;
     }
 
 
     /**
-     * @Route("/{id}")
+     * @Route("/safeguarding/{id}")
      * @Method({"GET"})
+     * 
      * @param integer $id
-     * @return \AppBundle\Entity\Safeguarding
      */
-    public function getOneBydId(Request $request, $id)
+    public function getOneById(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $serialiseGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : [ 'basic'];
         $this->setJmsSerialiserGroups($serialiseGroups);
 
         $safeguarding = $this->findEntityBy('Safeguarding', $id, "Safeguarding with id:" . $id . " not found");
-
+        $this->denyAccessIfReportDoesNotBelongToUser($safeguarding->getReport());
+        
+        
         return $safeguarding;
     }
 
 
     /**
-     * @Route("/{id}")
+     * @Route("/safeguarding/{id}")
      * @Method({"DELETE"})
      */
-    public function deleteAction($id)
+    public function deleteSafeguarding($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $safeguarding = $this->findEntityBy('Safeguarding', $id, 'Safeguarding not found');
-
+        $this->denyAccessIfReportDoesNotBelongToUser($safeguarding->getReport());
+        
         $this->getEntityManager()->remove($safeguarding);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()->flush($safeguarding);
 
         return [];
     }
 
 
     /**
-     * @param  array $data
-     * @param  \AppBundle\Entity\Safeguarding $safeguarding
+     * @param array $data
+     * @param EntityDir\Safeguarding $safeguarding
+     * 
      * @return \AppBundle\Entity\Report $report
      */
-    private function updateSafeguardingInfo($data, \AppBundle\Entity\Safeguarding $safeguarding)
+    private function updateSafeguardingInfo(array $data, EntityDir\Safeguarding $safeguarding)
     {
-
-        $reportId = $data['report']['id'];
-        $report = $this->getRepository('Report')->find($reportId);
-
-        $safeguarding->setReport($report);
-
         if (array_key_exists('do_you_live_with_client', $data)) {
             $safeguarding->setDoYouLiveWithClient($data['do_you_live_with_client']);
         }
