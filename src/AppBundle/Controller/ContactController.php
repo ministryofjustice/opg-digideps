@@ -67,7 +67,7 @@ class ContactController extends RestController
             $contact->setReport($report);
         }else{
             $this->validateArray($contactData, [
-                'report' => 'id'
+                'id' => 'mustExist'
             ]);
             $contact = $this->findEntityBy('Contact', $contactData['id']);
             $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());

@@ -2,19 +2,18 @@
 
 namespace AppBundle\Controller;
 
-class ContactControllerTest extends AbstractTestController
+class AssetControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
     private static $report1;
-    private static $contact1;
+    private static $asset1;
     private static $deputy2;
     private static $client2;
     private static $report2;
-    private static $contact2;
+    private static $asset2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-
 
     public static function setUpBeforeClass()
     {
@@ -24,27 +23,18 @@ class ContactControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$contact1 = self::fixtures()->createContact(self::$report1, ['setAddress'=>'address1']);
+        self::$asset1 = self::fixtures()->createAsset(self::$report1, ['setTitle'=>'title1']);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
-        self::$contact2 = self::fixtures()->createContact(self::$report2);
+        self::$asset2 = self::fixtures()->createAsset(self::$report2);
 
         self::fixtures()->flush()->clear();
     }
 
-    private $dataUpdate = [
-        'contact_name' => 'contact_name-changed', 
-        'address' => 'address-changed', 
-        'address2' => 'address2-changed', 
-        'county' => 'county-changed', 
-        'postcode' => 'SW1', 
-        'country' => 'UK', 
-        'explanation' => 'explanation-changed', 
-        'relationship' => 'relationship-changed', 
-    ];
+   
 
     public function setUp()
     {
@@ -56,7 +46,7 @@ class ContactControllerTest extends AbstractTestController
     
     public function testgetOneByIdAuth()
     {
-        $url = '/report/contact/' . self::$contact1->getId();
+        $url = '/report/asset/' . self::$asset1->getId();
         
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -64,13 +54,13 @@ class ContactControllerTest extends AbstractTestController
     
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/contact/' . self::$contact2->getId();
+        $url2 = '/report/asset/' . self::$asset2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
     
     public function testgetOneById()
     {
-        $url = '/report/contact/' . self::$contact1->getId();
+        $url = '/report/asset/' . self::$asset1->getId();
         
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -78,29 +68,28 @@ class ContactControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
 
-
-        $this->assertEquals(self::$contact1->getId(), $data['id']);
-        $this->assertEquals(self::$contact1->getAddress(), $data['address']);
+        $this->assertEquals(self::$asset1->getId(), $data['id']);
+        $this->assertEquals(self::$asset1->getTitle(), $data['title']);
     }
     
-     public function testgetContactsAuth()
+    public function testgetAssetsAuth()
     {
-        $url = '/report/'.self::$report1->getId().'/contacts';
+        $url = '/report/'.self::$report1->getId().'/assets';
         
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
     
-    public function testgetContactsAcl()
+    public function testgetAssetsAcl()
     {
-        $url2 = '/report/'.self::$report2->getId().'/contacts';
+        $url2 = '/report/'.self::$report2->getId().'/assets';
         
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
      
-    public function testgetContacts()
+    public function testgetAssets()
     {
-        $url = '/report/'.self::$report1->getId().'/contacts';
+        $url = '/report/'.self::$report1->getId().'/assets';
         
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -109,14 +98,14 @@ class ContactControllerTest extends AbstractTestController
         ])['data'];
         
         $this->assertCount(1, $data);
-        $this->assertEquals(self::$contact1->getId(), $data[0]['id']);
-        $this->assertEquals(self::$contact1->getAddress(), $data[0]['address']);
+        $this->assertEquals(self::$asset1->getId(), $data[0]['id']);
+        $this->assertEquals(self::$asset1->getTitle(), $data[0]['title']);
     }
     
     
-    public function testupsertContactAuth()
+    public function testupsertAssetAuth()
     {
-        $url = '/report/contact';
+        $url = '/report/asset';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
@@ -124,23 +113,23 @@ class ContactControllerTest extends AbstractTestController
     }
     
     /**
-     * @depends testgetContacts
+     * @depends testgetAssets
      */
-    public function testupsertContactAcl()
+    public function testupsertAssetAcl()
     {
-        $url2 = '/report/contact';
+        $url2 = '/report/asset';
         
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy, [
             'report'=> self::$report2->getId()
         ]); 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy, [
-            'id' => self::$contact2->getId()
+            'id' => self::$asset2->getId()
         ]); 
     }
     
-    public function testupsertContactMissingParams()
+    public function testupsertAssetMissingParams()
     {
-        $url = '/report/contact';
+        $url = '/report/asset';
         
         // empty params
         $errorMessage = $this->assertJsonRequest('POST', $url, [
@@ -151,38 +140,42 @@ class ContactControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'assertResponseCode' => 400
         ])['message'];
-        $this->assertContains('contact_name', $errorMessage);
-        $this->assertContains('address', $errorMessage);
-        $this->assertContains('address2', $errorMessage);
-        $this->assertContains('county', $errorMessage);
-        $this->assertContains('postcode', $errorMessage);
-        $this->assertContains('country', $errorMessage);
-        $this->assertContains('explanation', $errorMessage);
-        $this->assertContains('relationship', $errorMessage);
+        $this->assertContains('value', $errorMessage);
+        $this->assertContains('title', $errorMessage);
+        $this->assertContains('description', $errorMessage);
     }
     
-    public function testupsertContactPut()
+     private $dataUpdate = [
+        'description' => 'description-changed', 
+        'value' => 123, 
+        'title' => 'title-changed', 
+        'valuation_date' => '2015-11-27'
+    ];
+    
+    public function testupsertAssetPut()
     {
-        $url = '/report/contact';
+        $url = '/report/asset';
         
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
-            'data'=> ['id'=>self::$contact1->getId()] + $this->dataUpdate
+            'data'=> ['id'=>self::$asset1->getId()] + $this->dataUpdate
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
         self::fixtures()->clear();
 
-        $contact = self::fixtures()->getRepo('Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Contact */
-        $this->assertEquals('address-changed', $contact->getAddress());
-        $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
-        // TODO assert other fields
+        $asset = self::fixtures()->getRepo('Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Asset */
+        $this->assertEquals('title-changed', $asset->getTitle());
+        $this->assertEquals('description-changed', $asset->getDescription());
+        $this->assertEquals(123, $asset->getValue());
+        $this->assertEquals('2015-11-27', $asset->getValuationDate()->format('Y-m-d'));
+        $this->assertEquals(self::$report1->getId(), $asset->getReport()->getId());
     }
     
-    public function testupsertContactPost()
+    public function testupsertAssetPost()
     {
-        $url = '/report/contact';
+        $url = '/report/asset';
         
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed'=>true,
@@ -193,24 +186,25 @@ class ContactControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        // assert account created with transactions
-        $contact = self::fixtures()->getRepo('Contact')->find($return['data']['id']); /* @var $contact \AppBundle\Entity\Contact */
-        $this->assertEquals('address-changed', $contact->getAddress());
-        $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
-        // TODO assert other fields
+        $asset = self::fixtures()->getRepo('Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\Asset */
+        $this->assertEquals('title-changed', $asset->getTitle());
+        $this->assertEquals('description-changed', $asset->getDescription());
+        $this->assertEquals(123, $asset->getValue());
+        $this->assertEquals('2015-11-27', $asset->getValuationDate()->format('Y-m-d'));
+        $this->assertEquals(self::$report1->getId(), $asset->getReport()->getId());
     }
     
-    public function testDeleteContactAuth()
+    public function testDeleteAssetAuth()
     {
-        $url = '/report/contact/' . self::$contact1->getId();
+        $url = '/report/asset/' . self::$asset1->getId();
         
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
     
-    public function testDeleteContactAcl()
+    public function testDeleteAssetAcl()
     {
-        $url2 = '/report/contact/' . self::$contact2->getId();
+        $url2 = '/report/asset/' . self::$asset2->getId();
         
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
@@ -219,17 +213,17 @@ class ContactControllerTest extends AbstractTestController
     /**
      * Run this last to avoid corrupting the data
      * 
-     * @depends testgetContacts
+     * @depends testgetAssets
      */
-    public function testDeleteContact()
+    public function testDeleteAsset()
     {
-        $url = '/report/contact/' . self::$contact1->getId();
+        $url = '/report/asset/' . self::$asset1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ]);
         
-        $this->assertTrue(null === self::fixtures()->getRepo('Contact')->find(self::$contact1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo('Asset')->find(self::$asset1->getId()));
     }
     
 }

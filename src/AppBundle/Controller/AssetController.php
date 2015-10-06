@@ -16,7 +16,7 @@ class AssetController extends RestController
      * @Route("/{id}/assets")
      * @Method({"GET"})
      */
-    public function getAssetsAction($id)
+    public function getAssets($id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
@@ -39,7 +39,7 @@ class AssetController extends RestController
      * 
      * @param integer $id
      */
-    public function deleteAssetAction($id)
+    public function deleteAsset($id)
     { 
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
@@ -59,7 +59,7 @@ class AssetController extends RestController
      * 
      * @param integer $id
      */
-    public function getOneAsse($id)
+    public function getOneById($id)
     { 
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
@@ -79,19 +79,27 @@ class AssetController extends RestController
         
         $assetData = $this->deserializeBodyContent($request);
         
-        $report = $this->findEntityBy('Report', $assetData['report']);
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-        
-        if($request->getMethod() == 'POST'){
+        if ($request->getMethod() == 'POST') {
+            $this->validateArray($assetData, [
+                'report' => 'mustExist'
+            ]);
+            $report = $this->findEntityBy('Report', $assetData['report']);
+            $this->denyAccessIfReportDoesNotBelongToUser($report);
             $asset = new EntityDir\Asset();
             $asset->setReport($report);
-        }else{
+        } else {
+            $this->validateArray($assetData, [
+                'id' => 'mustExist'
+            ]);
             $asset = $this->findEntityBy('Asset', $assetData['id']);
-            
-            if(empty($asset)){
-                throw new AppExceptions\NotFound("Asset with id:".$assetData['id'].' was not found', 404);
-            }
+            $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
         }
+        
+        $this->validateArray($assetData, [
+            'description' => 'mustExist', 
+            'value' => 'mustExist', 
+            'title' => 'mustExist', 
+        ]);
         
         $asset->setDescription($assetData['description']);
         $asset->setValue($assetData['value']);
