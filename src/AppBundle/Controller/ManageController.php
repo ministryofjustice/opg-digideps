@@ -7,11 +7,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Exception as AppExceptions;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity as EntityDir;
 
 /**
  * @Route("/manage")
  */
-class ManageController extends Controller
+class ManageController extends RestController
 {
     /**
      * @Route("/availability")
