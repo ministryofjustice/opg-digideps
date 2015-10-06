@@ -14,3 +14,8 @@ swiftmailer:
 doctrine:
     dbal:
         dbname:   digideps_unit_test
+        
+services:
+    mailSender:
+        class: AppBundle\Service\Mailer\MailSenderMock
+        arguments: [ @service_container ]
