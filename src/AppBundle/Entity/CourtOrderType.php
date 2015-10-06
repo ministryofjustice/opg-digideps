@@ -31,6 +31,7 @@ class CourtOrderType
     private $name;
 
     /**
+     * @JMS\Exclude
      * @JMS\Accessor(getter="getReportIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="courtOrderType")
