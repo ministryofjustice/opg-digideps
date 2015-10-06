@@ -45,14 +45,14 @@ class SafeguardController extends Controller{
             $data->keepOnlyRelevantSafeguardingData();
 
             if ($safeguarding->getId() == null) {
-                $this->get('restClient')->post('safeguarding' , $data, ['deserialise_group' => 'safeguarding']);
+                $this->get('restClient')->post('report/safeguarding' , $data, ['deserialise_group' => 'safeguarding']);
             } else {
-                $this->get('restClient')->put('safeguarding/'. $safeguarding->getId() ,$data, ['deserialise_group' => 'safeguarding']);
+                $this->get('restClient')->put('report/safeguarding/'. $safeguarding->getId() ,$data, ['deserialise_group' => 'safeguarding']);
             }
 
             $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
 
-            return $this->redirect($this->generateUrl('safeguarding', ['reportId'=>$reportId]) . "#pageBody");
+            return $this->redirect($this->generateUrl('report/safeguarding', ['reportId'=>$reportId]) . "#pageBody");
         }
 
 
