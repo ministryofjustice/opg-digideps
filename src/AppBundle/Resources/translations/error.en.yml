@@ -3,8 +3,8 @@ generic:
   titleForDisplayableException: "%message%"
   description: Please try again in a short while
 404:
-  title: Page not found (404 error)
-  description: If you entered a web address please check it was correct
-returnToHomePage: Return to home page
+  title: Page not found
+  description: If you entered a web address please check it was correct.
+returnToHomePage: Create an account or sign in
 
     
