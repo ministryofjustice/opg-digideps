@@ -19,3 +19,9 @@ services:
     mailSender:
         class: AppBundle\Service\Mailer\MailSenderMock
         arguments: [ @service_container ]
+    mailer.transport.smtp.default:
+        class: AppBundle\Service\Mailer\Transport\FileWriter
+        arguments: [ "/tmp/dd_transport_smtp_default" ]
+    mailer.transport.smtp.secure:
+        class: AppBundle\Service\Mailer\Transport\FileWriter
+        arguments: [ "/tmp/dd_transport_smtp_secure" ]

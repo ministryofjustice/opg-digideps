@@ -30,7 +30,7 @@ class AuditLogController extends RestController
             'performed_by_user' => 'mustExist', 
             'ip_address' => 'mustExist', 
             'created_at' => 'mustExist', 
-            'action' => 'mustExits'
+            'action' => 'mustExist'
         ]);
         
         if (!array_key_exists('id', $data['performed_by_user'])) {

@@ -2,95 +2,374 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Service\Mailer\MailSenderMock;
+
 class UserControllerTest extends AbstractTestController
 {
-    public function testAdd()
+    private static $deputy1;
+    private static $admin1;
+    private static $deputy2;
+    private static $tokenAdmin = null;
+    private static $tokenDeputy = null;
+
+    public static function setUpBeforeClass()
     {
-        $this->assertEndpointNeedsAuth('POST', '/user');
-    
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        
-        $return = $this->assertJsonRequest('POST', '/user?skip-mail=1', [
-            'data' => [
-                'firstname' => 'n',
-                'lastname' => 's',
-                'email' => 'n.s.justice.gov.uk'
-            ],
-            'mustSucceed' => true,
-            'AuthToken' => $token
-        ]);
-        
-        return $return['data']['id'];
-    }
-    
-    
-    public function testupdate()
-    {
-        $this->assertEndpointNeedsAuth('PUT', '/user/1');
-        
-        //
-    }
-    
-    public function testisPasswordCorrect()
-    {
-        $this->assertEndpointNeedsAuth('POST', '/user/1/is-password-correct');
-        
-    }
-    
-    public function testchangePassword()
-    {
-        $this->assertEndpointNeedsAuth('PUT', '/user/1/set-password');
+        parent::setUpBeforeClass();
+
+        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$admin1 = self::fixtures()->getRepo('User')->findOneByEmail('admin@example.org');
+        self::$deputy2 = self::fixtures()->createUser();
+
+        self::fixtures()->flush()->clear();
     }
     
     /**
-     * 
-     * @depends testAdd
+     * clear fixtures 
      */
-    public function testGet($id)
+    public static function tearDownAfterClass()
     {
-        $this->assertEndpointNeedsAuth('GET', '/user/1');
+        parent::tearDownAfterClass();
         
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        
-        $return = $this->assertJsonRequest('GET', '/user/' . $id, [
-            'mustSucceed' => true,
-            'AuthToken' => $token
-        ]);
-        $this->assertTrue($return['success'], $return['message']);
-        $this->assertEquals('n', $return['data']['firstname']);
+        self::fixtures()->clear();
+    }
+
+
+    public function setUp()
+    {
+        if (null === self::$tokenAdmin) {
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenDeputy = $this->loginAsDeputy();
+        }
     }
     
-    public function testGetUserNotExisting()
+    
+    public function testAddAuth()
     {
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $url = '/user';
         
+        $this->assertEndpointNeedsAuth('POST', $url);
+
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
+    }
+
+    
+    public function testAddMissingParams()
+    {
+        $url = '/user';
+        
+        // empty params
+        $errorMessage = $this->assertJsonRequest('POST', $url, [
+            'data' => [
+            ],
+            'mustFail' => true,
+            'AuthToken' => self::$tokenAdmin,
+            'assertResponseCode' => 400
+        ])['message'];
+        $this->assertContains('role_id', $errorMessage);
+        $this->assertContains('email', $errorMessage);
+        $this->assertContains('firstname', $errorMessage);
+        $this->assertContains('lastname', $errorMessage);
+    }
+    
+    
+    public function testAdd()
+    {
+        MailSenderMock::resetessagesSent();
+        
+        $return = $this->assertJsonRequest('POST', '/user', [
+            'data' => [
+                'role_id' => self::$deputy1->getRole()->getId(), //deputy role
+                'firstname' => 'n',
+                'lastname' => 's',
+                'email' => 'n.s@example.org'
+            ],
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin
+        ]);
+        
+        $user = $this->fixtures()->clear()->getRepo('User')->find($return['data']['id']);
+        $this->assertEquals('n', $user->getFirstname());
+        $this->assertEquals('s', $user->getLastname());
+        $this->assertEquals('n.s@example.org', $user->getEmail());
+        
+        $this->assertCount(1, MailSenderMock::getMessagesSent());
+    }
+    
+    
+    public function testUpdateAuth()
+    {
+        $url = '/user/'.self::$deputy1->getId();
+        
+        $this->assertEndpointNeedsAuth('PUT', $url);
+    }
+    
+    public function testUpdateAcl()
+    {
+        $url2 = '/user/'.self::$deputy2->getId();
+        
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+    }
+    
+    public function testUpdate()
+    {
+        $deputyId = self::$deputy1->getId();
+        $url = '/user/' . $deputyId;
+
+        // assert get
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'lastname' => self::$deputy1->getLastname().'-modified', 
+                'email' => self::$deputy1->getEmail().'-modified', 
+                'address1' => self::$deputy1->getAddress1().'-modified', 
+            ]
+        ]);
+
+        $user = self::fixtures()->clear()->getRepo('User')->find($deputyId); /* @var $user \AppBundle\Entity\User */
+        
+        $this->assertEquals(self::$deputy1->getLastname().'-modified', $user->getLastname());
+        $this->assertEquals(self::$deputy1->getEmail().'-modified', $user->getEmail());
+        $this->assertEquals(self::$deputy1->getAddress1().'-modified', $user->getAddress1());
+        
+        // restore previous data
+        $user->setLastname(str_replace('-modified','', $user->getLastname()));
+        $user->setEmail(str_replace('-modified','', $user->getEmail()));
+        $user->setAddress1(str_replace('-modified','',$user->getAddress1()));
+
+        self::fixtures()->flush($user);
+    }
+    
+    public function testIsPasswordCorrectAuth()
+    {
+        $url = '/user/'.self::$deputy2->getId().'/is-password-correct';
+        
+        $this->assertEndpointNeedsAuth('POST', $url);
+    }
+    
+    public function testIsPasswordCorrectAcl()
+    {
+        $url = '/user/'.self::$deputy2->getId().'/is-password-correct';
+        
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
+    }
+    
+    public function testIsPasswordCorrect()
+    {
+        $url = '/user/'.self::$deputy1->getId().'/is-password-correct';
+        $this->assertEndpointNeedsAuth('POST', $url);
+    }
+    
+    public function testChangePasswordAuth()
+    {
+        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        
+        $this->assertEndpointNeedsAuth('PUT', $url);
+    }
+    
+    public function testChangePasswordAcl()
+    {
+        $url = '/user/'.self::$deputy2->getId().'/set-password';
+        
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
+    }
+    
+    
+    public function testChangePasswordMissingParams()
+    {
+        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        
+        // empty params
+        $errorMessage = $this->assertJsonRequest('PUT', $url, [
+            'mustFail' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'assertResponseCode' => 400
+        ])['message'];
+        $this->assertContains('password_plain', $errorMessage);
+    }
+    
+    public function testChangePasswordNoEmail()
+    {
+        MailSenderMock::resetessagesSent();
+        
+        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'password_plain' => 'Abcd1234ne'
+            ]
+        ]);
+         
+        $this->login('deputy@example.org', 'Abcd1234ne', '123abc-deputy');
+        
+        $this->assertCount(0, MailSenderMock::getMessagesSent());
+    }
+    
+    /**
+     * @depends testChangePasswordNoEmail
+     */
+    public function testChangePasswordEmailActivate()
+    {
+        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'password_plain' => 'Abcd1234pa',
+                'send_email' => 'activate'
+                
+            ]
+        ]);
+         
+        $this->login('deputy@example.org', 'Abcd1234pa', '123abc-deputy');
+        $this->assertContains('new password', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
+    }
+    
+    /**
+     * @depends testChangePasswordEmailActivate
+     */
+    public function testChangePasswordEmailReset()
+    {
+        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'password_plain' => 'Abcd1234', //restore password for subsequent logins
+                'send_email' => 'password-reset'
+            ]
+        ]);
+         
+        $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $this->assertContains('new password', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
+    }
+    
+    public function getOneByIdAuth()
+    {
+        $url = '/user/'.self::$deputy1->getId();
+        
+        $this->assertEndpointNeedsAuth('GET', $url);
+    }
+    
+    public function getOneByIdAcl()
+    {
+        $url1 = '/user/'.self::$deputy1->getId();
+        $url2 = '/user/'.self::$deputy2->getId();
+        $url3 = '/user/'.self::$admin1->getId();
+        
+        // deputy can only see his data
+        $this->assertEndpointAllowedFor('GET', $url1, self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
+        $this->assertEndpointNotAllowedFor('GET', $url3, self::$tokenDeputy);
+        
+        // admin can see all users
+        $this->assertEndpointAllowedFor('GET', $url1, self::$tokenAdmin);
+        $this->assertEndpointAllowedFor('GET', $url2, self::$tokenAdmin);
+        $this->assertEndpointAllowedFor('GET', $url3, self::$tokenAdmin);
+    }
+    
+    public function getOneById()
+    {
+        $url = '/user/' . self::$deputy1->getId();
+            
+        $this->assertEndpointNeedsAuth('GET', $url);
+        
+        $return = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy
+        ]);
+        
+        $this->assertTrue($return['success'], $return['message']);
+        $this->assertEquals('deputy@example.org', $return['data']['email']);
+    }
+    
+    /**
+     * @depends getOneById
+     */
+    public function getOneByIdNotExisting()
+    {
         $return = $this->assertJsonRequest('GET', '/user/0', [
             'mustFail' => true,
-            'AuthToken' => $token
+            'AuthToken' => self::$tokenDeputy
         ]);
         $this->assertEmpty($return['data']);
         $this->assertContains('not found', $return['message']);
     }
     
     
-    public function testdelete()
+    public function testDeleteAuth()
     {
-        $this->assertEndpointNeedsAuth('DELETE', '/user/1/1');
-    }
-    
-    public function testgetAll()
-    {
-        $this->assertEndpointNeedsAuth('GET', '/user/get-all/firstname/ASC');
+        $url = '/user/' . self::$deputy1->getId();
+        
+        $this->assertEndpointNeedsAuth('DELETE', $url);
     }
     
     
-    public function testrecreateToken()
+    public function testDeleteAcl()
+    {
+        $url = '/user/' . self::$deputy1->getId();
+        
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
+    }
+    
+    public function testDelete()
+    {
+        $deputy3 = self::fixtures()->createUser();
+        self::fixtures()->flush();
+        $userToDeleteId = $deputy3->getId();
+        
+        $url = '/user/' . $userToDeleteId;
+        
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenAdmin,
+        ]);
+        
+        $this->assertTrue(null === self::fixtures()->clear()->getRepo('User')->find($userToDeleteId));
+    }
+    
+    public function testGetAllAuth()
+    {
+        $url = '/user/get-all/firstname/ASC';
+        
+        $this->assertEndpointNeedsAuth('GET', $url);
+    }
+    
+    public function testGetAllAcl()
+    {
+        $url = '/user/get-all/firstname/ASC';
+        
+         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
+    }
+    
+    public function testGetAll()
+    {
+        $url = '/user/get-all/firstname/ASC';
+        
+        $return = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin
+        ]);
+
+        $this->assertTrue(count($return['data'])>2);
+    }
+    
+    
+    public function testRecreateTokenMissingClientSecret()
     {
         // assert client token
         $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
             'mustFail' => true,
             'assertResponseCode' => 403
         ]);
+    }
+    
+    public function testRecreateTokenWrongClientSecret()
+    {
         $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
             'mustFail' => true,
             'assertResponseCode' => 403,
@@ -98,18 +377,32 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
     
-    public function testregetByToken()
+    public function testRecreateToken()
     {
-        // assert client token 
-        $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
+        //
+    }
+    
+    public function testGetByTokenMissingClientSecre()
+    {
+         $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
             'assertResponseCode' => 403
         ]);
+    }
+    
+    public function testGetByTokenWrongClientSecret()
+    {
         $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
             'assertResponseCode' => 403,
             'ClientSecret' => 'WRONG-CLIENT_SECRET'
         ]);
+    }
+    
+    
+    public function testGetByToken()
+    {
+        
     }
     
     

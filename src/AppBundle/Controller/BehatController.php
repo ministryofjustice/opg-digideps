@@ -9,6 +9,7 @@ use AppBundle\Entity\Client;
 use AppBundle\Entity\User;
 
 /**
+ * @codeCoverageIgnore
  * @Route("/behat")
  */
 class BehatController extends RestController

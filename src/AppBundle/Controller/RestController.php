@@ -50,6 +50,9 @@ abstract class RestController extends Controller
                         $errors[] = "Missing '$requiredKey' key";
                     }
                     break;
+                    
+                default:
+                    throw new \InvalidArgumentException(__METHOD__ . ": {$validation} not recognised.");
             }
         }
         

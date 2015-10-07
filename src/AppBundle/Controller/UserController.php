@@ -5,8 +5,8 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Entity\User;
 use AppBundle\Exception as AppExceptions;
+use AppBundle\Entity as EntityDir;
 
 
 //TODO
@@ -18,16 +18,21 @@ use AppBundle\Exception as AppExceptions;
 class UserController extends RestController
 {
     /**
-     * @param queryString skip-mail 
-     * 
      * @Route("")
      * @Method({"POST"})
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent($request);
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
+        $data = $this->deserializeBodyContent($request, [
+            'role_id' => 'notEmpty',
+            'email' => 'notEmpty',
+            'firstname' => 'mustExist',
+            'lastname' => 'mustExist',
+        ]);
 
-        $user = new \AppBundle\Entity\User();
+        $user = new EntityDir\User();
        
         $this->populateUser($user, $data);
         
@@ -40,10 +45,8 @@ class UserController extends RestController
         }
         
         // send activation email
-        if (empty($request->query->get('skip-mail'))) {
-            $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
-            $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
-        }
+        $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
+        $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
         
         $this->persistAndFlush($user);
         
@@ -59,7 +62,10 @@ class UserController extends RestController
     public function update(Request $request, $id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
-
+        if ($this->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        }
+        
         $data = $this->deserializeBodyContent($request);
         
         $this->populateUser($user, $data);
@@ -71,15 +77,22 @@ class UserController extends RestController
     
     
     /**
+     * //TODO take user from logged user
+     * 
      * @Route("/{id}/is-password-correct")
      * @Method({"POST"})
      */
     public function isPasswordCorrect(Request $request, $id)
     {
+        // for both ADMIN and DEPUTY
+        
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        if ($this->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to check other user's password");
+        }
         
         $data = $this->deserializeBodyContent($request, [
-            'password' => 'NotEmpty',
+            'password' => 'notEmpty',
         ]);
         
         $encoder = $this->get('security.encoder_factory')->getEncoder($user);
@@ -99,10 +112,15 @@ class UserController extends RestController
      */
     public function changePassword(Request $request, $id)
     {
-        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        //for both admin and users
+        
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user EntityDir\User */
+        if ($this->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        }
         
         $data = $this->deserializeBodyContent($request, [
-            'password_plain' => 'NotEmpty',
+            'password_plain' => 'notEmpty',
         ]);
         
         $encoder = $this->get('security.encoder_factory')->getEncoder($user);
@@ -137,30 +155,29 @@ class UserController extends RestController
      */
     public function getOneById($id)
     {
-        return $this->findEntityBy('User', $id, 'User not found');
+        $user = $this->findEntityBy('User', $id, 'User not found');
+        $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
+        
+        // only allow admins to access any user, otherwise the user can only see himself
+        if (!$this->isGranted(EntityDir\Role::ADMIN) && !$requestedUserIsLogged) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        }
+        
+        return $user;
     }
     
     /**
-     * @Route("/{adminId}/{id}")
+     * @Route("/{id}")
      * @Method({"DELETE"})
      * 
      * @param integer $id
-     * @return array []
-     * @throws \RuntimeException
      */
-    public function delete($id,$adminId)
+    public function delete($id)
     {
-        $adminUser = $this->getRepository('User')->find($adminId);
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
         
-        if(empty($adminUser) || ($adminUser->getRole()->getRole() != "ROLE_ADMIN") || ($adminId == $id)){
-            throw new AppExceptions\Auth("You are not authorized to perform this action");
-        }
+        $user = $this->findEntityBy('User', $id);
         
-        $user = $this->getRepository('User')->find($id);
-        
-        if(empty($user)){
-            throw new AppExceptions\NotFound("User not found");
-        }
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
         
@@ -174,6 +191,8 @@ class UserController extends RestController
      */
     public function getAll($order_by, $sort_order)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
         return $this->getRepository('User')->findBy([],[ $order_by => $sort_order ]);
     }
 
@@ -242,7 +261,7 @@ class UserController extends RestController
      * @param User $user
      * @param array $data
      */
-    private function populateUser(User $user, array $data)
+    private function populateUser(EntityDir\User $user, array $data)
     {
         // Cannot easily(*) use JSM deserialising with already constructed objects. 
         // Also. It'd be possible to differentiate when a NULL value is intentional or not
