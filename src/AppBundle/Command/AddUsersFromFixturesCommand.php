@@ -10,6 +10,9 @@ use AppBundle\Service\ApiClient;
 use AppBundle\Entity\User;
 use Symfony\Component\Validator\ConstraintViolationList;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AddUsersFromFixturesCommand extends AddSingleUserCommand
 {
     protected function configure()

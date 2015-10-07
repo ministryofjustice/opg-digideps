@@ -10,6 +10,9 @@ use AppBundle\Entity\User;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AddSingleUserCommand extends ContainerAwareCommand
 {
     protected function configure()

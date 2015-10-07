@@ -7,6 +7,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class DebugCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand
 {
     protected function configure()

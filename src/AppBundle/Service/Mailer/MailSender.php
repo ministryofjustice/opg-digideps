@@ -79,7 +79,7 @@ class MailSender
     }
     
     
-    public function doSend($transport, Email $email)
+    protected function doSend($transport, Email $email)
     {
         $mailTransport = 'mailer.transport.smtp.default';
         if ($transport == 'secure-smtp') {
