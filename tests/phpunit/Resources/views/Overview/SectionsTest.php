@@ -7,7 +7,7 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Mockery as m;
 
-class OverviewTest extends WebTestCase
+class SectionsTest extends WebTestCase
 {
 
     /**
@@ -34,8 +34,9 @@ class OverviewTest extends WebTestCase
     {
         m::close();
     }
-    
-    public function testDecisionSectionContainsOverview()
+
+    /** @test */
+    public function decisionSectionContainsOverview()
     {
         $this->setupReport();
         
@@ -58,7 +59,8 @@ class OverviewTest extends WebTestCase
         $this->assertContains("moving the client to another nursing or care home", $guidanceElementText);
     }
 
-    public function testContactsSectionContainsOverview()
+    /** @test */
+    public function contactsSectionContainsOverview()
     {
         $this->setupReport();
         
@@ -82,7 +84,8 @@ class OverviewTest extends WebTestCase
         $this->assertContains("You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions.", $guidanceElementText);
     }
 
-    public function testSafeguardingSectionContainsOverview()
+    /** @test */
+    public function safeguardingSectionContainsOverview()
     {
         $this->setupReport();
 
@@ -102,7 +105,8 @@ class OverviewTest extends WebTestCase
         $this->assertContains("We need to know how you check their needs are met. The OPG has a duty protect those that don't have mental capacity to make decisions for themselves.", $guidanceElementText);
     }
 
-    public function testAccountSectionContainsOverview()
+    /** @test */
+    public function accountSectionContainsOverview()
     {
         $this->setupReport();
 
@@ -122,7 +126,8 @@ class OverviewTest extends WebTestCase
         $this->assertContains("You can only sign off the accounts section at the end of the reporting period when you know the final totals.", $guidanceElementText);
     }
 
-    public function testAssetsSectionContainsOverview()
+    /** @test */
+    public function assetsSectionContainsOverview()
     {
         $this->setupReport();
 
@@ -145,9 +150,9 @@ class OverviewTest extends WebTestCase
         $this->assertContains("artwork, antiques or jewellery", $guidanceElementText);
 
     }
-  
 
-    public function testWhenAReportIsDueAndAllSectionsCompletedAllowSubmission() {
+    /** @test */
+    public function whenAReportIsDueAndAllSectionsCompletedAllowSubmission() {
 
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
@@ -169,8 +174,9 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#report-submit-section a');
         $this->assertEquals(2, $submitReportLinkElement->count());
     }
-    
-    public function testWhenAReportIsNotDueAndAllSectionsCompletedDontAllowSubmission() {
+
+    /** @test */
+    public function whenAReportIsNotDueAndAllSectionsCompletedDontAllowSubmission() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(false)
@@ -191,8 +197,9 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#report-submit-section a');
         $this->assertEquals(0, $submitReportLinkElement->count());       
     }
-    
-    public function testWhenAReportIsDueAndAllSectionsCompletedIndicateActive() {
+
+    /** @test */
+    public function whenAReportIsDueAndAllSectionsCompletedIndicateActive() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(true)
@@ -213,8 +220,9 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
         $this->assertEquals(0, $submitReportLinkElement->count());    
     }
-    
-    public function testWhenAReportIsDueAndAllSectionsAreNotCompletedIndicateInactive() {
+
+    /** @test */
+    public function whenAReportIsDueAndAllSectionsAreNotCompletedIndicateInactive() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(true)
@@ -235,8 +243,9 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
-    
-    public function testWhenAReportIsNotDueAndAllSectionsCompletedIndicateInactive() {
+
+    /** @test */
+    public function whenAReportIsNotDueAndAllSectionsCompletedIndicateInactive() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(false)
@@ -257,8 +266,9 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
-    
-    public function testWhenAReportIsNotDueAndAllSectionsAreNotCompletedIndicateInactive() {
+
+    /** @test */
+    public function whenAReportIsNotDueAndAllSectionsAreNotCompletedIndicateInactive() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(false)
@@ -280,11 +290,19 @@ class OverviewTest extends WebTestCase
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
 
+    /** @test */
+    public function showSubmitWarningIsNotDueButReady() {
 
-    public function testShowSubmitWarningIsNotDueButReady() {
+        $tomorrow = new \DateTime;
+        $tomorrow->setTime(0, 0, 0);
+        $tomorrow->modify('1 day'); 
+        
+        $formatted = $tomorrow->format(" d F Y");
+        
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(false)
+            ->shouldReceive('getEndDate')->andReturn($tomorrow)
             ->getMock();
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
@@ -301,9 +319,12 @@ class OverviewTest extends WebTestCase
 
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(1, $submitReportLinkElement->count());
+        
+        $this->assertContains("You can't submit your report until " . $formatted, $submitReportLinkElement->eq(0)->text());
     }
 
-    public function testShowSubmitWarningIsDueButNotReady() {
+    /** @test */
+    public function showSubmitWarningIsDueButNotReady() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(true)
@@ -323,12 +344,22 @@ class OverviewTest extends WebTestCase
 
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(1, $submitReportLinkElement->count());
+        $this->assertContains("You can't submit your report until the report is complete", $submitReportLinkElement->eq(0)->text());
     }
 
-    public function testShowSubmitWarningIsNotDueAndNotReady() {
+    /** @test */
+    public function showSubmitWarningIsNotDueAndNotReady() {
+        $tomorrow = new \DateTime;
+        $tomorrow->setTime(0, 0, 0);
+        $tomorrow->modify('1 day');
+
+        $formatted = $tomorrow->format(" d F Y");
+
+        
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(false)
+            ->shouldReceive('getEndDate')->andReturn($tomorrow)
             ->getMock();
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
@@ -345,9 +376,13 @@ class OverviewTest extends WebTestCase
 
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(1, $submitReportLinkElement->count());
+
+        $this->assertContains("You can't submit your report until " . $formatted, $submitReportLinkElement->eq(0)->text());
+
     }
 
-    public function testDontShowSubmitWarningIsDueAndReady() {
+    /** @test */
+    public function dontShowSubmitWarningIsDueAndReady() {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('isDue')->andReturn(true)
@@ -368,8 +403,8 @@ class OverviewTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(0, $submitReportLinkElement->count());
     }
-    
-    
+
+
     
     private function setupReport() 
     {

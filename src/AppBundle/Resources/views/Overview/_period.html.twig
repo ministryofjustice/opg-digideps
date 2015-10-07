@@ -3,13 +3,16 @@
 
 <div id="report-period-due">
     <div id="report-period">
-        <div class="label"> Reporting period:</div>
-        <div class="value">22 December 2015 to 21 December 2015
-            <a class="edit-link" href="edit">Edit</a>
+        <div class="label">{{ 'reportingPeriod' | trans() }}:</div>
+        <div class="value">
+            {{ report.startDate | date(" d F Y") }}
+            to
+            {{ report.endDate | date(" d F Y") }}
+            <a class="edit-link" href="{{ path('client_home', {'action': 'edit-report', 'reportId': report.id}) }}">{{ 'edit' | trans() }}</a>
         </div>
     </div>
     <div id="report-due">
-        <div class="label">Due date:</div>
-        <div class="value">22 February 2016</div>
+        <div class="label">{{ 'dueDate' | trans() }}:</div>
+        <div class="value">{{ report.dueDate | date(" d F Y") }}</div>
     </div>
 </div>

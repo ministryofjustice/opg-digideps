@@ -10,7 +10,11 @@ finances: "Finances"
 close: "Close"
 help: "Help"
 finishYourReport: "Finish your report"
-submitWhenReady: "Section will become available when the report is complete"
+submitWhenReady: "You can't submit your report until the report is complete"
+warningNotDue: "You can't submit your report until %date%"
+reportingPeriod: "Reporting period"
+edit: "Edit"
+dueDate: "Due date"
 
 contacts:
     subSectionTitle: "Contacts"
@@ -43,7 +47,7 @@ report_add_further_info:
     subSectionDescription: "Add details of the client's assets and saving, such as:"
     subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
     edit: "Start sign and submit"
-    
+  
 
 additionalInformation:
   subSectionTitle: More information

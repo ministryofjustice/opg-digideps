@@ -91,7 +91,7 @@
     {%  endif %}
 </ul>
 
-{% if reportStatus.isReadyToSubmit == false or report.isDue == false %}
+{% if report.isDue == true and reportStatus.isReadyToSubmit == false %}
     {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
         pageSectionWarning: 'submitWhenReady',
@@ -99,6 +99,19 @@
         id: 'cannot-submit-warning'
     } %}
 {% endif %}
+
+
+{% if report.isDue == false %}
+    {% set endDate = report.getEndDate() | date(" d F Y")  %}
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'warningNotDue',
+    transOptions: {'%date%': endDate},
+    iconClass: 'icon icon__notification',
+    id: 'cannot-submit-warning'
+    } %}
+{% endif %}
+
 
 <script>
     $( document ).ready(function() {
