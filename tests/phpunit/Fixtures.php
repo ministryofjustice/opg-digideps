@@ -25,7 +25,7 @@ class Fixtures
     {
         // add clent, cot, report, needed for assets
         $user = new EntityDir\User;
-        $user->setEmail('temp'.time().'@temp.com');
+        $user->setEmail('temp'.microtime(1).rand(100,99999).'@temp.com');
         $user->setPassword('temp@temp.com');
         $user->setFirstname('name'.time());
         $user->setLastname('surname'.time());
