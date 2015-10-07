@@ -283,7 +283,6 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy
         ]);
         
-        $this->assertTrue($return['success'], $return['message']);
         $this->assertEquals('deputy@example.org', $return['data']['email']);
     }
     
@@ -361,26 +360,76 @@ class UserControllerTest extends AbstractTestController
     
     public function testRecreateTokenMissingClientSecret()
     {
+        $url = '/user/recreate-token/mail@example.org/activate';
+        
         // assert client token
-        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
+        $this->assertJsonRequest('PUT', $url, [
             'mustFail' => true,
             'assertResponseCode' => 403
         ]);
     }
     
-    public function testRecreateTokenWrongClientSecret()
+    public static function recreateTokenProvider()
     {
-        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/activate', [
+        return [
+            ['activate', 'activate your account'],
+            ['pass-reset', 'reset your password']
+        ];
+    }
+    
+    /**
+     * @dataProvider recreateTokenProvider
+     */
+    public function testRecreateTokenWrongClientSecret($urlPart)
+    {
+        $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org/' . $urlPart, [
             'mustFail' => true,
             'assertResponseCode' => 403,
             'ClientSecret' => 'WRONG-CLIENT_SECRET'
         ]);
     }
     
-    public function testRecreateToken()
+    
+    /**
+     * @dataProvider recreateTokenProvider
+     */
+    public function testRecreateTokenUserNotFound($urlPart)
     {
-        //
+        $this->assertJsonRequest('PUT', '/user/recreate-token/WRONGUSER@example.org/' . $urlPart, [
+            'mustFail' => true,
+            'ClientSecret' => '123abc-deputy'
+        ]);
     }
+    
+    
+    /**
+     * @dataProvider recreateTokenProvider
+     */
+    public function testRecreateTokenEmailActivate($urlPart, $emailSubject)
+    {
+        MailSenderMock::resetessagesSent();
+
+        $url = '/user/recreate-token/deputy@example.org/' . $urlPart;
+
+        $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $deputy->setRegistrationToken(null);
+        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        self::fixtures()->flush($deputy);
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-deputy'
+        ]);
+
+        // refresh deputy from db and chack token has been reset
+        $deputyRefreshed = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
+        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime)->format('%a'));
+
+        // check email has been sent
+        $this->assertContains($emailSubject, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
+    }
+    
     
     public function testGetByTokenMissingClientSecre()
     {
@@ -402,7 +451,17 @@ class UserControllerTest extends AbstractTestController
     
     public function testGetByToken()
     {
+        $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $deputy->recreateRegistrationToken();
+        self::fixtures()->flush($deputy);
         
+        $url = '/user/get-by-token/' . $deputy->getRegistrationToken();
+        
+        $data = $this->assertJsonRequest('GET', $url, [
+            'mustSucceed' => true,
+            'ClientSecret' => '123abc-deputy'
+        ])['data'];
+         $this->assertEquals('deputy@example.org', $data['email']);
     }
     
     
