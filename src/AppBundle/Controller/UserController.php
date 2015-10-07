@@ -45,6 +45,7 @@ class UserController extends RestController
         }
         
         // send activation email
+        $user->recreateRegistrationToken();
         $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
         $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
         
@@ -211,7 +212,7 @@ class UserController extends RestController
             throw new \RuntimeException('client secret not accepted.', 403);
         }
         $user = $this->findEntityBy('User', ['email'=>$email]);
-         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         
@@ -246,8 +247,10 @@ class UserController extends RestController
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
+        
         $user = $this->findEntityBy('User', ['registrationToken'=>$token], "User not found"); /* @var $user User */
-         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+        
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         

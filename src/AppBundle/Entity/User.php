@@ -221,10 +221,6 @@ class User implements UserInterface
     public function __construct()
     {
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
-        
-        $this->recreateRegistrationToken();
-        
-        $this->tokenDate = new \DateTime();
         $this->password = '';
     }
 
@@ -364,7 +360,8 @@ class User implements UserInterface
      */
     public function recreateRegistrationToken()
     {
-        $this->setRegistrationToken('digideps'.rand(1, 100) . time().date('dmY'));
+        $this->setRegistrationToken('digideps' . date('dmY') . time(true) . rand(17, 999917));
+        $this->setTokenDate(new \DateTime());
         
         return $this;
     }
@@ -378,7 +375,6 @@ class User implements UserInterface
     public function setRegistrationToken($registrationToken)
     {
         $this->registrationToken = $registrationToken;
-        $this->setTokenDate(new \DateTime);
         
         return $this;
     }
