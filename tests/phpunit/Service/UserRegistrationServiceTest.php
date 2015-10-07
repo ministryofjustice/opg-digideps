@@ -72,6 +72,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $data->setCaseNumber('12341234');
 
         $user = new User();
+        $user->recreateRegistrationToken();
         $this->userRegistrationService->populateUser($user, $data);
 
         $this->assertEquals($this->mockRole, $user->getRole());
@@ -80,6 +81,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('zac@thetolleys.com', $user->getEmail());
         $this->assertFalse($user->getActive());
         $this->assertFalse($user->getEmailConfirmed());
+        $this->assertNotEmpty($user->getRegistrationToken());
         $this->assertNotNull($user->getTokenDate());
 
         $token_time = $user->getTokenDate();
