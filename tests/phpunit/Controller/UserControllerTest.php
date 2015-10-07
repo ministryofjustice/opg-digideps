@@ -248,14 +248,14 @@ class UserControllerTest extends AbstractTestController
         $this->assertContains('new password', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
     }
     
-    public function getOneByIdAuth()
+    public function testGetOneByIdAuth()
     {
         $url = '/user/'.self::$deputy1->getId();
         
         $this->assertEndpointNeedsAuth('GET', $url);
     }
     
-    public function getOneByIdAcl()
+    public function testGetOneByIdAcl()
     {
         $url1 = '/user/'.self::$deputy1->getId();
         $url2 = '/user/'.self::$deputy2->getId();
@@ -272,7 +272,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url3, self::$tokenAdmin);
     }
     
-    public function getOneById()
+    public function testGetOneById()
     {
         $url = '/user/' . self::$deputy1->getId();
             
@@ -288,9 +288,9 @@ class UserControllerTest extends AbstractTestController
     }
     
     /**
-     * @depends getOneById
+     * @depends testGetOneById
      */
-    public function getOneByIdNotExisting()
+    public function testGetOneByIdNotExisting()
     {
         $return = $this->assertJsonRequest('GET', '/user/0', [
             'mustFail' => true,
