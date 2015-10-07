@@ -7,6 +7,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use AppBundle\Service\ReportStatusService;
+
+
 
 class ContactController extends Controller{
 
@@ -102,11 +105,14 @@ class ContactController extends Controller{
             $noContact = $processedForms['noContact'];
         }
 
+        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+        
         return [
             'form' => $form->createView(),
             'contacts' => $contacts,
             'action' => $action,
             'report' => $report,
+            'reportStatus' => $reportStatusService,
             'client' => $client,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView(),
             'no_contact' => $noContact->createView() ];

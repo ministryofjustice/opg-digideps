@@ -31,9 +31,10 @@ class RegistrationController extends Controller
 
         $form->handleRequest($request);
 
-        if($form->isValid()){
+        if ($form->isValid()) {
 
             $data = $form->getData();
+            
             try {
 
                 $this->get('restClient')->registerUser($data);
@@ -56,6 +57,7 @@ class RegistrationController extends Controller
                     //move this logic to a separate form field contraint (see existing password validator as example)
                     $form->get('email')->addError(new FormError("That email has already been registered with this service."));
                 }
+                $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
             

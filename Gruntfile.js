@@ -18,6 +18,7 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
+                        style: 'compressed',
                         cwd: scssPath,
                         src: ['*.scss'],
                         dest: 'web/stylesheets',
@@ -25,6 +26,7 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
+                        style: 'compressed',
                         cwd: 'bower_downloads/moj_template/source/assets/stylesheets',
                         src: ['*.scss'],
                         dest: 'web/stylesheets',
@@ -48,14 +50,25 @@ module.exports = function (grunt) {
 
             }
         },
-
+        cssmin: {
+            target: {
+                files: [{
+                    expand: true,
+                    cwd: 'web/stylesheets',
+                    src: ['govuk-template.css', 'fonts.css', 'moj-template.css', 'application.css',
+                        'govuk-template-print.css', 'application-print.css'],
+                    dest: 'web/stylesheets/min',
+                    ext: '.min.css'
+                }]
+            }
+        },
         watch: {
             options: {
                 nospawn: true
             },
             scss: {
                 files: [scssPath + '/**/*.scss'],
-                tasks: ['sass'],
+                tasks: ['sass','cssmin','concat:css','concat:print'],
                 options: {
                     livereload: true
                 }
@@ -70,8 +83,34 @@ module.exports = function (grunt) {
         },
         concat: {
             dist: {
-                src: jsPath +'/**/*.js',
+                src: [ 'bower_downloads/govuk_elements/govuk/public/javascripts/govuk-template.js',
+                    'bower_downloads/govuk_elements/govuk/public/javascripts/govuk/selection-buttons.js',
+                    'bower_downloads/moj_template/source/assets/javascripts/moj.js',
+                    jsPath +'/**/*.js'],
                 dest: 'web/javascripts/application.js',
+            },
+            css: {
+                src: [
+                    'web/stylesheets/min/fonts.min.css',
+                    'web/stylesheets/min/govuk-template.min.css',
+                    'web/stylesheets/min/moj-template.min.css',
+                    'web/stylesheets/min/application.min.css'],
+                dest: 'web/stylesheets/application.min.css'
+            },
+            print: {
+                src: ['web/stylesheets/min/govuk-template-print.min.css','web/stylesheets/min/application-print.min.css'],
+                dest: 'web/stylesheets/print.css'
+            }
+        },
+        uglify: {
+            js: {
+                files: {
+                    'web/javascripts/application.js': 
+                    [ 'bower_downloads/govuk_elements/govuk/public/javascripts/govuk-template.js', 
+                        'bower_downloads/govuk_elements/govuk/public/javascripts/govuk/selection-buttons.js',
+                        'bower_downloads/moj_template/source/assets/javascripts/moj.js',
+                        jsPath +'/**/*.js']
+                }
             }
         },
         copy: {
@@ -123,7 +162,7 @@ module.exports = function (grunt) {
     });
 
     // Register Grunt Tasks
-    grunt.registerTask('default', ['clean', 'copy', 'sass','jshint','concat:dist']);
+    grunt.registerTask('default', ['clean', 'copy', 'sass','jshint','uglify:js','cssmin','concat:css','concat:print']);
     grunt.registerTask('build', ['default']);
 
 };

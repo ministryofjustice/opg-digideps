@@ -143,10 +143,10 @@ Feature: Safeguarding OPG Report
         And I submit the report with further info "More info."
         And I view the users latest report
         Then the "Do you live with the client?" question should be answered with "No"
-        Then the "How often do you or other deputies visit the client?" question should be answered with "Everyday"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "Everyday"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "Everyday"
-        Then the "How often does the client see other people?" question should be answered with "Everyday"
+        Then the "How often do you or other deputies visit the client?" question should be answered with "Every day"
+        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "Every day"
+        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "Every day"
+        Then the "How often does the client see other people?" question should be answered with "Every day"
         And I save the page as "safeguarding-userreport-doesnt-live-with-client"
 
     @safeguarding @user-report @deputy

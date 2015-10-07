@@ -18,6 +18,7 @@ parameters:
     use_redis: true
     use_memcached: false
     session_engine: redis
+    log_level: info
+    log_path: /var/log/app/application.log
     ga: {{ getv "/ga" }}
     behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
-

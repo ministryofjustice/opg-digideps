@@ -1,3 +1,8 @@
+$green-status:  #35735B;
+$orange-status: #F08E53;
+$grey-status: #8C9295;
+
+
 .overview-sections {
 
     padding-top: 10px;
@@ -7,19 +12,22 @@
         
         padding-top: 18px;
 
-        .heading {
+        @include media(mobile) {
+            padding-top: 0;
+        }
+        
+
+        > .heading {
             @include core-19();
-            color: #000000;
-            background: #ecefef;
+            color: $text-colour;
+            background: $grey-3;
             padding: 7px 10px 5px 10px;
         }
                 
         .sub-section {
             @extend %contain-floats;
-
             border-top: 1px solid $grey-3;
             clear: both;
-            
             
             &:first-of-type {
                 border-top: none;
@@ -29,13 +37,18 @@
                 @include box-sizing(border-box);
                 @include bold-24();
                 @include inline-block();
-                padding: 20px 10px 15px 0px;
+                margin: 20px 10px 15px 5px;
                 width: 35%;
                 float: left;
-                background: transparent;
                 
-                @include media($max-width: $phablet) {
-                    width: 50%;
+                a {
+                    color: $black;
+                    text-decoration: none;
+
+                    @include media(mobile) {
+                        color: $link-colour;
+                        text-decoration: underline;
+                    }
                 }
             }
     
@@ -43,16 +56,48 @@
                 @include box-sizing(border-box);
                 @include core-19(1.6);
                 @include inline-block();
-                padding: 20px 0 15px 0;
+                margin: 20px 0 15px 0;
                 float: right;
-                width: 35%;
+                width: auto;
                 text-align: right;
-                
-                @include media($max-width: $phablet) {
-                    width: 50%;
+
+                @include media(mobile) {
+                    display: none;
                 }
+
             }
 
+            .status {
+                @include box-sizing(border-box);
+                font-size: 13px;
+                font-weight: 700;
+                line-height: 1.42857;
+                @include inline-block();
+                text-transform: uppercase;
+                padding: 2px 5px 0 5px;
+                margin: 20px 0 15px 0;
+                float: left;
+                text-align: center;
+                border-radius: 5px;
+                border: 2px solid $grey-status;
+                
+                &.not-started {
+                    color: $grey-status;
+                }
+                &.done {
+                    color: $green-status;
+                    border-color: $green-status;
+                }
+                &.incomplete {
+                    color: $orange-status;
+                    border-color: $orange-status;
+                }
+
+                @include media(mobile) {
+                    float: right;
+                }
+            }
+            
             .help-link {
                 display: none;
             }
@@ -83,10 +128,6 @@
                     width: 20%;
                     float: left;
                     color: $link-colour;
-
-                    @include media($max-width: $phablet) {
-                        display: none;
-                    }
                 }
 
                 .summary {
@@ -118,8 +159,6 @@
 
             }
             
-            
         }
     }
-    
 }
