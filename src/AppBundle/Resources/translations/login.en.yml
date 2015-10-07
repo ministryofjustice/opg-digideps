@@ -15,7 +15,7 @@ sessionTimeoutOutWarning: Sorry, your session has timed out either due to inacti
 sessionApiTimeoutOutWarning: Session timeout from API server.
 manualLogout:
   pageTitle: You are now signed out
-  pageSectionTitle: Thank you for using the Complete a deputy report service.
+  pageSectionTitle: Thank you for using the Complete the deputy report service.
   pageSectionDescription: Sign in to get started again.
 
 #_security:
