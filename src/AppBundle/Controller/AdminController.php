@@ -133,7 +133,7 @@ class AdminController extends Controller
         
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
         
-        $restClient->delete('user/' . $this->getUser()->getId() . '/' . $id);
+        $restClient->delete('user/' . $id);
         
         return $this->redirect($this->generateUrl('admin_homepage'));
     }
