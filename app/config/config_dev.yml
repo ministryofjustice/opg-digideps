@@ -7,13 +7,6 @@ framework:
         strict_requirements: true
     profiler: { only_exceptions: false }
 
-monolog:
-    handlers:
-        main:
-            type:  stream
-            path:  "%kernel.logs_dir%/%kernel.environment%.log"
-            level: info
-
 assetic:
     use_controller: true
 
@@ -21,3 +14,8 @@ assetic:
 #    delivery_address: me@example.com
 twig:
     cache:  false
+
+monolog:
+   handlers:
+       main:
+           formatter: line_formatter

@@ -1,4 +1,4 @@
-FROM registry.service.dsd.io/opguk/php-fpm:0.1.70
+FROM registry.service.dsd.io/opguk/php-fpm:0.1.78
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis php5-pgsql \
@@ -39,3 +39,6 @@ RUN dos2unix /app/scripts/*
 # copy init scripts
 ADD  docker/my_init.d /etc/my_init.d
 RUN  chmod a+x /etc/my_init.d/*
+
+ENV  OPG_SERVICE api
+ADD  docker/beaver.d /etc/beaver.d
