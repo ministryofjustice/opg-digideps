@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Exception\NotFound;
-use AppBundle\Exception as AppExceptions;
 use AppBundle\Service\Auth\AuthService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,7 +80,7 @@ abstract class RestController extends Controller
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
         
         if (!$entity) {
-            throw new AppExceptions\NotFound($errorMessage ? : $entityClass . ' not found');
+            throw new NotFound($errorMessage ? : $entityClass . ' not found');
         }
 
         return $entity;
