@@ -10,7 +10,7 @@ finances: "Finances"
 close: "Close"
 help: "Help"
 finishYourReport: "Finish your report"
-submitWhenReady: "Available when your report is finished"
+submitWhenReady: "Section will become available when the report is complete"
 
 contacts:
     subSectionTitle: "Contacts"
