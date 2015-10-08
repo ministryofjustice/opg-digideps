@@ -1,5 +1,5 @@
 [/var/log/app/application.log]
 format: rawjson
 type: php-fpm
-tags: php-fpm, client, application
+tags: php-fpm, {{ getv "/opg/service" }}, application
 delimiter: \n
