@@ -14,5 +14,11 @@
     <php>
         <server name="KERNEL_DIR" value="app" />
     </php>
-
+    
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../../src</directory>
+        </whitelist>
+    </filter>
+    
 </phpunit>
