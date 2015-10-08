@@ -59,11 +59,9 @@ class UserProvider implements UserProviderInterface
     {
         $token = $username;
 
-        $this->logger->info("Trying login with token $token ");
-
         $userId = $this->redis->get($token);
         if (!$userId) {
-            $this->logger->warning("token $username  not found");
+            $this->logger->warning("token $username not found");
             throw new \RuntimeException('Token non existing or not valid', 419);
         }
 
