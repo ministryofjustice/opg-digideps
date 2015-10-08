@@ -1,102 +1,22 @@
 Feature: deputy / report / submit
     
     @deputy
-    Scenario: report further info page
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
-        Then I should not see the "download-2015-report" link
-        When I click on "report-2015"
-        # set report due
-        Given I set the report 1 end date to 3 days ago
-        And I am on the "2015" report overview page
-        # assert I cannot access the following steps
-        Then The URL "/report/1/add_further_information" should not be accessible
-        Then The URL "/report/1/add_further_information/edit" should not be accessible
-        Then The URL "/report/1/declaration" should not be accessible
-        Then The URL "/report/1/submitted" should not be accessible
-        And I save the application status into "report-submit-pre"
-        # wrong declaration form
-        When I go to the "2015" report overview page
-        When I press "report_submit_submitReport"
-        Then the following fields should have an error:
-            | report_submit_reviewed_n_checked   |
-        # correct declaration form
-        When I am on the "2015" report overview page
-        When I confirm the report is ready to be submitted
-        Then the URL should match "/report/\d+/add_further_information"
-        And I save the page as "report-submit-further-info-empty"
-        # test go back link from additional-info page
-        When I click on "report-preview-go-back"
-        Then the URL should match "/report/\d+/overview"
-        # submit without adding anything
-        When I confirm the report is ready to be submitted
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        # add further info, and check they are saved
-        When I click on "report-preview-go-back"
-        And I confirm the report is ready to be submitted
-        And I fill in "report_add_info_furtherInformation" with "    nothing to add     "
-        And I press "report_add_info_saveAndContinue"
-        # go back and check info was added, and edit them
-        And I click on "report-preview-go-back"
-        And I confirm the report is ready to be submitted
-        Then I should see "nothing to add" in the "additional-info" region
-        And I save the page as "report-submit-further-info-view"
-        When I click on "edit-information"
-        Then the following fields should have the corresponding values:
-           | report_add_info_furtherInformation | nothing to add |
-        When I fill in "report_add_info_furtherInformation" with "no further info to add"
-        And I save the page as "report-submit-further-info-edit"
-        And I press "report_add_info_saveAndContinue"
-        Then the URL should match "/report/\d+/declaration"
-        # test submitting from contacts page
-        When I click on "report-preview-go-back"
-        And I follow "edit-contacts"
-        And I confirm the report is ready to be submitted
-        Then the URL should match "/report/\d+/add_further_information"
-        And I click on "report-preview-go-back"
-        # test submit from decisions page
-        When I follow "edit-decisions"
-        And I confirm the report is ready to be submitted
-        Then the URL should match "/report/\d+/add_further_information"
-        And I click on "report-preview-go-back"
-        # test submit from accounts page
-        When I follow "edit-accounts"
-        And I confirm the report is ready to be submitted
-        Then the URL should match "/report/\d+/add_further_information"
-        And I click on "report-preview-go-back"
-        # test submit from account page
-        When I am on the account "1234" page of the "2015" report
-        And I confirm the report is ready to be submitted
-        Then the URL should match "/report/\d+/add_further_information"
-        And I click on "report-preview-go-back"
-        # test submit from assets page
-        When I follow "edit-assets"
-        And I confirm the report is ready to be submitted
-        Then the URL should match "/report/\d+/add_further_information"
-
-    @deputy
     Scenario: report declaration page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
         When I click on "report-2015"    
         And I confirm the report is ready to be submitted
-        And I click on "next"
-        # test "go back" link from declaration page
-        When I click on "report-preview-go-back"
-        Then the URL should match "/report/\d+/overview"
-        When I confirm the report is ready to be submitted
-        And I click on "next"
+        And I follow "edit-report_add_further_info"
+        Then I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         And I save the page as "report-submit-declaration"
         
-
     @deputy
-    Scenario: report submission (full successful journey)
+    Scenario: report submission
         Given I reset the email log
-        And I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I save the application status into "report-submit-pre"
         # assert after login I'm redirected to report page
         Then the URL should match "/report/\d+/overview"
         # assert I cannot access the sumbmitted page directly
@@ -104,26 +24,9 @@ Feature: deputy / report / submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        #
-        # Submit steps
-        #
-        When I go to "/report/1/overview"
         And I go to the "2015" report overview page
-        #
-        # checkbox top page
-        #
-        And I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
-        #
-        # further info
-        #
-        And I fill in "report_add_info_furtherInformation" with "    nothing to add     "
-        And I press "report_add_info_saveAndContinue"
-        #
-        # declaration page
-        #
-        Then I should be on "/report/1/declaration"
         # submit without ticking "agree"
+        When I go to "/report/1/declaration"
         And I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
@@ -132,18 +35,13 @@ Feature: deputy / report / submit
         And I press "report_declaration_save"
         And the form should be valid
         And the response status code should be 200
-        #
-        # submitted page  
-        #
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
         When I go to "/report/1/display"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        #
-        # Assert emails (both confirmation to the user, and email to OPG)
-        #
+        # assert email has been sent/wrote into the disk
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
@@ -161,7 +59,6 @@ Feature: deputy / report / submit
     @deputy
     Scenario: submit feedback after report
         Given I reset the email log
-        And I load the application status from "report-submit-post"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to "/report/1/submitted"
         And I press "feedback_report_save"

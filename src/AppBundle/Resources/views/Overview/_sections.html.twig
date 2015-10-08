@@ -1,4 +1,4 @@
-{% set translationDomain = "report-overview" %}
+{% set translationDomain = "overview" %}
 {% trans_default_domain translationDomain %}
 
 <ul id="overview-sections" class="overview-sections">
@@ -9,6 +9,7 @@
             transDomain: translationDomain,
             subSection: 'decisions',
             report: report,
+            guidance: true,
             state: reportStatus.decisionsState,
             status: reportStatus.decisionsStatus,
             list: true
@@ -17,6 +18,7 @@
             transDomain: translationDomain,
             subSection: 'contacts',
             report: report,
+            guidance: true,
             list: true,
             info: true,
             state: reportStatus.contactsState,
@@ -27,12 +29,13 @@
     <li id="welfare-section" class="overview-section">
         <h2 class="heading">{{ 'careAndWelfare' | trans() }}</h2>
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
-        transDomain: translationDomain,
-        subSection: 'safeguarding',
-        report: report,
-        info: true,
-        state: reportStatus.safeguardingState,
-        status: reportStatus.safeguardingStatus
+            transDomain: translationDomain,
+            subSection: 'safeguarding',
+            report: report,
+            info: true,
+            guidance: true,
+            state: reportStatus.safeguardingState,
+            status: reportStatus.safeguardingStatus
         } %}
     </li>
 
@@ -40,24 +43,76 @@
         <li id="finances-section" class="overview-section">
             <h2 class="heading">{{ 'finances' | trans() }}</h2>
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'accounts',
-            report: report,
-            state: reportStatus.accountsState,
-            status: reportStatus.accountsStatus,
-            warning: true
+                transDomain: translationDomain,
+                subSection: 'accounts',
+                report: report,
+                state: reportStatus.accountsState,
+                status: reportStatus.accountsStatus,
+                warning: true,
+                guidance: true
             } %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
-            transDomain: translationDomain,
-            subSection: 'assets',
-            report: report,
-            state: reportStatus.assetsState,
-            status: reportStatus.assetsStatus,
-            list: true
+                transDomain: translationDomain,
+                subSection: 'assets',
+                report: report,
+                state: reportStatus.assetsState,
+                status: reportStatus.assetsStatus,
+                list: true,
+                guidance: true
             } %}
         </li>
     {% endif %}
+    
+    {% if reportStatus.isReadyToSubmit and report.isDue %}
+        <li id="report-submit-section" class="overview-section">
+            <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'report_add_further_info',
+                report: report,
+                guidance: false,
+                state: "not-started",
+                status: "Not started"
+            } %}
+        </li>
+    {%  else %}
+        <li id="report-submit-section" class="overview-section inactive">
+            <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
+                subSection: 'report_add_further_info',
+                report: report,
+                guidance: false,
+                state: "not-started",
+                status: "Not started",
+                disableedit: true 
+            } %}
+        </li>
+    {%  endif %}
 </ul>
+
+{% if report.isDue == true and reportStatus.isReadyToSubmit == false %}
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionWarning: 'submitWhenReady',
+        iconClass: 'icon icon__notification',
+        id: 'cannot-submit-warning'
+    } %}
+{% endif %}
+
+
+{% if report.isDue == false %}
+    {% set endDate = report.getEndDate() | date(" d F Y")  %}
+    {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionWarning: 'warningNotDue',
+    transOptions: {'%date%': endDate},
+    iconClass: 'icon icon__notification',
+    id: 'cannot-submit-warning'
+    } %}
+{% endif %}
+
+
 <script>
     $( document ).ready(function() {
         $('.sub-section').each(function(index,element) {

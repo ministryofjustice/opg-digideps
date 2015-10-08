@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
+
 
 class ReportController extends Controller
 {
@@ -106,12 +108,16 @@ class ReportController extends Controller
      */
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
+        /** @var \AppBundle\Entity\Report $report */
         $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
+
+        /** @var TranslatorInterface $translator*/
+        $translator =  $this->get('translator');
         
         // check status
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        $reportStatusService = new ReportStatusService($report, $translator);
+        if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
+            throw new \RuntimeException($translator->trans('submissionExceptions.readyForSubmission',[], 'validators'));
         }
         
         $clients = $this->getUser()->getClients();
@@ -135,7 +141,7 @@ class ReportController extends Controller
             $action = 'edit';
         }
         
-        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
+
         
         return [
             'action' => $action,
@@ -153,10 +159,14 @@ class ReportController extends Controller
     public function declarationAction(Request $request, $reportId)
     {
         $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
+        
+        /** @var TranslatorInterface $translator*/
+        $translator =  $this->get('translator');
+
         // check status
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        $reportStatusService = new ReportStatusService($report, $translator);
+        if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
+            throw new \RuntimeException($translator->trans('submissionExceptions.readyForSubmission',[], 'validators'));
         }
         
         $clients = $this->getUser()->getClients();
@@ -191,11 +201,16 @@ class ReportController extends Controller
     {
         $util = $this->get('util');
         $report = $util->getReport($reportId);
+
+        /** @var TranslatorInterface $translator*/
+        $translator =  $this->get('translator');
+        
         // check status
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        if(!$report->getSubmitted() ) {
+            throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
+
+
         $client = $util->getClient($report->getClient());
 
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
@@ -227,11 +242,15 @@ class ReportController extends Controller
     {
         $util = $this->get('util');
         $report = $util->getReport($reportId);
+        
+        /** @var TranslatorInterface $translator*/
+        $translator =  $this->get('translator');
+
         // check status
-        $violations = $this->get('validator')->validate($report, ['due', 'readyforSubmission', 'reviewedAndChecked', 'submitted']);
-        if (count($violations)) {
-            throw new \RuntimeException($violations->getIterator()->current()->getMessage());
+        if(!$report->getSubmitted() ) {
+            throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
+        
         $client = $util->getClient($report->getClient());
 
         return [
