@@ -74,22 +74,6 @@ class PeriodTest extends WebTestCase
         $this->assertContains($this->dueFormatted, $dueElement->eq(0)->text());
     }
     
-    /** @test */
-    public function comfirmdisplaysCorrectEditlink() {
-        $this->setupReport();
-
-        $html = $this->twig->render('AppBundle:Overview:_period.html.twig', [
-            'report' => $this->report
-        ]);
-
-        $crawler = new Crawler($html);
-
-        $dateRangeElement = $crawler->filter('.edit-link');
-        
-        $this->assertEquals("/client/show/edit-report/1", $dateRangeElement->eq(0)->attr('href'));
-        
-    }
-
     private function setupReport()
     {
         $today = new \DateTime;
