@@ -7,7 +7,12 @@ $grey-status: #8C9295;
 
     padding-top: 10px;
     border-top: 1px solid $grey-3;
+    color: $text-colour;
 
+    @include media(mobile) {
+        padding-top: 20px;
+    }
+    
     .overview-section {
         
         padding-top: 18px;
@@ -22,6 +27,9 @@ $grey-status: #8C9295;
             color: $text-colour;
             background: $grey-3;
             padding: 7px 10px 5px 10px;
+            @include media(mobile) {
+               font-size: 16px;
+            }
         }
                 
         .sub-section {
@@ -40,6 +48,13 @@ $grey-status: #8C9295;
                 margin: 20px 10px 15px 5px;
                 width: 35%;
                 float: left;
+                color: $grey-status;
+                
+                @include media(mobile) {
+                    font-size: 16px;
+                    width: auto;
+                    margin: 10px 10px 10px 5px;
+                }
                 
                 a {
                     color: $black;
@@ -60,11 +75,15 @@ $grey-status: #8C9295;
                 float: right;
                 width: auto;
                 text-align: right;
+                text-decoration: underline;
 
                 @include media(mobile) {
                     display: none;
                 }
 
+                &.disabled {
+                    color: $grey-status;
+                }
             }
 
             .status {
@@ -94,7 +113,9 @@ $grey-status: #8C9295;
                 }
 
                 @include media(mobile) {
+                    font-size: 11px;
                     float: right;
+                    margin: 10px 0 10px 0;
                 }
             }
             
@@ -128,6 +149,10 @@ $grey-status: #8C9295;
                     width: 20%;
                     float: left;
                     color: $link-colour;
+
+                    @include media(mobile) {
+                        display: none;
+                    }
                 }
 
                 .summary {
@@ -159,6 +184,68 @@ $grey-status: #8C9295;
 
             }
             
+        }
+    }
+}
+
+#report-period-due {
+    
+    @extend %contain-floats;
+    padding: 20px 0 20px 0;
+    border-top: 1px solid $grey-3;
+
+    @include media(mobile) {
+        padding: 10px 0 10px 0;
+    }
+    
+    #report-period {
+        float: left;
+        @include media(mobile) {
+           float: none;
+            margin-bottom: 10px;
+        }
+    }
+    
+    #report-due {
+        float: right;
+        @include media(mobile) {
+            float: none;
+        }
+    }
+
+    .label {
+        @include core-19();
+    }
+    
+    .value {
+        @include bold-19();
+    }
+    
+    .edit-link {
+        padding-left: 20px;
+        
+        @include media(mobile) {
+            padding-left: 5px;
+        }
+        
+    }
+    
+}
+
+.report-overview {
+    
+    .page-section-warning {
+        width: auto;
+        @include media(mobile) {
+            #submit-start-at {
+                display: block;
+            }
+        }
+    }
+    
+    span.icon.icon__notification {
+        @include media(mobile) {
+            display: none;
         }
     }
 }

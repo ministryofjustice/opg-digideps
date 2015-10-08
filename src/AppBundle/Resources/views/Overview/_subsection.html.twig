@@ -1,36 +1,53 @@
 <div id="{{ subSection }}-sub-section" class="sub-section">
-    <h3 class="heading"><a href="{{ path(subSection, {reportId: report.id}) }}">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</a></h3>
-    <a id="help-{{ subSection }}" class="help-link summary">
-        <span class="open-text">{{ 'close' | trans({}, translationDomain) }}</span>
-        <span class="closed-text">{{ 'help' | trans({}, translationDomain) }}</span>
-    </a>
-    <span class="status {{ state }}">{{ status }}</span>
-    <a id="edit-{{ subSection }}" class="edit-link" href="{{ path(subSection, {reportId: report.id}) }}" >
-        {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
-    </a>
-    <div id="{{ subSection }}-guidance" class="guidance content">
-        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-            transDomain: translationDomain,
-            subSectionDescription: subSection ~ '.subSectionDescription'
-        } %}
-        {%  if list is defined and list %}
-            {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
-                transDomain: translationDomain,
-                pageSectionList: subSection ~ '.subSectionList'
-            } %}
+    <h3 class="heading">
+        {% if disableedit is defined and disableedit == true %}
+            {{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}
+        {%  else  %}
+            <a href="{{ path(subSection, {reportId: report.id}) }}">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</a>
         {%  endif %}
-        {%  if info is defined and info %}
+    </h3>
+    {%  if guidance is defined and guidance %}
+        <a id="help-{{ subSection }}" class="help-link summary">
+            <span class="open-text">{{ 'close' | trans({}, translationDomain) }}</span>
+            <span class="closed-text">{{ 'help' | trans({}, translationDomain) }}</span>
+        </a>
+    {%  else %}
+        <div class="help-link">&nbsp;</div>
+    {% endif %}
+    <span class="status {{ state }}">{{ status }}</span>
+
+    {% if disableedit is defined and disableedit == true %}
+        <span id="edit-{{ subSection }}" class="edit-link disabled">{{ (subSection ~ '.edit') | trans({}, translationDomain) }}</span>
+    {% else %}
+        <a id="edit-{{ subSection }}" class="edit-link" href="{{ path(subSection, {reportId: report.id}) }}" >
+            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+        </a>
+    {% endif %}
+    
+    {%  if guidance is defined and guidance %}
+        <div id="{{ subSection }}-guidance" class="guidance content">
             {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
                 transDomain: translationDomain,
-                subSectionDescription: subSection ~ '.subSectionInfo'
+                subSectionDescription: subSection ~ '.subSectionDescription'
             } %}
-        {% endif %}
-        {%  if warning is defined and warning %}
-            {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionWarning: subSection ~ '.subSectionWarning'
-            } %}
-        {% endif %}
-    </div>
+            {%  if list is defined and list %}
+                {% include 'AppBundle:Components/Page:_page-section-list.html.twig' with {
+                    transDomain: translationDomain,
+                    pageSectionList: subSection ~ '.subSectionList'
+                } %}
+            {%  endif %}
+            {%  if info is defined and info %}
+                {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
+                    transDomain: translationDomain,
+                    subSectionDescription: subSection ~ '.subSectionInfo'
+                } %}
+            {% endif %}
+            {%  if warning is defined and warning %}
+                {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
+                transDomain: translationDomain,
+                pageSectionWarning: subSection ~ '.subSectionWarning'
+                } %}
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
-    
