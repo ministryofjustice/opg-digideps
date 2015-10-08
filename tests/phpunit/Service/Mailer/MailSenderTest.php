@@ -100,5 +100,45 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         $this->assertEquals('f', $message->getChildren()[1]->getFilename());
         $this->assertEquals('application/octect', $message->getChildren()[1]->getContentType());
     }
+    
+    
+    public function testSendFilWriter()
+    {
+        $filename = '/tmp/dd_unittest_email.json';
+        file_put_contents($filename, '');
+        
+        $transportMock = new Transport\TransportMock();
+        $mockMailer = new \Swift_Mailer($transportMock);
+        $this->mailSender->addSwiftMailer('default', $mockMailer);
+        $this->mailSender->writeToFileEmailMatching('/^behat-/i', $filename);
+        
+        $this->email = m::stub('AppBundle\Model\Email', [
+            'getToEmail' => 'behat-t@example.org',
+            'getToName' => 'tn',
+            'getFromEmail' => 'f@example.org',
+            'getFromName' => 'fn',
+            'getSubject' => 's',
+            'getBodyText' => 'bt',
+            'getBodyHtml' => 'bh',
+            'getAttachments' => [
+                m::stub('AppBundle\Model\EmailAttachment', [
+                    'getContent' => 'c',
+                    'getFilename' => 'f',
+                    'getContentType' => 'application/octect',
+                ])
+            ],
+        ]);
+        
+        $this->validator->shouldReceive('validate')->andReturn([]);
+        
+        $this->mailSender->send($this->email, ['text'], 'default');
+        
+        $emailJson = json_decode(file_get_contents($filename), true)[0];
+        $this->assertEquals(['behat-t@example.org' => 'tn'], $emailJson['to']);
+        
+        
+        // assert sent message
+        $this->assertCount(0, $transportMock->getSentMessages());
+    }
 
 }
