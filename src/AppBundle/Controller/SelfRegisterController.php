@@ -3,7 +3,7 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Model\SelfRegisterData;
 use AppBundle\Entity\User;
 
@@ -17,9 +17,13 @@ class SelfRegisterController extends RestController
      * @Route("")
      * @Method({"POST"})
      */
-    public function register()
+    public function register(Request $request)
     {
-        $data = $this->deserializeBodyContent();
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
+        
+        $data = $this->deserializeBodyContent($request);
 
         $selfRegisterData = new SelfRegisterData();
 

@@ -54,6 +54,10 @@ snc_redis:
             type: predis
             alias: default
             dsn: %redis_dsn%
+            
+parameters:
+    # fixes the JMS bundle v.1.0 using Twig_Function_Method
+    jms_serializer.twig_extension.class: AppBundle\Twig\SerializerExtensionDisabled
 
 services:
     logstash_formatter:

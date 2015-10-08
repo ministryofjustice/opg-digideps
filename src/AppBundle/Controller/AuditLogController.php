@@ -4,7 +4,9 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception as AppExceptions;
 
 /**
  * @Route("/audit-log")
@@ -20,16 +22,17 @@ class AuditLogController extends RestController
      * @Route("")
      * @Method({"POST"})
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
-        $data = $this->deserializeBodyContent();
-
-        // assert mandatory params
-        foreach (['performed_by_user', 'ip_address', 'created_at', 'action'] as $k) {
-            if (!array_key_exists($k, $data)) {
-                throw new \InvalidArgumentException("Missing parameter $k");
-            }
-        }
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
+        $data = $this->deserializeBodyContent($request, [
+            'performed_by_user' => 'mustExist', 
+            'ip_address' => 'mustExist', 
+            'created_at' => 'mustExist', 
+            'action' => 'mustExist'
+        ]);
+        
         if (!array_key_exists('id', $data['performed_by_user'])) {
             throw new \InvalidArgumentException("Missing parameter performed_by_user.id");
         }
@@ -45,8 +48,7 @@ class AuditLogController extends RestController
            $auditLogEntry->setUserEdited($this->findEntityBy('User', $data['user_edited']['id']));
         }
 
-        $this->getEntityManager()->persist($auditLogEntry);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($auditLogEntry);
 
         return $auditLogEntry;
     }
@@ -57,7 +59,9 @@ class AuditLogController extends RestController
      */
     public function getAll()
     {
-        $this->setJmsSerialiserGroup(['audit_log']);
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
+        $this->setJmsSerialiserGroups(['audit_log']);
 
         return $this->getRepository('AuditLogEntry')->findBy([], ['id'=>'DESC']);
     }

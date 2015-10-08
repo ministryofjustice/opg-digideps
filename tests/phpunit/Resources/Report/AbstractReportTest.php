@@ -23,12 +23,12 @@ class AbstractReportTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient([ 'environment' => 'test','debug' => false ]);
-        $this->client->getContainer()->enterScope('request');
+        $this->frameworkBundleClient = static::createClient([ 'environment' => 'test','debug' => false ]);
+        $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
-        $this->client->getContainer()->set('request', $request, 'request');
-        $this->twig = $this->client->getContainer()->get('templating');
+        $this->frameworkBundleClient->getContainer()->set('request', $request, 'request');
+        $this->twig = $this->frameworkBundleClient->getContainer()->get('templating');
     }
 
     public function tearDown()

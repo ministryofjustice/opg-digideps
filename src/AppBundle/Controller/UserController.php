@@ -4,11 +4,10 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Entity\User;
-use AppBundle\Exception\NotFound;
+use AppBundle\Exception as AppExceptions;
+use AppBundle\Entity as EntityDir;
+
 
 //TODO
 //http://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
@@ -19,16 +18,21 @@ use AppBundle\Exception\NotFound;
 class UserController extends RestController
 {
     /**
-     * @param queryString skip-mail 
-     * 
      * @Route("")
      * @Method({"POST"})
      */
     public function add(Request $request)
     {
-        $data = $this->deserializeBodyContent();
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
+        $data = $this->deserializeBodyContent($request, [
+            'role_id' => 'notEmpty',
+            'email' => 'notEmpty',
+            'firstname' => 'mustExist',
+            'lastname' => 'mustExist',
+        ]);
 
-        $user = new \AppBundle\Entity\User();
+        $user = new EntityDir\User();
        
         $this->populateUser($user, $data);
         
@@ -41,61 +45,29 @@ class UserController extends RestController
         }
         
         // send activation email
-        if (empty($request->query->get('skip-mail'))) {
-            $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
-            $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
-        }
+        $user->recreateRegistrationToken();
+        $activationEmail = $this->getMailFactory()->createActivationEmail($user, 'activate');
+        $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
         
-        $this->getEntityManager()->persist($user);
-        $this->getEntityManager()->flush($user);
-        
-         //TODO return status code
+        $this->persistAndFlush($user);
         
         return ['id'=>$user->getId()];
     }
     
     
-     /**
-     * @Route("/{userId}/recreate-token/email/{email}", defaults={"email": "none"})
-     * @Method({"PUT"})
-     */
-    public function recreateToken($userId, $email)
-    {
-        if (!in_array($email, ['activate', 'pass-reset'])) {
-            throw new \InvalidArgumentException(__METHOD__ . ' invalid email template');
-        }
-        $user = $this->findEntityBy('User', $userId, 'User not found'); /* @var $user User */
-
-        $user->recreateRegistrationToken();
-        
-        $this->getEntityManager()->flush($user);
-
-        switch ($email) {
-            case 'activate':
-                // send acivation email to user
-                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
-                $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
-                break;
-
-            case 'pass-reset':
-                // send reset password email
-                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
-                $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
-                break;
-        }
-        
-        return $user->getId();
-    }
-    
+     
     /**
      * @Route("/{id}")
      * @Method({"PUT"})
      */
-    public function update($id)
+    public function update(Request $request, $id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
-
-        $data = $this->deserializeBodyContent();
+        if ($this->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        }
+        
+        $data = $this->deserializeBodyContent($request);
         
         $this->populateUser($user, $data);
         
@@ -106,19 +78,56 @@ class UserController extends RestController
     
     
     /**
+     * //TODO take user from logged user
+     * 
+     * @Route("/{id}/is-password-correct")
+     * @Method({"POST"})
+     */
+    public function isPasswordCorrect(Request $request, $id)
+    {
+        // for both ADMIN and DEPUTY
+        
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        if ($this->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to check other user's password");
+        }
+        
+        $data = $this->deserializeBodyContent($request, [
+            'password' => 'notEmpty',
+        ]);
+        
+        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        
+        $oldPassword = $encoder->encodePassword($data['password'], $user->getSalt());
+        if ($oldPassword == $user->getPassword()) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * change password, activate user and send remind email
      * @Route("/{id}/set-password")
      * @Method({"PUT"})
      */
-    public function changePassword($id)
+    public function changePassword(Request $request, $id)
     {
-        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
+        //for both admin and users
         
-        $data = $this->deserializeBodyContent();
-        if (empty($data['password'])) {
-            throw new \InvalidArgumentException('missing password');
+        $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user EntityDir\User */
+        if ($this->getUser()->getId() != $user->getId()) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
         }
-        $user->setPassword($data['password']);
+        
+        $data = $this->deserializeBodyContent($request, [
+            'password_plain' => 'notEmpty',
+        ]);
+        
+        $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+        $newPassword = $encoder->encodePassword($data['password_plain'], $user->getSalt());
+        
+        $user->setPassword($newPassword);
         
         if (array_key_exists('set_active', $data)) {
            $user->setActive($data['set_active']);
@@ -147,31 +156,29 @@ class UserController extends RestController
      */
     public function getOneById($id)
     {
-        return $this->findEntityBy('User', $id, 'User not found');
+        $user = $this->findEntityBy('User', $id, 'User not found');
+        $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
+        
+        // only allow admins to access any user, otherwise the user can only see himself
+        if (!$this->isGranted(EntityDir\Role::ADMIN) && !$requestedUserIsLogged) {
+            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+        }
+        
+        return $user;
     }
     
     /**
-     * 
-     * @Route("/{adminId}/{id}")
+     * @Route("/{id}")
      * @Method({"DELETE"})
      * 
      * @param integer $id
-     * @return array []
-     * @throws \RuntimeException
      */
-    public function delete($id,$adminId)
+    public function delete($id)
     {
-        $adminUser = $this->getRepository('User')->find($adminId);
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
         
-        if(empty($adminUser) || ($adminUser->getRole()->getRole() != "ROLE_ADMIN") || ($adminId == $id)){
-            throw new \RuntimeException("You are not authorized to perform this action");
-        }
+        $user = $this->findEntityBy('User', $id);
         
-        $user = $this->getRepository('User')->find($id);
-        
-        if(empty($user)){
-            throw new \RuntimeException("User not found");
-        }
         $this->getEntityManager()->remove($user);
         $this->getEntityManager()->flush();
         
@@ -185,95 +192,66 @@ class UserController extends RestController
      */
     public function getAll($order_by, $sort_order)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
         return $this->getRepository('User')->findBy([],[ $order_by => $sort_order ]);
     }
 
-    /**
-     * @Route("/get-user-by-email/{email}")
-     * @Method({"GET"})
-     */
-    public function getUserByEmail($email)
-    {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
-        }
-        
-        $this->setJmsSerialiserGroup($serialisedGroups);
-        
-        $user = $this->getRepository('User')->getByEmail(strtolower($email));
-        
-        if(empty($user)){
-            throw new \Exception('User not found');
-        }
-        
-        return $user;
-    }
     
     /**
-     * @Route("/get-admin-by-email/{email}")
-     * @Method({"GET"})
+     * Requires client secret 
+     * 
+     * @Route("/recreate-token/{email}/{type}", defaults={"email": "none"}, requirements={
+     *   "type" = "(activate|pass-reset)"
+     * })
+     * @Method({"PUT"})
      */
-    public function getAdminByEmail($email)
+    public function recreateToken(Request $request, $email, $type)
     {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
+        }
+        $user = $this->findEntityBy('User', ['email'=>$email]);
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         
-        $this->setJmsSerialiserGroup($serialisedGroups);
+        $user->recreateRegistrationToken();
         
-        $user = $this->getRepository('User')->getAdminByEmail(strtolower($email));
-        
-        if(empty($user)){
-            throw new \Exception('User not found');
+        $this->getEntityManager()->flush($user);
+
+        switch ($type) {
+            case 'activate':
+                // send acivation email to user
+                $activationEmail = $this->getMailFactory()->createActivationEmail($user);
+                $this->getMailSender()->send($activationEmail, [ 'text', 'html']);
+                break;
+
+            case 'pass-reset':
+                // send reset password email
+                $resetPasswordEmail = $this->getMailFactory()->createResetPasswordEmail($user);
+                $this->getMailSender()->send($resetPasswordEmail, [ 'text', 'html']);
+                break;
         }
         
-        return $user;
+        return $user->getId();
     }
     
     
     /**
-     * @Route("/get-by-email/{email}")
+     * @Route("/get-by-token/{token}")
      * @Method({"GET"})
      */
-    public function getByEmail($email)
+    public function getByToken(Request $request, $token)
     {
-        $request = $this->getRequest();
-       
-        $serialisedGroups = ['basic'];
-        
-        if($request->query->has('groups')){
-            $serialisedGroups = $request->query->get('groups');
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
         
-        $this->setJmsSerialiserGroup($serialisedGroups);
-        
-        return $this->findEntityBy('User', ['email'=> strtolower($email)], "User not found");
-    }
-    
-    
-    /**
-     * @Route("/get-by-token/{domain}/{token}",defaults={ "domain" = "hybrid"}, requirements={"domain" = "(admin|deputy|hybrid)"})
-     * @Method({"GET"})
-     */
-    public function getByToken($token, $domain)
-    {
         $user = $this->findEntityBy('User', ['registrationToken'=>$token], "User not found"); /* @var $user User */
         
-        $role = $user->getRole()->getRole();
-        
-        if ($domain ==='admin' && $role != 'ROLE_ADMIN') {
-            throw new NotFound('User not found');
-        }
-        if ($domain ==='deputy' && $role == 'ROLE_ADMIN') {
-            throw new NotFound('User not found');
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
         }
         
         return $user;
@@ -286,7 +264,7 @@ class UserController extends RestController
      * @param User $user
      * @param array $data
      */
-    private function populateUser(User $user, array $data)
+    private function populateUser(EntityDir\User $user, array $data)
     {
         // Cannot easily(*) use JSM deserialising with already constructed objects. 
         // Also. It'd be possible to differentiate when a NULL value is intentional or not

@@ -12,11 +12,11 @@ use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class RestInputOuputFormatter
 {
-    const HEADER_JMS_GROUP = 'JmsSerialiseGroup';
-    
     /**
      * @var Serializer
      */
@@ -42,7 +42,16 @@ class RestInputOuputFormatter
      */
     private $debug;
 
-
+    /**
+     * @var Closure
+     */
+    private $responseModifiers = [];
+    
+    /**
+     * @var Closure
+     */
+    private $contextModifiers = [];
+    
     public function __construct(Serializer $serializer, LoggerInterface $logger, array $supportedFormats, $defaultFormat, $debug)
     {
         $this->serializer = $serializer;
@@ -88,24 +97,20 @@ class RestInputOuputFormatter
         }
 
         $context = SerializationContext::create(); //->setSerializeNull(true);
-        $serialiseGroups = $request->headers->get(self::HEADER_JMS_GROUP);
-        
-        if (!empty($serialiseGroups)) {
-            if(is_array($serialiseGroups)){
-                $context->setGroups($serialiseGroups);
-            }
+        // context modifier
+        foreach ($this->contextModifiers as $modifier) {
+            $modifier($context);
         }
         
         $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
         $response->headers->set('Content-Type', 'application/' . $format);
+        // response modifier
+        foreach ($this->responseModifiers as $modifier) {
+            $modifier($response);
+        }
         
         return $response;
-    }
-    
-    public static function addJmsSerialiserGroupToRequest($request, $group)
-    {
-        $request->headers->set(self::HEADER_JMS_GROUP, [$group]);
     }
 
     /**
@@ -125,12 +130,12 @@ class RestInputOuputFormatter
             'data' => $event->getControllerResult(), 
             'message' => ''
         );
-        
+
         $response = $this->arrayToResponse($data, $event->getRequest());
         
         $event->setResponse($response);
     }
-
+    
     /**
      * Attach the following with
        services:
@@ -142,25 +147,37 @@ class RestInputOuputFormatter
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        $exceptionMessage = $event->getException()->getMessage();
-        $exceptionCode = $event->getException()->getCode();
+        $e = $event->getException();
+        $message = $e->getMessage();
+        $code = $e->getCode();
+        
+        // log exception
+        $this->logger->warning($message);
+        
+        // transform message and code 
+        if ($code < 400 || $code > 599) {
+            $code = 500;
+        }
+        if ($e instanceof \InvalidArgumentException) {
+            $code = 400;
+        }
+        if ($e instanceof AccessDeniedHttpException) {
+            $code = 403;
+        }
         
         $data = array(
             'success' => false, 
             'data' => '', 
-            'message' => $exceptionMessage,
-            'stacktrace' => 'enable debug mode to see it',
-            'code' => $exceptionCode
+            'message' => $message,
+            'stacktrace' => ($this->debug) ? 
+                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 1000))
+                    : 'enable debug mode to see it',
+            'code' => $code
         );
         
-        if ($this->debug) {
-            $data['stacktrace'] = $exceptionMessage;
-        }
-        
-        $this->logger->warn($exceptionMessage);
-        
         $response = $this->arrayToResponse($data, $event->getRequest());
-
+        $response->setStatusCode($code);
+        
         $event->setResponse($response);
     }
     
@@ -171,6 +188,9 @@ class RestInputOuputFormatter
 
         register_shutdown_function(function () use ($event) {
             $lastError = error_get_last();
+            if (!$lastError) {
+                return;
+            }
             echo json_encode(array(
                 'success' => false, 
                 'data' => '', 
@@ -180,6 +200,22 @@ class RestInputOuputFormatter
             //TODO find a way to use kernely temrinate instead, usgin 
         });
 
+    }
+    
+    /**
+     * @param \Closure $f
+     */
+    public function addResponseModifier(\Closure $f)
+    {
+        $this->responseModifiers[] = $f;
+    }
+    
+     /**
+     * @param \Closure $f
+     */
+    public function addContextModifier(\Closure $f)
+    {
+        $this->contextModifiers[] = $f;
     }
     
 }

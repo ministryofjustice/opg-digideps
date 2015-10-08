@@ -156,7 +156,7 @@ class Report
      * @var boolean
      * @JMS\Type("boolean")
      * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false})
+     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
     
@@ -217,6 +217,8 @@ class Report
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->noAssetToAdd = null;
+        $this->reportSeen = true;
     }
     
     /**
@@ -412,10 +414,10 @@ class Report
     /**
      * Set client
      *
-     * @param \AppBundle\Entity\Client $client
+     * @param Client $client
      * @return Report
      */
-    public function setClient(\AppBundle\Entity\Client $client = null)
+    public function setClient(Client $client = null)
     {
         $this->client = $client;
 
@@ -425,7 +427,7 @@ class Report
     /**
      * Get client
      *
-     * @return \AppBundle\Entity\Client 
+     * @return Client 
      */
     public function getClient()
     {
@@ -440,10 +442,10 @@ class Report
     /**
      * Add contacts
      *
-     * @param \AppBundle\Entity\Contact $contacts
+     * @param Contact $contacts
      * @return Report
      */
-    public function addContact(\AppBundle\Entity\Contact $contacts)
+    public function addContact(Contact $contacts)
     {
         $this->contacts[] = $contacts;
 
@@ -453,9 +455,9 @@ class Report
     /**
      * Remove contacts
      *
-     * @param \AppBundle\Entity\Contact $contacts
+     * @param Contact $contacts
      */
-    public function removeContact(\AppBundle\Entity\Contact $contacts)
+    public function removeContact(Contact $contacts)
     {
         $this->contacts->removeElement($contacts);
     }
@@ -484,10 +486,10 @@ class Report
     /**
      * Add accounts
      *
-     * @param \AppBundle\Entity\Account $accounts
+     * @param Account $accounts
      * @return Report
      */
-    public function addAccount(\AppBundle\Entity\Account $accounts)
+    public function addAccount(Account $accounts)
     {
         $this->accounts[] = $accounts;
 
@@ -497,9 +499,9 @@ class Report
     /**
      * Remove accounts
      *
-     * @param \AppBundle\Entity\Account $accounts
+     * @param Account $accounts
      */
-    public function removeAccount(\AppBundle\Entity\Account $accounts)
+    public function removeAccount(Account $accounts)
     {
         $this->accounts->removeElement($accounts);
     }
@@ -528,10 +530,10 @@ class Report
     /**
      * Add decisions
      *
-     * @param \AppBundle\Entity\Decision $decision
+     * @param Decision $decision
      * @return Report
      */
-    public function addDecision(\AppBundle\Entity\Decision $decision)
+    public function addDecision(Decision $decision)
     {
         $this->decisions[] = $decision;
 
@@ -541,9 +543,9 @@ class Report
     /**
      * Remove decisions
      *
-     * @param \AppBundle\Entity\Decision $decision
+     * @param Decision $decision
      */
-    public function removeDecision(\AppBundle\Entity\Decision $decision)
+    public function removeDecision(Decision $decision)
     {
         $this->decisions->removeElement($decision);
     }
@@ -573,10 +575,10 @@ class Report
     /**
      * Add assets
      *
-     * @param \AppBundle\Entity\Asset $assets
+     * @param Asset $assets
      * @return Report
      */
-    public function addAsset(\AppBundle\Entity\Asset $assets)
+    public function addAsset(Asset $assets)
     {
         $this->assets[] = $assets;
 
@@ -586,9 +588,9 @@ class Report
     /**
      * Remove assets
      *
-     * @param \AppBundle\Entity\Asset $assets
+     * @param Asset $assets
      */
-    public function removeAsset(\AppBundle\Entity\Asset $assets)
+    public function removeAsset(Asset $assets)
     {
         $this->assets->removeElement($assets);
     }
@@ -668,7 +670,7 @@ class Report
     /**
      * Get Safeguarding
      *
-     * @return \AppBundle\Entity\Safeguarding
+     * @return Safeguarding
      */
     public function getSafeguarding()
     {
@@ -678,10 +680,10 @@ class Report
     /**
      * Set Safeguarding
      *
-     * @param \AppBundle\Entity\Safeguarding $safeguarding
-     * @return \AppBundle\Entity\Report
+     * @param Safeguarding $safeguarding
+     * @return Report
      */
-    public function setSafeguarding(\AppBundle\Entity\Safeguarding $safeguarding = null)
+    public function setSafeguarding(Safeguarding $safeguarding = null)
     {
         $this->safeguarding = $safeguarding;
 
@@ -738,10 +740,10 @@ class Report
     /**
      * Set courtOrderType
      *
-     * @param \AppBundle\Entity\CourtOrderType $courtOrderType
+     * @param CourtOrderType $courtOrderType
      * @return Report
      */
-    public function setCourtOrderType(\AppBundle\Entity\CourtOrderType $courtOrderType = null)
+    public function setCourtOrderType(CourtOrderType $courtOrderType = null)
     {
         $this->courtOrderType = $courtOrderType;
 
@@ -751,7 +753,7 @@ class Report
     /**
      * Get courtOrderType
      *
-     * @return \AppBundle\Entity\CourtOrderType 
+     * @return CourtOrderType 
      */
     public function getCourtOrderType()
     {
@@ -784,6 +786,16 @@ class Report
     public function getReportSeen()
     {
         return $this->reportSeen;
+    }
+    
+    /**
+     * @param User $user
+     * 
+     * @return boolean
+     */
+    public function belongsToUser(User $user)
+    {
+        return in_array($user->getId(), $this->getClient()->getUserIds());
     }
 
 
