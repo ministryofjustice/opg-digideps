@@ -35,7 +35,7 @@ services:
             - @logger
             - "%api_client_secret%"
     deputyprovider:
-        class:  AppBundle\UserProvider\DeputyProvider
+        class:  AppBundle\Service\DeputyProvider
         arguments: [ @restClient, @logger ]
     util:
         class: AppBundle\Service\Util
