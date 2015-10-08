@@ -50,8 +50,6 @@ class AuthService
      */
     public function getUserByEmailAndPassword($email, $pass)
     {
-        $this->logger->info(__METHOD__." called with $email and $pass ");
-        
         if (!$email || !$pass) {
             return null;
         }
@@ -69,7 +67,6 @@ class AuthService
             ->encodePassword($pass, $user->getSalt());
         
         if ($user->getPassword() == $encodedPass) {
-            $this->logger->info(__METHOD__." password match ");
             return $user;
         } 
         
@@ -100,6 +97,9 @@ class AuthService
     public function isSecretValidForUser(User $user, Request $request)
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
+        if (empty($this->clientSecrets[$clientSecretFromRequest]['permissions'])) {
+            return false;
+        }
         $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
         $userRole = $user->getRole()->getRole();
         
