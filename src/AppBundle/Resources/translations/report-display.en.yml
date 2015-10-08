@@ -1,0 +1,13 @@
+decisionsMadeAsDeputy: Decisions made as deputy
+pages:
+    reportPeriod:
+        healthAndWelfare:
+            contacts:
+                subSectionTitle: Contacts
+        propertyAndAffairs:
+            accounts:
+                subSectionTitle: Accounts
+            assets:
+                subSectionTitle: Assets
+                noAssets: The client has not assets
+
