@@ -7,17 +7,8 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
     em:
-        alias: doctrine.orm.entity_manager    
-    # pass it into Swift_Mailer to always write email into disk rather than sending them
-    mailSender:
-        class: AppBundle\Service\Mailer\MailSender
-        arguments: [ @service_container ]
-    mailFactory:
-        class: AppBundle\Service\Mailer\MailFactory
-        arguments: [ @service_container ]
-    mailer.transport.fileWriter:
-        class: AppBundle\Service\Mailer\Transport\FileWriter
-        arguments: [ "/tmp/dd_mail_mock" ]
+        alias: doctrine.orm.entity_manager  
+    # default transport + swift mailer
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_default_hostname%", "%smtp_default_port%" ]
@@ -25,9 +16,27 @@ services:
             - [ setEncryption, [ "tls"]]
             - [ setUsername, [ %smtp_default_user%]]
             - [ setPassword, [ %smtp_default_password%]]
+    mailer.swiftMailers.default:
+        class: Swift_Mailer
+        arguments: [ @mailer.transport.smtp.default ]
+    # secure transport + swift mailer
     mailer.transport.smtp.secure:
         class: Swift_SmtpTransport
         arguments: [ "%smtp_secure_hostname%", "%smtp_secure_port%" ]
+    mailer.swiftMailers.secure:
+        class: Swift_Mailer
+        arguments: [ @mailer.transport.smtp.secure ]
+    # mail sender accepting those the above-created swift mailer
+    mailSender:
+        class: AppBundle\Service\Mailer\MailSender
+        arguments: [ @validator ]
+        calls:
+            - [ addSwiftMailer, [ "default", @mailer.swiftMailers.default] ]
+            - [ addSwiftMailer, [ "secure-smtp" , @mailer.swiftMailers.secure] ]
+            - [ writeToFileEmailMatching, ["%email_mock_address%", "%email_mock_path%"] ]
+    mailFactory:
+        class: AppBundle\Service\Mailer\MailFactory
+        arguments: [ @service_container ]
     componentsExtension:
         class: AppBundle\Twig\ComponentsExtension
         public: false

@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service\Mailer\Transport;
 
 use Swift_Transport;
@@ -7,17 +8,21 @@ use Swift_Mime_Message;
 
 class TransportMock implements Swift_Transport
 {
+
     private $started = false;
     private $stopped = false;
-    
+    private $sentMessages = [];
+
+
     public function resetMockVars()
     {
         $this->started = false;
         $this->stopped = false;
-        
+
         return $this;
     }
-    
+
+
     public function isStarted()
     {
         return $this->started;
@@ -32,7 +37,9 @@ class TransportMock implements Swift_Transport
 
     public function send(Swift_Mime_Message $message, &$failedRecipients = null)
     {
+        $this->sentMessages[] = $message;
         
+        return 'sent';
     }
 
 
@@ -45,6 +52,14 @@ class TransportMock implements Swift_Transport
     public function stop()
     {
         $this->stopped = true;
+    }
+    
+    /**
+     * @return \Swift_Message[]
+     */
+    public function getSentMessages()
+    {
+        return $this->sentMessages;
     }
 
 }
