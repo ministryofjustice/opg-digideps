@@ -5,9 +5,7 @@
     <div id="report-period">
         <div class="label">{{ 'reportingPeriod' | trans() }}:</div>
         <div class="value">
-            {{ report.startDate | date(" d F Y") }}
-            to
-            {{ report.endDate | date(" d F Y") }}
+            {{ report.startDate | date(" d F Y") }} to {{ report.endDate | date(" d F Y") }}
             <a class="edit-link" href="{{ path('client_home', {'action': 'edit-report', 'reportId': report.id}) }}">{{ 'edit' | trans() }}</a>
         </div>
     </div>
