@@ -402,11 +402,16 @@ trait ReportTrait
      */
     public function iSubmitTheReportWithFurtherInfo($moreInfo)
     {
-        // checkbox top page
-        $this->checkOption("report_submit_reviewed_n_checked");
-        $this->pressButton("report_submit_submitReport");
+        // get the report then goto the overview
+        $css = 'meta[name="reportId"]';
+        
+        $element = $this->getSession()->getPage()->find('css',$css);
+        
+        $reportId = $element->getAttribute('content');
+        $this->visit('/report/' . $reportId . '/overview');
 
         # more info page
+        $this->clickLink('edit-report_add_further_info');
         $this->fillField('report_add_info_furtherInformation', $moreInfo);
         $this->pressButton("report_add_info_saveAndContinue");
 

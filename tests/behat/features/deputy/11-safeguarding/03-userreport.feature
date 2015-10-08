@@ -94,8 +94,8 @@ Feature: Safeguarding OPG Report
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         Then I save the application status into "safeguardingreadytosubmit2"
-        When I check "report_submit_reviewed_n_checked"
-        And I press "report_submit_submitReport"
+        And I follow "overview-button"
+        Then I follow "edit-report_add_further_info"
         Then the URL should match "/report/\d+/add_further_information"
         And I fill in the following:
             | report_add_info_furtherInformation | More info. |

@@ -9,6 +9,12 @@ careAndWelfare: "Care and welfare"
 finances: "Finances"
 close: "Close"
 help: "Help"
+finishYourReport: "Finish your report"
+submitWhenReady: "You can't submit your report until the report is complete"
+warningNotDue: "You can't submit your report until <span id=\"submit-start-at\">%date%</span>"
+reportingPeriod: "Reporting period"
+edit: "Edit"
+dueDate: "Due date"
 
 contacts:
     subSectionTitle: "Contacts"
@@ -35,8 +41,13 @@ assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Add details of the client's assets and saving, such as:"
     subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
-    noAssets: The client has not assets
     edit: "Edit assets"
+report_add_further_info:
+    subSectionTitle: "Sign and submit"
+    subSectionDescription: "Add details of the client's assets and saving, such as:"
+    subSectionList: "*property *savings and investments *stocks and shares, premium bonds *artwork, antiques or jewellery"
+    edit: "Start sign and submit"
+  
 
 additionalInformation:
   subSectionTitle: More information

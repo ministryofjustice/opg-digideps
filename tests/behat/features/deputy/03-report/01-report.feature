@@ -72,7 +72,6 @@ Feature: deputy / report / edit and test tabs
         And I should see a "#edit-decisions" element
         And I should see a "#edit-accounts" element
         And I should see a "#edit-assets" element
-        And I should see a ".report_submission_period" element
 
     @deputy
     Scenario: Check report notification and submission warnings
