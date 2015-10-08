@@ -29,14 +29,14 @@ class ReportController extends Controller
     public function createAction($clientId, $action = false)
     {
         $request = $this->getRequest();
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $util = $this->get('util');
        
-        $client = $util->getClient($clientId, $this->getUser()->getId());
+        $client = $util->getClient($clientId);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
-        $existingReports = $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']);
+        $existingReports = $util->getReportsIndexedById($client, ['basic']);
        
         if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
             $report = $firstReport;
@@ -61,12 +61,11 @@ class ReportController extends Controller
                                   [ 'action' => $this->generateUrl('report_create', [ 'clientId' => $clientId ])]);
         $form->handleRequest($request);
        
-        if($request->getMethod() == 'POST'){
-            if($form->isValid()){
-                $response = $apiClient->postC('report/upsert', $form->getData());
-                return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
-            }
+        if($form->isValid()){
+            $response = $restClient->post('report', $form->getData());
+            return $this->redirect($this->generateUrl('report_overview', [ 'reportId' => $response['report'] ]));
         }
+
         return [ 'form' => $form->createView() ];
     }
     
@@ -77,11 +76,11 @@ class ReportController extends Controller
     public function overviewAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
         
         // report submit logic
         if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
@@ -110,7 +109,7 @@ class ReportController extends Controller
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -128,7 +127,7 @@ class ReportController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             // add furher info
-            $this->get('apiclient')->putC('report/' .  $report->getId(), $report, [
+            $this->get('restClient')->put('report/' .  $report->getId(), $report, [
                 'deserialise_group' => 'furtherInformation',
             ]);
             
@@ -159,7 +158,7 @@ class ReportController extends Controller
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId()); /* @var $report EntityDir\Report */
+        $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -178,7 +177,7 @@ class ReportController extends Controller
         if ($form->isValid()) {
             // set report submitted with date
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $this->get('apiclient')->putC('report/' .  $report->getId() . '/user/' . $this->getUser()->getId() . '/submit', $report, [
+            $this->get('restClient')->put('report/' .  $report->getId() . '/submit', $report, [
                 'deserialise_group' => 'submit',
             ]);
             
@@ -201,7 +200,7 @@ class ReportController extends Controller
     public function submitConfirmationAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -212,7 +211,7 @@ class ReportController extends Controller
         }
 
 
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
         $request = $this->getRequest();
@@ -221,8 +220,8 @@ class ReportController extends Controller
 
         if ($form->isValid()) {
             
-            $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-            $apiClient->postC('/feedback', $form->getData());
+            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+            $restClient->post('feedback', $form->getData());
 
             return $this->redirect($this->generateUrl('report_submit_feedback', ['reportId' => $reportId]));
         }
@@ -242,7 +241,7 @@ class ReportController extends Controller
     public function submitFeedbackAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -252,7 +251,7 @@ class ReportController extends Controller
             throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
         
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $client = $util->getClient($report->getClient());
 
         return [
             'report' => $report,
@@ -267,14 +266,14 @@ class ReportController extends Controller
      */
     public function displayAction($reportId, $isEmailAttachment = false)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
-        $report = $util->getReport($reportId, $this->getUser()->getId());
-        $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+        $report = $util->getReport($reportId);
+        $client = $util->getClient($report->getClient());
         
-        $contacts = $apiClient->getEntities('Contact', 'report/get-contacts/' . $reportId);
-        $decisions = $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId);
+        $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
+        $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
         
         return [
             'report' => $report,

@@ -15,8 +15,12 @@ use AppBundle\Exception\DisplayableException;
  */
 class BehatController extends Controller
 {
-    private function checkIsBehatBrowser()
+    private function securityChecks()
     {
+        if (!$this->container->getParameter('behat_controller_enabled')) {
+            return $this->createNotFoundException('Behat endpoint disabled, check the behat_controller_enabled parameter');
+        }
+        
         $expectedSecretParam = md5('behat-dd-' . $this->container->getParameter('secret'));
         $secret = $this->getRequest()->get('secret');
         
@@ -35,15 +39,10 @@ class BehatController extends Controller
      */
     public function getLastEmailAction()
     {
-        $this->checkIsBehatBrowser();
-        $content = $this->get('apiclient')->get('behat/email')->getBody();
+        $this->securityChecks();
+        $content = $this->get('restClient')->get('behat/email', 'array');
         
-        $contentArray = json_decode($content, 1);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return new Response("Error decoding email: body:" . $content);
-        }
-        
-        return new Response($contentArray['data']);
+        return new Response($content);
     }
     
     /**
@@ -52,22 +51,23 @@ class BehatController extends Controller
      */
     public function resetAction()
     {
-        $this->checkIsBehatBrowser();
-        $content = $this->get('apiclient')->delete('behat/email')->getBody();
+        $this->securityChecks();
+        $content = $this->get('restClient')->delete('behat/email');
         
         return new Response($content);
     }
     
     /**
-     * @Route("/{secret}/report/{reportId}/change-report-cot/{cot}")
+     * @Route("/{secret}/report/{reportId}/change-report-cot/{cotId}")
      * @Method({"GET"})
      */
-    public function reportChangeReportCot($reportId, $cot)
+    public function reportChangeReportCot($reportId, $cotId)
     {
-        $this->checkIsBehatBrowser();
-        $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
-            'cot_id' => $cot
-        ]));
+        $this->securityChecks();
+        
+        $this->get('restClient')->put('behat/report/' .$reportId, [
+            'cotId' => $cotId
+        ]);
         
         return new Response('done');
     }
@@ -78,24 +78,13 @@ class BehatController extends Controller
      */
     public function reportChangeSubmitted($reportId, $value)
     {
-        $this->checkIsBehatBrowser();
-        $this->get('apiclient')->putC('report/'  .$reportId, json_encode([
-            'submitted' => ($value == 'true' || $value == 1)
-        ]));
+        $this->securityChecks();
         
-        return new Response('done');
-    }
-    
-    
-    /**
-     * @Route("/{secret}/delete-behat-users")
-     * @Method({"GET"})
-     */
-    public function deleteBehatUser()
-    {
-        $this->checkIsBehatBrowser();
+        $submitted = ($value == 'true' || $value == 1) ? 1 : 0;
         
-        $this->get('apiclient')->delete('behat/users/behat-users');
+        $this->get('restClient')->put('behat/report/' .$reportId, [
+            'submitted' => $submitted
+        ]);
         
         return new Response('done');
     }
@@ -106,12 +95,29 @@ class BehatController extends Controller
      */
     public function accountChangeReportDate($reportId, $dateYmd)
     {
-        $this->get('apiclient')->putC('report/' . $reportId, json_encode([
+        $this->securityChecks();
+        
+        $this->get('restClient')->put('behat/report/' . $reportId, [
             'end_date' => $dateYmd
-        ]));
+        ]);
         
         return new Response('done');
     }
+    
+    /**
+     * @Route("/{secret}/delete-behat-users")
+     * @Method({"GET"})
+     */
+    public function deleteBehatUser()
+    {
+        $this->securityChecks();
+        
+        $this->get('restClient')->delete('behat/users/behat-users');
+        
+        return new Response('done');
+    }
+    
+    
     
     /**
      * @Route("/{secret}/delete-behat-data")
@@ -119,6 +125,8 @@ class BehatController extends Controller
      */
     public function resetBehatData()
     {
+        $this->securityChecks();
+        
        return new Response('done');
     }
     
@@ -129,10 +137,10 @@ class BehatController extends Controller
      */
     public function viewAuditLogAction()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
-        $entities = $this->get('apiclient')->getEntities('AuditLogEntry', 'audit-log');
-        
+        $entities = $this->get('restClient')->get('behat/audit-log', 'AuditLogEntry[]');
+   
         return ['entries' => $entities];
     }
     
@@ -152,18 +160,12 @@ class BehatController extends Controller
      */
     public function userSetToken($email, $token, $date)
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
-        $user = $this->get('apiclient')->getEntity('User', 'user/get-user-by-email/' . $email);
-        
-        $this->get('apiclient')->putC('user/' . $user->getId(), $user, [
-            'deserialise_group' => 'registrationToken',
-        ]);
-        
-        $this->get('apiclient')->putC('user/' . $user->getId(), json_encode([
+        $this->get('restClient')->put('behat/user/'.$email, [
             'token_date' => $date,
             'registration_token' => $token
-        ]));
+        ]);
         
         return new Response('done');
     }
@@ -174,15 +176,14 @@ class BehatController extends Controller
      */
     public function checkParamsAction()
     {
-        $this->checkIsBehatBrowser();
+        $this->securityChecks();
         
-        $content = $this->get('apiclient')->get('behat/check-app-params')->getBody();
-        $contentDecoded = json_decode($content, 1);
-        
-        if ($contentDecoded['data'] !='valid') {
-            throw new \RuntimeException('Invalid API params. Response: '.print_r($contentDecoded, 1));
+        $data = $this->get('restClient')->get('behat/check-app-params', 'array');
+
+        if ($data !='valid') {
+            throw new \RuntimeException('Invalid API params. Response: '.print_r($data, 1));
         }
         
-        return new Response($content);
+        return new Response($data);
     }
 }

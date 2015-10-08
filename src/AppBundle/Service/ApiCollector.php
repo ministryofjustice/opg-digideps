@@ -2,24 +2,24 @@
 namespace AppBundle\Service;
 
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 
 class ApiCollector extends DataCollector
 {
     /**
-     * @var ApiClient
+     * @var RestClient
      */
-    public $apiClient;
+    public $restClient;
     
-    public function __construct(ApiClient $apiClient)
+    public function __construct(RestClient $restClient)
     {
-        $this->apiClient = $apiClient;
+        $this->restClient = $restClient;
     }
     
     public function collect(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response, \Exception $exception = null)
     {
         $this->data = [
-            'calls' => $this->apiClient->getHistory()
+            'calls' => $this->restClient->getHistory()
         ];
     }
 

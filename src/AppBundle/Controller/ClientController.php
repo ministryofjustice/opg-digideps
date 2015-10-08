@@ -20,14 +20,14 @@ class ClientController extends Controller
     public function indexAction($action, $reportId)
     {   
         $util = $this->get('util');  /* @var $util \AppBundle\Service\Util */
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         
         $clients = $this->getUser()->getClients(); 
         $request = $this->getRequest();
         
         $client = !empty($clients)? $clients[0]: null;
         
-        $reports = $client ? $util->getReportsIndexedById($this->getUser()->getId(), $client, ['basic']) : [];
+        $reports = $client ? $util->getReportsIndexedById($client, ['basic']) : [];
          arsort($reports);
         
         
@@ -43,20 +43,20 @@ class ClientController extends Controller
         // edit client form
         if ($clientForm->isValid()) {
             $clientUpdated = $clientForm->getData();
-            $apiClient->putC('client/upsert', $clientUpdated);
+            $restClient->put('client/upsert', $clientUpdated);
 
             return $this->redirect($this->generateUrl('client_home'));
         }
         
         // edit report dates
         if ($action == 'edit-report' && $reportId) {
-            $report = $util->getReport($reportId, $this->getUser()->getId());
+            $report = $util->getReport($reportId);
             $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates'
             ]);
             $editReportDatesForm->handleRequest($request);
             if ($editReportDatesForm->isValid()) {
-                $apiClient->putC('report/' . $reportId, $report, [
+                $restClient->put('report/' . $reportId, $report, [
                      'deserialise_group' => 'startEndDates',
                 ]);
                 return $this->redirect($this->generateUrl('client_home'));
@@ -69,11 +69,11 @@ class ClientController extends Controller
           if($report->getReportSeen() === false){
               $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
               
-              $reportObj = $util->getReport($report->getId(), $this->getUser()->getId());
+              $reportObj = $util->getReport($report->getId());
               //update report to say message has been seen
               $reportObj->setReportSeen(true);
               
-              $apiClient->putC('report/' . $report->getId(), $reportObj);
+              $restClient->put('report/' . $report->getId(), $reportObj);
           }   
         }
         
@@ -100,7 +100,7 @@ class ClientController extends Controller
     {
         $request = $this->getRequest();
         $util = $this->get('util');
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         
         $clients = $this->getUser()->getClients();
         if (!empty($clients) && $clients[0] instanceof EntityDir\Client) {
@@ -119,8 +119,8 @@ class ClientController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             $response = ($method === 'post') 
-                      ? $apiClient->postC('client/upsert', $form->getData())
-                      : $apiClient->putC('client/upsert', $form->getData());
+                      ? $restClient->post('client/upsert', $form->getData())
+                      : $restClient->put('client/upsert', $form->getData());
 
             return $this->redirect($this->generateUrl('report_create', [ 'clientId' => $response['id']]));
         }

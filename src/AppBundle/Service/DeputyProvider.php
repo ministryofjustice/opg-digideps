@@ -1,56 +1,62 @@
 <?php
-namespace AppBundle\UserProvider;
+namespace AppBundle\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use AppBundle\Service\ApiClient;
+use Symfony\Bridge\Monolog\Logger;
+use AppBundle\Entity\User;
+use AppBundle\Service\Client\RestClient;
 
 class DeputyProvider implements UserProviderInterface
 {
     /**
-     * @var ContainerInterface
+     * @var RestClient
      */
-    private $container;
-    
-    /**
-     * @var string $env
+    private $restClient;
+
+     /**
+     * @var Logger
      */
-    private $env;
+    private $logger;
     
-    
-    public function __construct(ContainerInterface $container, $env)
+    public function __construct(RestClient $restClient, Logger $logger)
     {
-        $this->container = $container;
-        $this->env = $env;
+        $this->restClient = $restClient;
+        $this->logger = $logger;
     }
     
     /**
-     * Finds user by email
+     * Login passing params to RestClient::login()
      * 
-     * @param string $email
-     * @return \AppBundle\Entity\User $user
-     * @throws UsernameNotFoundException
+     * @param array $credentials
+     * 
+     * @return User
      */
-    public function loadUserByUsername($email) 
+    public function login(array $credentials) 
     {
         try {
-            $apiclient = $this->container->get('apiclient');
+           return $this->restClient->login($credentials);
+        } catch(\Exception $e) {
+            echo $e->getMessage(); //REMOVEME
+            $this->logger->info(__METHOD__ . ': ' . $e);
             
-            if($this->env == 'admin'){
-                return $apiclient->getEntity('User', 'user/get-admin-by-email/' . $email);
-            } elseif(in_array($this->env,[ 'develop','staging','ci','prod'])){
-                return $apiclient->getEntity('User', 'user/get-user-by-email/' . $email);
-            } else{
-                return $apiclient->getEntity('User', 'user/get-by-email/' . $email);
-            }
-        } catch (\Exception $e) {
             throw new UsernameNotFoundException("We can't log you in at this time.");
         }
-        
     }
+    
+    /**
+     * Finds user by id
+     * 
+     * @param integer $id
+     */
+    public function loadUserByUsername($id) 
+    {
+        return $this->restClient->get('user/'.$id, 'User');
+    }
+    
     
     /**
      * @param UserInterface $user
@@ -68,7 +74,7 @@ class DeputyProvider implements UserProviderInterface
                 )
             );
         }
-        return $this->loadUserByUsername($user->getEmail());
+        return $this->loadUserByUsername($user->getId());
     }
     
     /**

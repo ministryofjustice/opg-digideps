@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,12 +29,12 @@ class UserController extends Controller
      */
     public function activateUserAction(Request $request, $action, $token)
     {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $translator = $this->get('translator');
         
         // check $token is correct
         try {
-            $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
+            $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
         } catch (\Exception $e) {
             throw new \AppBundle\Exception\DisplayableException('Token already used or invalid.');
         }
@@ -62,7 +62,6 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
                 ]);
                 $template = 'AppBundle:User:activate.html.twig';
-                $email = 'activate';
                 break;
             
             case 'password-reset':
@@ -70,7 +69,6 @@ class UserController extends Controller
                     'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
                 ]);
                 $template = 'AppBundle:User:passwordReset.html.twig';
-                $email = 'password-reset';
                 break;
             
             default:
@@ -81,26 +79,27 @@ class UserController extends Controller
         
         $form->handleRequest($request);
         if ($form->isValid()) {
-
-            // calculated hashed password
-            $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
-                    ->encodePassword($user->getPassword(), $user->getSalt());
-
-            $apiClient->putC('user/' . $user->getId() . '/set-password', json_encode([
-                'password' => $encodedPassword,
+            
+            // login user into API
+            //TODO try move at the beginning
+            $this->get('deputyprovider')->login(['token'=>$token]);
+            
+            // set password for user
+            $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+                'password_plain' => $user->getPassword(),
                 'set_active' => true,
                 'send_email' => false //not sent on this "landing" pages
             ]));
 
-            // log in user
-            $token = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
-            $this->get("security.context")->setToken($token); //now the user is logged in
+            // log in user into CLIENT
+            $clientToken = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
+            $this->get("security.context")->setToken($clientToken); //now the user is logged in
 
             $session = $this->get('session');
-            $session->set('_security_secured_area', serialize($token));
+            $session->set('_security_secured_area', serialize($clientToken));
 
              $request = $this->get("request");
-             $event = new InteractiveLoginEvent($request, $token);
+             $event = new InteractiveLoginEvent($request, $clientToken);
              $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
              // the following should not be triggered
@@ -120,17 +119,14 @@ class UserController extends Controller
      */
     public function activateLinkSendAction(Request $request, $token)
     {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         
         // check $token is correct
-        $user = $this->get('userService')->loadUserByToken($token); /* @var $user EntityDir\User*/
+        $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
         
         // recreate token
         // the endpoint will also send the activation email
-        $apiClient->putC('user/' .  $user->getId() . '/recreate-token/email/activate', $user);
-        
-//        $activationEmail = $this->get('mailFactory')->createActivationEmail($user);
-//        $this->get('mailSender')->send($activationEmail, [ 'text', 'html']);
+        $restClient->userRecreateToken($user, 'activate');
         
         return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
     }
@@ -155,9 +151,9 @@ class UserController extends Controller
      */
     public function detailsAction(Request $request)
     {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $apiClient->getEntity('User', 'user/' . $userId); /* @var $user EntityDir\User*/
+        $user = $restClient->get('user/' . $userId, 'User'); /* @var $user EntityDir\User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
         $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
@@ -169,7 +165,7 @@ class UserController extends Controller
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $apiClient->putC('user/' . $user->getId(), $form->getData(), [
+                $restClient->put('user/' . $user->getId(), $form->getData(), [
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
                 
@@ -188,7 +184,8 @@ class UserController extends Controller
     }
     
     /**
-     * change user
+     * - change user data
+     * - chang user password
      * 
      * @Route("/{action}", name="user_view", defaults={ "action" = ""})
      * @Template()
@@ -208,23 +205,18 @@ class UserController extends Controller
         $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
         
         $formEditDetails->handleRequest($request);
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
 
         if($formEditDetails->isValid()){
             $formData = $formEditDetails->getData();
             $formRawData = $request->request->get('user_details');
-
             /**
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            if(!empty($formRawData['password']['plain_password']['first'])){
-                $encodedPassword = $this->get('security.encoder_factory')->getEncoder($user)
-                    ->encodePassword($formRawData['password']['plain_password']['first'], $user->getSalt());
-                $formData->setPassword($encodedPassword);
-
-                $apiClient->putC('user/' . $user->getId() . '/set-password', json_encode([
-                    'password' => $encodedPassword,
+            if (!empty($formRawData['password']['plain_password']['first'])){
+                $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+                    'password_plain' => $formRawData['password']['plain_password']['first'],
                     'send_email' => true
                 ]));
                 
@@ -235,7 +227,7 @@ class UserController extends Controller
 
             }
             
-            $apiClient->putC('user/' . $user->getId(), $formData);
+            $restClient->put('user/' . $user->getId(), $formData);
 
             return $this->redirect($this->generateUrl('user_view'));
         }
@@ -260,11 +252,10 @@ class UserController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
-                $apiClient = $this->get('apiclient');
+                $restClient = $this->get('restClient');
                 /* @var $user EntityDir\User */
-                $user = $this->get('deputyprovider')->loadUserByUsername($form->getData()->getEmail());
-                $apiClient->putC('user/' .  $user->getId() . '/recreate-token/email/pass-reset', $user);
-                
+                $restClient->userRecreateToken($user, 'pass-reset');
+
             } catch (\Exception $e) {
                 $this->get('logger')->debug($e->getMessage());
             }

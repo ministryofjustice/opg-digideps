@@ -1,6 +1,1 @@
-#!/bin/bash
-#let's configure environment
-run-parts /etc/my_init.d
-
-cd /app
-/sbin/setuser app php app/console digideps:fixtures
+echo "fixtures.sh is deprecated. fixtures now added from API/resetdb.sh. Remove this file when dd-1130 is fully merged to master"

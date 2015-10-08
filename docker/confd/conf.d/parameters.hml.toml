@@ -9,5 +9,6 @@ keys = [
     "/secret",
     "/api",
     "/fixtures",
-    "/nonadmin"
+    "/nonadmin",
+    "/behat"
  ]

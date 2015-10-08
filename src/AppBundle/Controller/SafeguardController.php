@@ -19,7 +19,7 @@ class SafeguardController extends Controller{
     public function editAction($reportId)
     {
         $util = $this->get('util');
-        $report = $util->getReport($reportId, $this->getUser()->getId()); // check the report is owned by this user.
+        $report = $util->getReport($reportId); // check the report is owned by this user.
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
@@ -47,9 +47,9 @@ class SafeguardController extends Controller{
             $data->keepOnlyRelevantSafeguardingData();
 
             if ($safeguarding->getId() == null) {
-                $this->get('apiclient')->postC('safeguarding' , $data, ['deserialise_group' => 'safeguarding']);
+                $this->get('restClient')->post('report/safeguarding' , $data, ['deserialise_group' => 'safeguarding']);
             } else {
-                $this->get('apiclient')->putC('safeguarding/'. $safeguarding->getId() ,$data, ['deserialise_group' => 'safeguarding']);
+                $this->get('restClient')->put('report/safeguarding/'. $safeguarding->getId() ,$data, ['deserialise_group' => 'safeguarding']);
             }
 
             $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
@@ -61,7 +61,7 @@ class SafeguardController extends Controller{
         
         return[ 'report' => $report,
                 'reportStatus' => $reportStatusService,
-                'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
+                'client' => $util->getClient($report->getClient()),
                 'form' => $form->createView(),
                 'report_form_submit' => $this->get('reportSubmitter')->getFormView()
               ];

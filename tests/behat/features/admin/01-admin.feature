@@ -26,7 +26,6 @@ Feature: admin / admin
 
 
     Scenario: login and add user (admin)
-        #Given I am on "http://digideps-admin.local/app_dev.php/logout"
         Given I am not logged into admin
         # assert email link doesn't work on admin area
         When I open the "/user/activate/" link from the email on the "deputy" area

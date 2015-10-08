@@ -18,11 +18,11 @@ class DecisionController extends Controller
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to update this report
-        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
+        $report = $util->getReport($reportId, ['transactions']);
 
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
-            $this->get('apiclient')->putC('report/'.$report->getId(),$report);
+            $this->get('restClient')->put('report/'.$report->getId(),$report);
         }
         return $this->redirect($this->generateUrl('decisions', ['reportId' => $report->getId()]));
     }
@@ -36,10 +36,10 @@ class DecisionController extends Controller
         $util = $this->get('util');
 
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $util->getReport($reportId, $this->getUser()->getId(), ['transactions']);
+        $report = $util->getReport($reportId, ['transactions']);
 
         if(!empty($report) && in_array($id, $report->getDecisions())){
-            $this->get('apiclient')->delete("decision/{$id}");
+            $this->get('restClient')->delete("/report/decision/{$id}");
         }
         return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
     }
@@ -52,11 +52,11 @@ class DecisionController extends Controller
     public function decisionsAction($reportId,$action,$id)
     {
         $request = $this->getRequest();
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $util = $this->get('util');
 
         // just needed for title etc,
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -65,7 +65,7 @@ class DecisionController extends Controller
             if (!in_array($id, $report->getDecisions())) {
                throw new \RuntimeException("Decision not found.");
             }
-            $decision = $apiClient->getEntity('Decision', 'decision/' . $id);
+            $decision = $restClient->get('/report/decision/' . $id, 'Decision');
 
             $form = $this->createForm(new FormDir\DecisionType([
                 'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
@@ -118,12 +118,12 @@ class DecisionController extends Controller
         
 
         return [
-            'decisions' => $apiClient->getEntities('Decision', 'decision/find-by-report-id/' . $reportId),
+            'decisions' => $restClient->get('report/' . $reportId . '/decisions', 'Decision[]'),
             'form' => $form->createView(),
             'no_decision' => $noDecision->createView(),
             'report' => $report,
             'reportStatus' => $reportStatusService,
-            'client' => $util->getClient($report->getClient(), $this->getUser()->getId()),
+            'client' => $util->getClient($report->getClient()),
             'action' => $action,
             'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
@@ -135,18 +135,18 @@ class DecisionController extends Controller
      */
     protected function handleAddEditDecision($action,$form,$report)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
 
          if($action == 'add'){
             // add decision
-            $apiClient->postC('decision/upsert', $form->getData());
+            $restClient->post('report/decision', $form->getData());
 
             //lets clear any reason for no decisions they might have added previously
             $report->setReasonForNoDecisions(null);
-            $this->get('apiclient')->putC('report/'.$report->getId(),$report);
+            $this->get('restClient')->put('report/'.$report->getId(),$report);
         }else{
             // edit decision
-            $apiClient->putC('decision/upsert', $form->getData());
+            $restClient->put('report/decision', $form->getData());
         }
     }
 
@@ -158,13 +158,13 @@ class DecisionController extends Controller
      */
     protected function handleReasonForNoDecision($action,$noDecision,$reportId)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $util = $this->get('util');
 
         $formData = $noDecision->getData();
 
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         $report->setReasonForNoDecisions($formData['reason']);
-        $apiClient->putC('report/'.$report->getId(),$report);
+        $restClient->put('report/'.$report->getId(),$report);
     }
 }
