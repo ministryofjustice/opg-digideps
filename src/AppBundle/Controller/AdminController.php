@@ -51,12 +51,18 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('admin_homepage'));
             } 
         }
-
-        $users = $this->get('restClient')->get("user/get-all/{$orderBy}/{$sortOrder}", 'User[]');
+        
+        $limit = $request->query->get('limit') ?: 50;
+        $offset = $request->query->get('offset') ?: 0;
+        $userCount = $this->get('restClient')->get("user/count", 'array');
+        $users = $this->get('restClient')->get("user/get-all/{$orderBy}/{$sortOrder}/$limit/$offset", 'User[]');
         $newSortOrder = $sortOrder == "ASC"? "DESC": "ASC";
-
+        
         return [
             'users'=>$users, 
+            'userCount'=> $userCount,
+            'limit' => $limit,
+            'offset' => $offset,
             'form'=>$form->createView(),
             'newSortOrder' => $newSortOrder
         ];

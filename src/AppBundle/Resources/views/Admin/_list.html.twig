@@ -54,6 +54,22 @@
       </tr>
     </thead>
     <tbody>
+
+    <div style="float: right">
+        {{ userCount }} users in total.
+        {% if userCount > limit %}
+            Go to page 
+            {% set pages = range(0, userCount, limit) %}
+            {% for currentOffset in pages %}
+                {% if currentOffset == offset %}
+                    {{ loop.index }}
+                {% else %}
+                    <a href={{  path("admin_homepage", {"offset": currentOffset}) }}>{{ loop.index }}</a> 
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
     {% for user in users %}
       <tr>
           <td>
