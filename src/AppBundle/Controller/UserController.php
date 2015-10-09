@@ -185,16 +185,32 @@ class UserController extends RestController
         return [];
     }
 
-    
-    /**
-     * @Route("/get-all/{order_by}/{sort_order}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
+     /**
+     * @Route("/count")
      * @Method({"GET"})
      */
-    public function getAll($order_by, $sort_order)
+    public function userCount()
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
         
-        return $this->getRepository('User')->findBy([],[ $order_by => $sort_order ]);
+        $qb = $this->getDoctrine()->getManager()->createQueryBuilder();
+        $qb->select('count(user.id)');
+        $qb->from('AppBundle\Entity\User','user');
+
+        $count = $qb->getQuery()->getSingleScalarResult();
+        
+        return $count;
+    }
+    
+    /**
+     * @Route("/get-all/{order_by}/{sort_order}/{limit}/{offset}", defaults={"order_by" = "firstname", "sort_order" = "ASC"})
+     * @Method({"GET"})
+     */
+    public function getAll($order_by, $sort_order, $limit, $offset)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
+        
+        return $this->getRepository('User')->findBy([],[ $order_by => $sort_order ], $limit, $offset);
     }
 
     
