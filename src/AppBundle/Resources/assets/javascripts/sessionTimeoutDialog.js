@@ -1,3 +1,5 @@
+/* jshint unused: false */
+/* globals $, window, document */
 // SESSION TIMEOUT POPUP LOGIC  
 /**
  * @param element

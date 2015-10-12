@@ -33,7 +33,7 @@ USER app
 ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
 RUN  npm install
-RUN  npm run all
+RUN  npm run build
 
 # cleanup
 RUN  rm /app/app/config/parameters.yml
