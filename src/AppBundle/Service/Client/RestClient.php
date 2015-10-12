@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Client;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\Message\Response as GuzzleResponse;
@@ -98,7 +99,7 @@ class RestClient
 
         $this->tokenStorage->set($response->getHeader(self::HEADER_AUTH_TOKEN));
 
-        return $this->entityToArray('User', $this->extractDataArray($response));
+        return $this->arrayToEntity('User', $this->extractDataArray($response));
     }
 
 
@@ -131,7 +132,7 @@ class RestClient
         
         $responseArray = $this->extractDataArray($response);
         
-        return $this->entityToArray('User', $responseArray);
+        return $this->arrayToEntity('User', $responseArray);
     }
 
     /**
@@ -225,9 +226,9 @@ class RestClient
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } else if (substr($expectedResponseType, -2) == '[]') {
-            return $this->entitiesToArray('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
+            return $this->arrayToEntitities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
         } else if (class_exists('AppBundle\\Entity\\' . $expectedResponseType)) {
-            return $this->entityToArray($expectedResponseType, $responseArray);
+            return $this->arrayToEntity($expectedResponseType, $responseArray);
         } else {
             throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given.");
         }
@@ -281,7 +282,8 @@ class RestClient
         
         try {
             return $this->client->$method($url, $options);
-        } catch (\Exception $e) {
+        } catch (TransferException $e) {
+            echo $e->getMessage();
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
             throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
         }
@@ -304,7 +306,7 @@ class RestClient
         if (empty($data['success'])) {
             throw new \RuntimeException('Endpoint failed with message.' . $data['message']);
         }
-
+        
         return $data['data'];
     }
 
@@ -315,12 +317,12 @@ class RestClient
      * 
      * @return Object of type $class
      */
-    private function entityToArray($class, array $data)
+    private function arrayToEntity($class, array $data)
     {
-        $class = (strpos($class, 'AppBundle') !== false) 
+        $fullClassName = (strpos($class, 'AppBundle') !== false) 
                  ? $class : 'AppBundle\\Entity\\' . $class;
         
-        return $this->serialiser->deserialize(json_encode($data), $class, 'json');
+        return $this->serialiser->deserialize(json_encode($data), $fullClassName, 'json');
     }
 
 
@@ -330,12 +332,12 @@ class RestClient
      * 
      * @return array of type $class
      */
-    private function entitiesToArray($class, array $data)
+    private function arrayToEntitities($class, array $data)
     {
         $expectedResponseType = substr($class, 0, -2);
         $ret = [];
         foreach ($data as $row) {
-            $entity = $this->entityToArray($expectedResponseType, $row);
+            $entity = $this->arrayToEntity($expectedResponseType, $row);
             $ret[$entity->getId()] = $entity;
         }
 
