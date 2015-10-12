@@ -238,7 +238,7 @@ class RestClient
      * 
      * @return string response body
      */
-    public function delete($endpoint, array $options = [])
+    public function delete($endpoint)
     {
         $response = $this->rawSafeCall('delete', $endpoint, [
            'addAuthToken' => true,
@@ -260,10 +260,6 @@ class RestClient
      */
     private function rawSafeCall($method, $url, $options)
     {
-        if (!method_exists($this->client, $method)) {
-            throw new \InvalidArgumentException("Method $method does not exist on " . get_class($this->client));
-        }
-
         // process special header options
         if (!empty($options['addAuthToken'])) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get();
