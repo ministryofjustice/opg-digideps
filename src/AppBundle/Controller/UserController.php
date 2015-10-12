@@ -154,10 +154,14 @@ class UserController extends RestController
      * @Route("/{id}", requirements={"id":"\d+"})
      * @Method({"GET"})
      */
-    public function getOneById($id)
+    public function getOneById(Request $request, $id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found');
         $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
+        
+        $groups = $request->query->has('groups') ?
+            $request->query->get('groups') : ['basic'];
+        $this->setJmsSerialiserGroups($groups);
         
         // only allow admins to access any user, otherwise the user can only see himself
         if (!$this->isGranted(EntityDir\Role::ADMIN) && !$requestedUserIsLogged) {
