@@ -224,9 +224,9 @@ class RestClient
      *                or "Account[]" to deseialise into an array of entities
      * @return mixed $expectedResponseType type
      */
-    public function get($endpoint, $expectedResponseType)
+    public function get($endpoint, $expectedResponseType, $options = [])
     {
-        $response = $this->rawSafeCall('get', $endpoint, [
+        $response = $this->rawSafeCall('get', $endpoint, $options + [
             'addAuthToken' => true,
         ]);
 
