@@ -48,6 +48,15 @@ class RestClient
      */
     private $clientSecret;
 
+    /**
+     * @var array 
+     */
+    private $history;
+    
+    /**
+     * @var boolean 
+     */
+    private $saveHistory;
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests
@@ -71,13 +80,16 @@ class RestClient
         TokenStorageInterface $tokenStorage, 
         SerializerInterface $serialiser, 
         Logger $logger, 
-        $clientSecret
+        $clientSecret,
+        $saveHistory
     ) {
         $this->client = $client;
         $this->serialiser = $serialiser;
         $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
         $this->clientSecret = $clientSecret;
+        $this->saveHistory = $saveHistory;
+        $this->history = [];
     }
 
 
@@ -273,7 +285,15 @@ class RestClient
         
         
         try {
-            return $this->client->$method($url, $options);
+            $start = microtime(true);
+            $response = $this->client->$method($url, $options);
+            
+            if ($this->saveHistory) {
+                $this->logRequest($url, $method, $start, $options, $response);
+                
+            }
+            
+            return $response;
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
             throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
@@ -360,14 +380,31 @@ class RestClient
 
         return $mixed;
     }
-
-
+    
+    /**
+     * @param string $url
+     * @param string $method
+     * @param string $start
+     * @param type $response
+     */
+    private function logRequest($url, $method, $start, $options, ResponseInterface $response)
+    {
+        $this->history[] = [
+            'url' => $url,
+            'method' => $method,
+            'time' => microtime(true) - $start,
+            'options'=> print_r($options, true),
+            'responseCode' => $response->getStatusCode(),
+            'responseBody' => print_r(json_decode((string)$response->getBody(), true), true)
+        ];
+    }
+    
     /**
      * @return array of calls, for debug reasons (e.g. symfony debug toolbar)
      */
     public function getHistory()
     {
-        return [];
+        return $this->history;
     }
-
+    
 }

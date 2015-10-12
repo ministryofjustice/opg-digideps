@@ -34,6 +34,7 @@ services:
             - @jms_serializer
             - @logger
             - "%api_client_secret%"
+            - "%kernel.debug%"
     deputyprovider:
         class:  AppBundle\Service\DeputyProvider
         arguments: [ @restClient, @logger ]

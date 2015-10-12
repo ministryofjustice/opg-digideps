@@ -58,7 +58,8 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             $this->tokenStorage,
             $this->serialiser, 
             $this->logger,
-            $this->clientSecret
+            $this->clientSecret,
+            false
         );
     }
 
@@ -446,13 +447,12 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $responseJson = json_encode($responseArray);
         
         $this->serialiser
-            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
-        ;
+            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
         
         $this->tokenStorage
             ->shouldReceive('get')->once()->andReturn($this->sessionToken);
         
-         $this->endpointResponse
+        $this->endpointResponse
             ->shouldReceive('getBody')->andReturn($responseJson);
         
         $this->client->shouldReceive('delete')->with($endpointUrl, [
@@ -465,7 +465,56 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
     
     public function testGetHistory()
     {
-        $this->assertEquals([], $this->object->getHistory());
+        $this->client = m::mock('GuzzleHttp\ClientInterface');
+        $this->tokenStorage = m::mock('AppBundle\Service\Client\TokenStorage\TokenStorageInterface');
+        $this->serialiser = m::mock('JMS\Serializer\SerializerInterface');
+        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
+        $this->clientSecret = 'secret-123';
+        $this->sessionToken = 'sessionToken347349r783';
+        
+        $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');
+             
+        $object = new RestClient(
+            $this->client, 
+            $this->tokenStorage,
+            $this->serialiser, 
+            $this->logger,
+            $this->clientSecret,
+            true
+        );
+        
+        $endpointUrl = '/path/to/endpoint';
+        $responseData = ['bbbbb'];
+        $responseArray = ['success'=>true, 'data'=> $responseData];
+        $responseJson = json_encode($responseArray);
+        
+        $this->serialiser
+            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
+        
+        $this->tokenStorage
+            ->shouldReceive('get')->andReturn($this->sessionToken);
+        
+        $this->endpointResponse
+            ->shouldReceive('getBody')->andReturn($responseJson)
+            ->shouldReceive('getStatusCode')->andReturn(200);
+        
+        $this->client->shouldReceive('delete')->with($endpointUrl, [
+                'headers' => ['AuthToken' => $this->sessionToken],
+            ])->andReturn($this->endpointResponse);
+        
+        $object->delete($endpointUrl);
+        
+        $actual = $object->getHistory();
+        $this->assertCount(1, $actual);
+        
+        $this->assertEquals($endpointUrl, $actual[0]['url']);
+        $this->assertEquals('delete', $actual[0]['method']);
+        $this->assertContains($this->sessionToken, $actual[0]['options']);
+        $this->assertEquals(200, $actual[0]['responseCode']);
+        $this->assertContains('bbbbb', $actual[0]['responseBody']);
+        
+        $this->assertTrue($actual[0]['time'] > 0);
+        $this->assertTrue($actual[0]['time'] < 1);
     }
 
     public function tearDown()
