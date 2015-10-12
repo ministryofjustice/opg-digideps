@@ -126,7 +126,6 @@ class RestClient
     public function loadUserByToken($token)
     {
         $response = $this->rawSafeCall('get', 'user/get-by-token/' . $token, [
-            'addAuthToken' => false,
             'addClientSecret' => true,
         ]);
         
@@ -144,7 +143,6 @@ class RestClient
     public function userRecreateToken(User $user, $type)
     {
         $response = $this->rawSafeCall('put', 'user/recreate-token/' .  $user->getEmail() . '/' . $type, [
-            'addAuthToken' => false, 
             'addClientSecret' => true,
         ]);
         
@@ -162,7 +160,6 @@ class RestClient
     public function registerUser(SelfRegisterData $selfRegData)
     {
         $response = $this->rawSafeCall('post', 'selfregister', [
-            'addAuthToken' => false, 
             'addClientSecret' => true,
             'body' => $this->toJson($selfRegData)
         ]);
@@ -172,16 +169,15 @@ class RestClient
     
     /**
      * @param string $endpoint e.g. /user
-     * @param string|object $bodyorEntity HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param string|object|array $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array $options keys: deserialise_group
      * 
      * @return string response body
      */
-    public function put($endpoint, $bodyorEntity, array $options = [])
+    public function put($endpoint, $mixed, array $options = [])
     {
-        $body = $this->toJson($bodyorEntity, $options);
         $response = $this->rawSafeCall('put', $endpoint, [
-            'body' => $body,
+            'body' =>  $this->toJson($mixed, $options),
             'addAuthToken' => true,
         ]);
 
@@ -191,14 +187,14 @@ class RestClient
     
     /**
      * @param string $endpoint e.g. /user
-     * @param string|object $bodyorEntity HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param string|object $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array $options keys: deserialise_group
      * 
      * @return string response body
      */
-    public function post($endpoint, $bodyorEntity, array $options = [])
+    public function post($endpoint, $mixed, array $options = [])
     {
-        $body = $this->toJson($bodyorEntity, $options);
+        $body = $this->toJson($mixed, $options);
 
         $response = $this->rawSafeCall('post', $endpoint, [
             'body' => $body,
@@ -216,7 +212,7 @@ class RestClient
      *                or "Account[]" to deseialise into an array of entities
      * @return mixed $expectedResponseType type
      */
-    public function get($endpoint, $expectedResponseType, array $options = [])
+    public function get($endpoint, $expectedResponseType)
     {
         $response = $this->rawSafeCall('get', $endpoint, [
             'addAuthToken' => true,
@@ -283,7 +279,6 @@ class RestClient
         try {
             return $this->client->$method($url, $options);
         } catch (TransferException $e) {
-            echo $e->getMessage();
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
             throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
         }
@@ -361,6 +356,7 @@ class RestClient
             if (!empty($options['deserialise_group'])) {
                 $context->setGroups([$options['deserialise_group']]);
             }
+            
             return $this->serialiser->serialize($mixed, 'json', $context);
         } else if (is_array($mixed)) {
             return $this->serialiser->serialize($mixed, 'json');

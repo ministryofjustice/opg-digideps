@@ -104,7 +104,7 @@ class AccountController extends Controller
         $client = $util->getClient($report->getClient());
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);
+        $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account');
         $account->setReportObject($report);
         
         // closing balance logic
@@ -150,7 +150,7 @@ class AccountController extends Controller
         }
         
         // get account from db
-        $refreshedAccount = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
+        $refreshedAccount = $restClient->get('report/find-account-by-id/' . $accountId, 'Account');
         $refreshedAccount->setReportObject($report);
         
         // refresh account data after forms have altered the account's data
