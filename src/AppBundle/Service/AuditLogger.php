@@ -3,33 +3,33 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\User;
-use AppBundle\Service\ApiClient;
 use AppBundle\Entity\AuditLogEntry;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Container;
+use AppBundle\Service\Client\RestClient;
 
 class AuditLogger
 {
     /**
-     * @var ApiClient
+     * @var RestClient
      */
-    protected $apiClient;
+    private $restClient;
 
     /**
      * @var SecurityContextInterface 
      */
-    protected $securityContext;
+    private $securityContext;
 
     /**
      * @var Request 
      */
-    protected $request;
+    private $request;
 
 
-    public function __construct(ApiClient $apiClient, SecurityContextInterface $securityContext, Container $container)
+    public function __construct(RestClient $restClient, SecurityContextInterface $securityContext, Container $container)
     {
-        $this->apiClient = $apiClient;
+        $this->restClient = $restClient;
         $this->securityContext = $securityContext;
         $this->request = $container->get('request');
     }
@@ -50,7 +50,7 @@ class AuditLogger
             ->setAction($action)
             ->setUserEdited($userEdited);
 
-        $ret = $this->apiClient->postC('audit-log', $entry, [
+        $ret = $this->restClient->post('audit-log', $entry, [
             'deserialise_group' => 'audit_log_save'
          ]);
 

@@ -3,6 +3,7 @@ parameters:
     locale: en
     secret: {{ getv "/secret" }}
     api_base_url: {{ getv "/api/url" }}
+    api_client_secret: {{ getv "/api/client/secret" }}
     non_admin_host: {{ getv "/nonadmin/host" }}
     admin_host: http://digideps-admin.local
     env: {{ getv "/role" }}
@@ -20,16 +21,4 @@ parameters:
     log_level: info
     log_path: /var/log/app/application.log
     ga: {{ getv "/ga" }}
-
-    
-{{ if lsdir "/fixtures" }}
-    fixtures:
-{{ range lsdir "/fixtures" }}
-        {{ getv (printf "/fixtures/%s/email" .) }}:
-            firstname: {{ getv (printf "/fixtures/%s/firstname" .) }}
-            lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
-            password: {{ getv (printf "/fixtures/%s/password" .) }}
-            roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
-            activated: {{ getv (printf "/fixtures/%s/activated" .) }}
-{{ end }}
-{{ end }}
+    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}

@@ -76,7 +76,7 @@ class AssetController extends Controller
         if ($form->isValid()) {
             $asset = $form->getData();
             $asset->setReport($reportId);
-            $this->get('apiclient')->postC('report/upsert-asset', $asset);
+            $this->get('restClient')->post('report/asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -107,7 +107,7 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('apiclient')->getEntity('Asset', 'report/get-asset/' . $assetId);
+        $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         $form->handleRequest($request);
@@ -115,7 +115,7 @@ class AssetController extends Controller
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('apiclient')->putC('report/upsert-asset', $asset);
+            $this->get('restClient')->put('report/asset', $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -154,12 +154,12 @@ class AssetController extends Controller
         if (!in_array($assetId, $report->getAssets())) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('apiclient')->getEntity('Asset', 'report/get-asset/' . $assetId);
+        $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
         $form = $this->createForm(new FormDir\AssetType(), $asset);
 
         // handle delete
         if ($confirmed) {
-            $this->get('apiclient')->delete('report/delete-asset/' . $assetId);
+            $this->get('restClient')->delete('report/asset/' . $assetId);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -221,9 +221,9 @@ class AssetController extends Controller
      */
     public function _listAction($reportId, $assetToEdit = null, $editForm = null, $showDeleteConfirm = false, $showEditLink = true)
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
+        $report = $this->get('util')->getReport($reportId);
 
-        $assets = $this->get('apiclient')->getEntities('Asset', 'report/get-assets/' . $reportId);
+        $assets = $this->get('restClient')->get('report/' . $reportId . '/assets', 'Asset[]');
 
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
@@ -246,7 +246,7 @@ class AssetController extends Controller
      */
     public function _noAssetsAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId, $this->getUser()->getId());
+        $report = $this->get('util')->getReport($reportId);
 
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
 
@@ -279,7 +279,7 @@ class AssetController extends Controller
         $isFormValid = false;
         if ($noAssetsToAdd->get('saveNoAsset')->isClicked() && $noAssetsToAdd->isValid()) {
             $report->setNoAssetToAdd(true);
-            $this->get('apiclient')->putC('report/' . $report->getId(), $report);
+            $this->get('restClient')->put('report/' . $report->getId(), $report);
             $isFormValid = true;
         }
         
@@ -298,13 +298,13 @@ class AssetController extends Controller
     {
         $util = $this->get('util');
 
-        $report = $util->getReport($reportId, $this->getUser()->getId());
+        $report = $util->getReport($reportId);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         
         if ($addClient) {
-            $client = $util->getClient($report->getClient(), $this->getUser()->getId());
+            $client = $util->getClient($report->getClient());
             $report->setClientObject($client);
         }
 

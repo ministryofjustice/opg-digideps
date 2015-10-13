@@ -4,7 +4,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model as ModelDir;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,19 +43,10 @@ class IndexController extends Controller
         ];
        
         if ($form->isValid()){
-            $deputyProvider = $this->get('deputyprovider');
             $data = $form->getData();
-            
-            try{
-                $user = $deputyProvider->loadUserByUsername($data['email']);
-                
-                $encoder = $this->get('security.encoder_factory')->getEncoder($user);
 
-                // exception if credentials not valid
-                if(!$encoder->isPasswordValid($user->getPassword(), $data['password'], $user->getSalt())){
-                    $message = $this->get('translator')->trans('login.invalidMessage', [], 'login');
-                    throw new \Exception($message);
-                }
+            try {
+                $user = $this->get('deputyprovider')->login($data);
             } catch(\Exception $e){
                 return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
             }
@@ -74,13 +65,7 @@ class IndexController extends Controller
             $event = new InteractiveLoginEvent($request, $token);
             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
             
-            $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
-
             $session->set('lastLoggedIn', $user->getLastLoggedIn());
-            $user->setLastLoggedIn(new \DateTime()); //save for future access
-            $apiClient->putC('user/' .  $user->getId(), $user, [
-                'deserialise_group' => 'lastLoggedIn',
-            ]);
             
             $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
         }
@@ -94,6 +79,9 @@ class IndexController extends Controller
         } else if ($session->get('loggedOutFrom') === 'timeout') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
+        } else if ($request->query->get('from') === 'api') {
+            $session->set('loggedOutFrom', null); //avoid display the message at next page reload
+            $vars['error'] = $this->get('translator')->trans('sessionApiTimeoutOutWarning', [], 'login');
         }
             
         return $this->render('AppBundle:Index:login.html.twig', $vars);
@@ -183,9 +171,9 @@ class IndexController extends Controller
             
             if($form->isValid()){
                 
-                $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+                $restClient = $this->get('restClient'); /* @var $restClient RestClient */
                 
-                $apiClient->postC('/feedback', $form->getData());
+                $restClient->post('feedback', $form->getData());
                 
                 return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
             }

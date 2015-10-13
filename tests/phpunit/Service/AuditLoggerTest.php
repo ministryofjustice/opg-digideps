@@ -11,7 +11,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
     
     public function setUp()
     {
-        $this->apiClient = m::mock('AppBundle\Service\ApiClient');
+        $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
         $this->security = m::mock('Symfony\Component\Security\Core\SecurityContextInterface');
         $container = m::mock('Symfony\Component\DependencyInjection\Container');
         
@@ -20,7 +20,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
         
         $container->shouldReceive('get')->with('request')->andReturn($this->request);
         
-        $this->object = new AuditLogger($this->apiClient, $this->security, $container);
+        $this->object = new AuditLogger($this->restClient, $this->security, $container);
     }
     
     public function testLogNonAdmin()
@@ -57,7 +57,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
             return true;
         };
         $this->user->shouldReceive('getId')->andReturn(1);
-        $this->apiClient->shouldReceive('postC')->with('audit-log', \Mockery::on($entryChecker), ['deserialise_group' => 'audit_log_save']);
+        $this->restClient->shouldReceive('post')->with('audit-log', \Mockery::on($entryChecker), ['deserialise_group' => 'audit_log_save']);
         
         $this->object->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
     }
@@ -78,7 +78,7 @@ class AuditLoggerTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getId')->andReturn(2)
             ->getMock();
         $this->user->shouldReceive('getId')->andReturn(1);
-        $this->apiClient->shouldReceive('postC')->with('audit-log', \Mockery::on($entryChecker), ['deserialise_group' => 'audit_log_save']);
+        $this->restClient->shouldReceive('post')->with('audit-log', \Mockery::on($entryChecker), ['deserialise_group' => 'audit_log_save']);
         
         $this->object->log(EntityDir\AuditLogEntry::ACTION_USER_ADD, $userEdited);
     }

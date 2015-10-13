@@ -5,7 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
-use AppBundle\Service\ApiClient;
+use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,13 +22,13 @@ class AdminController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $apiClient = $this->get('apiclient'); /* @var $apiClient ApiClient */
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $orderBy = $request->query->has('order_by')? $request->query->get('order_by'): 'firstname';
         $sortOrder = $request->query->has('sort_order')? $request->query->get('sort_order'): 'ASC';
 
         
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->get('apiclient')->getEntities('Role', 'role'),
+            'roles' => $this->get('restClient')->get('role', 'Role[]'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), new EntityDir\User());
         
@@ -36,11 +36,11 @@ class AdminController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $apiClient->postC('/user', $form->getData(), [
+                $response = $restClient->post('user', $form->getData(), [
                     'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
                 ]);
-                $user = $apiClient->getEntity('User', 'user/' . $response['id']);
-                
+                $user = $restClient->get('user/' . $response['id'], 'User');
+
                 $request->getSession()->getFlashBag()->add(
                     'notice', 
                     'An activation email has been sent to the user.'
@@ -51,12 +51,18 @@ class AdminController extends Controller
                 return $this->redirect($this->generateUrl('admin_homepage'));
             } 
         }
-
-        $users = $this->get('apiclient')->getEntities('User', "user/get-all/{$orderBy}/{$sortOrder}");
+        
+        $limit = $request->query->get('limit') ?: 50;
+        $offset = $request->query->get('offset') ?: 0;
+        $userCount = $this->get('restClient')->get("user/count", 'array');
+        $users = $this->get('restClient')->get("user/get-all/{$orderBy}/{$sortOrder}/$limit/$offset", 'User[]');
         $newSortOrder = $sortOrder == "ASC"? "DESC": "ASC";
-
+        
         return [
             'users'=>$users, 
+            'userCount'=> $userCount,
+            'limit' => $limit,
+            'offset' => $offset,
             'form'=>$form->createView(),
             'newSortOrder' => $newSortOrder
         ];
@@ -71,10 +77,10 @@ class AdminController extends Controller
      */
     public function editUserAction($id)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         $request = $this->getRequest();
         
-        $user = $apiClient->getEntity('User', "user/{$id}");
+        $user = $restClient->get("user/{$id}", 'User');
        
         if(empty($user)){
             throw new \Exception('User does not exists');
@@ -82,7 +88,7 @@ class AdminController extends Controller
         
         
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->get('apiclient')->getEntities('Role', 'role'),
+            'roles' => $this->get('restClient')->get('role', 'Role[]'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), $user );
     
@@ -91,7 +97,7 @@ class AdminController extends Controller
             
             if($form->isValid()){
                 $updateUser = $form->getData();
-                $apiClient->putC('user/' . $user->getId(), $updateUser);
+                $restClient->put('user/' . $user->getId(), $updateUser);
                 
                 $request->getSession()->getFlashBag()->add('action', 'action.message');
                 
@@ -111,9 +117,9 @@ class AdminController extends Controller
      */
     public function deleteConfirmAction($id)
     {
-       $apiClient = $this->get('apiclient');
+       $restClient = $this->get('restClient');
         
-       $user = $apiClient->getEntity('User', "user/{$id}"); 
+       $user = $restClient->get("user/{$id}", 'User'); 
        
        return [ 'user' => $user ];
     }
@@ -127,13 +133,13 @@ class AdminController extends Controller
      */
     public function deleteAction($id)
     {
-        $apiClient = $this->get('apiclient');
+        $restClient = $this->get('restClient');
         
-        $user = $apiClient->getEntity('User', "user/{$id}"); 
+        $user = $restClient->get("user/{$id}", 'User'); 
         
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
         
-        $apiClient->delete('user/' . $this->getUser()->getId() . '/' . $id);
+        $restClient->delete('user/' . $id);
         
         return $this->redirect($this->generateUrl('admin_homepage'));
     }

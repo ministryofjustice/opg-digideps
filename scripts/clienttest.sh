@@ -15,6 +15,9 @@ suitename=${1:-deputy}
 
 /sbin/setuser app php vendor/phpunit/phpunit/phpunit -c tests/phpunit/
 
+# tests with coverage (install php5-xdebug if needed)
+#/sbin/setuser app php -d zend_extension=xdebug.so bin/phpunit -c tests/phpunit/phpunit.xml --coverage-html=web/coverage-html
+
 if [ -f tests/behat/behat.yml ]; then
     behatConfigFile=tests/behat/behat.yml
 else

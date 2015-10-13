@@ -1,7 +1,6 @@
 <?php
 namespace AppBundle\Test\Twig;
 
-//use AppBundle\Service\ApiClient;
 use Mockery as m;
 
 class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase

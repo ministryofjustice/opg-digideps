@@ -3,7 +3,6 @@ Feature: deputy / user / add user
     @deputy
     Scenario: login and add deputy user
         Given I reset the email log
-        #And I am on "http://digideps-admin.local/app_dev.php/"
         Given I am on admin login page
         And I save the page as "admin-login"
         Then the response status code should be 200
@@ -20,7 +19,6 @@ Feature: deputy / user / add user
             | login_password  | Abcd1234 |
         And I click on "login"
         Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
-        #When I go to "http://digideps-admin.local/app_dev.php/logout"
         Given I am not logged into admin
         # test right credentials
         When I fill in the following:
