@@ -4,15 +4,24 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
+use AppBundle\Service\Client\RestClient;
 
 class AbstractController extends Controller
 {
+    /**
+     * @return RestClient
+     */
+    protected function getRestClient()
+    {
+        return $this->get('restClient');
+    }
+    
     /**
      * @return array $choices
      */
     public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
     {
-        $responseArray = $this->get('restClient')->get('court-order-type', 'array');
+        $responseArray = $this->getRestClient()->get('court-order-type', 'array');
 
         if (!empty($filter)) {
             foreach ($responseArray['court_order_types'] as $value) {
@@ -42,7 +51,7 @@ class AbstractController extends Controller
      */
     public function getClient($clientId, array $groups = [ "basic"])
     {
-        return $this->get('restClient')->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
+        return $this->getRestClient()->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
@@ -55,7 +64,7 @@ class AbstractController extends Controller
      */
     public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
     {
-        return $this->get('restClient')->get("report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->getRestClient()->get("report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
