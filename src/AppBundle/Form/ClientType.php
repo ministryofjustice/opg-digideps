@@ -7,11 +7,11 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ClientType extends AbstractType
 {
-    private $util;
+    private $allowedCot;
     
-    public function __construct($util) 
+    public function __construct(array $allowedCot) 
     {
-        $this->util = $util;
+        $this->allowedCot = $allowedCot;
     }
     
     
@@ -25,7 +25,7 @@ class ClientType extends AbstractType
                                               'format' => 'yyyy-MM-dd',
                                               'invalid_message' => 'client.courtDate.message'
                                             ])
-                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->util->getAllowedCourtOrderTypeChoiceOptions([], 'arsort'),
+                ->add('allowedCourtOrderTypes', 'choice', [ 'choices' => $this->allowedCot,
                                                             'multiple' => true,
                                                             'expanded' => true ])
                 ->add('address', 'text')

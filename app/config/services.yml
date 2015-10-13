@@ -7,9 +7,6 @@ services:
         arguments: [ @security.context, @restClient ]
         tags:
             - { name: validator.constraint_validator, alias: security.validator.d_user_password }
-    dd_session.memcached_handler:
-        class: AppBundle\Service\MemcachedSessionHandler
-        arguments: [ "%session_memcached_host%", "%session_memcached_port%" ]
     guzzleJsonHttpClient:
         class: GuzzleHttp\Client
         arguments: 
@@ -34,12 +31,10 @@ services:
             - @jms_serializer
             - @logger
             - "%api_client_secret%"
+            - "%kernel.debug%"
     deputyprovider:
         class:  AppBundle\Service\DeputyProvider
         arguments: [ @restClient, @logger ]
-    util:
-        class: AppBundle\Service\Util
-        arguments: [@restClient]
     formFieldsExtension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
@@ -54,7 +49,7 @@ services:
             - { name: twig.extension }
     redirectorService:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router, @session, @util ]
+        arguments: [ @security.context, @router, @session, @restClient ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
         arguments: [ @event_dispatcher, @redirectorService ]
@@ -75,9 +70,6 @@ services:
     form.reportSubmit: 
         class: AppBundle\Form\ReportSubmitType
         arguments:  [@translator]
-    reportSubmitter:
-        class: AppBundle\Service\ReportSubmitter
-        arguments: [@service_container, @form.reportSubmit]
     auditLogger:
         class: AppBundle\Service\AuditLogger
         arguments: [@restClient, @security.context, @service_container]

@@ -3,6 +3,7 @@
 namespace AppBundle\Service\Client;
 
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\Message\Response as GuzzleResponse;
@@ -47,6 +48,15 @@ class RestClient
      */
     private $clientSecret;
 
+    /**
+     * @var array 
+     */
+    private $history;
+    
+    /**
+     * @var boolean 
+     */
+    private $saveHistory;
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests
@@ -70,13 +80,16 @@ class RestClient
         TokenStorageInterface $tokenStorage, 
         SerializerInterface $serialiser, 
         Logger $logger, 
-        $clientSecret
+        $clientSecret,
+        $saveHistory
     ) {
         $this->client = $client;
         $this->serialiser = $serialiser;
         $this->tokenStorage = $tokenStorage;
         $this->logger = $logger;
         $this->clientSecret = $clientSecret;
+        $this->saveHistory = $saveHistory;
+        $this->history = [];
     }
 
 
@@ -98,7 +111,7 @@ class RestClient
 
         $this->tokenStorage->set($response->getHeader(self::HEADER_AUTH_TOKEN));
 
-        return $this->entityToArray('User', $this->extractDataArray($response));
+        return $this->arrayToEntity('User', $this->extractDataArray($response));
     }
 
 
@@ -125,13 +138,12 @@ class RestClient
     public function loadUserByToken($token)
     {
         $response = $this->rawSafeCall('get', 'user/get-by-token/' . $token, [
-            'addAuthToken' => false,
             'addClientSecret' => true,
         ]);
         
         $responseArray = $this->extractDataArray($response);
         
-        return $this->entityToArray('User', $responseArray);
+        return $this->arrayToEntity('User', $responseArray);
     }
 
     /**
@@ -143,7 +155,6 @@ class RestClient
     public function userRecreateToken(User $user, $type)
     {
         $response = $this->rawSafeCall('put', 'user/recreate-token/' .  $user->getEmail() . '/' . $type, [
-            'addAuthToken' => false, 
             'addClientSecret' => true,
         ]);
         
@@ -161,7 +172,6 @@ class RestClient
     public function registerUser(SelfRegisterData $selfRegData)
     {
         $response = $this->rawSafeCall('post', 'selfregister', [
-            'addAuthToken' => false, 
             'addClientSecret' => true,
             'body' => $this->toJson($selfRegData)
         ]);
@@ -171,16 +181,15 @@ class RestClient
     
     /**
      * @param string $endpoint e.g. /user
-     * @param string|object $bodyorEntity HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param string|object|array $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array $options keys: deserialise_group
      * 
      * @return string response body
      */
-    public function put($endpoint, $bodyorEntity, array $options = [])
+    public function put($endpoint, $mixed, array $options = [])
     {
-        $body = $this->toJson($bodyorEntity, $options);
         $response = $this->rawSafeCall('put', $endpoint, [
-            'body' => $body,
+            'body' =>  $this->toJson($mixed, $options),
             'addAuthToken' => true,
         ]);
 
@@ -190,14 +199,14 @@ class RestClient
     
     /**
      * @param string $endpoint e.g. /user
-     * @param string|object $bodyorEntity HTTP body. json_encoded string or entity (that will JMS-serialised)
+     * @param string|object $mixed HTTP body. json_encoded string or entity (that will JMS-serialised)
      * @param array $options keys: deserialise_group
      * 
      * @return string response body
      */
-    public function post($endpoint, $bodyorEntity, array $options = [])
+    public function post($endpoint, $mixed, array $options = [])
     {
-        $body = $this->toJson($bodyorEntity, $options);
+        $body = $this->toJson($mixed, $options);
 
         $response = $this->rawSafeCall('post', $endpoint, [
             'body' => $body,
@@ -215,9 +224,9 @@ class RestClient
      *                or "Account[]" to deseialise into an array of entities
      * @return mixed $expectedResponseType type
      */
-    public function get($endpoint, $expectedResponseType, array $options = [])
+    public function get($endpoint, $expectedResponseType, $options = [])
     {
-        $response = $this->rawSafeCall('get', $endpoint, [
+        $response = $this->rawSafeCall('get', $endpoint, $options + [
             'addAuthToken' => true,
         ]);
 
@@ -225,9 +234,9 @@ class RestClient
         if ($expectedResponseType == 'array') {
             return $responseArray;
         } else if (substr($expectedResponseType, -2) == '[]') {
-            return $this->entitiesToArray('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
+            return $this->arrayToEntitities('AppBundle\\Entity\\' . $expectedResponseType, $responseArray);
         } else if (class_exists('AppBundle\\Entity\\' . $expectedResponseType)) {
-            return $this->entityToArray($expectedResponseType, $responseArray);
+            return $this->arrayToEntity($expectedResponseType, $responseArray);
         } else {
             throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given.");
         }
@@ -241,7 +250,7 @@ class RestClient
      * 
      * @return string response body
      */
-    public function delete($endpoint, array $options = [])
+    public function delete($endpoint)
     {
         $response = $this->rawSafeCall('delete', $endpoint, [
            'addAuthToken' => true,
@@ -263,10 +272,6 @@ class RestClient
      */
     private function rawSafeCall($method, $url, $options)
     {
-        if (!method_exists($this->client, $method)) {
-            throw new \InvalidArgumentException("Method $method does not exist on " . get_class($this->client));
-        }
-
         // process special header options
         if (!empty($options['addAuthToken'])) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get();
@@ -280,8 +285,16 @@ class RestClient
         
         
         try {
-            return $this->client->$method($url, $options);
-        } catch (\Exception $e) {
+            $start = microtime(true);
+            $response = $this->client->$method($url, $options);
+            
+            if ($this->saveHistory) {
+                $this->logRequest($url, $method, $start, $options, $response);
+                
+            }
+            
+            return $response;
+        } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
             throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
         }
@@ -304,7 +317,7 @@ class RestClient
         if (empty($data['success'])) {
             throw new \RuntimeException('Endpoint failed with message.' . $data['message']);
         }
-
+        
         return $data['data'];
     }
 
@@ -315,12 +328,12 @@ class RestClient
      * 
      * @return Object of type $class
      */
-    private function entityToArray($class, array $data)
+    private function arrayToEntity($class, array $data)
     {
-        $class = (strpos($class, 'AppBundle') !== false) 
+        $fullClassName = (strpos($class, 'AppBundle') !== false) 
                  ? $class : 'AppBundle\\Entity\\' . $class;
         
-        return $this->serialiser->deserialize(json_encode($data), $class, 'json');
+        return $this->serialiser->deserialize(json_encode($data), $fullClassName, 'json');
     }
 
 
@@ -330,12 +343,12 @@ class RestClient
      * 
      * @return array of type $class
      */
-    private function entitiesToArray($class, array $data)
+    private function arrayToEntitities($class, array $data)
     {
         $expectedResponseType = substr($class, 0, -2);
         $ret = [];
         foreach ($data as $row) {
-            $entity = $this->entityToArray($expectedResponseType, $row);
+            $entity = $this->arrayToEntity($expectedResponseType, $row);
             $ret[$entity->getId()] = $entity;
         }
 
@@ -359,6 +372,7 @@ class RestClient
             if (!empty($options['deserialise_group'])) {
                 $context->setGroups([$options['deserialise_group']]);
             }
+            
             return $this->serialiser->serialize($mixed, 'json', $context);
         } else if (is_array($mixed)) {
             return $this->serialiser->serialize($mixed, 'json');
@@ -366,14 +380,31 @@ class RestClient
 
         return $mixed;
     }
-
-
+    
+    /**
+     * @param string $url
+     * @param string $method
+     * @param string $start
+     * @param type $response
+     */
+    private function logRequest($url, $method, $start, $options, ResponseInterface $response)
+    {
+        $this->history[] = [
+            'url' => $url,
+            'method' => $method,
+            'time' => microtime(true) - $start,
+            'options'=> print_r($options, true),
+            'responseCode' => $response->getStatusCode(),
+            'responseBody' => print_r(json_decode((string)$response->getBody(), true), true)
+        ];
+    }
+    
     /**
      * @return array of calls, for debug reasons (e.g. symfony debug toolbar)
      */
     public function getHistory()
     {
-        return [];
+        return $this->history;
     }
-
+    
 }

@@ -7,7 +7,6 @@ use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -15,7 +14,7 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 /**
 * @Route("user")
 */
-class UserController extends Controller
+class UserController extends AbstractController
 {
     /**
      * Landing page to let the user access the app and selecting a password

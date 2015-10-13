@@ -12,11 +12,26 @@
     {% endset %}
 
     {% set text %}
-      <ul>
+        <table>
+            <tr>
+                <th></th>
+                <th>URL</th>
+                <th>Time (s)</th>
+                <th>Response code</th>
+                <th>bytes sent</th>
+                <th>bytes received</th>
+            </tr>
       {% for entry in collector.calls %}
-         <li>{{entry.method}} {{entry.url}} ({{entry.time | round(2)}} s)</li>
+         <tr>
+             <td>{{ entry.method | upper }}</td>
+             <td>{{ entry.url }}</td>
+             <td>{{ entry.time | round(3)}}</td>
+             <td>{{ entry.responseCode }}</td>
+             <td>{{ entry.options | length | number_format  }}</td>
+             <td>{{ entry.responseBody | length | number_format }}</td>
+         </tr>
       {% endfor %}
-      </ul>
+      </table>
     {% endset %}
 
     {# Set the "link" value to false if you do not have a big "panel"
@@ -45,10 +60,9 @@
      <ul>
       {% for entry in collector.calls %}
         <li>{{entry.method}} {{entry.url}} ({{entry.time | round(2)}} s)
-          <br/><b>Response:</b> <pre>{{entry.response}}</pre>
-          {% if entry.requestBody %}
-              <br/><b>Request Body:</b> <pre>{{entry.requestBody}}</pre>
-          {% endif %}
+          <br/><b>Request:</b> <pre>{{ entry.options }} </pre>
+          <br/><b>Response:</b>
+          <pre>{{ entry.responseBody }}</pre>
         </li>
       {% endfor %}
       </ul>

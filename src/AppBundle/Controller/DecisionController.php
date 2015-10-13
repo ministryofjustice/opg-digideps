@@ -5,20 +5,17 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Service\ReportStatusService;
 
-class DecisionController extends Controller
+class DecisionController extends AbstractController
 {
     /**
      * @Route("/report/{reportId}/decisions/delete-reason", name="delete_reason_decisions")
      */
     public function deleteReasonAction($reportId)
     {
-        $util = $this->get('util');
-
         //just do some checks to make sure user is allowed to update this report
-        $report = $util->getReport($reportId, ['transactions']);
+        $report = $this->getReport($reportId, ['basic', 'transactions']);
 
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
@@ -33,10 +30,8 @@ class DecisionController extends Controller
      */
     public function deleteAction($reportId,$id)
     {
-        $util = $this->get('util');
-
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $util->getReport($reportId, ['transactions']);
+        $report = $this->getReport($reportId, ['basic']);
 
         if(!empty($report) && in_array($id, $report->getDecisions())){
             $this->get('restClient')->delete("/report/decision/{$id}");
@@ -53,10 +48,9 @@ class DecisionController extends Controller
     {
         $request = $this->getRequest();
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        $util = $this->get('util');
 
         // just needed for title etc,
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -65,7 +59,7 @@ class DecisionController extends Controller
             if (!in_array($id, $report->getDecisions())) {
                throw new \RuntimeException("Decision not found.");
             }
-            $decision = $restClient->get('/report/decision/' . $id, 'Decision');
+            $decision = $restClient->get('report/decision/' . $id, 'Decision');
 
             $form = $this->createForm(new FormDir\DecisionType([
                 'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
@@ -81,11 +75,6 @@ class DecisionController extends Controller
 
         $decision->setReportId($reportId);
         $decision->setReport($report);
-
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
 
         $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
         
@@ -123,9 +112,8 @@ class DecisionController extends Controller
             'no_decision' => $noDecision->createView(),
             'report' => $report,
             'reportStatus' => $reportStatusService,
-            'client' => $util->getClient($report->getClient()),
+            'client' => $this->getClient($report->getClient()),
             'action' => $action,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -158,13 +146,10 @@ class DecisionController extends Controller
      */
     protected function handleReasonForNoDecision($action,$noDecision,$reportId)
     {
-        $restClient = $this->get('restClient');
-        $util = $this->get('util');
-
         $formData = $noDecision->getData();
 
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         $report->setReasonForNoDecisions($formData['reason']);
-        $restClient->put('report/'.$report->getId(),$report);
+        $this->get('restClient')->put('report/'.$report->getId(),$report);
     }
 }

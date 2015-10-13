@@ -7,14 +7,13 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\ReportStatusService;
 
 /**
  * @Route("/report")
  */
-class AssetController extends Controller
+class AssetController extends AbstractController
 {
 
 
@@ -48,7 +47,6 @@ class AssetController extends Controller
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
             'showCancelLink' => count($report->getAssets()) > 0,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -88,7 +86,6 @@ class AssetController extends Controller
             'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -120,11 +117,6 @@ class AssetController extends Controller
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
 
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         
@@ -134,7 +126,6 @@ class AssetController extends Controller
             'assetToEdit' => $asset,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -192,11 +183,6 @@ class AssetController extends Controller
                     'reportId' => $reportId,
             ));
         }
-
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
         
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
         if ($isFormValid) {
@@ -209,7 +195,6 @@ class AssetController extends Controller
             'report' => $report,
             'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -221,7 +206,7 @@ class AssetController extends Controller
      */
     public function _listAction($reportId, $assetToEdit = null, $editForm = null, $showDeleteConfirm = false, $showEditLink = true)
     {
-        $report = $this->get('util')->getReport($reportId);
+        $report = $this->getReport($reportId, [ "basic"]);
 
         $assets = $this->get('restClient')->get('report/' . $reportId . '/assets', 'Asset[]');
 
@@ -246,7 +231,7 @@ class AssetController extends Controller
      */
     public function _noAssetsAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId);
+        $report = $this->getReport($reportId, ['basic']);
 
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
 
@@ -296,15 +281,13 @@ class AssetController extends Controller
      */
     private function getReportIfReportNotSubmitted($reportId, $addClient = true)
     {
-        $util = $this->get('util');
-
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         
         if ($addClient) {
-            $client = $util->getClient($report->getClient());
+            $client = $this->getClient($report->getClient());
             $report->setClientObject($client);
         }
 

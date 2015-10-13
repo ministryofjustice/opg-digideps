@@ -7,12 +7,11 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Service\ReportStatusService;
 
 
 
-class AccountController extends Controller
+class AccountController extends AbstractController
 {
 
     /**
@@ -23,15 +22,14 @@ class AccountController extends Controller
      */
     public function accountsAction($reportId, $action)
     {
-        $util = $this->get('util');
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
         
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         $accounts = $report->getAccounts();
 
@@ -41,11 +39,6 @@ class AccountController extends Controller
         $form = $this->createForm(new FormDir\AccountType(['jsEnabled'=>('jsadd' === $action)]), $account, [
              'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
         ]);
-        
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
         
         $form->handleRequest($request);
         if ($form->get('save')->isClicked() && $form->isValid()) {
@@ -75,7 +68,6 @@ class AccountController extends Controller
             'action' => $action,
             'form' => $form->createView(),
             'accounts' => $accounts,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -92,16 +84,14 @@ class AccountController extends Controller
      */
     public function accountAction($reportId, $accountId, $action)
     {
-        $util = $this->get('util');
-
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         if (!in_array($accountId, $report->getAccountIds())) {
             throw new \RuntimeException("Bank account not found.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);
@@ -125,11 +115,6 @@ class AccountController extends Controller
             $this->get('restClient')->put('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
-        }
-        
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
         }
         
         // edit/delete logic
@@ -188,7 +173,6 @@ class AccountController extends Controller
             // other date needed for the view (list action mainly)
             'account' => $account,
             'actionParam' => $action,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
     
