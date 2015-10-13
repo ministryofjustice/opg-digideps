@@ -1,36 +1,27 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Controller;
 
-use AppBundle\Service\Client\RestClient;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
-use AppBundle\Entity\Report;
+use AppBundle\Service\Client\RestClient;
 
-class Util
+class AbstractController extends Controller
 {
-
     /**
-     * @var RestClient
+     * @return RestClient
      */
-    private $restClient;
-
-
-    /**
-     * 
-     * @param RestClient $restClient
-     */
-    public function __construct(RestClient $restClient)
+    protected function getRestClient()
     {
-        $this->restClient = $restClient;
+        return $this->get('restClient');
     }
-
-
+    
     /**
      * @return array $choices
      */
     public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
     {
-        $responseArray = $this->restClient->get('court-order-type', 'array');
+        $responseArray = $this->getRestClient()->get('court-order-type', 'array');
 
         if (!empty($filter)) {
             foreach ($responseArray['court_order_types'] as $value) {
@@ -60,7 +51,7 @@ class Util
      */
     public function getClient($clientId, array $groups = [ "basic"])
     {
-        return $this->restClient->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
+        return $this->getRestClient()->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
@@ -71,9 +62,9 @@ class Util
      * 
      * @return Report
      */
-    public function getReport($reportId, array $groups = [ "transactions", "basic"])
+    public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
     {
-        return $this->restClient->get("/report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->getRestClient()->get("report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
@@ -97,5 +88,4 @@ class Util
 
         return $ret;
     }
-
 }

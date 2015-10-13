@@ -7,7 +7,6 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
 use AppBundle\Model as ModelDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -15,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @Route("/register")
  */
-class RegistrationController extends Controller
+class RegistrationController extends AbstractController
 {
     
     /**

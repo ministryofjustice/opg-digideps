@@ -9,12 +9,11 @@ use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 /**
 * @Route("/admin")
 */
-class AdminController extends Controller
+class AdminController extends AbstractController
 {
     /**
      * @Route("/", name="admin_homepage")

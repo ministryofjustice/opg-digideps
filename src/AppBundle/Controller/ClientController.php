@@ -5,13 +5,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
 
 /**
  * @Route("/client")
  */
-class ClientController extends Controller
+class ClientController extends AbstractController
 {
     /**
      * @Route("/show/{action}/{reportId}", name="client_home", defaults={ "action" = "show", "reportId" = " "})
@@ -19,7 +17,6 @@ class ClientController extends Controller
      */
     public function indexAction($action, $reportId)
     {   
-        $util = $this->get('util');  /* @var $util \AppBundle\Service\Util */
         $restClient = $this->get('restClient');
         
         $clients = $this->getUser()->getClients(); 
@@ -27,8 +24,8 @@ class ClientController extends Controller
         
         $client = !empty($clients)? $clients[0]: null;
         
-        $reports = $client ? $util->getReportsIndexedById($client, ['basic']) : [];
-         arsort($reports);
+        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
+        arsort($reports);
         
         
         $report = new EntityDir\Report();
@@ -36,7 +33,8 @@ class ClientController extends Controller
 
         $formClientNewReport = $this->createForm(new FormDir\ReportType(), $report);
         $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
-        $clientForm = $this->createForm(new FormDir\ClientType($util), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
+        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
+        $clientForm = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
         
         $clientForm->handleRequest($request);
         
@@ -50,7 +48,7 @@ class ClientController extends Controller
         
         // edit report dates
         if ($action == 'edit-report' && $reportId) {
-            $report = $util->getReport($reportId);
+            $report = $this->getReport($reportId, [ 'transactions', 'basic']);
             $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
                 'translation_domain' => 'report-edit-dates'
             ]);
@@ -69,7 +67,7 @@ class ClientController extends Controller
           if($report->getReportSeen() === false){
               $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
               
-              $reportObj = $util->getReport($report->getId());
+              $reportObj = $this->getReport($report->getId(), [ 'transactions', 'basic']);
               //update report to say message has been seen
               $reportObj->setReportSeen(true);
               
@@ -99,7 +97,6 @@ class ClientController extends Controller
     public function addAction()
     {
         $request = $this->getRequest();
-        $util = $this->get('util');
         $restClient = $this->get('restClient');
         
         $clients = $this->getUser()->getClients();
@@ -114,7 +111,8 @@ class ClientController extends Controller
             $client->addUser($this->getUser()->getId());
         }
   
-        $form = $this->createForm(new FormDir\ClientType($util), $client);
+        $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
+        $form = $this->createForm(new FormDir\ClientType($allowedCot), $client);
         
         $form->handleRequest($request);
         if ($form->isValid()) {
