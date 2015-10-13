@@ -1,9 +1,42 @@
-@import url("govuk-template.css");
-@import "import-moj";
+@import url('../../../../../node_modules/govuk-elements/govuk/public/stylesheets/govuk-template.css');
+@import url('../../../../../node_modules/govuk-elements/govuk/public/stylesheets/fonts.css');
+
+$path: '/images/';
 $phablet: 600px;
 
-@import "components/popups/session-timeout";
+//GOVUK
+@import '_font_stack';
+@import '_grid_layout';
+@import '_measurements';
+@import '_shims';
+@import '_url-helpers';
 
+@import 'design-patterns/_alpha-beta';
+@import 'design-patterns/_buttons';
+@import 'design-patterns/_media-player';
+
+//Elements
+@import 'details';
+@import 'elements-typography';
+@import 'forms';
+@import 'helpers';
+@import 'icons';
+@import 'layout';
+@import 'lists';
+@import 'panels';
+@import 'reset';
+@import 'tables';
+
+@import 'forms/form-block-labels';
+@import 'forms/form-date';
+@import 'forms/form-validation';
+
+
+//MOJ-Template
+@import "moj-template";
+
+//DIGIDEPS
+@import "components/popups/session-timeout";
 @import "components/account";
 @import "components/account-header";
 @import "components/account-transactions";
