@@ -55,7 +55,7 @@ class AbstractController extends Controller
      */
     public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
     {
-        return $this->get('restClient')->get("/report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->get('restClient')->get("report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
