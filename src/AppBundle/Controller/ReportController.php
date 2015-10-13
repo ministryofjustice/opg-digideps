@@ -82,11 +82,6 @@ class ReportController extends Controller
         }
         $client = $util->getClient($report->getClient());
         
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-        
         $this->get('session')->getFlashBag()->add('news', 'report.header.announcement');
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
@@ -94,7 +89,6 @@ class ReportController extends Controller
             'report' => $report,
             'client' => $client,
             'reportStatus' => $reportStatusService,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
     

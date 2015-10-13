@@ -81,11 +81,6 @@ class ContactController extends Controller{
             $form = $this->createForm(new FormDir\ContactType(), $contact, [ 'action' => $this->generateUrl('contacts',[ 'reportId' => $reportId, 'action' => 'add' ]) ]);
         }
         
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-        
         //set up add reason for no contact form
         $noContact = $this->createForm(new FormDir\ReasonForNoContactType(), null, [ 'action' => $this->generateUrl('contacts', [ 'reportId' => $reportId])."#pageBody" ]);
         $reason = $report->getReasonForNoContacts();
@@ -114,7 +109,6 @@ class ContactController extends Controller{
             'report' => $report,
             'reportStatus' => $reportStatusService,
             'client' => $client,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView(),
             'no_contact' => $noContact->createView() ];
     }
 

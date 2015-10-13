@@ -82,11 +82,6 @@ class DecisionController extends Controller
         $decision->setReportId($reportId);
         $decision->setReport($report);
 
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-
         $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
         
         $reason = $report->getReasonForNoDecisions();
@@ -125,7 +120,6 @@ class DecisionController extends Controller
             'reportStatus' => $reportStatusService,
             'client' => $util->getClient($report->getClient()),
             'action' => $action,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 

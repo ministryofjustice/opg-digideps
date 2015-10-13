@@ -48,7 +48,6 @@ class AssetController extends Controller
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
             'showCancelLink' => count($report->getAssets()) > 0,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -88,7 +87,6 @@ class AssetController extends Controller
             'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -120,11 +118,6 @@ class AssetController extends Controller
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
 
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         
@@ -134,7 +127,6 @@ class AssetController extends Controller
             'assetToEdit' => $asset,
             'client' => $report->getClientObject(),
             'form' => $form->createView(),
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -192,11 +184,6 @@ class AssetController extends Controller
                     'reportId' => $reportId,
             ));
         }
-
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
         
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
         if ($isFormValid) {
@@ -209,7 +196,6 @@ class AssetController extends Controller
             'report' => $report,
             'reportStatus' => $reportStatusService,
             'client' => $report->getClientObject(),
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 

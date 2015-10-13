@@ -34,11 +34,6 @@ class SafeguardController extends Controller{
         $request = $this->getRequest();
         $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
 
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-
         $form->handleRequest($request);
 
         if($form->get('save')->isClicked() && $form->isValid()){
@@ -63,7 +58,6 @@ class SafeguardController extends Controller{
                 'reportStatus' => $reportStatusService,
                 'client' => $util->getClient($report->getClient()),
                 'form' => $form->createView(),
-                'report_form_submit' => $this->get('reportSubmitter')->getFormView()
               ];
     }
 

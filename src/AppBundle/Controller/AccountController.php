@@ -42,11 +42,6 @@ class AccountController extends Controller
              'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
         ]);
         
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
-        }
-        
         $form->handleRequest($request);
         if ($form->get('save')->isClicked() && $form->isValid()) {
             $account = $form->getData();
@@ -75,7 +70,6 @@ class AccountController extends Controller
             'action' => $action,
             'form' => $form->createView(),
             'accounts' => $accounts,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
 
@@ -125,11 +119,6 @@ class AccountController extends Controller
             $this->get('restClient')->put('account/' .  $account->getId(), $formMoneyInOut->getData(), [
                 'deserialise_group' => 'transactions',
             ]);
-        }
-        
-        // report submit logic
-        if ($redirectResponse = $this->get('reportSubmitter')->submit($report)) {
-            return $redirectResponse;
         }
         
         // edit/delete logic
@@ -188,7 +177,6 @@ class AccountController extends Controller
             // other date needed for the view (list action mainly)
             'account' => $account,
             'actionParam' => $action,
-            'report_form_submit' => $this->get('reportSubmitter')->getFormView()
         ];
     }
     
