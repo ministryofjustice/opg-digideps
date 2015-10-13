@@ -3,9 +3,8 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class EmailViewerController extends Controller
+class EmailViewerController extends AbstractController
 {
     /**
      * @Route("/email-viewer/{action}", name="email-viewer")

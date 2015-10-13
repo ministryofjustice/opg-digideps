@@ -7,12 +7,11 @@ use AppBundle\Model as ModelDir;
 use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 
 
-class ReportController extends Controller
+class ReportController extends AbstractController
 {
     /**
      * Create report
@@ -30,13 +29,12 @@ class ReportController extends Controller
     {
         $request = $this->getRequest();
         $restClient = $this->get('restClient');
-        $util = $this->get('util');
        
-        $client = $util->getClient($clientId);
+        $client = $this->getClient($clientId);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
-        $existingReports = $util->getReportsIndexedById($client, ['basic']);
+        $existingReports = $this->getReportsIndexedById($client, ['basic']);
        
         if ($action == 'create' && ($firstReport = array_shift($existingReports)) && $firstReport instanceof EntityDir\Report) {
             $report = $firstReport;
@@ -75,12 +73,11 @@ class ReportController extends Controller
      */
     public function overviewAction($reportId)
     {
-        $util = $this->get('util');
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
         
         $this->get('session')->getFlashBag()->add('news', 'report.header.announcement');
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
@@ -103,7 +100,7 @@ class ReportController extends Controller
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, ['basic']); /* @var $report EntityDir\Report */
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -152,7 +149,7 @@ class ReportController extends Controller
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, ['basic']); /* @var $report EntityDir\Report */
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -193,8 +190,7 @@ class ReportController extends Controller
      */
     public function submitConfirmationAction($reportId)
     {
-        $util = $this->get('util');
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, ['basic']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -205,7 +201,7 @@ class ReportController extends Controller
         }
 
 
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
         $request = $this->getRequest();
@@ -234,8 +230,7 @@ class ReportController extends Controller
      */
     public function submitFeedbackAction($reportId)
     {
-        $util = $this->get('util');
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, ["basic"]);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -245,7 +240,7 @@ class ReportController extends Controller
             throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
         
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         return [
             'report' => $report,
@@ -261,10 +256,9 @@ class ReportController extends Controller
     public function displayAction($reportId, $isEmailAttachment = false)
     {
         $restClient = $this->get('restClient');
-        $util = $this->get('util'); /* @var $util \AppBundle\Service\Util */
         
-        $report = $util->getReport($reportId);
-        $client = $util->getClient($report->getClient());
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $client = $this->getClient($report->getClient());
         
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
         $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');

@@ -1,36 +1,17 @@
 <?php
 
-namespace AppBundle\Service;
+namespace AppBundle\Controller;
 
-use AppBundle\Service\Client\RestClient;
-use AppBundle\Entity\Client;
-use AppBundle\Entity\Report;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class Util
+class AbstractController extends Controller
 {
-
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-
-    /**
-     * 
-     * @param RestClient $restClient
-     */
-    public function __construct(RestClient $restClient)
-    {
-        $this->restClient = $restClient;
-    }
-
-
     /**
      * @return array $choices
      */
     public function getAllowedCourtOrderTypeChoiceOptions(array $filter = [], $sort = null)
     {
-        $responseArray = $this->restClient->get('court-order-type', 'array');
+        $responseArray = $this->get('restClient')->get('court-order-type', 'array');
 
         if (!empty($filter)) {
             foreach ($responseArray['court_order_types'] as $value) {
@@ -60,7 +41,7 @@ class Util
      */
     public function getClient($clientId, array $groups = [ "basic"])
     {
-        return $this->restClient->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
+        return $this->get('restClient')->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
@@ -71,9 +52,9 @@ class Util
      * 
      * @return Report
      */
-    public function getReport($reportId, array $groups = [ "transactions", "basic"])
+    public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
     {
-        return $this->restClient->get("/report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->get('restClient')->get("/report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
@@ -97,5 +78,4 @@ class Util
 
         return $ret;
     }
-
 }

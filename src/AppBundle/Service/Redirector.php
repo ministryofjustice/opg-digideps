@@ -7,7 +7,6 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use AppBundle\Service\Util;
 
 class Redirector
 {
@@ -26,10 +25,6 @@ class Redirector
      */
     protected $session;
     
-    /**
-     * @var Util 
-     */
-    protected $util;
     
     /**
      * Routes the user can be redirected to, if accessed before timeout
@@ -55,12 +50,12 @@ class Redirector
      * @param \AppBundle\Service\SecurityContext $security
      * @param type $router
      */
-    public function __construct(SecurityContextInterface $security, RouterInterface $router, Session $session, Util $util)
+    public function __construct(SecurityContextInterface $security, RouterInterface $router, Session $session, Client\RestClient $restClient)
     {
         $this->security = $security;
         $this->router = $router;
         $this->session = $session;
-        $this->util = $util;
+        $this->restClient = $restClient;
     }
 
     /**
@@ -122,7 +117,7 @@ class Redirector
         $reportIds = $clients[0]->getReports();
         
         foreach($reportIds as $reportId){
-            $report = $this->util->getReport($reportId);
+            $report = $this->restClient->get("/report/{$reportId}", 'Report', [ 'query' => [ 'groups' => [ "basic"]]]);
             
             if(!$report->getSubmitted()){
                 return $this->router->generate('report_overview', ['reportId'=>$reportId]);

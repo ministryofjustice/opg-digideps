@@ -5,23 +5,20 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Service\ReportStatusService;
 
 
 
-class ContactController extends Controller{
+class ContactController extends AbstractController{
 
     /**
      * @Route("/report/{reportId}/contacts/delete-reason", name="delete_reason_contacts")
      */
     public function deleteReasonAction($reportId)
     {
-        $util = $this->get('util');
-
         //just do some checks to make sure user is allowed to update this report
-        $report = $util->getReport($reportId, ['transactions']);
+        $report = $this->getReport($reportId, [ "basic"]);
 
         if(!empty($report)){
             $report->setReasonForNoContacts(null);
@@ -37,10 +34,8 @@ class ContactController extends Controller{
      */
     public function deleteAction($reportId,$id)
     {
-        $util = $this->get('util');
-
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $util->getReport($reportId, ['transactions']);
+        $report = $this->getReport($reportId, ['basic']);
 
         if(!empty($report) && in_array($id, $report->getContacts())){
             $this->get('restClient')->delete('report/contact/' . $id);
@@ -56,13 +51,11 @@ class ContactController extends Controller{
      */
     public function indexAction($reportId,$action,$id)
     {
-        $util = $this->get('util');
-
-        $report = $util->getReport($reportId, ['transactions']);
+        $report = $this->getReport($reportId, ['basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         $request = $this->getRequest();
 
@@ -118,8 +111,6 @@ class ContactController extends Controller{
     */
     private function handleContactsFormSubmit(array $forms, $reportId, $action='add')
     {
-        $util = $this->get('util');
-
         $request = $this->getRequest();
         $restClient = $this->get('restClient');
 
@@ -129,7 +120,7 @@ class ContactController extends Controller{
         $form->handleRequest($request);
         $noContact->handleRequest($request);
 
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         
         //check if contacts form was submitted
         if($form->get('save')->isClicked()){

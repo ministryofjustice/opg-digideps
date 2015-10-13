@@ -5,7 +5,6 @@ use GuzzleHttp\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Exception\DisplayableException;
@@ -13,7 +12,7 @@ use AppBundle\Exception\DisplayableException;
 /**
  * @Route("/behat")
  */
-class BehatController extends Controller
+class BehatController extends AbstractController
 {
     private function securityChecks()
     {

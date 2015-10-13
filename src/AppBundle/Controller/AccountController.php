@@ -7,12 +7,11 @@ use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Service\ReportStatusService;
 
 
 
-class AccountController extends Controller
+class AccountController extends AbstractController
 {
 
     /**
@@ -23,15 +22,14 @@ class AccountController extends Controller
      */
     public function accountsAction($reportId, $action)
     {
-        $util = $this->get('util');
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
         
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         $accounts = $report->getAccounts();
 
@@ -86,16 +84,14 @@ class AccountController extends Controller
      */
     public function accountAction($reportId, $accountId, $action)
     {
-        $util = $this->get('util');
-
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         if (!in_array($accountId, $report->getAccountIds())) {
             throw new \RuntimeException("Bank account not found.");
         }
-        $client = $util->getClient($report->getClient());
+        $client = $this->getClient($report->getClient());
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);

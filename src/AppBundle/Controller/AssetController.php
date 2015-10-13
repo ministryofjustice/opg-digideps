@@ -7,14 +7,13 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\ReportStatusService;
 
 /**
  * @Route("/report")
  */
-class AssetController extends Controller
+class AssetController extends AbstractController
 {
 
 
@@ -207,7 +206,7 @@ class AssetController extends Controller
      */
     public function _listAction($reportId, $assetToEdit = null, $editForm = null, $showDeleteConfirm = false, $showEditLink = true)
     {
-        $report = $this->get('util')->getReport($reportId);
+        $report = $this->getReport($reportId, [ "basic"]);
 
         $assets = $this->get('restClient')->get('report/' . $reportId . '/assets', 'Asset[]');
 
@@ -232,7 +231,7 @@ class AssetController extends Controller
      */
     public function _noAssetsAction(Request $request, $reportId)
     {
-        $report = $this->get('util')->getReport($reportId);
+        $report = $this->getReport($reportId, ['basic']);
 
         list ($noAssetsToAdd, $isFormValid) = $this->handleNoAssetsForm($request, $report);
 
@@ -282,15 +281,13 @@ class AssetController extends Controller
      */
     private function getReportIfReportNotSubmitted($reportId, $addClient = true)
     {
-        $util = $this->get('util');
-
-        $report = $util->getReport($reportId);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         
         if ($addClient) {
-            $client = $util->getClient($report->getClient());
+            $client = $this->getClient($report->getClient());
             $report->setClientObject($client);
         }
 

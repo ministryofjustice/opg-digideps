@@ -38,9 +38,6 @@ services:
     deputyprovider:
         class:  AppBundle\Service\DeputyProvider
         arguments: [ @restClient, @logger ]
-    util:
-        class: AppBundle\Service\Util
-        arguments: [@restClient]
     formFieldsExtension:
         class: AppBundle\Twig\FormFieldsExtension
         public: false
@@ -55,7 +52,7 @@ services:
             - { name: twig.extension }
     redirectorService:
         class: AppBundle\Service\Redirector
-        arguments: [ @security.context, @router, @session, @util ]
+        arguments: [ @security.context, @router, @session, @restClient ]
     kernel.listener.login_listener:
         class: AppBundle\EventListener\LoginEventListener
         arguments: [ @event_dispatcher, @redirectorService ]

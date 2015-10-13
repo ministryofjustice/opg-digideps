@@ -5,12 +5,11 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Service\ReportStatusService;
 
 
-class SafeguardController extends Controller{
+class SafeguardController extends AbstractController{
 
     /**
      * @Route("/report/{reportId}/safeguarding", name="safeguarding")
@@ -18,8 +17,7 @@ class SafeguardController extends Controller{
      */
     public function editAction($reportId)
     {
-        $util = $this->get('util');
-        $report = $util->getReport($reportId); // check the report is owned by this user.
+        $report = $this->getReport($reportId, [ "basic"]); // check the report is owned by this user.
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
@@ -56,7 +54,7 @@ class SafeguardController extends Controller{
         
         return[ 'report' => $report,
                 'reportStatus' => $reportStatusService,
-                'client' => $util->getClient($report->getClient()),
+                'client' => $this->getClient($report->getClient()),
                 'form' => $form->createView(),
               ];
     }
