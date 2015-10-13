@@ -100,7 +100,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, ['basic']); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, ['basic', 'transactions']); /* @var $report EntityDir\Report */
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -149,7 +149,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic']); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, ['basic' ,'transactions']); /* @var $report EntityDir\Report */
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -190,7 +190,7 @@ class ReportController extends AbstractController
      */
     public function submitConfirmationAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic']);
+        $report = $this->getReport($reportId, ['basic' ,'transactions']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -230,7 +230,7 @@ class ReportController extends AbstractController
      */
     public function submitFeedbackAction($reportId)
     {
-        $report = $this->getReport($reportId, ["basic"]);
+        $report = $this->getReport($reportId, ['basic', 'transactions']);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');

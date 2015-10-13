@@ -15,7 +15,7 @@ class DecisionController extends AbstractController
     public function deleteReasonAction($reportId)
     {
         //just do some checks to make sure user is allowed to update this report
-        $report = $this->getReport($reportId, ['basic']);
+        $report = $this->getReport($reportId, ['basic', 'transactions']);
 
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
