@@ -8,10 +8,10 @@
   },
   "devDependencies": {
     "chai": "*",
+    "del": "^2.0.2",
     "event-stream": "^3.3.1",
     "govuk-elements": "alphagov/govuk_elements",
     "gulp": "^3.9.0",
-    "gulp-clean": "^0.3.1",
     "gulp-concat": "*",
     "gulp-import-css": "^0.1.2",
     "gulp-jshint": "^1.11.2",

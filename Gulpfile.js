@@ -2,7 +2,7 @@
 
 var gulp = require('gulp'),
     sass = require('gulp-sass'),
-    clean = require('gulp-clean'),
+    del = require('del'),
     minifyCss = require('gulp-minify-css'),
     sourcemaps = require('gulp-sourcemaps'),
     importCss = require('gulp-import-css'),
@@ -35,9 +35,9 @@ gulp.task('sass', function(callback) {
         callback);
 });
 gulp.task('sass.clean', function (callback) {
-    gulp.src('./web/stylesheets/*', {read: false})
-        .pipe(clean());
-    callback();
+    del(['web/stylesheets/**', '!web/stylesheets']).then(function() {
+        callback();
+    });
 });
 gulp.task('sass.application', function () {
 
@@ -90,8 +90,9 @@ gulp.task('images', function (callback) {
     runSequence('images.clean','images.copy', callback);
 });
 gulp.task('images.clean', function (callback) {
-    gulp.src('./web/images/*', {read: false}).pipe(clean());
-    callback();
+    del(['web/images/**', '!web/images']).then(function() {
+        callback();
+    });
 });
 gulp.task('images.copy', function (){
     gulp.src('./node_modules/govuk-elements/govuk/public/images/**/*').pipe(gulp.dest('./web/images'));
@@ -102,9 +103,9 @@ gulp.task('js', function(callback) {
     runSequence('js.clean',['js.uglify','js.vendor'], callback);
 });
 gulp.task('js.clean', function(callback) {
-    gulp.src('./web/javascripts/*', {read: false})
-        .pipe(clean());
-    callback();   
+    del(['web/javascripts/**', '!web/javascripts']).then(function() {
+        callback();
+    });
 });
 gulp.task('js.uglify', function () {
 
@@ -134,10 +135,6 @@ gulp.task('lint.js', function () {
         .pipe(jshint.reporter('default')) 
 });
 
-gulp.task('clean', function(callback) {
-    runSequence('js.clean','sass.clean','images.clean', callback); 
-});
-
 gulp.task('default', function(callback) {
-    runSequence('clean','sass','images','js', callback);
+    runSequence(['sass','images','js'], callback);
 });
