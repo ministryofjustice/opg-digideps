@@ -4,6 +4,9 @@ namespace AppBundle\Service;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use AppBundle\Service\Client\RestClient;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ApiCollector extends DataCollector
 {
     /**

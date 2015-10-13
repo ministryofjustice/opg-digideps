@@ -58,6 +58,8 @@ class DeputyProvider implements UserProviderInterface
     
     
     /**
+     * @codeCoverageIgnore
+     * 
      * @param UserInterface $user
      * @return  \AppBundle\Entity\User
      * @throws UnsupportedUserException
