@@ -40,7 +40,6 @@ class DeputyProvider implements UserProviderInterface
         try {
            return $this->restClient->login($credentials);
         } catch(\Exception $e) {
-            echo $e->getMessage(); //REMOVEME
             $this->logger->info(__METHOD__ . ': ' . $e);
             
             throw new UsernameNotFoundException("We can't log you in at this time.");
