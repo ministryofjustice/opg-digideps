@@ -58,9 +58,9 @@ class Util
      * 
      * @return Client
      */
-    public function getClient($clientId)
+    public function getClient($clientId, array $groups = [ "basic"])
     {
-        return $this->restClient->get('client/' . $clientId, 'Client');
+        return $this->restClient->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
     }
 
 
