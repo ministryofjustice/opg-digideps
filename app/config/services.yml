@@ -7,9 +7,6 @@ services:
         arguments: [ @security.context, @restClient ]
         tags:
             - { name: validator.constraint_validator, alias: security.validator.d_user_password }
-    dd_session.memcached_handler:
-        class: AppBundle\Service\MemcachedSessionHandler
-        arguments: [ "%session_memcached_host%", "%session_memcached_port%" ]
     guzzleJsonHttpClient:
         class: GuzzleHttp\Client
         arguments: 
