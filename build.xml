@@ -49,7 +49,7 @@
 
 
     <target name="phpunit">
-        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c phpunit.xml" checkreturn="true"></exec>
+        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c tests/phpunit/phpunit.xml" checkreturn="true"></exec>
     </target>
 
     <target name="optimise">
@@ -74,7 +74,7 @@
     <target name="behat" depends="db-reset,db-migrate">
     </target>
     
-    <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint,add-oauth2-client">
+    <target name="build" depends="cache-clear,composer-install,db-reset,db-migrate,phplint">
     </target>
 
     <target name="release" depends="cache-clear,composer-install,db-migrate,phplint">

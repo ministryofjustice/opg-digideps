@@ -13,6 +13,12 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Role implements RoleInterface
 { 
+    const ROLE_ADMIN = 1;
+    const ROLE_LAY_DEPUTY = 2;
+    
+    const ADMIN = 'ROLE_ADMIN';
+    const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    
     /**
      * @var integer
      *
@@ -104,10 +110,10 @@ class Role implements RoleInterface
     /**
      * Add user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param User $user
      * @return Role
      */
-    public function addUser(\AppBundle\Entity\User $user)
+    public function addUser(User $user)
     {
         $this->user[] = $user;
 
@@ -117,9 +123,9 @@ class Role implements RoleInterface
     /**
      * Remove user
      *
-     * @param \AppBundle\Entity\User $user
+     * @param User $user
      */
-    public function removeUser(\AppBundle\Entity\User $user)
+    public function removeUser(User $user)
     {
         $this->user->removeElement($user);
     }

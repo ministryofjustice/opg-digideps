@@ -149,10 +149,10 @@ class Safeguarding
     /**
      * Set report
      *
-     * @param \AppBundle\Entity\Report $report
+     * @param Report $report
      * @return Contact
      */
-    public function setReport(\AppBundle\Entity\Report $report = null)
+    public function setReport(Report $report = null)
     {
         $this->report = $report;
 
@@ -162,7 +162,7 @@ class Safeguarding
     /**
      * Get report
      *
-     * @return \AppBundle\Entity\Report
+     * @return Report
      */
     public function getReport()
     {

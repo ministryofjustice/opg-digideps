@@ -1,37 +1,34 @@
 <?php
-namespace AppBundle\Service;
+
+namespace AppBundle\Controller;
 
 use Symfony\Component\BrowserKit\Client;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Controller\SelfRegisterController;
 use AppBundle\Model\SelfRegisterData;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 use Mockery as m;
 
-class SelfRegisterControllerTest extends WebTestCase
+class SelfRegisterControllerTest extends AbstractTestController
 {
 
     /** @var SelfRegisterController */
     private $selfRegisterController;
 
-    /** @var Client  */
-    private $client;
-
-    /** @var EntityManager */
-    private $em;
 
     public function setUp()
     {
         $this->selfRegisterController = new SelfRegisterController();
-        $this->client = static::createClient([ 'environment' => 'test','debug' => true]);
-        $this->em = $this->client->getContainer()->get('doctrine.orm.entity_manager');
+        parent::setUp();
+//        self::$frameworkBundleClient = static::createClient([ 'environment' => 'test','debug' => true]);
+//        $this->em = self::$frameworkBundleClient->getContainer()->get('doctrine.orm.entity_manager');
     }
+
 
     public function tearDown()
     {
         m::close();
+        parent::tearDown();
     }
+
 
     /** @test */
     public function populateUser()
@@ -55,6 +52,7 @@ class SelfRegisterControllerTest extends WebTestCase
         $this->assertEquals('12341234', $selfRegisterData->getCaseNumber());
     }
 
+
     /** @test */
     public function populatePartialData()
     {
@@ -73,97 +71,86 @@ class SelfRegisterControllerTest extends WebTestCase
         $this->assertEquals('zac@thetolleys.com', $selfRegisterData->getEmail());
     }
 
+
     /** @test */
     public function failsWhenMissingData()
     {
-        $data = [
-            'firstname' => 'Zac',
-            'lastname' => 'Tolley',
-            'email' => 'behat-missingdata@gov.uk',
-        ];
-
-        $this->client->request(
-            'POST', '/selfregister',
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode($data)
-        );
-
-        $responseArray = json_decode($this->client->getResponse()->getContent(),true);
-
-        $this->assertFalse($responseArray['success']);
+        $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'behat-missingdata@gov.uk',
+            ],
+            'ClientSecret' => '123abc-deputy'
+        ]);
     }
+
 
     /** @test */
-    public function dontSaveUnvalidUserToDB() {
-        $data = [
-            'firstname' => 'Zac',
-            'lastname' => 'Tolley',
-            'email' => 'behat-dontsaveme@uk.gov',
-            'client_lastname' => '',
-            'case_number' => '12341234'
-        ];
+    public function dontSaveUnvalidUserToDB()
+    {
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
+        $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'behat-dontsaveme@uk.gov',
+                'client_lastname' => '',
+                'case_number' => '12341234'
+            ],
+            'ClientSecret' => '123abc-deputy'
+        ]);
 
-        $this->client->request(
-            'POST', '/selfregister',
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode($data)
-        );
-
-        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['email'=>'behat-dontsaveme@uk.gov']);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@uk.gov']);
         $this->assertNull($user);
-
     }
+
 
     /**
      * @test
      */
-    public function savesValidUserToDb() {
-        $data = [
-            'firstname' => 'Zac',
-            'lastname' => 'Tolley',
-            'email' => 'gooduser@gov.zzz',
-            'client_lastname' => 'Cross-Tolley',
-            'case_number' => '12341234'
-        ];
-
-        $this->client->request(
-            'POST', '/selfregister',
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode($data)
-        );
-
-        $responseArray = json_decode($this->client->getResponse()->getContent(),true);
-
-        if ($responseArray['success'] == false) {
-            echo $this->client->getResponse()->getContent();
-        }
-
-        $this->assertTrue($responseArray['success']);
+    public function savesValidUserToDb()
+    {
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'gooduser@gov.zzz',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '12341234'
+            ],
+            'ClientSecret' => '123abc-deputy'
+        ]);
 
         $id = $responseArray['data']['id'];
 
-        $this->em->clear();
-
         /** @var /AppBundle/Entity/User $user */
-        $user = $this->em->getRepository('AppBundle\Entity\User')->findOneBy(['id'=>$id]);
+        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
 
-        $this->assertEquals('Tolley',$user->getLastname());
-        $this->assertEquals('Zac',$user->getFirstname());
-        $this->assertEquals('gooduser@gov.zzz',$user->getEmail());
+        $this->assertEquals('Tolley', $user->getLastname());
+        $this->assertEquals('Zac', $user->getFirstname());
+        $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
 
         /** @var \AppBundle\Entity\Client $theClient */
         $theClient = $user->getClients()->first();
 
         $this->assertEquals("Cross-Tolley", $theClient->getLastname());
         $this->assertEquals('12341234', $theClient->getCaseNumber());
-
     }
 
+
     /** @test */
-    public function throwErrorForDuplicate() {
+    public function throwErrorForDuplicate()
+    {
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
         $data = [
             'firstname' => 'Zac',
             'lastname' => 'Tolley',
@@ -171,31 +158,23 @@ class SelfRegisterControllerTest extends WebTestCase
             'client_lastname' => 'Cross-Tolley',
             'case_number' => '12341234'
         ];
-
-        $this->client->request(
-            'POST', '/selfregister',
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode($data)
-        );
-
-        $responseArray = json_decode($this->client->getResponse()->getContent(),true);
-
-        if ($responseArray['success'] == false) {
-            echo $this->client->getResponse()->getContent();
-        }
-
-        $this->assertTrue($responseArray['success']);
-
-        $this->client->request(
-            'POST', '/selfregister',
-            array(), array(),
-            array('CONTENT_TYPE' => 'application/json'),
-            json_encode($data)
-        );
-
-        $responseArray = json_decode($this->client->getResponse()->getContent(),true);
-        $this->assertFalse($responseArray['success']);
+        
+        // 1st one succeed
+        $this->assertJsonRequest('POST', '/selfregister', [
+            'mustSucceed' => true,
+            'AuthToken' => $token,
+            'data' => $data,
+            'ClientSecret' => '123abc-deputy'
+        ]);
+        
+        //2nd fail (duplicate)
+        $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => $data,
+            'ClientSecret' => '123abc-deputy'
+        ]);
+        
     }
 
 }

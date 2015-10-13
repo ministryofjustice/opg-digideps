@@ -2,13 +2,20 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Exception as AppExceptions;
+use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity as EntityDir;
 
-
-class IndexController extends Controller
+/**
+* @Route("/court-order-type")
+*/
+class CourtOrderTypeController extends RestController
 {
     /**
-     * @Route("/court-order-type/all")
+     * @Route("")
+     * @Method({"GET"})
      */
     public function getAllCourtOrderTypeAction()
     {

@@ -39,5 +39,28 @@ parameters:
         password_reset: /user/password-reset/{token}
         homepage: /
         report_overview: /report/{reportId}/overview
+    
+{{ if lsdir "/fixtures" }}
+    fixtures:
+{{ range lsdir "/fixtures" }}
+        {{ getv (printf "/fixtures/%s/email" .) }}:
+            firstname: {{ getv (printf "/fixtures/%s/firstname" .) }}
+            lastname: {{ getv (printf "/fixtures/%s/lastname" .) }}
+            password: {{ getv (printf "/fixtures/%s/password" .) }}
+            roleId: {{ getv (printf "/fixtures/%s/roleid" .) }}
+            activated: {{ getv (printf "/fixtures/%s/activated" .) }}
+{{ end }}
+{{ end }}
+
+{{ if lsdir "/secrets" }}
+    client_secrets:
+{{ range lsdir "/secrets" }}
+        {{ getv (printf "/secrets/%s/key" .) }}:
+            permissions: {{ getv (printf "/secrets/%s/permissions" .) }}
+{{ end }}
+{{ end }}
+    
+    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
+
     log_level: info
     log_path: /var/log/app/application.log

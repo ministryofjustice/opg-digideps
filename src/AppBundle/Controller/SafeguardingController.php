@@ -1,147 +1,176 @@
 <?php
+
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Safeguarding;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Entity as EntityDir;
 
 /**
- * @Route("/safeguarding")
+ * @Route("/report")
  */
 class SafeguardingController extends RestController
 {
     /**
-     * @Route("")
+     * @Route("/safeguarding")
      * @Method({"POST"})
      */
-    public function addAction()
+    public function addAction(Request $request)
     {
-        $safeguarding = new Safeguarding();
-        return $this->persistEntity($safeguarding);
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $safeguarding = new EntityDir\Safeguarding();
+        $data = $this->deserializeBodyContent($request);
+        
+        $report = $this->findEntityBy('Report', $data['report']['id']);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $safeguarding->setReport($report);
+        
+        $this->updateSafeguardingInfo($data, $safeguarding);
+
+        $this->persistAndFlush($safeguarding);
+        
+        return ['id' => $safeguarding->getId()];
     }
-    
+
+
     /**
-     * @Route("/{id}")
+     * @Route("/safeguarding/{id}")
      * @Method({"PUT"})
      */
-    public function updateAction($id)
+    public function updateAction(Request $request, $id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $safeguarding = $this->findEntityBy('Safeguarding', $id);
-        return $this->persistEntity($safeguarding);
-    }
-
-    public function persistEntity($safeguarding) {
-        $data = $this->deserializeBodyContent();
+        $this->denyAccessIfReportDoesNotBelongToUser($safeguarding->getReport());
+        
+        $data = $this->deserializeBodyContent($request);
         $this->updateSafeguardingInfo($data, $safeguarding);
-        $this->getEntityManager()->persist($safeguarding);
-        $this->getEntityManager()->flush();
-        return ['id' => $safeguarding->getId() ];    
+        
+        $this->getEntityManager()->flush($safeguarding);
+        
+        return ['id' => $safeguarding->getId()];
     }
 
     /**
-     * @Route("/find-by-report-id/{reportId}")
+     * @Route("/{reportId}/safeguardings")
      * @Method({"GET"})
      *
      * @param integer $reportId
      */
     public function findByReportIdAction($reportId)
     {
-        return $this->getRepository('Safeguarding')->findBy(['report'=>$reportId]);
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+       
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $ret = $this->getRepository('Safeguarding')->findByReport($report);
+        
+        return $ret;
     }
 
+
     /**
-     * @Route("/{id}")
+     * @Route("/safeguarding/{id}")
      * @Method({"GET"})
+     * 
      * @param integer $id
-     * @return \AppBundle\Entity\Safeguarding
      */
-    public function get($id)
+    public function getOneById(Request $request, $id)
     {
-        $request = $this->getRequest();
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : [ 'basic'];
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $serialiseGroups = $request->query->has('groups') ? (array)$request->query->get('groups') : [ 'basic'];
+        $this->setJmsSerialiserGroups($serialiseGroups);
 
-        $safeguarding = $this->findEntityBy('Safeguarding', $id, "Safeguarding with id:".$id." not found");
-
+        $safeguarding = $this->findEntityBy('Safeguarding', $id, "Safeguarding with id:" . $id . " not found");
+        $this->denyAccessIfReportDoesNotBelongToUser($safeguarding->getReport());
+        
+        
         return $safeguarding;
     }
 
+
     /**
-     * @Route("/{id}")
+     * @Route("/safeguarding/{id}")
      * @Method({"DELETE"})
      */
-    public function deleteAction($id)
+    public function deleteSafeguarding($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $safeguarding = $this->findEntityBy('Safeguarding', $id, 'Safeguarding not found');
-
+        $this->denyAccessIfReportDoesNotBelongToUser($safeguarding->getReport());
+        
         $this->getEntityManager()->remove($safeguarding);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()->flush($safeguarding);
 
-        return [ ];
+        return [];
     }
 
+
     /**
-     * @param  array $data
-     * @param  \AppBundle\Entity\Safeguarding $safeguarding
+     * @param array $data
+     * @param EntityDir\Safeguarding $safeguarding
+     * 
      * @return \AppBundle\Entity\Report $report
      */
-    private function updateSafeguardingInfo($data,\AppBundle\Entity\Safeguarding $safeguarding)
+    private function updateSafeguardingInfo(array $data, EntityDir\Safeguarding $safeguarding)
     {
-        
-        $reportId = $data['report']['id'];
-        $report = $this->getRepository('Report')->find($reportId);
-        
-        $safeguarding->setReport($report);
-        
-        if(array_key_exists('do_you_live_with_client', $data)) {
+        if (array_key_exists('do_you_live_with_client', $data)) {
             $safeguarding->setDoYouLiveWithClient($data['do_you_live_with_client']);
         }
 
-        if(array_key_exists('how_often_do_you_visit', $data)) {
+        if (array_key_exists('how_often_do_you_visit', $data)) {
             $safeguarding->setHowOftenDoYouVisit($data['how_often_do_you_visit']);
         }
 
-        if(array_key_exists('how_often_do_you_phone_or_video_call', $data)) {
+        if (array_key_exists('how_often_do_you_phone_or_video_call', $data)) {
             $safeguarding->setHowOftenDoYouPhoneOrVideoCall($data['how_often_do_you_phone_or_video_call']);
         }
 
-        if(array_key_exists('how_often_do_you_write_email_or_letter', $data)) {
+        if (array_key_exists('how_often_do_you_write_email_or_letter', $data)) {
             $safeguarding->setHowOftenDoYouWriteEmailOrLetter($data['how_often_do_you_write_email_or_letter']);
         }
 
-        if(array_key_exists('how_often_does_client_see_other_people', $data)) {
+        if (array_key_exists('how_often_does_client_see_other_people', $data)) {
             $safeguarding->setHowOftenDoesClientSeeOtherPeople($data['how_often_does_client_see_other_people']);
         }
 
-        if(array_key_exists('anything_else_to_tell', $data)) {
+        if (array_key_exists('anything_else_to_tell', $data)) {
             $safeguarding->setAnythingElseToTell($data['anything_else_to_tell']);
         }
 
-        if(array_key_exists('does_client_receive_paid_care', $data)) {
+        if (array_key_exists('does_client_receive_paid_care', $data)) {
             $safeguarding->setDoesClientReceivePaidCare($data['does_client_receive_paid_care']);
         }
 
-        if(array_key_exists('how_is_care_funded', $data)) {
+        if (array_key_exists('how_is_care_funded', $data)) {
             $safeguarding->setHowIsCareFunded($data['how_is_care_funded']);
         }
 
-        if(array_key_exists('who_is_doing_the_caring', $data)) {
+        if (array_key_exists('who_is_doing_the_caring', $data)) {
             $safeguarding->setWhoIsDoingTheCaring($data['who_is_doing_the_caring']);
         }
 
-        if(array_key_exists('does_client_have_a_care_plan', $data)) {
+        if (array_key_exists('does_client_have_a_care_plan', $data)) {
             $safeguarding->setDoesClientHaveACarePlan($data['does_client_have_a_care_plan']);
         }
 
-        if(array_key_exists('when_was_care_plan_last_reviewed', $data)) {
+        if (array_key_exists('when_was_care_plan_last_reviewed', $data)) {
 
-            if(!empty($data['when_was_care_plan_last_reviewed'])){
+            if (!empty($data['when_was_care_plan_last_reviewed'])) {
                 $safeguarding->setWhenWasCarePlanLastReviewed(new \DateTime($data['when_was_care_plan_last_reviewed']));
-            }else{
+            } else {
                 $safeguarding->setWhenWasCarePlanLastReviewed(null);
             }
         }
-    
+
         return $safeguarding;
     }
+
 }

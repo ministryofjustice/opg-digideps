@@ -3,55 +3,55 @@ namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
-
+use AppBundle\Exception as AppExceptions;
 
 class AccountController extends RestController
-{
-    
+{    
     /**
      * @Route("/report/get-accounts/{id}")
      * @Method({"GET"})
      */
-    public function getAccountsAction($id)
+    public function getAccountsAction(Request $request, $id)
     {
-        $request = $this->getRequest();
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : null;
-        
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
+        }
         
         $report = $this->findEntityBy('Report', $id);
-      
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
         $accounts = $this->getRepository('Account')->findByReport($report, [
             'id' => 'DESC'
         ]);
-       
-        if(count($accounts) == 0){
+        
+        if(count($accounts) === 0){
             return [];
         }
         return $accounts;
     }
     
+    
     /**
-     * @Route("/report/add-account")
+     * @Route("/report/{reportId}/add-account")
      * @Method({"POST"})
      */
-    public function addAccountAction()
+    public function addAccountAction(Request $request, $reportId)
     {
-        $data = $this->deserializeBodyContent();
-   
-         // assert mandatory params
-        foreach (['bank', 'sort_code', 'opening_date', 'opening_balance'] as $k) {
-            if (!array_key_exists($k, $data)) {
-                throw new \InvalidArgumentException("Bank account creation: parameter '$k' missing");
-            }
-        }
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        $report = $this->findEntityBy('Report', $data['report']);
-        if (empty($report)) {
-            throw new \Exception("Report id: " . $data['report'] . " does not exists");
-        }
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $data = $this->deserializeBodyContent($request, [
+           'bank' => 'notEmpty', 
+           'sort_code' => 'notEmpty', 
+           'opening_date' => 'notEmpty', 
+           'opening_balance' => 'notEmpty'
+        ]);
         
         $account = new EntityDir\Account();
         $account->setReport($report);
@@ -60,8 +60,7 @@ class AccountController extends RestController
         
         $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
-        $this->getEntityManager()->persist($account);
-        $this->getEntityManager()->flush();
+        $this->persistAndFlush($account);
         
         return [ 'id' => $account->getId() ];
     }
@@ -70,16 +69,17 @@ class AccountController extends RestController
      * @Route("/report/find-account-by-id/{id}")
      * @Method({"GET"})
      */
-    public function get($id)
+    public function getOneById(Request $request, $id)
     {
-        $request = $this->getRequest();
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        $serialiseGroups = $request->query->has('groups')? $request->query->get('groups') : null;
-        
-        $this->setJmsSerialiserGroup($serialiseGroups);
+        if ($request->query->has('groups')) {
+            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
+        }
         
         $account = $this->findEntityBy('Account', $id, 'Account not found');
-
+        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
+        
         return $account;
     }
     
@@ -87,11 +87,14 @@ class AccountController extends RestController
      * @Route("/account/{id}")
      * @Method({"PUT"})
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
-        $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account*/ 
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        $data = $this->deserializeBodyContent();
+        $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account*/ 
+        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
+        
+        $data = $this->deserializeBodyContent($request);
         
         $this->fillAccountData($account, $data);
         
@@ -103,9 +106,8 @@ class AccountController extends RestController
                     ->setAmount($transactionRow['amount'])
                     ->setMoreDetails($transactionRow['more_details']);
             }, array_merge($data['money_in'], $data['money_out']));
-            $this->setJmsSerialiserGroup('transactions');
+            $this->setJmsSerialiserGroups(['transactions']);
         }
-        
         
         
         $account->setLastEdit(new \DateTime());
@@ -121,8 +123,11 @@ class AccountController extends RestController
      */
     public function accountDelete($id)
     {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
         $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account */
-
+        $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
+        
         foreach ($account->getTransactions() as $transaction) {
             $this->getEntityManager()->remove($transaction);
         }

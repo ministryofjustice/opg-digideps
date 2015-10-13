@@ -3,16 +3,16 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
  * Users
  *
  * @ORM\Table(name="dd_user")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\UserRepository")
+ * @ORM\Entity
  */
-class User implements AdvancedUserInterface
+class User implements UserInterface
 {
     const TOKEN_EXPIRE_HOURS = 48;
     
@@ -57,8 +57,7 @@ class User implements AdvancedUserInterface
     /**
      * @var string
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
-     * @JMS\Groups({"basic"})
-     * @JMS\Type("string")
+     * @JMS\Exclude
      */
     private $password;
 
@@ -222,10 +221,6 @@ class User implements AdvancedUserInterface
     public function __construct()
     {
         $this->clients = new \Doctrine\Common\Collections\ArrayCollection();
-        
-        $this->recreateRegistrationToken();
-        
-        $this->tokenDate = new \DateTime();
         $this->password = '';
     }
 
@@ -365,7 +360,8 @@ class User implements AdvancedUserInterface
      */
     public function recreateRegistrationToken()
     {
-        $this->setRegistrationToken('digideps'.rand(1, 100) . time().date('dmY'));
+        $this->setRegistrationToken('digideps' . date('dmY') . time(true) . rand(17, 999917));
+        $this->setTokenDate(new \DateTime());
         
         return $this;
     }
@@ -379,7 +375,6 @@ class User implements AdvancedUserInterface
     public function setRegistrationToken($registrationToken)
     {
         $this->registrationToken = $registrationToken;
-        $this->setTokenDate(new \DateTime);
         
         return $this;
     }
@@ -466,12 +461,13 @@ class User implements AdvancedUserInterface
     /**
      * Add clients
      *
-     * @param \AppBundle\Entity\Client $clients
+     * @param Client $client
      * @return User
      */
-    public function addClient(\AppBundle\Entity\Client $clients)
+    public function addClient(Client $client)
     {
-        $this->clients[] = $clients;
+        $client->addUser($this);
+        $this->clients[] = $client;
 
         return $this;
     }
@@ -479,9 +475,9 @@ class User implements AdvancedUserInterface
     /**
      * Remove clients
      *
-     * @param \AppBundle\Entity\Client $clients
+     * @param Client $clients
      */
-    public function removeClient(\AppBundle\Entity\Client $clients)
+    public function removeClient(Client $clients)
     {
         $this->clients->removeElement($clients);
     }
@@ -499,10 +495,10 @@ class User implements AdvancedUserInterface
     /**
      * Set role
      *
-     * @param \AppBundle\Entity\Role $role
+     * @param Role $role
      * @return User
      */
-    public function setRole(\AppBundle\Entity\Role $role = null)
+    public function setRole(Role $role = null)
     {
         $this->role = $role;
 
@@ -512,7 +508,7 @@ class User implements AdvancedUserInterface
     /**
      * Get role
      *
-     * @return \AppBundle\Entity\Role 
+     * @return Role 
      */
     public function getRole()
     {
@@ -537,33 +533,11 @@ class User implements AdvancedUserInterface
     
     public function getRoles() 
     {
-        $roles = [ $this->role->getRole()];
-        
-        return $roles;
+        return [ $this->role->getRole() ];
     }
     
     public function eraseCredentials() 
     {
-    }
-    
-    public function isAccountNonExpired()
-    {
-        return true;
-    }
-    
-    public function isAccountNonLocked()
-    {
-        return true;
-    }
-    
-    public function isCredentialsNonExpired()
-    {
-        return true;
-    }
-    
-    public function isEnabled()
-    {
-        return $this->active;
     }
     
     /**

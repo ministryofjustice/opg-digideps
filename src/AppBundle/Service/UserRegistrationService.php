@@ -41,6 +41,7 @@ class UserRegistrationService
     {
 
         $user = new User();
+        $user->recreateRegistrationToken();
         $client = new Client();
 
         $this->populateUser($user, $selfRegisterData);
