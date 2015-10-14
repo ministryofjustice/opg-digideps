@@ -83,6 +83,9 @@ gulp.task('sass.application-print', function () {
 gulp.task('sass.images', function(callback) {
     gulp.src('./node_modules/govuk-elements/govuk/public/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+    
+    gulp.src(config.sassSrc + '/images/**/*')
+        .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
     callback();
 });
 gulp.task('sass.fonts', function() {
