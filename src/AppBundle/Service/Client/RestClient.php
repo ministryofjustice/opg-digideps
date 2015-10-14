@@ -313,7 +313,14 @@ class RestClient
     {
         //TODO validate $response->getStatusCode()
 
-        $data = $this->serialiser->deserialize($response->getBody(), 'array', 'json');
+        
+        try{ 
+            $data = $this->serialiser->deserialize($response->getBody(), 'array', 'json');
+        } catch (\Exception $e) {
+            $this->logger->error('Api responded with invalid JSON. Body: ' . $response->getBody());
+            throw new \RuntimeException('Cannot decode endpoint response');
+        }
+        
         if (empty($data['success'])) {
             throw new \RuntimeException('Endpoint failed with message.' . $data['message']);
         }
