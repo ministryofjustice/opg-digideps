@@ -156,7 +156,7 @@ $grey-status: #8C9295;
                 }
 
                 .summary {
-                    background: url(/images/icons/accordian-closed.png) 0 27px no-repeat;
+                    background: url(images/icons/accordian-closed.png) 0 27px no-repeat;
                 }
 
                 &.open {
@@ -168,7 +168,7 @@ $grey-status: #8C9295;
                         display: none;
                     }
                     .summary {
-                        background-image: url(/images/icons/accordian-open.png)
+                        background-image: url(images/icons/accordian-open.png)
                     }
                 }
 

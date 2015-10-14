@@ -47,6 +47,12 @@ services:
         arguments: [  @translator, "%twig_components_extension%" ]
         tags:
             - { name: twig.extension }
+    assetsExtension:
+        class: AppBundle\Twig\AssetsExtension
+        public: false
+        arguments: [  "%kernel.root_dir%" ]
+        tags:
+            - { name: twig.extension }
     redirectorService:
         class: AppBundle\Service\Redirector
         arguments: [ @security.context, @router, @session, @restClient ]
@@ -89,7 +95,7 @@ services:
         calls:
             - [ setTranslator, [@translator] ]
         tags:
-            - { name: form.type, alias: feedback_report }
+            - { name: form.type, alias: feedback_report }        
     kernel.listener.authTokenExpiredListener:
         class: AppBundle\EventListener\AuthTokenExpiredListener
         tags:

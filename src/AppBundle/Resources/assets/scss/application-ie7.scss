@@ -1,5 +1,14 @@
 $is-ie: true;
 $ie-version: 7;
 
-@import "application";
-@import "application-ie";
+@import url('../../../../../node_modules/govuk-elements/govuk/public/stylesheets/govuk-template-ie8.css');
+@import url('../../../../../node_modules/govuk-elements/govuk/public/stylesheets/fonts.css');
+@import "common";
+
+#footer .footer-meta .footer-meta-inner ul li:first-child + li {
+    float: left;
+}
+
+input.form-control {
+    height: 36px;
+}

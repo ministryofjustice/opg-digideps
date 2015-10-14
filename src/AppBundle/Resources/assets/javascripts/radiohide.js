@@ -1,3 +1,4 @@
+/* globals jQuery */
 var opg = opg || {};
 
 // call with selector for radio button and selection for rest of form container
@@ -64,7 +65,7 @@ var opg = opg || {};
     };
 
     RadioHide.prototype.getUpdateHandler = function () {
-        return function(e) {
+        return function() {
             this.updateView();
         }.bind(this);
     };

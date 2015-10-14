@@ -1,0 +1,17 @@
+linters:
+  StringQuotes:
+    enabled: false
+  Shorthand:
+    enabled: false
+  PropertySortOrder:
+    enabled: false
+  IdSelector:
+    enabled: false
+  QualifyingElement:
+    enabled: false
+  ImportantRule:
+    enabled: false
+  Indentation:
+    severity: warning
+    width: 4
+exclude: src/AppBundle/Resources/assets/scss/email-template/inline-styles.scss

@@ -7,6 +7,8 @@
 {% endif %}
 <html>
     <head>
+        <!--[if gt IE 8]><!-->
+        <link href="/stylesheets/application.min.css" rel="stylesheet" type="text/css"/><!--<![endif]-->
         <!--[if IE 6]><link href="{{ asset('stylesheets/govuk-template-ie6.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
         <!--[if IE 7]><link href="{{ asset('stylesheets/govuk-template-ie7.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
         <!--[if IE 8]><link href="{{ asset('stylesheets/govuk-template-ie8.css') }}" media="screen" rel="stylesheet" type="text/css" /><![endif]-->
@@ -25,7 +27,7 @@
         <![endif]-->
 
         <!--[if gte IE 9]><!-->
-          <link href="{{ asset('stylesheets/fonts.css') }}" media="all" rel="stylesheet" type="text/css" />
+          <link href="/stylesheets/fonts.css') }}" media="all" rel="stylesheet" type="text/css" />
         <!--<![endif]-->
 
         <!--[if lt IE 9]>
