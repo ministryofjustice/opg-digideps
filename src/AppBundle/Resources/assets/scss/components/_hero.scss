@@ -1,0 +1,24 @@
+.hero {
+    
+    background: $turquoise;
+    padding: 30px;
+    text-align: center;
+    
+    h2 {
+        @include bold-48();
+        color: $white;
+        padding-bottom: 50px;
+    }
+    
+    .message {
+        @include core-24();
+        color: $white;
+        padding-bottom: 10px;
+        
+        .button {
+            margin-left: 10px;    
+        }
+        
+    }
+    
+}

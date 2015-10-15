@@ -7,8 +7,5 @@
         <h1 class="heading-large report-title">{{ report.period }} {{ 'report.header.report' | trans }}
             <div class="heading-large client-name">{{ client.fullname }}</div>
         </h1>
-        {% for flashMessage in app.session.flashbag.get('news') %}
-            <p class="flash-news flash">{{ flashMessage |trans({}, translationDomain)|raw }}</p>
-        {% endfor %}
     </div>
 </header>

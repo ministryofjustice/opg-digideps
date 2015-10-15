@@ -1,0 +1,20 @@
+{% set translationDomain = "overview" %}
+{% trans_default_domain translationDomain %}
+
+<header id="page-report-header" class="page-report-header page-header group">
+    <div class="page-header-titles">
+        <h1 class="heading-large report-title">{{ report.period }} {{ 'report' | trans }}
+            <div class="heading-large client-name">{{ client.fullname }}</div>
+        </h1>
+    </div>
+    {% if reportStatus.isReadyToSubmit and report.isDue %}
+        <div id="header-report-submit" class="hero">
+            <h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>
+            <div class="message">{{ 'yourFinalStep' | trans() }}: <a class="button submit-link" href="{{ path('report_add_further_info', {reportId: report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
+        </div>
+    {%  else %}
+        {% for flashMessage in app.session.flashBag.get('news') %}
+            <p class="flash-news flash">{{ flashMessage |trans({}, translationDomain)|raw }}</p>
+        {% endfor %}
+    {%  endif %}
+</header>
