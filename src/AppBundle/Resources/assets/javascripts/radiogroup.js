@@ -1,3 +1,4 @@
+/* globals jQuery */
 var opg = opg || {};
 
 // call with a selector for a group that 
@@ -7,7 +8,7 @@ var opg = opg || {};
         SELECTEDCLASS = 'selected';
 
 
-    var RadioGroup = function(element, opts) {
+    var RadioGroup = function(element) {
         this.fieldset = $(element);
         this.formControls = this.fieldset.find('.form-control.radio-vertical');
         this.radios = this.fieldset.find('input');

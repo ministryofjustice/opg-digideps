@@ -1,8 +1,10 @@
+/* globals jQuery */
 var opg = opg || {};
 
 // Call with element, e.g. opg.accordian($('.test'));
 // of  $('.test').each(function(index,element) { opg.accordian({target:element})}; 
 // of opg.accordian('#single');
+
 (function ($, opg) {
 
     opg.accordian = function(options) {
@@ -21,7 +23,7 @@ var opg = opg || {};
             content.show();
         }
         
-        function handleClick(event) {
+        function handleClick() {
             openState = !openState;
             if (openState) {
                 open();

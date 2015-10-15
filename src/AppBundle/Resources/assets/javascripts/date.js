@@ -1,3 +1,4 @@
+/* globals jQuery */
 var opg = opg || {};
 
 (function ($, opg) {
@@ -72,12 +73,10 @@ var opg = opg || {};
         this.container.removeClass('field-with-errors');
         this.container.find('.field-with-errors').removeClass('field-with-errors');
     };
-    opg.DateValidate.prototype.validate = function(event) {
+    opg.DateValidate.prototype.validate = function() {
 
         this.clearErrors();
 
-        var field = $(event.target);
-        var parent = field.parent();
         var dayStr, dayValue, monthStr, monthValue, yearStr, yearValue;
                 
         dayStr = this.dayInput.val();

@@ -1,3 +1,4 @@
+/* globals jQuery, define, navigator, console, window, document */
 // Expanding Textareas v0.2.0
 // MIT License
 // https://github.com/bgrins/ExpandingTextareas

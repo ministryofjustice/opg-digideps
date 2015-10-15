@@ -1,3 +1,4 @@
+/* globals jQuery */
 var opg = opg || {};
 
 (function ($, opg) {

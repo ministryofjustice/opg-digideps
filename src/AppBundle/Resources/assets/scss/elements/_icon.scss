@@ -21,14 +21,7 @@ span.icon {
   text-indent: -9999em; /* In case we have used some text as well */
 
   &__notification {
-    background-image: url('/images/icons/icon-notification.png');
-
-    /*
-        @include device-pixel-ratio() {
-          background-image: url("/images/accordian-arrow-2x.png");
-          background-size: 100%;
-        }
-    */
+    background-image: url('images/icons/icon-notification.png');
     background-position: 0px 0px;
     width: 35px;
     height: 35px;
