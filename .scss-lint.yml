@@ -12,6 +12,12 @@ linters:
   ImportantRule:
     enabled: false
   Indentation:
-    severity: warning
-    width: 4
+    enabled: false
+  NestingDepth:
+    enabled: true
+    max_depth: 6
+    ignore_parent_selectors: false
+  SelectorDepth:
+    enabled: true
+    max_depth: 6
 exclude: src/AppBundle/Resources/assets/scss/email-template/inline-styles.scss

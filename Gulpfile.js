@@ -26,7 +26,7 @@ var config = {
         ]
     },
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
-    imgSrc: '',
+    imgSrc: 'src/AppBundle/Resources/assets/images',
     sassSrc: 'src/AppBundle/Resources/assets/scss',
     webAssets: 'web/assets'
 };
@@ -43,7 +43,7 @@ gulp.task('clean', function (callback) {
 
 gulp.task('sass', function(callback) {
     runSequence(
-        ['sass.application', 'sass.application-ie7', 'sass.application-ie8', 'sass.application-print','sass.images','sass.fonts'],
+        'lint.sass',['sass.application', 'sass.application-ie7', 'sass.application-ie8', 'sass.application-print','sass.images','sass.fonts'],
         callback);
 });
 gulp.task('sass.application', function () {
@@ -100,7 +100,7 @@ gulp.task('images', function () {
 });
 
 gulp.task('js', function(callback) {
-    runSequence(['js.uglify','js.vendor','js.ie'], callback);
+    runSequence('lint.js',['js.uglify','js.vendor','js.ie'], callback);
 });
 gulp.task('js.uglify', function () {
     return gulp.src([
@@ -122,17 +122,30 @@ gulp.task('js.vendor', function () {
     gulp.src('./node_modules/jquery/dist/jquery.min.js')
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
-gulp.task('lint',['lint.sass','lint.js']);
+
 gulp.task('lint.sass', function() {
     return gulp.src('src/AppBundle/Resources/assets/scss/**/*.scss')
         .pipe(scsslint());
 });
-gulp.task('lint.js', function () {
-    return gulp.src(config.jsSrc + '/**/*.js')
+gulp.task('lint.js', function (callback) {
+    gulp.src(config.jsSrc + '/**/*.js')
         .pipe(jshint())
-        .pipe(jshint.reporter('default')) 
+        .pipe(jshint.reporter('default'));
+    
+    callback();
+});
+
+// Rerun the task when a file changes
+gulp.task('watch', ['gettag'], function() {
+    gulp.watch(config.sassSrc + '/**/*', ['sass']);
+    gulp.watch(config.imgSrc + '/**/*', ['images']);
+    gulp.watch(config.jsSrc + '/**/*', ['js']);
 });
 
 gulp.task('default', function(callback) {
     runSequence('gettag', 'clean', ['sass','images','js'], callback);
 });
+gulp.task('dev', function (callback) {
+    runSequence('gettag', 'clean', ['sass','images','js'], 'watch', callback);
+});
+
