@@ -134,12 +134,13 @@ class AccountController extends AbstractController
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
-        // get account from db
-        $refreshedAccount = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
-        $refreshedAccount->setReportObject($report);
-        
+       
         // refresh account data after forms have altered the account's data
         if ($formBalanceIsValid || $formMoneyIsValid || $formEditIsValid) {
+             // get account from db
+            $refreshedAccount = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
+            $refreshedAccount->setReportObject($report);
+        
             //TODO try tests without this
             $account = $refreshedAccount;
         }
