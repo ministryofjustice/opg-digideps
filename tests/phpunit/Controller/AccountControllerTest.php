@@ -55,21 +55,21 @@ class AccountControllerTest extends AbstractTestController
     
     public function testgetAccountsAuth()
     {
-        $url = '/report/get-accounts/' . self::$report1->getId();
+        $url = '/report/accounts/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url); 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
     }
     
     public function testgetAccountsAcl()
     {
-        $url2 = '/report/get-accounts/' . self::$report2->getId();
+        $url2 = '/report/accounts/' . self::$report2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
     }
     
     public function testgetAccounts()
     {
         // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', '/report/get-accounts/' . self::$report1->getId(), [
+        $data = $this->assertJsonRequest('GET', '/report/accounts/' . self::$report1->getId(), [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -81,7 +81,7 @@ class AccountControllerTest extends AbstractTestController
     
     public function testaddAccount()
     {
-        $url = '/report/' . self::$report1->getId() . '/add-account';
+        $url = '/report/' . self::$report1->getId() . '/account';
         $this->assertEndpointNeedsAuth('POST', $url); 
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
         
@@ -108,7 +108,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         
         // assert cannot create account for a report not belonging to logged user
-        $url2 = '/report/' . self::$report2->getId() . '/add-account';
+        $url2 = '/report/' . self::$report2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
         
         return $account->getId();
@@ -117,7 +117,7 @@ class AccountControllerTest extends AbstractTestController
     
     public function testgetOneById()
     {
-        $url = '/report/find-account-by-id/'.self::$account1->getId();
+        $url = '/report/account/'.self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url); 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
         
@@ -136,7 +136,7 @@ class AccountControllerTest extends AbstractTestController
         
         
         // asser  user2 cannot read the account
-        $url2 = '/report/find-account-by-id/'.self::$account2->getId();
+        $url2 = '/report/account/'.self::$account2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
     }
     
