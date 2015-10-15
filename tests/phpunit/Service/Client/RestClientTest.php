@@ -355,7 +355,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
     
     
     /**
-     * @expectedException RuntimeException
+     * @expectedException AppBundle\Service\Client\Exception\NoSuccess
      */
     public function testGetNoSuccess()
     {
@@ -415,7 +415,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * @expectedException AppBundle\Exception\DisplayableException
+     * @expectedException AppBundle\Exception\RestClientException
      */
     public function testNetworkExceptionIsLoggedAndReThrown()
     {
