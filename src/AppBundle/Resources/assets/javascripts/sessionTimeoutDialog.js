@@ -56,7 +56,7 @@ var SessionTimeoutDialog = function (options) {
     };
 
     this.keepSessionAlive = function () {
-        $.post(this.keepSessionAliveUrl);
+        $.get(this.keepSessionAliveUrl + '?refresh=' + Date.now());
     };
 
 };
