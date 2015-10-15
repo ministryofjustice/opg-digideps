@@ -10,7 +10,7 @@ use AppBundle\Exception as AppExceptions;
 class AccountController extends RestController
 {    
     /**
-     * @Route("/report/get-accounts/{id}")
+     * @Route("/report/accounts/{id}")
      * @Method({"GET"})
      */
     public function getAccountsAction(Request $request, $id)
@@ -36,7 +36,7 @@ class AccountController extends RestController
     
     
     /**
-     * @Route("/report/{reportId}/add-account")
+     * @Route("/report/{reportId}/account")
      * @Method({"POST"})
      */
     public function addAccountAction(Request $request, $reportId)
@@ -66,7 +66,7 @@ class AccountController extends RestController
     }
     
    /**
-     * @Route("/report/find-account-by-id/{id}")
+     * @Route("/report/account/{id}")
      * @Method({"GET"})
      */
     public function getOneById(Request $request, $id)
