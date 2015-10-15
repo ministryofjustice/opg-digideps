@@ -8,16 +8,18 @@
   // Inspired by Campaign Monitor's article on using phone numbers in email: http://www.campaignmonitor.com/blog/post/3571/using-phone-numbers-in-html-email/.
   // Step 1 (Step 2: line 224)
 
-  a[href^="tel"], a[href^="sms"] {
+  a[href^="tel"], 
+  a[href^="sms"] {
     text-decoration: none;
-    color: black; /* or whatever your want */
+    color: $black; // or whatever your want
     pointer-events: none;
     cursor: default;
   }
 
-  .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+  .mobile_link a[href^="tel"], 
+  .mobile_link a[href^="sms"] {
     text-decoration: default;
-    color: orange !important; /* or whatever your want */
+    color: $orange !important; /* or whatever your want */
     pointer-events: auto;
     cursor: default;
   }
@@ -29,16 +31,18 @@
   /* You guessed it, ipad (tablets, smaller screens, etc) */
 
   /* Step 1a: Repeating for the iPad */
-  a[href^="tel"], a[href^="sms"] {
+  a[href^="tel"], 
+  a[href^="sms"] {
     text-decoration: none;
-    color: blue; /* or whatever your want */
+    color: $blue; /* or whatever your want */
     pointer-events: none;
     cursor: default;
   }
 
-  .mobile_link a[href^="tel"], .mobile_link a[href^="sms"] {
+  .mobile_link a[href^="tel"], 
+  .mobile_link a[href^="sms"] {
     text-decoration: default;
-    color: orange !important;
+    color: $orange !important;
     pointer-events: auto;
     cursor: default;
   }
@@ -50,7 +54,7 @@
 and (min-device-width : 375px)
 and (max-device-width : 667px) {
 
-  .email-margin{
+  .email-margin {
     width: 10px;
   }
 
@@ -61,7 +65,7 @@ and (max-device-width : 667px) {
 and (min-device-width : 414px)
 and (max-device-width : 736px) {
 
-  .email-margin{
+  .email-margin {
     width: 10px;
   }
 
@@ -72,7 +76,7 @@ and (max-device-width : 736px) {
 and (min-device-width : 320px)
 and (max-device-width : 568px) {
 
-  .email-margin{
+  .email-margin {
     width: 10px;
   }
 
@@ -84,7 +88,7 @@ and (max-device-width : 568px) {
 and (min-device-width : 320px)
 and (max-device-width : 480px) {
 
-  .email-margin{
+  .email-margin {
     width: 10px;
   }
 

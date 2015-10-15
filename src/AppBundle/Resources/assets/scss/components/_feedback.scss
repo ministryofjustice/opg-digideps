@@ -1,6 +1,6 @@
 form.in-page-form.feedback-form {
     
-    border-left: none;
+    border-left: 0;
     padding-left: 3px;
     
     .form-group {
@@ -19,8 +19,8 @@ form.in-page-form.feedback-form {
         max-width: 560px;
         
         .block-label {
-            float: none;
             @include core-19();
+            float: none;
         }
     
     }

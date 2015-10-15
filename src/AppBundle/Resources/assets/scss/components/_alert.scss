@@ -1,22 +1,25 @@
+$newsbg: #e8f4fd;
+$newsborder: #2d8feb;
+
 .alert {
 
-  &__delete-confirmation {
-    width: 60%;
-    background-color: $grey-3;
-    margin-bottom: 10px;
+    &__delete-confirmation {
+        width: 60%;
+        background-color: $grey-3;
+        margin-bottom: 10px;
 
-    padding: 10px 13px 15px 10px;
+        padding: 10px 13px 15px 10px;
 
-    .button-bar {
+        .button-bar {
 
-      margin-bottom: 0;
+            margin-bottom: 0;
 
-      .button-warning {
-        margin-left: 0;
-      }
+            .button-warning {
+                margin-left: 0;
+            }
+        }
+
     }
-
-  }
 
 }
 
@@ -28,10 +31,19 @@
     margin-bottom: 40px;
     position: relative;
     overflow: hidden;
-    background: rgba( $turquoise, .1 ) url(images/icons/tick.png) 10px 13px no-repeat;
+    background: rgba($turquoise, .1) url("images/icons/tick.png") 10px 13px no-repeat;
+    
+    &.flash-news {
+        background: $newsbg url("images/icons/info.png") 10px 10px no-repeat;
+        border-left: 3px solid $newsborder;
+        margin-bottom: 0;
+        width: 95%;
+        padding-left: 50px;
+    }
+    
 }
 
-#content .report-submission  p.flash {
+#content .report-submission p.flash {
     max-width: 540px;
 }
 
@@ -39,10 +51,3 @@
     width: 65%;
 }
 
-#content p.flash.flash-news {
-    background: #e8f4fd url(images/icons/info.png) 10px 10px no-repeat;
-    border-left: 3px solid #1d8feb;
-    margin-bottom: 0;
-    width: 95%;
-    padding-left: 50px;
-}

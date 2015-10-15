@@ -20,4 +20,12 @@ linters:
   SelectorDepth:
     enabled: true
     max_depth: 6
+  Comment:
+    enabled: false
+  VendorPrefix:
+    enabled: false
+  SelectorFormat:
+    enabled: false
+  NameFormat:
+    enabled: false
 exclude: src/AppBundle/Resources/assets/scss/email-template/inline-styles.scss

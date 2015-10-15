@@ -4,7 +4,6 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     del = require('del'),
     minifyCss = require('gulp-minify-css'),
-    sourcemaps = require('gulp-sourcemaps'),
     importCss = require('gulp-import-css'),
     runSequence = require('run-sequence'),
     uglify = require('gulp-uglify'),
@@ -136,7 +135,7 @@ gulp.task('lint.js', function (callback) {
 });
 
 // Rerun the task when a file changes
-gulp.task('watch', ['gettag'], function() {
+gulp.task('watch', ['default'], function() {
     gulp.watch(config.sassSrc + '/**/*', ['sass']);
     gulp.watch(config.imgSrc + '/**/*', ['images']);
     gulp.watch(config.jsSrc + '/**/*', ['js']);

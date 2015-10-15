@@ -1,32 +1,30 @@
 .bread-crumb {
+    @include core-19();
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: $grey-1;
+    
+    .bread-crumbs {
+        display: inline;
+        margin-left: 5px;
 
-  margin-top: 20px;
-  margin-bottom: 20px;
-  color: $grey-1;
+        &:before {
+            content: ">";
+            margin-right: 10px;
+        }
 
-  @include core-19();
+        &:first-of-type {
+            margin-left: 0;
+            margin-right: 10px;
 
-  .bread-crumbs {
-    display: inline;
-    margin-left: 5px;
+            &:before {
+                content: "";
+                margin: 0;
+            }
 
-    &:before {
-      content: ">";
-      margin-right: 10px;
+        }
+
     }
-
-    &:first-of-type {
-      margin-left: 0;
-      margin-right: 10px;
-
-      &:before {
-        content: "";
-        margin: 0;
-      }
-
-    }
-
-  }
 
 }
 

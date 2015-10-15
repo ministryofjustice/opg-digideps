@@ -12,40 +12,41 @@
         padding: 0;
     }
 }
+
 .transaction {
     @extend %contain-floats;
-    
+    @include core-19;
     margin: 0;
     padding: 20px;
     border-bottom: 1px solid $grey-2;
     display: block;
-    @include core-19;
 
     .transaction-label {
         width: 80%;
         float: left;
     }
+    
     .transaction-value {
         display: inline-block;
         width: 20%;
     }
+    
     .transaction-detail {
         display: inline-block;
         width: 60%;
         float: left;
-        margin: 10px 0px 10px;
+        margin: 10px 0 10px;
         padding: 5px;
     }
 }
 
 .financial-transactions-total {
-
+    @include core-24;
     margin: 0;
     padding: 20px;
     border-bottom: 1px solid $grey-2;
     display: block;
     overflow: hidden;
-    @include core-24;
 
     .financial-transactions-total-label {
         width: 78%;
@@ -59,15 +60,15 @@
     }
 
 }
-.financial-transactions-balance {
 
+.financial-transactions-balance {
+    @include core-27;
     margin: 0;
     padding: 40px 20px 20px 20px;
     background: $white;
-    border-bottom: none;
+    border-bottom: 0;
     display: block;
     overflow: hidden;
-    @include core-27;
 
     .financial-transactions-balance-label {
         float: left;

@@ -1,42 +1,40 @@
 .page-report-content {
 
-  .page-report-header {
+    .page-report-header {
 
-    .page-header-titles {
-      padding-right: 1%;
+        .page-header-titles {
+            padding-right: 1%;
+        }
+
+        .report-title {
+            font-weight: normal;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .client-name {
+            @include bold-48();
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+
+        .page-report-message {
+            @include core-19();
+            background-color: $grey-3;
+            margin-top: 10px;
+            padding: 15px;
+        }
+
+        .page-section-warning {
+            margin: 20px 0 10px 0;
+            width: 100%;
+        }
+
+        .report-go-back-link {
+            display: block;
+            margin-top: 20px;
+        }
+
     }
-
-    .report-title {
-      font-weight: normal;
-      margin-top: 0px;
-      margin-bottom: 15px;
-    }
-
-    .client-name {
-      @include bold-48();
-      margin-top: 10px;
-      margin-bottom: 0px;
-    }
-
-    
-
-    .page-report-message {
-      @include core-19();
-      background-color: $grey-3;
-      margin-top: 10px;
-      padding: 15px;
-    }
-
-    .page-section-warning {
-      margin: 20px 0 10px 0;
-      width: 100%;
-    }
-
-    .report-go-back-link {
-      display: block;
-      margin-top: 20px;
-    }
-
-  }
 
 }

@@ -10,26 +10,28 @@
                 font-weight: normal;
                 margin: 0 0 20px 0;
             }
+            
             .client-name {
                 @include bold-48();
                 margin-top: 10px;
-                margin-bottom: 0px;
+                margin-bottom: 0;
             }
         }
 
-    }
-
-    header.page-header {
-        padding: 0 0 40px 0;
-        border-bottom: 1px solid $grey-3;
+        .page-header {
+            padding: 0 0 40px 0;
+            border-bottom: 1px solid $grey-3;
+        }
+        
     }
 
     .external-report-section {
-        padding:40px 0 40px 0;
+        padding: 40px 0 40px 0;
         border-bottom: 1px solid $grey-3;
     }
 
-    .page-section-description, .report-list {
+    .page-section-description, 
+    .report-list {
         width: auto;
         max-width: 535px;
     }
@@ -37,8 +39,7 @@
 
 
     .contacts-section .report-list__item .report-list__item-fields dd.report-list__item-fields-description,
-    .decisions-section .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block
-    {
+    .decisions-section .report-list__item .report-list__item-fields dd.report-list__item-fields-description--block {
         margin-right: 0;
     }
 
@@ -73,7 +74,7 @@
         .account-header {
 
             margin-bottom: 0;
-            background: #f4f4f4;
+            background: $grey-4;
 
             .account-header__item-fields-set {
                 width: 65%;
