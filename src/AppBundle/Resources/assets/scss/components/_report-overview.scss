@@ -204,7 +204,7 @@ $grey-status: #8c9295;
 #report-period-due {
     
     @extend %contain-floats;
-    padding: 20px 0 20px 0;
+    padding: 23px 0 20px 0;
     border-top: 1px solid $grey-3;
 
     @include media(mobile) {
