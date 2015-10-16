@@ -26,7 +26,6 @@ class AccountClosingBalanceType extends AccountType
             'data_class' => 'AppBundle\Entity\Account',
             'validation_groups' => ['closing_balance'],
             'translation_domain' => 'report-account-balance',
-            'csrf_protection' => false
         ]);
     }
 

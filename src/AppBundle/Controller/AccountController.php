@@ -45,7 +45,7 @@ class AccountController extends AbstractController
             $account = $form->getData();
             $account->setReport($reportId);
 
-            $response = $restClient->post('report/'.$reportId.'/add-account', $account, [
+            $response = $restClient->post('report/'.$reportId.'/account', $account, [
                 'deserialise_group' => 'add'
             ]);
             
@@ -94,7 +94,7 @@ class AccountController extends AbstractController
         $client = $this->getClient($report->getClient());
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        $account = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);
+        $account = $restClient->get('report/account/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);
         $account->setReportObject($report);
         
         // closing balance logic
@@ -134,12 +134,13 @@ class AccountController extends AbstractController
             return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
         }
         
-        // get account from db
-        $refreshedAccount = $restClient->get('report/find-account-by-id/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
-        $refreshedAccount->setReportObject($report);
-        
+       
         // refresh account data after forms have altered the account's data
         if ($formBalanceIsValid || $formMoneyIsValid || $formEditIsValid) {
+             // get account from db
+            $refreshedAccount = $restClient->get('report/account/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
+            $refreshedAccount->setReportObject($report);
+        
             //TODO try tests without this
             $account = $refreshedAccount;
         }
