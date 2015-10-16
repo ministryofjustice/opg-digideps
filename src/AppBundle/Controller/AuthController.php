@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\Auth\HeaderTokenAuthenticator;
 use AppBundle\Service\Auth\UserProvider;
 use AppBundle\Service\Auth\AuthService;
+use AppBundle\Exception as AppException;
 
 /**
  * @Route("/auth")
@@ -25,21 +26,33 @@ class AuthController extends RestController
     public function login(Request $request)
     {
         if (!$this->getAuthService()->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new AppException\UnauthorisedException('client secret not accepted.');
         }
         $data = $this->deserializeBodyContent($request);
+        
+        $bruteForceChecker = $this->get('bruteForceChecker');
         
         // load user by credentials (token or usernae&password)
         if (array_key_exists('token', $data)) {
             $user = $this->getAuthService()->getUserByToken($data['token']);
         } else {
-            $user = $this->getAuthService()->getUserByEmailAndPassword(strtolower($data['email']), $data['password']);
+            $email = strtolower($data['email']);
+            $password = $data['password'];
+            if (!$bruteForceChecker->isAllowed($email, $password)) {
+                throw new AppException\BruteForceDetectedException("Too many attemptes");
+            }
+            $user = $this->getAuthService()->getUserByEmailAndPassword($email, $password);
         }
         if (!$user) {
-            throw new \RuntimeException('Cannot find user with the given credentials', 498);
+            // incase the user is not found or the password is not valid (same error given for security reasons)
+            throw new AppException\UserWrongCredentials();
         }
-         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
-            throw new \RuntimeException($user->getRole()->getRole() . ' user role not allowed from this client.', 403);
+        if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
+            throw new AppException\UnauthorisedException($user->getRole()->getRole() . ' user role not allowed from this client.');
+        }
+        
+        if (isset($email)) {
+            $bruteForceChecker->resetAttacksByEmail($email);
         }
         
         $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);

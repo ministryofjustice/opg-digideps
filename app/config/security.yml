@@ -13,6 +13,9 @@ services:
     authService:
         class: AppBundle\Service\Auth\AuthService
         arguments: [ @service_container ]
+    bruteForceChecker:
+        class: AppBundle\Service\Auth\BruteForceChecker
+        arguments: [ @snc_redis.default, {"max_attempts_email": 5} ]
     
 security:
     encoders:

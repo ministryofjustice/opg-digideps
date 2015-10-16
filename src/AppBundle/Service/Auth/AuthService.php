@@ -46,7 +46,7 @@ class AuthService
      * @param string $email
      * @param string $pass
      * 
-     * @return User|null
+     * @return User or null if the user it not found or password is wrong
      */
     public function getUserByEmailAndPassword($email, $pass)
     {

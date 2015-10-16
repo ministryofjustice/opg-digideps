@@ -6,6 +6,11 @@ use AppBundle\Entity\Role;
 
 class AuthControllerTest extends AbstractTestController
 {
+    public static function setUpBeforeClass()
+    {
+        parent::setUpBeforeClass();
+    }
+    
      /**
      * @test
      */
@@ -173,5 +178,79 @@ class AuthControllerTest extends AbstractTestController
             'assertCode' => 419,
             'assertResponseCode' => 419
         ]);
+    }
+    
+    public static function bruteforceProvider()
+    {
+        return [
+            [[
+                // deputy@example.org: 5 attempts 
+                ['deputy@example.org', 'password-WRONG', 498],
+                ['deputy@example.org', 'password-WRONG', 498],
+                ['deputy@example.org', 'password-WRONG', 498],
+                ['deputy@example.org', 'password-WRONG', 498],
+                ['deputy@example.org', 'password-WRONG', 498],
+                // deputy-nonexisting@example.org: 5 attempts
+                ['deputynonexisting@example.org', 'password-WRONG', 498],
+                ['deputynonexisting@example.org', 'password-WRONG', 498],
+                ['deputynonexisting@example.org', 'password-WRONG', 498],
+                ['deputynonexisting@example.org', 'password-WRONG', 498],
+                ['deputynonexisting@example.org', 'password-WRONG', 498],
+                
+                //
+                ['deputy@example.org', 'password-WRONG', 403],
+                ['deputynonexisting@example.org', 'password-WRONG', 403],
+            ]],
+            [[
+                // if the email changes, no blocking !
+                ['deputy1@example.org', 'password-WRONG', 498],
+                ['deputy2@example.org', 'password-WRONG', 498],
+                ['deputy3@example.org', 'password-WRONG', 498],
+                ['deputy4@example.org', 'password-WRONG', 498],
+                ['deputy5@example.org', 'password-WRONG', 498],
+                ['deputy6@example.org', 'password-WRONG', 498],
+            ]]
+        ];
+    }
+    
+    
+    /**
+     * @dataProvider bruteforceProvider
+     */
+    public function testBruteForceSameEmail()
+    {
+        // just to warm up container and 
+        self::$frameworkBundleClient->request('GET', '/');
+        $bfChecker = self::$frameworkBundleClient->getContainer()->get('bruteForceChecker');
+        $bfChecker->resetAll();
+        $maxAttempts = $bfChecker->getOptions()['max_attempts_email'];
+        if (!$maxAttempts) {
+            $this->fail(__METHOD__." : bruteForceChecker.max_attempts_email not set");
+        }
+        
+        for ($i=0; $i<5; $i++) {
+            $this->assertJsonRequest('POST', '/auth/login', [
+                'mustFail' => true,
+                'data' => [
+                    'email' => 'deputy@example.org',
+                    'password' => 'password-WRONG',
+                ],
+                'ClientSecret' => '123abc-deputy',
+                'assertCode' => 498,
+                'assertResponseCode' => 498
+            ]);
+        }
+        
+        $this->assertJsonRequest('POST', '/auth/login', [
+                'mustFail' => true,
+                'data' => [
+                    'email' => 'deputy@example.org',
+                    'password' => 'password-WRONG',
+                ],
+                'ClientSecret' => '123abc-deputy',
+                'assertCode' => 423,
+                'assertResponseCode' => 423
+            ]);
+        
     }
 }
