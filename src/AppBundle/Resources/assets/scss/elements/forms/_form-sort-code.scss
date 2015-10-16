@@ -24,9 +24,9 @@
 }
 
 .field-with-errors .form-sort-code input {
-    border: 1px solid #bfc1c3;
+    border: 1px solid $grey-2;
 }
 
 .field-with-errors .form-sort-code .field-with-errors input {
-    border: 2px solid #af1324;
+    border: 2px solid $error-colour;
 }

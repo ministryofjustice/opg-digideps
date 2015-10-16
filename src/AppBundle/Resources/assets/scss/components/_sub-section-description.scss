@@ -19,7 +19,8 @@
     }
     
     // this solve the problem under opening balance (otherwise not displayed). DD-929
-    #account_edit_form,#account_add_form & {
+    #account_edit_form,
+    #account_add_form & {
       float: left;
     }
 

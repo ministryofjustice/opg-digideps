@@ -79,7 +79,7 @@ class ReportController extends AbstractController
         }
         $client = $this->getClient($report->getClient());
         
-        $this->get('session')->getFlashBag()->add('news', 'report.header.announcement');
+        $this->get('session')->getFlashBag()->add('news', 'announcement');
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         return [

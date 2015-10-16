@@ -1,7 +1,13 @@
-@import '_reset';
-@import '_layout';
-@import '_grid_layout';
-@import '_lists';   
+@import 'reset';
+@import 'layout';
+@import 'grid_layout';
+@import 'lists';
+@import 'colours';
+@import 'conditionals';
+@import 'font_stack';
+@import 'measurements';
+@import 'shims';
+@import 'typography';
 
 @font-face {
   font-family: 'nta';
@@ -17,12 +23,7 @@
 }
 
 
-@import '_colours';
-@import '_conditionals';
-@import '_font_stack';
-@import '_measurements';
-@import '_shims';
-@import '_typography';
+
 
 @import "../components/financial-transactions";
 @import "../components/formattedreport";
@@ -31,16 +32,17 @@ html {
     font-size: 62.5%;
     overflow-y: scroll;
     font-family: "nta",Arial,sans-serif;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     vertical-align: baseline;
-    background-color: #DEE0E2;
+    background-color: $grey-3;
 }
+
 body {
     font-size: 160%;
-    margin: 0px;
-    background: #FFF none repeat scroll 0% 0%;
-    color: #0B0C0C;
+    margin: 0;
+    background: $white none repeat scroll 0% 0%;
+    color: $black;
     line-height: 1.5;
     font-weight: 400;
     -moz-osx-font-smoothing: grayscale;

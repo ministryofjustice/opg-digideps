@@ -14,7 +14,7 @@ span.icon {
 
   Set some defaults */
   background-repeat: no-repeat;
-  background-position: 0px 0px;
+  background-position: 0 0;
   display: block;
   height: 16px;
   width: 16px;
@@ -22,7 +22,7 @@ span.icon {
 
   &__notification {
     background-image: url('images/icons/icon-notification.png');
-    background-position: 0px 0px;
+    background-position: 0 0;
     width: 35px;
     height: 35px;
 

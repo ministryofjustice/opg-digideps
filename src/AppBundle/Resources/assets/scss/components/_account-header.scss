@@ -11,23 +11,21 @@
     }
 
     .edit-account-details {
+        @include core-19();
         float: none;
         position: absolute;
         top: 20px;
         right: 10px;
         width: auto;
-        @include core-19();
     }
 
     .account-details {
         @extend %contain-floats;
-
+        @include core-19();
         width: 40%;
         max-width: 315px;
         float: right;
-        @include core-19();
-
-
+        
         .account-detail {
             @extend %contain-floats;
             text-align: right;
@@ -48,21 +46,16 @@
             width: 50%;
             float: left;
         }
-
-
-
+        
     }
 
     .account-balance {
         @extend %contain-floats;
-
+        @include core-19();
         width: 60%;
         float: left;
-
-        @include core-19();
-
+        
         .label {
-
             width: 38%;
             margin: 0;
             padding: 0;
@@ -78,10 +71,10 @@
         }
 
         .value {
+            @include bold-19();
             float: left;
             width: 35%;
             white-space: nowrap;
-            @include bold-19();
         }
 
     }

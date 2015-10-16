@@ -6,9 +6,10 @@
     border-bottom: 1px solid $grey-2;
   }
 
-  #content  & p.page-section-description {
-      max-width: 540px;
+  #content & p.page-section-description {
       @include bold-19();
+      max-width: 540px;
+
       
   }
   
