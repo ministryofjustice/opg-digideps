@@ -19,3 +19,4 @@ junit.xml
 nbproject
 vendor/*
 web/elb_healthcheck.html
+build
