@@ -1,6 +1,7 @@
+// scss-lint:disable NameFormat
 .form-group.radio-vertical-group {
     @extend %contain-floats;
-    box-sizing: border-box;;
+    box-sizing: border-box;
     
     @include media(tablet) {
         margin-bottom: 40px;
@@ -17,10 +18,9 @@
         float: left;
         margin-right: 10px;
         overflow: hidden;
-        padding: 0;
-        border: none;
+        border: 0;
         position: relative;
-        background: #fff;
+        background: $white;
         box-sizing: border-box;
         padding: 0 3px;
         
@@ -31,7 +31,7 @@
         }
 
         label {
-            display:block;
+            display: block;
             box-sizing: border-box;
             padding: 5px;
             margin: 0;
@@ -85,7 +85,7 @@
         
         &.selected .input-wrapper {
             background: $white;
-            border: 1px solid #000;
+            border: 1px solid $black;
             
             @include media($max_width: 767px) {
                 background-color: $white;
@@ -103,7 +103,7 @@
         }
 
         &.focused .input-wrapper {
-            outline: 3px solid #FFBF47;
+            outline: 3px solid $yellow;
             
             @include media($max_width: 767px) {
                 background-color: initial;
@@ -113,9 +113,10 @@
         
         }
         
-        &.focused label, &.focused.selected label {
+        &.focused label, 
+        &.focused.selected label {
             @include media($max_width: 767px) {
-                outline: 3px solid #FFBF47;
+                outline: 3px solid $yellow;
             }
         }
     }

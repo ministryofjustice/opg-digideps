@@ -2,8 +2,9 @@
     margin-top: 10px;  
     margin-bottom: 10px;
     
-    &.add-bar{  
+    &.add-bar {  
         margin-left: 50%;
+        
         @include media(tablet) {
             margin-left: 45%;
         }
@@ -11,11 +12,10 @@
 }
 
 #back-bar {
+    @include core-19();
     margin: 40px 0;
     padding: 10px;
     background-color: $grey-3;
-    @include core-19();
-    
 }
 
 .button {

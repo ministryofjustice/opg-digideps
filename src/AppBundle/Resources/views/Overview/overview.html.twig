@@ -1,22 +1,32 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
-    showNav: false,
-    showHelp: false
-} %}
+{% extends 'AppBundle:Layouts:application.html.twig' %}
 
-    {% set page = 'reportPeriod' %}
-    {% set translationDomain = "overview" %}
-    {% trans_default_domain translationDomain %}
+{% set translationDomain = "overview" %}
+{% trans_default_domain translationDomain %}
 
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-    {% block contentClass %}{{ parent() }} report-overview{% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+{% block contentClass %}page-report-content report-overview{% endblock %}
 
-    {% block pageBody %}
-        {%include 'AppBundle:Overview:_period.html.twig' with {
-            report: report
-        } %}
-        {%include 'AppBundle:Overview:_sections.html.twig' with {
-            report: report
-        } %}
+{% block pageContent %}
+    
+    {% block pageHeader %}
+        {% include 'AppBundle:Overview:_header.html.twig' %}
     {% endblock %}
 
-{% endembed %}
+    <a name="pageBody"></a>
+    
+    {% block errorSummary %}
+        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+    {% endblock %}
+
+    <div id="page-body">
+        <div id="pagebody-left-content">
+            {%include 'AppBundle:Overview:_period.html.twig' with {
+                report: report
+            } %}
+            {%include 'AppBundle:Overview:_sections.html.twig' with {
+                report: report
+            } %}
+        </div>
+    </div>
+
+{% endblock %}

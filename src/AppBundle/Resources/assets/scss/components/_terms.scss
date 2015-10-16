@@ -1,6 +1,8 @@
 .terms {
 
-    .heading-large, .heading-medium, .heading-small {
+    .heading-large, 
+    .heading-medium, 
+    .heading-small {
         margin: 40px 0 20px 0;
     }
     
@@ -15,8 +17,8 @@
     }
     
     .list-bullet {
-        margin-left: 20px;
         @include core-19();
+        margin-left: 20px;
     }
 
 }
