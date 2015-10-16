@@ -1,6 +1,3 @@
-$newsbg: #e8f4fd;
-$newsborder: #2d8feb;
-
 .alert {
 
     &__delete-confirmation {
@@ -34,10 +31,11 @@ $newsborder: #2d8feb;
     background: rgba($turquoise, .1) url("images/icons/tick.png") 10px 13px no-repeat;
     
     &.flash-news {
+        box-sizing: border-box;
         background: $newsbg url("images/icons/info.png") 10px 10px no-repeat;
         border-left: 3px solid $newsborder;
         margin-bottom: 0;
-        width: 95%;
+        width: 100%;
         padding-left: 50px;
     }
     

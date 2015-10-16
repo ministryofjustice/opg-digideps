@@ -1,8 +1,3 @@
-$green-status:  #35735b;
-$orange-status: #f08e53;
-$grey-status: #8c9295;
-
-
 .overview-sections {
 
     padding-top: 10px;
@@ -231,17 +226,7 @@ $grey-status: #8c9295;
     
     }
 
-    .label {
-    
-        @include core-19();
-    
-    }
-    
-    .value {
-    
-        @include bold-19();
-    
-    }
+
     
     .edit-link {
     
@@ -276,4 +261,67 @@ $grey-status: #8c9295;
         }
     
     }
+
+    #pagebody {
+
+        @extend %grid-row;
+        margin-top: 40px;
+        
+        #pagebody-left-content {
+            @include grid-column(3 / 4, $full-width: desktop);
+
+            header.page-header {
+                margin-top: 0;
+            }
+        }
+        
+        #pagebody-right-content {
+            @include grid-column(1 / 4, $full-width: desktop);
+        }
+        
+    }
+
+
+}
+
+
+.labelvalue {
+    .label {
+        @include core-19();
+    }
+
+    .value {
+        @include bold-19();
+    }
+}
+
+#report-status {
+    
+    h2 {
+        @include bold-24();
+        padding-bottom: 25px;
+    }
+    
+    .labelvalue {
+        margin-bottom: 20px;
+    }
+    
+    .labelsvalues {
+        padding: 20px 0 0  0;
+        border-top: 4px solid $grey-3;
+        border-bottom: 1px solid $grey-3;
+    }
+    
+    &.complete .labelsvalues {
+        border-top: 4px solid $green-50;  
+    }
+    
+}
+
+
+p#helpline {
+    @include bold-19();
+    padding-left: 50px;
+    margin-bottom: 45px;
+    background: url("images/icons/phone.png") top left no-repeat;
 }

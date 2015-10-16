@@ -1,5 +1,3 @@
-$blue: #00f;
-
 //MOJ-Template
 @import "moj-template";
 
@@ -34,6 +32,7 @@ $blue: #00f;
 
 
 //DIGIDEPS
+@import "components/colours";
 @import "components/popups/session-timeout";
 @import "components/account";
 @import "components/account-header";
