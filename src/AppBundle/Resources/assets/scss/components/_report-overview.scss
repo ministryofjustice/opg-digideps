@@ -155,6 +155,14 @@
                     @include media(mobile) {
                         display: none;
                     }
+                    
+                    @include media(tablet) {
+                        display: none;
+                    }
+
+                    @include media(desktop) {
+                        display: inline;
+                    }
                 }
 
                 .summary {
@@ -196,50 +204,6 @@
     }
 }
 
-#report-period-due {
-    
-    @extend %contain-floats;
-    padding: 23px 0 20px 0;
-    border-top: 1px solid $grey-3;
-
-    @include media(mobile) {
-        padding: 10px 0 10px 0;
-    }
-    
-    #report-period {
-        float: left;
-        
-        @include media(mobile) {
-           float: none;
-            margin-bottom: 10px;
-        }
-    
-    }
-    
-    #report-due {
-    
-        float: right;
-    
-        @include media(mobile) {
-            float: none;
-        }
-    
-    }
-
-
-    
-    .edit-link {
-    
-        padding-left: 20px;
-        
-        @include media(mobile) {
-            padding-left: 5px;
-        }
-        
-    }
-    
-}
-
 .report-overview {
     
     .page-section-warning {
@@ -268,7 +232,7 @@
         margin-top: 40px;
         
         #pagebody-left-content {
-            @include grid-column(3 / 4, $full-width: desktop);
+            @include grid-column(3 / 4, $full-width: tablet);
 
             header.page-header {
                 margin-top: 0;
@@ -276,7 +240,7 @@
         }
         
         #pagebody-right-content {
-            @include grid-column(1 / 4, $full-width: desktop);
+            @include grid-column(1 / 4, $full-width: tablet);
         }
         
     }
@@ -300,6 +264,16 @@
     h2 {
         @include bold-24();
         padding-bottom: 25px;
+
+        @include media(mobile) {
+            border-top: 4px solid $grey-3;
+            padding-top: 25px;
+            
+            #report-status.readytosubmit & {
+                border-top: 4px solid $green-status;
+            }
+        }
+        
     }
     
     .labelvalue {
@@ -312,8 +286,16 @@
         border-bottom: 1px solid $grey-3;
     }
     
-    &.complete .labelsvalues {
-        border-top: 4px solid $green-50;  
+    &.readytosubmit .labelsvalues {
+        border-top: 4px solid $green-status;  
+    }
+
+    &.incomplete .labelsvalues {
+        border-top: 4px solid $grey-3;
+    }
+
+    &.inprogress .labelsvalues {
+        border-top: 4px solid $grey-3;
     }
     
 }
@@ -322,6 +304,11 @@
 p#helpline {
     @include bold-19();
     padding-left: 50px;
-    margin-bottom: 45px;
+    margin: 4px 0 45px 0;
     background: url("images/icons/phone.png") top left no-repeat;
+
+    @include media(mobile) {
+        display: none;
+    }
+    
 }

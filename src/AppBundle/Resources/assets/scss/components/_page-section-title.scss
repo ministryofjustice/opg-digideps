@@ -12,4 +12,7 @@
 
 .page-report-content .page-section-title {
     width: 65%;
+    @include media(mobile) {
+        width: auto;
+    }
 }

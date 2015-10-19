@@ -1,11 +1,15 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
 
-
 <header class="page-report-header page-header group">
     <div class="page-header-titles">
-        <h1 class="heading-large report-title">{{ report.period }} {{ 'report.header.report' | trans }}
-            <div class="heading-large client-name">{{ client.fullname }}</div>
+        <h1 class="report-title">{{ report.period }} {{ 'report.header.report' | trans }}
+            <div class="client-name">{{ client.fullname }}</div>
         </h1>
     </div>
+
+    {%include 'AppBundle:Overview:_period.html.twig' with {
+        report: report
+    } %}
+
 </header>
