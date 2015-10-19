@@ -38,8 +38,8 @@ class AuthController extends RestController
         } else {
             $email = strtolower($data['email']);
             $password = $data['password'];
-            if (!$bruteForceChecker->isAllowed($email, $password)) {
-                throw new AppException\BruteForceDetectedException("Too many attemptes");
+            if (!$bruteForceChecker->isAllowed($email)) {
+                throw new AppException\BruteForceDetectedException("Too many attempts");
             }
             $user = $this->getAuthService()->getUserByEmailAndPassword($email, $password);
         }

@@ -47,7 +47,7 @@ class BruteForceChecker
     }
 
 
-    public function isAllowed($email, $password)
+    public function isAllowed($email)
     {
         $mt = $this->options['max_attempts_email'];
         if (!$mt) {
