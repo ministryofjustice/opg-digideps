@@ -13,9 +13,15 @@ services:
     authService:
         class: AppBundle\Service\Auth\AuthService
         arguments: [ @service_container ]
-    bruteForceChecker:
-        class: AppBundle\Service\Auth\BruteForceChecker
-        arguments: [ @snc_redis.default, {"max_attempts_email": 5} ]
+#    bruteForceChecker:
+#        class: AppBundle\Service\Auth\BruteForceChecker
+#        arguments: [ @snc_redis.default, @logger ]
+#        calls:
+#            # email checks
+#            - [ addWarningTrigger, [ "email", 5]]
+#            - [ addDelayTriggers, [ "email", {10: 2, 15: 5, 20: 30, 25: 60, 30: 120, 35: 300, 40: 600}]]
+#            # token checks (stricter, only delay)
+#            - [ addDelayTrigger, [ "token", {3: 2, 6: 20, 10: 60}]]
     
 security:
     encoders:

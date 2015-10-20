@@ -30,19 +30,15 @@ class AuthController extends RestController
         }
         $data = $this->deserializeBodyContent($request);
         
-        $bruteForceChecker = $this->get('bruteForceChecker');
+//        $this->bruteForceRegisterAttemptAndCheckIfAllowed($data);
         
-        // load user by credentials (token or usernae&password)
+        // load user by credentials (token or username & password)
         if (array_key_exists('token', $data)) {
             $user = $this->getAuthService()->getUserByToken($data['token']);
         } else {
-            $email = strtolower($data['email']);
-            $password = $data['password'];
-            if (!$bruteForceChecker->isAllowed($email)) {
-                throw new AppException\BruteForceDetectedException("Too many attempts");
-            }
-            $user = $this->getAuthService()->getUserByEmailAndPassword($email, $password);
+            $user = $this->getAuthService()->getUserByEmailAndPassword(strtolower($data['email']),  $data['password']);
         }
+        
         if (!$user) {
             // incase the user is not found or the password is not valid (same error given for security reasons)
             throw new AppException\UserWrongCredentials();
@@ -51,21 +47,45 @@ class AuthController extends RestController
             throw new AppException\UnauthorisedException($user->getRole()->getRole() . ' user role not allowed from this client.');
         }
         
-        if (isset($email)) {
-            $bruteForceChecker->resetAttacksByEmail($email);
-        }
+//        $this->get('bruteForceChecker')->resetAttempts(); //based on last key
         
         $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime);
         $this->get('em')->flush($user);
         
         // add token into response
-        $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($request) use ($randomToken) {
-            $request->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
+        $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($response) use ($randomToken) {
+            $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $randomToken);
         });
         
         return $user;
     }
+    
+    /**
+     * @param string $key
+     * @param string $data
+     * 
+     * @throws AppException\UnauthorisedException 
+     */
+//    private function bruteForceRegisterAttemptAndCheckIfAllowed($data)
+//    {
+//        $key = array_key_exists('token', $data) ? 'token' : 'email';
+//        
+//        $bruteForceChecker = $this->get('bruteForceChecker');
+//        $bruteForceChecker->setKey($key)->registerAttempt($data[$key]);
+//        
+//        // exception if reached delay-check
+//        if ($nextAttemptIn = $bruteForceChecker->reachedDelay()) {
+//            throw new AppException\UnauthorisedException(423, "Attack detected. Please try again in $nextAttemptIn minutes");
+//        }
+//        
+//        // set return code to 202 if warning is reached
+//        if ($bruteForceChecker->reachedWarning()) {
+//             $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($response){
+//                $response->setStatusCode(202);
+//            });
+//        }
+//    }
     
     /**
      * @return UserProvider
