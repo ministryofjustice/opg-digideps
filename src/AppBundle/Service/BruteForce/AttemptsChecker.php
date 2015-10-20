@@ -17,12 +17,12 @@ class AttemptsChecker
     private $triggers;
 
 
-    public function __construct(PredisClient $redis, $key, array $triggers)
+    public function __construct(PredisClient $redis, $prefix, $key, array $triggers)
     {
         $this->redis = $redis;
         $this->key = $key;
         $this->triggers = $triggers;
-        $this->prefix = md5(__CLASS__);
+        $this->prefix = $prefix.md5(__CLASS__);
     }
 
 
@@ -34,24 +34,14 @@ class AttemptsChecker
         $history = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
 
         foreach ($this->triggers as $maxAttempts => $timeInterval) { // 3 60
-            if ($this->countAttemptsInTheInterval($history, $currentTimestamp, $timeInterval) >= $maxAttempts) {
+            $attemptsInInterval = count(array_filter($history, function($attemptTimeStamp) use ($currentTimestamp, $timeInterval) {
+                return $attemptTimeStamp >= $currentTimestamp - $timeInterval;
+            }));
+            if ($attemptsInInterval >= $maxAttempts) {
                 return true;
             }
         }
         return false;
-    }
-
-
-    private function countAttemptsInTheInterval(array $history, $currentTimestamp, $timeInterval)
-    {
-        $ret = 0;
-        foreach ($history as $attemptTimeStamp) {
-            if ($attemptTimeStamp >= $currentTimestamp - $timeInterval) {
-                $ret++;
-            }
-        }
-
-        return $ret;
     }
 
 

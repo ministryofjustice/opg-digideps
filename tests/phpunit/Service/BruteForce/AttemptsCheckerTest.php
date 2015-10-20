@@ -38,7 +38,7 @@ class AttemptsCheckerTest extends \PHPUnit_Framework_TestCase
         $this->redis = new PredisMock();
         $this->logger = m::stub('Symfony\Bridge\Monolog\Logger');
         
-        $this->object = new AttemptsChecker($this->redis, 'email', $triggers);
+        $this->object = new AttemptsChecker($this->redis, 'prefix', 'x', $triggers);
         
         // 1st interval reached
         foreach ($attemptsTimeStampToExpected as $timestamp => $expected) {
