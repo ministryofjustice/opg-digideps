@@ -26,7 +26,14 @@ class PredisMock extends \Predis\Client
     {
         return isset($this->data[$id]) ? $this->data[$id] : null;
     }
-
+    
+    public function expire($id, $timeout)
+    {
+        if (!isset($this->data[$id])) {
+            throw new \InvalidArgumentException("key $id not set");
+        }
+    }
+    
 
     public function __call($commandID, $arguments)
     {

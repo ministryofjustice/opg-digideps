@@ -30,7 +30,8 @@ class AuthController extends RestController
         }
         $data = $this->deserializeBodyContent($request);
         
-//        $this->bruteForceRegisterAttemptAndCheckIfAllowed($data);
+        $key = array_key_exists('token', $data) ? 'token' : 'email';
+        $this->bruteForceRegisterAttemptAndCheckIfAllowed($key, $data);
         
         // load user by credentials (token or username & password)
         if (array_key_exists('token', $data)) {
@@ -47,7 +48,8 @@ class AuthController extends RestController
             throw new AppException\UnauthorisedException($user->getRole()->getRole() . ' user role not allowed from this client.');
         }
         
-//        $this->get('bruteForceChecker')->resetAttempts(); //based on last key
+        $this->get('attemptsChecker.returnCode')->resetAttempts($key);
+        $this->get('attemptsChecker.exception')->resetAttempts($key);
         
         $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime);
@@ -61,31 +63,28 @@ class AuthController extends RestController
         return $user;
     }
     
-    /**
-     * @param string $key
-     * @param string $data
-     * 
-     * @throws AppException\UnauthorisedException 
-     */
-//    private function bruteForceRegisterAttemptAndCheckIfAllowed($data)
-//    {
-//        $key = array_key_exists('token', $data) ? 'token' : 'email';
-//        
-//        $bruteForceChecker = $this->get('bruteForceChecker');
-//        $bruteForceChecker->setKey($key)->registerAttempt($data[$key]);
-//        
-//        // exception if reached delay-check
-//        if ($nextAttemptIn = $bruteForceChecker->reachedDelay()) {
-//            throw new AppException\UnauthorisedException(423, "Attack detected. Please try again in $nextAttemptIn minutes");
-//        }
-//        
-//        // set return code to 202 if warning is reached
-//        if ($bruteForceChecker->reachedWarning()) {
-//             $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($response){
-//                $response->setStatusCode(202);
-//            });
-//        }
-//    }
+    private function bruteForceRegisterAttemptAndCheckIfAllowed($index, $data)
+    {
+        $returnCodeChecker = $this->get('attemptsChecker.returnCode');
+        $exceptionChecker = $this->get('attemptsChecker.exception');
+        
+        $key = $index . $data[$index];
+        $returnCodeChecker->registerAttempt($key); //e.g emailName@example.org
+        $exceptionChecker->registerAttempt($key);
+        
+        // exception if reached delay-check
+        if ($exceptionChecker->maxAttemptsReached()) {
+            $nextAttemptIn = ceil($exceptionChecker->secondsBeforeNextAttempt() / 60);
+            throw new AppException\UnauthorisedException(423, "Attack detected. Please try again in $nextAttemptIn minutes");
+        }
+        
+        // set return code to 202
+        if ($returnCodeChecker->maxAttemptsReached($key)) {
+             $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($response){
+                $response->setStatusCode(202);
+            });
+        }
+    }
     
     /**
      * @return UserProvider
