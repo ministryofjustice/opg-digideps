@@ -8,7 +8,7 @@ use MockeryStub as m;
 
 require_once __DIR__ . '/PredisMock.php';
 
-class AttemptsInTimeTest extends \PHPUnit_Framework_TestCase
+class AttemptsCheckerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var AttemptsInTime 
@@ -38,7 +38,7 @@ class AttemptsInTimeTest extends \PHPUnit_Framework_TestCase
         $this->redis = new PredisMock();
         $this->logger = m::stub('Symfony\Bridge\Monolog\Logger');
         
-        $this->object = new AttemptsInTime($this->redis, 'email', $triggers);
+        $this->object = new AttemptsChecker($this->redis, 'email', $triggers);
         
         // 1st interval reached
         foreach ($attemptsTimeStampToExpected as $timestamp => $expected) {

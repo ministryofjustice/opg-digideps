@@ -4,12 +4,8 @@ namespace AppBundle\Service\BruteForce;
 
 use Predis\Client as PredisClient;
 
-class AttemptsInTime
+class AttemptsChecker
 {
-
-    const PREFIX = 'bf_';
-
-
     /**
      * @var PredisClient 
      */
@@ -26,6 +22,7 @@ class AttemptsInTime
         $this->redis = $redis;
         $this->key = $key;
         $this->triggers = $triggers;
+        $this->prefix = md5(__CLASS__);
     }
 
 
@@ -33,7 +30,7 @@ class AttemptsInTime
     {
         $currentTimestamp = (null === $currentTimestamp) ? time() : $currentTimestamp;
 
-        $id = self::PREFIX . $this->key;
+        $id = $this->prefix . $this->key;
         $history = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
 
         foreach ($this->triggers as $maxAttempts => $timeInterval) { // 3 60
@@ -60,7 +57,7 @@ class AttemptsInTime
 
     public function registerAttempt($timestamp = null)
     {
-        $id = self::PREFIX . $this->key;
+        $id = $this->prefix . $this->key;
         $history = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
 
         $history[] = (null === $timestamp ? time() : $timestamp);
@@ -73,7 +70,7 @@ class AttemptsInTime
 
     public function resetAttempts()
     {
-        $id = self::PREFIX . $this->key;
+        $id = $this->prefix . $this->key;
 
         $this->redis->set($id, null);
     }
