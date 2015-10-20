@@ -79,6 +79,7 @@ header.page-header #report-period-due {
     
     #report-due {
         float: none;
+        
         @include media(mobile) {
             float: none;
             width: auto;

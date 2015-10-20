@@ -34,9 +34,13 @@
         box-sizing: border-box;
         background: $newsbg url("images/icons/info.png") 10px 10px no-repeat;
         border-left: 3px solid $newsborder;
-        margin-bottom: 0;
+        margin-bottom: 30px;
         width: 100%;
         padding-left: 50px;
+    
+        @include media(mobile) {
+            margin-bottom: 20px;
+        }
     }
     
 }
