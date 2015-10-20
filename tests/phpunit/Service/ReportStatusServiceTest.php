@@ -986,7 +986,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $reportStatusService = new ReportStatusService($report, $this->translator);
 
         $answer = $reportStatusService->getStatus();
-        $expected = "inprogress";
+        $expected = "notFinished";
         $this->assertEquals($expected, $answer);
     }
     
@@ -1020,7 +1020,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $reportStatusService = new ReportStatusService($report, $this->translator);
 
         $answer = $reportStatusService->getStatus();
-        $expected = "inprogress";
+        $expected = "notFinished";
         $this->assertEquals($expected, $answer);
     }
     
@@ -1054,7 +1054,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $reportStatusService = new ReportStatusService($report, $this->translator);
 
         $answer = $reportStatusService->getStatus();
-        $expected = "incomplete";
+        $expected = "notFinished";
         $this->assertEquals($expected, $answer);
     }
     
@@ -1088,13 +1088,13 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $reportStatusService = new ReportStatusService($report, $this->translator);
 
         $answer = $reportStatusService->getStatus();
-        $expected = "readytosubmit";
+        $expected = "readyToSubmit";
         $this->assertEquals($expected, $answer);
 
     }
     
     /** @test */
-    public function calculateStatusCount() {
+    public function calculateStatusRemainingCount() {
 
         $contact = m::mock('AppBundle\Entity\Contact');
         $decision = m::mock('AppBundle\Entity\Decision');
@@ -1123,7 +1123,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
         
-        $this->assertEquals(4, $reportStatusService->getCompleteSectionCount());
+        $this->assertEquals(1, $reportStatusService->getRemainingSectionCount());
         
     }
     

@@ -10,8 +10,8 @@ class ReportStatusService {
     const NOTSTARTED = "not-started";
     const DONE = "done";
     const INCOMPLETE = "incomplete";
-    const INPROGRESS = "inprogress";
-    const READYTOSUBMIT = "readytosubmit";
+    const NOTFINISHED = "notFinished";
+    const READYTOSUBMIT = "readyToSubmit";
     
     /** @var Report */
     private $report;
@@ -261,52 +261,49 @@ class ReportStatusService {
     public function getStatus()
     {
         $readyToSubmit = $this->isReadyToSubmit();
-        $isDue = $this->report->isDue();
         
-        if ($isDue == false) {
-            return $this::INPROGRESS;
-        } elseif ($readyToSubmit == false) {
-            return $this::INCOMPLETE;
-        } else {
+        if ($readyToSubmit == true && $this->report->isDue()) {
             return $this::READYTOSUBMIT;
+        } else {
+            return $this::NOTFINISHED;
         }
     }
 
-    public function getCompleteSectionCount() {
+    public function getRemainingSectionCount() {
         
-        $count = 0;
+        $count = 5;
         
         if($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS){
             if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() ) {
-                $count++;
+                $count--;
             } 
             
             if (!$this->missingContacts()) {
-                $count++;
+                $count--;
             }
             
             if (!$this->missingAssets()) {
-                $count++;
+                $count--;
             }
             
             if (!$this->missingDecisions()) {
-                $count++;
+                $count--;
             }
             
             if (!$this->missingSafeguarding()) {
-                $count++;
+                $count--;
             }
         } else {
             if (!$this->missingContacts()) {
-                $count++;
+                $count--;
             }
 
             if (!$this->missingAssets()) {
-                $count++;
+                $count--;
             }
 
             if (!$this->missingDecisions()) {
-                $count++;
+                $count--;
             }
         }
         

@@ -3,12 +3,12 @@
     <h2>Review report</h2>
     <div class="labelsvalues">
         <div class="labelvalue">
-            <div class="label">Progress</div>
-            <div class="value">{{ reportStatus.completeSectionCount }} of {{ report.sectionCount }} sections finished</div>
+            <div class="label">Progress:</div>
+            <div class="value">{{ reportStatus.remainingSectionCount }} Sections remaining</div>
         </div>
         
         <div class="labelvalue">
-            <div class="label">Status</div>
+            <div class="label">Status:</div>
             <div class="value">{{ reportStatus.status | trans() }}</div>
         </div>
     </div>

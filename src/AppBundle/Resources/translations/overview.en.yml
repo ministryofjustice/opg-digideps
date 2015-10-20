@@ -18,6 +18,8 @@ dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
 yourFinalStep: "Your final step"
 signAndSubmit: "Sign and submit"
+readyToSubmit: "Ready to submit"
+notFinished: "Not finished"
 
 contacts:
     subSectionTitle: "Contacts"
