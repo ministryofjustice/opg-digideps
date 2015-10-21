@@ -13,36 +13,24 @@ services:
     authService:
         class: AppBundle\Service\Auth\AuthService
         arguments: [ @service_container ]
-    attemptsChecker.returnCode:
+    attemptsInTimeChecker:
         class:  AppBundle\Service\BruteForce\AttemptsInTimeChecker
         arguments: [ @snc_redis.default ]
         calls:
             - [ setRedisPrefix, ["ac_ret_code"] ]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [ addTrigger, [  5, 600 ] ]
-    attemptsChecker.exception:
+    attemptsIncrementalWaitingChecker:
         class:  AppBundle\Service\BruteForce\AttemptsIncrementalWaitingChecker
         arguments: [ @snc_redis.default ]
         calls:
             - [ setRedisPrefix, ["ac_exception"] ]
-            # after 10 attempts, freeze for 10 minutes
-            - [ addFreezingRule, [  10, 600 ] ]
-            # after further 10 attempts. freeze for 20 minutes
-            - [ addFreezingRule, [  20, 1200 ] ]
-            # after further 10 attempts. freeze for 60 minutes
-            - [ addFreezingRule, [  30, 3600 ] ]
-            
-    bruteForceChecker:
-        class: AppBundle\Service\Auth\BruteForceChecker
-        arguments: [ @snc_redis.default, @logger ]
-        calls:
-            # email checks
-            - [ addWarningTrigger, [ "email", 5]]
-            - [ addDelayTriggers, [ "email", {10: 2, 15: 5, 20: 30, 25: 60, 30: 120, 35: 300, 40: 600}]]
-            # token checks (stricter, only delay)
-            - [ addDelayTrigger, [ "token", {3: 2, 6: 20, 10: 60}]]
-    
-    
+            # after 10 attempts, freeze for 30 minutes
+            - [ addFreezingRule, [  10, 1800 ] ]
+            # after further 10 attempts. freeze for 1h
+            - [ addFreezingRule, [  20, 3600 ] ]
+            # after further 10 attempts. freeze for 2h
+            - [ addFreezingRule, [  30, 7200 ] ]
     
     
 security:

@@ -76,7 +76,7 @@ class AttemptsIncrementalWaitingChecker
         $timestamp = $this->getTimestamp();
         $id = $this->keyToRedisId($key);
         $data = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
-       
+        
         $data['totalAttempts'] = isset($data['totalAttempts']) ? ($data['totalAttempts'] + 1) : 1;
         $data['lastAttemptTimestamp'] = $timestamp;
         

@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use AppBundle\Exception\HasDataInterface;
 
 class RestInputOuputFormatter
 {
@@ -167,7 +168,7 @@ class RestInputOuputFormatter
         
         $data = array(
             'success' => false, 
-            'data' => '', 
+            'data' => ($e instanceof HasDataInterface) ? $e->getData() : '', 
             'message' => $message,
             'stacktrace' => ($this->debug) ? 
                     sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 1000))

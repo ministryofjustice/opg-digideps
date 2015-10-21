@@ -30,8 +30,25 @@ class AuthController extends RestController
         }
         $data = $this->deserializeBodyContent($request);
         
-        $key = array_key_exists('token', $data) ? 'token' : 'email';
-        $this->bruteForceRegisterAttemptAndCheckIfAllowed($key, $data);
+        //brute force checks
+        $index = array_key_exists('token', $data) ? 'token' : 'email';
+        $key = $index . $data[$index];
+        $attemptsInTimechecker = $this->get('attemptsInTimeChecker');
+        $incrementalWaitingTimechecker = $this->get('attemptsIncrementalWaitingChecker');
+        
+        $attemptsInTimechecker->registerAttempt($key); //e.g emailName@example.org
+        $incrementalWaitingTimechecker->registerAttempt($key);
+        
+        // exception if reached delay-check
+        if ($incrementalWaitingTimechecker->isFrozen($key)) {
+            $nextAttemptAt = $incrementalWaitingTimechecker->getUnfrozenAt($key);
+            $nextAttemptIn = ceil(($nextAttemptAt - time()) / 60);
+            $exception = new AppException\UnauthorisedException( "Attack detected. Please try again in $nextAttemptIn minutes", 423);
+            $exception->setData($nextAttemptAt);
+            
+            throw $exception;
+        }
+        
         
         // load user by credentials (token or username & password)
         if (array_key_exists('token', $data)) {
@@ -42,14 +59,19 @@ class AuthController extends RestController
         
         if (!$user) {
             // incase the user is not found or the password is not valid (same error given for security reasons)
-            throw new AppException\UserWrongCredentials();
+            if ($attemptsInTimechecker->maxAttemptsReached($key)) {
+                throw new AppException\UserWrongCredentialsManyAttempts();
+            } else {
+                 throw new AppException\UserWrongCredentials();
+            }
         }
         if (!$this->getAuthService()->isSecretValidForUser($user, $request)) {
             throw new AppException\UnauthorisedException($user->getRole()->getRole() . ' user role not allowed from this client.');
         }
         
-        $this->get('attemptsChecker.returnCode')->resetAttempts($key);
-        $this->get('attemptsChecker.exception')->resetAttempts($key);
+        // reset counters at successful login
+        $attemptsInTimechecker->resetAttempts($key);
+        $incrementalWaitingTimechecker->resetAttempts($key);
         
         $randomToken = $this->getProvider()->generateRandomTokenAndStore($user);
         $user->setLastLoggedIn(new \DateTime);
@@ -61,29 +83,6 @@ class AuthController extends RestController
         });
         
         return $user;
-    }
-    
-    private function bruteForceRegisterAttemptAndCheckIfAllowed($index, $data)
-    {
-        $returnCodeChecker = $this->get('attemptsChecker.returnCode');
-        $exceptionChecker = $this->get('attemptsChecker.exception');
-        
-        $key = $index . $data[$index];
-        $returnCodeChecker->registerAttempt($key); //e.g emailName@example.org
-        $exceptionChecker->registerAttempt($key);
-        
-        // exception if reached delay-check
-        if ($exceptionChecker->maxAttemptsReached()) {
-            $nextAttemptIn = ceil($exceptionChecker->secondsBeforeNextAttempt() / 60);
-            throw new AppException\UnauthorisedException(423, "Attack detected. Please try again in $nextAttemptIn minutes");
-        }
-        
-        // set return code to 202
-        if ($returnCodeChecker->maxAttemptsReached($key)) {
-             $this->get('kernel.listener.responseConverter')->addResponseModifier(function ($response){
-                $response->setStatusCode(202);
-            });
-        }
     }
     
     /**

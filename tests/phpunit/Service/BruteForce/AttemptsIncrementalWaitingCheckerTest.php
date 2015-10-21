@@ -88,7 +88,14 @@ class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
     
     public function testResetAttempts()
     {
-        do me
+        $this->object->overrideTimestamp(0);
+        
+        $this->object->addFreezingRule(1, 10); // after 2 attempts, lock for 10 seconds
+        $this->attempt();
+        $this->assertFrozen();
+        $this->object->resetAttempts($this->key);
+        $this->assertAccessible();
+        
     }
     
     public function tearDown()

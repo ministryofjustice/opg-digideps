@@ -6,6 +6,8 @@ use AppBundle\Entity\User;
 use AppBundle\Entity\Role;
 use AppBundle\Service\Auth\BruteForceChecker;
 
+use Mockery as m;
+
 class AuthControllerTest extends AbstractTestController
 {
     public static function setUpBeforeClass()
@@ -13,23 +15,16 @@ class AuthControllerTest extends AbstractTestController
         parent::setUpBeforeClass();
     }
 
-    /**
-     * @return BruteForceChecker
-     */
-    private static function getBruteForceChecker()
+    
+    private function resetAttempts($key)
     {
-        self::$frameworkBundleClient->request('GET', '/');
-        return self::$frameworkBundleClient->getContainer()->get('bruteForceChecker');
-    }
-
-    public function setUp()
-    {
-        parent::setUp();
+        self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
         
-        self::getBruteForceChecker()->resetAll();
+        self::$frameworkBundleClient->getContainer()->get('attemptsInTimeChecker')->resetAttempts($key);
+        self::$frameworkBundleClient->getContainer()->get('attemptsIncrementalWaitingChecker')->resetAttempts($key);
+    
     }
-
-
+    
     /**
      * @test
      */
@@ -58,6 +53,8 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginFailWrongPassword()
     {
+        $this->resetAttempts('email'.'user@mail.com-WRONG');
+        
         $return = $this->assertJsonRequest('POST', '/auth/login', [
             'mustFail' => true,
             'data' => [
@@ -79,6 +76,8 @@ class AuthControllerTest extends AbstractTestController
 
     public function testLoginFailSecretPermissions()
     {
+        $this->resetAttempts('email'.'admin@example.org');
+        
         $return = $this->assertJsonRequest('POST', '/auth/login', [
             'mustFail' => true,
             'data' => [
@@ -156,6 +155,9 @@ class AuthControllerTest extends AbstractTestController
      */
     public function testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference()
     {
+        $this->resetAttempts('email'.'deputy@example.org');
+        $this->resetAttempts('email'.'admin@example.org');
+         
         $authTokenDeputy = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         $authTokenAdmin = $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
 
@@ -207,51 +209,23 @@ class AuthControllerTest extends AbstractTestController
     }
 
 
-    public static function bruteforceProvider()
-    {
-        return [
-            [[
-                // deputy@example.org: 5 attempts 
-                ['deputy@example.org', 'password-WRONG', 498],
-                ['deputy@example.org', 'password-WRONG', 498],
-                ['deputy@example.org', 'password-WRONG', 498],
-                ['deputy@example.org', 'password-WRONG', 498],
-                ['deputy@example.org', 'password-WRONG', 498],
-                // deputy-nonexisting@example.org: 5 attempts
-                ['deputynonexisting@example.org', 'password-WRONG', 498],
-                ['deputynonexisting@example.org', 'password-WRONG', 498],
-                ['deputynonexisting@example.org', 'password-WRONG', 498],
-                ['deputynonexisting@example.org', 'password-WRONG', 498],
-                ['deputynonexisting@example.org', 'password-WRONG', 498],
-                //
-                ['deputy@example.org', 'password-WRONG', 403],
-                ['deputynonexisting@example.org', 'password-WRONG', 403],
-                ]],
-            [[
-                // if the email changes, no blocking !
-                ['deputy1@example.org', 'password-WRONG', 498],
-                ['deputy2@example.org', 'password-WRONG', 498],
-                ['deputy3@example.org', 'password-WRONG', 498],
-                ['deputy4@example.org', 'password-WRONG', 498],
-                ['deputy5@example.org', 'password-WRONG', 498],
-                ['deputy6@example.org', 'password-WRONG', 498],
-                ]]
-        ];
-    }
 
-
-    /**
-     * @dataProvider bruteforceProvider
-     */
+    
     public function testBruteForceSameEmail()
     {
-        $maxAttempts = self::getBruteForceChecker()->getOptions()['max_attempts_email'];
-        if (!$maxAttempts) {
-            $this->fail(__METHOD__ . " : bruteForceChecker.max_attempts_email not set");
-        }
-
-        // attempts will return 498
-        for ($i = 0; $i < $maxAttempts; $i++) {
+        $this->resetAttempts('email'.'deputy@example.org');
+        
+        // change in accordance with config_test.yml
+        
+        $expectedReturnCodes = [
+            498, 498, 498, 498, 
+            499, 4
+        ];
+        
+        // assert the application returns 498 (invalid credentials) for the 1st 4 attempts
+        // and after 4 attempts it will return 499 (invalid credentials + too many attempts detected),
+        // still allowing the user to try
+        foreach([498, 498, 498, 498, 499] as $expectedReturnCode) {
             $this->assertJsonRequest('POST', '/auth/login', [
                 'mustFail' => true,
                 'data' => [
@@ -259,34 +233,58 @@ class AuthControllerTest extends AbstractTestController
                     'password' => 'password-WRONG',
                 ],
                 'ClientSecret' => '123abc-deputy',
-                'assertCode' => 498,
-                'assertResponseCode' => 498
+                'assertCode' => $expectedReturnCode,
+                'assertResponseCode' => $expectedReturnCode
             ]);
         }
-
-        // next attempt will return 423
-        $this->assertJsonRequest('POST', '/auth/login', [
-            'mustFail' => true,
-            'data' => [
-                'email' => 'deputy@example.org',
-                'password' => 'password-WRONG',
-            ],
-            'ClientSecret' => '123abc-deputy',
-            'assertCode' => 423,
-            'assertResponseCode' => 423
-        ]);
-        
-        // same code returned with right password
-        $this->assertJsonRequest('POST', '/auth/login', [
-            'mustFail' => true,
+         
+        // assert I can still log in if the right password is provided
+        $data = $this->assertJsonRequest('POST', '/auth/login', [
+            'mustFail' => false,
             'data' => [
                 'email' => 'deputy@example.org',
                 'password' => 'Abcd1234',
             ],
             'ClientSecret' => '123abc-deputy',
-            'assertCode' => 423,
-            'assertResponseCode' => 423
+            'assertResponseCode' => 200
+        ])['data'];
+        $this->assertEquals('deputy@example.org', $data['email']);
+        
+        // logout
+        $authToken = self::$frameworkBundleClient->getResponse()->headers->get('AuthToken');
+        $this->assertJsonRequest('POST', '/auth/logout', [
+            'mustSucceed' => true,
+            'AuthToken' => $authToken
         ]);
+         
+        // 10  attempts
+        foreach([498, 498, 498, 498, 499, 499, 499, 499, 499] as $expectedReturnCode) {
+            $this->assertJsonRequest('POST', '/auth/login', [
+                'mustFail' => true,
+                'data' => [
+                    'email' => 'deputy@example.org',
+                    'password' => 'password-WRONG',
+                ],
+                'ClientSecret' => '123abc-deputy',
+                'assertCode' => $expectedReturnCode,
+                'assertResponseCode' => $expectedReturnCode
+            ]);
+        }
+        
+        // assert it's now locked, even if the password is correct
+        $data = $this->assertJsonRequest('POST', '/auth/login', [
+                'mustFail' => true,
+                'data' => [
+                    'email' => 'deputy@example.org',
+                    'password' => 'Abcd1234',
+                ],
+                'ClientSecret' => '123abc-deputy',
+                'assertCode' => 423,
+                'assertResponseCode' => 423
+        ])['data'];
+        
+        $expectedTimeStamp = time() + 600;
+        $this->assertTrue(abs($expectedTimeStamp -  $data) < 30, 'data does not contain when login with be unlocked');
     }
 
 }
