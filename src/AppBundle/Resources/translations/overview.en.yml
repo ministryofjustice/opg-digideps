@@ -20,6 +20,8 @@ yourFinalStep: "Your final step"
 signAndSubmit: "Sign and submit"
 readyToSubmit: "Ready to submit"
 notFinished: "Not finished"
+sectionsRemaining: "sections remaining"
+
 
 contacts:
     subSectionTitle: "Contacts"
