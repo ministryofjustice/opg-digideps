@@ -42,7 +42,12 @@ class DeputyProvider implements UserProviderInterface
         } catch(\Exception $e) {
             $this->logger->info(__METHOD__ . ': ' . $e);
             
-            throw new UsernameNotFoundException("We can't log you in at this time.");
+            // rethrow 423 (brute-force/locked to grab timestamp)
+            if ($e->getCode() == 423) {
+                throw $e;
+            }
+            
+            throw new UsernameNotFoundException("We can't log you in at this time.", $e->getCode());
         }
     }
     
