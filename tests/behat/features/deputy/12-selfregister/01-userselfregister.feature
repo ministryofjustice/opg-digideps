@@ -9,6 +9,7 @@ Feature: User Self Registration
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
+            | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
@@ -35,6 +36,7 @@ Feature: User Self Registration
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
+            | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
@@ -44,6 +46,7 @@ Feature: User Self Registration
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
+            | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
