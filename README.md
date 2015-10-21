@@ -17,6 +17,8 @@ Return codes
 * 404 not found
 * 403 Missing client secret, or invalid permissions (configuration error) or invalid ACL permissions for logged user
 * 419 AuthToken missing, expired or not matching (runtime error)
+* 423 Too many login attempts, Locked
 * 498 wrong credentials at login
+* 499 wrong credentials at login (after many failed requests)
 * 500 generic error due to internal exception (e.g. db offline)
 

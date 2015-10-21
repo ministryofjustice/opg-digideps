@@ -114,6 +114,14 @@ abstract class AbstractTestController extends WebTestCase
      */
     public function login($email, $password, $clientSecret)
     {
+        self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
+        
+        // reset brute-force counters
+        $key = 'email'.$email;
+        self::$frameworkBundleClient->getContainer()->get('attemptsInTimeChecker')->resetAttempts($key);
+        self::$frameworkBundleClient->getContainer()->get('attemptsIncrementalWaitingChecker')->resetAttempts($key);
+        
+        
         $responseArray = $this->assertJsonRequest('POST', '/auth/login', [
             'mustSucceed' => true,
             'ClientSecret' => $clientSecret,
