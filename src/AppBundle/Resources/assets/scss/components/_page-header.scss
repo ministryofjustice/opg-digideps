@@ -16,16 +16,6 @@ header.page-header {
 
     }
     
-    
-    .page-header-titles {
-        
-        @include media(desktop) {
-            float: left;
-        }
-    
-    }
-    
-    
     .report-title {
         font-weight: normal;
         margin-top: 0;
