@@ -47,7 +47,18 @@ class IndexController extends AbstractController
             try {
                 $user = $this->get('deputyprovider')->login($data);
             } catch(\Exception $e){
-                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $e->getMessage()]);
+                $error = $e->getMessage();
+
+                if ($e->getCode() == 423) {
+                    $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
+                    $error = sprintf('Brute force attack detected. Account locked for %s minutes', $lockedFor);
+                }
+                
+                if ($e->getCode() == 499) {
+                    // too-many-attempts warning. captcha ?
+                }
+                
+                return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $error]);
             }
             // manually set session token into security context (manual login)
             $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
