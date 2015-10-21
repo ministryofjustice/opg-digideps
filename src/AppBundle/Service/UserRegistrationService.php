@@ -96,10 +96,10 @@ class UserRegistrationService
         $user->setFirstname($selfRegisterData->getFirstname());
         $user->setLastname($selfRegisterData->getLastname());
         $user->setEmail($selfRegisterData->getEmail());
+        $user->setAddressPostcode($selfRegisterData->getPostcode());
         $user->setActive(false);
         $user->setEmailConfirmed(false);
         $user->setRole($role);
-
     }
 
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
