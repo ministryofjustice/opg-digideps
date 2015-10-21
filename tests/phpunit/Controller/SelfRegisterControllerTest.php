@@ -37,6 +37,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'firstname' => 'Zac',
             'lastname' => 'Tolley',
             'email' => 'behat-test@gov.uk',
+            'postcode' => 'SW1',
             'client_lastname' => 'Cross-Tolley',
             'case_number' => '12341234'
         ];
@@ -48,6 +49,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('Zac', $selfRegisterData->getFirstname());
         $this->assertEquals('Tolley', $selfRegisterData->getLastname());
         $this->assertEquals('behat-test@gov.uk', $selfRegisterData->getEmail());
+        $this->assertEquals('SW1', $selfRegisterData->getPostcode());
         $this->assertEquals('Cross-Tolley', $selfRegisterData->getClientLastname());
         $this->assertEquals('12341234', $selfRegisterData->getCaseNumber());
     }
@@ -123,6 +125,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'firstname' => 'Zac',
                 'lastname' => 'Tolley',
                 'email' => 'gooduser@gov.zzz',
+                'postcode' => 'SW1',
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12341234'
             ],
@@ -131,11 +134,10 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        /** @var /AppBundle/Entity/User $user */
         $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
-
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
+        $this->assertEquals('SW1', $user->getAddressPostcode());
         $this->assertEquals('gooduser@gov.zzz', $user->getEmail());
 
         /** @var \AppBundle\Entity\Client $theClient */
@@ -155,6 +157,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'firstname' => 'Zac',
             'lastname' => 'Tolley',
             'email' => 'duplicate@uk.zzz',
+            'postcode' => 'SW1',
             'client_lastname' => 'Cross-Tolley',
             'case_number' => '12341234'
         ];

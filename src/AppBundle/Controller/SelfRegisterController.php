@@ -33,13 +33,10 @@ class SelfRegisterController extends RestController
         $errors = $validator->validate($selfRegisterData);
 
         if (count($errors) > 0) {
-            throw new \RuntimeException("Invalid registration data");
+            throw new \RuntimeException("Invalid registration data: " . $errors);
         }
 
-        $userRegistrationService = $this->container->get("user.selfRegistration");
-
-        /** @var User $user */
-        $user = $userRegistrationService->selfRegisterUser($selfRegisterData);
+        $user = $this->container->get('user.selfRegistration')->selfRegisterUser($selfRegisterData);
 
         return ['id'=>$user->getId()];
     }
@@ -54,6 +51,7 @@ class SelfRegisterController extends RestController
             'firstname' => 'setFirstname',
             'lastname' => 'setLastname',
             'email' => 'setEmail',
+            'postcode' => 'setPostcode',
             'client_lastname' => 'setClientLastname',
             'case_number' => 'setCaseNumber',
         ]);
