@@ -51,7 +51,7 @@ class IndexController extends AbstractController
 
                 if ($e->getCode() == 423) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = sprintf('Brute force attack detected. Account locked for %s minutes', $lockedFor);
+                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%'=>$lockedFor], 'login');
                 }
                 
                 if ($e->getCode() == 499) {
