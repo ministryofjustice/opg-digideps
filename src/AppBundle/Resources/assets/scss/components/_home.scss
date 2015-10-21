@@ -7,8 +7,8 @@
     .split-section {
         @extend %contain-floats;
 
-        & > div {
-            @include grid-column(1/2);
+        > div {
+            @include grid-column(1 / 2);
             padding: 0;
         }
     }

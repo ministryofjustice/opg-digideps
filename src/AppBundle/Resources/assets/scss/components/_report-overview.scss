@@ -1,6 +1,6 @@
-$green-status:  #35735B;
-$orange-status: #F08E53;
-$grey-status: #8C9295;
+$green-status:  #35735b;
+$orange-status: #f08e53;
+$grey-status: #8c9295;
 
 
 .overview-sections {
@@ -27,9 +27,11 @@ $grey-status: #8C9295;
             color: $text-colour;
             background: $grey-3;
             padding: 7px 10px 5px 10px;
+            
             @include media(mobile) {
                font-size: 16px;
             }
+            
         }
                 
         .sub-section {
@@ -38,7 +40,7 @@ $grey-status: #8C9295;
             clear: both;
             
             &:first-of-type {
-                border-top: none;
+                border-top: 0;
             }
             
             .heading {
@@ -87,11 +89,13 @@ $grey-status: #8C9295;
             }
 
             .status {
+                
                 @include box-sizing(border-box);
+                @include inline-block();
+                
                 font-size: 13px;
                 font-weight: 700;
                 line-height: 1.42857;
-                @include inline-block();
                 text-transform: uppercase;
                 padding: 2px 5px 0 5px;
                 margin: 20px 0 15px 0;
@@ -99,24 +103,27 @@ $grey-status: #8C9295;
                 text-align: center;
                 border-radius: 5px;
                 border: 2px solid $grey-status;
-                
-                &.not-started {
-                    color: $grey-status;
-                }
-                &.done {
-                    color: $green-status;
-                    border-color: $green-status;
-                }
-                &.incomplete {
-                    color: $orange-status;
-                    border-color: $orange-status;
-                }
 
                 @include media(mobile) {
                     font-size: 11px;
                     float: right;
                     margin: 10px 0 10px 0;
                 }
+                
+                &.not-started {
+                    color: $grey-status;
+                }
+                
+                &.done {
+                    color: $green-status;
+                    border-color: $green-status;
+                }
+                
+                &.incomplete {
+                    color: $orange-status;
+                    border-color: $orange-status;
+                }
+                
             }
             
             .help-link {
@@ -156,7 +163,7 @@ $grey-status: #8C9295;
                 }
 
                 .summary {
-                    background: url(images/icons/accordian-closed.png) 0 27px no-repeat;
+                    background: url("images/icons/accordian-closed.png") 0 27px no-repeat;
                 }
 
                 &.open {
@@ -164,22 +171,28 @@ $grey-status: #8C9295;
                         display: inline;
                         text-decoration: underline;
                     }
+                    
                     .closed-text {
                         display: none;
                     }
+                    
                     .summary {
-                        background-image: url(images/icons/accordian-open.png)
+                        background-image: url("images/icons/accordian-open.png");
                     }
+                
                 }
 
                 &.closed {
+                    
                     .open-text {
                         display: none;
                     }
+                    
                     .closed-text {
                         display: inline;
                         text-decoration: underline;
                     }
+                
                 }
 
             }
@@ -191,7 +204,7 @@ $grey-status: #8C9295;
 #report-period-due {
     
     @extend %contain-floats;
-    padding: 20px 0 20px 0;
+    padding: 23px 0 20px 0;
     border-top: 1px solid $grey-3;
 
     @include media(mobile) {
@@ -200,28 +213,38 @@ $grey-status: #8C9295;
     
     #report-period {
         float: left;
+        
         @include media(mobile) {
            float: none;
             margin-bottom: 10px;
         }
+    
     }
     
     #report-due {
+    
         float: right;
+    
         @include media(mobile) {
             float: none;
         }
+    
     }
 
     .label {
+    
         @include core-19();
+    
     }
     
     .value {
+    
         @include bold-19();
+    
     }
     
     .edit-link {
+    
         padding-left: 20px;
         
         @include media(mobile) {
@@ -235,17 +258,22 @@ $grey-status: #8C9295;
 .report-overview {
     
     .page-section-warning {
+
         width: auto;
+        
         @include media(mobile) {
             #submit-start-at {
                 display: block;
             }
         }
+        
     }
     
     span.icon.icon__notification {
+        
         @include media(mobile) {
             display: none;
         }
+    
     }
 }

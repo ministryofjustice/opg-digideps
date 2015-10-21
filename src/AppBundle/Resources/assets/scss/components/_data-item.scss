@@ -6,21 +6,23 @@ $declaration-margin: 170px;
 
 .item-list {
     
-    border-top: 1px solid #dee0e2;
-    border-bottom: 1px solid #dee0e2;
+    border-top: 1px solid $panel-colour;
+    border-bottom: 1px solid $panel-colour;
     margin: 30px 0 40px 0;
     padding-left: 0;
 
     .item {
         padding: 30px 0 30px 0;
         margin-top: 0;
-        border-top: 1px solid #dee0e2;
+        border-top: 1px solid $panel-colour;
 
         &:first-child {
-            border-top: none;
+            border-top: 0;
         }
     
-        .edit-button, .view-button, .button-wrapper {
+        .edit-button, 
+        .view-button, 
+        .button-wrapper {
             top: 30px;
         }
             
@@ -40,7 +42,9 @@ $declaration-margin: 170px;
         margin-bottom: 5px;
     }
     
-    .edit-button, .view-button, .button-wrapper  {
+    .edit-button, 
+    .view-button, 
+    .button-wrapper {
         width: 32%;
         position: absolute;
         top: 0;
@@ -58,70 +62,80 @@ $declaration-margin: 170px;
         float: left;
         clear: both;
     }
+    
     .item-value {
-        color: $black;
         @include bold-19();
+        color: $black;
         margin: 0 0 0 5px;
         display: inline;
-        float:left;
-    }
-}
-.item-data.item-data-fixed {
-    .item-label {
         float: left;
-        clear: left;
-        width: $item-label-default-width;
-        display: block;
-        margin-bottom: 5px;
-    }
-    .item-value {
-        margin-left: $item-label-default-width + 20;
-        display: block;
-        margin-bottom: 5px;
-        float: none;
     }
 
+    &.item-data-fixed {
+        .item-label {
+            float: left;
+            clear: left;
+            width: $item-label-default-width;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .item-value {
+            margin-left: $item-label-default-width + 20;
+            display: block;
+            margin-bottom: 5px;
+            float: none;
+        }
+
+    }
+
+    &.item-data-stacked {
+        .item-label {
+            @include bold-19();
+            display: block;
+            float: none;
+            margin: 0 0 5px 0;
+            color: $black;
+            width: 70%;
+        }
+
+        .item-value {
+            @include core-19();
+            display: block;
+            float: none;
+            margin: 0 0 0 0;
+        }
+
+        .item-big {
+            .item-label {
+                @include bold-24();
+            }
+        }
+    }
+
+    &.item-big {
+        .item-label {
+            @include core-24();
+        }
+    }
+    
 }
 
-.item-data.item-data-stacked {
-    .item-label {
-        display: block;
-        float: none;
-        margin: 0 0 5px 0;
-        color: $black;
-        @include bold-19();
-        width: 70%;
-    }
-    .item-value {
-        display:block;
-        float: none;
-        margin: 0 0 0 0;
-        @include core-19();
-    }
-}
-
-.item-data.item-big {
-    .item-label {
-        @include core-24();
-    }
-}
-.item-data.item-data-stacked.item-big {
-    .item-label {
-        @include bold-24();
-    }
-}
 
 .no-reason {
     width: 65%;
     margin: 40px 0 40px 0;
+    
     .edit-button {
         text-align: right;
     }
+
 }
 
 .my-client {
 
-    .item-list.reports, .client-details {
+    .item-list.reports, 
+    .client-details {
         width: 85%;
     }
 
@@ -130,6 +144,7 @@ $declaration-margin: 170px;
             .item-label {
                 width: $client-label-width;
             }
+            
             .item-value {
                 margin-left: $client-label-width;
             }
@@ -156,6 +171,7 @@ $declaration-margin: 170px;
             width: $your-label-width;
             margin-bottom: 25px;
         }
+        
         .item-value {
             margin-left: $your-label-width;
             margin-bottom: 25px;
@@ -169,8 +185,9 @@ $declaration-margin: 170px;
         .item-label {
             width: $declaration-margin;
         }
+        
         .item-value {
-            margin-left: $declaration-margin
+            margin-left: $declaration-margin;
         }
     }
 }

@@ -1,3 +1,4 @@
+
 .radio-hide-content {
     display: block;
     max-height: 9999px;
@@ -8,10 +9,11 @@
     transition: all 250ms linear;
     overflow: hidden;
     float: left;
-}
 
-.radio-hide-content.hidden {
-    max-height: 0;
-    -moz-opacity: 0;
-    opacity: 0; 
+    &.hidden {
+        max-height: 0;
+        -moz-opacity: 0;
+        opacity: 0;
+    }
+
 }

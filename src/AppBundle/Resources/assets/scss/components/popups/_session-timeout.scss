@@ -16,8 +16,8 @@
     width: 480px;
     height: 210px;
 
-    border: 10px solid black;
-    background-color: #fff;
+    border: 10px solid $black;
+    background-color: $white;
     opacity: 1;
 
     margin: 100px auto 0;
@@ -34,7 +34,7 @@
       margin-bottom: 20px;
       width: 100%;
 
-      & + .page-section-description {
+      .page-section-description {
         margin-bottom: 20px;
       }
 
@@ -56,11 +56,11 @@
     left: 0;
 
     width: 100%;
-    height: 100%; /* This is also updated in JS to the px value */
+    height: 100%;       // This is also updated in JS to the px value
 
-    color: #ffffff;
-    background-color: #000;
-    opacity: 0.3;
+    color: $white;
+    background-color: $black;
+    opacity: .3;
 
   }
 
