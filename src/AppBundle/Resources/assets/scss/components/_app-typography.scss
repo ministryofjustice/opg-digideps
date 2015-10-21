@@ -17,23 +17,6 @@
 
 }
 
-header.page-header {
-  margin-top: 40px;
-  margin-bottom: 0;
-
-  h1 {
-    padding-bottom: 0;
-    padding-top: 0;
-
-    span {
-      @include core-24;
-      line-height: 1;
-      padding-bottom: 15px;
-    }
-
-  }
-}
-
 #content {
   p {
     @include core-19;

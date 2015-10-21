@@ -13,8 +13,6 @@
             <div class="message">{{ 'yourFinalStep' | trans() }}: <a class="button submit-link" href="{{ path('report_add_further_info', {reportId: report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
         </div>
     {%  else %}
-        {% for flashMessage in app.session.flashBag.get('news') %}
-            <p class="flash-news flash">{{ flashMessage |trans({}, translationDomain)|raw }}</p>
-        {% endfor %}
+        <p class="flash-news flash">{{ 'announcement' |trans({}, translationDomain)|raw }}</p>
     {%  endif %}
 </header>

@@ -4,12 +4,13 @@ namespace AppBundle\Service\Client;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Exception\RequestException;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\Message\Response as GuzzleResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Bridge\Monolog\Logger;
-use AppBundle\Exception\DisplayableException;
+use AppBundle\Exception as AppException;
 use AppBundle\Entity\User;
 use GuzzleHttp\Message\ResponseInterface;
 use AppBundle\Model\SelfRegisterData;
@@ -68,11 +69,12 @@ class RestClient
      */
     const HEADER_CLIENT_SECRET = 'ClientSecret';
 
-    /**
+     /**
      * Error Messages
      */
     const ERROR_CONNECT = 'API not available.';
-    const ERROR_FORMAT = 'Cannot decode message.';
+    const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
+    const ERROR_FORMAT = 'Cannot decode endpoint response';
 
 
     public function __construct(
@@ -294,9 +296,21 @@ class RestClient
             }
             
             return $response;
+        } catch (RequestException $e) {
+            // request exception contains a body, that gets decoded and passed to RestClientException
+            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            
+            try {
+                $data = $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') ?: [];
+            } catch (\Exception $e) {
+                $data = [];
+            }
+            
+            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode(), $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
-            throw new DisplayableException(self::ERROR_CONNECT, $e->getCode());
+            
+            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode());
         }
     }
 
@@ -317,17 +331,16 @@ class RestClient
         try{ 
             $data = $this->serialiser->deserialize($response->getBody(), 'array', 'json');
         } catch (\Exception $e) {
-            $this->logger->error('Api responded with invalid JSON. Body: ' . $response->getBody());
-            throw new \RuntimeException('Cannot decode endpoint response');
+            $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . '. Api responded with invalid JSON. Body: ' . $response->getBody());
+            throw new Exception\JsonDecodeException(self::ERROR_FORMAT);
         }
         
         if (empty($data['success'])) {
-            throw new \RuntimeException('Endpoint failed with message.' . $data['message']);
+            throw new Exception\NoSuccess(sprintf(self::ERROR_NO_SUCCESS, $data['message']));
         }
         
         return $data['data'];
     }
-
 
     /**
      * @param string $class full class name of the class to deserialise to

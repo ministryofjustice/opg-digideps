@@ -6,21 +6,20 @@
 
 {% block content %}
     <div class="application-error">
-     {% if displayable %}
-        {% set message =  exception.message %}
-     {% else %}
-        {% set message = 'Application error' %}
-     {% endif %}
+        {% if displayable %}
+            {% set message =  exception.message %}
+        {% else %}
+            {% set message = 'Application error' %}
+        {% endif %}
 
-     {% include 'AppBundle:Partials:_service-header.html.twig' with {
-        serviceName: 'Application error',
-        title: exception.message
-        } %}
-        {# TODO display only when kernel.debug = true #}
-    <p>{{ currentContent}}</p>
-        {# Stacktrace
-        <pre>
-            {{ dump(exception) }}
-        </pre>#}
+        <header class="page-header group">
+            <div class="hgroup">
+                <h1>
+                    <span>Application error</span>
+                    {{ message }}
+                </h1>
+            </div>
+        </header>
+        <p>{{ currentContent}}</p>
    </div>
 {% endblock %}

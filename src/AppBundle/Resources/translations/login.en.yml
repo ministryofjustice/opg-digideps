@@ -13,6 +13,7 @@ login:
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: Sorry, your session has timed out either due to inactivity or because you have signed in on another browser. Please sign in again.
 sessionApiTimeoutOutWarning: Session timeout from API server.
+bruteForceLocked: You’ve tried to log in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
 manualLogout:
   pageTitle: You are now signed out
   pageSectionTitle: Thank you for using the Complete the deputy report service.

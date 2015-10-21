@@ -625,25 +625,6 @@ class Report {
     }
     
     /**
-     * @return string $status | null
-     */
-        public function getStatus()
-        {
-            if(!$this->isDue()){
-                return 'in progress';
-            }
-            
-            if($this->isDue() && !$this->submitted){
-                return 'in review';
-            }
-            
-            if($this->submitted){
-                return 'submitted';
-            }
-            return null;
-        }
-    
-    /**
      * @return Client
      */
     public function getClientObject()
@@ -655,5 +636,13 @@ class Report {
     public function setClientObject(Client $clientObject)
     {
         $this->clientObject = $clientObject;
+    }
+    
+    public function getSectionCount() {
+        if ($this->courtOrderType == $this::PROPERTY_AND_AFFAIRS) {
+            return 5;
+        } else {
+            return 3;
+        }
     }
 }

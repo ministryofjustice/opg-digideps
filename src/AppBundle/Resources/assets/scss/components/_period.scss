@@ -1,0 +1,133 @@
+// Overview page
+#report-period-due {
+
+    @extend %contain-floats;
+    padding: 23px 0 20px 0;
+    border-top: 1px solid $grey-3;
+    
+    @include media($min-width: 641px, $max-width: 768px) {
+        padding: 10px 0 10px 0;
+
+        header.page-header & {
+            border-bottom: 1px solid $grey-3;
+            
+            #report-due {
+                width: 45%;
+                margin-left: 10px;
+            }
+        }
+
+    }
+    
+    #report-period {
+        float: left;
+
+        @include media(mobile) {
+            float: none;
+            margin-bottom: 10px;
+        }
+
+    }
+
+    #report-due {
+
+        float: right;
+
+        @include media(mobile) {
+            float: none;
+        }
+
+    }
+    
+}
+
+// other pages
+header.page-header #report-period-due {
+    width: 45%;
+    margin: 0;
+    padding: 20px 0 0 0;
+    float: right;
+    border-top: 0;
+    border-bottom: 0;
+    
+    @include media(mobile) {
+        width: auto;
+        float: none;
+        border-top: 1px solid $grey-3;
+        border-bottom: 1px solid $grey-3;
+        margin: 0;
+        padding: 10px 0 10px 0;
+    }
+    
+    @include media(tablet) {
+        width: 100%;
+        float: none;
+        margin: 0;
+        border-top: 1px solid $grey-3;
+        border-bottom: 1px solid $grey-3;
+        padding: 10px 0 10px 0;
+    }
+    
+    @include media(desktop) {
+        width: 45%;
+        margin: 0;
+        padding: 20px 0 0 0;
+        float: right;
+        border-top: 0;
+        border-bottom: 0;
+    }
+    
+    #report-due {
+        float: none;
+        
+        @include media(mobile) {
+            float: none;
+            width: auto;
+            margin-left: 0;
+        }
+        
+        @include media(tablet) {
+            float: right;
+            width: 45%;
+            margin-left: 10px;
+        }
+        
+        @include media(desktop) {
+            float: none;
+            width: 100%;
+            margin-left: 10px;
+        }
+    }
+
+    #report-period {
+        margin-bottom: 20px;
+        float: none;
+        
+        @include media(mobile) {
+            float: none;
+            margin: 0 0 20px 0;
+        }
+        
+        @include media(tablet) {
+            float: left;
+            margin: 0;
+        }
+        
+        @include media(desktop) {
+            float: none;
+            margin: 0 0 20px 10px;
+        }
+    
+    }
+
+    .labelvalue {
+
+        margin-left: 10px;
+
+        .label {
+            color: $grey-1;
+        }
+    }
+
+    
+}
