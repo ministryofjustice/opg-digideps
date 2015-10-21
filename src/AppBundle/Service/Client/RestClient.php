@@ -4,6 +4,7 @@ namespace AppBundle\Service\Client;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Exception\RequestException;
 use JMS\Serializer\SerializerInterface;
 use AppBundle\Service\Client\TokenStorage\TokenStorageInterface;
 use GuzzleHttp\Message\Response as GuzzleResponse;
@@ -295,8 +296,20 @@ class RestClient
             }
             
             return $response;
+        } catch (RequestException $e) {
+            // request exception contains a body, that gets decoded and passed to RestClientException
+            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            
+            try {
+                $data = $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') ?: [];
+            } catch (\Exception $e) {
+                $data = [];
+            }
+            
+            throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode(), $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            
             throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode());
         }
     }
