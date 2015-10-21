@@ -1,0 +1,40 @@
+#report-status {
+
+    h2 {
+        @include bold-24();
+        padding-bottom: 25px;
+
+        @include media(mobile) {
+            border-top: 4px solid $grey-3;
+            padding-top: 25px;
+
+            #report-status.readytosubmit & {
+                border-top: 4px solid $green-status;
+            }
+        }
+
+    }
+
+    .labelvalue {
+        margin-bottom: 20px;
+    }
+
+    .labelsvalues {
+        padding: 20px 0 0  0;
+        border-top: 4px solid $grey-3;
+        border-bottom: 1px solid $grey-3;
+    }
+
+    &.readytosubmit .labelsvalues {
+        border-top: 4px solid $green-status;
+    }
+
+    &.incomplete .labelsvalues {
+        border-top: 4px solid $grey-3;
+    }
+
+    &.inprogress .labelsvalues {
+        border-top: 4px solid $grey-3;
+    }
+
+}

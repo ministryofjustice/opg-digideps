@@ -1,5 +1,3 @@
-$blue: #00f;
-
 //MOJ-Template
 @import "moj-template";
 
@@ -34,6 +32,7 @@ $blue: #00f;
 
 
 //DIGIDEPS
+@import "components/colours";
 @import "components/popups/session-timeout";
 @import "components/account";
 @import "components/account-header";
@@ -53,7 +52,7 @@ $blue: #00f;
 @import "components/notification-summary";
 @import "components/page-body";
 @import "components/page-report-content";
-@import "components/page-report-header";
+@import "components/page-header";
 @import "components/page-section-description";
 @import "components/page-section-list";
 @import "components/page-section-title";
@@ -81,6 +80,11 @@ $blue: #00f;
 @import "components/assets";
 @import "components/home";
 @import "components/hero";
+@import "components/period";
+@import "components/labelvalue";
+@import "components/reportstatus";
+@import "components/overviewsections";
+@import "components/helpline";
 
 @import "elements/icon";
 @import "elements/forms/form-date";

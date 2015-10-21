@@ -8,7 +8,7 @@ $spacingforchevron: 14px;
 ol.progress {
     display: table;
     width: 100%;
-    margin: 24px 0 0;
+    margin: 45px 0 45px 0;
     padding: 0;
     counter-reset: pos;
     list-style-type: none;
@@ -25,10 +25,6 @@ ol.progress {
 
     @include ie-lte(7) {
         display: none;
-    }
-    
-    .js-enabled & {
-        margin-top: 48px;
     }
     
     li {
@@ -104,8 +100,10 @@ ol.progress {
                 margin-left: 0;
             }
 
-            @include ie(8) {
+            .lte-8 & {
                 display: inline-block;
+                text-indent: 0;
+                overflow: visible;
             }
         }
         

@@ -2,10 +2,13 @@
 namespace AppBundle\Entity;
 
 use Mockery as m;
+use AppBundle\Entity\Report;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var  Report $report */
     private $report;
+    
     private $account;
     
     protected function setUp()
@@ -64,6 +67,18 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $accounts);
         $this->assertEquals(count($accounts),2);
         $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
+    }
+    
+    /** @test */
+    public function sectionCountForProperty() {
+        $this->report->setCourtOrderType(REPORT::PROPERTY_AND_AFFAIRS);
+        $this->AssertEquals(5, $this->report->getSectionCount());
+    }
+
+    /** @test */
+    public function sectionCountForOther() {
+        $this->report->setCourtOrderType(1);
+        $this->AssertEquals(3, $this->report->getSectionCount());
     }
     
 }

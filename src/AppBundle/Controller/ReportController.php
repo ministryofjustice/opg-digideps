@@ -78,8 +78,6 @@ class ReportController extends AbstractController
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         $client = $this->getClient($report->getClient());
-        
-        $this->get('session')->getFlashBag()->add('news', 'announcement');
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         return [

@@ -10,6 +10,8 @@ class ReportStatusService {
     const NOTSTARTED = "not-started";
     const DONE = "done";
     const INCOMPLETE = "incomplete";
+    const NOTFINISHED = "notFinished";
+    const READYTOSUBMIT = "readyToSubmit";
     
     /** @var Report */
     private $report;
@@ -251,6 +253,62 @@ class ReportStatusService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @return string $status | null
+     */
+    public function getStatus()
+    {
+        $readyToSubmit = $this->isReadyToSubmit();
+        
+        if ($readyToSubmit == true && $this->report->isDue()) {
+            return $this::READYTOSUBMIT;
+        } else {
+            return $this::NOTFINISHED;
+        }
+    }
+
+    public function getRemainingSectionCount() {
+        
+        $count = 5;
+        
+        if($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS){
+            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() ) {
+                $count--;
+            } 
+            
+            if (!$this->missingContacts()) {
+                $count--;
+            }
+            
+            if (!$this->missingAssets()) {
+                $count--;
+            }
+            
+            if (!$this->missingDecisions()) {
+                $count--;
+            }
+            
+            if (!$this->missingSafeguarding()) {
+                $count--;
+            }
+        } else {
+            if (!$this->missingContacts()) {
+                $count--;
+            }
+
+            if (!$this->missingAssets()) {
+                $count--;
+            }
+
+            if (!$this->missingDecisions()) {
+                $count--;
+            }
+        }
+        
+        return $count;
+        
     }
     
 }

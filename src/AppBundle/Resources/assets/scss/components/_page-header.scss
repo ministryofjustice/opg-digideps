@@ -1,0 +1,48 @@
+header.page-header {
+    @extend %contain-floats;
+
+    margin-top: 40px;
+    margin-bottom: 0;
+
+    h1 {
+        padding-bottom: 0;
+        padding-top: 0;
+
+        span {
+            @include core-24;
+            line-height: 1;
+            padding-bottom: 15px;
+        }
+
+    }
+    
+    .report-title {
+        font-weight: normal;
+        margin-top: 0;
+        margin-bottom: 15px;
+    }
+
+    .client-name {
+        @include bold-48();
+        margin-top: 10px;
+        margin-bottom: 0;
+    }
+
+    .page-report-message {
+        @include core-19();
+        background-color: $grey-3;
+        margin-top: 10px;
+        padding: 15px;
+    }
+
+    .page-section-warning {
+        margin: 20px 0 10px 0;
+        width: 100%;
+    }
+
+    .report-go-back-link {
+        display: block;
+        margin-top: 20px;
+    }
+    
+}

@@ -7,26 +7,30 @@
 {% block contentClass %}page-report-content report-overview{% endblock %}
 
 {% block pageContent %}
-    
-    {% block pageHeader %}
-        {% include 'AppBundle:Overview:_header.html.twig' %}
-    {% endblock %}
+<div id="pagebody">
+    <div id="pagebody-left-content">
+        
+        {% block pageHeader %}
+            {% include 'AppBundle:Overview:_header.html.twig' %}
+        {% endblock %}
 
-    <a name="pageBody"></a>
+        <a name="pageBody"></a>
     
-    {% block errorSummary %}
-        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
-    {% endblock %}
+        {% block errorSummary %}
+            {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+        {% endblock %}
 
-    <div id="page-body">
-        <div id="pagebody-left-content">
-            {%include 'AppBundle:Overview:_period.html.twig' with {
-                report: report
-            } %}
-            {%include 'AppBundle:Overview:_sections.html.twig' with {
-                report: report
-            } %}
-        </div>
+        {%include 'AppBundle:Overview:_period.html.twig' with {
+            report: report
+        } %}
+        
+        {%include 'AppBundle:Overview:_sections.html.twig' with {
+           report: report
+        } %}
     </div>
-
+    <div id="pagebody-right-content">
+        {%include 'AppBundle:Overview:_helpline.html.twig' %}
+        {%include 'AppBundle:Overview:_status.html.twig' with { report: report } %}
+    </div>
+</div>
 {% endblock %}
