@@ -11,6 +11,8 @@ lastname:
     label: "Your last name"
 email:
     label: "Your email"
+postcode:
+    label: "Your post code"
 clientLastname:
     label: "Client's last name"
 caseNumber:

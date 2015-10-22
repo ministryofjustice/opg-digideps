@@ -37,6 +37,14 @@ class SelfRegisterData
      */
     private $email;
 
+     /**
+     * @var string email
+     * @JMS\Type("string")
+     * @Assert\NotBlank( message="user.addressPostcode.notBlank")
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength" )
+     */
+    private $postcode;
+    
     /**
      * @var string clientLastName
      * @JMS\Type("string")
@@ -100,6 +108,22 @@ class SelfRegisterData
     public function setEmail($email)
     {
         $this->email = $email;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * @param string $postcode
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
     }
 
     /**
