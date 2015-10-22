@@ -12,7 +12,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
         $object->setExpectedColumns($this->columns);
         $data = $object->getData();
 
-        $this->assertCount(24, $data);
+        $this->assertCount(24, $data); 
 
         $this->assertEquals(['Case' => '20000037',
             'Surname' => 'SMITH',
