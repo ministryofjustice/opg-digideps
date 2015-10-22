@@ -64,7 +64,9 @@ class CsvToArray
 
         // read rows
         while (($row = $this->getRow()) !== false) {
-            $ret[] = array_combine($header, $row);
+            if (count($header) === count($row)) {
+                $ret[] = array_combine($header, $row);
+            }
         }
 
         return $ret;
