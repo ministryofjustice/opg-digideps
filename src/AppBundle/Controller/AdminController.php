@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Service\DataImporter\CsvToArray;
 use Symfony\Component\Form\FormError;
+use AppBundle\Exception\RestClientException;
 
 /**
 * @Route("/admin")
@@ -157,15 +158,26 @@ class AdminController extends AbstractController
                     ->setExpectedColumns(['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode'])
                     ->getData();
                 
+                $count = count($data);
+                if ($count > 30000) {
+                    throw new \RuntimeException("$count records found in the file, only 30000 allowed for each upload.");
+                }
+                
                 $compressedData = base64_encode(gzcompress(json_encode($data), 9));
-                $this->getRestClient()->setTimeout(300)->post('casrec/bulk-add', $compressedData);
+                
+                $url = 'casrec/bulk-add/' . ($form->get('truncate')->getData() ? '1' : '0');
+                $this->getRestClient()->setTimeout(600)->post($url, $compressedData);
                 
                 $request->getSession()->getFlashBag()->add('notice', count($data) . ' records uploaded');
                 
                 return $this->redirect($this->generateUrl('admin_upload'));
                 
             } catch (\Exception $e) {
-                $form->get('file')->addError(new FormError($e->getMessage()));
+                $message = $e->getMessage();
+                if ($e instanceof RestClientException && isset($e->getData()['message'])) {
+                    $message = $e->getData()['message'];
+                }
+                $form->get('file')->addError(new FormError($message));
             }
         }
         

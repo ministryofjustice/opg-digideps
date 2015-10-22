@@ -11,6 +11,7 @@ class UploadCsvType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder ->add('file', 'file')
+                 ->add('truncate', 'checkbox')
                  ->add('upload', 'submit');
     }
     
