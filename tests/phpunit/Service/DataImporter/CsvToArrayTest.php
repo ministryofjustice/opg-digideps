@@ -55,7 +55,8 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
             $object->getData();
             $this->fail(__METHOD__.': expected exception');
         } catch (\RuntimeException $e) {
-            $this->assertContains('Missing Header columns: Surname, Dep Surname', $e->getMessage());
+            $this->assertContains('Surname', $e->getMessage());
+            $this->assertContains('Dep Surname', $e->getMessage());
         }
     }
 

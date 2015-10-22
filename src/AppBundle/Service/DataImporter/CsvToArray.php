@@ -59,7 +59,7 @@ class CsvToArray
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
         if ($missingColumns) {
-            throw new \RuntimeException('Missing Header columns: ' . implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find header columns ' . implode(', ', $missingColumns));
         }
 
         // read rows
