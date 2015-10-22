@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Service\Mailer\MailSenderMock;
+use AppBundle\Entity\CasRec;
 
 class CasRecControllerTest extends AbstractTestController
 {
@@ -45,7 +46,7 @@ class CasRecControllerTest extends AbstractTestController
     
     public function testAddBulkAuth()
     {
-        $url =  '/casrec/bulk-add';
+        $url =  '/casrec/bulk-add/1';
         
         $this->assertEndpointNeedsAuth('POST', $url);
 
@@ -59,9 +60,11 @@ class CasRecControllerTest extends AbstractTestController
     
     public function testAddBulk()
     {
-        MailSenderMock::resetessagesSent();
-        
-        $this->assertJsonRequest('POST', '/casrec/bulk-add', [
+        $casRec = new CasRec('case', 'Surname', 'Deputy No','Dep Surname', 'SW1');
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush($casRec);
+                
+        $this->assertJsonRequest('POST', '/casrec/bulk-add/1', [
             'rawData' => $this->compress([
                 [
                     'Case' => '11', 
@@ -98,6 +101,26 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEquals('DN2', $users[1]->getDeputyNo());
         $this->assertEquals('H2', $users[1]->getDeputySurname());
         $this->assertEquals('',  $users[1]->getDeputyPostCode());
+        
+        
+        // assert no-truncate
+        $this->assertJsonRequest('POST', '/casrec/bulk-add/0', [
+            'rawData' => $this->compress([
+                [
+                    'Case' => '33', 
+                    'Surname'=>'R3', 
+                    'Deputy No' => 'DN3', 
+                    'Dep Surname'=>'R3', 
+                    'Dep Postcode'=>'SW1'
+                ],
+                
+            ]),
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenAdmin
+        ]);
+        
+        $this->assertCount(3, $this->fixtures()->clear()->getRepo('CasRec')->findAll());
+        
     }
     
     
@@ -127,7 +150,7 @@ class CasRecControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin
         ])['data'];
 
-        $this->assertEquals(2, $data);
+        $this->assertEquals(3, $data);
     }
     
 }
