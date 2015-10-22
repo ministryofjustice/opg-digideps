@@ -25,3 +25,9 @@ yes:
     label: Yes
 action:
     message: Your changes were saved
+csv_upload:
+    form:
+        file:
+            label: Select CSV file exported from CASREC
+        upload:
+            label: Upload

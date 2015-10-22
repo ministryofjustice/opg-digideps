@@ -8,7 +8,8 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
     
     public function testgetData1()
     {
-        $object = new CsvToArray(__DIR__ . '/csv1.csv', $this->columns);
+        $object = new CsvToArray(__DIR__ . '/csv1.csv');
+        $object->setExpectedColumns($this->columns);
         $data = $object->getData();
 
         $this->assertCount(24, $data);
@@ -32,7 +33,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetDataMissingFile()
     {
-        new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv', $this->columns);
+        new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv');
     }
     
     /**
@@ -40,13 +41,15 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetDataInvalidFormat()
     {
-        $object = new CsvToArray(__DIR__ . '/invalid.csv', $this->columns);
+        $object = new CsvToArray(__DIR__ . '/invalid.csv');
+        $object->setExpectedColumns($this->columns);
         $object->getData();
     }
     
     public function testgetDataMissingColumns()
     {
-        $object = new CsvToArray(__DIR__ . '/missing-columns.csv', $this->columns);
+        $object = new CsvToArray(__DIR__ . '/missing-columns.csv');
+        $object->setExpectedColumns($this->columns);
         
         try {
             $object->getData();

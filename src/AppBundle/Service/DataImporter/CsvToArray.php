@@ -16,7 +16,7 @@ class CsvToArray
      * @param array $expectedColumns e.g. ['Case','Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode']
      * @throws \RuntimeException
      */
-    public function __construct($file, array $expectedColumns)
+    public function __construct($file)
     {
         ini_set('auto_detect_line_endings', true);
 
@@ -24,10 +24,16 @@ class CsvToArray
             throw new \RuntimeException("file $file not found");
         }
         $this->handle = fopen($file, 'r');
+    }
+    
+    public function setExpectedColumns(array $expectedColumns)
+    {
         $this->expectedColumns = $expectedColumns;
+        
+        return $this;
     }
 
-
+    
     /**
      * @return array or false when EOF
      */

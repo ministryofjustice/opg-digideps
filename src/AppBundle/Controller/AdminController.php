@@ -10,6 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use AppBundle\Service\DataImporter\CsvToArray;
+use Symfony\Component\Form\FormError;
+
 /**
 * @Route("/admin")
 */
@@ -21,13 +24,11 @@ class AdminController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $orderBy = $request->query->has('order_by')? $request->query->get('order_by'): 'firstname';
         $sortOrder = $request->query->has('sort_order')? $request->query->get('sort_order'): 'ASC';
-
         
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->get('restClient')->get('role', 'Role[]'),
+            'roles' => $this->getRestClient()->get('role', 'Role[]'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), new EntityDir\User());
         
@@ -35,10 +36,10 @@ class AdminController extends AbstractController
             $form->handleRequest($request);
             if ($form->isValid()) {
                 // add user
-                $response = $restClient->post('user', $form->getData(), [
+                $response = $this->getRestClient()->post('user', $form->getData(), [
                     'deserialise_group' => 'admin_add_user' //only serialise the properties modified by this form)
                 ]);
-                $user = $restClient->get('user/' . $response['id'], 'User');
+                $user = $this->getRestClient()->get('user/' . $response['id'], 'User');
 
                 $request->getSession()->getFlashBag()->add(
                     'notice', 
@@ -53,8 +54,8 @@ class AdminController extends AbstractController
         
         $limit = $request->query->get('limit') ?: 50;
         $offset = $request->query->get('offset') ?: 0;
-        $userCount = $this->get('restClient')->get("user/count", 'array');
-        $users = $this->get('restClient')->get("user/get-all/{$orderBy}/{$sortOrder}/$limit/$offset", 'User[]');
+        $userCount = $this->getRestClient()->get("user/count", 'array');
+        $users = $this->getRestClient()->get("user/get-all/{$orderBy}/{$sortOrder}/$limit/$offset", 'User[]');
         $newSortOrder = $sortOrder == "ASC"? "DESC": "ASC";
         
         return [
@@ -74,12 +75,9 @@ class AdminController extends AbstractController
      * 
      * @param Request $request
      */
-    public function editUserAction($id)
+    public function editUserAction(Request $request, $id)
     {
-        $restClient = $this->get('restClient');
-        $request = $this->getRequest();
-        
-        $user = $restClient->get("user/{$id}", 'User');
+        $user = $this->getRestClient()->get("user/{$id}", 'User');
        
         if(empty($user)){
             throw new \Exception('User does not exists');
@@ -87,7 +85,7 @@ class AdminController extends AbstractController
         
         
         $form = $this->createForm(new FormDir\AddUserType([
-            'roles' => $this->get('restClient')->get('role', 'Role[]'),
+            'roles' => $this->getRestClient()->get('role', 'Role[]'),
             'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
         ]), $user );
     
@@ -96,7 +94,7 @@ class AdminController extends AbstractController
             
             if($form->isValid()){
                 $updateUser = $form->getData();
-                $restClient->put('user/' . $user->getId(), $updateUser);
+                $this->getRestClient()->put('user/' . $user->getId(), $updateUser);
                 
                 $request->getSession()->getFlashBag()->add('action', 'action.message');
                 
@@ -116,9 +114,7 @@ class AdminController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
-       $restClient = $this->get('restClient');
-        
-       $user = $restClient->get("user/{$id}", 'User'); 
+       $user = $this->getRestClient()->get("user/{$id}", 'User'); 
        
        return [ 'user' => $user ];
     }
@@ -132,14 +128,49 @@ class AdminController extends AbstractController
      */
     public function deleteAction($id)
     {
-        $restClient = $this->get('restClient');
-        
-        $user = $restClient->get("user/{$id}", 'User'); 
+        $user = $this->getRestClient()->get("user/{$id}", 'User'); 
         
         $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_USER_DELETE, $user);
         
-        $restClient->delete('user/' . $id);
+        $this->getRestClient()->delete('user/' . $id);
         
         return $this->redirect($this->generateUrl('admin_homepage'));
+    }
+    
+    /**
+     * @Route("/upload", name="admin_upload")
+     * @Template
+     */
+    public function uploadUsersAction(Request $request)
+    {
+        $form = $this->createForm(new FormDir\UploadCsvType(), null, [
+            'action' => $this->generateUrl('admin_upload'),
+            'method'=> 'POST'
+        ]);
+        
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $fileName = $form->get('file')->getData();
+            try {
+                $data = (new CsvToArray($fileName))
+                    ->setExpectedColumns(['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode'])
+                    ->getData();
+                
+                $this->getRestClient()->post('casrec', $data);
+                
+                $request->getSession()->getFlashBag()->add('notice', count($data) . ' records uploaded');
+                
+                return $this->redirect($this->generateUrl('admin_upload'));
+                
+            } catch (\Exception $e) {
+                $form->get('file')->addError(new FormError($e->getMessage()));
+            }
+        }
+        
+        return [
+            'currentRecords' => $this->getRestClient()->get("casrec/count", 'array'),
+            'form' => $form->createView(),
+        ];
     }
 }
