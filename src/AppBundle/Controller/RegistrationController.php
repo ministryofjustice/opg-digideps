@@ -58,12 +58,10 @@ class RegistrationController extends AbstractController
                 }
                 if ($e->getCode() == 421) {
                     //move this logic to a separate form field contraint (see existing password validator as example)
-                    $message = "User not identified with the given data.";
-                    
-                    $form->get('lastname')->addError(new FormError($message));
-                    $form->get('postcode')->addError(new FormError($message));
-                    $form->get('clientLastname')->addError(new FormError($message));
-                    $form->get('caseNumber')->addError(new FormError($message));
+                    $form->get('lastname')->addError(new FormError("The lastname name you've given us doesn't match our records. Please check and try again."));
+                    $form->get('postcode')->addError(new FormError("The postcode you've given us doesn't match our records. Please check and try again."));
+                    $form->get('clientLastname')->addError(new FormError("The client last name you've given us doesn't match our records. Please check and try again."));
+                    $form->get('caseNumber')->addError(new FormError("The case number you've given us doesn't match our records. Please check and try again."));
                 }
                 $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
