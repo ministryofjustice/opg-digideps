@@ -56,6 +56,15 @@ class RegistrationController extends AbstractController
                     //move this logic to a separate form field contraint (see existing password validator as example)
                     $form->get('email')->addError(new FormError("That email has already been registered with this service."));
                 }
+                if ($e->getCode() == 421) {
+                    //move this logic to a separate form field contraint (see existing password validator as example)
+                    $message = "User not identified with the given data.";
+                    
+                    $form->get('lastname')->addError(new FormError($message));
+                    $form->get('postcode')->addError(new FormError($message));
+                    $form->get('clientLastname')->addError(new FormError($message));
+                    $form->get('caseNumber')->addError(new FormError($message));
+                }
                 $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
