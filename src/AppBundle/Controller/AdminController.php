@@ -157,7 +157,8 @@ class AdminController extends AbstractController
                     ->setExpectedColumns(['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode'])
                     ->getData();
                 
-                $this->getRestClient()->post('casrec/bulk-add', $data);
+                $compressedData = base64_encode(gzcompress(json_encode($data), 9));
+                $this->getRestClient()->setTimeout(300)->post('casrec/bulk-add', $compressedData);
                 
                 $request->getSession()->getFlashBag()->add('notice', count($data) . ' records uploaded');
                 
@@ -171,6 +172,7 @@ class AdminController extends AbstractController
         return [
             'currentRecords' => $this->getRestClient()->get("casrec/count", 'array'),
             'form' => $form->createView(),
+            'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')])
         ];
     }
 }
