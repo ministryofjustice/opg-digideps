@@ -15,6 +15,9 @@ use AppBundle\Entity as EntityDir;
 class CasRecController extends RestController
 {
     /**
+     * Bulk insert
+     * Max 10k otherwise failing (memory reach 128M)
+     * 
      * @Route("/bulk-add")
      * @Method({"POST"})
      */
@@ -22,8 +25,11 @@ class CasRecController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
         
+        $data = json_decode(gzuncompress(base64_decode($request->getContent())), true);
         
-        $data = $this->deserializeBodyContent($request);
+        $this->get('logger')->info('Received ' . count($data) . ' records');
+        
+        $this->getEntityManager()->clear();
         
         foreach ($data as $index => $row) {
             $casRec = new EntityDir\CasRec($row['Case'], $row['Surname'], $row['Deputy No'], $row['Dep Surname'], $row['Dep Postcode']);
@@ -31,6 +37,7 @@ class CasRecController extends RestController
         }
         
         $this->getEntityManager()->flush();
+        $this->getEntityManager()->clear();
         
         return [];
     }

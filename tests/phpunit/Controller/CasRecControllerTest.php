@@ -52,14 +52,17 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
 
-    
+    private function compress($data)
+    {
+        return base64_encode(gzcompress(json_encode($data), 9));
+    }
     
     public function testAddBulk()
     {
         MailSenderMock::resetessagesSent();
         
         $this->assertJsonRequest('POST', '/casrec/bulk-add', [
-            'data' => [
+            'rawData' => $this->compress([
                 [
                     'Case' => '11', 
                     'Surname'=>'R1', 
@@ -75,7 +78,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Dep Postcode'=>''
                 ],
                 
-            ],
+            ]),
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin
         ]);

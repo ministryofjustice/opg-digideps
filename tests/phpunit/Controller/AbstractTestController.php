@@ -74,12 +74,19 @@ abstract class AbstractTestController extends WebTestCase
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
         }
         
+        $rawData = null;
+        if (isset($options['data'])) {
+            $rawData = json_encode($options['data']);
+        } elseif (isset($options['rawData'])) {
+            $rawData = $options['rawData'];
+        }
+        
         self::$frameworkBundleClient->request(
             $method, 
             $uri,
             [], [],
             $headers,
-            isset($options['data']) ? json_encode($options['data']) : null
+           $rawData
         );
         $response =  self::$frameworkBundleClient->getResponse();
 
