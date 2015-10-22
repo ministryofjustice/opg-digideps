@@ -15,6 +15,7 @@ class SelfRegisterDataType extends AbstractType
         $builder
             ->add('firstname', 'text')
             ->add('lastname', 'text')
+            ->add('postcode', 'text')
             ->add('email', 'email',  [ 'constraints' => [
                 new Constraints\Email(['message' => 'login.email.inValid']) ]
             ])
