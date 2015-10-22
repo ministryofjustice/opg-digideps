@@ -44,6 +44,7 @@ class CasRecController extends RestController
         $this->get('logger')->info('Received ' . count($data) . ' records');
         
         $em = $this->getEntityManager();
+        $validator = $this->get('validator');
         
         try {
             $em->beginTransaction();
@@ -53,13 +54,25 @@ class CasRecController extends RestController
 
             $index = 1;
             foreach ($data as  $row) {
-                $casRec = new EntityDir\CasRec($row['Case'], $row['Surname'], $row['Deputy No'], $row['Dep Surname'], $row['Dep Postcode']);
-                $em->persist($casRec);
-
-                if (($index++ % $persistEvery) === 0) {
-                   $em->flush();
-                   $em->clear();
-                   $this->get('logger')->info("saved $index / $count records. ".(memory_get_peak_usage() / 1024 / 1024)." MB of memory used");
+                $casRec = new EntityDir\CasRec(
+                    $row['Case'], 
+                    $row['Surname'], 
+                    $row['Deputy No'], 
+                    $row['Dep Surname'], 
+                    $row['Dep Postcode']
+                );
+                
+                $errors = $validator->validate($casRec);
+                if (count($errors) > 0) {
+                    $this->get('logger')->warning($errors);
+                    unset($casRec);
+                }  else {
+                    $em->persist($casRec);
+                    if (($index++ % $persistEvery) === 0) {
+                       $em->flush();
+                       $em->clear();
+                       $this->get('logger')->info("saved $index / $count records. ".(memory_get_peak_usage() / 1024 / 1024)." MB of memory used");
+                    }
                 }
             }
 
@@ -69,6 +82,8 @@ class CasRecController extends RestController
         } catch (\Exception $e) {
             $this->get('logger')->error($e->getMessage());
             $em->rollback();
+            
+            throw new \RuntimeException($e->getMessage());
         }
         
         return $index;

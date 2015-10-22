@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="casrec")
@@ -60,6 +61,7 @@ class CasRec
      *
      * @JMS\Type("string")
      * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full"} )
      */
     private $deputyPostCode;
     
@@ -72,11 +74,19 @@ class CasRec
      */
     public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode)
     {
-        $this->caseNumber = $caseNumber;
-        $this->clientLastname = $clientLastname;
-        $this->deputyNo = $deputyNo;
-        $this->deputySurname = $deputySurname;
-        $this->deputyPostCode = $deputyPostCode;
+        $this->caseNumber = self::normaliseValue($caseNumber);
+        $this->clientLastname = self::normaliseValue($clientLastname);
+        $this->deputyNo = self::normaliseValue($deputyNo);
+        $this->deputySurname = self::normaliseValue($deputySurname);
+        $this->deputyPostCode = self::normaliseValue($deputyPostCode);
+    }
+    
+    public static function normaliseValue($value)
+    {
+        $value = trim($value);
+        $value = strtolower($value);
+        $value = preg_replace('/ */', '', $value);
+        return $value;
     }
     
     public function getCaseNumber()

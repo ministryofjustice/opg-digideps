@@ -8,6 +8,7 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Exception;
+use AppBundle\Entity\CasRec;
 
 class UserRegistrationService
 {
@@ -51,6 +52,11 @@ class UserRegistrationService
         if ($this->userIsUnique($user) == false) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
+        
+        // Check the user is unique
+        if (!$this->casRecExists($user, $client)) {
+            throw new \RuntimeException("User and client not found in casrec.", 421);
+        }
 
         $this->saveUserAndClient($user, $client);
 
@@ -59,6 +65,32 @@ class UserRegistrationService
 
         return $user;
 
+    }
+    
+    /**
+     * @param User $user
+     * @param Client $client
+     * @return boolean
+     */
+    private function casRecExists(User $user, Client $client)
+    {
+        $repo = $this->em->getRepository('AppBundle\Entity\CasRec');
+        
+        $casRec = $repo->findOneBy([
+            'caseNumber' => CasRec::normaliseValue($client->getCaseNumber()),
+            'clientLastname' => CasRec::normaliseValue($client->getLastname()),
+            'deputySurname' => CasRec::normaliseValue($user->getLastname()),
+        ]);
+        if (!$casRec) {
+            return false;
+        }
+        
+        // if the postcode is set in CASREC, it has to match to the given one
+        if ($casRec->getDeputyPostCode() && $casRec->getDeputyPostCode() != $user->getAddressPostcode()) {
+            return false;
+        }
+        
+        return true;
     }
 
     public function saveUserAndClient($user, $client)
