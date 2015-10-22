@@ -1,0 +1,14 @@
+{% if (report.accounts is not empty and action == 'list') %}
+    {% set show = true %}
+    {% for account in report.accounts %}
+        {% if account.getCountValidTotals() == 0 %}
+            {% set show = false %}
+        {% endif %}
+    {%  endfor %}
+    
+    {%  if show == true %}
+        <nav id="bottom-button-bar">
+            <a href="/report/{{ report.id }}/assets" id="continue-button" class="button">Continue to assets</a>
+        </nav>
+    {% endif %}
+{% endif %}

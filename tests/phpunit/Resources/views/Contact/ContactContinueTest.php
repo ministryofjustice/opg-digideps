@@ -12,7 +12,8 @@ use Mockery as m;
 class ContactContinueTest extends WebTestCase
 {
     public function setUp() {
-        $client = static::createClient([ 'environment' => 'test', 'debug' => false]);
+        $client = static::createClient([ 'environment' => 'test',
+            'debug' => false]);
         $this->twig = $client->getContainer()->get('templating');
     }
 
@@ -39,8 +40,32 @@ class ContactContinueTest extends WebTestCase
         $crawler = new Crawler($html);
 
         $this->assertCount(1, $crawler->filter('#continue-button'));
-        $this->assertEquals('/report/1/safeguarding',$crawler->filter('#continue-button')->eq(0).attr('href'));
+        $this->assertEquals("/report/1/safeguarding", $crawler->filter('#continue-button')->eq(0)->attr('href'));
 
+    }
+
+    /** @test */
+    public function showContinueInListWithReasonForNoDecisions() {
+
+        // mock data
+        $report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getId')->andReturn(1)
+            ->shouldReceive('isDue')->andReturn(false)
+            ->shouldReceive('getContacts')->andReturn([])
+            ->shouldReceive('getReasonForNoContacts')->andReturn('nothing')
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Contact:_continue.html.twig', [
+            'report' => $report,
+            'action' => 'list'
+        ]);
+
+        $crawler = new Crawler($html);
+
+        $this->assertCount(1, $crawler->filter('#continue-button'));
+        $this->assertEquals("/report/1/safeguarding", $crawler->filter('#continue-button')->eq(0)->attr('href'));
     }
 
     /** @test */
@@ -52,7 +77,7 @@ class ContactContinueTest extends WebTestCase
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
-            ->shouldReceive('getContact')->andReturn([$contact])
+            ->shouldReceive('getContacts')->andReturn([$contact])
             ->getMock();
 
 
@@ -121,7 +146,7 @@ class ContactContinueTest extends WebTestCase
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
-            ->shouldReceive('getContacts')->andReturn([$contact])
+            ->shouldReceive('getDecisions')->andReturn([$contact])
             ->getMock();
 
 
@@ -144,12 +169,13 @@ class ContactContinueTest extends WebTestCase
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(false)
             ->shouldReceive('getContacts')->andReturn([])
+            ->shouldReceive('getReasonForNoContacts')->andReturn("")
             ->getMock();
 
 
         $html = $this->twig->render('AppBundle:Contact:_continue.html.twig', [
             'report' => $report,
-            'action' => 'delete-reason-confirm'
+            'action' => 'list'
         ]);
 
         $crawler = new Crawler($html);
@@ -166,6 +192,7 @@ class ContactContinueTest extends WebTestCase
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
             ->shouldReceive('getContacts')->andReturn([])
+            ->shouldReceive('getReasonForNoContacts')->andReturn("")
             ->getMock();
 
 

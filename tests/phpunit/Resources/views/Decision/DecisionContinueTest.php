@@ -40,6 +40,7 @@ class DecisionContinueTest extends WebTestCase
         $crawler = new Crawler($html);
         
         $this->assertCount(1, $crawler->filter('#continue-button'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('#continue-button')->eq(0)->attr('href'));
         
     }
 
@@ -64,6 +65,7 @@ class DecisionContinueTest extends WebTestCase
         $crawler = new Crawler($html);
 
         $this->assertCount(1, $crawler->filter('#continue-button'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('#continue-button')->eq(0)->attr('href'));
 
     }
     
