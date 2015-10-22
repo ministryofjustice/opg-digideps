@@ -71,7 +71,7 @@ class CasRecControllerTest extends AbstractTestController
                     'Surname'=>'R1', 
                     'Deputy No' => 'DN1', 
                     'Dep Surname'=>'R2', 
-                    'Dep Postcode'=>'SW1'
+                    'Dep Postcode'=>'SW1 aH3'
                 ],
                 [
                     'Case' => '22', 
@@ -91,15 +91,15 @@ class CasRecControllerTest extends AbstractTestController
         $this->assertCount(2, $users);
         
         $this->assertEquals('11', $users[0]->getCaseNumber());
-        $this->assertEquals('R1', $users[0]->getClientLastname());
-        $this->assertEquals('DN1', $users[0]->getDeputyNo());
-        $this->assertEquals('R2', $users[0]->getDeputySurname());
-        $this->assertEquals('SW1',  $users[0]->getDeputyPostCode());
+        $this->assertEquals('r1', $users[0]->getClientLastname());
+        $this->assertEquals('dn1', $users[0]->getDeputyNo());
+        $this->assertEquals('r2', $users[0]->getDeputySurname());
+        $this->assertEquals('sw1ah3',  $users[0]->getDeputyPostCode());
         
         $this->assertEquals('22', $users[1]->getCaseNumber());
-        $this->assertEquals('H1', $users[1]->getClientLastname());
-        $this->assertEquals('DN2', $users[1]->getDeputyNo());
-        $this->assertEquals('H2', $users[1]->getDeputySurname());
+        $this->assertEquals('h1', $users[1]->getClientLastname());
+        $this->assertEquals('dn2', $users[1]->getDeputyNo());
+        $this->assertEquals('h2', $users[1]->getDeputySurname());
         $this->assertEquals('',  $users[1]->getDeputyPostCode());
         
         
