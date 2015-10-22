@@ -157,7 +157,7 @@ class AdminController extends AbstractController
                     ->setExpectedColumns(['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode'])
                     ->getData();
                 
-                $this->getRestClient()->post('casrec', $data);
+                $this->getRestClient()->post('casrec/bulk-add', $data);
                 
                 $request->getSession()->getFlashBag()->add('notice', count($data) . ' records uploaded');
                 
