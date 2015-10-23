@@ -13,11 +13,12 @@ Feature: User Self Registration
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
-            | self_registration_postcode  | WRONG! |
+            | self_registration_postcode  |  |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
         Then I should see a "#error-heading" element
+        And I save the page as "selfreg-error-mismatch"
         And I should be on "/register"
         #
         # Add user to casrec and expect error for postcode
@@ -31,6 +32,7 @@ Feature: User Self Registration
         And I press "self_registration_save"
         Then the following fields should have an error:
             | self_registration_postcode |
+        And I save the page as "selfreg-error-postcode"
         #
         # fix postcode and expect success
         #
@@ -38,6 +40,7 @@ Feature: User Self Registration
             | self_registration_postcode  | SW1 3RF |  
         And I press "self_registration_save"
         Then the form should be valid
+        And I save the page as "selfreg-ok"
         Then I should see "Please check your email"
         And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
