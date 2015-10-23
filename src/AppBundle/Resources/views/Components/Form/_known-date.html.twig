@@ -1,5 +1,4 @@
-{% set id = random() %}
-<div class="form-group form-date {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}" id="{{ id }}">
+<div class="form-group form-date {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
     <fieldset>
         <legend class="form-label">
             {% if legendTextJS %}
@@ -45,8 +44,3 @@
         </div>
     </fieldset>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        new opg.DateValidate('#{{ id }}');
-    });
-</script>
