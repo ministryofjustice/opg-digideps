@@ -3,6 +3,7 @@ Feature: User Self Registration
     @deputy @wip
     Scenario: A user can enter their self registration information
         Given I load the application status from "init" 
+        And I truncate the users from CASREC:
         And I reset the email log
         And I am on "/register"
         And I fill in the following:
@@ -13,6 +14,21 @@ Feature: User Self Registration
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
+        # expect CASREC error
+        Then the form should be invalid
+        Then the following fields should have an error:
+            | self_registration_lastname |
+            | self_registration_postcode |
+            | self_registration_clientLastname |
+            | self_registration_caseNumber |
+        #
+        # Add user to casrec and expect successful submit
+        # 
+        Given I add the following users to CASREC:
+            | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode | 
+            |12341234   | Cross-Tolley  | D001      | Tolley | SW1 3RF      |
+        And I press "self_registration_save"
+        Then the form should be valid
         Then I should see "Please check your email"
         And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
