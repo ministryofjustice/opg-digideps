@@ -77,11 +77,13 @@ class UserRegistrationService
      */
     private function casRecExists(User $user, Client $client)
     {
-        $casRec = $this->casRecRepo->findOneBy([
+        $criteria = [
             'caseNumber' => CasRec::normaliseValue($client->getCaseNumber()),
             'clientLastname' => CasRec::normaliseValue($client->getLastname()),
             'deputySurname' => CasRec::normaliseValue($user->getLastname()),
-        ]);
+        ];
+        $casRec = $this->casRecRepo->findOneBy($criteria);
+        
         if (!$casRec) {
             return false;
         }
