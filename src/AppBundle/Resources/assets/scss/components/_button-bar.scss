@@ -3,6 +3,11 @@
     margin-bottom: 10px;
 }
 
+form .form-group.button-bar {
+    float: none;
+}
+
+
 #back-bar {
 
     @include core-19();
@@ -19,4 +24,8 @@
 
 .button {
     @include core-19();
+}
+
+nav#bottom-button-bar {
+    margin: 40px 0 40px 0;
 }

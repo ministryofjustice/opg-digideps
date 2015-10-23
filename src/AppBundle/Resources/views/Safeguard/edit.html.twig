@@ -118,9 +118,9 @@
     {{ form_submit(form.save,'form.save') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-
-
-
+    {% include 'AppBundle:Safeguard:_continue.html.twig' with {
+        'report': report
+    } %}
     {{ form_end(form) }}
 
     {{form(form)}}

@@ -137,6 +137,10 @@ activeTab : "tab-contacts"
             } %}
         {% endif %}
 
+        {% include 'AppBundle:Contact:_continue.html.twig' with {
+        'report': report,
+        'action' : action
+        } %}
     {% endblock %}
 
 {% endembed %}
