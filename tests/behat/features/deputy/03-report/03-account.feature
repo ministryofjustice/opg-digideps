@@ -12,10 +12,7 @@ Feature: deputy / report / account
         Then the "account_openingDateExplanation" field is expandable
         Then the following fields should have an error:
             | account_bank |
-            | account_accountNumber_part_1 |
-            | account_accountNumber_part_2 |
-            | account_accountNumber_part_3 |
-            | account_accountNumber_part_4 |
+            | account_accountNumber|
             | account_sortCode_sort_code_part_1 |
             | account_sortCode_sort_code_part_2 |
             | account_sortCode_sort_code_part_3 |
@@ -24,10 +21,7 @@ Feature: deputy / report / account
         When I fill in the following:
             | account_bank    | HSBC - main account | 
             # invalid number
-            | account_accountNumber_part_1 | a | 
-            | account_accountNumber_part_2 | b | 
-            | account_accountNumber_part_3 | c | 
-            | account_accountNumber_part_4 | d | 
+            | account_accountNumber | abcd |
             # invalid sort code
             | account_sortCode_sort_code_part_1 | g |
             | account_sortCode_sort_code_part_2 | h |
@@ -39,10 +33,7 @@ Feature: deputy / report / account
             | account_openingBalance  | 1,155.00 |
         And I press "account_save"
         Then the following fields should have an error:
-            | account_accountNumber_part_1 |
-            | account_accountNumber_part_2 |
-            | account_accountNumber_part_3 |
-            | account_accountNumber_part_4 |
+            | account_accountNumber |
             | account_sortCode_sort_code_part_1 |
             | account_sortCode_sort_code_part_2 |
             | account_sortCode_sort_code_part_3 |
@@ -53,10 +44,7 @@ Feature: deputy / report / account
         # missing validation for date mismatch and explanation not given
         And I fill in the following:
             | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
+            | account_accountNumber | 8765 |
             | account_sortCode_sort_code_part_1 | 88 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 66 |
@@ -96,10 +84,7 @@ Feature: deputy / report / account
         # assert fields are filled in from db correctly
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 8 | 
-            | account_accountNumber_part_2 | 7 | 
-            | account_accountNumber_part_3 | 6 | 
-            | account_accountNumber_part_4 | 5 | 
+            | account_accountNumber | 8765 |
             | account_sortCode_sort_code_part_1 | 88 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 66 |
@@ -110,10 +95,7 @@ Feature: deputy / report / account
         # check invalid values
         When I fill in the following:
             | account_bank    |  | 
-            | account_accountNumber_part_1 | a | 
-            | account_accountNumber_part_2 | 123 | 
-            | account_accountNumber_part_3 | - | 
-            | account_accountNumber_part_4 |  | 
+            | account_accountNumber | a123 |
             | account_sortCode_sort_code_part_1 | a |
             | account_sortCode_sort_code_part_2 | 123 |
             | account_sortCode_sort_code_part_3 |  |
@@ -124,10 +106,7 @@ Feature: deputy / report / account
         And I press "account_save"
         Then the following fields should have an error:
             | account_bank |
-            | account_accountNumber_part_1 |
-            | account_accountNumber_part_2 |
-            | account_accountNumber_part_3 |
-            | account_accountNumber_part_4 |
+            | account_accountNumber |
             | account_sortCode_sort_code_part_1 |
             | account_sortCode_sort_code_part_2 |
             | account_sortCode_sort_code_part_3 |
@@ -139,10 +118,7 @@ Feature: deputy / report / account
         # right values
         When I fill in the following:
             | account_bank    | HSBC main account | 
-            | account_accountNumber_part_1 | 1 | 
-            | account_accountNumber_part_2 | 2 | 
-            | account_accountNumber_part_3 | 3 | 
-            | account_accountNumber_part_4 | 4 | 
+            | account_accountNumber | 1234 |
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
@@ -155,10 +131,7 @@ Feature: deputy / report / account
         When I click on "edit-account-details"
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC main account | 
-            | account_accountNumber_part_1 | 1 | 
-            | account_accountNumber_part_2 | 2 | 
-            | account_accountNumber_part_3 | 3 | 
-            | account_accountNumber_part_4 | 4 | 
+            | account_accountNumber | 1234 |
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
@@ -175,10 +148,7 @@ Feature: deputy / report / account
       When I follow "edit-accounts"
       And I fill in the following:
         | account_bank    | openingdate default values | 
-        | account_accountNumber_part_1 | 9 | 
-        | account_accountNumber_part_2 | 9 | 
-        | account_accountNumber_part_3 | 9 | 
-        | account_accountNumber_part_4 | 9 | 
+        | account_accountNumber | 9999 |
         | account_sortCode_sort_code_part_1 | 99 |
         | account_sortCode_sort_code_part_2 | 99 |
         | account_sortCode_sort_code_part_3 | 99 |

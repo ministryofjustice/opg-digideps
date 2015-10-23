@@ -33,10 +33,7 @@ Feature: deputy / report / edit accounts
         # Create an account with an opening balance explanation
         And I fill in the following:
             | account_bank    | HSBC - main account | 
-            | account_accountNumber_part_1 | 9 | 
-            | account_accountNumber_part_2 | 9 | 
-            | account_accountNumber_part_3 | 1 | 
-            | account_accountNumber_part_4 | 1 | 
+            | account_accountNumber | 9911 |
             | account_sortCode_sort_code_part_1 | 22 |
             | account_sortCode_sort_code_part_2 | 22 |
             | account_sortCode_sort_code_part_3 | 22 |
