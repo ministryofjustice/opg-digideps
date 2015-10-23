@@ -209,6 +209,19 @@ class Client
         }
         return $this;
     }
+
+    /**
+     * @return boolean
+     */
+    public function hasDetails()
+    {
+        if (!empty($this->getAddress())  && !empty($this->getCountry())
+            && !empty($this->getPostcode()) && !empty($this->getPhone()) ) {
+
+            return true;
+
+        }
+    }
     
     public function hasReport()
     {

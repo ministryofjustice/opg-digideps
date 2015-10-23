@@ -110,6 +110,11 @@ class Redirector
         }
 
         $clients = $user->getClients();
+        
+        $client = $clients[0];
+        if (!$client->hasDetails()) {
+            return $this->router->generate('client_add');
+        }
 
         if (!$user->hasReports()) {
             return $this->router->generate('report_create', [ 'clientId' => $clients[0]->getId()]);

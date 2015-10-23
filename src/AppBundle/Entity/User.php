@@ -632,9 +632,12 @@ class User implements AdvancedUserInterface
      */
     public function hasDetails()
     {
-        return $this->getAddress1() || $this->getAddress2() || $this->getAddress3()
-               || $this->getAddressCountry() || $this->getAddressPostcode()
-               || $this->getPhoneMain() || $this->getPhoneAlternative();
+        if (!empty($this->getAddress1())  && !empty($this->getAddressCountry()) 
+             && !empty($this->getAddressPostcode()) && !empty($this->getPhoneMain()) ) {
+            
+            return true;
+        
+        }
     }
     
     /**
