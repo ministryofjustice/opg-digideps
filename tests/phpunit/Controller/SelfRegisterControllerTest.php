@@ -14,7 +14,6 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @var SelfRegisterController */
     private $selfRegisterController;
 
-
     public function setUp()
     {
         $this->selfRegisterController = new SelfRegisterController();
@@ -113,35 +112,14 @@ class SelfRegisterControllerTest extends AbstractTestController
     }
 
     
-    /**
-     * @test
-     */
-    public function userNotFoundinCasRec()
-    {
-        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
-        
-        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
-            'mustFail' => true,
-            'AuthToken' => $token,
-            'data' => [
-                'firstname' => 'Zac',
-                'lastname' => 'Tolley',
-                'email' => 'gooduser@gov.zzz',
-                'postcode' => 'SW1',
-                'client_lastname' => 'Cross-Tolley',
-                'case_number' => '12341234'
-            ],
-            'ClientSecret' => '123abc-deputy'
-        ]);
-
-        $this->assertContains('casrec', $responseArray['message']);
-    }
-
+   
     /**
      * @test
      */
     public function savesValidUserToDb()
     {
+        self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
+        
         $casRec = new CasRec('12341234', 'Cross-Tolley', 'DEP001','Tolley', 'SW1');
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
@@ -175,6 +153,32 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $this->assertEquals("Cross-Tolley", $theClient->getLastname());
         $this->assertEquals('12341234', $theClient->getCaseNumber());
+    }
+
+    
+     /**
+     * @test
+     * @depends savesValidUserToDb
+     */
+    public function userNotFoundinCasRec()
+    {
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'not found',
+                'lastname' => 'test',
+                'email' => 'gooduser2@gov.zzz',
+                'postcode' => 'SW2',
+                'client_lastname' => 'Cl',
+                'case_number' => '123'
+            ],
+            'ClientSecret' => '123abc-deputy'
+        ]);
+
+        $this->assertContains('casrec', $responseArray['message']);
     }
 
 

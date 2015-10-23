@@ -13,21 +13,23 @@ use AppBundle\Entity\CasRec;
 class UserRegistrationService
 {
 
-    /** @var EntityManager em */
+    /** @var EntityManager */
     private $em;
 
-    /** @var  MailFactory mailFactory */
+    /** @var  MailFactory */
     private $mailFactory;
 
-    /** @var  MailSender mailServer */
+    /** @var  MailSender */
     private $mailSender;
 
-    /** @var \Doctrine\ORM\EntityRepository $userRepository */
+    /** @var \Doctrine\ORM\EntityRepository*/
     private $userRepository;
 
-    /** @var \Doctrine\ORM\EntityRepository $roleRepository */
+    /** @var \Doctrine\ORM\EntityRepository */
     private $roleRepository;
 
+    /** @var \Doctrine\ORM\EntityRepository  */
+    private $casRecRepo;
 
     public function __construct($em, $mailFactory, $mailSender)
     {
@@ -36,6 +38,7 @@ class UserRegistrationService
         $this->mailSender = $mailSender;
         $this->userRepository = $this->em->getRepository('AppBundle\Entity\User');
         $this->roleRepository = $this->em->getRepository('AppBundle\Entity\Role');
+        $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
     }
 
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
@@ -74,9 +77,7 @@ class UserRegistrationService
      */
     private function casRecExists(User $user, Client $client)
     {
-        $repo = $this->em->getRepository('AppBundle\Entity\CasRec');
-        
-        $casRec = $repo->findOneBy([
+        $casRec = $this->casRecRepo->findOneBy([
             'caseNumber' => CasRec::normaliseValue($client->getCaseNumber()),
             'clientLastname' => CasRec::normaliseValue($client->getLastname()),
             'deputySurname' => CasRec::normaliseValue($user->getLastname()),
