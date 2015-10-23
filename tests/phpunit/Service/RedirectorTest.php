@@ -44,12 +44,14 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
 
         $this->report = m::stub('AppBundle\Entity\Report');
-        $this->cient = m::stub('AppBundle\Entity\Client', [
-            'getId'=>2,
-            'getReports' => [3]
-        ]);
+        $this->client = m::mock('AppBundle\Entity\Client')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getId')->andReturn(2)
+            ->shouldReceive('getReports')->andReturn([3])
+            ->getMock();
+        
         $this->user = m::stub('AppBundle\Entity\User', [
-            'getClients' => [$this->cient]
+            'getClients' => [$this->client]
         ]);
         
         $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
@@ -70,6 +72,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
 
     public function testFirstPageLayNoDetails()
     {
+        
         $this->security
             ->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(false)
             ->shouldReceive('isGranted')->with('ROLE_LAY_DEPUTY')->andReturn(true);
@@ -78,10 +81,35 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('generate')->with('user_details')->andReturn('url');
         
         $this->user
+            ->shouldReceive('hasDetails')->andReturn(false)
+            ->shouldReceive('hasClients')->andReturn(false);
+
+        $this->client
             ->shouldReceive('hasDetails')->andReturn(false);
         
         $this->assertEquals('url', $this->object->getUserFirstPage());
     }
+
+    public function testFirstPageClientNoDetails()
+    {
+        $this->user
+            ->shouldReceive('hasDetails')->andReturn(true)
+            ->shouldReceive('hasClients')->andReturn(true);
+
+        $this->client
+            ->shouldReceive('hasDetails')->andReturn(false);
+        
+        $this->security
+            ->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(false)
+            ->shouldReceive('isGranted')->with('ROLE_LAY_DEPUTY')->andReturn(true);
+
+        $this->router
+            ->shouldReceive('generate')->with('client_add')->andReturn('url');
+        
+
+        $this->assertEquals('url', $this->object->getUserFirstPage());
+    }
+    
     
     public function testFirstPageLayDetailsNoClient()
     {
@@ -113,6 +141,9 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasClients')->andReturn(true)
             ->shouldReceive('hasReports')->andReturn(false);
         
+        $this->client
+            ->shouldReceive('hasDetails')->andReturn(true);
+        
         $this->assertEquals('url', $this->object->getUserFirstPage());
     }
     
@@ -129,6 +160,9 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasDetails')->andReturn(true)
             ->shouldReceive('hasClients')->andReturn(true)
             ->shouldReceive('hasReports')->andReturn(true);
+
+        $this->client
+            ->shouldReceive('hasDetails')->andReturn(true);
         
         $this->assertEquals('http://example.org/path', $this->object->getUserFirstPage());
     }
@@ -152,6 +186,9 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasDetails')->andReturn(true)
             ->shouldReceive('hasClients')->andReturn(true)
             ->shouldReceive('hasReports')->andReturn(true);
+
+        $this->client
+            ->shouldReceive('hasDetails')->andReturn(true);
         
         $this->assertEquals('url', $this->object->getUserFirstPage(false));
     }
@@ -175,6 +212,9 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasDetails')->andReturn(true)
             ->shouldReceive('hasClients')->andReturn(true)
             ->shouldReceive('hasReports')->andReturn(true);
+
+        $this->client
+            ->shouldReceive('hasDetails')->andReturn(true);
         
         $this->assertEquals('url', $this->object->getUserFirstPage(false));
     }
