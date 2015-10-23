@@ -101,32 +101,6 @@ class AccountContinueTest extends WebTestCase
 
     }
 
-    /** @test */
-    public function dontShowContinueIfAnyAccountsDontContainMoneyInOu() {
 
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive("getCountValidTotals")->andReturn(0)
-            ->getMock();
-        
-        // mock data
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('isDue')->andReturn(false)
-            ->shouldReceive('getAccounts')->andReturn([$account])
-            ->getMock();
-
-
-        $html = $this->twig->render('AppBundle:Account:_continue.html.twig', [
-            'report' => $report,
-            'action' => 'add'
-        ]);
-
-        $crawler = new Crawler($html);
-
-        $this->assertCount(0, $crawler->filter('#continue-button'));
-        
-    }
     
 }

@@ -16,8 +16,10 @@
 
 }
 
-#account_edit_form, 
-#account_add_form {
+form#account_edit_form, 
+form#account_add_form {
+
+    @extend %contain-floats;
 
     #account_opening_date_same_wrapper {
         display: none;
@@ -37,4 +39,9 @@
         }
     }
 
+    .sub-section-description {
+        width: 50%;
+        margin-right: 50%;
+    }
+    
 }
