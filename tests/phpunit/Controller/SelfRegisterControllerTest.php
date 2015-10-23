@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\BrowserKit\Client;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Entity\CasRec;
 use Mockery as m;
 
 class SelfRegisterControllerTest extends AbstractTestController
@@ -111,13 +112,42 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertNull($user);
     }
 
+    
+    /**
+     * @test
+     */
+    public function userNotFoundinCasRec()
+    {
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'gooduser@gov.zzz',
+                'postcode' => 'SW1',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '12341234'
+            ],
+            'ClientSecret' => '123abc-deputy'
+        ]);
+
+        $this->assertContains('casrec', $responseArray['message']);
+    }
 
     /**
      * @test
      */
     public function savesValidUserToDb()
     {
+        $casRec = new CasRec('12341234', 'Cross-Tolley', 'DEP001','Tolley', 'SW1');
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush($casRec);
+        
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
             'AuthToken' => $token,

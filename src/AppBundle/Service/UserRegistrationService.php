@@ -86,7 +86,8 @@ class UserRegistrationService
         }
         
         // if the postcode is set in CASREC, it has to match to the given one
-        if ($casRec->getDeputyPostCode() && $casRec->getDeputyPostCode() != $user->getAddressPostcode()) {
+        if ($casRec->getDeputyPostCode() && 
+            $casRec->getDeputyPostCode() != CasRec::normaliseValue($user->getAddressPostcode())) {
             return false;
         }
         
