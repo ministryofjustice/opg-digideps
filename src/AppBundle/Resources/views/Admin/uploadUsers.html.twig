@@ -26,7 +26,6 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
     
     {{ form_input(form.file, 'csv_upload.form.file', { 'labelClass': 'required' }) }}
-    {{ form_input(form.truncate, 'csv_upload.form.truncate', { 'labelClass': 'required' }) }}
     
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.upload, 'csv_upload.form.upload') }}
