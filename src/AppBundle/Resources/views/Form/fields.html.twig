@@ -1,33 +1,3 @@
-{% block account_number_widget %}
-    <fieldset>
-        <legend class="form-label visuallyhidden">Last four digits of account number</legend>
-        <div class="form-last-four-digits">
-            <ul>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
-            <div class="form-group">
-                {{ form_label(form.part_1,'Digit 1', {'label_attr': {'for': 'account_accountNumber_part_1', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.part_1, { 'attr': {'class': 'form-control'} }) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.part_2,'Digit 2', {'label_attr': {'for': 'account_accountNumber_part_2', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.part_2, { 'attr': {'class': 'form-control'} }) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.part_3,'Digit 3', {'label_attr': {'for': 'account_accountNumber_part_3', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.part_3, { 'attr': {'class': 'form-control'} }) }}
-            </div>
-            <div class="form-group">
-                {{ form_label(form.part_4,'Digit 4', {'label_attr': {'for': 'account_accountNumber_part_4', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(form.part_4, { 'attr': {'class': 'form-control'} }) }}
-            </div>
-        </div>
-    </fieldset>
-{% endblock %}
-
 {% block change_password_widget %}
     <fieldset>
         <legend class="form-label">Change your password</legend>
