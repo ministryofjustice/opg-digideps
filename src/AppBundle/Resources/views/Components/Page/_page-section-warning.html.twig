@@ -2,7 +2,7 @@
 
 {% set transOptions = transOptions | default({}) %}
 
-<div class="page-section-warning" {% if id is defined %}id="{{ id }}{% endif %}">
+<div class="page-section-warning" {% if id is defined %}id="{{ id }}"{% endif %}>
     {% if iconClass is defined %}
         <span class="{{ iconClass }}"></span>
     {% endif %}
