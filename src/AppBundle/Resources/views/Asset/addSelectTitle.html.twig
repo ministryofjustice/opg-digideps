@@ -77,10 +77,6 @@ activeTab: "tab-assets"
                  
                     $.get(urlToLoad, function( html ) {
                         var $element = $(html);
-                     
-                        $element.find('.form-date').each(function(index,dateElement) {
-                            new opg.DateValidate(dateElement);
-                        });
                         
                         bodyLeftContent.text('').append($element);
                         $element.find('textarea').expanding();
