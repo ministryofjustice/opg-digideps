@@ -118,7 +118,6 @@ activeTab: "tab-decisions"
         'showListData': showListData
         } %}
         
-        
         {% if showNoDecisionForm or showNoDecisionReason %}
           <div class="report-list-separator"> </div>
           {% include 'AppBundle:Decision:_no_decision_form.html.twig' with {
@@ -130,6 +129,11 @@ activeTab: "tab-decisions"
           } %}
         {% endif %}
 
+        {% include 'AppBundle:Decision:_continue.html.twig' with {
+            'report': report,
+            'action' : action
+        } %}
+        
         <script type="text/javascript">
             $(document).ready(function() {
                 new GOVUK.SelectionButtons(":radio");

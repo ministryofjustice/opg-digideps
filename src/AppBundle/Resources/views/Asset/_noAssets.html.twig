@@ -22,5 +22,13 @@
       {{ form_submit(no_assets_to_add.saveNoAsset,'save') }}
 
       {{ form_end(no_assets_to_add) }}
+
+      <script type="text/javascript">
+          $(document).ready(function() {
+              new GOVUK.SelectionButtons(":checkbox");
+          });
+      </script>
+      
+      
   {% endif %}
 {% endif %}

@@ -1,0 +1,6 @@
+{% if (action == 'list' and decisions is empty and report.reasonForNoDecisions() is not empty ) or (action == 'list' and decisions is not empty) %}
+    <nav id="bottom-button-bar">
+        <a href="/report/{{ report.id }}/contacts" id="continue-button" class="button">Continue to contacts</a>
+    </nav>
+{% endif %}
+
