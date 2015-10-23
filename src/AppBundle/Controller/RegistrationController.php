@@ -56,11 +56,16 @@ class RegistrationController extends AbstractController
                 
                 switch ((int)$e->getCode()) {
                     case 422:
-                        $form->get('email')->addError(new FormError($translator->trans('email.existing', [], 'register')));
+                        $form->get('email')->addError(new FormError($translator->trans('email.existingError', [], 'register')));
                         break;
                     
                     case 421:
                         $form->addError(new FormError($translator->trans('matchingError', [], 'register')));
+                        break;
+                    
+                    case 424:
+                        $form->get('postcode')->addError(new FormError($translator->trans('postcode.matchingError', [], 'register')));
+                        // TODO form now valiate postcode ?
                         break;
                     
                     default:

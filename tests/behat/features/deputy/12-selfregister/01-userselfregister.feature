@@ -5,24 +5,37 @@ Feature: User Self Registration
         Given I load the application status from "init" 
         And I truncate the users from CASREC:
         And I reset the email log
+        #
+        # Add the user and expect failure (not matching in CASREC)
+        #
         And I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
-            | self_registration_postcode  | SW1 3RF |
+            | self_registration_postcode  | WRONG! |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
-        # expect CASREC error
         Then I should see a "#error-heading" element
         And I should be on "/register"
         #
-        # Add user to casrec and expect successful submit
+        # Add user to casrec and expect error for postcode
         # 
         Given I add the following users to CASREC:
             | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode | 
             |12341234   | Cross-Tolley  | D001      | Tolley | SW1 3RF      |
+        #
+        # expect postcode error
+        #
+        And I press "self_registration_save"
+        Then the following fields should have an error:
+            | self_registration_postcode |
+        #
+        # fix postcode and expect success
+        #
+        And I fill in the following:
+            | self_registration_postcode  | SW1 3RF |  
         And I press "self_registration_save"
         Then the form should be valid
         Then I should see "Please check your email"
