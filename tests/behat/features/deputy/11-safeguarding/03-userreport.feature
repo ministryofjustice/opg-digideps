@@ -42,7 +42,7 @@ Feature: Safeguarding OPG Report
             | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2015 |
         And I add the following bank account:
             | bank    | HSBC - main account |
-            | accountNumber | 8 | 7 | 6 | 5 |
+            | accountNumber | 8765 |
             | sortCode | 88 | 77 | 66 |
             | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
