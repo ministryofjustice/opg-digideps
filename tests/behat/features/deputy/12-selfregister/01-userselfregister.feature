@@ -15,12 +15,8 @@ Feature: User Self Registration
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
         # expect CASREC error
-        Then the form should be invalid
-        Then the following fields should have an error:
-            | self_registration_lastname |
-            | self_registration_postcode |
-            | self_registration_clientLastname |
-            | self_registration_caseNumber |
+        Then I should see a "#error-heading" element
+        And I should be on "/register"
         #
         # Add user to casrec and expect successful submit
         # 

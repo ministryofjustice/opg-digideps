@@ -24,7 +24,8 @@ class RegistrationController extends AbstractController
     {
         $selfRegisterData = new ModelDir\SelfRegisterData();
         $form = $this->createForm(new FormDir\SelfRegisterDataType(), $selfRegisterData);
-
+        $translator = $this->get('translator');
+        
         /** @var Request $request */
         $request = $this->getRequest();
 
@@ -38,12 +39,12 @@ class RegistrationController extends AbstractController
 
                 $this->get('restClient')->registerUser($data);
 
-                $bodyText = $this->get('translator')->trans('thankyou.body', [], 'register');
+                $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();
                 $bodyText = str_replace("{{ email }}", $email, $bodyText);
 
 
-                $signInText = $this->get('translator')->trans('signin', [], 'register');
+                $signInText = $translator->trans('signin', [], 'register');
                 $signIn = '<a href="' . $this->generateUrl("login") . '">' . $signInText . '</a>';
                 $bodyText = str_replace("{{ sign_in }}", $signIn, $bodyText);
 
@@ -52,17 +53,20 @@ class RegistrationController extends AbstractController
                 ]);
 
             } catch(\Exception $e) {
-                if ($e->getCode() == 422) {
-                    //move this logic to a separate form field contraint (see existing password validator as example)
-                    $form->get('email')->addError(new FormError("That email has already been registered with this service."));
+                
+                switch ((int)$e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($translator->trans('email.existing', [], 'register')));
+                        break;
+                    
+                    case 421:
+                        $form->addError(new FormError($translator->trans('matchingError', [], 'register')));
+                        break;
+                    
+                    default:
+                        $form->addError(new FormError($translator->trans('genericError', [], 'register')));
                 }
-                if ($e->getCode() == 421) {
-                    //move this logic to a separate form field contraint (see existing password validator as example)
-                    $form->get('lastname')->addError(new FormError("The lastname name you've given us doesn't match our records. Please check and try again."));
-                    $form->get('postcode')->addError(new FormError("The postcode you've given us doesn't match our records. Please check and try again."));
-                    $form->get('clientLastname')->addError(new FormError("The client last name you've given us doesn't match our records. Please check and try again."));
-                    $form->get('caseNumber')->addError(new FormError("The case number you've given us doesn't match our records. Please check and try again."));
-                }
+                
                 $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
