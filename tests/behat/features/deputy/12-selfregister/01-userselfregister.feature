@@ -85,6 +85,9 @@ Feature: User Self Registration
     Scenario: A user can self register and activate
         Given I load the application status from "init"
         And I reset the email log
+        And I add the following users to CASREC:
+            | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode |
+            | 12341234  | Cross-Tolley  | D001      | Tolley       | SW1 3RF      |
         And I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
