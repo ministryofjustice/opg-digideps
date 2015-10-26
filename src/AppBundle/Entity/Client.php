@@ -215,11 +215,8 @@ class Client
      */
     public function hasDetails()
     {
-        if (!empty($this->getAddress())  && !empty($this->getCountry())
-            && !empty($this->getPostcode()) && !empty($this->getPhone()) ) {
-
+        if (!empty($this->getAddress()) ) {
             return true;
-
         }
     }
     

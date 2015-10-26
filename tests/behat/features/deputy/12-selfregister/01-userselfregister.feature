@@ -1,6 +1,6 @@
 Feature: User Self Registration
     
-    @deputy @wip
+    @deputy
     Scenario: A user can enter their self registration information
         Given I load the application status from "init" 
         And I reset the email log
@@ -29,7 +29,7 @@ Feature: User Self Registration
         Then I should see "behat-zac.tolley@digital.justice.gov.uk" in the "users" region
         
 
-    @deputy @wip
+    @deputy
     Scenario: Inform the use that email already exists
         Given I am on "/register"
         And I fill in the following:
@@ -89,11 +89,9 @@ Feature: User Self Registration
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2014 |
-            | client_address |  addres1 |
-            | client_county |  Berks |
-            | client_country | GB    |
+            | client_address |  address1 |
+            | client_country | GB |
             | client_postcode | SW1 1RH |
-            | client_phone | 0777 123 1234 |
             | client_allowedCourtOrderTypes_1 | 1 |
         And I press "client_save"
         Then the URL should match "/report/create/\d+"
@@ -102,4 +100,7 @@ Feature: User Self Registration
             | report_endDate_month | 1 |
             | report_endDate_year | 2015 |
         Then I press "report_save"
+        Then the URL should match "/report/\d+/overview"
+        Then I go to "/logout"
+        And I am logged in as "behat-zac.tolley@digital.justice.gov.uk" with password "Abcd1234"
         Then the URL should match "/report/\d+/overview"
