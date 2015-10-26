@@ -97,10 +97,7 @@ Feature: deputy / report / submit
         And I click on "edit-account-details"
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC main account | 
-            | account_accountNumber_part_1 | 1 | 
-            | account_accountNumber_part_2 | 2 | 
-            | account_accountNumber_part_3 | 3 | 
-            | account_accountNumber_part_4 | 4 | 
+            | account_accountNumber | 1234 |
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |

@@ -304,10 +304,7 @@ trait ReportTrait
         $rows = $table->getRowsHash();
 
         $this->fillField('account_bank', $rows['bank']);
-        $this->fillField('account_accountNumber_part_1', $rows['accountNumber'][0]);
-        $this->fillField('account_accountNumber_part_2', $rows['accountNumber'][1]);
-        $this->fillField('account_accountNumber_part_3', $rows['accountNumber'][2]);
-        $this->fillField('account_accountNumber_part_4', $rows['accountNumber'][3]);
+        $this->fillField('account_accountNumber', $rows['accountNumber']);
         $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
         $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
         $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
@@ -326,7 +323,7 @@ trait ReportTrait
         $this->assertResponseStatus(200);
 
         // open account and add transactions
-        $this->clickOnBehatLink('account-' . implode('', $rows['accountNumber']));
+        $this->clickOnBehatLink('account-' . $rows['accountNumber']);
         $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
         $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 

@@ -47,7 +47,7 @@ class Account
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic"})
      * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic"})
-     * @Assert\Length(minMessage="account.accountNumber.length",min=4, groups={"basic"})
+     * @Assert\Length(minMessage="account.accountNumber.length",min=4, max=4, groups={"basic"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
      * 
      * @var string $accountNumber

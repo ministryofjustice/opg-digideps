@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
-use AppBundle\Form\Type\AccountNumberType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormEvents;
@@ -48,10 +47,9 @@ class AccountType extends AbstractType
 
         $this->addOpeningBalanceFields($builder);
 
-        $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false])
-            ->add('accountNumber', new AccountNumberType(), [ 'error_bubbling' => false]);
-
-
+        $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false]);
+        $builder->add('accountNumber', 'number', ['max_length' => 4]);
+        
         if ($this->options['showClosingBalance']) {
             $this->addClosingBalanceFields($builder);
         }
