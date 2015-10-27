@@ -16,7 +16,7 @@
         </a>
     {% endif %}
     {%  if description is defined and description %}
-        <p class="sub-section-description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%':client.fullname}, translationDomain ) }}</p>
+        <p class="sub-section-description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%':client.firstname}, translationDomain ) }}</p>
     {%  endif %}
     
 </div>

@@ -53,7 +53,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("Add the significant decisions you've made for Fred Smith", $descriptionElement->eq(0)->text());
+        $this->assertContains("Add the significant decisions you've made for Fred", $descriptionElement->eq(0)->text());
 
     }
 
@@ -74,7 +74,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("Give us the details of people you consulted about Fred Smith", $descriptionElement->eq(0)->text());
+        $this->assertContains("Give us the details of people you consulted about Fred", $descriptionElement->eq(0)->text());
 
     }
 
@@ -95,7 +95,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("We need to know about your involvement with Fred Smith, and their care", $descriptionElement->eq(0)->text());
+        $this->assertContains("We need to know about your involvement with Fred's care", $descriptionElement->eq(0)->text());
 
     }
 
@@ -136,7 +136,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("Add Fred Smith's property, investments and other valuables", $descriptionElement->eq(0)->text());
+        $this->assertContains("Add Fred's property, investments and other valuables", $descriptionElement->eq(0)->text());
 
     }
 
@@ -422,6 +422,7 @@ class SectionsTest extends WebTestCase
         $this->reportClient = m::mock('AppBundle\Entity\Client')
             ->shouldIgnoreMissing(true)
             ->shouldReceive("getFullname")->andReturn("Fred Smith")
+            ->shouldReceive("getFirstname")->andReturn("Fred")
             ->getMock();
     }   
     

@@ -37,7 +37,7 @@ accounts:
     edit: "Edit accounts"
 safeguarding:
     subSectionTitle: "Safeguarding"
-    subSectionDescription: "We need to know about your involvement with %client%, and their care"
+    subSectionDescription: "We need to know about your involvement with %client%'s care"
     edit: "Edit safeguarding"
 assets:
     subSectionTitle: "Assets"
