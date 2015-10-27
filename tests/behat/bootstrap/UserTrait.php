@@ -124,4 +124,43 @@ trait UserTrait
         // The Find the line that has this user
         // confirm the type is lay deputy
     }
+    
+    /**
+     * @Given I truncate the users from CASREC:
+     */
+    public function iTruncateTheUsersFromCasrec()
+    {
+        $query = "TRUNCATE TABLE casrec";
+        $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+        
+        exec($command);
+    }
+    
+    
+    /**
+     * @Given I add the following users to CASREC:
+     */
+    public function iAddTheFollowingUsersToCASREC(TableNode $table)
+    {
+        foreach ($table->getHash() as $row) {
+            $row = array_map([$this, 'casRecNormaliseValue'], $row);
+            $query = sprintf('INSERT INTO casrec' .
+                '(client_case_number, client_lastname, deputy_no, deputy_lastname, deputy_postcode)'.
+                " VALUES('%s','%s','%s','%s','%s')", 
+                $row['Case'], $row['Surname'], $row['Deputy No'], $row['Dep Surname'], $row['Dep Postcode']
+            );
+            
+            $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
+            
+            exec($command);
+        }
+    }
+    
+    public static function casRecNormaliseValue($value)
+    {
+        $value = trim($value);
+        $value = strtolower($value);
+        $value = preg_replace('/ */', '', $value);
+        return $value;
+    }
 }
