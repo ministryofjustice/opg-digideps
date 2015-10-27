@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Component\BrowserKit\Client;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Model\SelfRegisterData;
+use AppBundle\Entity\CasRec;
 use Mockery as m;
 
 class SelfRegisterControllerTest extends AbstractTestController
@@ -12,7 +13,6 @@ class SelfRegisterControllerTest extends AbstractTestController
 
     /** @var SelfRegisterController */
     private $selfRegisterController;
-
 
     public function setUp()
     {
@@ -111,13 +111,21 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertNull($user);
     }
 
-
+    
+   
     /**
      * @test
      */
     public function savesValidUserToDb()
     {
+        self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
+        
+        $casRec = new CasRec('12341234', 'Cross-Tolley', 'DEP001','Tolley', 'SW1');
+        $this->fixtures()->persist($casRec);
+        $this->fixtures()->flush($casRec);
+        
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
             'AuthToken' => $token,
@@ -145,6 +153,32 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $this->assertEquals("Cross-Tolley", $theClient->getLastname());
         $this->assertEquals('12341234', $theClient->getCaseNumber());
+    }
+
+    
+     /**
+     * @test
+     * @depends savesValidUserToDb
+     */
+    public function userNotFoundinCasRec()
+    {
+        $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
+        
+        $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
+            'mustFail' => true,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'not found',
+                'lastname' => 'test',
+                'email' => 'gooduser2@gov.zzz',
+                'postcode' => 'SW2',
+                'client_lastname' => 'Cl',
+                'case_number' => '123'
+            ],
+            'ClientSecret' => '123abc-deputy'
+        ]);
+
+        $this->assertContains('casrec', $responseArray['message']);
     }
 
 

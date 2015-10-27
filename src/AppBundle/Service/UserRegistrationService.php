@@ -8,25 +8,28 @@ use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Doctrine\ORM\EntityManager;
 use AppBundle\Exception;
+use AppBundle\Entity\CasRec;
 
 class UserRegistrationService
 {
 
-    /** @var EntityManager em */
+    /** @var EntityManager */
     private $em;
 
-    /** @var  MailFactory mailFactory */
+    /** @var  MailFactory */
     private $mailFactory;
 
-    /** @var  MailSender mailServer */
+    /** @var  MailSender */
     private $mailSender;
 
-    /** @var \Doctrine\ORM\EntityRepository $userRepository */
+    /** @var \Doctrine\ORM\EntityRepository*/
     private $userRepository;
 
-    /** @var \Doctrine\ORM\EntityRepository $roleRepository */
+    /** @var \Doctrine\ORM\EntityRepository */
     private $roleRepository;
 
+    /** @var \Doctrine\ORM\EntityRepository  */
+    private $casRecRepo;
 
     public function __construct($em, $mailFactory, $mailSender)
     {
@@ -35,6 +38,7 @@ class UserRegistrationService
         $this->mailSender = $mailSender;
         $this->userRepository = $this->em->getRepository('AppBundle\Entity\User');
         $this->roleRepository = $this->em->getRepository('AppBundle\Entity\Role');
+        $this->casRecRepo = $this->em->getRepository('AppBundle\Entity\CasRec');
     }
 
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
@@ -51,6 +55,9 @@ class UserRegistrationService
         if ($this->userIsUnique($user) == false) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
+        
+        // Check the user is unique
+        $this->casRecChecks($user, $client);
 
         $this->saveUserAndClient($user, $client);
 
@@ -59,6 +66,31 @@ class UserRegistrationService
 
         return $user;
 
+    }
+    
+    /**
+     * @param User $user
+     * @param Client $client
+     * @return boolean
+     */
+    private function casRecChecks(User $user, Client $client)
+    {
+        $criteria = [
+            'caseNumber' => CasRec::normaliseValue($client->getCaseNumber()),
+            'clientLastname' => CasRec::normaliseValue($client->getLastname()),
+            'deputySurname' => CasRec::normaliseValue($user->getLastname()),
+        ];
+        $casRec = $this->casRecRepo->findOneBy($criteria);
+        
+        if (!$casRec) {
+            throw new \RuntimeException("User and client not found in casrec.", 421);
+        }
+        
+        // if the postcode is set in CASREC, it has to match to the given one
+        if ($casRec->getDeputyPostCode() && 
+            $casRec->getDeputyPostCode() != CasRec::normaliseValue($user->getAddressPostcode())) {
+            throw new \RuntimeException("User and client found, but postcode mismatch", 424);
+        }
     }
 
     public function saveUserAndClient($user, $client)
