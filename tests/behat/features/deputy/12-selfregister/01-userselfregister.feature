@@ -1,18 +1,46 @@
 Feature: User Self Registration
     
-    @deputy @wip
+    @deputy
     Scenario: A user can enter their self registration information
         Given I load the application status from "init" 
+        And I truncate the users from CASREC:
         And I reset the email log
+        #
+        # Add the user and expect failure (not matching in CASREC)
+        #
         And I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
-            | self_registration_postcode  | SW1 3RF |
+            | self_registration_postcode  |  |
             | self_registration_clientLastname | Cross-Tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
+        Then I should see a "#error-heading" element
+        And I save the page as "selfreg-error-mismatch"
+        And I should be on "/register"
+        #
+        # Add user to casrec and expect error for postcode
+        # 
+        Given I add the following users to CASREC:
+            | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode | 
+            |12341234   | Cross-Tolley  | D001      | Tolley | SW1 3RF      |
+        #
+        # expect postcode error
+        #
+        And I press "self_registration_save"
+        Then the following fields should have an error:
+            | self_registration_postcode |
+        And I save the page as "selfreg-error-postcode"
+        #
+        # fix postcode and expect success
+        #
+        And I fill in the following:
+            | self_registration_postcode  | SW1 3RF |  
+        And I press "self_registration_save"
+        Then the form should be valid
+        And I save the page as "selfreg-ok"
         Then I should see "Please check your email"
         And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-zac.tolley@digital.justice.gov.uk"
@@ -29,7 +57,7 @@ Feature: User Self Registration
         Then I should see "behat-zac.tolley@digital.justice.gov.uk" in the "users" region
         
 
-    @deputy @wip
+    @deputy
     Scenario: Inform the use that email already exists
         Given I am on "/register"
         And I fill in the following:
@@ -57,6 +85,9 @@ Feature: User Self Registration
     Scenario: A user can self register and activate
         Given I load the application status from "init"
         And I reset the email log
+        And I add the following users to CASREC:
+            | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode |
+            | 12341234  | Cross-Tolley  | D001      | Tolley       | SW1 3RF      |
         And I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
@@ -89,11 +120,9 @@ Feature: User Self Registration
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2014 |
-            | client_address |  addres1 |
-            | client_county |  Berks |
-            | client_country | GB    |
+            | client_address |  address1 |
+            | client_country | GB |
             | client_postcode | SW1 1RH |
-            | client_phone | 0777 123 1234 |
             | client_allowedCourtOrderTypes_1 | 1 |
         And I press "client_save"
         Then the URL should match "/report/create/\d+"
@@ -102,4 +131,7 @@ Feature: User Self Registration
             | report_endDate_month | 1 |
             | report_endDate_year | 2015 |
         Then I press "report_save"
+        Then the URL should match "/report/\d+/overview"
+        Then I go to "/logout"
+        And I am logged in as "behat-zac.tolley@digital.justice.gov.uk" with password "Abcd1234"
         Then the URL should match "/report/\d+/overview"

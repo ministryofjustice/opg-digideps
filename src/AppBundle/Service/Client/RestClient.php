@@ -285,7 +285,6 @@ class RestClient
         }
         unset($options['addClientSecret']);
         
-        
         try {
             $start = microtime(true);
             $response = $this->client->$method($url, $options);
@@ -425,6 +424,17 @@ class RestClient
     public function getHistory()
     {
         return $this->history;
+    }
+    
+    
+    /**
+     * @param integer $timeout in seconds
+     */
+    public function setTimeout($timeout)
+    {
+        $this->client->setDefaultOption('timeout', $timeout);
+        
+        return $this;
     }
     
 }

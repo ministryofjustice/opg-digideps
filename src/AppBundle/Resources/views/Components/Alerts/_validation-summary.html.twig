@@ -1,9 +1,17 @@
-{% if ((formErrorMessages | length) > 0) and (error is not defined) %}
+{% if ((formErrorMessages | length + formUncaughtErrors | length) > 0) 
+      and (error is not defined) %}
     <div class="validation-summary-container">
         <div aria-labelledby="error-heading" class="validation-summary group" id="error-summary" role="alert"
              tabindex="-1">
-            <h2 id="error-heading">There are some problems on this page you need to fix before you can continue.</h2>
-
+            {# form generic errors #}
+            {% if formUncaughtErrors %}
+                {% for formError in formUncaughtErrors %}
+                    <h2 id="error-heading"> {{ formError.message }} </h2>
+                {% endfor %}
+            {% else %}
+                <h2 id="error-heading">There are some problems on this page you need to fix before you can continue.</h2>
+            {% endif %}
+            {# error in fields #}
             <p class="visuallyhidden">See highlighted errors below.</p>
             <ul class="visuallyhidden">
                 {% for formErrorMessage in formErrorMessages %}
