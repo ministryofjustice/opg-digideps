@@ -14,15 +14,22 @@
 {% block pageContent %}
 
     {% if not isEmailAttachment%}
-      <div class="navigation-back report-back">
-          <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to your client</a>
-      </div>
+        {% if report.submitted == true %}
+            <div class="navigation-back report-back">
+              <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to your client</a>
+            </div>
+        {% endif %}
+            
     {% endif %}
 
     <!-- set class to external-report -->
     {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
 
-
+    {%  if report.submitted == false %}
+        {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+        transDomain: translationDomain
+        } %}
+    {% endif %}
     <div class="external-report-section" id="decisions-section">
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
             transDomain: translationDomain,
@@ -76,9 +83,7 @@
                 pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.accounts.subSectionTitle'
             } %}
 
-            {% if report.accounts | length == 0 %}
-                <p class="page-section-description">{{ report.reasonForNoAccounts }}</p>
-            {% else %}
+            {% if report.accounts | length > 0 %}
                 {% include 'AppBundle:Account:_report_accounts.html.twig' with {
                     'accounts': report.accounts
                 } %}
@@ -92,7 +97,9 @@
             } %}
 
             {% if report.assets | length == 0 %}
-                <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
+                {% if report.noAssetToAdd == true %}
+                    <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
+                {% endif %}    
             {% else %}
                 {{ render(controller('AppBundle:Asset:_list', { 
                     'reportId': report.id, 
@@ -118,8 +125,9 @@
           </div>
         {% endif %}
 
-        {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
-
+        {% if report.submitted == true %}
+            {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
+        {% endif %}
     {% endif %}
 {% endblock %}
 
