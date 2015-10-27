@@ -16,6 +16,7 @@ class SectionsTest extends WebTestCase
     private $client;
     
     private $report;
+    private $reportClient;
     
     private $reportStatus;
     
@@ -42,7 +43,8 @@ class SectionsTest extends WebTestCase
         
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
            'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
         
         $crawler = new Crawler($html);
@@ -51,7 +53,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("Add the significant decisions you've made for the client", $descriptionElement->eq(0)->text());
+        $this->assertContains("Add the significant decisions you've made for Fred Smith", $descriptionElement->eq(0)->text());
 
     }
 
@@ -62,7 +64,8 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -71,7 +74,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("Give us the details of people you consulted about the client", $descriptionElement->eq(0)->text());
+        $this->assertContains("Give us the details of people you consulted about Fred Smith", $descriptionElement->eq(0)->text());
 
     }
 
@@ -82,7 +85,8 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -91,7 +95,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("We need to know about your involvement with the client, and their care", $descriptionElement->eq(0)->text());
+        $this->assertContains("We need to know about your involvement with Fred Smith, and their care", $descriptionElement->eq(0)->text());
 
     }
 
@@ -122,7 +126,8 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -131,7 +136,7 @@ class SectionsTest extends WebTestCase
         $this->assertEquals(1, $descriptionElement->count());
 
 
-        $this->assertContains("Add your client's property, investments and other valuables", $descriptionElement->eq(0)->text());
+        $this->assertContains("Add Fred Smith's property, investments and other valuables", $descriptionElement->eq(0)->text());
 
     }
 
@@ -414,6 +419,10 @@ class SectionsTest extends WebTestCase
             ->shouldReceive('isReadyToSubmit')->andReturn(true)
             ->getMock();
 
+        $this->reportClient = m::mock('AppBundle\Entity\Client')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getFullname")->andReturn("Fred Smith")
+            ->getMock();
     }   
     
 }

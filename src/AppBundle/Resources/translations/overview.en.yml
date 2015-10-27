@@ -25,11 +25,11 @@ sectionsRemaining: "sections remaining"
 
 contacts:
     subSectionTitle: "Contacts"
-    subSectionDescription: "Give us the details of people you consulted about the client"
+    subSectionDescription: "Give us the details of people you consulted about %client%"
     edit: "Edit contacts"
 decisions:
     subSectionTitle: "Decisions"
-    subSectionDescription: "Add the significant decisions you've made for the client"
+    subSectionDescription: "Add the significant decisions you've made for %client%"
     edit: "Edit decisions"
 accounts:
     subSectionTitle: "Accounts"
@@ -37,11 +37,11 @@ accounts:
     edit: "Edit accounts"
 safeguarding:
     subSectionTitle: "Safeguarding"
-    subSectionDescription: "We need to know about your involvement with the client, and their care"
+    subSectionDescription: "We need to know about your involvement with %client%, and their care"
     edit: "Edit safeguarding"
 assets:
     subSectionTitle: "Assets"
-    subSectionDescription: "Add your client's property, investments and other valuables"
+    subSectionDescription: "Add %client%'s property, investments and other valuables"
     edit: "Edit assets"
 report_add_further_info:
     subSectionTitle: "Sign and submit"

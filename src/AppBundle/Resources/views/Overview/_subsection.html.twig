@@ -16,10 +16,7 @@
         </a>
     {% endif %}
     {%  if description is defined and description %}
-        {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
-            transDomain: translationDomain,
-            subSectionDescription: subSection ~ '.subSectionDescription'
-        } %}
+        <p class="sub-section-description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%':client.fullname}, translationDomain ) }}</p>
     {%  endif %}
     
 </div>
