@@ -34,12 +34,19 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldIgnoreMissing(true)
             ->shouldReceive('findOneBy')->with(['role'=>'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
             ->getMock();
-
+        
+        $this->casRec = m::mock('\AppBundle\Entity\CasRec');
+        
+        $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
+            ->shouldIgnoreMissing(false)
+            ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
+            ->getMock();
 
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
-            ->shouldIgnoreMissing(true)
+//            ->shouldIgnoreMissing(true)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\Role')->andReturn($mockRoleRepository)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->getMock();
 
         $mailFactory = m::mock('\AppBundle\Services\MailFactory')
@@ -355,6 +362,15 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('findOneBy')->with(['role'=>'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
             ->getMock();
 
+        $this->casRec = m::mock('\AppBundle\Entity\CasRec')
+            ->shouldReceive('getDeputyPostCode')->andReturn(null)
+            ->getMock();
+        
+        $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
+            ->shouldIgnoreMissing(false)
+            ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
+            ->getMock();
+        
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
@@ -363,6 +379,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('persist')->with($mockClient)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\Role')->andReturn($mockRoleRepository)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
             ->getMock();
 
         $mockEmail = m::mock('\AppBundle\Model\Email')
