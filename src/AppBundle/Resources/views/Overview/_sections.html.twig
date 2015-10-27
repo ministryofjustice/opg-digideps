@@ -9,7 +9,7 @@
             transDomain: translationDomain,
             subSection: 'decisions',
             report: report,
-            guidance: true,
+            description: true,
             state: reportStatus.decisionsState,
             status: reportStatus.decisionsStatus,
             list: true
@@ -18,7 +18,7 @@
             transDomain: translationDomain,
             subSection: 'contacts',
             report: report,
-            guidance: true,
+            description: true,
             list: true,
             info: true,
             state: reportStatus.contactsState,
@@ -33,7 +33,7 @@
             subSection: 'safeguarding',
             report: report,
             info: true,
-            guidance: true,
+            description: true,
             state: reportStatus.safeguardingState,
             status: reportStatus.safeguardingStatus
         } %}
@@ -49,7 +49,7 @@
                 state: reportStatus.accountsState,
                 status: reportStatus.accountsStatus,
                 warning: true,
-                guidance: true
+                description: true
             } %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -58,7 +58,7 @@
                 state: reportStatus.assetsState,
                 status: reportStatus.assetsStatus,
                 list: true,
-                guidance: true
+                description: true
             } %}
         </li>
     {% endif %}
@@ -70,7 +70,7 @@
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
                 report: report,
-                guidance: false,
+                description: false,
                 state: "not-started",
                 status: "Not started"
             } %}
@@ -82,7 +82,7 @@
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
                 report: report,
-                guidance: false,
+                description: false,
                 state: "not-started",
                 status: "Not started",
                 disableedit: true 
@@ -111,15 +111,3 @@
     id: 'cannot-submit-warning'
     } %}
 {% endif %}
-
-
-<script>
-    $( document ).ready(function() {
-        $('.sub-section').each(function(index,element) {
-            opg.accordian({
-                target: element,
-                open: false
-            });
-        });
-    });
-</script>

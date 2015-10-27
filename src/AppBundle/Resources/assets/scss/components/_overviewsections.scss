@@ -43,7 +43,7 @@
                 @include bold-24();
                 @include inline-block();
                 margin: 20px 10px 15px 5px;
-                width: 35%;
+                width: 45%;
                 float: left;
                 color: $grey-status;
 
@@ -121,84 +121,19 @@
 
             }
 
-            .help-link {
-                display: none;
-            }
-
-            .guidance {
-                border-top: 1px solid $grey-3;
-                padding: 20px 0 0 20px;
+            .sub-section-description {
+                float: none;
                 clear: both;
-                display: none;
-
-                p {
-                    width: 80%;
+                display: block;
+                box-sizing: border-box;
+                padding: 0;
+                width: 45%;
+                margin: 0 55% 15px 5px;
+                
+                @include media(mobile) {
+                    width: 100%;
                 }
-
-                .page-section-list {
-                    margin-left: 10px;
-                    width: 75%;
-                }
-            }
-
-            &.accordian {
-
-                .help-link {
-                    @include box-sizing(border-box);
-                    @include core-19(1.6);
-                    @include inline-block();
-                    padding: 20px 10px 15px 20px;
-                    width: 20%;
-                    float: left;
-                    color: $link-colour;
-
-                    @include media(mobile) {
-                        display: none;
-                    }
-
-                    @include media(tablet) {
-                        display: none;
-                    }
-
-                    @include media(desktop) {
-                        display: inline;
-                    }
-                }
-
-                .summary {
-                    background: url("images/icons/accordian-closed.png") 0 27px no-repeat;
-                }
-
-                &.open {
-                    .open-text {
-                        display: inline;
-                        text-decoration: underline;
-                    }
-
-                    .closed-text {
-                        display: none;
-                    }
-
-                    .summary {
-                        background-image: url("images/icons/accordian-open.png");
-                    }
-
-                }
-
-                &.closed {
-
-                    .open-text {
-                        display: none;
-                    }
-
-                    .closed-text {
-                        display: inline;
-                        text-decoration: underline;
-                    }
-
-                }
-
-            }
+            }           
 
         }
     }

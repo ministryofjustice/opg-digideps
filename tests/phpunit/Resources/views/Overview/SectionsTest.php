@@ -16,6 +16,7 @@ class SectionsTest extends WebTestCase
     private $client;
     
     private $report;
+    private $reportClient;
     
     private $reportStatus;
     
@@ -36,77 +37,70 @@ class SectionsTest extends WebTestCase
     }
 
     /** @test */
-    public function decisionSectionContainsOverview()
+    public function decisionsSectionDescription()
     {
         $this->setupReport();
         
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
            'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
         
         $crawler = new Crawler($html);
-        $decisionsGuidance = $crawler->filter('#decisions-guidance');
-        
-        $this->assertEquals(1, $decisionsGuidance->count());
-        
-        $guidanceElementText = $decisionsGuidance->eq(0)->text();
-        
-        $this->assertContains("Let us know the significant decisions you make over the reporting period. A significant decision is any important decision you make for the client during the reporting period. A significant decision might be:", $guidanceElementText);
-        $this->assertContains("buying or selling or renting property", $guidanceElementText);
-        $this->assertContains("buying or selling investments or shares", $guidanceElementText);
-        $this->assertContains("making gifts", $guidanceElementText);
-        $this->assertContains("moving the client to another nursing or care home", $guidanceElementText);
+        $descriptionElement = $crawler->filter('#decisions-sub-section .sub-section-description');
+       
+        $this->assertEquals(1, $descriptionElement->count());
+
+
+        $this->assertContains("Add the significant decisions you've made for Fred", $descriptionElement->eq(0)->text());
+
     }
 
     /** @test */
-    public function contactsSectionContainsOverview()
-    {
-        $this->setupReport();
-        
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-            'report' => $this->report,
-            'reportStatus' => $this->reportStatus
-        ]);
-
-        $crawler = new Crawler($html);
-        $guidanceElements = $crawler->filter('#contacts-guidance');
-
-        $this->assertEquals(1, $guidanceElements->count());
-
-        $guidanceElementText = $guidanceElements->eq(0)->text();
-
-        $this->assertContains("Let us know the contact details of the people you consult over the reporting period, such as:", $guidanceElementText);
-        $this->assertContains("care home staff or social services", $guidanceElementText);
-        $this->assertContains("family members", $guidanceElementText);
-        $this->assertContains("close friends", $guidanceElementText);
-        $this->assertContains("GP and other health staff", $guidanceElementText);
-        $this->assertContains("You don't need to list every person you contact, but we need an idea of the people you consult when deciding for the client - especially for important decisions.", $guidanceElementText);
-    }
-
-    /** @test */
-    public function safeguardingSectionContainsOverview()
+    public function contactsSectionDescription()
     {
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
-        $guidanceElements = $crawler->filter('#safeguarding-guidance');
+        $descriptionElement = $crawler->filter('#contacts-sub-section .sub-section-description');
 
-        $this->assertEquals(1, $guidanceElements->count());
+        $this->assertEquals(1, $descriptionElement->count());
 
-        $guidanceElementText = $guidanceElements->eq(0)->text();
 
-        $this->assertContains("Let us know how the client is cared for and what contact they have with you and other people.", $guidanceElementText);
-        $this->assertContains("We need to know how you check their needs are met. The OPG has a duty protect those that don't have mental capacity to make decisions for themselves.", $guidanceElementText);
+        $this->assertContains("Give us the details of people you consulted about Fred", $descriptionElement->eq(0)->text());
+
     }
 
     /** @test */
-    public function accountSectionContainsOverview()
+    public function safeguardingSectionDescription()
+    {
+        $this->setupReport();
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $descriptionElement = $crawler->filter('#safeguarding-sub-section .sub-section-description');
+
+        $this->assertEquals(1, $descriptionElement->count());
+
+
+        $this->assertContains("We need to know about your involvement with Fred's care", $descriptionElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function accountsSectionDescription()
     {
         $this->setupReport();
 
@@ -116,38 +110,33 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $guidanceElements = $crawler->filter('#accounts-guidance');
+        $descriptionElement = $crawler->filter('#accounts-sub-section .sub-section-description');
 
-        $this->assertEquals(1, $guidanceElements->count());
+        $this->assertEquals(1, $descriptionElement->count());
 
-        $guidanceElementText = $guidanceElements->eq(0)->text();
 
-        $this->assertContains("Add details of your client's accounts. We need to know the totals for the different types of payments you make and money you receive for the client. It's easiest to fill this in toward the end of your reporting period, when you know the final total amounts.", $guidanceElementText);
-        $this->assertContains("You can only sign off the accounts section at the end of the reporting period when you know the final totals.", $guidanceElementText);
+        $this->assertContains("Add details of all income and spending in the reporting period", $descriptionElement->eq(0)->text());
+
     }
 
     /** @test */
-    public function assetsSectionContainsOverview()
+    public function assetsSectionDescription()
     {
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
-        $guidanceElements = $crawler->filter('#assets-guidance');
+        $descriptionElement = $crawler->filter('#assets-sub-section .sub-section-description');
 
-        $this->assertEquals(1, $guidanceElements->count());
+        $this->assertEquals(1, $descriptionElement->count());
 
-        $guidanceElementText = $guidanceElements->eq(0)->text();
 
-        $this->assertContains("Add details of the client's assets and saving, such as:", $guidanceElementText);
-        $this->assertContains("property", $guidanceElementText);
-        $this->assertContains("savings and investments", $guidanceElementText);
-        $this->assertContains("stocks and shares, premium bonds", $guidanceElementText);
-        $this->assertContains("artwork, antiques or jewellery", $guidanceElementText);
+        $this->assertContains("Add Fred's property, investments and other valuables", $descriptionElement->eq(0)->text());
 
     }
 
@@ -403,8 +392,7 @@ class SectionsTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(0, $submitReportLinkElement->count());
     }
-
-
+    
     
     private function setupReport() 
     {
@@ -431,6 +419,11 @@ class SectionsTest extends WebTestCase
             ->shouldReceive('isReadyToSubmit')->andReturn(true)
             ->getMock();
 
+        $this->reportClient = m::mock('AppBundle\Entity\Client')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getFullname")->andReturn("Fred Smith")
+            ->shouldReceive("getFirstname")->andReturn("Fred")
+            ->getMock();
     }   
     
 }
