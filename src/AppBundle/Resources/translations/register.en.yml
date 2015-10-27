@@ -11,8 +11,10 @@ lastname:
     label: "Your last name"
 email:
     label: "Your email"
+    existingError: That email has already been registered with this service.
 postcode:
     label: "Your post code"
+    matchingError: You haven't entered a post code. Do you live in the UK? If you have a UK post code, please enter it.
 clientLastname:
     label: "Client's last name"
 caseNumber:
@@ -28,3 +30,7 @@ thankyou:
         <p class="page-section-description">If you haven't received the email within a few minutes, please check your spam, bulk or 
             junk email folder - it may have been mistakenly blocked by your email system.</p>
         <p class="page-section-description">If you've already activated your account, you can {{ sign_in }}<p>
+
+matchingError: The information you've given us does not match our records. Please call 0300 456 0300 to make sure we have a record of your deputyship.    
+matchingError: The information you've given us does not match our records. Please call 0300 456 0300 to make sure we have a record of your deputyship.    
+genericError: Cannot register with the given details
