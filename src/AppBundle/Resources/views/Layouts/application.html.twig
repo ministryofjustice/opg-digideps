@@ -46,6 +46,7 @@
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
                 {% endif %}
 
                 {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}

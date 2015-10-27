@@ -277,7 +277,8 @@ class FormFieldsExtension extends \Twig_Extension
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
         
         $html = $this->environment->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
-            'formErrorMessages' => $formErrorMessages
+            'formErrorMessages' => $formErrorMessages,
+            'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors']
         ]);
         
         echo $html;
