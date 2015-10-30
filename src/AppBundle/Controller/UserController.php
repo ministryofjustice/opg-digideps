@@ -35,7 +35,7 @@ class UserController extends AbstractController
         try {
             $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
         } catch (\Exception $e) {
-            throw new \AppBundle\Exception\DisplayableException('Token already used or invalid.');
+            throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
         }
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {

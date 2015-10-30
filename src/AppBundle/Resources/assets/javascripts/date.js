@@ -29,7 +29,7 @@ var opg = opg || {};
     
     opg.DateValidate.prototype.addErrorSection = function() {
         this.container.find('.errors').remove();
-        this.container.find('fieldset .form-group').first().before('<ul class="errors"><li class="error-message">Invalid Date</li></ul>');
+        this.container.find('fieldset .form-group').first().before('<ul class="errors"><li class="error-message">Enter a valid date</li></ul>');
     };
     opg.DateValidate.prototype.pad = function(event) {
         var field = $(event.target);
