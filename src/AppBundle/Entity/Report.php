@@ -160,6 +160,23 @@ class Report {
      * @var Client 
      */
     private $clientObject;
+
+    /**
+     * @var boolean
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic"})
+     */
+    private $allAgreed;
+
+    /** @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * @Assert\NotBlank(message="report.allagreed.notBlank", groups={"allagreed-no"} )
+     */
+    private $reasonNotAllAgreed;
+    
     
     /**
      * 
@@ -645,4 +662,38 @@ class Report {
             return 3;
         }
     }
+
+    /**
+     * @return boolean
+     */
+    public function isAllAgreed()
+    {
+        return $this->allAgreed;
+    }
+
+    /**
+     * @param boolean $allAgreed
+     */
+    public function setAllAgreed($allAgreed)
+    {
+        $this->allAgreed = $allAgreed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReasonNotAllAgreed()
+    {
+        return $this->reasonNotAllAgreed;
+    }
+
+    /**
+     * @param string $reasonNotAllAgreed
+     */
+    public function setReasonNotAllAgreed($reasonNotAllAgreed)
+    {
+        $this->reasonNotAllAgreed = $reasonNotAllAgreed;
+    }
+    
+    
 }
