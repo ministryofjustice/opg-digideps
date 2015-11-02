@@ -87,6 +87,13 @@ class ReportController extends RestController
             throw new \InvalidArgumentException("Missing submit_date");
         }
 
+        if (!empty($data['dontAllAgreeReason'])) {
+            $currentReport->setAllAgreed(false);
+            $currentReport->setReasonNotAllAgreed($data['dontAllAgreeReason']);
+        } else {
+            $currentReport->setAllAgreed(true);
+        }
+
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
