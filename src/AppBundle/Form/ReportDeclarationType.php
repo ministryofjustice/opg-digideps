@@ -32,7 +32,7 @@ class ReportDeclarationType extends AbstractType
             'validation_groups' => function(FormInterface $form){
 
                 $data = $form->getData();
-                $validationGroups = ['submitted'];
+                $validationGroups = ['submitted','declare'];
 
                 if($data->isAllAgreed() == false){
                     $validationGroups[] = "allagreed-no";

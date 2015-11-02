@@ -78,6 +78,9 @@ report:
         submitted: Report not submitted
         reviewedAndChecked: Report not reviewed and checked
         readyForSubmission: Report not ready for submission
+    allagreed:
+        notBlank: Value is required and can't be empty
+    agreed:  You must agree to the declaration
 
 report-declaration:
     agree:

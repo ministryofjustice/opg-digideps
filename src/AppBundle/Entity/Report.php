@@ -172,11 +172,17 @@ class Report {
     /** @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic","submit"})
      * @Assert\NotBlank(message="report.allagreed.notBlank", groups={"allagreed-no"} )
      */
     private $reasonNotAllAgreed;
     
+    /** @var boolean
+     *  
+     * @JMS\Type("boolean")
+     * @Assert\True(message="report.agreed", groups={"declare"} )
+     */
+    private $agree;
     
     /**
      * 
@@ -681,6 +687,7 @@ class Report {
 
     /**
      * @return string
+     *
      */
     public function getReasonNotAllAgreed()
     {
@@ -694,6 +701,23 @@ class Report {
     {
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isAgree()
+    {
+        return $this->agree;
+    }
+
+    /**
+     * @param boolean $agree
+     */
+    public function setAgree($agree)
+    {
+        $this->agree = $agree;
+    }
+    
     
     
 }
