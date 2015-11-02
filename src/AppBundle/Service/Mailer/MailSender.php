@@ -142,11 +142,15 @@ class MailSender
      */
     private function prependMessageIntoEmailMockPath(Swift_Message $swiftMessage)
     {
+        // read existing emails
+        $emails = [];
+        if (file_exists($this->mockPath)) {
+            $emails = json_decode(file_get_contents($this->mockPath), true) ? : [];
+        }
+        
         // prepend email into the file
-        $emails = json_decode(file_get_contents($this->mockPath), true) ? : [];
-
         array_unshift($emails, MessageUtils::messageToArray($swiftMessage));
-
+        
         $ret = file_put_contents($this->mockPath, json_encode($emails));
 
         if (false === $ret) {
