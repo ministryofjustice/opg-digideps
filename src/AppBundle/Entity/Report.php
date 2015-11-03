@@ -166,6 +166,7 @@ class Report {
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic"})
+     * @Assert\NotBlank(message="report.allagreed.reason", groups={"declare"} )
      */
     private $allAgreed;
 

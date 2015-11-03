@@ -79,7 +79,8 @@ report:
         reviewedAndChecked: Report not reviewed and checked
         readyForSubmission: Report not ready for submission
     allagreed:
-        notBlank: Value is required and can't be empty
+        notBlank: Value is required and can’t be empty
+        reason: You must tell us if all deputies agree
     agreed:  You must agree to the declaration
 
 report-declaration:

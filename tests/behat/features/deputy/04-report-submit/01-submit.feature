@@ -30,7 +30,8 @@ Feature: deputy / report / submit
         And I press "report_declaration_save"
         # tick agree and submit
         When I check "report_declaration_agree"
-        And I check "report_declaration_allAgreed_0"
+        When I fill in the following:
+            | report_declaration_allAgreed_0 | 1 |
         And I press "report_declaration_save"
         And the form should be valid
         And the response status code should be 200
@@ -151,16 +152,17 @@ Feature: deputy / report / submit
         When I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I go to "/report/1/declaration"
-        And I check "report_declaration_allAgreed_0"
+        When I fill in the following:
+            | report_declaration_allAgreed_0 | 1 |
         And I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_agree |
         Then I check "report_declaration_agree"
-        And I check "report_declaration_allAgreed_0"
+        When I fill in the following:
+            | report_declaration_allAgreed_0 | 1 |
         And I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_agree |
-        When I load the application status from "report-submit-post"
+        Then the URL should match "/report/\d+/submitted"
+        Then I load the application status from "report-submit-post"
 
         
     @deputy @wip
@@ -172,18 +174,21 @@ Feature: deputy / report / submit
         Then I check "report_declaration_agree"
         And I press "report_declaration_save"
         Then the following fields should have an error:
-            | report_declaration_agree |
+            | report_declaration_allAgreed_0 |
+            | report_declaration_allAgreed_1 |
+            | report_declaration_reasonNotAllAgreed |
         When I load the application status from "report-submit-post"
 
         
     @deputy @wip
-    Scenario: If not all agree, give reason
+    Scenario: If not all agree, need reason
         Given I reset the email log
         When I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I go to "/report/1/declaration"
         Then I check "report_declaration_agree"
-        And I check "report_declaration_allAgreed_1"
+        When I fill in the following:
+            | report_declaration_allAgreed_1 | 0 |
         And I press "report_declaration_save"
         Then the following fields should have an error:
             | report_declaration_reasonNotAllAgreed |
@@ -197,12 +202,11 @@ Feature: deputy / report / submit
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I go to "/report/1/declaration"
         Then I check "report_declaration_agree"
-        And I check "report_declaration_allAgreed_1"
-        Then the following fields should have the corresponding values:
+        When I fill in the following:
+            | report_declaration_allAgreed_1 | 0 |
+        Then I fill in the following:
             | report_declaration_reasonNotAllAgreed | test |
         And I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_reasonNotAllAgreed |
-        Then the response status code should be 200
+        Then the URL should match "/report/\d+/submitted"
         When I load the application status from "report-submit-post"
 
