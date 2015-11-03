@@ -24,25 +24,34 @@ class CasRec
     private $id;
     
     /**
-     * @JMS\Type("string")
      * @var string
+     * 
+     * @JMS\Type("string")
+     *
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
      */
     private $caseNumber;
     
     /**
-     * @JMS\Type("string")
      * @var string
+     * 
+     * @JMS\Type("string")
+     *
+     * @Assert\NotBlank()
      *
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
     private $clientLastname;
     
     /**
-     * @JMS\Type("string")
      * @var string
-     *
+     * 
+     * @JMS\Type("string")
+     * 
+     * @Assert\NotBlank()
+     * 
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
      */
     private $deputyNo;
@@ -50,9 +59,11 @@ class CasRec
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * 
      * @ORM\Column(name="deputy_lastname", type="string", length=100, nullable=true)
+     * 
      * @JMS\Type("string")
-     * @JMS\Groups({"basic", "audit_log"})
      */
     private $deputySurname;
     
@@ -60,8 +71,10 @@ class CasRec
      * @var string
      *
      * @JMS\Type("string")
+     * 
      * @ORM\Column(name="deputy_postcode", type="string", length=10, nullable=true)
-     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength", groups={"user_details_full"} )
+     * 
+     * @Assert\Length(min=2, max=10, minMessage="user.addressPostcode.minLength", maxMessage="user.addressPostcode.maxLength" )
      */
     private $deputyPostCode;
     
@@ -85,7 +98,11 @@ class CasRec
     {
         $value = trim($value);
         $value = strtolower($value);
-        $value = preg_replace('/ */', '', $value);
+        // remove MBE suffix
+        $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
+        // remove characters that are not a-z or 0-9 or spaces
+        $value = preg_replace('/([^a-z0-9])/i', '', $value);
+        
         return $value;
     }
     
