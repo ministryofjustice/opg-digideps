@@ -218,6 +218,9 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(true, $report->isAllAgreed());
+
+        // todo put back in test for submit date
+
     }
 
     public function testUpdateAuth()
