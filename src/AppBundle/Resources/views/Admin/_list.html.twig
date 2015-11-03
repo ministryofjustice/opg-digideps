@@ -1,6 +1,6 @@
 <div class="behat-region-users user-list">
 
-    <h1 class="form-title heading-medium-large">
+    <h1 class="form-title heading-medium-large" id="users-list-title">
         User list
     </h1>
 
@@ -55,6 +55,7 @@
     </thead>
     <tbody>
 
+    {# simple paginator #}
     <div style="float: right">
         {{ userCount }} users in total.
         {% if userCount > limit %}
@@ -64,7 +65,7 @@
                 {% if currentOffset == offset %}
                     {{ loop.index }}
                 {% else %}
-                    <a href={{  path("admin_homepage", {"offset": currentOffset}) }}>{{ loop.index }}</a> 
+                    <a href="{{  path("admin_homepage", {"offset": currentOffset}) }}#users-list-title">{{ loop.index }}</a> 
                 {% endif %}
             {% endfor %}
         {% endif %}
