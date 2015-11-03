@@ -10,7 +10,7 @@ form:
       closingDateExplanation:
         label: Please tell us why the dates do not match
       closingBalance:
-        label: "Closing Balance"
+        label: "Closing balance"
       closingBalanceExplanation:
         label: Please tell us why the balance does not match
       save:

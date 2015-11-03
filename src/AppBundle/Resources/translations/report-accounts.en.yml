@@ -50,7 +50,7 @@ form:
       bank:
         label: Enter the bank or building society name
       accountNumber:
-        label: Last four digits of the account number
+        label: Last 4 digits of the account number
         hint: ""
       sortCode:
         legend: Branch sort code
@@ -79,7 +79,7 @@ form:
         label: Cancel
 listing:
   bank: "Bank or building society name"
-  accountNumber: "Last four digits of account number"
+  accountNumber: "Last 4 digits of account number"
   balance: "Opening balance:"
   totalBalance: "Total balance:"
   lastEdited: "Last edited:"

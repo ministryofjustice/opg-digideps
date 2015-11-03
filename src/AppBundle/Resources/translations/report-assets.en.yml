@@ -44,7 +44,7 @@ listing:
 no_assets:
     label: My client has no assets
     description: If your client has no assets, please click the checkbox below.
-    selected: You have selected that your client has no assets
+    selected: Your client has no assets
 save:
     label: Save
 defaultDropDownOption:
