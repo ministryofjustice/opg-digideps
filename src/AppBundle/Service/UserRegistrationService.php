@@ -57,7 +57,7 @@ class UserRegistrationService
         }
         
         // Check the user is unique
-        $this->casRecChecks($user, $client);
+        $this->casRec($user, $client);
 
         $this->saveUserAndClient($user, $client);
 
@@ -73,14 +73,14 @@ class UserRegistrationService
      * @param Client $client
      * @return boolean
      */
-    private function casRecChecks(User $user, Client $client)
+    private function casRec(User $user, Client $client)
     {
         $criteria = [
             'caseNumber' => CasRec::normaliseValue($client->getCaseNumber()),
             'clientLastname' => CasRec::normaliseValue($client->getLastname()),
             'deputySurname' => CasRec::normaliseValue($user->getLastname()),
         ];
-        $casRec = $this->casRecRepo->findOneBy($criteria);
+        $casRec = $this->casRecRepo->findOneBy($criteria); /** @var $casRec CasRec */
         
         if (!$casRec) {
             throw new \RuntimeException("User and client not found in casrec.", 421);
@@ -91,6 +91,9 @@ class UserRegistrationService
             $casRec->getDeputyPostCode() != CasRec::normaliseValue($user->getAddressPostcode())) {
             throw new \RuntimeException("User and client found, but postcode mismatch", 424);
         }
+        
+        // copy deputy number over
+        $user->setDeputyNo($casRec->getDeputyNo());
     }
 
     public function saveUserAndClient($user, $client)

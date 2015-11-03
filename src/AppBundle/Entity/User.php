@@ -214,6 +214,13 @@ class User implements UserInterface
      */
     private $lastLoggedIn;
     
+     /**
+     * @var string
+     * 
+     * @JMS\Type("string")
+     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
+     */
+    private $deputyNo;
     
     /**
      * Constructor
@@ -689,6 +696,23 @@ class User implements UserInterface
     public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getDeputyNo()
+    {
+        return $this->deputyNo;
+    }
+
+    /**
+     * @param string $deputyNo
+     */
+    public function setDeputyNo($deputyNo)
+    {
+        $this->deputyNo = $deputyNo;
         return $this;
     }
 
