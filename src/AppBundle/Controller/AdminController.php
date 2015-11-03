@@ -165,9 +165,14 @@ class AdminController extends AbstractController
                 
                 $compressedData = base64_encode(gzcompress(json_encode($data), 9));
                 
-                $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add/1', $compressedData);
-                
-                $request->getSession()->getFlashBag()->add('notice', count($data) . ' records uploaded');
+                $ret = $this->getRestClient()->setTimeout(600)->post('casrec/bulk-add/1', $compressedData);
+                $request->getSession()->getFlashBag()->add(
+                    'notice', 
+                    sprintf('%d record uploaded, %d failed', $ret['added'], count($ret['errors']))
+                );
+                foreach ($ret['errors'] as $error) {
+                   $request->getSession()->getFlashBag()->add('notice', $error); 
+                }
                 
                 return $this->redirect($this->generateUrl('admin_upload'));
                 

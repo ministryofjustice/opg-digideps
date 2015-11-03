@@ -160,7 +160,11 @@ trait UserTrait
     {
         $value = trim($value);
         $value = strtolower($value);
-        $value = preg_replace('/ */', '', $value);
+        // remove MBE suffix
+        $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
+        // remove characters that are not a-z or 0-9 or spaces
+        $value = preg_replace('/([^a-z0-9])/i', '', $value);
+        
         return $value;
     }
 }
