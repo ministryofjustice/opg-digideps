@@ -218,7 +218,7 @@ class User implements UserInterface
      * @var string
      * 
      * @JMS\Type("string")
-     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
+     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
     private $deputyNo;
     

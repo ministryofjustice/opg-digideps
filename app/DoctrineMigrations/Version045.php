@@ -18,7 +18,7 @@ class Version045 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE dd_user ADD deputy_no VARCHAR(100) NOT NULL');
+        $this->addSql('ALTER TABLE dd_user ADD deputy_no VARCHAR(100) NULL');
     }
 
     /**
