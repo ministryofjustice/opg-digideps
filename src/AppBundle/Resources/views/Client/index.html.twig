@@ -30,8 +30,16 @@
     {% if newReportNotification %}
         <p class="flash">{{ newReportNotification }}</p>
     {% endif %}
-
-    {% if reports is not empty %}
+    
+    {% if action == 'edit-report' %}
+        {% include 'AppBundle:Report:_edit-dates.html.twig' with {
+            'form' : editReportDatesForm
+        } %}
+        <hr class="item-list" />
+    {% endif %}
+    
+    
+    {% if action != 'edit-report' and reports is not empty %}
         {% include 'AppBundle:Client:_list-reports.html.twig' with {
         'translationDomain': translationDomain,
         'reports': reports
