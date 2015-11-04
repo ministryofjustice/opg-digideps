@@ -212,7 +212,7 @@ class Report
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic","transactions"})
      * @ORM\Column(name="all_agreed", type="boolean", nullable=true)
      */
     private $allAgreed;
@@ -220,7 +220,7 @@ class Report
     /** @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic","transactions"})
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
      */
     private $reasonNotAllAgreed;

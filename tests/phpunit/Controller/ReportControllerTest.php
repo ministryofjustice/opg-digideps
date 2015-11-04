@@ -186,7 +186,7 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'submit_date' => '2015-12-30',
-                'dontAllAgreeReason' => 'dont agree reason'
+                'reason_not_all_agreed' => 'dont agree reason'
             ]
         ]);
 
