@@ -135,6 +135,7 @@ class UserRegistrationService
         $user->setActive(false);
         $user->setEmailConfirmed(false);
         $user->setRole($role);
+        $user->setRegistrationDate(new \DateTime());
     }
 
     public function populateClient(Client $client, SelfRegisterData $selfRegisterData)
