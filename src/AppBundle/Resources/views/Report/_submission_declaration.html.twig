@@ -17,7 +17,7 @@
     <div class="item">
         <dl class="item-data item-data-fixed">
             <dt class="item-label">{{ 'status' | trans() }}</dt>
-            <dd class="item-value">
+            <dd class="item-value" id="statusString">
                 {% if (report.isAllAgreed == true) %}
                     {{ 'deputyAgreed' | trans() }}
                 {% else %}
