@@ -33,6 +33,8 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doYouLiveWithClient_0" should be checked
 
     @safeguarding @entry @deputy
@@ -49,6 +51,8 @@ Feature: Safeguarding Data entry
             | safeguarding_howOftenDoYouWriteEmailOrLetter_0 | everyday |
             | safeguarding_howOftenDoesClientSeeOtherPeople_0 | everyday |
             | safeguarding_anythingElseToTell | nothing to report |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doYouLiveWithClient_1" should be checked
         Then the checkbox "safeguarding_howOftenDoYouVisit_0" should be checked
         Then the checkbox "safeguarding_howOftenDoYouPhoneOrVideoCall_0" should be checked
@@ -101,6 +105,8 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"    
         Then the checkbox "safeguarding_doesClientReceivePaidCare_1" should be checked
 
     @safeguarding @entry @deputy
@@ -113,6 +119,8 @@ Feature: Safeguarding Data entry
             | safeguarding_howIsCareFunded_0 | client_pays_for_all |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doesClientReceivePaidCare_0" should be checked
         And the checkbox "safeguarding_howIsCareFunded_0" should be checked
 
@@ -139,6 +147,8 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"
         And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones"
 
     @safeguarding @entry @deputy
@@ -152,6 +162,8 @@ Feature: Safeguarding Data entry
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_0" should be checked
         And the "safeguarding_whenWasCarePlanLastReviewed_month" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2015"
@@ -165,6 +177,8 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
+        When I follow "overview-button"
+        And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_1" should be checked
 
     @safeguarding @entry @deputy
