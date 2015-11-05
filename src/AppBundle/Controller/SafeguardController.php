@@ -45,9 +45,10 @@ class SafeguardController extends AbstractController{
                 $this->get('restClient')->put('report/safeguarding/'. $safeguarding->getId() ,$data, ['deserialise_group' => 'safeguarding']);
             }
 
-            $this->get('session')->getFlashBag()->add('action', 'page.safeguardinfoSaved');
+            //$t = $this->get('translator')->trans('page.safeguardinfoSaved', [], 'report-safeguarding');
+            //$this->get('session')->getFlashBag()->add('action', $t);
 
-            return $this->redirect($this->generateUrl('safeguarding', ['reportId'=>$reportId]) . "#pageBody");
+            return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]) . "#pageBody");
         }
 
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
