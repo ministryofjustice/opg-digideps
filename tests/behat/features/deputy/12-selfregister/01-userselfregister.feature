@@ -14,7 +14,7 @@ Feature: User Self Registration
             | self_registration_lastname  | Tolley             |
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  |  |
-            | self_registration_clientLastname | Cross-Tolley  |
+            | self_registration_clientLastname | Cross  tolley  |
             | self_registration_caseNumber     | 12341234      |
         And I press "self_registration_save"
         Then I should see a "#error-heading" element

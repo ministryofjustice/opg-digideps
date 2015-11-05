@@ -67,7 +67,12 @@
             {% if app.user %}
                 ga('set', '&uid','{{app.user.gaTrackingId()}}');
             {% endif %} 
-            ga('send', 'pageview');
+            
+            {% if gaCustomUrl is defined %}
+                ga('send', 'pageview', '{{gaCustomUrl}}');
+            {% else %}
+                ga('send', 'pageview');
+            {% endif %}
         </script>
        {% endif %}
 

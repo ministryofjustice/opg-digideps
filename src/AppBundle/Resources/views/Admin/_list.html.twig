@@ -1,6 +1,6 @@
 <div class="behat-region-users user-list">
 
-    <h1 class="form-title heading-medium-large">
+    <h1 class="form-title heading-medium-large" id="users-list-title">
         User list
     </h1>
 
@@ -9,7 +9,7 @@
       <tr>
         <th scope="col">
             {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'firstname') %}
-                <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': newSortOrder })}}"> Firstname</a>
+                <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': newSortOrder })}}#users-list-title"> Firstname</a>
 
                 {% if app.request.query.get('sort_order') == "ASC" %}
                          (a-z)
@@ -18,13 +18,13 @@
                 {% endif %}
 
             {% else %}
-                <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': 'DESC' })}}" > Firstname</a>
+                <a href="{{url('admin_homepage', { 'order_by': 'firstname', 'sort_order': 'DESC' })}}#users-list-title" > Firstname</a>
             {% endif %}
         </th>
 
         <th scope="col">
            {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'lastname') %}
-                <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}">Lastname</a>
+                <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': newSortOrder })}}#users-list-title">Lastname</a>
 
                 {% if app.request.query.get('sort_order') == "ASC" %}
                          (a-z)
@@ -33,12 +33,12 @@
                 {% endif %}
 
            {% else %}
-                <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}"  >Lastname</a>
+                <a href="{{url('admin_homepage', { 'order_by': 'lastname', 'sort_order': 'ASC' })}}#users-list-title"  >Lastname</a>
            {% endif %}
         </th>
         <th scope="col">
                {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'email') %}
-                      <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': newSortOrder })}}">Email</a>
+                      <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': newSortOrder })}}#users-list-title">Email</a>
 
                       {% if app.request.query.get('sort_order') == "ASC" %}
                             (a-z)
@@ -47,14 +47,29 @@
                       {% endif %}
 
                {% else %}
-                      <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': 'ASC' })}}" >Email</a>
+                      <a href="{{url('admin_homepage', { 'order_by': 'email', 'sort_order': 'ASC' })}}#users-list-title" >Email</a>
                {% endif %}
         </th>
         <th scope="col">Role</th>
+        <th scope="col">
+            {% if (app.request.query.has('order_by')) and (app.request.query.get('order_by') == 'registrationDate') %}
+                      <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': newSortOrder })}}#users-list-title">Registration date</a>
+
+                      {% if app.request.query.get('sort_order') == "ASC" %}
+                            (a-z)
+                      {% else %}
+                            (z-a)
+                      {% endif %}
+
+               {% else %}
+                      <a href="{{url('admin_homepage', { 'order_by': 'registrationDate', 'sort_order': 'ASC' })}}#users-list-title" >Registration date</a>
+               {% endif %}
+        </th>
       </tr>
     </thead>
     <tbody>
 
+    {# simple paginator #}
     <div style="float: right">
         {{ userCount }} users in total.
         {% if userCount > limit %}
@@ -64,7 +79,7 @@
                 {% if currentOffset == offset %}
                     {{ loop.index }}
                 {% else %}
-                    <a href={{  path("admin_homepage", {"offset": currentOffset}) }}>{{ loop.index }}</a> 
+                    <a href="{{  path("admin_homepage", {"offset": currentOffset}) }}#users-list-title">{{ loop.index }}</a> 
                 {% endif %}
             {% endfor %}
         {% endif %}
@@ -83,6 +98,7 @@
         <td>{{ user.lastname }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.role.name }}</td>
+        <td>{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'n.a.' }}</td>
       </tr>
     {% endfor %}
     </tbody>
