@@ -31,6 +31,7 @@ class CasRecController extends RestController
         ini_set('memory_limit','1024M');
         set_time_limit(600);
         
+        $retErrors = [];
         $data = json_decode(gzuncompress(base64_decode($request->getContent())), true);
         $count = count($data);
         
@@ -52,8 +53,8 @@ class CasRecController extends RestController
                 $em->getConnection()->query('TRUNCATE TABLE casrec');
             }
 
-            $index = 1;
-            foreach ($data as  $row) {
+            $added = 1;
+            foreach ($data as $dataIndex => $row) {
                 $casRec = new EntityDir\CasRec(
                     $row['Case'], 
                     $row['Surname'], 
@@ -64,14 +65,14 @@ class CasRecController extends RestController
                 
                 $errors = $validator->validate($casRec);
                 if (count($errors) > 0) {
-                    $this->get('logger')->warning($errors);
+                    $retErrors[] = "ERROR IN LINE ".($dataIndex+2)." :" . str_replace('Object(AppBundle\Entity\CasRec).', '', (string)$errors);
                     unset($casRec);
                 }  else {
                     $em->persist($casRec);
-                    if (($index++ % $persistEvery) === 0) {
+                    if (($added++ % $persistEvery) === 0) {
                        $em->flush();
                        $em->clear();
-                       $this->get('logger')->info("saved $index / $count records. ".(memory_get_peak_usage() / 1024 / 1024)." MB of memory used");
+                       $this->get('logger')->info("saved $added / $count records. ".(memory_get_peak_usage() / 1024 / 1024)." MB of memory used");
                     }
                 }
             }
@@ -86,7 +87,7 @@ class CasRecController extends RestController
             throw new \RuntimeException($e->getMessage());
         }
         
-        return $index;
+        return ['added' => $added-1, 'errors' => $retErrors];
     }
 
      /**

@@ -35,6 +35,7 @@ class UserController extends RestController
         $user = new EntityDir\User();
        
         $this->populateUser($user, $data);
+        $user->setRegistrationDate(new \DateTime());
         
         /**
          * Not sure we need this check, email field is set as unique in the db. May be try catch the unique value exception

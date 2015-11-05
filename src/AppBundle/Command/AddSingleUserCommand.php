@@ -69,6 +69,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->setLastname($data['lastname'])
             ->setEmail($email)
             ->setActive(true)
+            ->setRegistrationDate(new \DateTime())
             ->setRole($roleRepo->find($data['roleId']));
 
         $user->setPassword($this->encodePassword($user, $data['password']));
