@@ -31,7 +31,7 @@ var config = {
 };
 
 gulp.task('gettag', function(callback) {
-    config.webAssets = "web/assets/" + new Date().getTime()
+    config.webAssets = "web/assets/" + new Date().getTime();
     callback();
 });
 gulp.task('clean', function (callback) {

@@ -1,0 +1,84 @@
+{% trans_default_domain translationDomain %}
+
+{% if showDelete is not defined %}
+    {% if form.vars.value.id %}
+        {% set showDelete = true %}
+    {% else %}
+        {% set showDelete = false %}
+    {% endif %}
+{% endif %}
+
+{% if showCancel is not defined %}
+    {% set showCancel = true %}
+{% endif %}
+
+<div id="save-section-{{ section }}" class="save-section">
+    
+    <div class="save-bar button-bar">
+        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+
+        {% if showCancel == true %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'cancel.label',
+                linkClass: 'button-link',
+                linkHref: path(section, {'reportId': report.id})
+            } %}
+        {% endif %}
+
+        {% if showDelete == true %}
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+            transDomain: translationDomain,
+            linkButtonLabel: 'delete.label',
+            linkClass: 'delete-button button-warning behat-link-delete-confirm',
+            linkHref: path('delete_' ~ section , {'reportId': report.id, 'id': form.vars.value.id })
+            } %}
+        {% endif %}
+    </div>
+
+    {% if showDelete == true %}
+        <div class="confirm-bar button-bar">
+            <p class="delete-confirm-message">{{ 'delete.message' | trans() }}</p>
+            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                transDomain: translationDomain,
+                linkButtonLabel: 'delete.label',
+                linkClass: 'button-warning behat-link-delete-confirm',
+                linkHref: path('delete_' ~ section, {'reportId': report.id, 'id': form.vars.value.id })
+            } %}
+            
+            {% if showCancel == true %}
+                {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+                    transDomain: translationDomain,
+                    linkButtonLabel: 'cancel.label',
+                    linkClass: 'button-link cancel-link',
+                    linkHref: path(section, {'reportId': report.id})
+                } %}
+            {% endif %}
+        </div>
+        <script>
+            $(document).ready(function() {
+
+                var saveSection = $('#save-section-{{ section }}'),
+                    okBar =  saveSection.find('.save-bar'),
+                    confirmBar = saveSection.find('.confirm-bar'),
+                    deleteElement = okBar.find('.delete-button'),
+                    cancelConfirmElement = confirmBar.find('.cancel-link');
+
+                confirmBar.hide();
+
+                deleteElement.on('click', function(event) {
+                    event.preventDefault();
+                    okBar.hide();
+                    confirmBar.show();
+                });
+                cancelConfirmElement.on('click', function(event) {
+                    event.preventDefault();
+                    confirmBar.hide();
+                    okBar.show();
+                });
+
+            });
+        </script>
+    {% endif %}
+
+</div>

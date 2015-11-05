@@ -1,100 +1,45 @@
-{#
-Component parameters
---------------------
+{% if form.vars.value.id %}
+    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+{% else %}
+    {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+{% endif %}
 
-showAddForm (true/false)
-form
-#}
-
-{% if (showAddForm) %}
-
-    {% if (showAddForm) %}
-        {% set formContainerClass = '' %}
-        {% set formClass = 'in-page-form' %}
-    {% else %}
-        {% set formContainerClass = 'visuallyhidden' %}
-        {% set formClass = '' %}
-    {% endif %}
-
-    <div class="help-items">
-    <section class="help-item">
-        <h3 class="summary heading-medium">Why does OPG need to know this?</h3>
-        <p class="content page-section-description">We need to know the important decisions you've made for the client so we
-            can build a picture about the client's finances and their well being.
-        <p class="content page-section-description">This is because OPG has a responsibility to protect people who don't have
-            the mental capacity to make decisions for themselves.</p>
-    </section>
-    <section class="help-item">
-        <h3 class="summary heading-medium">What is a significant decision?</h3>
-        <p class="content page-section-description">Significant decisions are any important decisions you make for the 
-        client - not just financial decisions. We need to know about any decisions that have 
-        a big impact on the client's well-being or circumstances.</p>
-        <p class="content list-into">Significant decisions might be:</p>
-        <ul class="content list-bullet">
-            <li>buying or selling or renting property</li>
-            <li>buying or selling investments or shares</li>
-            <li>holidays or frequent day trips</li>
-            <li>home improvements</li>
-            <li>making gifts</li>
-            <li>moving the client to another nursing or care home</li>
-            <li>changing their day centre</li>
-        </ul>
-        <p class="content page-section-description">Decisions you do <b>not</b> need to include here are small, day-to-day decisions
-            such as buying food or toiletries</p>
-    </section>
-    </div>
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass }}) }}
-
-    <div id="add" class="{{ formContainerClass }}"> {# Show the Add Form #}
-
-        {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
-
-        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
+ 
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
         transDomain: translationDomain,
         subSectionTitle: subSectionTitleText
-        } %}
+    } %}
 
-        {# form block start #}
-        {{ form_input(form.description,'description', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    {{ form_input(form.description,'description', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
 
-        {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
+    {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
         'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
         'items': [
-        {'labelClass': 'block-label', 'elementClass': '' },
-        {'labelClass': 'block-label', 'elementClass': '' }
-        ]
-        }) }}
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }]
+    }) }}
 
-        {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
-        {# form block end #}
-
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
-        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
-
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    
+        
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
         transDomain: translationDomain,
-        linkButtonLabel: 'cancel.label',
-        linkClass: 'button-link',
-        linkHref: path('decisions', {'reportId': report.id})
-        } %}
+        section: 'decisions'
+    } %}
 
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+{{ form_end(form) }}
 
-    </div>
-
-    {{ form_end(form) }}
-
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.help-item').each(function(index,item) {
-                opg.accordian({
-                    target:item,
-                    open: false
-                });
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.help-item').each(function(index,item) {
+            opg.accordian({
+                target:item,
+                open: false
             });
+            new GOVUK.SelectionButtons(":radio");
         });
-    </script>
-
-{% endif %}
+        
+    });
+</script>

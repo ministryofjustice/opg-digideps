@@ -32,3 +32,21 @@ form .form-group.button-bar {
 nav#bottom-button-bar {
     margin: 40px 0 40px 0;
 }
+
+.button-bar.confirm-bar {
+    
+    background: $grey-3;
+    max-width: 425px;
+    padding: 10px 13px 15px 10px;
+    margin: 0 10px 10px 0;
+    
+    .button-warning {
+        margin-left: 0;
+    }
+    
+}
+
+.save-section {
+    float: none;
+    clear:both;
+}
