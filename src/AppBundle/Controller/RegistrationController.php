@@ -25,6 +25,7 @@ class RegistrationController extends AbstractController
         $selfRegisterData = new ModelDir\SelfRegisterData();
         $form = $this->createForm(new FormDir\SelfRegisterDataType(), $selfRegisterData);
         $translator = $this->get('translator');
+        $vars = [];
         
         /** @var Request $request */
         $request = $this->getRequest();
@@ -75,7 +76,14 @@ class RegistrationController extends AbstractController
                 $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
-            
-        return $this->render('AppBundle:Registration:register.html.twig', [ 'form' => $form->createView() ]);
+        
+        // send different URL to google analytics
+        if (count($form->getErrors())) {
+            $vars['gaCustomUrl'] = '/register/form-errors';
+        }
+        
+        return $this->render('AppBundle:Registration:register.html.twig', $vars + [ 
+            'form' => $form->createView()
+        ]);
     }
 }

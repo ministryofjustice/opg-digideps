@@ -297,12 +297,14 @@ class RestClient
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            $this->logger->warning('RestClient | Api not running ? | ' . $url . ' | ' . $e->getMessage());
+            
+            $data = [];
             
             try {
-                $data = $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') ?: [];
+                $data = $e->getResponse() ? $this->serialiser->deserialize($e->getResponse()->getBody(), 'array', 'json') : [];
             } catch (\Exception $e) {
-                $data = [];
+                $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
             
             throw new AppException\RestClientException(self::ERROR_CONNECT, $e->getCode(), $data);
