@@ -1,0 +1,21 @@
+{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+
+{# {% trans_default_domain "admin" %} #}
+
+{% block pageTitle %}Administration - Users{% endblock %}
+{% block contentClass %}{{ parent() }} admin-users{% endblock %}
+{% block title %}OPG Assisted Digital{% endblock %}
+
+{% block validationSummary %}
+{% endblock %}
+
+
+{% block pageBody %}    
+   Sign in
+   <form action="" method="POST">
+       <input name="cot" value="cot" />
+       <input name="q1" value="q1" />
+       <input type="submit" />
+   </form>
+   
+{% endblock %}

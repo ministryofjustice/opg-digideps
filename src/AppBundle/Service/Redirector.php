@@ -81,6 +81,8 @@ class Redirector
             return $this->getAdminHomepage();
         } elseif ($this->security->isGranted('ROLE_LAY_DEPUTY')) {
             return $this->getLayDeputyHomepage($user, $enabledLastAccessedUrl);
+        } elseif ($this->security->isGranted('ROLE_AD')) {
+            return $this->getAdHomepage($user, $enabledLastAccessedUrl);
         } else {
             return $this->router->generate('access_denied');
         }
@@ -94,6 +96,16 @@ class Redirector
     {
         return $this->router->generate('admin_homepage');
     }
+    
+    /**
+     * @return string URL
+     */
+    private function getAdHomepage()
+    {
+        return $this->router->generate('ad_homepage');
+    }
+    
+    
 
 
     /**
