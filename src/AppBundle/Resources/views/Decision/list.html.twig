@@ -38,7 +38,7 @@
                     <li class="report-list__item" id="edit-{{ decision.id }}">
                         <div class="report-list__item-header">
                             <h3>&nbsp;</h3>
-                            <a href="{{ url('edit_decisions', {'reportId': report.id, 'id': decision.id }) }}"
+                            <a href="{{ url('edit_decision', {'reportId': report.id, 'id': decision.id }) }}"
                                    class="js-report-list__item-edit-link report-list__item-edit-link behat-link-decision-{{decision.description | behat_namify}}">{{ 'listing.edit-link'| trans }}</a>
                         </div>
                         <dl class="report-list__item-fields">
@@ -58,7 +58,11 @@
                 {% endfor %}
             </ul>
         {% else %}
-                {{ render(controller('AppBundle:Decision:_noDecisions', { 'reportId': report.id, 'request': app.request })) }}
+            {% if report.reasonForNoDecisions is not empty %}
+                {% include 'AppBundle:Decision:_none_reason.html.twig' with {'report': report} %}
+            {% else %}
+                {{ render(controller('AppBundle:Decision:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}
+            {% endif %}
         {% endif %}
         
         {% include 'AppBundle:Decision:_continue.html.twig' with {'report': report} %}

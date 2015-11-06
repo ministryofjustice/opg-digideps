@@ -13,16 +13,16 @@
 {% endif %}
 
 <div id="save-{{ section }}" class="save-section">
-    
+
     <div class="save-bar button-bar">
         {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
 
         {% if showCancel == true %}
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'cancel.label',
-                linkClass: 'button-link',
-                linkHref: path(section ~ 's', {'reportId': report.id})
+            transDomain: translationDomain,
+            linkButtonLabel: 'cancel.label',
+            linkClass: 'button-link',
+            linkHref: path(section ~ 's', {'reportId': report.id})
             } %}
         {% endif %}
 
@@ -31,7 +31,7 @@
             transDomain: translationDomain,
             linkButtonLabel: 'delete.label',
             linkClass: 'delete-button button-warning behat-link-delete-confirm',
-            linkHref: path('delete_' ~ section , {'reportId': report.id, 'id': form.vars.value.id })
+            linkHref: path('delete_nonereason_' ~ section ~ 's' , {'reportId': report.id})
             } %}
         {% endif %}
     </div>
@@ -40,18 +40,18 @@
         <div class="confirm-bar button-bar hidden">
             <p class="delete-confirm-message">{{ 'delete.message' | trans() }}</p>
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                transDomain: translationDomain,
-                linkButtonLabel: 'delete.label',
-                linkClass: 'button-warning behat-link-delete-confirm',
-                linkHref: path('delete_' ~ section, {'reportId': report.id, 'id': form.vars.value.id })
+            transDomain: translationDomain,
+            linkButtonLabel: 'delete.label',
+            linkClass: 'button-warning behat-link-delete-confirm',
+            linkHref: path('delete_nonereason_' ~ section ~ 's', {'reportId': report.id })
             } %}
-            
+
             {% if showCancel == true %}
                 {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-                    transDomain: translationDomain,
-                    linkButtonLabel: 'cancel.label',
-                    linkClass: 'button-link cancel-link',
-                    linkHref: path(section ~ 's', {'reportId': report.id})
+                transDomain: translationDomain,
+                linkButtonLabel: 'cancel.label',
+                linkClass: 'button-link cancel-link',
+                linkHref: path(section ~ 's', {'reportId': report.id})
                 } %}
             {% endif %}
         </div>
@@ -76,7 +76,6 @@
                     confirmBar.addClass('hidden');
                     okBar.removeClass('hidden');
                 });
-
             });
         </script>
     {% endif %}

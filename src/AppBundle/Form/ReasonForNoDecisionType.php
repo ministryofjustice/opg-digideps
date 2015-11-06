@@ -10,9 +10,14 @@ class ReasonForNoDecisionType extends AbstractType{
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('reasonForNoDecisions','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'decision.no-decision-reason.notBlank'])
-                     ]])
-                ->add('save', 'submit');
+        $builder
+            ->add('reasonForNoDecisions','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'decision.no-decision-reason.notBlank']) ]])
+            ->add('save', 'submit');
+        
+        //if (array_key_exists ( 'action' , $options )) {
+           $builder->setAction($options['action']);
+        //}
+   
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)

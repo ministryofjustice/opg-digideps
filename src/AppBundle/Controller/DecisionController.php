@@ -5,7 +5,6 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Service\ReportStatusService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -15,10 +14,10 @@ class DecisionController extends AbstractController
     /**
      * @Route("/report/{reportId}/decisions", name="decisions")
      * @Template("AppBundle:Decision:list.html.twig")
+     * @param integer $reportId
+     * @return array
      */
-    public function listAction(Request $request, $reportId) {
-
-        
+    public function listAction($reportId) {
         
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         
@@ -73,7 +72,7 @@ class DecisionController extends AbstractController
 
     
     /**
-     * @Route("/report/{reportId}/decisions/{id}", name="edit_decisions")
+     * @Route("/report/{reportId}/decision/{id}", name="edit_decision")
      * @Template("AppBundle:Decision:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $id) {
@@ -112,7 +111,7 @@ class DecisionController extends AbstractController
 
     
     /**
-     * @Route("/report/{reportId}/decisions/delete/{id}", name="delete_decisions")
+     * @Route("/report/{reportId}/decision/delete/{id}", name="delete_decision")
      * @param integer $id
      * 
      * @return RedirectResponse
@@ -132,7 +131,7 @@ class DecisionController extends AbstractController
     
 
     /**
-     * @Route("/report/{reportId}/decisions/delete-reason", name="delete_reason_decisions")
+     * @Route("/report/{reportId}/decisions/delete-nonereason", name="delete_nonereason_decisions")
      */
     public function deleteReasonAction($reportId)
     {
@@ -148,16 +147,47 @@ class DecisionController extends AbstractController
 
 
     /**
-     * Return the small template with the form for no decisions
+     * @Route("/report/{reportId}/decisions/nonereason", name="edit_decisions_nonereason")
+     * @Template("AppBundle:Decision:edit_none_reason.html.twig")
+     */  
+    public function noneReasonAction(Request $request, $reportId) {
+        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
+        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+        
+            $data = $form->getData();
+            $this->get('restClient')->put('report/'. $reportId,$data);
+
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) . "#pageBody");
+            
+        }
+
+        $client = $this->getClient($report->getClient());
+        
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
+            'client' => $client
+        ];
+        
+    }
+    
+
+    /**
+     * Sub controller action called when the no decision form is embedded in another page.
      *
-     * @Template("AppBundle:Decision:_noDecisions.html.twig")
+     * @Template("AppBundle:Decision:_none_reason_form.html.twig")
      */
-    public function _noDecisionsAction(Request $request, $reportId)
+    public function _noneReasonFormAction(Request $request, $reportId)
     {
 
+        $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId'=>$reportId]);
         $report = $this->getReportIfReportNotSubmitted($reportId);
-        
-        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
+        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 
         if($form->isValid()){
@@ -170,12 +200,8 @@ class DecisionController extends AbstractController
             'report' => $report
         ];
     }
-
     
     
-
-
-
     /**
      *
      * @param integer $reportId
