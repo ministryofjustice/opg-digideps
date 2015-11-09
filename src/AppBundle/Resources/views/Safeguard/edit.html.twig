@@ -115,12 +115,9 @@
     </div>
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'form.save') }}
+    {{ form_submit(form.save,'form.saveAndContinue') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-    {% include 'AppBundle:Safeguard:_continue.html.twig' with {
-        'report': report
-    } %}
     {{ form_end(form) }}
 
     {{form(form)}}
