@@ -131,7 +131,7 @@ account:
     openingDate:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         notBlank: Please enter opening balance date
-        notSameAsReport: The start date of the report and the date here is different. Please tell us why below.
+        notSameAsReport: The start date of the report and the date here is different. Tell us why below.
         date: Please enter a valid date
     bank:
         notBlank: Enter the bank or building society name

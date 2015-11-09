@@ -25,7 +25,7 @@ class AssetType extends AbstractType
                 ->add('valuationDate', 'date',[ 'widget' => 'text',
                                                  'input' => 'datetime',
                                                  'format' => 'dd-MM-yyyy',
-                                                 'invalid_message' => 'invalid date'
+                                                 'invalid_message' => 'Enter a valid date'
                                               ])
                 ->add('id', 'hidden')
                 ->add('save', 'submit');

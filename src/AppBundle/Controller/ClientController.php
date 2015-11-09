@@ -27,7 +27,6 @@ class ClientController extends AbstractController
         $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
         arsort($reports);
         
-        
         $report = new EntityDir\Report();
         $report->setClient($client->getId());
 
