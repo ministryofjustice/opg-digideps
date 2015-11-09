@@ -337,7 +337,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $data->setCaseNumber('12341234');
 
         $mockUser = m::mock('\AppBundle\Entity\User')
-            ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
             ->getMock();
 
@@ -364,6 +363,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->casRec = m::mock('\AppBundle\Entity\CasRec')
             ->shouldReceive('getDeputyPostCode')->andReturn(null)
+            ->shouldReceive('getDeputyNo')->andReturn('D01')
             ->getMock();
         
         $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
