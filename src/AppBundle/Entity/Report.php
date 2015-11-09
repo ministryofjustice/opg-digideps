@@ -207,6 +207,23 @@ class Report
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
      */
     private $reportSeen;
+
+    /**
+     * @var boolean
+     *
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic","transactions"})
+     * @ORM\Column(name="all_agreed", type="boolean", nullable=true)
+     */
+    private $allAgreed;
+
+    /** @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic","transactions"})
+     * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
+     */
+    private $reasonNotAllAgreed;
     
      /**
      * Constructor
@@ -796,6 +813,39 @@ class Report
     public function belongsToUser(User $user)
     {
         return in_array($user->getId(), $this->getClient()->getUserIds());
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAllAgreed()
+    {
+        return $this->allAgreed;
+    }
+
+    /**
+     * @param boolean $allAgreed
+     */
+    public function setAllAgreed($allAgreed)
+    {
+        $this->allAgreed = $allAgreed;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getReasonNotAllAgreed()
+    {
+        return $this->reasonNotAllAgreed;
+    }
+
+    /**
+     * @param string $reasonNotAllAgreed
+     */
+    public function setReasonNotAllAgreed($reasonNotAllAgreed)
+    {
+        $this->reasonNotAllAgreed = $reasonNotAllAgreed;
     }
 
 

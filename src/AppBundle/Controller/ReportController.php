@@ -87,9 +87,15 @@ class ReportController extends RestController
             throw new \InvalidArgumentException("Missing submit_date");
         }
 
+        if (!empty($data['reason_not_all_agreed'])) {
+            $currentReport->setAllAgreed(false);
+            $currentReport->setReasonNotAllAgreed($data['reason_not_all_agreed']);
+        } else {
+            $currentReport->setAllAgreed(true);
+        }
+
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
-
 
         // send report if submitted
         $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId' => $currentReport->getId()])->getContent();
@@ -103,6 +109,8 @@ class ReportController extends RestController
         //send confirmation email
         $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($user, $currentReport, $nextYearReport);
         $this->getMailSender()->send($reportConfirmEmail, [ 'text', 'html']);
+
+        $this->getEntityManager()->flush($currentReport);
 
         //response to pass back
         return ['newReportId' => $nextYearReport->getId()];

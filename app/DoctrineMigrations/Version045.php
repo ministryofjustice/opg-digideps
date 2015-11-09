@@ -19,6 +19,8 @@ class Version045 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE dd_user ADD deputy_no VARCHAR(100) NULL');
+        $this->addSql('ALTER TABLE report ADD all_agreed BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD reason_not_all_agreed TEXT DEFAULT NULL');
     }
 
     /**
@@ -31,5 +33,7 @@ class Version045 extends AbstractMigration
 
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE dd_user DROP deputy_no');
+        $this->addSql('ALTER TABLE report DROP all_agreed');
+        $this->addSql('ALTER TABLE report DROP reason_not_all_agreed');
     }
 }
