@@ -414,6 +414,7 @@ trait ReportTrait
 
         # declaration page
         $this->checkOption("report_declaration_agree");
+        $this->fillField("report_declaration_allAgreed_0", 1);
         $this->pressButton("report_declaration_save");
 
         $this->theFormShouldBeValid();

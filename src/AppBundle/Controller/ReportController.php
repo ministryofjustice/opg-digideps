@@ -161,7 +161,7 @@ class ReportController extends AbstractController
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
         
-        $form = $this->createForm(new FormDir\ReportDeclarationType());
+        $form = $this->createForm(new FormDir\ReportDeclarationType(), $report);
         $form->handleRequest($request);
         if ($form->isValid()) {
             // set report submitted with date

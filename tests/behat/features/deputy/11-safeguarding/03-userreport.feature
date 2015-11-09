@@ -102,6 +102,8 @@ Feature: Safeguarding OPG Report
         And I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         Then I check "report_declaration_agree"
+        When I fill in the following:
+            | report_declaration_allAgreed_0 | 1 |
         And I press "report_declaration_save"
         And the URL should match "/report/\d+/submitted"
         Then I save the application status into "safereportsubmitted2"
