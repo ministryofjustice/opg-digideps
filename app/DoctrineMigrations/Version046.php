@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version045 extends AbstractMigration
+class Version046 extends AbstractMigration
 {
     /**
      * @param Schema $schema
@@ -18,7 +18,8 @@ class Version045 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE dd_user ADD deputy_no VARCHAR(100) NULL');
+        $this->addSql('ALTER TABLE report ADD all_agreed BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD reason_not_all_agreed TEXT DEFAULT NULL');
     }
 
     /**
@@ -30,6 +31,7 @@ class Version045 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE SCHEMA public');
-        $this->addSql('ALTER TABLE dd_user DROP deputy_no');
+        $this->addSql('ALTER TABLE report DROP all_agreed');
+        $this->addSql('ALTER TABLE report DROP reason_not_all_agreed');
     }
 }
