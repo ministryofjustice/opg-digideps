@@ -11,7 +11,17 @@
 
 
 {% block pageBody %}    
-   [...]
+   
+     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
+    {{ form_input(form.password,'password', { 'labelClass': 'required' } ) }}
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.login,'login', {'buttonClass': 'behat-link-login'}) }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {{ form_end(form) }}
    
    <p>
     <a href="{{ path('ad_homepage') }}">Go back to Assisted Digital homepage</a>

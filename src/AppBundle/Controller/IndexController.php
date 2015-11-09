@@ -198,5 +198,20 @@ class IndexController extends AbstractController
     {
         return $this->render('AppBundle:Index:terms.html.twig');
     }
+    
+    /**
+     * @Route("/logout", name="logout")
+     * @Template
+     */
+    public function logoutAction(Request $request)
+    {
+        f();
+        $this->get('security.context')->setToken(null);
+        $request->getSession()->invalidate();
+        
+        return $this->redirect(
+            $this->generateUrl('homepage')
+        );
+    }
 
 }
