@@ -17,9 +17,21 @@
     <div class="item">
         <dl class="item-data item-data-fixed">
             <dt class="item-label">{{ 'status' | trans() }}</dt>
-            <dd class="item-value">{{ 'deputyAgreed' | trans() }}</dd>
+            <dd class="item-value">
+                {% if (report.isAllAgreed == true) %}
+                    {{ 'deputyAgreed' | trans() }}
+                {% else %}
+                    {{ 'partlyAgreed' | trans() }}
+                {% endif %}
+            </dd>
+
+            {% if (report.isAllAgreed == false) %}
+                <dt class="item-label">{{ 'partAgreedReason' | trans() }}</dt>
+                <dd class="item-value">{{ report.reasonNotAllAgreed }}</dd>
+            {% endif %}
             <dt class="item-label">{{ 'declarationTime' | trans() }}</dt>
             <dd class="item-value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
+            
             <dt class="item-label">{{ 'deputyName' | trans() }}</dt>
             <dd class="item-value">{{ deputy.fullname }}</dd>
         </dl>

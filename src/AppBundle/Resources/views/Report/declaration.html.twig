@@ -30,15 +30,36 @@
 
         {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required' }) }}
+        {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
 
-        {{ form_submit(form.save,'save') }}
+        {{ form_checkbox_group(form.allAgreed, 'allAgreed', {
+            'fieldSetClass' : 'inline all-agreed',
+            'legendClass' : 'form-label',
+            'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
+            {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+        
+        <div id="not-agreed-section">
+            {{ form_input(form.reasonNotAllAgreed,'reasonNotAllAgreed', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+        </div>
 
+        <nav id="bottom-button-bar">
+            {{ form_submit(form.save,'save') }}
+        </nav>
+        
         {{ form_end(form) }}
 
         <script type="text/javascript">
             $(document).ready(function() {
                 new GOVUK.SelectionButtons(":checkbox");
+                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+                new opg.RadioHide({
+                    radio:'.all-agreed input[type=radio]',
+                    content: '#not-agreed-section',
+                    hideOnYes: true
+                });
             });
         </script>
 
