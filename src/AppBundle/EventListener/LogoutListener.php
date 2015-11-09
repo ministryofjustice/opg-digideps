@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Entity\AuditLogEntry;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use AppBundle\Service\AuditLogger;
+use AppBundle\Service\Client\RestClient;
 
 class LogoutListener implements LogoutSuccessHandlerInterface
 {
@@ -22,22 +23,28 @@ class LogoutListener implements LogoutSuccessHandlerInterface
      */
     private $router;
 
-
     /**
      * @var AuditLogger
      */
     private $auditLogger;
 
+    /**
+     * @var RestClient
+     */
+    private $restClient;
 
-    public function __construct(SecurityContext $security, Router $router, AuditLogger $auditLogger)
+    public function __construct(SecurityContext $security, RestClient $restClient, Router $router, AuditLogger $auditLogger)
     {
         $this->security = $security;
+        $this->restClient = $restClient;
         $this->router = $router;
         $this->auditLogger = $auditLogger;
     }
 
     public function onLogoutSuccess(Request $request)
     {
+        $this->restClient->logout();
+        
         $this->auditLogger->log(AuditLogEntry::ACTION_LOGOUT);
 
         $request->getSession()->set('loggedOutFrom', 'logoutPage');

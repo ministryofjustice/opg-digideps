@@ -68,7 +68,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     logout_listener:
       class:   AppBundle\EventListener\LogoutListener
-      arguments:  [@security.context, @router, @auditLogger]
+      arguments:  [@security.context, @restClient, @router, @auditLogger]
     response_nocache_listener:
        class:   AppBundle\EventListener\ResponseNoCacheListener
        tags:
