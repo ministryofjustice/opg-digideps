@@ -26,3 +26,5 @@ status: Status
 declarationTime: Declaration time
 deputyName: Deputy name
 deputyAgreed: Deputy agreed
+partlyAgreed: Not agreed by all deputies
+partAgreedReason: Reason

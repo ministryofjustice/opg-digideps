@@ -173,37 +173,54 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
+    public function testSubmitNotAllAgree()
+    {
+        MailSenderMock::resetessagesSent();
+        $this->assertEquals(false, self::$report1->getSubmitted());
+
+        $reportId = self::$report1->getId();
+        $url = '/report/' . $reportId . '/submit';
+
+        $this->assertJsonRequest('PUT', $url, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => [
+                'submit_date' => '2015-12-30',
+                'reason_not_all_agreed' => 'dont agree reason'
+            ]
+        ]);
+
+        // assert account created with transactions
+        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $this->assertEquals(true, $report->getSubmitted());
+        $this->assertEquals(false, $report->isAllAgreed());
+        $this->assertEquals('dont agree reason', $report->getReasonNotAllAgreed());
+
+    }
+
     public function testSubmit()
     {
         MailSenderMock::resetessagesSent();
         $this->assertEquals(false, self::$report1->getSubmitted());
-        
+
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/submit';
 
-        $response = $this->assertJsonRequest('PUT', $url, [
-            'mustFail' => true,
-            'AuthToken' => self::$tokenDeputy,
-        ]);
-        $this->assertContains('submit_date', $response['message']);
-
-        $response = $this->assertJsonRequest('PUT', $url, [
+        $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'submit_date' => '2015-12-30'
             ]
         ]);
-        
+
         // assert account created with transactions
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(true, $report->getSubmitted());
-        $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));
-        
-        //assert email
-        $this->assertCount(1, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default']);
-        $this->assertEquals(['deputy@example.org'=>'test'], MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['to']);
-        
+        $this->assertEquals(true, $report->isAllAgreed());
+
+        // todo put back in test for submit date
+
     }
 
     public function testUpdateAuth()
