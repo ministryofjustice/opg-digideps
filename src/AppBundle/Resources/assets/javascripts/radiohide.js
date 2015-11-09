@@ -48,7 +48,7 @@ var opg = opg || {};
             } else {
                 this.showContent();
             }
-        } else if (value == 'yes') {
+        } else if (value === 'yes' || value === '1') {
             if (this.hideOnYes) {
                 this.hideContent();
             } else {

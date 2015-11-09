@@ -20,9 +20,15 @@ page:
   goBackLink: "Go back to make changes to the report"
 agree:
   label: "I agree to this statement"
+allAgreed:
+  label: "Are you agreeing on behalf of all deputies?"
+reasonNotAllAgreed:
+  label: "Tell us why."
 save:
   label: "Submit report"
 status: Status
 declarationTime: Declaration time
 deputyName: Deputy name
 deputyAgreed: Deputy agreed
+partlyAgreed: Not agreed by all deputies
+partAgreedReason: Reason
