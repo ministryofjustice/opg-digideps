@@ -4,16 +4,17 @@
 
 {% block pageTitle %}Administration - Users{% endblock %}
 {% block contentClass %}{{ parent() }} admin-users{% endblock %}
-{% block title %}OPG Assisted Digital{% endblock %}
+{% block title %}Register a deputy {% endblock %}
 
 {% block validationSummary %}
 {% endblock %}
 
 
 {% block pageBody %}    
-    Register a new assited digital user
-    <a href="/ad/register">Register a new user</a>
-    <hr>
-    Help an existing assited digital user
-    <a href="/ad/login">Login for a user</a>
+   [...]
+   
+   <p>
+    <a href="{{ path('ad_homepage') }}">Go back to Assisted Digital homepage</a>
+   </p>
+   
 {% endblock %}

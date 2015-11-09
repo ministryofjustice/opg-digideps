@@ -48,6 +48,10 @@
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
                 {% endif %}
+                
+                {% if is_granted('ROLE_AD') %}
+                    <li><a href="{{ path('ad_homepage') }}">{{ 'assistedDigitalArea' | trans }}</a></li>
+                {% endif %}
 
                 {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('client_home')}}" class="behat-link-client-home client-home-link"  >{% trans %}clientHome{% endtrans %} </a></li>
@@ -55,6 +59,9 @@
 
                 {% if is_granted('ROLE_ADMIN') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('user_view')}}" class="behat-link-my-details your-home-link" >{% trans %}userDetails{% endtrans %} </a></li>
+                {% endif %}
+                
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
                 {% endif %}
 

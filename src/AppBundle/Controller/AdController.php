@@ -45,14 +45,6 @@ class AdController extends AbstractController
      */
     public function loginAction(Request $request)
     {
-        if ($request->isMethod('POST')) {
-            $req = ($request->request->all());
-            var_dump($req['cot']);
-            var_dump($req['q1']);
-            die;
-        }
-        
-        
         return [
         ];
     }
