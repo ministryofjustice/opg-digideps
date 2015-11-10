@@ -9,14 +9,13 @@ use Symfony\Component\DependencyInjection\Container;
 
 class MailFactory
 {
-    private $routes = [];
-    
+    const AREA_FRONTEND = 'frontend';
+    const AREA_ADMIN = 'admin';
     
     /**
      * @var Translator 
      */
     protected $translator;
-
 
     /**
      * @var Container
@@ -28,10 +27,21 @@ class MailFactory
      */
     protected $roleToArea;
 
+    /**
+     * @var array 
+     */
+    private static $allowedAreas = [self::AREA_FRONTEND, self::AREA_ADMIN];
 
     public function __construct(Container $container, array $roleToArea)
     {
+        // validate args
         $this->roleToArea = $roleToArea;
+        foreach ($roleToArea as $area) {
+            if (!in_array($area, self::$allowedAreas)) {
+                throw new \InvalidArgumentException("Area $area not valid");
+            }
+        }
+        
         $this->container = $container;
         $this->translator = $container->get('translator');
         $this->templating = $container->get('templating');
@@ -47,7 +57,7 @@ class MailFactory
      */
     private function generateAbsoluteLink($area, $routeName, array $params = [])
     {
-        if (!in_array($area, ['frontend', 'admin'])) {
+        if (!in_array($area, self::$allowedAreas)) {
             throw new \InvalidArgumentException(__METHOD__ . ": area must be frontend or admin, $area given");
         }
         $baseUrl = trim($this->container->getParameter('email')['base_url'][$area]);
@@ -215,13 +225,12 @@ class MailFactory
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report $submittedReport, EntityDir\Report $newReport)
     {
         $email = new ModelDir\Email();
-        $area = 'frontend'; //only deputy submit reports
         
         $viewParams = [
             'submittedReport'=> $submittedReport,
             'newReport' => $newReport,
-            'link' => $this->generateAbsoluteLink($area, 'report_overview', [ 'reportId' => $newReport->getId()]),
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage')
+            'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'report_overview', [ 'reportId' => $newReport->getId()]),
+            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'homepage')
         ];
         
         $email
