@@ -43,10 +43,10 @@ class LogoutListener implements LogoutSuccessHandlerInterface
 
     public function onLogoutSuccess(Request $request)
     {
-        $this->restClient->logout();
-        
         $this->auditLogger->log(AuditLogEntry::ACTION_LOGOUT);
 
+        $this->restClient->logout();
+        
         $request->getSession()->set('loggedOutFrom', 'logoutPage');
 
         $response = new RedirectResponse($this->router->generate('login'));
