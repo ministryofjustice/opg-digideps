@@ -30,15 +30,18 @@ country:
     label: Country (optional)
     hint: ''
     defaultOption: Please select ...
-contact_form:
+page:
+    htmlTitle: "Deputy report - contacts | GOV.UK"
     pageSectionTitle: Contacts
     pageSectionDescription: Give details of people who helped you make significant decisions as a deputy, such as a GP, solicitor, accountant, family members, care workers.<span class="page-section-example">Example: John Smith, accountant, to prepare accounts for the deputy report.</span>
     pageSectionEditInfo: "You can update the details of a contact or delete a contact by using the 'Edit this contact' link below."
     subSectionTitleAdd : Add a new contact
     subSectionTitleEdit : Edit this contact
-    addContactButton:
-      label: Add a contact
-      moreLabel: Add another contact
+form:
+    controls:
+        addButton:
+            label: Add a contact
+            moreLabel: Add another contact
 no_contact:
     subSectionDescription: "If you haven't added any contacts, tell us why."
     fields:

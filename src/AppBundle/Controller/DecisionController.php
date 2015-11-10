@@ -57,7 +57,7 @@ class DecisionController extends AbstractController
             $report->setReasonForNoDecisions(null);
             $this->get('restClient')->put('report/'. $report->getId(),$report);
             
-            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) . "#pageBody");
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) );
         }
 
         $client = $this->getClient($report->getClient());
@@ -96,7 +96,7 @@ class DecisionController extends AbstractController
 
             $this->get('restClient')->post('report/decision', $data);
             
-            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) . "#pageBody");
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
         }
 
         $client = $this->getClient($report->getClient());
@@ -162,7 +162,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $this->get('restClient')->put('report/'. $reportId,$data);
 
-            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) . "#pageBody");
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             
         }
 
