@@ -18,6 +18,9 @@ class Version046 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
+        $this->addSql('ALTER TABLE report DROP IF EXISTS all_agreed');
+        $this->addSql('ALTER TABLE report DROP IF EXISTS reason_not_all_agreed');
+        
         $this->addSql('ALTER TABLE report ADD all_agreed BOOLEAN DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD reason_not_all_agreed TEXT DEFAULT NULL');
     }
