@@ -108,7 +108,7 @@ class UserController extends AbstractController
         return $this->render($template, [
             'token'=>$token, 
             'form' => $form->createView(),
-            'isAdmin' => $user->getRole()['role'] === 'ROLE_ADMIN'
+            'userRole' => $user->getRole()['role']
         ]);
     }
     
