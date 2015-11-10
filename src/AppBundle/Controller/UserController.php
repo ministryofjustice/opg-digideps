@@ -92,10 +92,11 @@ class UserController extends AbstractController
              //$event = new InteractiveLoginEvent($request, $clientToken);
              //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
-            if ('activate' == $action) { // go to second step
-                $redirectUrl = $this->generateUrl('user_details');
-            } else { // password reset : go to homepage depending on the user role
+            // after password reset
+            if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
                 $redirectUrl = $this->get('redirectorService')->getUserFirstPage(false);
+            } else { // activate:  o to 2nd step
+                $redirectUrl = $this->generateUrl('user_details');
             }
             
              // the following should not be triggered
