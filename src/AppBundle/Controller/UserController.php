@@ -39,39 +39,30 @@ class UserController extends AbstractController
         }
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            switch ($action) {
-                case 'activate':
-                    return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
-                        'token'=>$token, 
-                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                    ]);
-                    
-                case 'password-reset':
-                    return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
-                        'token'=>$token, 
-                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                    ]);
+            if ('activate' == $action) {
+                return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
+                    'token'=>$token, 
+                    'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                ]);
+            } else { // password-reset
+                return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
+                    'token'=>$token, 
+                    'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                ]);
             }
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
-        switch ($action) {
-            case 'activate':
-                $formType = new FormDir\SetPasswordType([
-                    'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
-                ]);
-                $template = 'AppBundle:User:activate.html.twig';
-                break;
-            
-            case 'password-reset':
-                $formType = new FormDir\ResetPasswordType([
-                    'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
-                ]);
-                $template = 'AppBundle:User:passwordReset.html.twig';
-                break;
-            
-            default:
-                return $this->createNotFoundException("action $action not defined ");
+        if ('activate' == $action) {
+            $formType = new FormDir\SetPasswordType([
+                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+            ]);
+            $template = 'AppBundle:User:activate.html.twig';
+        } else { // 'password-reset'
+            $formType = new FormDir\ResetPasswordType([
+                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+            ]);
+            $template = 'AppBundle:User:passwordReset.html.twig';
         }
         
         $form = $this->createForm($formType, $user);
@@ -101,8 +92,14 @@ class UserController extends AbstractController
              //$event = new InteractiveLoginEvent($request, $clientToken);
              //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
+            if ('activate' == $action) { // go to second step
+                $redirectUrl = $this->generateUrl('user_details');
+            } else { // password reset : go to homepage depending on the user role
+                $redirectUrl = $this->get('redirectorService')->getUserFirstPage(false);
+            }
+            
              // the following should not be triggered
-             return $this->redirect($this->generateUrl('user_details'));
+            return $this->redirect($redirectUrl);
         }
 
         return $this->render($template, [
