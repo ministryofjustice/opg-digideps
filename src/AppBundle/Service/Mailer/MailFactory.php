@@ -26,11 +26,12 @@ class MailFactory
     /**
      * @var array
      */
-    protected $emailConfig;
+    protected $roleToArea;
 
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, array $roleToArea)
     {
+        $this->roleToArea = $roleToArea;
         $this->container = $container;
         $this->translator = $container->get('translator');
         $this->templating = $container->get('templating');
@@ -66,7 +67,12 @@ class MailFactory
     
     private function getAreaFromUserRole(EntityDir\User $user)
     {
-        return $user->getRole()->getRole() == 'ROLE_ADMIN' ? 'admin' : 'frontend';
+        $role = $user->getRole()->getRole();
+        if (empty($this->roleToArea[$role])) {
+            throw new \RuntimeException(__METHOD__ . " : area not defined for user $role");
+        }
+        
+        return $this->roleToArea[$role];
     }
     
     public function createActivationEmail(EntityDir\User $user)
