@@ -97,9 +97,9 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-             $request = $this->get("request");
-             $event = new InteractiveLoginEvent($request, $clientToken);
-             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+             //$request = $this->get("request");
+             //$event = new InteractiveLoginEvent($request, $clientToken);
+             //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
              // the following should not be triggered
              return $this->redirect($this->generateUrl('user_details'));
@@ -153,7 +153,7 @@ class UserController extends AbstractController
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $restClient->get('user/' . $userId, 'User'); /* @var $user EntityDir\User*/
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
         $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
@@ -168,8 +168,16 @@ class UserController extends AbstractController
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
                 
+                if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                    $route = 'admin_homepage';
+                } elseif ($this->get('security.context')->isGranted('ROLE_AD')) {
+                    $route = 'ad_homepage';
+                } else {
+                    $route = 'client_add';
+                }
+                
                 // after details are added, admin users to go their homepage, deputies go to next step
-                return $this->redirect($this->generateUrl($basicFormOnly ? 'admin_homepage' : 'client_add'));
+                return $this->redirect($this->generateUrl($route));
             }
         } else {
             // fill the form in (edit mode)
@@ -194,7 +202,7 @@ class UserController extends AbstractController
         $request = $this->getRequest();
         $user = $this->getUser();
         
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
         ]);

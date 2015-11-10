@@ -57,7 +57,7 @@
                     <li><a href="{{path('client_home')}}" class="behat-link-client-home client-home-link"  >{% trans %}clientHome{% endtrans %} </a></li>
                 {% endif %}
 
-                {% if is_granted('ROLE_ADMIN') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('user_view')}}" class="behat-link-my-details your-home-link" >{% trans %}userDetails{% endtrans %} </a></li>
                 {% endif %}
                 
