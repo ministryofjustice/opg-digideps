@@ -19,6 +19,8 @@ manualLogout:
   pageSectionTitle: Thank you for using the Complete the deputy report service.
   pageSectionDescription: Sign in to get started again.
 
+admin:
+    pageTitle: OPG user login
 #_security:
 #    403_error:
 #    last_error: sec last error
