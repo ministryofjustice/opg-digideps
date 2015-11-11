@@ -27,6 +27,10 @@ class ContactController extends AbstractController
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
         $client = $this->getClient($report->getClient());
 
+        if (empty($contacts) && $report->isDue()) {
+            return $this->redirect($this->generateUrl('add_contact', ['reportId'=>$reportId]) );
+        }
+        
         return [
             'contacts' => $contacts,
             'report' => $report,

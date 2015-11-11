@@ -1,5 +1,5 @@
 <?php
-namespace phpunit\AppBundle\Resources\views\Account;
+namespace AppBundle\Resources\views\Account;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Account;

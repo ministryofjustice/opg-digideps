@@ -1,5 +1,5 @@
 <?php
-namespace phpunit\AppBundle\Resources\views\Contact;
+namespace AppBundle\Resources\views\Contact;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;

@@ -1,5 +1,5 @@
 <?php
-namespace phpunit\AppBundle\Resources\views\Decision;
+namespace AppBundle\Resources\views\Decision;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Request;
