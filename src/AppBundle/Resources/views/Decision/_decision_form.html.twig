@@ -4,7 +4,7 @@
     {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
 {% endif %}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' }}) }}
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'decision-form' }}) }}
  
     {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
         transDomain: translationDomain,

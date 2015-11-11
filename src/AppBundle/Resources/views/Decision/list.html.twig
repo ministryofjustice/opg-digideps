@@ -32,8 +32,9 @@
             'data': report.decisions
         } %}
 
+
         {% if decisions is not empty %}
-            <ul class="behat-region-list-decisions report-list report-list--decisions">
+            <ul id="decision-list" class="behat-region-list-decisions report-list report-list--decisions">
                 {% for decision in decisions %}
                     <li class="report-list__item" id="edit-{{ decision.id }}">
                         <div class="report-list__item-header">
@@ -59,9 +60,9 @@
             </ul>
         {% else %}
             {% if report.reasonForNoDecisions is not empty %}
-                {% include 'AppBundle:Decision:_none_reason.html.twig' with {'report': report} %}
+                {% include 'AppBundle:Decision:_none_reason_description.html.twig' with {'report': report} %}
             {% else %}
-                {{ render(controller('AppBundle:Decision:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}
+                <div id="no-decision-reason-form-embed">{{ render(controller('AppBundle:Decision:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>        
             {% endif %}
         {% endif %}
         

@@ -20,3 +20,8 @@ assetic:
     
 twig:
     cache:  false
+security:
+    firewalls:
+        dev:
+            pattern:  ^/
+            security: false

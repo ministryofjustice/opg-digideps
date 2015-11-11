@@ -33,7 +33,7 @@
         } %}
 
         {% if contacts is not empty %}
-            <ul class="behat-region-list-contacts report-list report-list--contacts">
+            <ul id="contact-list" class="behat-region-list-contacts report-list report-list--contacts">
                 {% for contact in contacts %}
                     <li itemscope itemtype="http://schema.org/Person" class="report-list__item" id="edit-{{ contact.id }}">
                         <div class="report-list__item-header"><h3 itemprop="name">{{ contact.contactName }}</h3>
@@ -77,9 +77,9 @@
             </ul>
         {% else %}
             {% if report.reasonForNoContacts is not empty %}
-                {% include 'AppBundle:Contact:_none_reason.html.twig' with {'report': report} %}
+                {% include 'AppBundle:Contact:_none_reason_description.html.twig' with {'report': report} %}
             {% else %}
-                {{ render(controller('AppBundle:Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}
+                <div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>
             {% endif %}
         {% endif %}
 

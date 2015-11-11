@@ -19,12 +19,17 @@ class DecisionController extends AbstractController
      */
     public function listAction($reportId) {
         
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
         $report = $this->getReportIfReportNotSubmitted($reportId);
         $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
         $client = $this->getClient($report->getClient());
 
+        
+        if (empty($decisions) && $report->isDue()) {
+            return $this->redirect($this->generateUrl('add_decision', ['reportId'=>$reportId]) );
+        }
+        
         return [
             'decisions' => $decisions,
             'report' => $report,
@@ -77,7 +82,7 @@ class DecisionController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id) {
 
-        $restClient = $this->get('restClient');
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
         $report = $this->getReportIfReportNotSubmitted($reportId);
 
@@ -94,7 +99,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReportId($reportId);
 
-            $this->get('restClient')->post('report/decision', $data);
+            $restClient->post('report/decision', $data);
             
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
         }
@@ -120,9 +125,10 @@ class DecisionController extends AbstractController
     {
         //just do some checks to make sure user is allowed to delete this contact
         $report = $this->getReport($reportId, ['basic']);
-
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+        
         if(!empty($report) && in_array($id, $report->getDecisions())){
-            $this->get('restClient')->delete("/report/decision/{$id}");
+            $restClient->delete("/report/decision/{$id}");
         }
         
         return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
@@ -137,10 +143,11 @@ class DecisionController extends AbstractController
     {
         //just do some checks to make sure user is allowed to update this report
         $report = $this->getReport($reportId, ['basic', 'transactions']);
-
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+        
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
-            $this->get('restClient')->put('report/'.$report->getId(),$report);
+            $restClient->put('report/'.$report->getId(),$report);
         }
         return $this->redirect($this->generateUrl('decisions', ['reportId' => $report->getId()]));
     }
@@ -153,6 +160,7 @@ class DecisionController extends AbstractController
     public function noneReasonAction(Request $request, $reportId) {
         
         $report = $this->getReportIfReportNotSubmitted($reportId);
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
         $form->handleRequest($request);
@@ -160,7 +168,7 @@ class DecisionController extends AbstractController
         if($form->isValid()){
         
             $data = $form->getData();
-            $this->get('restClient')->put('report/'. $reportId,$data);
+            $restClient->put('report/'. $reportId,$data);
 
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             
@@ -192,7 +200,7 @@ class DecisionController extends AbstractController
 
         if($form->isValid()){
             $data = $form->getData();
-            $this->get('restClient')->put('report/'. $reportId,$data);
+            $this->getRestClient()->put('report/'. $reportId,$data);
         }
         
         return [
