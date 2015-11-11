@@ -22,6 +22,12 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
+        // admin domain should never show the homepage.
+        // User is redirected to the admin homepage. If not logged, the user will be redirected to login page
+        if ($this->container->getParameter('env') === 'admin') {
+            return $this->redirect($this->generateUrl('admin_homepage'));
+        }
+        
         return $this->render('AppBundle:Index:index.html.twig');
     }
     
@@ -39,6 +45,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
         $vars = [
             'form' => $form->createView(),
+            'isAdmin' => $this->container->getParameter('env') === 'admin'
         ];
        
         if ($form->isValid()){
