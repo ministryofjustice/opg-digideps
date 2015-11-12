@@ -14,6 +14,7 @@ use AppBundle\Exception as AppException;
 use AppBundle\Entity\User;
 use GuzzleHttp\Message\ResponseInterface;
 use AppBundle\Model\SelfRegisterData;
+use Symfony\Component\Security\Core\SecurityContext;
 
 /**
  * Connects to RESTful Server (API)
@@ -35,6 +36,9 @@ class RestClient
     private $serialiser;
 
     /**
+     * Used to keep the user auth token.
+     * UserId is used as a key
+     * 
      * @var TokenStorageInterface 
      */
     private $tokenStorage;
@@ -59,6 +63,17 @@ class RestClient
      */
     private $saveHistory;
 
+     /**
+     * @var SecurityContext
+     */
+    private $container;
+    
+    /**
+     * @var integer 
+     */
+    private $userId;
+    
+    
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests
      */
@@ -78,19 +93,18 @@ class RestClient
 
 
     public function __construct(
+        ContainerInterface $container,
         ClientInterface $client, 
         TokenStorageInterface $tokenStorage, 
-        SerializerInterface $serialiser, 
-        Logger $logger, 
-        $clientSecret,
-        $saveHistory
+        $clientSecret
     ) {
         $this->client = $client;
-        $this->serialiser = $serialiser;
+        $this->container = $container;
+        $this->serialiser = $container->get('jms_serializer');
         $this->tokenStorage = $tokenStorage;
-        $this->logger = $logger;
+        $this->logger = $container->get('logger');
         $this->clientSecret = $clientSecret;
-        $this->saveHistory = $saveHistory;
+        $this->saveHistory = $container->getParameter('kernel.debug');
         $this->history = [];
     }
 
@@ -111,13 +125,17 @@ class RestClient
             'addClientSecret' => true,
         ]);
 
-        $this->tokenStorage->set($response->getHeader(self::HEADER_AUTH_TOKEN));
-
-        return $this->arrayToEntity('User', $this->extractDataArray($response));
+        $user = $this->arrayToEntity('User', $this->extractDataArray($response));
+        
+        // store 
+        $this->tokenStorage->set($user->getId(), $response->getHeader(self::HEADER_AUTH_TOKEN));
+        
+        return $user;
     }
+    
 
 
-    /**
+        /**
      * Call /auth/logout
      */
     public function logout()
@@ -125,7 +143,11 @@ class RestClient
         $response = $this->rawSafeCall('post', '/auth/logout', [
             'addAuthToken' => true,
         ]);
-
+        
+        // remove AuthToken
+        $this->tokenStorage->remove($this->getLoggedUserId());
+        
+        
         return $this->extractDataArray($response);
     }
 
@@ -276,7 +298,7 @@ class RestClient
     {
         // process special header options
         if (!empty($options['addAuthToken'])) {
-            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get();
+            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($this->getLoggedUserId());
         }
         unset($options['addAuthToken']);
         
@@ -437,6 +459,30 @@ class RestClient
         $this->client->setDefaultOption('timeout', $timeout);
         
         return $this;
+    }
+   
+    /**
+     * @param integer $userId
+     */
+    public function setLoggedUserId($userId)
+    {
+        $this->userId = $userId;
+        
+        return $this;
+    }
+    
+    /**
+     * @return integer
+     */
+    private function getLoggedUserId()
+    {
+        if ($this->userId) {
+            return $this->userId;
+        } else if ($token = $this->container->get('security.context')->getToken()) {
+           return $token->getUser()->getId();
+        }  else {
+            throw new \RuntimeException(__METHOD__ . ": cannot find logged user info", self::HTTP_CODE_AUTHTOKEN_EXPIRED);
+        }
     }
     
 }
