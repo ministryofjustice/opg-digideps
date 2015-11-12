@@ -17,9 +17,9 @@ class FeedbackControllerTest extends AbstractTestController
         }
     }
     
-    public function testsendFeedbackMissingClientSecre()
+    public function testsendFeedbackHomepageMissingClientSecre()
     {
-        $url = '/feedback';
+        $url = '/feedback/homepage';
         
         $this->assertJsonRequest('POST', $url, [
             'mustFail' => true,
@@ -27,9 +27,9 @@ class FeedbackControllerTest extends AbstractTestController
         ]);
     }
     
-    public function testsendFeedback()
+    public function testsendFeedbackHomepage()
     {
-        $url = '/feedback';
+        $url = '/feedback/homepage';
         MailSenderMock::resetessagesSent();
         
         $this->assertJsonRequest('POST', $url, [
@@ -44,5 +44,30 @@ class FeedbackControllerTest extends AbstractTestController
         $email = MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0];
         $this->assertEquals('User Feedback', $email['subject']);
         $this->assertContains('difficulty-response', $email['parts'][0]['body']);
+    }
+    
+    public function testsendFeedbackReportAuth()
+    {
+        $url = '/feedback/report';
+        $this->assertEndpointNeedsAuth('POST', $url);
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
+    }
+    
+    
+    public function testsendFeedbackReport()
+    {
+        $url = '/feedback/report';
+        MailSenderMock::resetessagesSent();
+        
+        $this->assertJsonRequest('POST', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+            'data'=>[
+                
+            ]
+        ])['data'];
+        
+        $this->assertCount(1, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default']);
+        $this->assertEquals('User Feedback', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
     }
 }

@@ -13,7 +13,7 @@ use AppBundle\Exception as AppException;
 class FeedbackController extends RestController
 {
     /**
-     * @Route("")
+     * @Route("/homepage")
      * @Method({"POST"})
      */
     public function sendFeedback(Request $request)
@@ -23,11 +23,22 @@ class FeedbackController extends RestController
         }
         
         $feedbackData = $this->deserializeBodyContent($request);
-       
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
         
-        $ret = $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+        return  $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+    }
+    
+    /**
+     * @Route("/report")
+     * @Method({"POST"})
+     */
+    public function sendReportFeedback(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        return $ret;
+        $feedbackData = $this->deserializeBodyContent($request);
+        $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
+        
+        return $this->get('mailSender')->send($feedbackEmail,[ 'html']);
     }
 }
