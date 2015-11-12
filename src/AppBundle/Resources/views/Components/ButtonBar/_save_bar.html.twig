@@ -21,7 +21,7 @@
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                 transDomain: translationDomain,
                 linkButtonLabel: 'cancel.label',
-                linkClass: 'button-link',
+                linkClass: 'button-link behat-link-cancel-edit',
                 linkHref: path(section ~ 's', {'reportId': report.id})
             } %}
         {% endif %}
@@ -31,6 +31,7 @@
             transDomain: translationDomain,
             linkButtonLabel: 'delete.label',
             linkClass: 'delete-button button-warning behat-link-delete-confirm',
+            linkId: 'delete-button',
             linkHref: path('delete_' ~ section , {'reportId': report.id, 'id': form.vars.value.id })
             } %}
         {% endif %}
@@ -43,6 +44,7 @@
                 transDomain: translationDomain,
                 linkButtonLabel: 'delete.label',
                 linkClass: 'button-warning behat-link-delete-confirm',
+                linkId: 'delete-confirm-button',
                 linkHref: path('delete_' ~ section, {'reportId': report.id, 'id': form.vars.value.id })
             } %}
             

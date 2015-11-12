@@ -27,7 +27,7 @@ class ContactController extends AbstractController
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
         $client = $this->getClient($report->getClient());
 
-        if (empty($contacts) && $report->isDue()) {
+        if (empty($contacts) && $report->isDue() == false) {
             return $this->redirect($this->generateUrl('add_contact', ['reportId'=>$reportId]) );
         }
         
@@ -77,7 +77,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/contact/{id}", name="edit_contact")
+     * @Route("/report/{reportId}/contacts/{id}/edit", name="edit_contact")
      * @Template("AppBundle:Contact:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $id) {
@@ -97,7 +97,7 @@ class ContactController extends AbstractController
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReportId($reportId);
+            $data->setReport($reportId);
 
             $this->get('restClient')->post('report/contact', $data);
 
@@ -115,7 +115,7 @@ class ContactController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/contact/delete/{id}", name="delete_contact")
+     * @Route("/report/{reportId}/contacts/{id}/delete", name="delete_contact")
      * @param integer $id
      *
      * @return RedirectResponse

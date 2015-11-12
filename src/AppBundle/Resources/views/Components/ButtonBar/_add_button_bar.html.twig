@@ -7,7 +7,7 @@
 {% endif %}
 
 <div class="form-group button-bar button-bar-add button-bar-add-{{ section }}" id="button-bar-add-{{ section}}">
-    <a class="button-secondary" href="/report/{{ report.id }}/{{ section }}/add#pageBody">
+    <a id="add-{{ section }}-button" class="button-secondary" href="/report/{{ report.id }}/{{ section }}/add#pageBody">
         {{ label | default('Add')|trans({}, transDomain) }}
     </a>
 </div>

@@ -178,9 +178,8 @@ trait ReportTrait
             $this->gotoOverview();
             $this->clickLink('edit-contacts');
 
-            // expand form if collapsed
-            if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
-                $this->clickOnBehatLink('add-a-contact');
+            if (1 === count($this->getSession()->getPage()->findAll('css', '#add-contacts-button'))) {
+                $this->clickLink("add-contacts-button");
             }
 
             $this->fillField('contact_contactName', $row['contactName']);
@@ -210,11 +209,10 @@ trait ReportTrait
             $this->gotoOverview();
             $this->clickLink("edit-decisions");
 
-            // expand form if collapsed
-            if (0 === count($this->getSession()->getPage()->findAll('css', '#decision_clientInvolvedBoolean_0'))) {
-                $this->clickOnBehatLink('add-a-decision');
+            if (1 === count($this->getSession()->getPage()->findAll('css', '#add-decisions-button'))) {
+                $this->clickLink("add-decisions-button");
             }
-
+            
             $this->fillField('decision_description', $row['description']);
             switch ($row['clientInvolved']) {
                 case 'yes':

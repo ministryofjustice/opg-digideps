@@ -39,11 +39,10 @@
         {% if report.decisions | length == 0 %}
             <p class="page-section-description">{{ report.reasonForNoDecisions }}</p>
         {% else %}
-            {% include 'AppBundle:Decision:_listDecision.html.twig' with {
-            'showListData': true,
-            'formEditShow': false,
-            'showEditLink': false,
-            'showDeleteConfirm': false
+            {% include 'AppBundle:Decision:_decision_list.html.twig' with {
+            'report': report,
+            'decisions': decisions,
+            'transDomain': translationDomain
             } %}
         {% endif %}
     </div>
@@ -58,11 +57,10 @@
         {% if report.contacts | length == 0 %}
             <p class="page-section-description">{{ report.reasonForNoContacts }}</p>
         {% else %}
-            {% include 'AppBundle:Contact:_listContact.html.twig' with {
-                'showListData': true,
-                'formEditShow': false,
-                'showEditLink': false,
-                'showDeleteConfirm': false
+            {% include 'AppBundle:Contact:_contact_list.html.twig' with {
+                'report': report,
+                'contacts': contacts,
+                'transDomain': translationDomain
             } %}
         {% endif %}
     </div>

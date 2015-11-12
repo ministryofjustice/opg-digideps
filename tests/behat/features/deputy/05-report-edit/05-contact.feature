@@ -44,11 +44,10 @@ Feature: deputy / report / edit user contact
         And the URL should match "/report/\d+/contacts"
         Then I should see "Andy Brown" in the "list-contacts" region
         And I should see "46 Noth Road" in the "list-contacts" region
+        And I click on "contact-n2"
+        And I click on "delete-button"
         And I click on "contact-n1"
-        And I click on "delete-confirm"
-        And I click on "delete-confirm-cancel"
-        And I click on "delete-confirm"
-        And I click on "delete"
+        And I click on "delete-button"
         Then the response status code should be 200
         And the URL should match "/report/\d+/contacts"
         Then I should not see the "list-contacts" region
@@ -62,45 +61,40 @@ Feature: deputy / report / edit user contact
       And I follow "edit-contacts"
       And I save the page as "report-no-contact-empty"
       # add explanation
-      Then the "reason_for_no_contact_reason" field is expandable
+      Then the "reason_for_no_contact_reasonForNoContacts" field is expandable
       # empty form throws error
-      When I fill in "reason_for_no_contact_reason" with ""
-      And I press "reason_for_no_contact_saveReason"
+      When I fill in "reason_for_no_contact_reasonForNoContacts" with ""
+      And I press "reason_for_no_contact_save"
       Then the form should be invalid
       And I save the page as "report-no-contact-error"
       # add reason
-      When I fill in "reason_for_no_contact_reason" with "kept in the book"
-      And I press "reason_for_no_contact_saveReason"
+      When I fill in "reason_for_no_contact_reasonForNoContacts" with "kept in the book"
+      And I press "reason_for_no_contact_save"
       Then the form should be valid
       And I should see "kept in the book" in the "reason-no-contacts" region
       And I save the page as "report-no-contact-added"
       # edit reason, and cancel
       When I click on "edit-reason-no-contacts"
       Then the following fields should have the corresponding values:
-        | reason_for_no_contact_reason | kept in the book |
-      When I click on "cancel-edit-reason"
+        | reason_for_no_contact_reasonForNoContacts | kept in the book |
+      When I click on "cancel-reason-button"
       Then the URL should match "/report/\d+/contacts"
       # edit reason, and save
       When I click on "edit-reason-no-contacts"
       And I save the page as "report-no-contact-edit"
       And I fill in the following:
-        | reason_for_no_contact_reason | |
-      And I press "reason_for_no_contact_saveReason"
+        | reason_for_no_contact_reasonForNoContacts | |
+      And I press "reason_for_no_contact_save"
       Then the form should be invalid
       And I save the page as "report-no-contact-error"
       And I fill in the following:
-        | reason_for_no_contact_reason | nothing relevant contact added |
-      And I press "reason_for_no_contact_saveReason"
+        | reason_for_no_contact_reasonForNoContacts | nothing relevant contact added |
+      And I press "reason_for_no_contact_save"
       And I save the page as "report-no-contact-edit"
       And I should see "nothing relevant contact added" in the "reason-no-contacts" region
       # delete reason and cancel
       When I click on "edit-reason-no-contacts"
-      And I click on "delete-confirm"
-      And I click on "delete-reason-confirm-cancel"
-      Then the URL should match "/report/\d+/contacts/edit-reason"
-      # delete reason and confirm
-      When I click on "delete-confirm"
-      When I click on "delete-reason"
+      When I click on "delete-button"
       Then the URL should match "/report/\d+/contacts"
       And the following fields should have the corresponding values:
-        | reason_for_no_contact_reason | |
+        | reason_for_no_contact_reasonForNoContacts | |

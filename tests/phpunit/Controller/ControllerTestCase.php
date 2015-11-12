@@ -25,7 +25,6 @@ abstract class ControllerTestCase extends WebTestCase {
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('isDue')->andReturn(true)
             ->shouldReceive('getDecisions')->andReturn([])
             ->shouldReceive('getSubmitted')->andReturn(false)
             ->shouldReceive('getClient')->andReturn(1)

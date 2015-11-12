@@ -26,7 +26,7 @@ class DecisionController extends AbstractController
         $client = $this->getClient($report->getClient());
 
         
-        if (empty($decisions) && $report->isDue()) {
+        if (empty($decisions) && $report->isDue() == false) {
             return $this->redirect($this->generateUrl('add_decision', ['reportId'=>$reportId]) );
         }
         
@@ -77,7 +77,7 @@ class DecisionController extends AbstractController
 
     
     /**
-     * @Route("/report/{reportId}/decision/{id}", name="edit_decision")
+     * @Route("/report/{reportId}/decisions/{id}/edit", name="edit_decision")
      * @Template("AppBundle:Decision:edit.html.twig")
      */
     public function editAction(Request $request, $reportId, $id) {
@@ -116,7 +116,7 @@ class DecisionController extends AbstractController
 
     
     /**
-     * @Route("/report/{reportId}/decision/delete/{id}", name="delete_decision")
+     * @Route("/report/{reportId}/decisions/{id}/delete", name="delete_decision")
      * @param integer $id
      * 
      * @return RedirectResponse

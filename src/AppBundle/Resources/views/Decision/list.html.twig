@@ -34,30 +34,11 @@
 
 
         {% if decisions is not empty %}
-            <ul id="decision-list" class="behat-region-list-decisions report-list report-list--decisions">
-                {% for decision in decisions %}
-                    <li class="report-list__item" id="edit-{{ decision.id }}">
-                        <div class="report-list__item-header">
-                            <h3>&nbsp;</h3>
-                            <a href="{{ url('edit_decision', {'reportId': report.id, 'id': decision.id }) }}#pageBody"
-                                   class="js-report-list__item-edit-link report-list__item-edit-link behat-link-decision-{{decision.description | behat_namify}}">{{ 'listing.edit-link'| trans }}</a>
-                        </div>
-                        <dl class="report-list__item-fields">
-                            <div class="report-list__item-fields-row">
-                                <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.description' | trans }}</dt>
-                                <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ decision.description }}</dd>
-                            </div>
-    
-                            <div class="report-list__item-fields-row">
-                                <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'listing.clientInvolvement' | trans }}</dt>
-                                <dd class="report-list__item-fields-description report-list__item-fields-description--block">
-                                    <p>{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
-                                        : {{ decision.clientInvolvedDetails | nl2br }}</p></dd>
-                            </div>
-                        </dl>
-                    </li>
-                {% endfor %}
-            </ul>
+            {% include 'AppBundle:Decision:_decision_list.html.twig' with {
+            'report': report,
+            'decisions': decisions,
+            'transDomain': translationDomain
+            } %}
         {% else %}
             {% if report.reasonForNoDecisions is not empty %}
                 {% include 'AppBundle:Decision:_none_reason_description.html.twig' with {'report': report} %}
