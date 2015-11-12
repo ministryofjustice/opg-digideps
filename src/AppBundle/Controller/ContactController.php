@@ -99,7 +99,7 @@ class ContactController extends AbstractController
             $data = $form->getData();
             $data->setReport($reportId);
 
-            $this->get('restClient')->post('report/contact', $data);
+            $this->get('restClient')->put('report/contact', $data);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId'=>$reportId]));
         }

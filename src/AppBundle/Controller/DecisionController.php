@@ -99,7 +99,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReportId($reportId);
 
-            $restClient->post('report/decision', $data);
+            $restClient->put('report/decision', $data);
             
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
         }

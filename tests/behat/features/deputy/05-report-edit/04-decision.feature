@@ -49,8 +49,6 @@ Feature:deputy / report / edit decision
       And I follow "edit-decisions"
       And I click on "decision-3-beds"
       And I click on "delete-button"
-      And I click on "decision-2-beds"
-      And I click on "delete-button"
       And I save the page as "report-no-decision-empty"
       # add explanation
       Then the reason_for_no_decision_reasonForNoDecisions field is expandable

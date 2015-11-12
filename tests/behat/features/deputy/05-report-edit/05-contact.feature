@@ -44,8 +44,6 @@ Feature: deputy / report / edit user contact
         And the URL should match "/report/\d+/contacts"
         Then I should see "Andy Brown" in the "list-contacts" region
         And I should see "46 Noth Road" in the "list-contacts" region
-        And I click on "contact-n2"
-        And I click on "delete-button"
         And I click on "contact-n1"
         And I click on "delete-button"
         Then the response status code should be 200
