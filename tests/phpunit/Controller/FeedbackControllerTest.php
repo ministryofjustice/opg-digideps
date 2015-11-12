@@ -17,6 +17,16 @@ class FeedbackControllerTest extends AbstractTestController
         }
     }
     
+    public function testsendFeedbackMissingClientSecre()
+    {
+        $url = '/feedback';
+        
+        $this->assertJsonRequest('POST', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403
+        ]);
+    }
+    
     public function testsendFeedback()
     {
         $url = '/feedback';
@@ -24,13 +34,15 @@ class FeedbackControllerTest extends AbstractTestController
         
         $this->assertJsonRequest('POST', $url, [
             'mustSucceed'=>true,
-            'AuthToken' => self::$tokenDeputy,
+            'ClientSecret' => '123abc-deputy',
             'data'=>[
-                
+                'difficulty' => 'difficulty-response'
             ]
         ])['data'];
         
         $this->assertCount(1, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default']);
-        $this->assertEquals('User Feedback', MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0]['subject']);
+        $email = MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0];
+        $this->assertEquals('User Feedback', $email['subject']);
+        $this->assertContains('difficulty-response', $email['parts'][0]['body']);
     }
 }
