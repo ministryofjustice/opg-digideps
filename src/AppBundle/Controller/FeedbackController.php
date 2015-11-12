@@ -5,8 +5,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception as AppExceptions;
-
+use AppBundle\Exception as AppException;
 
 /**
  * @Route("/feedback")
@@ -19,6 +18,10 @@ class FeedbackController extends RestController
      */
     public function sendFeedback(Request $request)
     {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new AppException\UnauthorisedException('client secret not accepted.');
+        }
+        
         $feedbackData = $this->deserializeBodyContent($request);
        
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
