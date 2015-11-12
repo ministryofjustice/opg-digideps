@@ -176,18 +176,17 @@ class IndexController extends AbstractController
         $form = $this->createForm('feedback', new ModelDir\Feedback());
         $request = $this->getRequest();
         
-        if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
-            
-            if($form->isValid()){
-                
-                $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-                
-                $restClient->post('feedback', $form->getData());
-                
-                return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
-            }
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+
+            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+
+            $restClient->sendFeedback($form->getData());
+
+            return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
         }
+        
         return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
     }
     

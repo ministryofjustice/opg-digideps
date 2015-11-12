@@ -135,7 +135,7 @@ class RestClient
     
 
 
-        /**
+    /**
      * Call /auth/logout
      */
     public function logout()
@@ -147,6 +147,19 @@ class RestClient
         // remove AuthToken
         $this->tokenStorage->remove($this->getLoggedUserId());
         
+        
+        return $this->extractDataArray($response);
+    }
+    
+    /**
+     * Call /feedback
+     */
+    public function sendFeedback($data)
+    {
+        $response = $this->rawSafeCall('post', '/feedback', [
+            'body' => $this->toJson($data),
+            'addClientSecret' => true,
+        ]);
         
         return $this->extractDataArray($response);
     }
@@ -478,7 +491,10 @@ class RestClient
     {
         if ($this->userId) {
             return $this->userId;
-        } else if ($token = $this->container->get('security.context')->getToken()) {
+        } else if (
+            ($token = $this->container->get('security.context')->getToken() )
+            && ($token->getUser() instanceof User)
+        ) {
            return $token->getUser()->getId();
         } 
         
