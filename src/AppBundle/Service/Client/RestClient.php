@@ -296,9 +296,9 @@ class RestClient
      */
     private function rawSafeCall($method, $url, $options)
     {
-        // process special header options
-        if (!empty($options['addAuthToken'])) {
-            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($this->getLoggedUserId());
+        // add AuthToken if user is logged
+        if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
+            $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
         }
         unset($options['addAuthToken']);
         
@@ -480,9 +480,9 @@ class RestClient
             return $this->userId;
         } else if ($token = $this->container->get('security.context')->getToken()) {
            return $token->getUser()->getId();
-        }  else {
-            throw new \RuntimeException(__METHOD__ . ": cannot find logged user info", self::HTTP_CODE_AUTHTOKEN_EXPIRED);
-        }
+        } 
+        
+        return false;
     }
     
 }
