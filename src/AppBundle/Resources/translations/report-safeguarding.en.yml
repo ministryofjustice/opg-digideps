@@ -7,7 +7,7 @@ page:
 form:
     contact:
         subSectionTitle: Contact with the client?
-    save.label: Save
+    saveAndContinue.label: Save and continue to accounts
 
 
 everyday: Every day
