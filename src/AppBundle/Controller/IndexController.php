@@ -182,7 +182,7 @@ class IndexController extends AbstractController
 
             $restClient = $this->get('restClient'); /* @var $restClient RestClient */
 
-            $restClient->sendFeedback($form->getData());
+            $restClient->sendHomepageFeedback($form->getData());
 
             return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
         }

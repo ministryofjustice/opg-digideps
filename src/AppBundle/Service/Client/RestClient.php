@@ -154,9 +154,9 @@ class RestClient
     /**
      * Call /feedback
      */
-    public function sendFeedback($data)
+    public function sendHomepageFeedback($data)
     {
-        $response = $this->rawSafeCall('post', '/feedback', [
+        $response = $this->rawSafeCall('post', '/feedback/homepage', [
             'body' => $this->toJson($data),
             'addClientSecret' => true,
         ]);
