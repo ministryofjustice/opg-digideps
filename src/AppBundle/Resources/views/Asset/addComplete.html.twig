@@ -1,14 +1,11 @@
 {# when loaded with AJAX, only return the "pageBody" block content #}
 {% embed app.request.xmlHttpRequest  ? 
   'AppBundle:Layouts:ajaxPageBody.html.twig' :
-  'AppBundle:Components/Page:page-report.html.twig' with {
-    activeTab: "tab-assets"
-} %}
+  'AppBundle:Components/Page:page-report.html.twig' %}
 
     {% set translationDomain = "report-assets" %}
     {% trans_default_domain translationDomain %}
-
-
+    
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
 
@@ -33,38 +30,24 @@
 
           {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
           transDomain: translationDomain,
-          subSectionTitle: 'form.newAsset.subSectionTitleAdd'
+          subSectionTitle: 'page.subSectionTitleAdd'
           } %}
 
-          {{ form_input(form.value, 'form.newAsset.controls.value', {
-          'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
+          {{ form_input(form.value, 'value', {
+          'inputPrefix' : 'currencySymbol',
           'inputClass' : 'form-control__number'
           } ) }}
-          {{ form_input(form.description, 'form.newAsset.controls.description', {inputClass: 'expanding'}) }}
-          {{ form_known_date(form.valuationDate, 'form.newAsset.controls.valuationDate') }}
+          {{ form_input(form.description, 'description', {inputClass: 'expanding'}) }}
+          {{ form_known_date(form.valuationDate, 'valuationDate') }}
 
-          {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-          
-            {{ form_submit(form.save,'form.newAsset.controls.save', { 'buttonClass': '' }) }}
-            
-            {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-              transDomain: translationDomain,
-              linkButtonLabel: 'form.newAsset.controls.cancel.label',
-              linkClass: 'button-link',
-              linkHref: path('asset_add_select_title', {'reportId': report.id})
-            } %}
-            
-          {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
-      {{ form_end(form) }}
-      
-      
-      {{ render(controller('AppBundle:Asset:_list', { 'reportId': report.id })) }}
-
-      
-      {{ render(controller('AppBundle:Asset:_noAssets', { 'reportId': report.id })) }}
-      
-      
+        {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+            transDomain: translationDomain,
+            section: 'asset',
+            showDelete: false
+        } %}
+        
+        {{ form_end(form) }}
+        
     {% endblock %}
 
 {% endembed %}

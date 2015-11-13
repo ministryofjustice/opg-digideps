@@ -260,12 +260,14 @@ class ReportController extends AbstractController
         
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
         $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
+        $assets = $restClient->get('report/' . $reportId . '/assets', 'Asset[]');
         
         return [
             'report' => $report,
             'client' => $client,
             'contacts' => $contacts,
             'decisions' => $decisions,
+            'assets' => $assets,
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
         ];

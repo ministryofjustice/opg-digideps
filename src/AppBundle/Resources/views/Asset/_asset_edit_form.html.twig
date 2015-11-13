@@ -1,0 +1,29 @@
+{% if form.vars.value.id %}
+    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+{% else %}
+    {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+{% endif %}
+
+{{ form_start(editForm, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+        transDomain: translationDomain,
+        subSectionTitle: subSectionTitleText
+    } %}
+
+    {{ form_input(editForm.value, 'form.newAsset.controls.value', {
+        'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
+        'inputClass' : 'form-control__number'
+    } ) }}
+
+    {{ form_input(editForm.description, 'form.newAsset.controls.description') }}
+
+    {{ form_known_date(editForm.valuationDate, 'form.newAsset.controls.valuationDate') }}
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        section: 'asset'
+    } %}
+
+
+{{ form_end(editForm) }}

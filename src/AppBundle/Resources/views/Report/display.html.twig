@@ -99,16 +99,11 @@
                     <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
                 {% endif %}    
             {% else %}
-                {{ render(controller('AppBundle:Asset:_list', { 
-                    'reportId': report.id, 
-                    'showEditLink': false }))
-                }}
-                
-              {#  {% include 'AppBundle:Asset:_list.html.twig' with {
-                    'assetToEdit': false,
-                    'showDeleteConfirm': false,
-                    
-                } %}#}
+                {% include 'AppBundle:Asset:_asset_list.html.twig' with {
+                'report': report,
+                'assets': assets,
+                'transDomain': 'report-assets',
+                } %}
             {% endif %}
         </div>
 
