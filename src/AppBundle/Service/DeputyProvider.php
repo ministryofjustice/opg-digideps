@@ -38,7 +38,11 @@ class DeputyProvider implements UserProviderInterface
     public function login(array $credentials) 
     {
         try {
-           return $this->restClient->login($credentials);
+          $user = $this->restClient->login($credentials);
+          // set logged user ID to the restClient (for future requests in this lifespan. e.g. set password on user activation)
+          $this->restClient->setLoggedUserId($user->getId());
+          
+          return $user;
         } catch(\Exception $e) {
             $this->logger->info(__METHOD__ . ': ' . $e);
             
@@ -58,7 +62,10 @@ class DeputyProvider implements UserProviderInterface
      */
     public function loadUserByUsername($id) 
     {
-        return $this->restClient->get('user/'.$id, 'User');
+        return $this->restClient
+            // the userId needs to be told to the RestClient, as the user is not logged in yet
+            ->setLoggedUserId($id)
+            ->get('user/'.$id, 'User');
     }
     
     

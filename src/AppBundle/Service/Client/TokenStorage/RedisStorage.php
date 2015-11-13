@@ -13,23 +13,29 @@ class RedisStorage implements TokenStorageInterface
     /**
      * @var string 
      */
-    private $id;
+    private $prefix;
     
-    public function __construct(PredisClient $redis, $id)
+     
+    public function __construct(PredisClient $redis, $prefix)
     {
         $this->redis = $redis;
-        $this->id = $id;
+        $this->prefix = $prefix;
     }
 
-    public function get()
+    public function get($id)
     {
-        return $this->redis->get($this->id);
+        return $this->redis->get($this->prefix . $id);
     }
 
 
-    public function set($value)
+    public function set($id, $value)
     {
-        return $this->redis->set($this->id, $value);
+        return $this->redis->set($this->prefix . $id, $value);
     }
     
+    public function remove($id)
+    {
+        $this->redis->set($this->prefix . $id, null);
+        $this->redis->expire($this->prefix . $id, 0);
+    }
 }
