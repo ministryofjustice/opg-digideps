@@ -52,6 +52,10 @@ security:
         behat:
             pattern: ^/behat/
             security: false
+        feedbackHomepage:
+            pattern: ^/feedback/homepage
+            security: false
+            methods: [POST]
         login:
             pattern:  ^/auth/login$
             security: false

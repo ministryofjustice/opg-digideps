@@ -17,9 +17,46 @@ class FeedbackControllerTest extends AbstractTestController
         }
     }
     
-    public function testsendFeedback()
+    public function testsendFeedbackHomepageMissingClientSecre()
     {
-        $url = '/feedback';
+        $url = '/feedback/homepage';
+        
+        $this->assertJsonRequest('POST', $url, [
+            'mustFail' => true,
+            'assertResponseCode' => 403
+        ]);
+    }
+    
+    public function testsendFeedbackHomepage()
+    {
+        $url = '/feedback/homepage';
+        MailSenderMock::resetessagesSent();
+        
+        $this->assertJsonRequest('POST', $url, [
+            'mustSucceed'=>true,
+            'ClientSecret' => '123abc-deputy',
+            'data'=>[
+                'difficulty' => 'difficulty-response'
+            ]
+        ])['data'];
+        
+        $this->assertCount(1, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default']);
+        $email = MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0];
+        $this->assertEquals('User Feedback', $email['subject']);
+        $this->assertContains('difficulty-response', $email['parts'][0]['body']);
+    }
+    
+    public function testsendFeedbackReportAuth()
+    {
+        $url = '/feedback/report';
+        $this->assertEndpointNeedsAuth('POST', $url);
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
+    }
+    
+    
+    public function testsendFeedbackReport()
+    {
+        $url = '/feedback/report';
         MailSenderMock::resetessagesSent();
         
         $this->assertJsonRequest('POST', $url, [
