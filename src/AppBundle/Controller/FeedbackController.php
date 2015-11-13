@@ -5,8 +5,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception as AppExceptions;
-
+use AppBundle\Exception as AppException;
 
 /**
  * @Route("/feedback")
@@ -14,17 +13,32 @@ use AppBundle\Exception as AppExceptions;
 class FeedbackController extends RestController
 {
     /**
-     * @Route("")
+     * @Route("/homepage")
      * @Method({"POST"})
      */
     public function sendFeedback(Request $request)
     {
+        if (!$this->getAuthService()->isSecretValid($request)) {
+            throw new AppException\UnauthorisedException('client secret not accepted.');
+        }
+        
         $feedbackData = $this->deserializeBodyContent($request);
-       
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
         
-        $ret = $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+        return  $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+    }
+    
+    /**
+     * @Route("/report")
+     * @Method({"POST"})
+     */
+    public function sendReportFeedback(Request $request)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        return $ret;
+        $feedbackData = $this->deserializeBodyContent($request);
+        $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
+        
+        return $this->get('mailSender')->send($feedbackEmail,[ 'html']);
     }
 }
