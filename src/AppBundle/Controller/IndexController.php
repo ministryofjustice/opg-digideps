@@ -183,18 +183,17 @@ class IndexController extends AbstractController
         $form = $this->createForm('feedback', new ModelDir\Feedback());
         $request = $this->getRequest();
         
-        if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
-            
-            if($form->isValid()){
-                
-                $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-                
-                $restClient->post('feedback', $form->getData());
-                
-                return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
-            }
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+
+            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+
+            $restClient->sendHomepageFeedback($form->getData());
+
+            return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
         }
+        
         return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
     }
     
@@ -204,6 +203,21 @@ class IndexController extends AbstractController
     public function termsAction()
     {
         return $this->render('AppBundle:Index:terms.html.twig');
+    }
+    
+    /**
+     * @Route("/logout", name="logout")
+     * @Template
+     */
+    public function logoutAction(Request $request)
+    {
+        f();
+        $this->get('security.context')->setToken(null);
+        $request->getSession()->invalidate();
+        
+        return $this->redirect(
+            $this->generateUrl('homepage')
+        );
     }
 
 }

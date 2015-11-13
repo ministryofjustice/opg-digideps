@@ -39,39 +39,30 @@ class UserController extends AbstractController
         }
         
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
-            switch ($action) {
-                case 'activate':
-                    return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
-                        'token'=>$token, 
-                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                    ]);
-                    
-                case 'password-reset':
-                    return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
-                        'token'=>$token, 
-                        'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-                    ]);
+            if ('activate' == $action) {
+                return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
+                    'token'=>$token, 
+                    'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                ]);
+            } else { // password-reset
+                return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
+                    'token'=>$token, 
+                    'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
+                ]);
             }
         }
         
         // define form and template that differs depending on the action (activate or password-reset)
-        switch ($action) {
-            case 'activate':
-                $formType = new FormDir\SetPasswordType([
-                    'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
-                ]);
-                $template = 'AppBundle:User:activate.html.twig';
-                break;
-            
-            case 'password-reset':
-                $formType = new FormDir\ResetPasswordType([
-                    'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
-                ]);
-                $template = 'AppBundle:User:passwordReset.html.twig';
-                break;
-            
-            default:
-                return $this->createNotFoundException("action $action not defined ");
+        if ('activate' == $action) {
+            $formType = new FormDir\SetPasswordType([
+                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+            ]);
+            $template = 'AppBundle:User:activate.html.twig';
+        } else { // 'password-reset'
+            $formType = new FormDir\ResetPasswordType([
+                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+            ]);
+            $template = 'AppBundle:User:passwordReset.html.twig';
         }
         
         $form = $this->createForm($formType, $user);
@@ -97,18 +88,25 @@ class UserController extends AbstractController
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
 
-             $request = $this->get("request");
-             $event = new InteractiveLoginEvent($request, $clientToken);
-             $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
+             //$request = $this->get("request");
+             //$event = new InteractiveLoginEvent($request, $clientToken);
+             //$this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
 
+            // after password reset
+            if ($action == 'password-reset' /*|| $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD')*/) {
+                $redirectUrl = $this->get('redirectorService')->getUserFirstPage(false);
+            } else { // activate:  o to 2nd step
+                $redirectUrl = $this->generateUrl('user_details');
+            }
+            
              // the following should not be triggered
-             return $this->redirect($this->generateUrl('user_details'));
+            return $this->redirect($redirectUrl);
         }
 
         return $this->render($template, [
             'token'=>$token, 
             'form' => $form->createView(),
-            'isAdmin' => $user->getRole()['role'] === 'ROLE_ADMIN'
+            'userRole' => $user->getRole()['role']
         ]);
     }
     
@@ -153,7 +151,7 @@ class UserController extends AbstractController
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
         $user = $restClient->get('user/' . $userId, 'User'); /* @var $user EntityDir\User*/
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
         $notification = $request->query->has('notification')? $request->query->get('notification'): null;
 
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
@@ -168,8 +166,16 @@ class UserController extends AbstractController
                     'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
                 ]);
                 
+                if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                    $route = 'admin_homepage';
+                } elseif ($this->get('security.context')->isGranted('ROLE_AD')) {
+                    $route = 'ad_homepage';
+                } else {
+                    $route = 'client_add';
+                }
+                
                 // after details are added, admin users to go their homepage, deputies go to next step
-                return $this->redirect($this->generateUrl($basicFormOnly ? 'admin_homepage' : 'client_add'));
+                return $this->redirect($this->generateUrl($route));
             }
         } else {
             // fill the form in (edit mode)
@@ -194,7 +200,7 @@ class UserController extends AbstractController
         $request = $this->getRequest();
         $user = $this->getUser();
         
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN');
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
         ]);

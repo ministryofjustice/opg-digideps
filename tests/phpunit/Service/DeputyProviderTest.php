@@ -35,7 +35,14 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
     {
         $credentials = ['email'=>'Peter', 'password'=>'p'];
         
-        $this->restClient->shouldReceive('login')->once()->with($credentials);
+        $user = m::mock('AppBundle\Entity\User')
+            ->shouldReceive('getId')->andReturn(1)
+            ->getMock();
+        
+        $this->restClient->shouldReceive('login')->once()->with($credentials)->andReturn($user);
+        $this->restClient->shouldReceive('setLoggedUserId')->once()->with(1);
+        
+        $this->logger->shouldReceive('info')->andReturnUsing(function($e){  throw new \Exception($e); });
         
         $this->object->login($credentials);
     }
@@ -56,6 +63,7 @@ class DeputyProviderTest extends \PHPUnit_Framework_TestCase
     
     public function testLoadUserByUsername() 
     {
+        $this->restClient->shouldReceive('setLoggedUserId')->with(1)->andReturn($this->restClient);
         $this->restClient->shouldReceive('get')->with('user/1', 'User')->andReturn('user');
         
         $this->assertEquals('user', $this->object->LoadUserByUsername(1));

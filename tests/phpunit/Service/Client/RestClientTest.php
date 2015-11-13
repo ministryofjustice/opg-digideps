@@ -50,17 +50,22 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
+        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
+            ->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser)
+            ->shouldReceive('get')->with('logger')->andReturn($this->logger)
+            ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(false)
+            ->getMock();
         
         $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');
              
         $this->object = new RestClient(
+            $this->container,   
             $this->client, 
             $this->tokenStorage,
-            $this->serialiser, 
-            $this->logger,
-            $this->clientSecret,
-            false
+            $this->clientSecret
         );
+        
+        $this->object->setLoggedUserId(1);
     }
 
 
@@ -68,7 +73,9 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
     {
         $credentialsArray = ['username' => 'u', 'password' => 'p'];
         $credentialsJson = json_encode($credentialsArray);
-        $loggedUser = m::mock('AppBundle\Entity\User');
+        $loggedUser = m::mock('AppBundle\Entity\User')
+            ->shouldReceive('getId')->andReturn(1)
+            ->getMock();
         $userArray = ['id'=>1, 'firstname'=>'Peter'];
         $userJson = json_encode($userArray);
         
@@ -92,7 +99,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         
       
         $this->tokenStorage
-            ->shouldReceive('set')->once()->with($this->sessionToken);
+            ->shouldReceive('set')->once()->with(m::any(), $this->sessionToken);
         
         $this->logger
             ->shouldReceive('warning')->never();
@@ -111,7 +118,8 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getBody')->andReturn($responseJson);
         
         $this->tokenStorage
-            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+            ->shouldReceive('get')->once()->andReturn($this->sessionToken)
+            ->shouldReceive('remove')->once()->with(1);
         
         $this->serialiser
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
@@ -471,17 +479,21 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
         $this->clientSecret = 'secret-123';
         $this->sessionToken = 'sessionToken347349r783';
+        $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
+            ->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser)
+            ->shouldReceive('get')->with('logger')->andReturn($this->logger)
+            ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
+            ->getMock();
         
         $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');
              
         $object = new RestClient(
+            $this->container,   
             $this->client, 
             $this->tokenStorage,
-            $this->serialiser, 
-            $this->logger,
-            $this->clientSecret,
-            true
+            $this->clientSecret
         );
+        $object->setLoggedUserId(1);
         
         $endpointUrl = '/path/to/endpoint';
         $responseData = ['bbbbb'];

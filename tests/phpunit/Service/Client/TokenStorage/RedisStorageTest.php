@@ -20,18 +20,19 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
     public function __construct()
     {
         $this->redis = m::mock('Predis\Client');
-        $this->id = 'id';
+        $this->prefix = 'prefix';
         
-        $this->object = new RedisStorage($this->redis, $this->id);
+        $this->object = new RedisStorage($this->redis, $this->prefix);
     }
 
     public function testGet()
     {
         $value = 'v';
+        $id = 1;
         
-        $this->redis->shouldReceive('get')->with($this->id)->andReturn($value);
+        $this->redis->shouldReceive('get')->with($this->prefix . $id)->andReturn($value);
         
-        $this->assertEquals($value, $this->object->get());
+        $this->assertEquals($value, $this->object->get($id));
     }
 
 
@@ -39,10 +40,11 @@ class RedisStorageTest extends \PHPUnit_Framework_TestCase
     {
         $value = 'v';
         $returnValue = 'rv';
+        $id = 1;
         
-        $this->redis->shouldReceive('set')->with($this->id, $value)->andReturn($returnValue);
+        $this->redis->shouldReceive('set')->with($this->prefix . $id, $value)->andReturn($returnValue);
         
-        $this->assertEquals($returnValue, $this->object->set($value));
+        $this->assertEquals($returnValue, $this->object->set($id, $value));
     }
     
 }
