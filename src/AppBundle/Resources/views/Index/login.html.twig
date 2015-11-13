@@ -4,7 +4,13 @@
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block contentClass %}{{ parent() }} sign-in-page js-sign-in-page{% endblock %}
 
-{% block title %}{{ 'pageTitle' | trans }}{% endblock %}
+{% block title %}
+    {% if isAdmin %}
+        {{ 'admin.pageTitle' | trans }}
+    {% else %}
+        {{ 'pageTitle' | trans }}
+    {% endif %}
+{% endblock %}
 {% block pageHeader %}
     {{ parent() }}
 {% endblock %}
