@@ -205,7 +205,7 @@ class Client
      */
     public function setCaseNumber($caseNumber)
     {
-        $this->caseNumber = $caseNumber;
+        $this->caseNumber = trim($caseNumber);
 
         return $this;
     }

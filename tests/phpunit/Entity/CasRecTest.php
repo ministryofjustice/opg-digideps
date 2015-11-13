@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class CasRecTest extends \PHPUnit_Framework_TestCase
 {
-    public static function normalizeValueProvider()
+    public static function normalizeSurnameProvider()
     {
         return [
             ['', ''],
@@ -30,11 +30,11 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
     }
     
     /**
-     * @dataProvider  normalizeValueProvider
+     * @dataProvider  normalizeSurnameProvider
      */
-    public function testnormaliseValue($input, $expected)
+    public function testnormaliseSurname($input, $expected)
     {
-        $this->assertEquals($expected, CasRec::normaliseValue($input));
+        $this->assertEquals($expected, CasRec::normaliseSurname($input));
     }
     
 

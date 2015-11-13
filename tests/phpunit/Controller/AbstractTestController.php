@@ -100,7 +100,7 @@ abstract class AbstractTestController extends WebTestCase
             }
         }
         if (!empty($options['mustFail'])) {
-            $this->assertFalse($return['success'], "Endpoint didn't failE as expected. Response: " . print_r($return, true));
+            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: " . print_r($return, true));
         }
          if (!empty($options['assertCode'])) {
             $this->assertEquals($options['assertResponseCode'], $return['code'], "Response: " . print_r($return, true));
