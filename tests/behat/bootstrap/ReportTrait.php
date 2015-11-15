@@ -245,7 +245,7 @@ trait ReportTrait
 
             // click on "Add" if form not present
             if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title_title'))) {
-                $this->clickOnBehatLink('add-an-asset');
+                $this->clickLink('add-assets-button');
             }
 
             $this->fillField('asset_title_title', $row['title']);
@@ -621,8 +621,8 @@ trait ReportTrait
     {
         $this->gotoOverview();
         $this->clickLink('edit-assets');
-        $this->checkOption("report_no_assets_no_assets");
-        $this->pressButton("report_no_assets_saveNoAsset");
+        $this->checkOption("report_noAssetToAdd");
+        $this->pressButton("report_saveNoAsset");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }

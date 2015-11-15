@@ -141,9 +141,9 @@ class AssetController extends AbstractController
             'form' => $form->createView(),
         ];
     }
-    
+
     /**
-     * @Route("/report/{reportId}/assets/{id}/delete", name="delete_asset")
+     * @Route("/{reportId}/assets/{id}/delete", name="delete_asset")
      * @param integer $id
      *
      * @return RedirectResponse
@@ -162,7 +162,7 @@ class AssetController extends AbstractController
     
     /**
      * Sub controller action called when the no decision form is embedded in another page.
-     * @Route("/report/{reportId}/noassets", name="no_assets")
+     * @Route("/{reportId}/noassets", name="no_assets")
      *
      * @Template("AppBundle:Asset:_noAssets.html.twig")
      */
