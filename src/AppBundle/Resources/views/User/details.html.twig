@@ -6,7 +6,7 @@
 {% block stepTitle %}{{ 'stepTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    {% if is_granted('ROLE_ADMIN') %}
+    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')%}
          {{ progress_bar('registration_admin', 2) }}
     {% else %}
          {{ progress_bar('registration', 2) }}
@@ -27,7 +27,7 @@
 
     {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
 
-    {% if not is_granted('ROLE_ADMIN') %}
+    {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_AD') %}
         {{ form_input(form.address1,'address1', { 'labelClass': 'required' }) }}
 
         {{ form_input(form.address2,'address2') }}

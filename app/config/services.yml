@@ -25,13 +25,7 @@ services:
         arguments: [@snc_redis.default, "redis_token_storage_dd"]
     restClient:
         class:  AppBundle\Service\Client\RestClient
-        arguments: 
-            - @guzzleJsonHttpClient
-            - @redisTokenStorage
-            - @jms_serializer
-            - @logger
-            - "%api_client_secret%"
-            - "%kernel.debug%"
+        arguments: [@service_container, @guzzleJsonHttpClient, @redisTokenStorage, "%api_client_secret%"]
     deputyprovider:
         class:  AppBundle\Service\DeputyProvider
         arguments: [ @restClient, @logger ]
@@ -68,7 +62,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     logout_listener:
       class:   AppBundle\EventListener\LogoutListener
-      arguments:  [@security.context, @router, @auditLogger]
+      arguments:  [@security.context, @restClient, @router, @auditLogger]
     response_nocache_listener:
        class:   AppBundle\EventListener\ResponseNoCacheListener
        tags:

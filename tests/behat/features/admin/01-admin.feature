@@ -41,7 +41,7 @@ Feature: admin / admin
             | set_password_password_second  | Abcd1234 |
         And I press "set_password_save"
         Then I should not see the "header errors" region
-        And I should be on "/admin/"
+        And I should be on "/user/details"
 
 
     Scenario: change user password on admin area

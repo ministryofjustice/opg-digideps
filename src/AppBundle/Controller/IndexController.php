@@ -22,6 +22,12 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
+        // admin domain should never show the homepage.
+        // User is redirected to the admin homepage. If not logged, the user will be redirected to login page
+        if ($this->container->getParameter('env') === 'admin') {
+            return $this->redirect($this->generateUrl('admin_homepage'));
+        }
+        
         return $this->render('AppBundle:Index:index.html.twig');
     }
     
@@ -39,6 +45,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
         $vars = [
             'form' => $form->createView(),
+            'isAdmin' => $this->container->getParameter('env') === 'admin'
         ];
        
         if ($form->isValid()){
@@ -176,18 +183,17 @@ class IndexController extends AbstractController
         $form = $this->createForm('feedback', new ModelDir\Feedback());
         $request = $this->getRequest();
         
-        if($request->getMethod() == 'POST'){
-            $form->handleRequest($request);
-            
-            if($form->isValid()){
-                
-                $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-                
-                $restClient->post('feedback', $form->getData());
-                
-                return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
-            }
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+
+            $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+
+            $restClient->sendHomepageFeedback($form->getData());
+
+            return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
         }
+        
         return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
     }
     
@@ -197,6 +203,21 @@ class IndexController extends AbstractController
     public function termsAction()
     {
         return $this->render('AppBundle:Index:terms.html.twig');
+    }
+    
+    /**
+     * @Route("/logout", name="logout")
+     * @Template
+     */
+    public function logoutAction(Request $request)
+    {
+        f();
+        $this->get('security.context')->setToken(null);
+        $request->getSession()->invalidate();
+        
+        return $this->redirect(
+            $this->generateUrl('homepage')
+        );
     }
 
 }
