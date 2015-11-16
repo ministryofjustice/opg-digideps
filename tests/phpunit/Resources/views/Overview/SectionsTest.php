@@ -11,7 +11,7 @@ class SectionsTest extends WebTestCase
 {
 
     /**
-     * @var Symfony\Bundle\FrameworkBundle\Client
+     * @var \Symfony\Bundle\FrameworkBundle\Client
      */
     private $client;
     
@@ -161,7 +161,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         
         $submitReportLinkElement = $crawler->filter('#report-submit-section a');
-        $this->assertEquals(2, $submitReportLinkElement->count());
+        $this->assertEquals(1, $submitReportLinkElement->count());
     }
 
     /** @test */
