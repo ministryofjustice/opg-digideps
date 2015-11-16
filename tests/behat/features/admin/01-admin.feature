@@ -2,12 +2,14 @@ Feature: admin / admin
 
     Scenario: login and add admin user, check audit log
         Given I reset the email log
+        And I am on admin page "/"
+        Then I should be on "/login"
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then the last audit log entry should contain:
           | from | admin@publicguardian.gsi.gov.uk |
           | action | login |
-        #When I go to "/admin"
-        Given I am on admin page "/admin"
+        Given I am on admin page "/"
+        Then I should be on "/admin/"
         And I create a new "Admin" user "John" "Doe" with email "behat-admin-user@publicguardian.gsi.gov.uk"
         Then I should see "behat-admin-user@publicguardian.gsi.gov.uk" in the "users" region
         Then the response status code should be 200
