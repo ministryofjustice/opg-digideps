@@ -18,7 +18,7 @@ server {
     error_log   /var/log/app/nginx.error.log error;
 
     
-    index {{ getv "/index" }};
+    index {{ getv "/opg/nginx/index" }};
     
     client_max_body_size 20m;
 
@@ -27,9 +27,6 @@ server {
     location =/meta.json {
         alias /app/META;
     }
-
-#    real_ip_header X-Forwarded-For;
-#    set_real_ip_from 0.0.0.0/0;   
 
     fastcgi_buffers 256 16k;
     fastcgi_buffer_size 128k;
@@ -43,11 +40,11 @@ server {
     }
     
     location / {
-        try_files $uri $uri/ /{{ getv "/index" }}$is_args$args;
+        try_files $uri $uri/ /{{ getv "/opg/nginx/index" }}$is_args$args;
     }
 
     location ~ \.php$ {
-        fastcgi_index   {{ getv "/index" }};
+        fastcgi_index   {{ getv "/opg/nginx/index" }};
         fastcgi_pass    127.0.0.1:9000;
         fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include         fastcgi_params;
