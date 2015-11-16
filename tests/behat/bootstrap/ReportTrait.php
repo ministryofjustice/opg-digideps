@@ -178,9 +178,8 @@ trait ReportTrait
             $this->gotoOverview();
             $this->clickLink('edit-contacts');
 
-            // expand form if collapsed
-            if (0 === count($this->getSession()->getPage()->findAll('css', '#contact_contactName'))) {
-                $this->clickOnBehatLink('add-a-contact');
+            if (1 === count($this->getSession()->getPage()->findAll('css', '#add-contacts-button'))) {
+                $this->clickLink("add-contacts-button");
             }
 
             $this->fillField('contact_contactName', $row['contactName']);
@@ -210,11 +209,10 @@ trait ReportTrait
             $this->gotoOverview();
             $this->clickLink("edit-decisions");
 
-            // expand form if collapsed
-            if (0 === count($this->getSession()->getPage()->findAll('css', '#decision_clientInvolvedBoolean_0'))) {
-                $this->clickOnBehatLink('add-a-decision');
+            if (1 === count($this->getSession()->getPage()->findAll('css', '#add-decisions-button'))) {
+                $this->clickLink("add-decisions-button");
             }
-
+            
             $this->fillField('decision_description', $row['description']);
             switch ($row['clientInvolved']) {
                 case 'yes':
@@ -247,7 +245,7 @@ trait ReportTrait
 
             // click on "Add" if form not present
             if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title_title'))) {
-                $this->clickOnBehatLink('add-an-asset');
+                $this->clickLink('add-assets-button');
             }
 
             $this->fillField('asset_title_title', $row['title']);
@@ -623,8 +621,8 @@ trait ReportTrait
     {
         $this->gotoOverview();
         $this->clickLink('edit-assets');
-        $this->checkOption("report_no_assets_no_assets");
-        $this->pressButton("report_no_assets_saveNoAsset");
+        $this->checkOption("report_noAssetToAdd");
+        $this->pressButton("report_saveNoAsset");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }

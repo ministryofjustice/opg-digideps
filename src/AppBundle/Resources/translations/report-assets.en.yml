@@ -4,49 +4,43 @@ page:
   pageSectionDescription: "Add details of any property, savings or investments owned by your client."
   pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
+  subSectionTitleAdd: Add an asset
+  subSectionTitleEdit: "Edit this asset"
 form:
-  listing:
+  controls:
     addButton:
       label: "Add an asset"
       moreLabel: "Add another asset"
-  newAsset:
-    subSectionTitleAdd: Add an asset
-    subSectionTitleEdit: "Edit this asset"
-    controls:
-      title:
-        label: Select an asset category, such as ‘Property’.
-        hint: ""
-      value:
-        label: "Value"
-        hint: "Can be an estimated value"
-        currencySymbol: "£"
-      description:
-        label: "Asset description"
-        hint: ""
-      valuationDate:
-        legend: Valuation date (optional)
-        hint: "(DD/MM/YYYY)"
-      next:
-        label: Next
-      save:
-        label: Save
-      cancel:
-        label: Cancel
-      delete:
-        label: Delete
-        message: "Are you sure that you want to delete this asset?"
-listing:
-  value: "Value"
-  description: "Asset description"
-  date: "Valuation date"
-  currencySymbol: "£"
-  editLink: "Edit this asset"
+
+title:
+    label: Select an asset category, such as ‘Property’.
+    hint: ""
+value:
+    label: "Value"
+    hint: "Can be an estimated value"
+currencySymbol: "£"
+description:
+    label: "Asset description"
+    hint: ""
+valuationDate:
+    legend: Valuation date (optional)
+    hint: "(DD/MM/YYYY)"
+    label: Valuation date
+next:
+    label: Next
+editLink: "Edit this asset"
+
 no_assets:
     label: My client has no assets
     description: If your client has no assets, please click the checkbox below.
     selected: Your client has no assets
 save:
     label: Save
+cancel:
+    label: Cancel
+delete:
+    label: Delete
+    message: "Are you sure that you want to delete this asset?"
 defaultDropDownOption:
     option: Please select ...
 dropdown:

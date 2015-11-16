@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Tests\Service;
+namespace AppBundle\Service;
 
 use AppBundle\Service\AuditLogger;
 use Mockery as m;

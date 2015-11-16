@@ -3,11 +3,6 @@
     h2 {
         @include bold-24();
         padding-bottom: 25px;
-        
-        a{
-            color: $link-colour;
-            text-decoration: none;
-        }
 
         @include media(mobile) {
             border-top: 4px solid $grey-3;
@@ -17,7 +12,12 @@
                 border-top: 4px solid $green-status;
             }
         }
-
+        
+        a {
+            color: $link-colour;
+            text-decoration: none;
+        }
+        
     }
 
     .labelvalue {

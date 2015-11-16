@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Tests\Twig;
+namespace AppBundle\Twig;
 
 use AppBundle\Twig\AssetsExtension;
 use Mocker as m;

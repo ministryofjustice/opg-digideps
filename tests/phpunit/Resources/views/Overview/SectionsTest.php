@@ -1,5 +1,5 @@
 <?php
-namespace phpunit\AppBundle\Resources\views\Report;
+namespace AppBundle\Resources\views\Report;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Report as Report;

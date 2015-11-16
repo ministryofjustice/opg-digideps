@@ -1,34 +1,19 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
 
-{% set reportHasNoAssetExplanation = report.noAssetToAdd is not empty %}
-{% set showNoAssetToAddForm = (report.assets is empty) and report.isDue() and (report.noAssetToAdd is empty) %}
-    
+<div class="report-list-separator"></div>
 
-{% if showNoAssetToAddForm or reportHasNoAssetExplanation %}
-  <div class="report-list-separator"> </div>
-  {% if reportHasNoAssetExplanation %}
-    <p class="no-assets-selected nothing-selected page-section-description behat-region-no-assets-selected">{{ 'no_assets.selected' | trans }}</p>
-  {% else %}
-      {% block validationSummary %}
-          {{ form_errors_list(no_assets_to_add) }}
-      {% endblock %}
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form in-page-form behat-region-no-assets-selected' } }) }}
 
-      {{ form_start(no_assets_to_add, {attr: {novalidate: 'novalidate', class: 'no-data-form in-page-form' } }) }}
+    <p class="page-section-description ">{{ 'no_assets.description'| trans }}</p>
+    {{ form_checkbox(form.noAssetToAdd,'no_assets', { 'labelClass': 'required'}) }}
 
-      <p class="page-section-description ">{{ 'no_assets.description'| trans }}</p>
-      {{ form_checkbox(no_assets_to_add.no_assets,'no_assets', { 'labelClass': 'required'}) }}
+    {{ form_submit(form.saveNoAsset,'save') }}
 
-      {{ form_submit(no_assets_to_add.saveNoAsset,'save') }}
+{{ form_end(form) }}
 
-      {{ form_end(no_assets_to_add) }}
-
-      <script type="text/javascript">
-          $(document).ready(function() {
-              new GOVUK.SelectionButtons(":checkbox");
-          });
-      </script>
-      
-      
-  {% endif %}
-{% endif %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        new GOVUK.SelectionButtons(":checkbox");
+    });
+</script>
