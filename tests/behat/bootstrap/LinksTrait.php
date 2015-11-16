@@ -54,13 +54,28 @@ trait LinksTrait
             throw new \RuntimeException("Found more than a $linkSelector element in the page. Interrupted");
         }
         if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element $linkSelector not found. Interrupted");
+            $this->clickOnHashLink($link);
+            return;
         }
         
         // click on the found link
         $linksElementsFound[0]->click();
     }
 
+    private function clickOnHashLink($link) 
+    {
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#' . $link);
+        if (count($linksElementsFound) > 1) {
+            throw new \RuntimeException("Found more than a #$link element in the page. Interrupted");
+        }
+        if (count($linksElementsFound) === 0) {
+            throw new \RuntimeException("Element #$link not found. Interrupted");
+        }
+
+        // click on the found link
+        $linksElementsFound[0]->click();    
+    }
+    
 
     /**
      * Click on element with attribute [behat-link=:link]

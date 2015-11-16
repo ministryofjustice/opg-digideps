@@ -10,7 +10,7 @@ class NoAssetToAddType extends AbstractType{
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder ->add('no_assets', 'checkbox', [
+        $builder ->add('noAssetToAdd', 'checkbox', [
                        'constraints' => new Constraints\NotBlank(['message'=>'asset.no_assets.notBlank']),
                  ])
                  ->add('saveNoAsset', 'submit');
@@ -25,6 +25,6 @@ class NoAssetToAddType extends AbstractType{
     
     public function getName()
     {
-        return 'report_no_assets';
+        return 'report';
     }
 }

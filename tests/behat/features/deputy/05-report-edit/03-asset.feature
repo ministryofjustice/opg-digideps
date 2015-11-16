@@ -29,13 +29,7 @@ Feature: deputy / report / edit asset
        Then I should see "I love my artworks" in the "list-assets" region
        And I should see "£10,000.00" in the "list-assets" region
        And I click on "asset-i-love-my-artworks"
-       And I save the page as "report-assets-remove-edit"
-       And I click on "delete-confirm"
-       And I save the page as "report-assets-remove-delete-confirm"
-       And I click on "delete-confirm-cancel"
-       And I save the page as "report-assets-remove-remove-cancel"
-       And I click on "delete-confirm"
-       And I click on "delete"
+       And I click on "delete-button"
        And I save the page as "report-assets-remove-remove-deleted"
        And the URL should match "/report/\d+/assets"
        Then I should not see "I love my artworks" in the "list-assets" region
@@ -50,17 +44,16 @@ Feature: deputy / report / edit asset
       # delete current asset
       And I follow "edit-assets"
       And I click on "asset-2-beds-flat-in-ha2"
-      And I click on "delete-confirm"
-      And I click on "delete"
-      Then the checkbox "report_no_assets_no_assets" should be unchecked
+      And I click on "delete-button"
+      Then the checkbox "report_noAssetToAdd" should be unchecked
       And I save the page as "report-no-asset-empty"
       # submit without ticking the box
-      And I press "report_no_assets_saveNoAsset"
+      And I press "report_saveNoAsset"
       Then the form should be invalid
       And I save the page as "report-no-asset-error"
       # tick and submit
-      When I check "report_no_assets_no_assets"
-      And I press "report_no_assets_saveNoAsset"
+      When I check "report_noAssetToAdd"
+      And I press "report_saveNoAsset"
       Then the form should be valid
       And I save the page as "report-no-asset-added"
       And I should see the "no-assets-selected" region
@@ -69,7 +62,6 @@ Feature: deputy / report / edit asset
         | title        | value       |  description        | valuationDate | 
         | Vehicles    | 13000.00    |  Alfa Romeo 156 JTD | 10/11/2015 |
       And I click on "asset-alfa-romeo-156-jtd"
-      And I click on "delete-confirm"
-      And I click on "delete"
+      And I click on "delete-button"
       # check checkbox is reset
-      Then the checkbox "report_no_assets_no_assets" should be unchecked
+      Then the checkbox "report_noAssetToAdd" should be unchecked

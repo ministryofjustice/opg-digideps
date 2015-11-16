@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Test\Twig;
+namespace AppBundle\Twig;
 
 use Mockery as m;
 

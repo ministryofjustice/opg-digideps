@@ -1,12 +1,8 @@
 <?php
-namespace phpunit\AppBundle\Resources\views\Safeguard;
+namespace AppBundle\Resources\views\Safeguard;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use AppBundle\Entity\Account;
-use AppBundle\Entity\Report;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Request;
-use Fixtures;
 use Mockery as m;
 
 class SafeguardContinueTest extends WebTestCase

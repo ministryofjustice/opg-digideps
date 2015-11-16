@@ -5,151 +5,208 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Service\ReportStatusService;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 class DecisionController extends AbstractController
 {
     /**
-     * @Route("/report/{reportId}/decisions/delete-reason", name="delete_reason_decisions")
+     * @Route("/report/{reportId}/decisions", name="decisions")
+     * @Template("AppBundle:Decision:list.html.twig")
+     * @param integer $reportId
+     * @return array
+     */
+    public function listAction($reportId) {
+        
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
+        $client = $this->getClient($report->getClient());
+
+        
+        if (empty($decisions) && $report->isDue() == false) {
+            return $this->redirect($this->generateUrl('add_decision', ['reportId'=>$reportId]) );
+        }
+        
+        return [
+            'decisions' => $decisions,
+            'report' => $report,
+            'client' => $client
+        ];
+        
+    }
+
+    
+    /**
+     * @Route("/report/{reportId}/decisions/add", name="add_decision")
+     * @Template("AppBundle:Decision:add.html.twig")
+     */
+    public function addAction(Request $request, $reportId) {
+        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+        
+        $decision = new EntityDir\Decision;
+        $form = $this->createForm(new FormDir\DecisionType(), $decision);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+
+            $data = $form->getData();
+            $data->setReportId($reportId);
+
+            $this->get('restClient')->post('report/decision', $data);
+
+            //lets clear any reason for no decisions they might have added previously
+            $report->setReasonForNoDecisions(null);
+            $this->get('restClient')->put('report/'. $report->getId(),$report);
+            
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) );
+        }
+
+        $client = $this->getClient($report->getClient());
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
+            'client' => $client
+        ];
+
+    }
+
+    
+    /**
+     * @Route("/report/{reportId}/decisions/{id}/edit", name="edit_decision")
+     * @Template("AppBundle:Decision:edit.html.twig")
+     */
+    public function editAction(Request $request, $reportId, $id) {
+
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+
+        if (!in_array($id, $report->getDecisions())) {
+            throw new \RuntimeException("Decision not found.");
+        }
+        $decision = $restClient->get('report/decision/' . $id, 'Decision');
+        
+        $form = $this->createForm(new FormDir\DecisionType(), $decision);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+
+            $data = $form->getData();
+            $data->setReportId($reportId);
+
+            $restClient->put('report/decision', $data);
+            
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
+        }
+
+        $client = $this->getClient($report->getClient());
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report,
+            'client' => $client
+        ];
+
+    }
+
+    
+    /**
+     * @Route("/report/{reportId}/decisions/{id}/delete", name="delete_decision")
+     * @param integer $id
+     * 
+     * @return RedirectResponse
+     */
+    public function deleteAction($reportId, $id)
+    {
+        //just do some checks to make sure user is allowed to delete this contact
+        $report = $this->getReport($reportId, ['basic']);
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+        
+        if(!empty($report) && in_array($id, $report->getDecisions())){
+            $restClient->delete("/report/decision/{$id}");
+        }
+        
+        return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
+    
+    }
+    
+
+    /**
+     * @Route("/report/{reportId}/decisions/delete-nonereason", name="delete_nonereason_decisions")
      */
     public function deleteReasonAction($reportId)
     {
         //just do some checks to make sure user is allowed to update this report
         $report = $this->getReport($reportId, ['basic', 'transactions']);
-
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+        
         if(!empty($report)){
             $report->setReasonForNoDecisions(null);
-            $this->get('restClient')->put('report/'.$report->getId(),$report);
+            $restClient->put('report/'.$report->getId(),$report);
         }
         return $this->redirect($this->generateUrl('decisions', ['reportId' => $report->getId()]));
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/delete/{id}", name="delete_decision")
-     * @param integer $id
-     */
-    public function deleteAction($reportId,$id)
-    {
-        //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['basic']);
-
-        if(!empty($report) && in_array($id, $report->getDecisions())){
-            $this->get('restClient')->delete("/report/decision/{$id}");
-        }
-        return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));
-    }
 
     /**
-     * action [list, add, edit, delete-confirm, edit-reason, delete-reason-confirm ]
-     * @Route("/report/{reportId}/decisions/{action}/{id}", name="decisions", defaults={ "action" = "list", "id" = " "})
-     * @Template()
-     */
-    public function decisionsAction($reportId,$action,$id)
-    {
-        $request = $this->getRequest();
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+     * @Route("/report/{reportId}/decisions/nonereason", name="edit_decisions_nonereason")
+     * @Template("AppBundle:Decision:edit_none_reason.html.twig")
+     */  
+    public function noneReasonAction(Request $request, $reportId) {
+        
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
-        // just needed for title etc,
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
+        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+        
+            $data = $form->getData();
+            $restClient->put('report/'. $reportId,$data);
+
+            return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
+            
         }
 
-        if(in_array($action, [ 'edit', 'delete-confirm'])){
-            if (!in_array($id, $report->getDecisions())) {
-               throw new \RuntimeException("Decision not found.");
-            }
-            $decision = $restClient->get('report/decision/' . $id, 'Decision');
-
-            $form = $this->createForm(new FormDir\DecisionType([
-                'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
-            ]), $decision, [ 'action' => $this->generateUrl('decisions',[ 'reportId' => $reportId, 'action' => 'edit', 'id' => $id ])]);
-
-        }else{
-            $decision = new EntityDir\Decision;
-
-            $form = $this->createForm(new FormDir\DecisionType([
-                'clientInvolvedBooleanEmptyValue' => $this->get('translator')->trans('clientInvolvedBoolean.defaultOption', [], 'report-decisions')
-            ]), $decision, [ 'action' => $this->generateUrl('decisions',[ 'reportId' => $reportId, 'action' => 'add' ])]);
-        }
-
-        $decision->setReportId($reportId);
-        $decision->setReport($report);
-
-        $noDecision = $this->createForm(new FormDir\ReasonForNoDecisionType(), null, [ 'action' => $this->generateUrl('decisions', [ 'reportId' => $reportId])."#pageBody" ]);
+        $client = $this->getClient($report->getClient());
         
-        $reason = $report->getReasonForNoDecisions();
-        $mode = empty($reason)? 'add':'edit';
-        $noDecision->setData([ 'reason' => $reason, 'mode' => $mode ]);
-        
-        if ($request->isMethod('POST')) {
-
-            $form->handleRequest($request);
-            $noDecision->handleRequest($request);
-
-            if($form->get('save')->isClicked()){
-
-                if ($form->isValid()) {
-
-                    $this->handleAddEditDecision($action,$form,$report);
-
-                    return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
-                }
-            } elseif ($noDecision->get('saveReason')->isClicked()){
-                
-                if($noDecision->isValid()){
-                    $this->handleReasonForNoDecision($action, $noDecision, $reportId);
-                    return $this->redirect($this->generateUrl('decisions',[ 'reportId' => $report->getId()]));
-                }
-            }
-        }
-        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
-        
-
         return [
-            'decisions' => $restClient->get('report/' . $reportId . '/decisions', 'Decision[]'),
             'form' => $form->createView(),
-            'no_decision' => $noDecision->createView(),
             'report' => $report,
-            'reportStatus' => $reportStatusService,
-            'client' => $this->getClient($report->getClient()),
-            'action' => $action,
+            'client' => $client
+        ];
+        
+    }
+    
+
+    /**
+     * Sub controller action called when the no decision form is embedded in another page.
+     *
+     * @Template("AppBundle:Decision:_none_reason_form.html.twig")
+     */
+    public function _noneReasonFormAction(Request $request, $reportId)
+    {
+
+        $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId'=>$reportId]);
+        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+            $data = $form->getData();
+            $this->getRestClient()->put('report/'. $reportId,$data);
+        }
+        
+        return [
+            'form' => $form->createView(),
+            'report' => $report
         ];
     }
-
-    /**
-     *
-     * @param string $action
-     */
-    protected function handleAddEditDecision($action,$form,$report)
-    {
-        $restClient = $this->get('restClient');
-
-         if($action == 'add'){
-            // add decision
-            $restClient->post('report/decision', $form->getData());
-
-            //lets clear any reason for no decisions they might have added previously
-            $report->setReasonForNoDecisions(null);
-            $this->get('restClient')->put('report/'.$report->getId(),$report);
-        }else{
-            // edit decision
-            $restClient->put('report/decision', $form->getData());
-        }
-    }
-
-    /**
-     *
-     * @param string $action
-     * @param type $noDecision
-     * @param integer $reportId
-     */
-    protected function handleReasonForNoDecision($action,$noDecision,$reportId)
-    {
-        $formData = $noDecision->getData();
-
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
-        $report->setReasonForNoDecisions($formData['reason']);
-        $this->get('restClient')->put('report/'.$report->getId(),$report);
-    }
+    
 }

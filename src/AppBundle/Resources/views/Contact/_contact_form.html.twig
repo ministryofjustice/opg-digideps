@@ -1,59 +1,29 @@
-{#
-Component parameters
---------------------
+{% if form.vars.value.id %}
+    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+{% else %}
+    {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
+{% endif %}
 
-showAddForm (true/false)
-form
-#}
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
-{% if (showAddForm) %}
-
-    {% if (showAddForm) %}
-        {% set formContainerClass = '' %}
-        {% set formClass = 'in-page-form' %}
-    {% else %}
-        {% set formContainerClass = 'visuallyhidden' %}
-        {% set formClass = '' %}
-    {% endif %}
-
-
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
-
-    <div id="add" class="{{ formContainerClass }}"> {# Show the Add Form #}
-
-        {% set subSectionTitleText = 'contact_form.subSectionTitleAdd' %}
-
-        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
+    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
         transDomain: translationDomain,
         subSectionTitle: subSectionTitleText
-        } %}
+    } %}
 
-        {{ form_input(form.contactName, 'contactName') }}
-        {{ form_input(form.relationship, 'relationship') }}
-        {{ form_input(form.explanation, 'explanation', {inputClass: 'expanding'}) }}
-        {{ form_input(form.address, 'address') }}
-        {{ form_input(form.address2, 'address2') }}
-        {{ form_input(form.county, 'county') }}
-        {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
-        {{ form_select(form.country, 'country') }}
+    {{ form_input(form.contactName, 'contactName') }}
+    {{ form_input(form.relationship, 'relationship') }}
+    {{ form_input(form.explanation, 'explanation', {inputClass: 'expanding'}) }}
+    {{ form_input(form.address, 'address') }}
+    {{ form_input(form.address2, 'address2') }}
+    {{ form_input(form.county, 'county') }}
+    {{ form_input(form.postcode, 'postcode', {'inputClass': 'form-control__postcode' }) }}
+    {{ form_select(form.country, 'country') }}
 
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-
-        {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
-
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
         transDomain: translationDomain,
-        linkButtonLabel: 'cancel.label',
-        linkClass: 'button-link',
-        linkHref: path('contacts', {'reportId': report.id})
-        } %}
+        section: 'contact'
+    } %}
 
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
-    </div>
-
-    {{ form_end(form) }}
-
-
-{% endif %}
+{{ form_end(form) }}

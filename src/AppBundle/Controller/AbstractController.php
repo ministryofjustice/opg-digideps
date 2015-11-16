@@ -88,4 +88,27 @@ class AbstractController extends Controller
 
         return $ret;
     }
+
+    /**
+     *
+     * @param integer $reportId
+     * @return \AppBundle\Entity\Report
+     *
+     * @throws \RuntimeException if report is submitted
+     */
+    protected function getReportIfReportNotSubmitted($reportId, $addClient = true)
+    {
+        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+
+        if ($addClient) {
+            $client = $this->getClient($report->getClient());
+            $report->setClientObject($client);
+        }
+
+        return $report;
+    }
+
 }
