@@ -7,7 +7,7 @@ use Behat\Gherkin\Node\TableNode;
 trait UserTrait
 {
     // added here for simplicity
-    private static $roleNameToRoleId = ['admin'=>1, 'lay deputy'=>2];
+    private static $roleNameToRoleId = ['admin'=>1, 'lay deputy'=>2, 'ad'=>5];
     
     /**
      * it's assumed you are logged as an admin and you are on the admin homepage (with add user form)

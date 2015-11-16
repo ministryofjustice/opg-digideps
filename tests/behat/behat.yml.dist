@@ -20,6 +20,14 @@ default:
         contexts:
             - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
+      ad:
+        description: End to end journey for Assisted Digital user
+        paths:    [ %paths.base%/features/ad ]
+        filters:
+           tags: "~@javascript"
+        contexts:
+           - DigidepsBehat\FeatureContext: [{ dbName: api }]
+
       feedback:
         description: Tests related to user feedback
         paths:    [ %paths.base%/features/deputy ]
