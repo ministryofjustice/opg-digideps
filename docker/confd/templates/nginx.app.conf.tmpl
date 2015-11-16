@@ -1,15 +1,21 @@
+{{ if exists "/opg/nginx/ssl/force/redirect" }}
 server {
+   listen      80 default_server;
+   return      307 https://$host$request_uri;
+}
+{{ end }}
+
+
+server {
+{{ if not (exists "/opg/nginx/ssl/force/redirect") }}
     listen     80 default_server;
+{{ end }}
     #Using global cert let's also listen on 443
     listen     443 default_server ssl;
 
     rewrite_log  on;
     access_log  /var/log/app/nginx.access.json logstash_json;
     error_log   /var/log/app/nginx.error.log error;
-
-    error_page  500 502 504       /500.html;
-    error_page  503               /503.html;
-    error_page  404               /404.html;
 
     
     index {{ getv "/index" }};
@@ -41,7 +47,6 @@ server {
     }
 
     location ~ \.php$ {
-#        fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_index   {{ getv "/index" }};
         fastcgi_pass    127.0.0.1:9000;
         fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
@@ -52,4 +57,11 @@ server {
     location ~ /\. {
         deny  all;
     }
+
+    set $uid $http_x_request_id;
+    if ($uid = '') {
+      set $uid $request_id;
+    }
+    add_header X-Request-Id $uid;
+    proxy_set_header X-Request-Id $uid;
 }
