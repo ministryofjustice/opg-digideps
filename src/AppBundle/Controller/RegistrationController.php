@@ -37,9 +37,9 @@ class RegistrationController extends AbstractController
             $data = $form->getData();
             
             try {
-
+                
                 $this->get('restClient')->registerUser($data);
-
+                
                 $bodyText = $translator->trans('thankyou.body', [], 'register');
                 $email = $data->getEmail();
                 $bodyText = str_replace("{{ email }}", $email, $bodyText);
@@ -61,16 +61,19 @@ class RegistrationController extends AbstractController
                         break;
                     
                     case 421:
-                        $form->addError(new FormError($translator->trans('matchingError', [], 'register')));
+                        $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
                         break;
                     
                     case 424:
                         $form->get('postcode')->addError(new FormError($translator->trans('postcode.matchingError', [], 'register')));
-                        // TODO form now valiate postcode ?
+                        break;
+                    
+                     case 425:
+                        $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
                         break;
                     
                     default:
-                        $form->addError(new FormError($translator->trans('genericError', [], 'register')));
+                        $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }
                 
                 $this->get('logger')->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());

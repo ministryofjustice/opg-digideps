@@ -73,6 +73,7 @@ trait DebugTrait
 
     /**
      * @Then die :code
+     * @Then exit :code
      */
     public function interrupt($code)
     {

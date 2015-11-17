@@ -15,7 +15,7 @@ Feature: User Self Registration
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  |  |
             | self_registration_clientLastname | Cross  tolley  |
-            | self_registration_caseNumber     | 12341234      |
+            | self_registration_caseNumber     | 100001      |
         And I press "self_registration_save"
         Then I should see a "#error-heading" element
         And I save the page as "selfreg-error-mismatch"
@@ -25,7 +25,8 @@ Feature: User Self Registration
         # 
         Given I add the following users to CASREC:
             | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode | 
-            |12341234   | Cross-Tolley  | D001      | Tolley | SW1 3RF      |
+            |100001   | Cross-Tolley  | D001      | Tolley | SW1 3RF      |
+            |100002   | Cross-Tolley2 | D002     | Tolley2 | SW1 3RF2      |
         #
         # expect postcode error
         #
@@ -55,18 +56,32 @@ Feature: User Self Registration
             | login_password  | Abcd1234 |
         Then I click on "login"
         Then I should see "behat-zac.tolley@digital.justice.gov.uk" in the "users" region
-        
+       
+    @deputy
+    Scenario: Inform the use that Someone else has already registered with this case number
+        Given I am on "/register"
+        And I fill in the following:
+            | self_registration_firstname | Zac                |
+            | self_registration_lastname  | Tolley             |
+            | self_registration_email     | behat-zac.tolley-new@digital.justice.gov.uk |
+            | self_registration_postcode  | SW1 3RF |
+            | self_registration_clientLastname | Cross-Tolley  |
+            # add case number already used
+            | self_registration_caseNumber     | 100001      |
+        And I press "self_registration_save"
+        Then I should see a "#error-heading" element
+        And I save the page as "selfreg-error-casenumber-already-used"
 
     @deputy
     Scenario: Inform the use that email already exists
         Given I am on "/register"
         And I fill in the following:
-            | self_registration_firstname | Zac                |
-            | self_registration_lastname  | Tolley             |
+            | self_registration_firstname | Zac2                |
+            | self_registration_lastname  | Tolley2             |
             | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
-            | self_registration_postcode  | SW1 3RF |
-            | self_registration_clientLastname | Cross-Tolley  |
-            | self_registration_caseNumber     | 12341234      |
+            | self_registration_postcode  | SW1 3RF2 |
+            | self_registration_clientLastname | Cross-Tolley2  |
+            | self_registration_caseNumber     | 100002      |
         And I press "self_registration_save"
         Then I should see "Please check your email"
         Given I am on "/register"
@@ -76,7 +91,7 @@ Feature: User Self Registration
             | self_registration_email     | behat-zac.tolley-dup@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
-            | self_registration_caseNumber     | 12341234      |
+            | self_registration_caseNumber     | 100001      |
         And I press "self_registration_save"
         Then the following fields should have an error:
             | self_registration_email |
@@ -87,7 +102,7 @@ Feature: User Self Registration
         And I reset the email log
         And I add the following users to CASREC:
             | Case      | Surname       | Deputy No | Dep Surname  | Dep Postcode |
-            | 12341234  | Cross-Tolley  | D001      | Tolley       | SW1 3RF      |
+            | 100001  | Cross-Tolley  | D001      | Tolley       | SW1 3RF      |
         And I am on "/register"
         And I fill in the following:
             | self_registration_firstname | Zac                |
@@ -95,7 +110,7 @@ Feature: User Self Registration
             | self_registration_email     | behat-zac.tolley@digital.justice.gov.uk |
             | self_registration_postcode  | SW1 3RF |
             | self_registration_clientLastname | Cross-Tolley  |
-            | self_registration_caseNumber     | 12341234      |
+            | self_registration_caseNumber     | 100001      |
         And I press "self_registration_save"
         Then I should see "Please check your email"
         And I should see "We've sent you a link to behat-zac.tolley@digital.justice.gov.uk"
