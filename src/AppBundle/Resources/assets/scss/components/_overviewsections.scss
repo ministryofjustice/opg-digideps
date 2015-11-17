@@ -1,19 +1,13 @@
 .overview-sections {
 
-    padding-top: 10px;
-    border-top: 1px solid $grey-3;
     color: $text-colour;
-
-    @include media(mobile) {
-        padding-top: 20px;
-    }
-
+    
     .overview-section {
 
-        padding-top: 18px;
+        margin-top: 30px;
 
         @include media(mobile) {
-            padding-top: 0;
+            margin-top: 0;
         }
 
 

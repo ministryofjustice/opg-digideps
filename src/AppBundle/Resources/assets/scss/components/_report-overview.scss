@@ -23,7 +23,6 @@
     #pagebody {
 
         @extend %grid-row;
-        margin-top: 40px;
         
         #pagebody-left-content {
             @include grid-column(3 / 4, $full-width: tablet);
@@ -35,6 +34,11 @@
         
         #pagebody-right-content {
             @include grid-column(1 / 4, $full-width: tablet);
+            
+            #helpline {
+                margin-top: 40px;
+            }
+            
         }
         
     }

@@ -5,13 +5,15 @@
 
 {% block pageContent %}
     {% block pageHeader %}
-        <header class="page-header group">
-            <h1>
-                <span class="service-title">{% block serviceName %}Complete the deputy report{% endblock %}</span>
-                {% block title %}undefined{% endblock %}
-            </h1>
-            <div class="after-title">
-                {% block afterTitle %}{% endblock %}
+        <header class="page-header">
+            <div class="page-header-titles">
+                <h1>
+                    <span class="service-title">{% block serviceName %}Complete the deputy report{% endblock %}</span>
+                    {% block title %}undefined{% endblock %}
+                </h1>
+                <div class="after-title">
+                    {% block afterTitle %}{% endblock %}
+                </div>
             </div>
         </header>
     {% endblock %}
