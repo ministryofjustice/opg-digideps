@@ -1,22 +1,27 @@
+{% if disableedit is defined and disableedit == true %}
+    {% set allowEdit = false %}
+{% else %}
+    {% set allowEdit = true %}
+{% endif %}
+
 <div id="{{ subSection }}-sub-section" class="sub-section">
-    <h3 class="heading">
-        {% if disableedit is defined and disableedit == true %}
-            {{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}
-        {%  else  %}
-            <a href="{{ path(subSection, {reportId: report.id}) }}">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</a>
-        {%  endif %}
-    </h3>
+    {% if allowEdit == true %}
+        <a id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
+    {% endif %}
+    
+    <h3 class="heading">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
     <span class="status {{ state }}">{{ status }}</span>
 
-    {% if disableedit is defined and disableedit == true %}
-        <span id="edit-{{ subSection }}" class="edit-link disabled">{{ (subSection ~ '.edit') | trans({}, translationDomain) }}</span>
-    {% else %}
-        <a id="edit-{{ subSection }}" class="edit-link" href="{{ path(subSection, {reportId: report.id}) }}" >
-            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
-        </a>
-    {% endif %}
+    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" href="{{ path(subSection, {reportId: report.id}) }}" >
+        {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+    </span>
+
     {%  if description is defined and description %}
         <p class="sub-section-description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%':client.firstname}, translationDomain ) }}</p>
     {%  endif %}
-    
+
+
+    {% if allowEdit == true %}
+        </a>
+    {% endif %}
 </div>
