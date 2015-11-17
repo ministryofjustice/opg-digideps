@@ -16,11 +16,10 @@ var gulp = require('gulp'),
 var config = {
     sass: {
         includePaths: [
-            'node_modules/govuk-elements/govuk/public/sass',
-            'node_modules/govuk-elements/govuk/public/sass/design-patterns',
-            'node_modules/govuk-elements/public/sass',
             'node_modules/govuk-elements/public/sass/elements/',
             'node_modules/govuk-elements/public/sass/elements/forms',
+            'node_modules/govuk_frontend_toolkit/stylesheets',
+            'node_modules/govuk__template_mustache/assets/stylesheets',
             'node_modules/moj-template/source/assets/stylesheets'
         ]
     },
@@ -80,7 +79,7 @@ gulp.task('sass.application-print', function () {
 
 });
 gulp.task('sass.images', function(callback) {
-    gulp.src('./node_modules/govuk-elements/govuk/public/stylesheets/images/**/*')
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
     
     gulp.src(config.sassSrc + '/images/**/*')
@@ -88,13 +87,13 @@ gulp.task('sass.images', function(callback) {
     callback();
 });
 gulp.task('sass.fonts', function() {
-    gulp.src('./node_modules/govuk-elements/govuk/public/stylesheets/fonts/*').pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
-    gulp.src('./node_modules/govuk-elements/govuk/public/stylesheets/fonts-ie8.css').pipe(gulp.dest(config.webAssets + '/stylesheets'));
+    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*').pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
+    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css').pipe(gulp.dest(config.webAssets + '/stylesheets'));
     
 });
 
 gulp.task('images', function () {
-    gulp.src('./node_modules/govuk-elements/govuk/public/images/**/*').pipe(gulp.dest('./web/images'));
+    gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
     gulp.src('./src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
 });
 
@@ -103,8 +102,8 @@ gulp.task('js', function(callback) {
 });
 gulp.task('js.uglify', function () {
     return gulp.src([
-            './node_modules/govuk-elements/govuk/public/javascripts/govuk-template.js',
-            './node_modules/govuk-elements/govuk/public/javascripts/govuk/selection-buttons.js',
+            './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
+            './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
             './node_modules/moj-template/source/assets/javascripts/moj.js',
             config.jsSrc + '/*.js'])
         .pipe(concat('application.js'))
@@ -114,8 +113,8 @@ gulp.task('js.uglify', function () {
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 gulp.task('js.ie', function() {
-    gulp.src('./node_modules/govuk-elements/govuk/public/javascripts/ie.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
-    gulp.src('./node_modules/govuk-elements/govuk/public/javascripts/vendor/goog/webfont-debug.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
+    gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/ie.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
+    gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/vendor/goog/webfont-debug.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 gulp.task('js.vendor', function () {
     gulp.src('./node_modules/jquery/dist/jquery.min.js')
