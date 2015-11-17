@@ -371,6 +371,11 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
             ->getMock();
         
+        $mockClientRepository = m::mock('\Doctrine\ORM\EntityRepository')
+            ->shouldIgnoreMissing(false)
+            ->shouldReceive('findOneBy')->withAnyArgs()->andReturn(false)
+            ->getMock();
+        
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
@@ -380,6 +385,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getRepository')->with('AppBundle\Entity\User')->andReturn($mockUserRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\Role')->andReturn($mockRoleRepository)
             ->shouldReceive('getRepository')->with('AppBundle\Entity\CasRec')->andReturn($mockCasRecRepository)
+            ->shouldReceive('getRepository')->with('AppBundle\Entity\Client')->andReturn($mockClientRepository)
             ->getMock();
 
         $mockEmail = m::mock('\AppBundle\Model\Email')

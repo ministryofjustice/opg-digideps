@@ -39,7 +39,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'email' => 'behat-test@gov.uk',
             'postcode' => 'SW1',
             'client_lastname' => 'Cross-Tolley',
-            'case_number' => '12341234'
+            'case_number' => '100001'
         ];
 
         $selfRegisterData = new SelfRegisterData();
@@ -51,7 +51,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('behat-test@gov.uk', $selfRegisterData->getEmail());
         $this->assertEquals('SW1', $selfRegisterData->getPostcode());
         $this->assertEquals('Cross-Tolley', $selfRegisterData->getClientLastname());
-        $this->assertEquals('12341234', $selfRegisterData->getCaseNumber());
+        $this->assertEquals('100001', $selfRegisterData->getCaseNumber());
     }
 
 
@@ -102,7 +102,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'lastname' => 'Tolley',
                 'email' => 'behat-dontsaveme@uk.gov',
                 'client_lastname' => '',
-                'case_number' => '12341234'
+                'case_number' => '100001'
             ],
             'ClientSecret' => '123abc-deputy'
         ]);
@@ -120,7 +120,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
         
-        $casRec = new CasRec('12341234', 'Cross-Tolley', 'DEP001','Tolley', 'SW1');
+        $casRec = new CasRec('100001', 'Cross-Tolley', 'DEP001','Tolley', 'SW1');
         $this->fixtures()->persist($casRec);
         $this->fixtures()->flush($casRec);
         
@@ -135,7 +135,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'email' => 'gooduser@gov.zzz',
                 'postcode' => 'SW1',
                 'client_lastname' => 'Cross-Tolley',
-                'case_number' => '12341234'
+                'case_number' => '100001'
             ],
             'ClientSecret' => '123abc-deputy'
         ]);
@@ -152,9 +152,10 @@ class SelfRegisterControllerTest extends AbstractTestController
         $theClient = $user->getClients()->first();
 
         $this->assertEquals("Cross-Tolley", $theClient->getLastname());
-        $this->assertEquals('12341234', $theClient->getCaseNumber());
+        $this->assertEquals('100001', $theClient->getCaseNumber());
     }
 
+    
     
      /**
      * @test
@@ -182,36 +183,32 @@ class SelfRegisterControllerTest extends AbstractTestController
     }
 
 
-    /** @test */
+    /** 
+     * @test 
+     * @depends savesValidUserToDb
+     */
     public function throwErrorForDuplicate()
     {
         $token = $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
         
-        $data = [
-            'firstname' => 'Zac',
-            'lastname' => 'Tolley',
-            'email' => 'duplicate@uk.zzz',
-            'postcode' => 'SW1',
-            'client_lastname' => 'Cross-Tolley',
-            'case_number' => '12341234'
-        ];
-        
-        // 1st one succeed
-        $this->assertJsonRequest('POST', '/selfregister', [
-            'mustSucceed' => true,
-            'AuthToken' => $token,
-            'data' => $data,
-            'ClientSecret' => '123abc-deputy'
-        ]);
-        
-        //2nd fail (duplicate)
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
             'AuthToken' => $token,
-            'data' => $data,
+            'assertResponseCode' => 425,
+            'assertCode' => 425,
+            'AuthToken' => $token,
+            'data' => [
+                'firstname' => 'Zac',
+                'lastname' => 'Tolley',
+                'email' => 'gooduser1@gov.zzz',
+                'postcode' => 'SW1',
+                'client_lastname' => 'Cross-Tolley',
+                'case_number' => '100001' // already taken !
+            ],
             'ClientSecret' => '123abc-deputy'
         ]);
         
+        
     }
-
+    
 }

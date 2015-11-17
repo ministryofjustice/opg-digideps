@@ -87,14 +87,42 @@ class CasRec
      */
     public function __construct($caseNumber, $clientLastname, $deputyNo, $deputySurname, $deputyPostCode)
     {
-        $this->caseNumber = self::normaliseValue($caseNumber);
-        $this->clientLastname = self::normaliseValue($clientLastname);
-        $this->deputyNo = self::normaliseValue($deputyNo);
-        $this->deputySurname = self::normaliseValue($deputySurname);
-        $this->deputyPostCode = self::normaliseValue($deputyPostCode);
+        $this->caseNumber = self::normaliseCaseNumber($caseNumber);
+        $this->clientLastname = self::normaliseSurname($clientLastname);
+        $this->deputyNo = self::normaliseDeputyNo($deputyNo);
+        $this->deputySurname = self::normaliseSurname($deputySurname);
+        $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
     }
     
-    public static function normaliseValue($value)
+    
+    public static function normaliseSurname($value)
+    {
+        $value = trim($value);
+        $value = strtolower($value);
+        // remove MBE suffix
+        $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
+        // remove characters that are not a-z or 0-9 or spaces
+        $value = preg_replace('/([^a-z0-9])/i', '', $value);
+        
+        return $value;
+    }
+    
+    public static function normaliseCaseNumber($value)
+    {
+        $value = trim($value);
+        
+        return $value;
+    }
+    
+    public static function normaliseDeputyNo($value)
+    {
+        $value = trim($value);
+        $value = strtolower($value);
+        
+        return $value;
+    }
+    
+    public static function normalisePostCode($value)
     {
         $value = trim($value);
         $value = strtolower($value);

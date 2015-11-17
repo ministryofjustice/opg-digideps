@@ -21,6 +21,7 @@ Return codes
 * 421 User regisration: User and client not found in casrec
 * 422 User regisration: email already existing
 * 424 User regisration: User and client found, but postcode mismatch
+* 425 User regisration: Case number already used
 * 498 wrong credentials at login
 * 499 wrong credentials at login (after many failed requests)
 * 500 generic error due to internal exception (e.g. db offline)

@@ -56,9 +56,10 @@ class UserRegistrationService
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
         
-        // Check the user is unique
-        $this->casRec($user, $client);
-
+        // Casrec checks
+        $casRec = $this->casRecChecks($user, $client);
+        $user->setDeputyNo($casRec->getDeputyNo());
+        
         $this->saveUserAndClient($user, $client);
 
         $mail = $this->mailFactory->createActivationEmail($user);
@@ -69,17 +70,32 @@ class UserRegistrationService
     }
     
     /**
+     * CASREC checks
+     * - throw error 425 if case number already used
+     * - throw error 421 if user and client not found
+     * - throw error 424 if user and client are found but the postcode doesn't match
+     * (see <root>/README.md for more info. Keep the readme file updated with this logic)
+     * 
      * @param User $user
      * @param Client $client
-     * @return boolean
+     * 
+     * @return CasRec
      */
-    private function casRec(User $user, Client $client)
+    private function casRecChecks(User $user, Client $client)
     {
+        $caseNumber = CasRec::normaliseCaseNumber($client->getCaseNumber());
+        
         $criteria = [
-            'caseNumber' => CasRec::normaliseValue($client->getCaseNumber()),
-            'clientLastname' => CasRec::normaliseValue($client->getLastname()),
-            'deputySurname' => CasRec::normaliseValue($user->getLastname()),
+            'caseNumber' => $caseNumber,
+            'clientLastname' => CasRec::normaliseSurname($client->getLastname()),
+            'deputySurname' => CasRec::normaliseSurname($user->getLastname()),
         ];
+        
+        $clientRepo = $this->em->getRepository('AppBundle\Entity\Client');
+        if ($clientRepo->findOneBy(['caseNumber'=>$caseNumber])) {
+            throw new \RuntimeException("Case number already used", 425);
+        }
+        
         $casRec = $this->casRecRepo->findOneBy($criteria); /** @var $casRec CasRec */
         
         if (!$casRec) {
@@ -88,12 +104,11 @@ class UserRegistrationService
         
         // if the postcode is set in CASREC, it has to match to the given one
         if ($casRec->getDeputyPostCode() && 
-            $casRec->getDeputyPostCode() != CasRec::normaliseValue($user->getAddressPostcode())) {
+            $casRec->getDeputyPostCode() != CasRec::normalisePostCode($user->getAddressPostcode())) {
             throw new \RuntimeException("User and client found, but postcode mismatch", 424);
         }
         
-        // copy deputy number over
-        $user->setDeputyNo($casRec->getDeputyNo());
+        return $casRec;
     }
 
     public function saveUserAndClient($user, $client)
