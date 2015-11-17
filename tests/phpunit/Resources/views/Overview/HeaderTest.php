@@ -143,55 +143,6 @@ class HeaderTest extends WebTestCase
         
     }
     
-    /** @test */
-    public function reportNotDueAllSectionsCompleteShowNews() {
-        $this->report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('isDue')->andReturn(false)
-            ->getMock();
-
-        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('isReadyToSubmit')->andReturn(true)
-            ->getMock();
-
-        $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
-            'report' => $this->report,
-            'reportStatus' => $this->reportStatus,
-            'app' => $this->getApp()
-        ]);
-        
-        $crawler = new Crawler($html);
-
-        $headerSubmitElement = $crawler->filter('#page-report-header .flash-news');
-        $this->assertEquals(1, $headerSubmitElement->count());
-    }
-    
-    /** @test */
-    public function reportDueAllSectionsNotCompleteShowNews() {
-        $this->report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('isDue')->andReturn(false)
-            ->getMock();
-
-        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('isReadyToSubmit')->andReturn(true)
-            ->getMock();
-        
-        $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
-            'report' => $this->report,
-            'reportStatus' => $this->reportStatus,
-            'app' => $this->getApp()
-        ]);
-
-        $crawler = new Crawler($html);
-
-        $headerSubmitElement = $crawler->filter('#page-report-header .flash-news');
-        $this->assertEquals(1, $headerSubmitElement->count());    
-    }
-    
-    
     private function getApp() {
         
         $flashbag = m::mock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface')
