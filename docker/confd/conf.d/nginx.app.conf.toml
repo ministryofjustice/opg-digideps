@@ -1,7 +1,0 @@
-[template]
-prefix = "/nginx"
-src = "nginx.app.conf.tmpl"
-dest = "/etc/nginx/conf.d/app.conf"
-keys = [
-    "/index",
- ]
