@@ -1,5 +1,5 @@
 <?php
-namespace phpunit\AppBundle\Resources\views\Report;
+namespace AppBundle\Resources\views\Report;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Report as Report;
@@ -11,7 +11,7 @@ class SectionsTest extends WebTestCase
 {
 
     /**
-     * @var Symfony\Bundle\FrameworkBundle\Client
+     * @var \Symfony\Bundle\FrameworkBundle\Client
      */
     private $client;
     

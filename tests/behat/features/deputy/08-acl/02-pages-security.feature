@@ -35,20 +35,19 @@ Feature: deputy / acl / security on pages
         | /report/1/overview  | 200 | 
         # decisions
         | /report/1/decisions | 200 | 
-        | /report/1/decisions/edit/1 | 200 | 
-        | /report/1/decisions/delete-confirm/1 | 200 | 
+        | /report/1/decisions/1/edit | 200 |
+        | /report/1/decisions/1/delete | 200 |
         | /report/1/decisions/add | 200 | 
         # contacts
         | /report/1/contacts | 200 | 
-        | /report/1/contacts/edit/1 | 200 | 
-        | /report/1/contacts/delete-confirm/1 | 200 | 
+        | /report/1/contacts/1/edit | 200 |
+        | /report/1/contacts/1/delete | 200 |
         | /report/1/contacts/add | 200 | 
         # assets
         | /report/1/assets | 200 | 
-        | /report/1/assets/1/edit | 200 | 
-        | /report/1/assets/1/delete | 200 | 
-        | /report/1/assets/1/delete/1 | 200 | 
-        | /report/1/assets/add-select-title | 200 | 
+        | /report/1/assets/1/edit | 200 |
+        | /report/1/assets/1/delete | 200 |
+        | /report/1/assets/add | 200 | 
         | /report/1/assets/add-complete/Antiques | 200 | 
         # accounts
         | /report/1/accounts | 200 | 
@@ -67,22 +66,21 @@ Feature: deputy / acl / security on pages
         # decisions
         | /report/2/decisions | 200 | 
         | /report/1/decisions | 500 | 
-        | /report/1/decisions/edit/1 | 500 | 
-        | /report/1/decisions/delete-confirm/1 | 500 | 
+        | /report/1/decisions/1/edit | 500 |
+        | /report/1/decisions/1/delete | 500 |
         | /report/1/decisions/add | 500 | 
         # contacts
         | /report/2/contacts | 200 | 
         | /report/1/contacts | 500 | 
-        | /report/1/contacts/edit/1 | 500 | 
-        | /report/1/contacts/delete-confirm/1 | 500 | 
+        | /report/1/contacts/1/edit | 500 |
+        | /report/1/contacts/1/delete | 500 |
         | /report/1/contacts/add | 500 | 
         # assets
         | /report/2/assets | 200 | 
         | /report/1/assets | 500 | 
         | /report/1/assets/1/edit | 500 | 
-        | /report/1/assets/1/delete | 500 | 
-        | /report/1/assets/1/delete/1 | 500 | 
-        | /report/1/assets/add-select-title | 500 | 
+        | /report/1/assets/1/delete | 500 |
+        | /report/1/assets/add | 500 | 
         | /report/1/assets/add-complete/Antiques | 500 | 
         # accounts
         | /report/2/accounts | 200 | 

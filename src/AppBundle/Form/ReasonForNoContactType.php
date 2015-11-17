@@ -10,10 +10,11 @@ class ReasonForNoContactType extends AbstractType{
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('reason','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'contact.no-contact-reason.notBlank'])
+        $builder->add('reasonForNoContacts','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'contact.no-contact-reason.notBlank'])
                      ]])
-                ->add('mode', 'hidden')
-                ->add('saveReason', 'submit');
+                ->add('save', 'submit');
+
+        $builder->setAction($options['action']);
     }
     
     public function setDefaultOptions(OptionsResolverInterface $resolver)

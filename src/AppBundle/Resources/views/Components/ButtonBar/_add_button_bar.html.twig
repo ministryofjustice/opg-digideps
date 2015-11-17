@@ -1,0 +1,14 @@
+<!--Component: button-bar-add-start-->
+
+{% if data is defined and data is not empty %}
+    {% set label = 'form.controls.addButton.moreLabel' %}
+{% else %}
+    {% set label = 'form.controls.addButton.label' %}
+{% endif %}
+
+<div class="form-group button-bar button-bar-add button-bar-add-{{ section }}" id="button-bar-add-{{ section}}">
+    <a id="add-{{ section }}-button" class="button-secondary" href="/report/{{ report.id }}/{{ section }}/add#pageBody">
+        {{ label | default('Add')|trans({}, transDomain) }}
+    </a>
+</div>
+<!--Component: button-bar-add-end-->

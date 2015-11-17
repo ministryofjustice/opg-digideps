@@ -22,12 +22,19 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
-        // admin domain should never show the homepage.
-        // User is redirected to the admin homepage. If not logged, the user will be redirected to login page
+        // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
         if ($this->container->getParameter('env') === 'admin') {
-            return $this->redirect($this->generateUrl('admin_homepage'));
+            if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                return $this->redirect($this->generateUrl('admin_homepage'));
+            } else if ($this->get('security.context')->isGranted('ROLE_AD')) {
+                return $this->redirect($this->generateUrl('ad_homepage'));
+            } else {
+                return $this->redirect($this->generateUrl('login'));
+            }
+            
         }
         
+        // deputy homepage with links to register and login
         return $this->render('AppBundle:Index:index.html.twig');
     }
     
@@ -98,7 +105,8 @@ class IndexController extends AbstractController
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
         } else if ($request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
-            $vars['error'] = $this->get('translator')->trans('sessionApiTimeoutOutWarning', [], 'login');
+            $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
+            $this->get('logger')->error("Session timeout from API server.");
         }
             
         return $this->render('AppBundle:Index:login.html.twig', $vars);
