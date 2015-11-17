@@ -55,6 +55,13 @@ class Report
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
+
+    /**
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("array")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
+     */
+    private $transactions;
     
     /**
      * @JMS\Groups({"transactions"})
@@ -232,6 +239,7 @@ class Report
     {
         $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
         $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->transactions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
         $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
         $this->noAssetToAdd = null;
@@ -468,7 +476,6 @@ class Report
 
         return $this;
     }
-    
     /**
      * Remove contacts
      *

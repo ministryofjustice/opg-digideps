@@ -122,7 +122,7 @@ class Account
     private $closingDateExplanation;
     
     /**
-     * @var integer
+     * @var Report
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="accounts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
