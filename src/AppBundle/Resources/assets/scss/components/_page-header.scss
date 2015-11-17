@@ -1,9 +1,9 @@
 header.page-header {
-    @extend %contain-floats;
-
-    margin-top: 40px;
-    margin-bottom: 0;
-
+    
+    .page-header-titles {
+        margin: 40px 0 30px 0;
+    }
+    
     h1 {
         padding-bottom: 0;
         padding-top: 0;
@@ -19,7 +19,6 @@ header.page-header {
     .report-title {
         font-weight: normal;
         margin-top: 0;
-        margin-bottom: 15px;
     }
 
     .client-name {
