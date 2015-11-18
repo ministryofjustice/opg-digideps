@@ -1,0 +1,28 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block pageContent %}
+
+    {% block pageHeader %}
+        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
+    {% endblock %}
+
+
+    {% block errorSummary %}
+        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+    {% endblock %}
+
+    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+        'report': report
+    } %}
+    
+    <div class="left-nav-container">
+        <div class="row">
+            <div class="left-nav">
+                {% include 'AppBundle:Account2:left-nav.html.twig'%}
+            </div>
+            <div class="right-content">
+                {% block maincontent %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
