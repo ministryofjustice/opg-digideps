@@ -123,12 +123,6 @@ class Version049 extends AbstractMigration
             ],
         ];
 
-        foreach ($rows as &$row) {
-            foreach ($row as &$row1) {
-
-            }
-        }
-
 
         $displayOrder = 1;
         foreach ($rows as $type => $categories) {
