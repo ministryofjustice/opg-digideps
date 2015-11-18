@@ -102,9 +102,6 @@ class AccountControllerTest extends AbstractTestController
         
         // assert account created with transactions
         $account = self::fixtures()->getRepo('Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
-        $transactionTypesTotal = count(self::fixtures()->getRepo('AccountTransactionType')->findAll());
-        $this->assertCount($transactionTypesTotal, $account->getTransactions(), "transactions not created");
-
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         
         // assert cannot create account for a report not belonging to logged user

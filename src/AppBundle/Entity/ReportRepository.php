@@ -29,7 +29,8 @@ class ReportRepository extends EntityRepository
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);
         $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
-        
+        $this->addEmptyTransactionsToReport($newReport);
+
         //lets clone the assets
         $assets = $report->getAssets();
         
@@ -57,8 +58,7 @@ class ReportRepository extends EntityRepository
             $newAccount->setCreatedAt(new \DateTime());
             $newAccount->setReport($newReport);
 
-            $this->_em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($newAccount);
-            $this->addEmptyTransactionsToReport($report);
+
 
             $this->_em->persist($newAccount);
         }
@@ -70,6 +70,8 @@ class ReportRepository extends EntityRepository
     }
 
     /**
+     * add emtpy Transaction to Report
+     *
      * @param Report $report
      */
     public function addEmptyTransactionsToReport(Report $report)

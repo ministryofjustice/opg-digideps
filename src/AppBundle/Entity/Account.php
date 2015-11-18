@@ -11,7 +11,7 @@ use Doctrine\ORM\QueryBuilder;
  * Account
  *
  * @ORM\Table(name="account")
- * @ORM\Entity(repositoryClass="AppBundle\Entity\AccountRepository")
+ * @ORM\Entity()
  */
 class Account 
 {
