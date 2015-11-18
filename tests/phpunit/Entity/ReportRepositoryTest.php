@@ -32,7 +32,6 @@ class ReportRepositoryTest extends WebTestCase
             'setStartDate' => new \DateTime('01 January 2014'),
             'setEndDate' => new \DateTime('31 December 2014')
         ]);
-        $this->fixtures->getRepo('Report')->addEmptyTransactionsToReport($report);
 
         $asset = new EntityDir\Asset();
         $asset->setReport($report);
