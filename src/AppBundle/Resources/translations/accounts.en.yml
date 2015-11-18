@@ -63,6 +63,8 @@ any_other_money_paid_out_and_not_listed_above: Any other money paid out and not 
 #end deprecated
 
 
+
+# transactions (categories and types)
 income-earnings: Income/Earnings
 dividends: dividends
 income-from-investments: Income from investments
@@ -154,3 +156,4 @@ arrears: Arrears
 moving-money: Moving Money
 transfers-out-to-other-client-accounts: Transfers out to other client accounts
 cash-withdrawn: Cash withdrawn
+# end transactions (categories and types)
