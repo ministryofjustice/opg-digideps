@@ -45,9 +45,16 @@ server {
 
     location ~ \.php$ {
         fastcgi_index   {{ getv "/opg/nginx/index" }};
-        fastcgi_pass    127.0.0.1:9000;
         fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
         include         fastcgi_params;
+
+        # set X-Request-Id header for fastcqi
+        fastcgi_param   HTTP_X_REQUEST_ID  $uid;
+
+        fastcgi_pass    127.0.0.1:9000;
+
+        # hide php version
+        fastcgi_hide_header "X-Powered-By";
     }
 
     # i.e. deny access to .htaccess in case someone will create it
@@ -59,6 +66,4 @@ server {
     if ($uid = '') {
       set $uid $request_id;
     }
-    add_header X-Request-Id $uid;
-    proxy_set_header X-Request-Id $uid;
 }
