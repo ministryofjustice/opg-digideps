@@ -7,7 +7,11 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
     em:
-        alias: doctrine.orm.entity_manager  
+        alias: doctrine.orm.entity_manager
+    doctrine.listener:
+        class: AppBundle\EventListener\DoctrineListener
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, method: prePersist }
     # default transport + swift mailer
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
@@ -46,3 +50,4 @@ services:
     user.selfRegistration:
         class: AppBundle\Service\UserRegistrationService
         arguments: [@doctrine.orm.entity_manager, @mailFactory, @mailSender]
+

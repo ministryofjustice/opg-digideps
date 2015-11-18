@@ -82,7 +82,7 @@ class ReportControllerTest extends AbstractTestController
             'end_date' => '2015-12-31',
         ];
 
-    public function testAddPost()
+    public function testAdd()
     {
         $url = '/report';
         
@@ -109,10 +109,11 @@ class ReportControllerTest extends AbstractTestController
 
     }
     
-    public function testAddPut()
+    public function testEdit()
     {
         $url = '/report';
-        
+
+        //POST but passes ID in the request
         $reportId = $this->assertJsonRequest('POST', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
@@ -231,24 +232,21 @@ class ReportControllerTest extends AbstractTestController
 
     }
 
-    public function testUpdateAuth()
-    {
-        $url = '/report/' . self::$report1->getId();
-        
-        $this->assertEndpointNeedsAuth('PUT', $url);
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-    }
-    
-    public function testUpdateAcl()
-    {
-        $url2 = '/report/' . self::$report2->getId();
-        
-        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
-    }
+//    public function testUpdateAuth()
+//    {
+//        $url = '/report/' . self::$report1->getId();
+//
+//        $this->assertEndpointNeedsAuth('PUT', $url);
+//        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+//    }
+//
+//    public function testUpdateAcl()
+//    {
+//        $url2 = '/report/' . self::$report2->getId();
+//
+//        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+//    }
 
-    /**
-     * @depends testSubmit
-     */
     public function testUpdate()
     {
         $reportId = self::$report1->getId();
@@ -261,15 +259,33 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'start_date' => '2015-01-29',
                 'end_date' =>  '2015-12-29',
-                // TODO add 'cot_id' reviewed report_seen 
-                // reason_for_no_contacts no_asset_to_add 
-                // reason_for_no_decisions further_information
+                'transactions' => [
+                    ['id'=>'dividends', 'amount'=>1200, 'more_details'=>''],
+                    //['id'=>'sale-of-property', 'amount'=>250000, 'more_details'=>'sold main flat'],
+
+                    //['id'=>'water', 'amount'=>24, 'more_details'=>'details'],
+                    ['id'=>'cash-withdrawn', 'amount'=>24, 'more_details'=>'to pay bills'],
+                ]
             ]
         ]);
 
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals('2015-01-29', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-29', $report->getEndDate()->format('Y-m-d'));
+
+        // assert transactions changes
+        $t1 = $report->getTransactionByTypeId('dividends');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeIn', $t1->getTransactionType());
+        $this->assertEquals(1200, $t1->getAmount());
+        $this->assertEquals('', $t1->getMoreDetails());
+
+        $t2 = $report->getTransactionByTypeId('cash-withdrawn');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeOut', $t2->getTransactionType());
+        $this->assertEquals(24, $t2->getAmount());
+        $this->assertEquals('to pay bills', $t2->getMoreDetails());
+
+        $t3 = $report->getTransactionByTypeId('gifts');
+        $this->assertEquals(null, $t3->getAmount());
     }
 
 }

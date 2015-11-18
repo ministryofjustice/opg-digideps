@@ -29,7 +29,6 @@ class ReportRepository extends EntityRepository
         $newReport->setEndDate($report->getEndDate()->modify('+12 months -1 day'));
         $newReport->setReportSeen(false);
         $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
-        $this->addEmptyTransactionsToReport($newReport);
 
         //lets clone the assets
         $assets = $report->getAssets();
@@ -82,6 +81,7 @@ class ReportRepository extends EntityRepository
         foreach ($transactionTypes as $transactionType) {
             $transaction = new Transaction($report, $transactionType, null);
             $report->getTransactions()->add($transaction);
+            $this->_em->persist($transaction);
         }
     }
 }

@@ -21,6 +21,8 @@ class ReportController extends RestController
         $reportData = $this->deserializeBodyContent($request);
 
         if (!empty($reportData['id'])) {
+            //throw new \RuntimeException(__METHOD__ . 'DEPRECTED, use PUT endpoint to modify report');
+            // DEPRECATED ???
             // get existing report
             $report = $this->findEntityBy('Report', $reportData['id']);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -41,8 +43,6 @@ class ReportController extends RestController
         $report->setStartDate(new \DateTime($reportData['start_date']));
         $report->setEndDate(new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
-
-        $this->getRepository('Report')->addEmptyTransactionsToReport($report);
 
         $this->persistAndFlush($report);
 
@@ -151,15 +151,14 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-
         // edit transactions
-        if (isset($data['money_in']) && isset($data['money_out'])) {
-            $transactionRepo = $this->getRepository('Transaction');
-            array_map(function($transactionRow) use ($transactionRepo) {
-                $transactionRepo->find($transactionRow['id'])
+        if (isset($data['transactions'])) {
+            foreach ($data['transactions'] as $transactionRow) {
+                $t = $report->getTransactionByTypeId($transactionRow['id'])
                     ->setAmount($transactionRow['amount'])
                     ->setMoreDetails($transactionRow['more_details']);
-            }, array_merge($data['money_in'], $data['money_out']));
+                $this->getEntityManager()->flush($t);
+            }
             $this->setJmsSerialiserGroups(['transactions']);
         }
 

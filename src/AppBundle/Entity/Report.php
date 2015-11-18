@@ -58,7 +58,7 @@ class Report
     private $accounts;
 
     /**
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic","transactions_new"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      */
@@ -889,7 +889,7 @@ class Report
     }
 
     /**
-     * @return ArrayCollection
+     * @return Transaction[]
      */
     public function getTransactions()
     {
@@ -990,7 +990,7 @@ class Report
      *
      * @return AccountTransaction
      */
-    public function findTransactionByTypeId($transactionTypeId)
+    public function getTransactionByTypeId($transactionTypeId)
     {
         return $this->getTransactions()->filter(function($accountTransaction) use($transactionTypeId) {
             return $accountTransaction->getTransactionTypeId() == $transactionTypeId;

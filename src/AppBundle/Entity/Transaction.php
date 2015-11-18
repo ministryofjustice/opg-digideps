@@ -94,16 +94,6 @@ class Transaction
 
 
     /**
-     * added for compatibility with formatted report partials from CLIENT
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->getTransactionType()->getId();
-    }
-
-
-    /**
      * @return TransactionType
      */
     public function getTransactionType()
@@ -117,6 +107,14 @@ class Transaction
     public function getTransactionTypeId()
     {
         return $this->getTransactionType()->getId();
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransactionCategory()
+    {
+        return $this->getTransactionType()->getCategory();
     }
 
     /**
