@@ -1,0 +1,29 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+
+    {% set translationDomain = "report-accounts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+
+    {% block subnav %}
+        <h2>Test</h2>
+    {% endblock %}
+    
+    {% block maincontent %}
+
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1><h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1><h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        <h1>Hello Mum</h1>
+        
+        
+    {% endblock %}
+
+{% endembed %}

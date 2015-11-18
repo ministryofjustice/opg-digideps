@@ -1,13 +1,17 @@
 //MOJ-Template
 @import "moj-template";
 
-//GOVUK
+//Frontend toolkit
+@import 'colours';
+@import 'conditionals';
+@import 'css3';
+@import 'device-pixels';
 @import 'font_stack';
 @import 'grid_layout';
 @import 'measurements';
 @import 'shims';
+@import 'typography';
 @import 'url-helpers';
-
 @import 'design-patterns/alpha-beta';
 @import 'design-patterns/buttons';
 @import 'design-patterns/media-player';
@@ -91,3 +95,5 @@
 @import "elements/forms/form-last-four-digits";
 @import "elements/forms/form-sort-code";
 @import "elements/forms/form-validation";
+
+@import "components/leftnav";
