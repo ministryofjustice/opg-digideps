@@ -1,0 +1,165 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Mocha Tests</title>
+        <link href="../../web/assets/stylesheets/application.css" rel="stylesheet" type="text/css"/>
+        <link href="../../node_modules/mocha/mocha.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="mocha"></div>
+        
+        
+        <div id="template">
+            <form class="expanding-transaction-table form-horizontal">
+                <div class="sections">
+                    <div class="section">
+                        <div class="summary">
+                            <div class="title">Income and earnings</div>
+                            <div class="sub-total">£<span class="value">0.00</span></div>
+                        </div>
+                        <div class="detail transactions">
+                            <div class="form-group transaction">
+                                    <label class="form-label" for="transaction-1">
+                                        Account Interest
+                                    </label>
+                                    <span class="input-group-prefix">£</span>
+                                    <input type="text" 
+                                           id="transaction-1"
+                                           class="form-control"
+                                           name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-2">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-2"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-3">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-3"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="sub-total">
+                                Total income/earnings: £<span class="value">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="summary">
+                            <div class="title">State benefit</div>
+                            <div class="sub-total">£<span class="value">0.00</span></div>
+                        </div>
+                        <div class="detail transactions">
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-1">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-1"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-2">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-2"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-3">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-3"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="sub-total">
+                                Total income/earnings: £<span class="value">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section">
+                        <div class="summary">
+                            <div class="title">Pensions</div>
+                            <div class="sub-total">£<span class="value">0.00</span></div>
+                        </div>
+                        <div class="detail transactions">
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-1">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-1"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-2">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-2"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="form-group transaction">
+                                <label class="form-label" for="transaction-3">
+                                    Account Interest
+                                </label>
+                                <span class="input-group-prefix">£</span>
+                                <input type="text"
+                                       id="transaction-3"
+                                       class="form-control"
+                                       name="transactions[moneyIn][0][amount]"/>
+                            </div>
+                            <div class="sub-total">
+                                Total income/earnings: £<span class="value">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grand-total">Total Money in: £<span class="value">0.00</span></div>
+                </div>
+                
+            </form>
+        </div>
+        
+        <div id="placeholder"></div>
+        
+        <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+        <script src="../../node_modules/chai/chai.js"></script>
+        <script src="../../node_modules/mocha/mocha.js"></script>
+        
+        <script>
+            var expect = chai.expect;
+            mocha.setup('bdd');
+        </script>
+        
+        
+        <script src="../../src/AppBundle/Resources/assets/javascripts/expandingtransactiontable.js"></script>
+        <script src="expandingtransactiontabletests.js"></script>
+        
+        <script>
+            mocha.checkLeaks();
+            mocha.globals(['jQuery']);
+            mocha.run();
+        </script>
+    </body>
+</html>

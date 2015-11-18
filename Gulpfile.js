@@ -141,9 +141,12 @@ gulp.task('watch', ['default'], function() {
 });
 
 gulp.task('default', function(callback) {
-    runSequence('gettag', 'clean', ['sass','images','js'], callback);
+    runSequence( 'sass.application','gettag', 'clean', ['sass','images','js'], callback);
 });
 gulp.task('dev', function (callback) {
     runSequence('gettag', 'clean', ['sass','images','js'], 'watch', callback);
+});
+gulp.task('watchsass', function(callback) {
+    gulp.watch(config.sassSrc + '/**/*', ['lint.sass','sass.application','sass.images','sass.fonts']);
 });
 

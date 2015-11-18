@@ -12,17 +12,20 @@
     
     {% block maincontent %}
 
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1><h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1><h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'moneyIn.pageSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'moneyIn.pageSectionDescription'
+        } %}
+
+        {% include 'AppBundle:Account2:transactions.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'page.pageSectionDescription'
+        } %}
         
     {% endblock %}
 
