@@ -151,6 +151,19 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
+
+        // edit transactions
+        if (isset($data['money_in']) && isset($data['money_out'])) {
+            $transactionRepo = $this->getRepository('Transaction');
+            array_map(function($transactionRow) use ($transactionRepo) {
+                $transactionRepo->find($transactionRow['id'])
+                    ->setAmount($transactionRow['amount'])
+                    ->setMoreDetails($transactionRow['more_details']);
+            }, array_merge($data['money_in'], $data['money_out']));
+            $this->setJmsSerialiserGroups(['transactions']);
+        }
+
+
         if (array_key_exists('cot_id', $data)) {
             $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
             $report->setCourtOrderType($cot);

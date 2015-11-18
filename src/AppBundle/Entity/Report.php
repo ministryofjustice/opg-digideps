@@ -232,7 +232,39 @@ class Report
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
      */
     private $reasonNotAllAgreed;
-    
+
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyIn")
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
+     */
+    private $moneyIn;
+
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOut")
+     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
+     */
+    private $moneyOut;
+
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyInTotal")
+     */
+    private $moneyInTotal;
+
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOutTotal")
+     */
+    private $moneyOutTotal;
+
+    /**
+     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Accessor(getter="getMoneyTotal")
+     */
+    private $moneyTotal;
+
      /**
      * Constructor
      */
@@ -862,6 +894,107 @@ class Report
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+
+    /**
+     * Get account balance offset
+     */
+    public function getBalanceOffset()
+    {
+        return ($this->closingBalance - $this->getCurrentBalance());
+    }
+
+    /**
+     * Gets current account balance
+     * @return integer $balance
+     */
+    public function getCurrentBalance()
+    {
+        $balance = 0;
+
+
+        return $balance;
+    }
+
+
+    /**
+     * @param AccountTransaction $transaction
+     */
+    public function addTransaction(AccountTransaction $transaction)
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return float
+     */
+    public function getMoneyInTotal()
+    {
+        $ret = 0.0;
+        foreach ($this->getMoneyIn() as $money) {
+            $ret += $money->getAmount();
+        }
+        return $ret;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        $ret = 0.0;
+        foreach ($this->getMoneyOut() as $money) {
+            $ret += $money->getAmount();
+        }
+        return $ret;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyTotal()
+    {
+        //TODO Fix
+        return 0; //$this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
+    }
+
+
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyIn()
+    {
+        return $this->getTransactions()->filter(function(Transaction $transaction) {
+            return $transaction->getTransactionType() instanceof TransactionTypeIn;
+        });
+    }
+
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyOut()
+    {
+        return $this->getTransactions()->filter(function(Transaction $transaction) {
+            return $transaction->getTransactionType() instanceof TransactionTypeOut;
+        });
+    }
+
+    /**
+     * @param string $transactionTypeId
+     *
+     * @return AccountTransaction
+     */
+    public function findTransactionByTypeId($transactionTypeId)
+    {
+        return $this->getTransactions()->filter(function($accountTransaction) use($transactionTypeId) {
+            return $accountTransaction->getTransactionTypeId() == $transactionTypeId;
+        })->first();
     }
 
 }
