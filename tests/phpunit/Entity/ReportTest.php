@@ -13,7 +13,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->markTestIncomplete('use new logic');
 
         $report = new Account();
-        $report->getAccounts()
+        $report->getAccounts();
         $report->setOpeningBalance(10.0);
 
         $this->assertTrue(time() - $report->getCreatedAt()->getTimestamp() < 1000, 'account.createdAt not set with current date');
