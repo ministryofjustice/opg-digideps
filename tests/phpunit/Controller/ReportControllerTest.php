@@ -94,11 +94,19 @@ class ReportControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        // assert account created with transactions
+        // assert creation
         $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
+
+        $transactionTypesCount = count(self::fixtures()->getRepo('TransactionType')->findAll());
+        $this->assertTrue($transactionTypesCount > 1, 'transaction type not added');
+
+        // assert transactions have been added
+        $this->assertCount($transactionTypesCount, $report->getTransactions());
+        $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
+
     }
     
     public function testAddPut()

@@ -42,6 +42,8 @@ class ReportController extends RestController
         $report->setEndDate(new \DateTime($reportData['end_date']));
         $report->setReportSeen(true);
 
+        $this->getRepository('Report')->addEmptyTransactionsToReport($report);
+
         $this->persistAndFlush($report);
 
         return [ 'report' => $report->getId()];

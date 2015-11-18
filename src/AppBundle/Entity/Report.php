@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -237,11 +238,11 @@ class Report
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->transactions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->accounts = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->decisions = new ArrayCollection();
+        $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
         $this->reportSeen = true;
     }
@@ -855,5 +856,12 @@ class Report
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
     }
 
+    /**
+     * @return ArrayCollection
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
 
 }

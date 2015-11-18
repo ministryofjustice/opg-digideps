@@ -58,7 +58,8 @@ class ReportRepository extends EntityRepository
             $newAccount->setReport($newReport);
 
             $this->_em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($newAccount);
-            
+            $this->addEmptyTransactionsToReport($report);
+
             $this->_em->persist($newAccount);
         }
         // persist
@@ -66,5 +67,19 @@ class ReportRepository extends EntityRepository
         $this->_em->flush();
         
         return $newReport;
+    }
+
+    /**
+     * @param Report $report
+     */
+    public function addEmptyTransactionsToReport(Report $report)
+    {
+        $transactionTypes = $this->_em->getRepository('AppBundle\Entity\TransactionType')
+            ->findBy([], ['displayOrder'=>'ASC']);
+
+        foreach ($transactionTypes as $transactionType) {
+            $transaction = new Transaction($report, $transactionType, null);
+            $report->getTransactions()->add($transaction);
+        }
     }
 }
