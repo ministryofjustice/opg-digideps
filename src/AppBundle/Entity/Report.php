@@ -21,7 +21,7 @@ class Report
     /**
      * @var integer
      *
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -33,7 +33,7 @@ class Report
     /**
      * @var integer
      * 
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getClientId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
@@ -42,7 +42,7 @@ class Report
     private $client;
     
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getContactIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
@@ -58,21 +58,20 @@ class Report
     private $accounts;
 
     /**
-     * @JMS\Groups({"basic","transactions_new"})
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      */
     private $transactions;
     
     /**
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getAccounts", setter="addAccount")
      * @JMS\Type("array<AppBundle\Entity\Account>")
      */
     private $accountObjs;
     
     /**
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getDecisionIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
@@ -80,7 +79,7 @@ class Report
     private $decisions;
     
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getAssetIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
@@ -88,7 +87,7 @@ class Report
     private $assets;
 
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Type("AppBundle\Entity\Safeguarding")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
@@ -96,7 +95,7 @@ class Report
 
 
     /**
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
@@ -107,7 +106,7 @@ class Report
     /**
      * @var string
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -116,7 +115,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -126,7 +125,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -136,7 +135,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -163,7 +162,7 @@ class Report
     /**
      * @var boolean
      * @JMS\Type("boolean")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
@@ -172,7 +171,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;
@@ -181,7 +180,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
@@ -194,7 +193,7 @@ class Report
     /**
      * @var boolean
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -220,7 +219,7 @@ class Report
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic","transactions"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="all_agreed", type="boolean", nullable=true)
      */
     private $allAgreed;
@@ -228,7 +227,7 @@ class Report
     /** @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","transactions"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
      */
     private $reasonNotAllAgreed;
@@ -260,7 +259,7 @@ class Report
     private $moneyOutTotal;
 
     /**
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "transactions"})
      * @JMS\Accessor(getter="getMoneyTotal")
      */
     private $moneyTotal;
@@ -937,8 +936,8 @@ class Report
     public function getMoneyInTotal()
     {
         $ret = 0.0;
-        foreach ($this->getMoneyIn() as $money) {
-            $ret += $money->getAmount();
+        foreach ($this->getMoneyIn() as $t) {
+            $ret += $t->getAmount();
         }
         return $ret;
     }

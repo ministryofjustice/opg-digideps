@@ -130,7 +130,7 @@ class ReportControllerTest extends AbstractTestController
     }
 
 
-    public function testfindByIdAuth()
+    public function testGetByIdAuth()
     {
         $url = '/report/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
@@ -139,7 +139,7 @@ class ReportControllerTest extends AbstractTestController
     }
 
 
-    public function testfindByIdAcl()
+    public function testGetByIdAcl()
     {
         $url2 = '/report/' . self::$report2->getId();
 
@@ -148,23 +148,54 @@ class ReportControllerTest extends AbstractTestController
 
 
     /**
-     * @depends testAddPost
-     * @depends testAddPut
+     * @depends testAdd
+     * @depends testEdit
      */
-    public function testfindById()
+    public function testGetById()
     {
         $url = '/report/' . self::$report1->getId();
 
-        // assert get
+        // assert get groups=basic
         $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-
+        $this->assertArrayHasKey('contacts', $data);
+        $this->assertArrayHasKey('accounts', $data);
+        $this->assertArrayHasKey('decisions', $data);
+        $this->assertArrayHasKey('assets', $data);
+        $this->assertArrayHasKey('court_order_type', $data);
+        $this->assertArrayHasKey('report_seen', $data);
+        $this->assertArrayNotHasKey('tranactions', $data);
+        $this->assertArrayNotHasKey('money_in', $data);
+        $this->assertArrayNotHasKey('money_out', $data);
         $this->assertEquals(self::$report1->getId(), $data['id']);
         $this->assertEquals(self::$client1->getId(), $data['client']);
         $this->assertEquals('2015-01-01', $data['start_date']);
         $this->assertEquals('2015-12-31', $data['end_date']);
+
+
+        //  assert get groups=transactions
+        $data = $this->assertJsonRequest('GET', $url . '?groups=transactions', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertCount(26, $data['money_in']);
+        $this->assertCount(36, $data['money_out']);
+        $this->assertArrayHasKey('money_in_total', $data);
+        $this->assertArrayHasKey('money_out_total', $data);
+        $this->assertArrayHasKey('money_total', $data);
+
+        $q = http_build_query(['groups'=>['transactions','basic']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertCount(26, $data['money_in']);
+        $this->assertCount(36, $data['money_out']);
+        $this->assertArrayHasKey('start_date', $data);
+        $this->assertArrayHasKey('end_date', $data);
     }
 
     public function testSubmitAuth()
@@ -232,20 +263,20 @@ class ReportControllerTest extends AbstractTestController
 
     }
 
-//    public function testUpdateAuth()
-//    {
-//        $url = '/report/' . self::$report1->getId();
-//
-//        $this->assertEndpointNeedsAuth('PUT', $url);
-//        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-//    }
-//
-//    public function testUpdateAcl()
-//    {
-//        $url2 = '/report/' . self::$report2->getId();
-//
-//        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
-//    }
+    public function testUpdateAuth()
+    {
+        $url = '/report/' . self::$report1->getId();
+
+        $this->assertEndpointNeedsAuth('PUT', $url);
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
+    }
+
+    public function testUpdateAcl()
+    {
+        $url2 = '/report/' . self::$report2->getId();
+
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+    }
 
     public function testUpdate()
     {
@@ -262,7 +293,6 @@ class ReportControllerTest extends AbstractTestController
                 'transactions' => [
                     ['id'=>'dividends', 'amount'=>1200, 'more_details'=>''],
                     //['id'=>'sale-of-property', 'amount'=>250000, 'more_details'=>'sold main flat'],
-
                     //['id'=>'water', 'amount'=>24, 'more_details'=>'details'],
                     ['id'=>'cash-withdrawn', 'amount'=>24, 'more_details'=>'to pay bills'],
                 ]

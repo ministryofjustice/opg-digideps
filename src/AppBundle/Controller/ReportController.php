@@ -59,9 +59,8 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
-        }
+        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
