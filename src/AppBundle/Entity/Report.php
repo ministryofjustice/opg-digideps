@@ -192,12 +192,54 @@ class Report {
     private $transactions;
 
     /**
-     * @return mixed
+     * @param string $type in/out
+     * @return Transaction[]
      */
-    public function getTransactions()
+    public function getTransactions($type = null)
     {
+        if (null !== $type) {
+            return array_filter($this->transactions, function ($transaction) use ($type) {
+                return $transaction->getType() == $type;
+            } );
+        }
+
         return $this->transactions;
     }
+
+    /**
+     * @param string $type in/out
+     *
+     * @return array of [category=>[entries=>, amount[]]]
+     */
+    public function getTransactionsGrouped($type)
+    {
+        $ret = [];
+
+        foreach ($this->getTransactions($type) as $transaction) {
+            $cat = $transaction->getCategory();
+            if (!isset($ret[$cat])) {
+                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
+            }
+            $ret[$cat]['entries'][] = $transaction;
+            $ret[$cat]['amountTotal'] += $transaction->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @param string $type in/out
+     *
+     * @return Transaction[]
+     */
+    public function getTransactionsTotal($type)
+    {
+        return array_sum(array_map(function ($transaction){
+            return $transaction->getAmount();
+        }, $this->getTransactions($type)));
+    }
+
+
 
     /**
      * @param mixed $transactions
