@@ -17,18 +17,16 @@ form:
     one-off: One-off
     other: Other
   entries:
-
-    dividends.label:
-      label: dividends
-    income-from-investments.label:
+    dividends:
+      label: Dividends
+    income-from-investments:
       label: Income from investments
-    account-interest.label:
+    account-interest:
       label: Account interest
-    salary-or-wages.label:
+    salary-or-wages:
       label: Salary or wages
-    income-from-property-rental.label:
+    income-from-property-rental:
       label: Income from property rental
-
     attendance-allowance:
       label: Attendance Allowance
     disability-living-allowance:
@@ -51,15 +49,12 @@ form:
       label: Pension Credit
     universal-credit:
       label: Universal Credit
-
     personal-pension:
       label: Personal pension
     state-pension:
       label: State pension
-
     compensation-or-damages-award:
       label: Compensation or damages award
-
     bequest-received:
       label: Bequest received
     gift-received:
@@ -72,7 +67,6 @@ form:
       label: Moving Money
     transfers-in-from-client-s-other-accounts:
       label: Transfers in from client's other accounts
-
     refunds:
       label: Refunds
     anything-else:
@@ -129,8 +123,6 @@ form:
       label: Accountant fees
     opg-fees:
       label: OPG fees
-
-
     stocks-or-shares:
       label: Stocks or Shares
     investment-bonds:
@@ -139,22 +131,16 @@ form:
       label: Investment Account
     purchase-over-1000:
       label: Purchase over £1,000
-
-
     deputy-expenses:
       label: Deputy expenses
     gifts:
       label: Gifts
-
-
     loans:
       label: Loans
     credit-cards:
       label: Credit cards
     arrears:
       label: Arrears
-
-
     transfers-out-to-other-client-accounts:
       label: Transfers out to other client accounts
     cash-withdrawn:
