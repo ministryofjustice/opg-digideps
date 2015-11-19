@@ -31,43 +31,43 @@ class Transaction
 
     /**
      * @var TransactionType
-     * 
-     * @JMS\Groups({"transactions"})
+     *
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TransactionType")
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
     private $transactionType;
-    
+
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      *
      * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amount;
-    
+
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      *
      * @ORM\Column(name="more_details", type="text", nullable=true)
      */
     private $moreDetails;
-    
+
     /**
      * @var string
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\Type("boolean")
      * @JMS\Accessor(getter="hasMoreDetails")
      */
     private $hasMoreDetails;
-    
-    
+
+
     public function __construct(Report $report, TransactionType $transactionType, $amount)
     {
         $this->report = $report;
-        
+
         $this->transactionType = $transactionType;
         $this->amount = $amount;
     }
@@ -96,10 +96,10 @@ class Transaction
     {
         return $this->transactionType;
     }
-    
+
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("id")
      *
      * @return string
@@ -111,7 +111,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("type")
      *
      * @return string
@@ -123,7 +123,7 @@ class Transaction
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\SerializedName("category")
      *
      * @return string

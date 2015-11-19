@@ -58,8 +58,6 @@ class Report
     private $accounts;
 
     /**
-     * @JMS\Groups({"transactions"})
-     * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      */
     private $transactions;
@@ -875,6 +873,36 @@ class Report
     public function getTransactions()
     {
         return $this->transactions;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactionsIn"})
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\SerializedName("transactions_in")
+     *
+     * @return Transaction[]
+     */
+    public function getTransactionsIn()
+    {
+        return $this->transactions->filter(function($t) {
+            return $t->getTransactionType() instanceof TransactionTypeIn;
+        });
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactionsOut"})
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\SerializedName("transactions_out")
+     *
+     * @return Transaction[]
+     */
+    public function getTransactionsOut()
+    {
+        return $this->transactions->filter(function($t) {
+            return $t->getTransactionType() instanceof TransactionTypeOut;
+        });
     }
 
 

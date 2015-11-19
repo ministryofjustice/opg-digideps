@@ -150,7 +150,7 @@ class ReportController extends RestController
 
         $data = $this->deserializeBodyContent($request);
 
-        foreach (['transactionsIn', 'transactionsOut'] as $tk) {
+        foreach (['transactions_in', 'transactions_out'] as $tk) {
             if (isset($data[$tk])) {
                 foreach ($data[$tk] as $transactionRow) {
                     $t = $report->getTransactionByTypeId($transactionRow['id']);
