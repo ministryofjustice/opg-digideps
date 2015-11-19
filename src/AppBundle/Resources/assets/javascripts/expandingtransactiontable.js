@@ -56,34 +56,43 @@
         var total = 0.00;
 
         $('input.form-control', section).each(function (index, element) {
-            var value = parseFloat(element.value);
+            var value = parseFloat(element.value.replace(/,/g , ""));
             if (!isNaN(value)) {
                 total += value;
             }
         });
-
-        $('.sub-total .value', section).text(total.toFixed(2));
+        
+        $('.sub-total .value', section).text(formatNumber(total));
 
         this.updateGrandTotal();
 
     };
     
+    function formatNumber(number) {
+        var toFixed = parseFloat(number).toFixed(2);
+        var digits = toFixed.substr(toFixed.length - 3);
+        var leftSide = toFixed.substr(0, toFixed.length -3);
+        var formattedLeft = parseInt(leftSide).toLocaleString();
+        return formattedLeft + digits;
+    }
     
-    ExpandingTransactionTable.prototype.closeAll = function() {
-        $('.open', this.container).removeClass('open');
-    };
     ExpandingTransactionTable.prototype.updateGrandTotal = function() {
         var total = 0;
-        
+
         this.subTotals.each(function (index, element) {
-            var value = parseFloat($(element).text());
+            var value = parseFloat(element.innerHTML.replace(/,/g , ""));
             if (!isNaN(value)) {
                 total += value;
             }
         });
         
-        this.grandTotal.text(total.toFixed(2));
+        this.grandTotal.text(formatNumber(total));
+    };    
+    
+    ExpandingTransactionTable.prototype.closeAll = function() {
+        $('.open', this.container).removeClass('open');
     };
+
     
     root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 

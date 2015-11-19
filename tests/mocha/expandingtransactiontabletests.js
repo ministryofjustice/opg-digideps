@@ -128,6 +128,55 @@ describe('Expanding Transaction Table Tests', function () {
                 expect($('.grand-total .value', placeholder).text()).to.equal('5.00');
                 
             });
+            it('should format the sub total in the summary with a comma', function () {
+                var section = getFirstSection();
+                var t1 = $('.transaction:nth-child(1) input.form-control', section);
+                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+
+                t1.val('1000.25').trigger('keyup');
+                t2.val('1000.25').trigger('keyup');
+
+                expect($('.summary .sub-total .value', section).text()).to.equal('2,000.50');                
+            });
+            it('should format the sub total in the detail with a comma', function () {
+                var section = getFirstSection();
+                var t1 = $('.transaction:nth-child(1) input.form-control', section);
+                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+
+                t1.val('1000.25').trigger('keyup');
+                t2.val('1000.25').trigger('keyup');
+
+                expect($('.detail .sub-total .value', section).text()).to.equal('2,000.50'); 
+            });
+            it('should format the grand total with commas', function () {
+                var firstSection = $('.section:nth-child(1)', placeholder);
+                var secondSection = $('.section:nth-child(2)', placeholder);
+
+                var t11 = $('.transaction:nth-child(1) input.form-control', firstSection);
+                var t12 = $('.transaction:nth-child(2) input.form-control', firstSection);
+
+                t11.val('10000.25').trigger('keyup');
+                t12.val('10000.25').trigger('keyup');
+
+                var t21 = $('.transaction:nth-child(1) input.form-control', secondSection);
+                var t22 = $('.transaction:nth-child(2) input.form-control', secondSection);
+
+                t21.val('10000.00').trigger('keyup');
+                t22.val('10000.00').trigger('keyup');
+
+                expect($('.grand-total .value', placeholder).text()).to.equal('40,000.50');
+            });
+            it('should ignore commas in totals entered by the user', function () {
+                var section = getFirstSection();
+                var t1 = $('.transaction:nth-child(1) input.form-control', section);
+                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+
+                t1.val('1,000.25').trigger('keyup');
+                t2.val('10,000.25').trigger('keyup');
+
+                expect($('.summary .sub-total .value', section).text()).to.equal('11,000.50');
+            });
+        
         });
     });
     
