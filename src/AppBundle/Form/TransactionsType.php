@@ -38,6 +38,7 @@ class TransactionsType extends AbstractType
              'validation_groups' => ['transactions'],
              // enable validation on AccountTransactionSingleType collections
              'cascade_validation' => true,
+             'translation_domain' => 'report-transactions',
         ]);
      }
      

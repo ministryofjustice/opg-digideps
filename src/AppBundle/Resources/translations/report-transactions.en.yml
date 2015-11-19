@@ -1,98 +1,161 @@
 form:
   save:
     label: Save
+  categories:
+    household-bills: Household bills
+    care: Care
+    client-spending-money: Client spending money
+    fees: Fees
+    major-purchases: Major purchases
+    spending-on-other-people: Spending on other people
+    debt-payments: Debt payments
+    moving-money: Moving Money
+    income-earnings: Income/Earnings
+    state-benefits: State benefits
+    pensions: Pensions
+    damages: Damages
+    one-off: One-off
+    other: Other
+  entries:
+
+    dividends.label:
+      label: dividends
+    income-from-investments.label:
+      label: Income from investments
+    account-interest.label:
+      label: Account interest
+    salary-or-wages.label:
+      label: Salary or wages
+    income-from-property-rental.label:
+      label: Income from property rental
+
+    attendance-allowance:
+      label: Attendance Allowance
+    disability-living-allowance:
+      label: Disability Living Allowance
+    personal-independence-payment:
+      label: Personal Independence Payment
+    severe-disablement-allowance:
+      label: Severe Disablement Allowance
+    winter-fuel-cold-weather-payment:
+      label: Winter Fuel/Cold Weather payment
+    housing-benefit:
+      label: Housing Benefit
+    employment-support-allowance:
+      label: Employment Support Allowance
+    incapacity-benefit:
+      label: Incapacity Benefit
+    income-support:
+      label: Income Support
+    pension-credit:
+      label: Pension Credit
+    universal-credit:
+      label: Universal Credit
+
+    personal-pension:
+      label: Personal pension
+    state-pension:
+      label: State pension
+
+    compensation-or-damages-award:
+      label: Compensation or damages award
+
+    bequest-received:
+      label: Bequest received
+    gift-received:
+      label: Gift received
+    sale-of-property:
+      label: Sale of property
+    sale-of-asset:
+      label: Sale of asset
+    moving-money:
+      label: Moving Money
+    transfers-in-from-client-s-other-accounts:
+      label: Transfers in from client's other accounts
+
+    refunds:
+      label: Refunds
+    anything-else:
+      label: Anything else
+    water:
+      label: Water
+    gas:
+      label: Gas
+    electricity:
+      label: Electricity
+    telephone:
+      label: Telephone
+    council-tax:
+      label:
+      label:
+      label: Council tax
+    property-maintenance-improvement:
+      label: Property maintenance/improvement
+    rent:
+      label: Rent
+    mortgage:
+      label: Mortgage
+    accommodation-service-charge:
+      label: Accommodation service charge
+    buildings-or-contents-insurance:
+      label: Buildings or contents insurance
+    care-fees:
+      label: Care fees
+    medical-expenses:
+      label: Medical expenses
+    medical-insurance:
+      label: Medical insurance
+    food:
+      label: Food
+    toiletries:
+      label: Toiletries
+    clothes:
+      label: Clothes
+    personal-allowance-pocket-money:
+      label: Personal allowance/pocket money
+    holidays:
+      label: Holidays
+    day-trips:
+      label: Day trips
+    transport-bus-train-taxi-fares:
+      label: Transport - bus, train, taxi fares
+    tax-payments-to-hmrc:
+      label: Tax payments to HMRC
+    security-bond:
+      label: Security bond
+    solicitor-fees:
+      label: Solicitor fees
+    accountant-fees:
+      label: Accountant fees
+    opg-fees:
+      label: OPG fees
 
 
-# transactions (categories and types)
-income-earnings: Income/Earnings
-dividends.label: dividends
-income-from-investments.label: Income from investments
-account-interest.label: Account interest
-salary-or-wages.label: Salary or wages
-income-from-property-rental.label: Income from property rental
+    stocks-or-shares:
+      label: Stocks or Shares
+    investment-bonds:
+      label: Investment Bonds
+    investment-account:
+      label: Investment Account
+    purchase-over-1000:
+      label: Purchase over £1,000
 
-state-benefits: State benefits
-attendance-allowance: Attendance Allowance
-disability-living-allowance: Disability Living Allowance
-personal-independence-payment: Personal Independence Payment
-severe-disablement-allowance: Severe Disablement Allowance
-winter-fuel-cold-weather-payment: Winter Fuel/Cold Weather payment
-housing-benefit: Housing Benefit
-employment-support-allowance: Employment Support Allowance
-incapacity-benefit: Incapacity Benefit
-income-support: Income Support
-pension-credit: Pension Credit
-universal-credit: Universal Credit
 
-pensions: Pensions
-personal-pension: Personal pension
-state-pension: State pension
+    deputy-expenses:
+      label: Deputy expenses
+    gifts:
+      label: Gifts
 
-damages: Damages
-compensation-or-damages-award: Compensation or damages award
 
-one-off: One-off
-bequest-received: Bequest received
-gift-received: Gift received
-sale-of-property: Sale of property
-sale-of-asset: Sale of asset
+    loans:
+      label: Loans
+    credit-cards:
+      label: Credit cards
+    arrears:
+      label: Arrears
 
-moving-money: Moving Money
-transfers-in-from-client-s-other-accounts: Transfers in from client's other accounts
 
-other: Other
-refunds: Refunds
-anything-else: Anything else
-
-household-bills: Household bills
-water: Water
-gas: Gas
-electricity: Electricity
-telephone: Telephone
-council-tax: Council tax
-property-maintenance-improvement: Property maintenance/improvement
-rent: Rent
-mortgage: Mortgage
-accommodation-service-charge: Accommodation service charge
-buildings-or-contents-insurance: Buildings or contents insurance
-
-care: Care
-care-fees: Care fees
-medical-expenses: Medical expenses
-medical-insurance: Medical insurance
-
-client-spending-money: Client spending money
-food: Food
-toiletries: Toiletries
-clothes: Clothes
-personal-allowance-pocket-money: Personal allowance/pocket money
-holidays: Holidays
-day-trips: Day trips
-transport-bus-train-taxi-fares: Transport - bus, train, taxi fares
-
-fees: Fees
-tax-payments-to-hmrc: Tax payments to HMRC
-security-bond: Security bond
-solicitor-fees: Solicitor fees
-accountant-fees: Accountant fees
-opg-fees: OPG fees
-
-major-purchases: Major purchases
-stocks-or-shares: Stocks or Shares
-investment-bonds: Investment Bonds
-investment-account: Investment Account
-purchase-over-1000: Purchase over £1,000
-
-spending-on-other-people: Spending on other people
-deputy-expenses: Deputy expenses
-gifts: Gifts
-
-debt-payments: Debt payments
-loans: Loans
-credit-cards: Credit cards
-arrears: Arrears
-
-moving-money: Moving Money
-transfers-out-to-other-client-accounts: Transfers out to other client accounts
-cash-withdrawn: Cash withdrawn
-# end transactions (categories and types)
+    transfers-out-to-other-client-accounts:
+      label: Transfers out to other client accounts
+    cash-withdrawn:
+      label: Cash withdrawn

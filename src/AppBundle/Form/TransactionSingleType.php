@@ -36,7 +36,8 @@ class TransactionSingleType extends AbstractType
      {
          $resolver->setDefaults( [
              'data_class' => 'AppBundle\Entity\Transaction',
-             'validation_groups' => ['transactions']
+             'validation_groups' => ['transactions'],
+             'translation_domain' => 'report-transactions',
         ]);
      }
      
