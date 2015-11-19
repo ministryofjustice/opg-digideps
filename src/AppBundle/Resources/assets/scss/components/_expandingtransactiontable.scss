@@ -3,6 +3,7 @@
     margin-top: 60px;
     
     .sections {
+        
         .section {
             
             padding-bottom: 30px;
@@ -14,8 +15,8 @@
                 cursor: pointer;
                 
                 .title {
-                    float: left;
                     @include core-19();
+                    float: left;
                     color: $link-colour;
                     padding-left: 30px;
                     background-image: url('images/icons/solid-arrow.png');
@@ -25,8 +26,8 @@
                 }
                 
                 .sub-total {
-                    float: right;
                     @include bold-19();
+                    float: right;
                     padding-right: 10px;
                 }
             }
@@ -58,6 +59,7 @@
             }
 
         }
+        
         .grand-total {
             @include core-19();       
             text-align: right;
@@ -79,37 +81,70 @@
         
         .transaction {
 
-            margin: 0 0 20px 0;
             padding: 0;
-            border-bottom: 1px solid #6f777b;
+            border-bottom: 0;
             position: relative;
             
             .input-group-prefix {
+                @include core-24();
                 margin: 2px 0 0 2px;
                 padding: 4px 9px 0 8px;
                 border: 0;
-                position:absolute;
-                right: 122px;
+                position: absolute;
+                right: 121px;
                 width: 10px;
-                background: $grey-4;
-                color: #5C6468;
-                @include core-24();
-
             }
 
-            .form-control {
+            .form-group {
+                border-bottom: 1px solid $grey-1;
+            }
+            
+            .form-control__number {
                 width: 150px;
+            }
+            
+            .form-group-combo-description {
+                
+                .form-label {
+                    float: none;
+                    clear: both;
+                    display: block;
+                }
+                
+                .form-control {
+                    float: none;
+                    width: 100%;
+                    max-width: 100%;
+                    margin-bottom: 15px;
+                }
+                
+            }
+        
+            
+            &.hide-description {
+                .form-group-combo-description {
+                    border-bottom: 0;
+                    margin-bottom: 20px;
+
+                    .form-label {
+                        display: none;
+                    }
+
+                    .form-control {
+                        display: none;
+                    }
+                }
             }
         }
         
         .sub-total {
-            float: right;
             @include bold-19();
+            float: right;
         }
+        
     }
 
 }
-    
 
 .form-horizontal {
 
@@ -124,4 +159,3 @@
     }
 
 }
-

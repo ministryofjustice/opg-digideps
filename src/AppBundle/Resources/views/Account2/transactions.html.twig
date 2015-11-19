@@ -10,6 +10,11 @@
             </div>
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
+                {% if formTransactions[id].moreDetails is defined %}
+                {%     set formGroupClass = 'form-group-compound' %}
+                {% else %}
+                {%     set formGroupClass = '' %}
+                {% endif %}
                 <div class="transaction">
                     {#access the element via ID, set from the model therefore matching#}
                     {{ form_row(formTransactions[id].id) }}
@@ -17,7 +22,8 @@
 
                     {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number'
+                        'inputClass' : 'form-control__number',
+                        'formGroupClass': formGroupClass
                     }) }}
 
                     {% if formTransactions[id].moreDetails is defined %}

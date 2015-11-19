@@ -1,4 +1,4 @@
-$darkblue: #175EA5;
+$darkblue: #175ea5;
 
 .left-nav-container {
     
@@ -10,36 +10,34 @@ $darkblue: #175EA5;
     
     .left-nav {
         
-        @include grid-column( 1/4 );
+        @include grid-column(1 / 4);
         padding-right: 0;
         
-        nav {
-            a {
-                display: block;
-                @include core-19();
-                color: $link-colour;
-                text-decoration: none;
-                margin-bottom: 17px;
-                padding: 7px 10px 5px 10px;
+        nav a {
+            @include core-19();
+            display: block;
+            color: $link-colour;
+            text-decoration: none;
+            margin-bottom: 17px;
+            padding: 7px 10px 5px 10px;
 
-                &::after {
-                    content: ">";
-                    text-align: right;
-                    float:right
-                }
-                
+            &::after {
+                content: ">";
+                text-align: right;
+                float: right;
             }
-            a.active {
+            
+            &.active {
                 background: $link-colour;
                 color: $white;
             }
-        }
         
+        }
         
     }
     
     .right-content {
-        @include grid-column( 3/4 );
+        @include grid-column(3 / 4);
         border-left: 1px solid $grey-2;
     }
     

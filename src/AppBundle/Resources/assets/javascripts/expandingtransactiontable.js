@@ -1,4 +1,3 @@
-/* globals jQuery */
 (function () {
     "use strict";
 
@@ -16,6 +15,7 @@
         
         this.addElementLevelEvents();
         this.closeAll();
+        this.setInitialDescriptionVisibility();
     };
     
     ExpandingTransactionTable.prototype.addElementLevelEvents = function () {
@@ -32,11 +32,12 @@
     };
     ExpandingTransactionTable.prototype.getTotalChangeHandler = function () {
         return function (e) {
-            this.handleTotalChange($(e.target));
+            var $target = $(e.target);
+            
+            this.handleTotalChange($target);
+            this.shouldDisplayDescription($target.closest('.transaction'));
         }.bind(this);
     };
-
-    
     ExpandingTransactionTable.prototype.handleSummaryClick = function (target) {
 
         var section = target.closest('.section');
@@ -62,21 +63,12 @@
             }
         });
         
-        $('.sub-total .value', section).text(formatNumber(total));
+        $('.sub-total .value', section).text(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
         this.updateGrandTotal();
 
     };
-    
-    function formatNumber(number) {
-        var toFixed = parseFloat(number).toFixed(2);
-        var digits = toFixed.substr(toFixed.length - 3);
-        var leftSide = toFixed.substr(0, toFixed.length -3);
-        var formattedLeft = parseInt(leftSide).toLocaleString();
-        return formattedLeft + digits;
-    }
-    
-    ExpandingTransactionTable.prototype.updateGrandTotal = function() {
+    ExpandingTransactionTable.prototype.updateGrandTotal = function () {
         var total = 0;
 
         this.subTotals.each(function (index, element) {
@@ -86,13 +78,34 @@
             }
         });
         
-        this.grandTotal.text(formatNumber(total));
-    };    
-    
-    ExpandingTransactionTable.prototype.closeAll = function() {
+        this.grandTotal.text(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
+    };
+    ExpandingTransactionTable.prototype.closeAll = function () {
         $('.open', this.container).removeClass('open');
     };
+    ExpandingTransactionTable.prototype.setInitialDescriptionVisibility = function () {
+    
+        var shouldDisplayDescription = this.shouldDisplayDescription;
+        
+        $('.form-group-combo-description', this.container).each(function (index, element) {
+            
+            var transaction = $(element).closest('.transaction');
+            shouldDisplayDescription(transaction);
+            
+        });
+        
+        
+    };
+    ExpandingTransactionTable.prototype.shouldDisplayDescription = function (transaction) {
+        var valueElement = $('.form-control__number', transaction);
+        var value = parseFloat(valueElement.val().replace(/,/g , ""));
 
+        if (isNaN(value) || value === 0) {
+            transaction.addClass('hide-description');
+        } else {
+            transaction.removeClass('hide-description');
+        }
+    };
     
     root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 

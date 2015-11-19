@@ -16,7 +16,7 @@ form:
     damages: Damages
     one-off: One-off
     other: Other
-  moreDetails: More Details
+  moreDetails: Give more information
   entries:
     dividends:
       label: Dividends

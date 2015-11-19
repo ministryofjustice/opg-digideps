@@ -49,7 +49,6 @@ describe('Expanding Transaction Table Tests', function () {
         });
     });
     
-    
     describe('totals', function () {
         describe('hide/save', function () {
             it('should initially the title in the header', function () {
@@ -182,12 +181,101 @@ describe('Expanding Transaction Table Tests', function () {
     
     describe('more details', function () {
         describe('show/hide', function () {
-            it('should initially hide further info if there is no value');
-            it('should initially show further info if there is a value');
-            it('should show the further info if a value goes from 0 to something');
-            it('should show the further info if a value goes from null to something');
-            it('should hide further info if a value goes from a number to 0');
-            it('should hide further info if a value goes from a number to null');
+            it('should initially hide further info if there is no value', function() {
+                
+                var damagesSection = $('.section:nth-child(4)', placeholder);
+                
+                $('.summary', damagesSection).trigger('click');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.false;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.false;
+                
+            });
+            it('should initially show further info if there is a value', function() {
+
+                var movingSection = $('.section:nth-child(6)', placeholder);
+
+                $('.summary', movingSection).trigger('click');
+
+                var labelVisible = $('.form-group-combo-description .form-label', movingSection).is(':visible');
+                expect(labelVisible).to.be.true;
+
+                var valueVisible = $('.form-group-combo-description .form-control', movingSection).is(':visible');
+                expect(valueVisible).to.be.true;
+
+            });
+            it('should show the further info if a value goes from 0 to something', function () {
+                var damagesSection = $('.section:nth-child(4)', placeholder);
+
+                $('.summary', damagesSection).trigger('click');
+                $('.form-control__number', damagesSection).val('1.00').trigger('keyup');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.true;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.true;
+            
+            });
+            it('should show the further info if a value goes from null to something', function () {
+                var damagesSection = $('.section:nth-child(4)', placeholder);
+
+                $('.summary', damagesSection).trigger('click');
+                ('.form-control__number', damagesSection).val('').trigger('keyup');
+                $('.form-control__number', damagesSection).val('1.00').trigger('keyup');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.true;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.true;
+
+            });
+            it('should hide further info if a value goes from a number to 0', function () {
+                var damagesSection = $('.section:nth-child(4)', placeholder);
+
+                $('.summary', damagesSection).trigger('click');
+                $('.form-control__number', damagesSection).val('1.00').trigger('keyup');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.true;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.true;
+
+                $('.form-control__number', damagesSection).val('0').trigger('keyup');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.false;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.false;
+            
+            });
+            it('should hide further info if a value goes from a number to null', function () {
+                var damagesSection = $('.section:nth-child(4)', placeholder);
+
+                $('.summary', damagesSection).trigger('click');
+                $('.form-control__number', damagesSection).val('1.00').trigger('keyup');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.true;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.true;
+
+                $('.form-control__number', damagesSection).val('').trigger('keyup');
+
+                var labelVisible = $('.form-group-combo-description .form-label', damagesSection).is(':visible');
+                expect(labelVisible).to.be.false;
+
+                var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
+                expect(valueVisible).to.be.false;
+
+            });
         });
         describe('clear further info', function () {
             it('should set a further info value to null if a number goes from something to 0');
