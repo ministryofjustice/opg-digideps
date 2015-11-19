@@ -187,9 +187,20 @@ class Report {
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\Groups({"transactions"})
      * @var Transaction[]
      */
     private $transactions;
+
+    /**
+     * Report constructor.
+     * @param int $id
+     */
+    public function __construct()
+    {
+        $this->transactions = [];
+    }
+
 
     /**
      * @param string $type in/out
@@ -207,6 +218,10 @@ class Report {
     }
 
     /**
+     * @JMS\Groups({"transactionsIn"})
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("transactionsIn")
+     *
      * @return Transaction[]
      */
     public function getTransactionsIn()
@@ -214,7 +229,21 @@ class Report {
         return $this->getTransactions('in');
     }
 
+    public function setTransactionsIn()
+    {
+
+    }
+
+    public function setTransactionsOut()
+    {
+
+    }
+
     /**
+     * @JMS\Groups({"transactionsOut"})
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("transactionsOut")
+     *
      * @return Transaction[]
      */
     public function getTransactionsOut()
