@@ -1,5 +1,4 @@
-{% set translationDomain = "report-transactions" %}
-{% trans_default_domain translationDomain %}
+{% trans_default_domain "report-transactions" %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
     <div class="sections">
@@ -23,14 +22,13 @@
                 </div>
                 {% endfor %}
                 <div class="sub-total">
-                    Total {{ ('form.categories.' ~ category)  | trans  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal }}</span>
+                    Total {{ ('form.categories.' ~ category)  | trans  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',') }}</span>
                 </div>
             </div>
         </div>
         {% endfor %}
-        <div class="grand-total">{{ 'moneyInTotal' | trans }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactionsTotal | number_format(2, '.', ',')}}</span></div>
+        <div class="grand-total">{{ (subsection ~ '.grandtotal')| trans }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactionsTotal | number_format(2, '.', ',')}}</span></div>
     </div>
-
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save, 'save', {
