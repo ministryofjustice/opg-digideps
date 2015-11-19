@@ -207,6 +207,22 @@ class Report {
     }
 
     /**
+     * @return Transaction[]
+     */
+    public function getTransactionsIn()
+    {
+        return $this->getTransactions('in');
+    }
+
+    /**
+     * @return Transaction[]
+     */
+    public function getTransactionsOut()
+    {
+        return $this->getTransactions('out');
+    }
+
+    /**
      * @param string $type in/out
      *
      * @return array of [category=>[entries=>, amount[]]]
@@ -215,12 +231,12 @@ class Report {
     {
         $ret = [];
 
-        foreach ($this->getTransactions($type) as $transaction) {
+        foreach ($this->getTransactions($type) as $id => $transaction) {
             $cat = $transaction->getCategory();
             if (!isset($ret[$cat])) {
                 $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
             }
-            $ret[$cat]['entries'][] = $transaction;
+            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
             $ret[$cat]['amountTotal'] += $transaction->getAmount();
         }
 

@@ -32,15 +32,18 @@ class Account2Controller extends AbstractController
 
         $account = new EntityDir\Account();
         $account->setReportObject($report);
-        
+
+        $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
+
         return [
             'report' => $report,
             'client' => $client,
             'accounts' => $accounts,
-            'subsection' => "moneyin"
+            'subsection' => 'moneyin',
+            'form' => $form->createView()
         ];
-        
-        
+
+
     }
 
     /**
@@ -63,11 +66,14 @@ class Account2Controller extends AbstractController
         $account = new EntityDir\Account();
         $account->setReportObject($report);
 
+        $form = $this->createForm(new FormDir\TransactionsType('transactionsOut'), $report);
+
         return [
             'report' => $report,
             'client' => $client,
             'accounts' => $accounts,
-            'subsection' => "moneyout"
+            'subsection' => "moneyout",
+            'form' => $form->createView()
         ];
 
 
