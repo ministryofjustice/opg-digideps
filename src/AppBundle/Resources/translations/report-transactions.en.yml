@@ -5,11 +5,11 @@ form:
 
 # transactions (categories and types)
 income-earnings: Income/Earnings
-dividends: dividends
-income-from-investments: Income from investments
-account-interest: Account interest
-salary-or-wages: Salary or wages
-income-from-property-rental: Income from property rental
+dividends.label: dividends
+income-from-investments.label: Income from investments
+account-interest.label: Account interest
+salary-or-wages.label: Salary or wages
+income-from-property-rental.label: Income from property rental
 
 state-benefits: State benefits
 attendance-allowance: Attendance Allowance

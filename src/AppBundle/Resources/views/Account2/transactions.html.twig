@@ -11,22 +11,20 @@
             </div>
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
-                <div class="form-group transaction">
-                    <label class="form-label" for="transaction-1">
-                       {{ transaction.id | trans }}
-                    </label>
-                     {#access the element via ID, set from the model therefore matching#}
+                <div class="transaction">
+                    {#access the element via ID, set from the model therefore matching#}
                     {{ form_row(formTransactions[id].id) }}
                     {{ form_row(formTransactions[id].type) }}
 
-                    {{ form_input(formTransactions[id].amount,'', {
-                        'labelText': '',
-                        'formGroupClass': 'form-inline',
+                    {{ form_input(formTransactions[id].amount, transaction.id, {
                         'inputPrefix' : '£',
                         'inputClass' : 'form-control__number'
                     }) }}
                 </div>
                 {% endfor %}
+                <div class="sub-total">
+                    Total income/earnings: £<span class="value">0.00</span>
+                </div>
             </div>
         </div>
         {% endfor %}
