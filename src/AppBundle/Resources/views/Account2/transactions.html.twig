@@ -7,7 +7,7 @@
         <div class="section">
             <div class="summary">
                 <div class="title">{{ category  | trans  }}</div>
-                <div class="sub-total">£<span class="value">{{ transactions.amountTotal }}</span></div>
+                <div class="sub-total">{{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',')}}</span></div>
             </div>
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
@@ -23,12 +23,12 @@
                 </div>
                 {% endfor %}
                 <div class="sub-total">
-                    Total income/earnings: £<span class="value">0.00</span>
+                    {{ 'subSectionTotal' | trans }} {{ category  | trans  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',') }}</span>
                 </div>
             </div>
         </div>
         {% endfor %}
-        <div class="grand-total">Total Money In: £<span class="value">{{ transactionsTotal }}</span></div>
+        <div class="grand-total">{{ 'moneyInTotal' | trans }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactionsTotal | number_format(2, '.', ',')}}</span></div>
     </div>
 
 
