@@ -26,7 +26,8 @@
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription',
         transactionsGrouped: report.transactionsGrouped('in'),
-        transactionsTotal: report.getTransactionsTotal('out'),
+        transactionsTotal: report.getTransactionsTotal('in'),
+        formTransactions: form.transactionsIn
         } %}
         
     {% endblock %}

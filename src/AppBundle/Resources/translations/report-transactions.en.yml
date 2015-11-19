@@ -1,3 +1,7 @@
+form:
+  save:
+    label: Save
+
 
 # transactions (categories and types)
 income-earnings: Income/Earnings

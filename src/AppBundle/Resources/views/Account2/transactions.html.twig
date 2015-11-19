@@ -1,8 +1,7 @@
 {% set translationDomain = "report-transactions" %}
-    {% trans_default_domain translationDomain %}
+{% trans_default_domain translationDomain %}
 
-
-<form class="expanding-transaction-table form-horizontal">
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
     <div class="sections">
         {% for category, transactions in transactionsGrouped %}
         <div class="section">
@@ -11,130 +10,38 @@
                 <div class="sub-total">£<span class="value">{{ transactions.amountTotal }}</span></div>
             </div>
             <div class="detail transactions">
-                {% for transaction in transactions.entries %}
+                {% for id, transaction in transactions.entries %}
                 <div class="form-group transaction">
                     <label class="form-label" for="transaction-1">
                        {{ transaction.id | trans }}
                     </label>
-                    <span class="input-group-prefix">£</span>
-                    <input type="text"
-                           id="transaction-1"
-                           class="form-control"
-                           name="transactions[moneyIn][0][amount]" value="{{ transaction.amount }}"/>
+                     {#access the element via ID, set from the model therefore matching#}
+                    {{ form_row(formTransactions[id].id) }}
+                    {{ form_row(formTransactions[id].type) }}
+
+                    {{ form_input(formTransactions[id].amount,'', {
+                        'labelText': '',
+                        'formGroupClass': 'form-inline',
+                        'inputPrefix' : '£',
+                        'inputClass' : 'form-control__number'
+                    }) }}
                 </div>
                 {% endfor %}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-2">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-2"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-3">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-3"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="sub-total">#}
-                    {#Total income/earnings: £<span class="value">0.00</span>#}
-                {#</div>#}
             </div>
         </div>
         {% endfor %}
-        {#<div class="section">#}
-            {#<div class="summary">#}
-                {#<div class="title">State benefit</div>#}
-                {#<div class="sub-total">£<span class="value">0.00</span></div>#}
-            {#</div>#}
-            {#<div class="detail transactions">#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-1">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-1"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-2">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-2"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-3">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-3"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="sub-total">#}
-                    {#Total income/earnings: £<span class="value">0.00</span>#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
-        {#<div class="section">#}
-            {#<div class="summary">#}
-                {#<div class="title">Pensions</div>#}
-                {#<div class="sub-total">£<span class="value">0.00</span></div>#}
-            {#</div>#}
-            {#<div class="detail transactions">#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-1">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-1"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-2">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-2"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="form-group transaction">#}
-                    {#<label class="form-label" for="transaction-3">#}
-                        {#Account Interest#}
-                    {#</label>#}
-                    {#<span class="input-group-prefix">£</span>#}
-                    {#<input type="text"#}
-                           {#id="transaction-3"#}
-                           {#class="form-control"#}
-                           {#name="transactions[moneyIn][0][amount]"/>#}
-                {#</div>#}
-                {#<div class="sub-total">#}
-                    {#Total income/earnings: £<span class="value">0.00</span>#}
-                {#</div>#}
-            {#</div>#}
-        {#</div>#}
         <div class="grand-total">Total Money In: £<span class="value">{{ transactionsTotal }}</span></div>
     </div>
 
-</form>
+
+{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+{{ form_submit(form.save, 'save', {
+    'labelText': ( 'form.save.label') | trans,
+    'buttonClass': 'behat-link-save'
+}) }}
+{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+{{ form_end(form) }}
 
 <script>
     $( document ).ready(function() {
