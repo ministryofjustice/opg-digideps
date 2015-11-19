@@ -312,6 +312,7 @@ class RestClient
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
             $options['headers'][self::HEADER_AUTH_TOKEN] = $this->tokenStorage->get($loggedUserId);
+//            var_dump($this->tokenStorage->get($loggedUserId));die;
         }
         unset($options['addAuthToken']);
         
