@@ -6,7 +6,7 @@
         {% for category, transactions in transactionsGrouped %}
         <div class="section">
             <div class="summary">
-                <div class="title">{{ category  | trans  }}</div>
+                <div class="title">{{ ('form.categories.' ~ category)  | trans  }}</div>
                 <div class="sub-total">£<span class="value">{{ transactions.amountTotal }}</span></div>
             </div>
             <div class="detail transactions">
@@ -16,14 +16,14 @@
                     {{ form_row(formTransactions[id].id) }}
                     {{ form_row(formTransactions[id].type) }}
 
-                    {{ form_input(formTransactions[id].amount, transaction.id, {
+                    {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                         'inputPrefix' : '£',
                         'inputClass' : 'form-control__number'
                     }) }}
                 </div>
                 {% endfor %}
                 <div class="sub-total">
-                    Total income/earnings: £<span class="value">0.00</span>
+                    Total {{ ('form.categories.' ~ category)  | trans  }}: £<span class="value">{{ transactions.amountTotal }}</span>
                 </div>
             </div>
         </div>
