@@ -15,7 +15,7 @@ class AccountController extends AbstractController
 {
 
     /**
-     * @Route("/report/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"}, requirements={
+     * @Route("/report/{reportId}/accounts/{action}", name="accountsd", defaults={ "action" = "list"}, requirements={
      *   "action" = "(add|jsadd|list)"
      * })
      * @Template()

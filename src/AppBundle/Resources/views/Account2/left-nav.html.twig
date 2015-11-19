@@ -1,6 +1,6 @@
 <nav id="account-sub-nav">
-    <a href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" {% if subsection == 'moneyin' %}class="active"{% endif %}>Money In</a>
-    <a href="{{ path('accounts_moneyout' , {'reportId': report.id}) }}" {% if subsection == 'moneyout' %}class="active"{% endif %}>Money Out</a>
+    <a href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" {% if subsection == 'moneyin' %}class="active"{% endif %}>Money in</a>
+    <a href="{{ path('accounts_moneyout' , {'reportId': report.id}) }}" {% if subsection == 'moneyout' %}class="active"{% endif %}>Money out</a>
     <a href="{{ path('accounts_banks' , {'reportId': report.id}) }}" {% if subsection == 'banks' %}class="active"{% endif %}>Bank accounts</a>
     <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" {% if subsection == 'balance' %}class="active"{% endif %}>Balance accounts</a>
 </nav>

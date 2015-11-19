@@ -135,6 +135,16 @@ class Account2Controller extends AbstractController
 
 
     /**
+     * @Route("/{reportId}/accounts", name="accounts")
+     * @return RedirectResponse
+     */
+    public function accountsAction($reportId)
+    {
+        return $this->redirect($this->generateUrl('accounts_moneyin', [ 'reportId' => $reportId]));
+    }
+
+
+    /**
      * @Route("/report/{reportId}/accounts/temp", name="accounts_temp")
      * @Template()
      */
@@ -148,8 +158,6 @@ class Account2Controller extends AbstractController
         return [
             'report' => $report,
         ];
-
-
     }
     
 }

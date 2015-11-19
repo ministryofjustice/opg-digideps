@@ -89,3 +89,12 @@ listing:
   closingDate: "End of year:"
   addTotalsWarning: Add Money paid in or Money paid out
   addClosingBalanceWarning: Add the closing balance of the account
+
+
+
+moneyIn:
+  pageSectionTitle: Money coming into the client’s accounts
+  pageSectionDescription: Tell us about money paid into the client’s accounts between 1 December 2014 and  1 December 2015. If your client has more than 1 bank account, add up the totals from all the accounts for each income category.
+moneyOut:
+  pageSectionTitle: Money you have spent on behalf of the client
+  pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between 1 December 2014 and 1 December 2015. If your client has more than 1 bank account, add up the totals from all the accounts for each type of payment.

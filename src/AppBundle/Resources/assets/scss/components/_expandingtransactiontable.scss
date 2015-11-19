@@ -1,0 +1,127 @@
+.expanding-transaction-table {
+    
+    margin-top: 60px;
+    
+    .sections {
+        .section {
+            
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid $grey-2;
+            
+            .summary {
+                @extend %contain-floats;
+                cursor: pointer;
+                
+                .title {
+                    float: left;
+                    @include core-19();
+                    color: $link-colour;
+                    padding-left: 30px;
+                    background-image: url('images/icons/solid-arrow.png');
+                    background-position: 0 -80px;
+                    background-repeat: no-repeat;
+
+                }
+                
+                .sub-total {
+                    float: right;
+                    @include bold-19();
+                    padding-right: 10px;
+                }
+            }
+
+            .detail {
+                display: none;
+            }
+            
+            &.open {
+                
+                .summary {
+                    
+                    .title {
+                        background-position: 0 0;
+                    }
+                    
+                    .sub-total {
+                        display: none;
+                    }
+                    
+                }
+                
+                .detail {
+                    display: block;
+                    border-top: 1px solid $grey-2;
+                    margin-top: 30px;
+                }
+            
+            }
+
+        }
+        .grand-total {
+            @include core-19();       
+            text-align: right;
+            background: $grey-2;
+            padding: 20px 10px 20px 0;
+            color: $black;
+            
+            .value {
+                @include bold-24(); 
+            }
+        
+        }
+    }
+    
+    .transactions {
+        @extend %contain-floats;
+        background: $grey-3;
+        padding: 20px 10px 20px 30px;
+        
+        .transaction {
+
+            margin: 0 0 20px 0;
+            padding: 0;
+            border-bottom: 1px solid #6f777b;
+            position: relative;
+            
+            .input-group-prefix {
+                margin: 2px 0 0 2px;
+                padding: 4px 9px 0 8px;
+                border: 0;
+                position:absolute;
+                right: 122px;
+                width: 10px;
+                background: $grey-4;
+                color: #5C6468;
+                @include core-24();
+
+            }
+
+            .form-control {
+                width: 150px;
+            }
+        }
+        
+        .sub-total {
+            float: right;
+            @include bold-19();
+        }
+    }
+
+}
+    
+
+.form-horizontal {
+
+    .form-label {
+        float: left;
+        padding-top: 7px;
+        width: auto;
+    }
+    
+    .form-control {
+        float: right;
+    }
+
+}
+
