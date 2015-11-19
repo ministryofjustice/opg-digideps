@@ -37,7 +37,7 @@ var opg = opg || {};
             
             $('.summary', element).on('click', handleClick);
             
-            inputs.on('keyup', updateSectionTotal);
+            inputs.on('keyup input paste', updateSectionTotal);
             closeAll();
         }
         
