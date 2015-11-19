@@ -32,7 +32,7 @@ class Version049 extends AbstractMigration
                     ['salary-or-wages', false],
                     ['income-from-property-rental', false],
                 ],
-                'state-bene/fits' => [
+                'state-benefits' => [
                     ['attendance-allowance', false],
                     ['disability-living-allowance', false],
                     ['personal-independence-payment', false],
