@@ -23,22 +23,21 @@ class Version049 extends AbstractMigration
         };
 
         // TRANSACTIONS
-        // income_earnings, state_benefits, pensions, one_off_debits, damages_and_awards, other
         $rows = [
             'in' => [
-                'income/earnings' => [
+                'income-earnings' => [
                     ['dividends', false],
                     ['income-from-investments', false],
                     ['account-interest', false],
                     ['salary-or-wages', false],
                     ['income-from-property-rental', false],
                 ],
-                'state-benefits' => [
+                'state-bene/fits' => [
                     ['attendance-allowance', false],
                     ['disability-living-allowance', false],
                     ['personal-independence-payment', false],
                     ['severe-disablement-allowance', false],
-                    ['winter-fuel/cold-weather-payment', false],
+                    ['winter-fuel-cold-weather-payment', false],
                     ['housing-benefit', false],
                     ['employment-support-allowance', false],
                     ['incapacity-benefit', false],
@@ -74,7 +73,7 @@ class Version049 extends AbstractMigration
                     ['electricity', false],
                     ['telephone', false],
                     ['council-tax', false],
-                    ['property-maintenance/improvement', false],
+                    ['property-maintenance-improvement', false],
                     ['rent', false],
                     ['mortgage', false],
                     ['accommodation-service-charge', false],
@@ -89,10 +88,10 @@ class Version049 extends AbstractMigration
                     ['food', false],
                     ['toiletries', false],
                     ['clothes', false],
-                    ['personal-allowance/pocket-money', false],
+                    ['personal-allowance-pocket-money', false],
                     ['holidays', false],
                     ['day-trips', false],
-                    ['transport-bus,-train,-taxi-fares', false],
+                    ['transport-bus-train-taxi-fares', false],
                 ],
                 'fees' => [
                     ['tax-payments-to-hmrc', false],

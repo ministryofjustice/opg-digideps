@@ -949,26 +949,6 @@ class Report
 
 
     /**
-     * @return AccountTransaction[]
-     */
-//    public function getMoneyIn()
-//    {
-//        return $this->getTransactions()->filter(function(Transaction $transaction) {
-//            return $transaction->getTransactionType() instanceof TransactionTypeIn;
-//        });
-//    }
-
-    /**
-     * @return AccountTransaction[]
-     */
-//    public function getMoneyOut()
-//    {
-//        return $this->getTransactions()->filter(function(Transaction $transaction) {
-//            return $transaction->getType() instanceof TransactionTypeOut;
-//        });
-//    }
-
-    /**
      * @param string $transactionTypeId
      *
      * @return AccountTransaction
