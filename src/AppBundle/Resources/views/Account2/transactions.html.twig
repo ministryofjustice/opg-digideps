@@ -32,12 +32,12 @@
     </div>
 
 
-{% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-{{ form_submit(form.save, 'save', {
-    'labelText': ( 'form.save.label') | trans,
-    'buttonClass': 'behat-link-save'
-}) }}
-{% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save, 'save', {
+        'labelText': ( 'form.save.label') | trans,
+        'buttonClass': 'behat-link-save'
+    }) }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
 {{ form_end(form) }}
 
