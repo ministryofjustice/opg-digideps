@@ -166,9 +166,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('assets', $data);
         $this->assertArrayHasKey('court_order_type', $data);
         $this->assertArrayHasKey('report_seen', $data);
-        $this->assertArrayNotHasKey('tranactions', $data);
-        $this->assertArrayNotHasKey('money_in', $data);
-        $this->assertArrayNotHasKey('money_out', $data);
+        $this->assertArrayNotHasKey('transactions', $data);
         $this->assertEquals(self::$report1->getId(), $data['id']);
         $this->assertEquals(self::$client1->getId(), $data['client']);
         $this->assertEquals('2015-01-01', $data['start_date']);
@@ -180,20 +178,24 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(26, $data['money_in']);
-        $this->assertCount(36, $data['money_out']);
+        $this->assertCount(62, $data['transactions']);
         $this->assertArrayHasKey('money_in_total', $data);
         $this->assertArrayHasKey('money_out_total', $data);
         $this->assertArrayHasKey('money_total', $data);
+        $first = array_shift($data['transactions']);
+        $this->assertArrayHasKey('id', $first);
+        $this->assertArrayHasKey('type', $first);
+        $this->assertArrayHasKey('category', $first);
+        $this->assertArrayHasKey('has_more_details', $first);
 
+        // both
         $q = http_build_query(['groups'=>['transactions','basic']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(26, $data['money_in']);
-        $this->assertCount(36, $data['money_out']);
+        $this->assertCount(62, $data['transactions']);
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
     }

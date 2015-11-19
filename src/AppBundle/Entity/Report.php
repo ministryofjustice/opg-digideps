@@ -58,7 +58,8 @@ class Report
     private $accounts;
 
     /**
-     * @JMS\Type("array")
+     * @JMS\Groups({"transactions"})
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      */
     private $transactions;
@@ -185,11 +186,6 @@ class Report
      **/
     private $reasonForNoDecisions;
 
-
-    /**
-     * @var
-     */
-
     /**
      * @var boolean
      *
@@ -231,20 +227,6 @@ class Report
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
      */
     private $reasonNotAllAgreed;
-
-    /**
-     * @JMS\Groups({"transactions"})
-     * @JMS\Accessor(getter="getMoneyIn")
-     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
-     */
-    private $moneyIn;
-
-    /**
-     * @JMS\Groups({"transactions"})
-     * @JMS\Accessor(getter="getMoneyOut")
-     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
-     */
-    private $moneyOut;
 
     /**
      * @JMS\Groups({"transactions"})
@@ -920,7 +902,7 @@ class Report
     /**
      * @param AccountTransaction $transaction
      */
-    public function addTransaction(AccountTransaction $transaction)
+    public function addTransaction(Transaction $transaction)
     {
         if (!$this->transactions->contains($transaction)) {
             $this->transactions->add($transaction);
@@ -935,11 +917,12 @@ class Report
      */
     public function getMoneyInTotal()
     {
-        $ret = 0.0;
-        foreach ($this->getMoneyIn() as $t) {
-            $ret += $t->getAmount();
-        }
-        return $ret;
+        return 0;
+//        $ret = 0.0;
+//        foreach ($this->getMoneyIn() as $t) {
+//            $ret += $t->getAmount();
+//        }
+//        return $ret;
     }
 
     /**
@@ -947,11 +930,12 @@ class Report
      */
     public function getMoneyOutTotal()
     {
-        $ret = 0.0;
-        foreach ($this->getMoneyOut() as $money) {
-            $ret += $money->getAmount();
-        }
-        return $ret;
+        return 0;
+//        $ret = 0.0;
+//        foreach ($this->getMoneyOut() as $money) {
+//            $ret += $money->getAmount();
+//        }
+//        return $ret;
     }
 
     /**
@@ -967,22 +951,22 @@ class Report
     /**
      * @return AccountTransaction[]
      */
-    public function getMoneyIn()
-    {
-        return $this->getTransactions()->filter(function(Transaction $transaction) {
-            return $transaction->getTransactionType() instanceof TransactionTypeIn;
-        });
-    }
+//    public function getMoneyIn()
+//    {
+//        return $this->getTransactions()->filter(function(Transaction $transaction) {
+//            return $transaction->getTransactionType() instanceof TransactionTypeIn;
+//        });
+//    }
 
     /**
      * @return AccountTransaction[]
      */
-    public function getMoneyOut()
-    {
-        return $this->getTransactions()->filter(function(Transaction $transaction) {
-            return $transaction->getTransactionType() instanceof TransactionTypeOut;
-        });
-    }
+//    public function getMoneyOut()
+//    {
+//        return $this->getTransactions()->filter(function(Transaction $transaction) {
+//            return $transaction->getType() instanceof TransactionTypeOut;
+//        });
+//    }
 
     /**
      * @param string $transactionTypeId
@@ -991,8 +975,8 @@ class Report
      */
     public function getTransactionByTypeId($transactionTypeId)
     {
-        return $this->getTransactions()->filter(function($accountTransaction) use($transactionTypeId) {
-            return $accountTransaction->getTransactionTypeId() == $transactionTypeId;
+        return $this->getTransactions()->filter(function(Transaction $transaction) use($transactionTypeId) {
+            return $transaction->getTransactionTypeId() == $transactionTypeId;
         })->first();
     }
 

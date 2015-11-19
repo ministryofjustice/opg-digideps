@@ -12,7 +12,6 @@ use JMS\Serializer\Annotation as JMS;
 class Transaction
 {
     /**
-     * @JMS\Groups({"transactions"})
      * @var integer
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -34,10 +33,7 @@ class Transaction
      * @var TransactionType
      * 
      * @JMS\Groups({"transactions"})
-     * @JMS\Type("string") 
-     * @JMS\SerializedName("type")
-     * @JMS\Accessor(getter="getTransactionTypeId")
-     * 
+     * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TransactionType")
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
@@ -102,6 +98,10 @@ class Transaction
     }
     
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactions"})
+     * @JMS\SerializedName("id")
+     *
      * @return string
      */
     public function getTransactionTypeId()
@@ -110,9 +110,25 @@ class Transaction
     }
 
     /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactions"})
+     * @JMS\SerializedName("type")
+     *
      * @return string
      */
-    public function getTransactionCategory()
+    public function getTransactionClass()
+    {
+        return $this->getTransactionType() instanceof TransactionTypeIn ? 'in' : 'out';
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactions"})
+     * @JMS\SerializedName("category")
+     *
+     * @return string
+     */
+    public function getCategoryString()
     {
         return $this->getTransactionType()->getCategory();
     }
@@ -141,7 +157,7 @@ class Transaction
         return $this->getTransactionType()->getHasMoreDetails();
     }
 
-    public function setTransactionType(AccountTransactionType $transactionType)
+    public function setTransactionType(TransactionType $transactionType)
     {
         $this->transactionType = $transactionType;
         return $this;
