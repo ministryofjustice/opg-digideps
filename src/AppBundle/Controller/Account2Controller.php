@@ -8,7 +8,7 @@ use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use AppBundle\Service\ReportStatusService;
-
+use Symfony\Component\HttpFoundation\Request;
 
 
 class Account2Controller extends AbstractController
@@ -34,6 +34,14 @@ class Account2Controller extends AbstractController
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
+                'deserialise_group' => 'transactionsIn',
+            ]);
+            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId'=>$reportId]) );
+        }
 
         return [
             'report' => $report,
@@ -67,6 +75,14 @@ class Account2Controller extends AbstractController
         $account->setReportObject($report);
 
         $form = $this->createForm(new FormDir\TransactionsType('transactionsOut'), $report);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
+                'deserialise_group' => 'transactionsOut',
+            ]);
+            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId'=>$reportId]) );
+        }
+
 
         return [
             'report' => $report,

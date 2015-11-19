@@ -8,6 +8,7 @@ class Transaction
 {
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      */
     private $id;
 
@@ -23,6 +24,7 @@ class Transaction
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      */
     private $amount;
 
