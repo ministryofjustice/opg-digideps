@@ -145,3 +145,8 @@ form:
       label: Transfers out to other client accounts
     cash-withdrawn:
       label: Cash withdrawn
+currencySymbol: £
+moneyin:
+    grandtotal: Total money in
+moneyout:
+    grandtotal: Total money out
