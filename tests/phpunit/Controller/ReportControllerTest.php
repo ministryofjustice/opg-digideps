@@ -292,10 +292,11 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'start_date' => '2015-01-29',
                 'end_date' =>  '2015-12-29',
-                'transactions' => [
+                'transactionsIn' => [
                     ['id'=>'dividends', 'amount'=>1200, 'more_details'=>''],
-                    //['id'=>'sale-of-property', 'amount'=>250000, 'more_details'=>'sold main flat'],
-                    //['id'=>'water', 'amount'=>24, 'more_details'=>'details'],
+                    ['id'=>'income-from-investments', 'amount'=>760],
+                ],
+                'transactionsOut' => [
                     ['id'=>'cash-withdrawn', 'amount'=>24, 'more_details'=>'to pay bills'],
                 ]
             ]
@@ -306,18 +307,23 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('2015-12-29', $report->getEndDate()->format('Y-m-d'));
 
         // assert transactions changes
-        $t1 = $report->getTransactionByTypeId('dividends');
-        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeIn', $t1->getTransactionType());
-        $this->assertEquals(1200, $t1->getAmount());
-        $this->assertEquals('', $t1->getMoreDetails());
+        $tDividend = $report->getTransactionByTypeId('dividends');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeIn', $tDividend->getTransactionType());
+        $this->assertEquals(1200, $tDividend->getAmount());
+        $this->assertEquals('', $tDividend->getMoreDetails());
 
-        $t2 = $report->getTransactionByTypeId('cash-withdrawn');
-        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeOut', $t2->getTransactionType());
-        $this->assertEquals(24, $t2->getAmount());
-        $this->assertEquals('to pay bills', $t2->getMoreDetails());
+        $tIfd = $report->getTransactionByTypeId('income-from-investments');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeIn', $tIfd->getTransactionType());
+        $this->assertEquals(760, $tIfd->getAmount());
+        $this->assertEquals('', $tIfd->getMoreDetails());
 
-        $t3 = $report->getTransactionByTypeId('gifts');
-        $this->assertEquals(null, $t3->getAmount());
+        $tCashW = $report->getTransactionByTypeId('cash-withdrawn');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeOut', $tCashW->getTransactionType());
+        $this->assertEquals(24, $tCashW->getAmount());
+        $this->assertEquals('to pay bills', $tCashW->getMoreDetails());
+
+        $tGifts = $report->getTransactionByTypeId('gifts');
+        $this->assertEquals(null, $tGifts->getAmount());
     }
 
 }
