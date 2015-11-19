@@ -184,7 +184,30 @@ class Report {
      * @Assert\True(message="report.agreed", groups={"declare"} )
      */
     private $agree;
-    
+
+    /**
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @var Transaction[]
+     */
+    private $transactions;
+
+    /**
+     * @return mixed
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    /**
+     * @param mixed $transactions
+     */
+    public function setTransactions($transactions)
+    {
+        $this->transactions = $transactions;
+    }
+
+
     /**
      * 
      * @return integer $id
@@ -718,7 +741,9 @@ class Report {
     {
         $this->agree = $agree;
     }
-    
+
+
+
     
     
 }
