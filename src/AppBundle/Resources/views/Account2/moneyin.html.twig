@@ -25,8 +25,8 @@
         {% include 'AppBundle:Account2:transactions.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription',
-        transactionsGrouped: report.transactionsGrouped('in'),
-        transactionsTotal: report.getTransactionsTotal('in'),
+        transactionsGrouped: report.groupByCategory(report.transactionsIn),
+        transactionsTotal: report.getTotalAmount(report.transactionsIn),
         formTransactions: form.transactionsIn
         } %}
         

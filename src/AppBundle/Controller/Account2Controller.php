@@ -22,7 +22,7 @@ class Account2Controller extends AbstractController
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
 
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactionsIn', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -63,7 +63,7 @@ class Account2Controller extends AbstractController
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
 
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactionsOut', 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -104,7 +104,7 @@ class Account2Controller extends AbstractController
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
 
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -134,7 +134,7 @@ class Account2Controller extends AbstractController
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $request = $this->getRequest();
 
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'basic']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }

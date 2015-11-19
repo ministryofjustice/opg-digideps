@@ -187,113 +187,19 @@ class Report {
 
     /**
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
-     * @JMS\Groups({"transactions"})
+     * @JMS\Groups({"transactionsIn"})
+     *
      * @var Transaction[]
      */
-    private $transactions;
+    private $transactionsIn;
 
     /**
-     * Report constructor.
-     * @param int $id
-     */
-    public function __construct()
-    {
-        $this->transactions = [];
-    }
-
-
-    /**
-     * @param string $type in/out
-     * @return Transaction[]
-     */
-    public function getTransactions($type = null)
-    {
-        if (null !== $type) {
-            return array_filter($this->transactions, function ($transaction) use ($type) {
-                return $transaction->getType() == $type;
-            } );
-        }
-
-        return $this->transactions;
-    }
-
-    /**
-     * @JMS\Groups({"transactionsIn"})
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("transactionsIn")
-     *
-     * @return Transaction[]
-     */
-    public function getTransactionsIn()
-    {
-        return $this->getTransactions('in');
-    }
-
-    public function setTransactionsIn()
-    {
-
-    }
-
-    public function setTransactionsOut()
-    {
-
-    }
-
-    /**
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\Groups({"transactionsOut"})
-     * @JMS\VirtualProperty
-     * @JMS\SerializedName("transactionsOut")
      *
-     * @return Transaction[]
+     * @var Transaction[]
      */
-    public function getTransactionsOut()
-    {
-        return $this->getTransactions('out');
-    }
-
-    /**
-     * @param string $type in/out
-     *
-     * @return array of [category=>[entries=>, amount[]]]
-     */
-    public function getTransactionsGrouped($type)
-    {
-        $ret = [];
-
-        foreach ($this->getTransactions($type) as $id => $transaction) {
-            $cat = $transaction->getCategory();
-            if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
-            }
-            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $transaction->getAmount();
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @param string $type in/out
-     *
-     * @return Transaction[]
-     */
-    public function getTransactionsTotal($type)
-    {
-        return array_sum(array_map(function ($transaction){
-            return $transaction->getAmount();
-        }, $this->getTransactions($type)));
-    }
-
-
-
-    /**
-     * @param mixed $transactions
-     */
-    public function setTransactions($transactions)
-    {
-        $this->transactions = $transactions;
-    }
-
+    private $transactionsOut;
 
     /**
      * 
@@ -829,8 +735,72 @@ class Report {
         $this->agree = $agree;
     }
 
+    /**
+     * @return Transaction[]
+     */
+    public function getTransactionsIn()
+    {
+        return $this->transactionsIn;
+    }
+
+    /**
+     * @param Transaction[] $transactionsIn
+     */
+    public function setTransactionsIn($transactionsIn)
+    {
+        $this->transactionsIn = $transactionsIn;
+    }
+
+    /**
+     * @return Transaction[]
+     */
+    public function getTransactionsOut()
+    {
+        return $this->transactionsOut;
+    }
+
+    /**
+     * @param Transaction[] $transactionsOut
+     */
+    public function setTransactionsOut($transactionsOut)
+    {
+        $this->transactionsOut = $transactionsOut;
+    }
 
 
-    
+
+    /**
+     * @param Transaction[] $transactions
+     *
+     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
+     */
+    public function groupByCategory(array $transactions)
+    {
+        $ret = [];
+
+        foreach ($transactions as $id => $transaction) {
+            $cat = $transaction->getCategory();
+            if (!isset($ret[$cat])) {
+                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
+            }
+            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
+            $ret[$cat]['amountTotal'] += $transaction->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @param Transaction[] $transactions
+     *
+     * @return float
+     */
+    public function getTotalAmount(array $transactions)
+    {
+        return array_sum(array_map(function ($transaction){
+            return $transaction->getAmount();
+        }, $transactions));
+    }
+
     
 }
