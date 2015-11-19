@@ -19,6 +19,14 @@
                         'inputPrefix' : '£',
                         'inputClass' : 'form-control__number'
                     }) }}
+
+                    {% if formTransactions[id].moreDetails is defined %}
+                        {{ form_input(formTransactions[id].moreDetails, '', {
+                            'labelText': 'form.moreDetails' | trans,
+                            'formGroupClass': 'form-group-combo-description',
+                            'inputClass': 'expanding'
+                        }) }}
+                    {% endif %}
                 </div>
                 {% endfor %}
                 <div class="sub-total">

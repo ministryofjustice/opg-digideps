@@ -22,14 +22,14 @@ class TransactionSingleType extends AbstractType
                      'invalid_message'=>'account.moneyInOut.amount.notNumeric'
                  ]);
          
-//         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-//            $accountTransaction = $event->getData(); /* @var $accountTransaction AccountTransaction */
-//            $form = $event->getForm();
-//
-//            if ($accountTransaction->hasMoreDetails()) {
-//                $form->add('moreDetails', 'textarea');
-//            }
-//        });
+         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $transaction = $event->getData(); /* @var $accountTransaction Transaction */
+            $form = $event->getForm();
+
+            if ($transaction->getHasMoreDetails()) {
+                $form->add('moreDetails', 'textarea');
+            }
+        });
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)

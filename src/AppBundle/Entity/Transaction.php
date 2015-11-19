@@ -29,6 +29,20 @@ class Transaction
     private $amount;
 
     /**
+     * @var string
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Type("boolean")
+     */
+    private $hasMoreDetails;
+
+    /**
+     * @var string
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Type("string")
+     */
+    private $moreDetails;
+
+    /**
      * @return mixed
      */
     public function getId()
@@ -90,6 +104,38 @@ class Transaction
     public function setAmount($amount)
     {
         $this->amount = $amount;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHasMoreDetails()
+    {
+        return $this->hasMoreDetails;
+    }
+
+    /**
+     * @param string $hasMoreDetails
+     */
+    public function setHasMoreDetails($hasMoreDetails)
+    {
+        $this->hasMoreDetails = $hasMoreDetails;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoreDetails()
+    {
+        return $this->moreDetails;
+    }
+
+    /**
+     * @param string $moreDetails
+     */
+    public function setMoreDetails($moreDetails)
+    {
+        $this->moreDetails = $moreDetails;
     }
 
 
