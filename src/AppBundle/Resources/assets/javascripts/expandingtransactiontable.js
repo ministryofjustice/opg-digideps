@@ -1,81 +1,90 @@
 /* globals jQuery */
-var opg = opg || {};
+(function () {
+    "use strict";
 
-(function ($, opg) {
+    var root = this,
+        $ = root.jQuery;
+    
+    if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
+    
+    var ExpandingTransactionTable = function(element) {
 
-    opg.expandingTransactionTable = function(element) {
-
-        var container,
-            inputs,
-            subTotals,
-            grandTotal;
+        this.container = $(element);
+        this.inputs = this.container.find('input');
+        this.subTotals = this.container.find('.summary .sub-total .value');
+        this.grandTotal = this.container.find('.grand-total .value');
         
-        function closeAll() {
-            $('.open', container).removeClass('open');
+        this.addElementLevelEvents();
+        this.closeAll();
+    };
+    
+    ExpandingTransactionTable.prototype.addElementLevelEvents = function () {
+        this.clickHandler = this.getSummaryClickHandler();
+        $('.summary', this.element).on('click', this.clickHandler);
+        
+        this.totalChangeHandler = this.getTotalChangeHandler();
+        this.inputs.on('keyup input paste', this.totalChangeHandler);
+    };
+    ExpandingTransactionTable.prototype.getSummaryClickHandler = function () {
+        return function (e) {
+            this.handleSummaryClick($(e.target));
+        }.bind(this);
+    };
+    ExpandingTransactionTable.prototype.getTotalChangeHandler = function () {
+        return function (e) {
+            this.handleTotalChange($(e.target));
+        }.bind(this);
+    };
+
+    
+    ExpandingTransactionTable.prototype.handleSummaryClick = function (target) {
+
+        var section = target.closest('.section');
+
+        // if this one is open, close it
+        if (section.hasClass('open')) {
+            section.removeClass('open');
+        } else {
+            this.closeAll();
+            section.addClass('open');
         }
-        
-        function handleClick(event) {
-            var target = $(event.currentTarget);
-            var targetParent = target.parent();
-            
-            // if this one is open, close it
-            if (targetParent.hasClass('open')) {
-                targetParent.removeClass('open');
-            } else {
-                closeAll();
-                targetParent.addClass('open');
+
+    };
+    ExpandingTransactionTable.prototype.handleTotalChange = function (target) {
+
+        var section = target.closest('.section');
+        var total = 0.00;
+
+        $('input.form-control', section).each(function (index, element) {
+            var value = parseFloat(element.value);
+            if (!isNaN(value)) {
+                total += value;
             }
+        });
 
-        }
+        $('.sub-total .value', section).text(total.toFixed(2));
 
-        function init(element) {
-            container = $(element);
-            inputs = container.find('input');
-            subTotals = container.find('.summary .sub-total .value');
-            grandTotal = container.find('.grand-total .value');
-            
-            
-            $('.summary', element).on('click', handleClick);
-            
-            inputs.on('keyup input paste', updateSectionTotal);
-            closeAll();
-        }
-        
-        function updateSectionTotal(event) {
-            
-            var target = $(event.target);
-            var section = target.closest('.section');
-            
-            var total = 0.00;
-            
-            $('input.form-control', section).each(function(index, element) {
-                var value = parseFloat(element.value);
-                if (!isNaN(value)) {
-                    total += value;
-                }
-            });
-            
-            $('.sub-total .value', section).text(total.toFixed(2));
-            
-            updateGrandTotal();
-        }
-        
-        function updateGrandTotal() {
-            var total = 0;
-            
-            subTotals.each(function (index, element) {
-                var value = parseFloat($(element).text());
-                if (!isNaN(value)) {
-                    total += value;
-                }
-            });
-            
-            grandTotal.text(total.toFixed(2));
-        }
-        
-        init(element);
+        this.updateGrandTotal();
 
     };
     
+    
+    ExpandingTransactionTable.prototype.closeAll = function() {
+        $('.open', this.container).removeClass('open');
+    };
+    ExpandingTransactionTable.prototype.updateGrandTotal = function() {
+        var total = 0;
+        
+        this.subTotals.each(function (index, element) {
+            var value = parseFloat($(element).text());
+            if (!isNaN(value)) {
+                total += value;
+            }
+        });
+        
+        this.grandTotal.text(total.toFixed(2));
+    };
+    
+    root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 
-})(jQuery, opg);
+}).call(this);
