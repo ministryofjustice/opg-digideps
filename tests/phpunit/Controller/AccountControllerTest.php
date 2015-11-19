@@ -102,9 +102,6 @@ class AccountControllerTest extends AbstractTestController
         
         // assert account created with transactions
         $account = self::fixtures()->getRepo('Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
-        $transactionTypesTotal = count(self::fixtures()->getRepo('AccountTransactionType')->findAll());
-        $this->assertCount($transactionTypesTotal, $account->getTransactions(), "transactions not created");
-
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         
         // assert cannot create account for a report not belonging to logged user
@@ -130,10 +127,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('101010', $data['sort_code']);
         $this->assertEquals('1234', $data['account_number']);
         $this->assertEquals(self::$report1->getId(), $data['report']['id']);
-        $this->assertEquals('0', $data['money_total']);
-        $this->assertEquals('0', $data['money_in_total']);
-        $this->assertEquals('0', $data['money_out_total']);
-        
+
         
         // asser  user2 cannot read the account
         $url2 = '/report/account/'.self::$account2->getId();
@@ -154,8 +148,6 @@ class AccountControllerTest extends AbstractTestController
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                // 'money_in' //TODO
-                // 'money_out' //TODO
                 'bank' => 'bank1-modified'
                 //TODO add other fields
             ]

@@ -32,7 +32,7 @@ class ReportRepositoryTest extends WebTestCase
             'setStartDate' => new \DateTime('01 January 2014'),
             'setEndDate' => new \DateTime('31 December 2014')
         ]);
-        
+
         $asset = new EntityDir\Asset();
         $asset->setReport($report);
         $asset->setTitle('test');
@@ -49,7 +49,7 @@ class ReportRepositoryTest extends WebTestCase
             'setCreatedAt' => new \DateTime()
         ]);
 
-        $this->fixtures->getRepo('Account')->addEmptyTransactionsToAccount($account);
+
 
         $this->fixtures->persist($asset);
         
@@ -86,6 +86,5 @@ class ReportRepositoryTest extends WebTestCase
         $this->assertEquals('NATWEST', $account->getBank());
         $this->assertEquals('120044', $account->getSortCode());
         $this->assertEquals('0012', $account->getAccountNumber());
-        $this->assertCount(40,$account->getTransactions()); 
     }
 }

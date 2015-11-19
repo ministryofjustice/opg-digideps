@@ -82,7 +82,7 @@ class ReportControllerTest extends AbstractTestController
             'end_date' => '2015-12-31',
         ];
 
-    public function testAddPost()
+    public function testAdd()
     {
         $url = '/report';
         
@@ -94,17 +94,26 @@ class ReportControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        // assert account created with transactions
+        // assert creation
         $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
+
+        $transactionTypesCount = count(self::fixtures()->getRepo('TransactionType')->findAll());
+        $this->assertTrue($transactionTypesCount > 1, 'transaction type not added');
+
+        // assert transactions have been added
+        $this->assertCount($transactionTypesCount, $report->getTransactions());
+        $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
+
     }
     
-    public function testAddPut()
+    public function testEdit()
     {
         $url = '/report';
-        
+
+        //POST but passes ID in the request
         $reportId = $this->assertJsonRequest('POST', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
@@ -121,7 +130,7 @@ class ReportControllerTest extends AbstractTestController
     }
 
 
-    public function testfindByIdAuth()
+    public function testGetByIdAuth()
     {
         $url = '/report/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
@@ -130,7 +139,7 @@ class ReportControllerTest extends AbstractTestController
     }
 
 
-    public function testfindByIdAcl()
+    public function testGetByIdAcl()
     {
         $url2 = '/report/' . self::$report2->getId();
 
@@ -139,23 +148,56 @@ class ReportControllerTest extends AbstractTestController
 
 
     /**
-     * @depends testAddPost
-     * @depends testAddPut
+     * @depends testAdd
+     * @depends testEdit
      */
-    public function testfindById()
+    public function testGetById()
     {
         $url = '/report/' . self::$report1->getId();
 
-        // assert get
+        // assert get groups=basic
         $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-
+        $this->assertArrayHasKey('contacts', $data);
+        $this->assertArrayHasKey('accounts', $data);
+        $this->assertArrayHasKey('decisions', $data);
+        $this->assertArrayHasKey('assets', $data);
+        $this->assertArrayHasKey('court_order_type', $data);
+        $this->assertArrayHasKey('report_seen', $data);
+        $this->assertArrayNotHasKey('transactions', $data);
         $this->assertEquals(self::$report1->getId(), $data['id']);
         $this->assertEquals(self::$client1->getId(), $data['client']);
         $this->assertEquals('2015-01-01', $data['start_date']);
         $this->assertEquals('2015-12-31', $data['end_date']);
+
+
+        //  assert get groups=transactions
+        $data = $this->assertJsonRequest('GET', $url . '?groups=transactions', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertCount(62, $data['transactions']);
+        $this->assertArrayHasKey('money_in_total', $data);
+        $this->assertArrayHasKey('money_out_total', $data);
+        $this->assertArrayHasKey('money_total', $data);
+        $first = array_shift($data['transactions']);
+        $this->assertArrayHasKey('id', $first);
+        $this->assertArrayHasKey('type', $first);
+        $this->assertArrayHasKey('category', $first);
+        $this->assertArrayHasKey('has_more_details', $first);
+
+        // both
+        $q = http_build_query(['groups'=>['transactions','basic']]);
+        //assert both groups (quick)
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertCount(62, $data['transactions']);
+        $this->assertArrayHasKey('start_date', $data);
+        $this->assertArrayHasKey('end_date', $data);
     }
 
     public function testSubmitAuth()
@@ -226,21 +268,18 @@ class ReportControllerTest extends AbstractTestController
     public function testUpdateAuth()
     {
         $url = '/report/' . self::$report1->getId();
-        
+
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
-    
+
     public function testUpdateAcl()
     {
         $url2 = '/report/' . self::$report2->getId();
-        
+
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-    /**
-     * @depends testSubmit
-     */
     public function testUpdate()
     {
         $reportId = self::$report1->getId();
@@ -253,15 +292,32 @@ class ReportControllerTest extends AbstractTestController
             'data' => [
                 'start_date' => '2015-01-29',
                 'end_date' =>  '2015-12-29',
-                // TODO add 'cot_id' reviewed report_seen 
-                // reason_for_no_contacts no_asset_to_add 
-                // reason_for_no_decisions further_information
+                'transactions' => [
+                    ['id'=>'dividends', 'amount'=>1200, 'more_details'=>''],
+                    //['id'=>'sale-of-property', 'amount'=>250000, 'more_details'=>'sold main flat'],
+                    //['id'=>'water', 'amount'=>24, 'more_details'=>'details'],
+                    ['id'=>'cash-withdrawn', 'amount'=>24, 'more_details'=>'to pay bills'],
+                ]
             ]
         ]);
 
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals('2015-01-29', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-29', $report->getEndDate()->format('Y-m-d'));
+
+        // assert transactions changes
+        $t1 = $report->getTransactionByTypeId('dividends');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeIn', $t1->getTransactionType());
+        $this->assertEquals(1200, $t1->getAmount());
+        $this->assertEquals('', $t1->getMoreDetails());
+
+        $t2 = $report->getTransactionByTypeId('cash-withdrawn');
+        $this->assertInstanceOf('AppBundle\Entity\TransactionTypeOut', $t2->getTransactionType());
+        $this->assertEquals(24, $t2->getAmount());
+        $this->assertEquals('to pay bills', $t2->getMoreDetails());
+
+        $t3 = $report->getTransactionByTypeId('gifts');
+        $this->assertEquals(null, $t3->getAmount());
     }
 
 }

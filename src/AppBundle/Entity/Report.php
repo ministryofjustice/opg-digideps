@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -20,7 +21,7 @@ class Report
     /**
      * @var integer
      *
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -32,7 +33,7 @@ class Report
     /**
      * @var integer
      * 
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getClientId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
@@ -41,7 +42,7 @@ class Report
     private $client;
     
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getContactIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
@@ -55,16 +56,23 @@ class Report
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
-    
+
     /**
      * @JMS\Groups({"transactions"})
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
+     */
+    private $transactions;
+    
+    /**
+     * @JMS\Groups({"accounts"})
      * @JMS\Accessor(getter="getAccounts", setter="addAccount")
      * @JMS\Type("array<AppBundle\Entity\Account>")
      */
     private $accountObjs;
     
     /**
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getDecisionIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
@@ -72,7 +80,7 @@ class Report
     private $decisions;
     
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getAssetIds")
      * @JMS\Type("array")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
@@ -80,7 +88,7 @@ class Report
     private $assets;
 
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Type("AppBundle\Entity\Safeguarding")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
@@ -88,7 +96,7 @@ class Report
 
 
     /**
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
@@ -99,7 +107,7 @@ class Report
     /**
      * @var string
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -108,7 +116,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -118,7 +126,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -128,7 +136,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -155,7 +163,7 @@ class Report
     /**
      * @var boolean
      * @JMS\Type("boolean")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
@@ -164,7 +172,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;
@@ -173,20 +181,15 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
 
-
-    /**
-     * @var
-     */
-
     /**
      * @var boolean
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -212,7 +215,7 @@ class Report
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic","transactions"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="all_agreed", type="boolean", nullable=true)
      */
     private $allAgreed;
@@ -220,20 +223,39 @@ class Report
     /** @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","transactions"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
      */
     private $reasonNotAllAgreed;
-    
+
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyInTotal")
+     */
+    private $moneyInTotal;
+
+    /**
+     * @JMS\Groups({"transactions"})
+     * @JMS\Accessor(getter="getMoneyOutTotal")
+     */
+    private $moneyOutTotal;
+
+    /**
+     * @JMS\Groups({ "transactions"})
+     * @JMS\Accessor(getter="getMoneyTotal")
+     */
+    private $moneyTotal;
+
      /**
      * Constructor
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->accounts = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->decisions = new ArrayCollection();
+        $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
         $this->reportSeen = true;
     }
@@ -468,7 +490,6 @@ class Report
 
         return $this;
     }
-    
     /**
      * Remove contacts
      *
@@ -848,5 +869,115 @@ class Report
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
     }
 
+    /**
+     * @return Transaction[]
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+
+    /**
+     * Get account balance offset
+     */
+    public function getBalanceOffset()
+    {
+        return ($this->closingBalance - $this->getCurrentBalance());
+    }
+
+    /**
+     * Gets current account balance
+     * @return integer $balance
+     */
+    public function getCurrentBalance()
+    {
+        $balance = 0;
+
+
+        return $balance;
+    }
+
+
+    /**
+     * @param AccountTransaction $transaction
+     */
+    public function addTransaction(Transaction $transaction)
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @return float
+     */
+    public function getMoneyInTotal()
+    {
+        return 0;
+//        $ret = 0.0;
+//        foreach ($this->getMoneyIn() as $t) {
+//            $ret += $t->getAmount();
+//        }
+//        return $ret;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        return 0;
+//        $ret = 0.0;
+//        foreach ($this->getMoneyOut() as $money) {
+//            $ret += $money->getAmount();
+//        }
+//        return $ret;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyTotal()
+    {
+        //TODO Fix
+        return 0; //$this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
+    }
+
+
+    /**
+     * @return AccountTransaction[]
+     */
+//    public function getMoneyIn()
+//    {
+//        return $this->getTransactions()->filter(function(Transaction $transaction) {
+//            return $transaction->getTransactionType() instanceof TransactionTypeIn;
+//        });
+//    }
+
+    /**
+     * @return AccountTransaction[]
+     */
+//    public function getMoneyOut()
+//    {
+//        return $this->getTransactions()->filter(function(Transaction $transaction) {
+//            return $transaction->getType() instanceof TransactionTypeOut;
+//        });
+//    }
+
+    /**
+     * @param string $transactionTypeId
+     *
+     * @return AccountTransaction
+     */
+    public function getTransactionByTypeId($transactionTypeId)
+    {
+        return $this->getTransactions()->filter(function(Transaction $transaction) use($transactionTypeId) {
+            return $transaction->getTransactionTypeId() == $transactionTypeId;
+        })->first();
+    }
 
 }

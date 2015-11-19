@@ -21,6 +21,8 @@ class ReportController extends RestController
         $reportData = $this->deserializeBodyContent($request);
 
         if (!empty($reportData['id'])) {
+            //throw new \RuntimeException(__METHOD__ . 'DEPRECTED, use PUT endpoint to modify report');
+            // DEPRECATED ???
             // get existing report
             $report = $this->findEntityBy('Report', $reportData['id']);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -57,9 +59,8 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
-        }
+        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -148,6 +149,18 @@ class ReportController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
+
+        // edit transactions
+        if (isset($data['transactions'])) {
+            foreach ($data['transactions'] as $transactionRow) {
+                $t = $report->getTransactionByTypeId($transactionRow['id'])
+                    ->setAmount($transactionRow['amount'])
+                    ->setMoreDetails($transactionRow['more_details']);
+                $this->getEntityManager()->flush($t);
+            }
+            $this->setJmsSerialiserGroups(['transactions']);
+        }
+
 
         if (array_key_exists('cot_id', $data)) {
             $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
