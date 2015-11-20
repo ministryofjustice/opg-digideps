@@ -22,7 +22,7 @@
 
                     {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                         'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number',
+                        'inputClass' : 'form-control__number transaction-value',
                         'formGroupClass': formGroupClass
                     }) }}
 
@@ -30,7 +30,7 @@
                         {{ form_input(formTransactions[id].moreDetails, '', {
                             'labelText': 'form.moreDetails' | trans,
                             'formGroupClass': 'form-group-combo-description',
-                            'inputClass': 'expanding'
+                            'inputClass': 'expanding transaction-more-details'
                         }) }}
                     {% endif %}
                 </div>

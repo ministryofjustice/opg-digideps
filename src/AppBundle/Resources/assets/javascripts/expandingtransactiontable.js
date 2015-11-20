@@ -9,7 +9,7 @@
     var ExpandingTransactionTable = function(element) {
 
         this.container = $(element);
-        this.inputs = this.container.find('input');
+        this.inputs = this.container.find('.transaction-value');
         this.subTotals = this.container.find('.summary .sub-total .value');
         this.grandTotal = this.container.find('.grand-total .value');
         
@@ -56,7 +56,7 @@
         var section = target.closest('.section');
         var total = 0.00;
 
-        $('input.form-control', section).each(function (index, element) {
+        $('.transaction-value', section).each(function (index, element) {
             var value = parseFloat(element.value.replace(/,/g , ""));
             if (!isNaN(value)) {
                 total += value;
@@ -87,7 +87,7 @@
     
         var shouldDisplayDescription = this.shouldDisplayDescription;
         
-        $('.form-group-combo-description', this.container).each(function (index, element) {
+        $('.transaction-more-details', this.container).each(function (index, element) {
             
             var transaction = $(element).closest('.transaction');
             shouldDisplayDescription(transaction);
@@ -97,11 +97,12 @@
         
     };
     ExpandingTransactionTable.prototype.shouldDisplayDescription = function (transaction) {
-        var valueElement = $('.form-control__number', transaction);
+        var valueElement = $('.transaction-value', transaction);
         var value = parseFloat(valueElement.val().replace(/,/g , ""));
 
         if (isNaN(value) || value === 0) {
             transaction.addClass('hide-description');
+            $('.transaction-more-details', transaction).val('');
         } else {
             transaction.removeClass('hide-description');
         }

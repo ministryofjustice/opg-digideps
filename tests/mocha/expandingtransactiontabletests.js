@@ -77,8 +77,8 @@ describe('Expanding Transaction Table Tests', function () {
             it('should adjust the total in the header when a transaction is changed.', function () {
                 
                 var section = getFirstSection();
-                var t1 = $('.transaction:nth-child(1) input.form-control', section);
-                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+                var t1 = $('.transaction:nth-child(1) .transaction-value', section);
+                var t2 = $('.transaction:nth-child(2) .transaction-value', section);
                 
                 t1.val('1.25').trigger('keyup');
                 t2.val('1.25').trigger('keyup');
@@ -88,8 +88,8 @@ describe('Expanding Transaction Table Tests', function () {
             });
             it('should adjust the total at the bottom of a section when a transaction is changed', function () {
                 var section = getFirstSection();
-                var t1 = $('.transaction:nth-child(1) input.form-control', section);
-                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+                var t1 = $('.transaction:nth-child(1) .transaction-value', section);
+                var t2 = $('.transaction:nth-child(2) .transaction-value', section);
 
                 t1.val('1.25').trigger('keyup');
                 t2.val('1.25').trigger('keyup');
@@ -98,9 +98,9 @@ describe('Expanding Transaction Table Tests', function () {
             });
             it('should ignore transactions that contain a text value',function () {
                 var section = getFirstSection();
-                var t1 = $('.transaction:nth-child(1) input.form-control', section);
-                var t2 = $('.transaction:nth-child(2) input.form-control', section);
-                var t3 = $('.transaction:nth-child(3) input.form-control', section);
+                var t1 = $('.transaction:nth-child(1) .transaction-value', section);
+                var t2 = $('.transaction:nth-child(2) .transaction-value', section);
+                var t3 = $('.transaction:nth-child(3) .transaction-value', section);
 
                 t1.val('1.25').trigger('keyup');
                 t2.val('1.25').trigger('keyup');
@@ -112,14 +112,14 @@ describe('Expanding Transaction Table Tests', function () {
                 var firstSection = $('.section:nth-child(1)', placeholder);
                 var secondSection = $('.section:nth-child(2)', placeholder);
 
-                var t11 = $('.transaction:nth-child(1) input.form-control', firstSection);
-                var t12 = $('.transaction:nth-child(2) input.form-control', firstSection);
+                var t11 = $('.transaction:nth-child(1) .transaction-value', firstSection);
+                var t12 = $('.transaction:nth-child(2) .transaction-value', firstSection);
 
                 t11.val('1.25').trigger('keyup');
                 t12.val('1.25').trigger('keyup');
 
-                var t21 = $('.transaction:nth-child(1) input.form-control', secondSection);
-                var t22 = $('.transaction:nth-child(2) input.form-control', secondSection);
+                var t21 = $('.transaction:nth-child(1) .transaction-value', secondSection);
+                var t22 = $('.transaction:nth-child(2) .transaction-value', secondSection);
 
                 t21.val('1.25').trigger('keyup');
                 t22.val('1.25').trigger('keyup');
@@ -129,8 +129,8 @@ describe('Expanding Transaction Table Tests', function () {
             });
             it('should format the sub total in the summary with a comma', function () {
                 var section = getFirstSection();
-                var t1 = $('.transaction:nth-child(1) input.form-control', section);
-                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+                var t1 = $('.transaction:nth-child(1) .transaction-value', section);
+                var t2 = $('.transaction:nth-child(2) .transaction-value', section);
 
                 t1.val('1000.25').trigger('keyup');
                 t2.val('1000.25').trigger('keyup');
@@ -139,8 +139,8 @@ describe('Expanding Transaction Table Tests', function () {
             });
             it('should format the sub total in the detail with a comma', function () {
                 var section = getFirstSection();
-                var t1 = $('.transaction:nth-child(1) input.form-control', section);
-                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+                var t1 = $('.transaction:nth-child(1) .transaction-value', section);
+                var t2 = $('.transaction:nth-child(2) .transaction-value', section);
 
                 t1.val('1000.25').trigger('keyup');
                 t2.val('1000.25').trigger('keyup');
@@ -151,14 +151,14 @@ describe('Expanding Transaction Table Tests', function () {
                 var firstSection = $('.section:nth-child(1)', placeholder);
                 var secondSection = $('.section:nth-child(2)', placeholder);
 
-                var t11 = $('.transaction:nth-child(1) input.form-control', firstSection);
-                var t12 = $('.transaction:nth-child(2) input.form-control', firstSection);
+                var t11 = $('.transaction:nth-child(1) .transaction-value', firstSection);
+                var t12 = $('.transaction:nth-child(2) .transaction-value', firstSection);
 
                 t11.val('10000.25').trigger('keyup');
                 t12.val('10000.25').trigger('keyup');
 
-                var t21 = $('.transaction:nth-child(1) input.form-control', secondSection);
-                var t22 = $('.transaction:nth-child(2) input.form-control', secondSection);
+                var t21 = $('.transaction:nth-child(1) .transaction-value', secondSection);
+                var t22 = $('.transaction:nth-child(2) .transaction-value', secondSection);
 
                 t21.val('10000.00').trigger('keyup');
                 t22.val('10000.00').trigger('keyup');
@@ -167,8 +167,8 @@ describe('Expanding Transaction Table Tests', function () {
             });
             it('should ignore commas in totals entered by the user', function () {
                 var section = getFirstSection();
-                var t1 = $('.transaction:nth-child(1) input.form-control', section);
-                var t2 = $('.transaction:nth-child(2) input.form-control', section);
+                var t1 = $('.transaction:nth-child(1) .transaction-value', section);
+                var t2 = $('.transaction:nth-child(2) .transaction-value', section);
 
                 t1.val('1,000.25').trigger('keyup');
                 t2.val('10,000.25').trigger('keyup');
@@ -278,8 +278,30 @@ describe('Expanding Transaction Table Tests', function () {
             });
         });
         describe('clear further info', function () {
-            it('should set a further info value to null if a number goes from something to 0');
-            it('should set a further info value to null if a number goes from something to null');
+            it('should set a further info value to null if a number goes from something to 0', function () {
+                var movingSection = $('.section:nth-child(6)', placeholder);
+                var moreDetails = $('.transaction-more-details', movingSection);
+                var value = $('.transaction-value', movingSection);
+
+
+                $('.summary', movingSection).trigger('click');
+                moreDetails.val('test');
+                value.val("0").trigger('keyup');
+
+                expect(moreDetails.val()).to.equal("");
+            });
+            it('should set a further info value to null if a number goes from something to null', function () {
+                var movingSection = $('.section:nth-child(6)', placeholder);
+                var moreDetails = $('.transaction-more-details', movingSection);
+                var value = $('.transaction-value', movingSection);
+                
+                
+                $('.summary', movingSection).trigger('click');
+                moreDetails.val('test');
+                value.val("").trigger('keyup');
+
+                expect(moreDetails.val()).to.equal("");
+            });
         });
     });
     
