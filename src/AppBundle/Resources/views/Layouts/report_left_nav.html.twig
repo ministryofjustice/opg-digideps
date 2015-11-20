@@ -16,9 +16,14 @@
     } %}
     
     <div class="left-nav-container">
+        <div id="sub-section-title-container" class="sub-section-title-container">
+            <h1>{% block title %}{% endblock %}</h1>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </div>
+    
         <div class="row">
             <div class="left-nav">
-                {% include 'AppBundle:Account2:left-nav.html.twig'%}
+                {% block leftcontent %}{% endblock %}
             </div>
             <div class="right-content">
                 {% block maincontent %}{% endblock %}

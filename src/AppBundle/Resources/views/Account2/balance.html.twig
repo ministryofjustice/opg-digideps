@@ -4,10 +4,10 @@
     {% trans_default_domain translationDomain %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-    {% block subnav %}
-        <h2>Test</h2>
+    {% block leftcontent %}
+        {% include 'AppBundle:Account2:left-nav.html.twig'%}
     {% endblock %}
     
     {% block maincontent %}
