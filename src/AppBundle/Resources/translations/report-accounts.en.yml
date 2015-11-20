@@ -90,7 +90,7 @@ listing:
   addTotalsWarning: Add Money paid in or Money paid out
   addClosingBalanceWarning: Add the closing balance of the account
 
-
+currencySymbol: "£"
 
 moneyIn:
   pageSectionTitle: Money coming into the client’s accounts
@@ -100,3 +100,19 @@ moneyOut:
   pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between 1 December 2014 and 1 December 2015. If your client has more than 1 bank account, add up the totals from all the accounts for each type of payment.
 
 dividends.label: dividends
+
+balance:
+    pageSectionTitle: Balance the accounts
+    balancesMatch: Money in and money out match up
+    pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
+    accountsBalanced: Accounts Balanced
+    accountsBalancedMessage: Money in and money out match up
+    balanceAfterReported: Balance after reported money in and money out
+    actualBalance: Actual balance from all bank account
+    totalBankStart: Totals from bank accounts at start of reporting period
+    totalInDuringPeriod: Total money in during reporting period
+    totalFromAllIn: Total from all opening balances and money in
+    totalOutInPeriod: Total money out during the reporting period
+    finalBalance: Balance after reported money in and money out
+    
+    

@@ -1,0 +1,85 @@
+table.money-table {
+    
+    td {
+        padding: 14px 25px 10px 25px;
+    }
+    
+    
+    td.value {
+        text-align: right;
+    }
+    
+    tr.solid-row {
+        
+        background: $grey-3;
+        
+        td.title {
+            @include core-19();
+            color: $black;
+        }
+
+        td.value {
+            @include core-24();
+            color: $black;
+        }
+        
+    }
+
+
+    tr.split-row {
+        td.title {
+            @include core-19();
+            color: $black;
+            background: $white;
+            border: 0;
+        }
+
+        td.value {
+            @include bold-24();
+            color: $black;
+            background: $grey-3;
+        }
+    }
+
+    tr.split-row.highlighted-row {
+        
+        border: 1px solid $turquoise;
+        
+        td.title {
+            @include bold-19();
+            background: $white;
+            color: $turquoise;
+        }
+
+        td.value {
+            @include bold-24();
+            background: $turquoise;
+            color: $white;
+        }
+    }
+    
+    tr.medium-bottom-margin {
+        margin-bottom: 20px;
+    }
+    
+    tr.large-bottom-margin {
+        margin-bottom: 30px;
+    }
+    
+    tr.spacer {
+        td {
+            padding: 15px 25px 15px 25px;
+        }
+    }
+    
+    tr.borderless {
+        td {
+            border: 0;
+        }
+    }
+    
+    td.right {
+        text-align: right;
+    }
+    
+}

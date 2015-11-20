@@ -9,21 +9,74 @@
     {% block leftcontent %}
         {% include 'AppBundle:Account2:left-nav.html.twig'%}
     {% endblock %}
-    
+
     {% block maincontent %}
 
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1><h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1><h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        
-        
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'balance.pageSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'balance.pageSectionDescription'
+        } %}
+
+        <div class="hero">
+            <h2 class="heading">{{ 'balance.accountsBalanced' | trans }}</h2>
+            <div class="message">{{ 'balance.accountsBalancedMessage' | trans }}</div>
+        </div>
+
+        <div class="hero-split">
+            <div class="hero-column">
+                <div class="message">
+                    {{ 'balance.balanceAfterReported' | trans }}:
+                </div>
+                <div class="total">
+                    {{ 'currencySymbol' |trans }}105,000.00
+                </div>
+            </div>
+            <div class="hero-column">
+                <div class="message">
+                    {{ 'balance.actualBalance' | trans }}:
+                </div>
+                <div class="total">
+                    {{ 'currencySymbol' | trans }}105,000.00
+                </div>
+            </div>
+        </div>
+
+        <table class="money-table">
+            <tr class="solid-row">
+                <td class="title">{{ 'balance.totalBankStart' | trans }}:</td>
+                <td class="value">{{ 'currencySymbol' | trans }}90,000.00</td>
+            </tr>
+            <tr class="solid-row">
+                <td class="title">{{ 'balance.totalInDuringPeriod' | trans }}:</td>
+                <td class="value">+{{ 'currencySymbol' | trans }}30,000.00</td>
+            </tr>
+            <tr class="split-row">
+                <td class="title right">{{ 'balance.totalFromAllIn' | trans }}:</td>
+                <td class="value">{{ 'currencySymbol' | trans }}120,500.00</td>
+            </tr>
+            
+            <tr class="spacer"><td colspan="2"></td></tr>
+ 
+            <tr class="solid-row">
+                <td class="title">{{ 'balance.totalOutInPeriod' | trans }}:</td>
+                <td class="value">-{{ 'currencySymbol' | trans }}15,000.00</td>
+            </tr>
+            
+            <tr class="spacer borderless"><td colspan="2"></td></tr>
+            <tr class="spacer borderless"><td colspan="2"></td></tr>
+            
+            <tr class="split-row highlighted-row">
+                <td class="title">{{ 'balance.finalBalance' | trans }}:</td>
+                <td class="value">{{ 'currencySymbol' | trans }}105,000.00</td>
+            </tr>
+
+        </table>
+
     {% endblock %}
 
 {% endembed %}
