@@ -69,12 +69,20 @@ class ReportRepository extends EntityRepository
     }
 
     /**
-     * add emtpy Transaction to Report
+     * add empty Transaction to Report
      *
      * @param Report $report
+     * 
+     * @return integer changed records
      */
-    public function addEmptyTransactionsToReport(Report $report)
+    public function addTransactionsToReportIfMissing(Report $report)
     {
+        $ret = 0;
+        
+        if (count($report->getTransactions()) > 0) {
+            return $ret;
+        }
+        
         $transactionTypes = $this->_em->getRepository('AppBundle\Entity\TransactionType')
             ->findBy([], ['displayOrder'=>'ASC']);
 
@@ -82,6 +90,9 @@ class ReportRepository extends EntityRepository
             $transaction = new Transaction($report, $transactionType, null);
             $report->getTransactions()->add($transaction);
             $this->_em->persist($transaction);
+            $ret++;
         }
+        
+        return $ret;
     }
 }

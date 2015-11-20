@@ -13,8 +13,8 @@ class DoctrineListener
         $entityManager = $args->getEntityManager();
 
         // add empty transactions to report at creation time
-        if ($entity instanceof Report && !$entity->getId() && count($entity->getTransactions())===0) {
-            $entityManager->getRepository('AppBundle\Entity\Report')->addEmptyTransactionsToReport($entity);
+        if ($entity instanceof Report && !$entity->getId()) {
+            $entityManager->getRepository('AppBundle\Entity\Report')->addTransactionsToReportIfMissing($entity);
         }
     }
 }
