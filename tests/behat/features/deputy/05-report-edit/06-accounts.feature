@@ -1,8 +1,8 @@
-#Feature: deputy / report / edit accounts
-#
-#    @deputy
-#    Scenario: Setup the test user
-#      Given I load the application status from "report-submit-pre"
+Feature: deputy / report / edit accounts
+
+    @deputy
+    Scenario: Setup the test user
+      Given I load the application status from "report-submit-pre"
 #      And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
 #      Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
 #      When I create a new "Lay Deputy" user "Account" "Smith" with email "behat-account@publicguardian.gsi.gov.uk"

@@ -1,9 +1,9 @@
-#Feature: deputy / report / closing balance
-#
-#
-#    @deputy
-#    Scenario: edit bank account, check edit account does not show closing balance
-#        Given I set the report 1 end date to 3 days ahead
+Feature: deputy / report / closing balance
+
+
+    @deputy
+    Scenario: edit bank account, check edit account does not show closing balance
+        Given I set the report 1 end date to 3 days ahead
 #        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
 #        And I am on the account "1234" page of the "2015" report
 #        And I click on "edit-account-details"
