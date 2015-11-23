@@ -57,8 +57,9 @@ class Client
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.caseNumber.notBlank")
-     * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage")
-     * 
+     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1")
+     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2")
+     *
      * @var string $caseNumber
      */
     private $caseNumber;

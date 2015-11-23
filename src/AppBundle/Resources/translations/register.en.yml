@@ -19,6 +19,7 @@ clientLastname:
     label: "Client's last name"
 caseNumber:
     label: "Case number"
+    hint: This is 8 characters long and usually starts with a 1 or 9
 save:
     label: "Sign up"
 

@@ -32,7 +32,6 @@ class SelfRegisterData
      * @var string email
      * @JMS\Type("string")
      * @Assert\NotBlank( message="user.email.notBlank")
-     * @Assert\Email( message="user.email.invalid", checkMX=false, checkHost=false )
      * @Assert\Length( max=60, maxMessage="user.email.maxLength" )
      */
     private $email;
@@ -57,7 +56,8 @@ class SelfRegisterData
      * @var string caseNumber
      * @JMS\Type("string")
      * @Assert\NotBlank( message="client.caseNumber.notBlank")
-     * @Assert\Length(min = 2, minMessage= "client.caseNumber.minMessage", max=20, maxMessage= "client.caseNumber.maxMessage")
+     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage1")
+     * @Assert\Length(min = 8, max=8, exactMessage= "client.caseNumber.exactMessage2")
      */
     private $caseNumber;
 
