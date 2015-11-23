@@ -27,7 +27,7 @@
 
                 {% if accounts is empty %}
                     <li class="card-item">
-                        <a href class="card add">Add account</a>
+                        <a href="{{ path('add_bank_account' , {'reportId': report.id}) }}" class="card add">Add account</a>
                         <div class="meta-data"></div>
                     </li>
                 {% else %}

@@ -29,6 +29,17 @@ class Account
      * @var string $bank
      */
     private $bank;
+
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic"})
+     * @Assert\Length(max=100, maxMessage= "account.bank.maxMessage", groups={"basic"})
+     *
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
+     *
+     * @var string $accountType
+     */
+    private $accountType;
     
     /**
      * @JMS\Type("string")
@@ -495,4 +506,22 @@ class Account
     {
         $this->openingDateMatchesReportDate = $openingDateMatchesReportDate;
     }
+
+    /**
+     * @return string
+     */
+    public function getAccountType()
+    {
+        return $this->accountType;
+    }
+
+    /**
+     * @param string $accountType
+     */
+    public function setAccountType($accountType)
+    {
+        $this->accountType = $accountType;
+    }
+    
+    
 }

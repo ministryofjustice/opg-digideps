@@ -1,0 +1,51 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+
+    {% set translationDomain = "report-accounts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Account2:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% set formClass = "Test" %}
+    {% set formId = "fred" %}
+    
+    {% block maincontent %}
+
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'banks.pageSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'banks.pageSectionDescription'
+        } %}
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass, id: formId } }) }}
+
+        {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
+        {{ form_input(form.accountType, 'form.accountDetails.controls.accountNumber') }}
+        {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
+        {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}
+        {{ form_input(form.openingBalance, 'form.openingBalance.controls.openingBalance', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number'
+        } ) }}
+        {{ form_input(form.closingBalance, 'form.openingBalance.controls.openingBalance', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number'
+        } ) }}
+
+        {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        section: 'account'
+        } %}
+
+        {{ form_end(form) }}
+    {% endblock %}
+
+{% endembed %}

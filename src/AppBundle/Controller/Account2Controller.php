@@ -110,10 +110,7 @@ class Account2Controller extends AbstractController
         $client = $this->getClient($report->getClient());
 
         $accounts = $report->getAccounts();
-
-        $account = new EntityDir\Account();
-        $account->setReportObject($report);
-
+        
         return [
             'report' => $report,
             'client' => $client,
@@ -164,4 +161,33 @@ class Account2Controller extends AbstractController
         return $this->redirect($this->generateUrl('accounts_moneyin', [ 'reportId' => $reportId]));
     }
 
+    /**
+     * @Route("/{reportId}/accounts/add", name="add_bank_account")
+     * @Template()      
+     */
+    public function addAction($reportId) {
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+        $request = $this->getRequest();
+
+        $report = $this->getReport($reportId, [ 'basic']);
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+        $client = $this->getClient($report->getClient());
+        
+        $account = new EntityDir\Account();
+        $account->setReportObject($report);
+
+        $form = $this->createForm(new FormDir\Account2Type(), $account, [
+            'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
+        ]);
+
+        return [
+            'report' => $report,
+            'client' => $client,
+            'subsection' => 'banks',
+            'form' => $form->createView()
+        ]; 
+    }
+    
 }
