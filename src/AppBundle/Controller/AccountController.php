@@ -110,12 +110,12 @@ class AccountController extends AbstractController
 //        }
         
         // money in/out logic
-        list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
-        if ($formMoneyIsValid) {
-            $this->get('restClient')->put('account/' .  $account->getId(), $formMoneyInOut->getData(), [
-                'deserialise_group' => 'transactions',
-            ]);
-        }
+//        list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
+//        if ($formMoneyIsValid) {
+//            $this->get('restClient')->put('account/' .  $account->getId(), $formMoneyInOut->getData(), [
+//                'deserialise_group' => 'transactions',
+//            ]);
+//        }
         
         // edit/delete logic
         $editFormHasClosingBalance = $report->isDue() && $account->getCountValidTotals() > 0;
@@ -180,7 +180,7 @@ class AccountController extends AbstractController
     /**
      * @param EntityDir\Account $account
      * 
-     * @return [FormDir\AccountTransactionsType, boolean]
+     * @return [FormDir\AccountType, boolean]
      */
     private function handleAccountEditDeleteForm(EntityDir\Account $account, array $options)
     {
@@ -210,7 +210,7 @@ class AccountController extends AbstractController
     /**
      * @param EntityDir\Account $account
      * 
-     * @return [FormDir\AccountTransactionsType, boolean, boolean]
+     * @return [FormDir\AccountClosingBalanceType, boolean, boolean]
      */
     private function handleClosingBalanceForm(EntityDir\Account $account)
     {
@@ -222,21 +222,4 @@ class AccountController extends AbstractController
         return [$form, $isClicked, $valid];
     }
     
-    
-    /**
-     * @param EntityDir\Account $account
-     * 
-     * @return [FormDir\AccountTransactionsType, boolean]
-     */
-    private function handleMoneyInOutForm(EntityDir\Account $account)
-    {
-        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
-            'action' => $this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#account-header'
-        ]);
-        $form->handleRequest($this->getRequest());
-        $isClicked = $form->get('saveMoneyIn')->isClicked() || $form->get('saveMoneyOut')->isClicked();
-        $valid = $isClicked && $form->isValid();
-        
-        return [$form, $valid];
-    }
 }
