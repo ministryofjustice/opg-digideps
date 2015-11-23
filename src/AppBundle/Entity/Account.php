@@ -130,16 +130,6 @@ class Account
     private $report;
 
     /**
-     * DEPRECATED !
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\AccountTransaction", mappedBy="account", cascade={"persist"})
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
-    private $transactions;
-    
-
-    
-    /**
      * Constructor
      */
     public function __construct()

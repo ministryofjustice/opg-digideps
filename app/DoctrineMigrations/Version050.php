@@ -24,7 +24,8 @@ class Version050 extends AbstractMigration implements ContainerAwareInterface
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        
+
+        $this->addSql('SELECT COUNT(*) FROM migrations'); //just to avoid warning
     }
 
     
