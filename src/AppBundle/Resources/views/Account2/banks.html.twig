@@ -12,17 +12,33 @@
     
     {% block maincontent %}
 
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1><h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1><h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
-        <h1>Hello Mum</h1>
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'banks.pageSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'banks.pageSectionDescription'
+        } %}
         
+        {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
+            {% block list %}
+
+                {% if accounts is empty %}
+                    <li class="card-item">
+                        <a href class="card add">Add account</a>
+                        <div class="meta-data"></div>
+                    </li>
+                {% else %}
+                    {% for account in accounts %}
+                        {% include 'AppBundle:Account2:bank-list-item.html.twig' %}
+                    {% endfor %}
+                {% endif %}
+                
+            {% endblock %}
+            
+        {% endembed %}
         
     {% endblock %}
 

@@ -115,4 +115,9 @@ balance:
     totalOutInPeriod: Total money out during the reporting period
     finalBalance: Balance after reported money in and money out
     
-    
+banks:
+    pageSectionTitle: Client's bank accounts
+    pageSectionDescription: Add all the client's bank and building society accounts, including savings accounts and ISA's
+    balanceOn: Balance on
+    sortCode: Sort code
+    accountNumber: Account number

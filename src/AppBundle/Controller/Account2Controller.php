@@ -91,8 +91,7 @@ class Account2Controller extends AbstractController
             'subsection' => "moneyout",
             'form' => $form->createView()
         ];
-
-
+        
     }
 
     /**
