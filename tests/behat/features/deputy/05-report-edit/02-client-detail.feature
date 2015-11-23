@@ -10,7 +10,7 @@ Feature: deputy / report / edit client
         Then the following fields should have the corresponding values:
             | client_firstname | Peter |
             | client_lastname | White |
-            | client_caseNumber | 123456ABC |
+            | client_caseNumber | 12345ABC |
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2015 |
@@ -49,7 +49,7 @@ Feature: deputy / report / edit client
         When I fill in the following:
             | client_firstname | Nolan |
             | client_lastname | Ross |
-            | client_caseNumber | 123456ABC |
+            | client_caseNumber | 12345ABC |
             | client_courtDate_day | 1 |
             | client_courtDate_month | 1 |
             | client_courtDate_year | 2015 |
@@ -63,6 +63,6 @@ Feature: deputy / report / edit client
         And I press "client_save"
         Then I should be on "client/show"
         Then I should see "Nolan Ross" in the page header
-        Then I should see "123456ABC" in the "case-number" region
+        Then I should see "12345ABC" in the "case-number" region
         Then I should see "2 South Parade" in the "client-address" region
         

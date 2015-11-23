@@ -14,7 +14,7 @@ Feature: deputy / report / edit accounts
           | phone | 020 3334 3555  | 020 1234 5678  |
       When I set the client details to:
             | name | Peter | White | 
-            | caseNumber | 123456ABC |
+            | caseNumber | 12345ABC |
             | courtDate | 1 | 1 | 2014 |
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
