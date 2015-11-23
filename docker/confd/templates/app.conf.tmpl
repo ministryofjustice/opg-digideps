@@ -49,7 +49,7 @@ server {
         include         fastcgi_params;
         
         # set X-Request-Id header for fastcqi
-        fastcgi_param   HTTP_X_REQUEST_ID  $uid;
+        fastcgi_param   HTTP_X_REQUEST_ID  $http_x_request_id;
         
         fastcgi_pass    127.0.0.1:9000;
         
@@ -62,8 +62,10 @@ server {
         deny  all;
     }
 
-    set $uid $http_x_request_id;
-    if ($uid = '') {
-      set $uid $request_id;
+    if ($http_x_request_id = '') {
+        set $http_x_request_id $request_id;
     }
+    # add x-request-id to response
+    add_header X-Request-Id $http_x_request_id;
+    proxy_set_header X-Request-Id $http_x_request_id;
 }

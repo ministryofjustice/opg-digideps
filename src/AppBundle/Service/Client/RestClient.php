@@ -321,6 +321,11 @@ class RestClient
         }
         unset($options['addClientSecret']);
         
+        // forward X-Request-Id to the API calls
+        if (($request = $this->container->get('request')) && $request->headers->has('x-request-id')) {
+            $options['headers']['X-Request-ID'] = $request->headers->get('x-request-id');
+        }
+        
         try {
             $start = microtime(true);
             $response = $this->client->$method($url, $options);
