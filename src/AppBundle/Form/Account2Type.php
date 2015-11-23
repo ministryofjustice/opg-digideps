@@ -27,7 +27,7 @@ class Account2Type extends AbstractType
         $builder->add('closingBalance', 'number', [
             'grouping' => true,
             'precision' => 2,
-            'invalid_message' => 'account.openingBalance.type'
+            'invalid_message' => 'account.closingBalance.type'
         ]);
 
         $builder->add('save', 'submit');
@@ -42,7 +42,7 @@ class Account2Type extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-            'translation_domain' => 'report-account',
+            'translation_domain' => 'report-accounts',
         ]);
     }
 }

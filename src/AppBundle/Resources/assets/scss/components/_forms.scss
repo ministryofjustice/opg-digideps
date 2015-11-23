@@ -36,11 +36,15 @@ form {
                 width: 100%;
             }
 
-            .form-control__postcode, 
-            .form-control__number {
+            .form-control__postcode  {
                 width: 22%;
             }
 
+            .form-control.form-control__number {
+                width: 50%;
+                max-width: 250px;
+            }
+            
             fieldset.stacked {
                 label.block-label {
                     width: 85%;
@@ -194,12 +198,13 @@ form {
     opacity: .6;
 }
 
-.form-control__postcode {
+.form-control.form-control__postcode {
     width: 25%;
 }
 
-.form-control__number {
-    width: 25%;
+.form-control.form-control__number {
+    width: 75%;
+    max-width: 280px;
 }
 
 .form-label {
@@ -243,6 +248,16 @@ legend .form-label {
 
 ul.form-hint {
     margin-left: 10px;
+}
+
+.input-group-prefix {
+    @include core-24();
+    margin: 2px 0 0 2px;
+    padding: 4px 9px 0 8px;
+    border: 0;
+    position: absolute;
+    right: 121px;
+    width: 10px;
 }
 
 .input-group-prefix {
