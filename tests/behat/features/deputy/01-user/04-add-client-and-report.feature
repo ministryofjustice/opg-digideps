@@ -66,7 +66,7 @@ Feature: deputy / user / add client and report
         # right values
        When I set the client details to:
             | name | Peter | White | 
-            | caseNumber | 123456ABC |
+            | caseNumber | 12345ABC |
             | courtDate | 1 | 1 | 2015 |
             | allowedCourtOrderTypes_1 | 1 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
@@ -76,7 +76,7 @@ Feature: deputy / user / add client and report
         Then the following fields should have the corresponding values:
             | client_firstname | Peter |
             | client_lastname | White |
-            | client_caseNumber | 123456ABC |
+            | client_caseNumber | 12345ABC |
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2015 |
@@ -153,7 +153,7 @@ Feature: deputy / user / add client and report
         Then the URL should match "client/show"
         And I should see "Peter White" in the page header
         And I should see the "edit-client-details" link
-        And I should see "123456ABC" in the "case-number" region
+        And I should see "12345ABC" in the "case-number" region
         And I should see "1 South Parade" in the "client-address" region
         And I should see the "report-2015" link
         And I should not see the "create-new-report" link

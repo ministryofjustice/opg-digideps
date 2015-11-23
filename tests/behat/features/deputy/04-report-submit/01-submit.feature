@@ -47,7 +47,7 @@ Feature: deputy / report / submit
         # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
         And the second_last email "application/xml" part should contain the following:
-            | caseNumber | 123456ABC |
+            | caseNumber | 12345ABC |
             | ClientLastName | White |
 #            | moneyInTotal |  3,250.00 |
 #            | moneyOutTotal | 7,500.50 |
@@ -128,13 +128,13 @@ Feature: deputy / report / submit
         # download report from confirmation page
         When I go to "/report/1/submitted"
         When I click on "download-report"
-        And the response should contain "123456ABC"
+        And the response should contain "12345ABC"
         And the response should contain "Peter White"
         # download report from client page
         #When I go to the homepage
         When I click on "client-home"
         And I click on "download-2015-report"
-        And the response should contain "123456ABC"
+        And the response should contain "12345ABC"
         And the response should contain "Peter White"
         # test go back link
         When I click on "back-to-client"
