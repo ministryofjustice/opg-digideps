@@ -41,6 +41,10 @@ form#account_add_form {
         position: relative;
     }
     
+    .form-label {
+        width: auto;
+    }
+    
     .input-group-prefix {
         @include core-24();
         margin: 2px 0 0 2px;
@@ -50,6 +54,8 @@ form#account_add_form {
         left: 0;
         width: 10px;
     }
+    
+    
     
     
 }

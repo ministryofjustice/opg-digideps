@@ -55,29 +55,9 @@ form:
         label: Account type
         hint: For example, current account, savings account
       openingBalance:
-        label: Opening balance
+        label: How much was in the account on {{ startDate }}? 
       closingBalance:
-        label: Closing balance
-  openingBalance:
-    subSectionTitle: Add the opening balance
-    subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}.
-    controls:
-      openingDateMatchesReportDate:
-        labelYes: " "
-        labelNo: " "
-        legend: Is the start date of your reporting period and the opening balance date the same?
-      openingDate:
-        legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ?
-        legendjs: Add the opening balance date for this account
-        hint: (DD/MM/YYYY)
-      openingBalancePrefix:
-        label: £
-      openingDateExplanation:
-        label: Tell us why the opening date is not {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}.
-      openingBalance:
-        label: Opening balance
-      closingBalance:
-        label: Closing balance
+        label: How much was in the account on {{ endDate }}?
 save:
   label: Save
 cancel:

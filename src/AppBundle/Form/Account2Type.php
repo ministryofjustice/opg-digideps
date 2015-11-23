@@ -22,7 +22,8 @@ class Account2Type extends AbstractType
         $builder->add('openingBalance', 'number', [
             'grouping' => true,
             'precision' => 2,
-            'invalid_message' => 'account.openingBalance.type'
+            'invalid_message' => 'account.openingBalance.type',
+            
         ]);
         $builder->add('closingBalance', 'number', [
             'grouping' => true,
