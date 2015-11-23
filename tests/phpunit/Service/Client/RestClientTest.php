@@ -55,6 +55,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('get')->with('logger')->andReturn($this->logger)
             ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(false)
             ->getMock();
+        $this->container->shouldIgnoreMissing();
         
         $this->endpointResponse = m::mock('GuzzleHttp\Message\Response');
              
@@ -184,7 +185,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
     }
     
     
-    public function testRregisterUser()
+    public function testRegisterUser()
     {
         $data = ['id'=>1];
         $responseArray = ['success'=>true, 'data'=> $data];
@@ -218,7 +219,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $responseArray = ['success'=>true, 'data'=> $responseData];
         $responseJson = json_encode($responseArray);
         $endpointUrl = '/path/to/endpoint';
-        
+       
         $this->serialiser
             ->shouldReceive('serialize')->with($putData, 'json')->andReturn($putDataSerialised)
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray)
@@ -471,6 +472,40 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
     }
     
     
+    public function testXRequestIdForwarded()
+    {
+        $responseArray = ['success'=>true, 'data'=> 1];
+        $responseJson = json_encode($responseArray);
+        
+        $this->serialiser
+            ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray) //extractDataArray()
+        ;
+        
+        $this->tokenStorage
+            ->shouldReceive('get')->once()->andReturn($this->sessionToken);
+        
+         $this->endpointResponse
+            ->shouldReceive('getBody')->andReturn($responseJson);
+        
+        
+        $request = new \Symfony\Component\HttpFoundation\Request;
+        $request->headers->set('x-request-id', 'XRI');
+        
+        $this->container->shouldReceive('get')->with('request')->andReturn($request);
+        
+        $this->logger->shouldReceive('error')->andReturnUsing(function($e){ echo $e;});
+        
+        $this->client->shouldReceive('get')->with('/', [
+                'headers' => [
+                    'AuthToken' => $this->sessionToken,
+                    'X-Request-ID' => 'XRI'
+            
+            ],
+            ])->andReturn($this->endpointResponse);
+        
+        $this->object->get('/', 'array');
+    }
+    
     public function testGetHistory()
     {
         $this->client = m::mock('GuzzleHttp\ClientInterface');
@@ -482,6 +517,7 @@ class RestClientTest extends \PHPUnit_Framework_TestCase
         $this->container = m::mock('Symfony\Component\DependencyInjection\ContainerInterface')
             ->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser)
             ->shouldReceive('get')->with('logger')->andReturn($this->logger)
+            ->shouldReceive('get')->with('request')->andReturn(null)
             ->shouldReceive('getParameter')->with('kernel.debug')->andReturn(true)
             ->getMock();
         
