@@ -2,6 +2,7 @@ Feature: deputy / report / add contact, decision, assets
 
     @deputy
     Scenario: add contact
+        Given I load the application status from "report-empty"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the "2015" report overview page
         And I follow "edit-contacts"

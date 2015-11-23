@@ -106,7 +106,7 @@ class ReportController extends AbstractController
         // check status
         $reportStatusService = new ReportStatusService($report, $translator);
         if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
-            throw new \RuntimeException($translator->trans('submissionExceptions.readyForSubmission',[], 'validators'));
+            throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission',[], 'validators'));
         }
         
         $clients = $this->getUser()->getClients();
@@ -155,7 +155,7 @@ class ReportController extends AbstractController
         // check status
         $reportStatusService = new ReportStatusService($report, $translator);
         if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
-            throw new \RuntimeException($translator->trans('submissionExceptions.readyForSubmission',[], 'validators'));
+            throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission',[], 'validators'));
         }
         
         $clients = $this->getUser()->getClients();

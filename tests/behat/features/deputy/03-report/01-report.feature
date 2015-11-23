@@ -62,16 +62,17 @@ Feature: deputy / report / edit and test tabs
             | report_edit_endDate_day | 31 |
             | report_edit_endDate_month | 12 |
             | report_edit_endDate_year | 2015 |
+        And I save the application status into "report-empty"
 
     @deputy
     Scenario: test tabs for "Property and Affairs" report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #And I am on the "2015" report overview page
         And I save the page as "report-property-affairs-homepage"
-        Then I should see a "#edit-contacts" element
-        And I should see a "#edit-decisions" element
-        And I should see a "#edit-accounts" element
-        And I should see a "#edit-assets" element
+        #Then I should see a "#edit-contacts" element
+        #And I should see a "#edit-decisions" element
+        #And I should see a "#edit-accounts" element
+        #And I should see a "#edit-assets" element
 
     @deputy
     Scenario: Check report notification and submission warnings

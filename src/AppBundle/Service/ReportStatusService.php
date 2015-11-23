@@ -211,6 +211,9 @@ class ReportStatusService {
     /** @return boolean */
     public function hasOutstandingAccounts()
     {
+        // REMOVE ME
+        return false;
+
         if(empty($this->report->getOutstandingAccounts())) {
             return false;
         }
@@ -245,6 +248,10 @@ class ReportStatusService {
     /** @return boolean */
     private function missingAccounts()
     {
+        // TEMP
+        return false;
+
+
         if( $this->report->getCourtOrderType() != Report::PROPERTY_AND_AFFAIRS ){
             return false;
         }
