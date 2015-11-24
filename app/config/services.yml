@@ -46,3 +46,9 @@ services:
     user.selfRegistration:
         class: AppBundle\Service\UserRegistrationService
         arguments: [@doctrine.orm.entity_manager, @mailFactory, @mailSender]
+
+    monolog.processor.add_request_id:
+          class: AppBundle\Service\RequestIdLoggerProcessor
+          arguments:  [ @service_container ]
+          tags:
+              - { name: monolog.processor, method: processRecord }
