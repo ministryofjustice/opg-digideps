@@ -1,0 +1,23 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+{% embed "AppBundle:Components/Listing:_card_item.html.twig" %}
+    {% block card %}
+        <div class="account card-title">Smile.co.uk</div>
+        <dl class="labelvalue">
+            <dt class="label">{{ 'banks.accountNumber' | trans({}, translationDomain) }}:</dt>
+            <dd class="value">0000{{ account.accountNumber }}</dd>
+            <dt class="label">{{ 'banks.sortCode' | trans({}, translationDomain) }}:</dt>
+            <dd class="value">{{ account.sortCode }}</dd>
+        </dl>
+    {% endblock %}
+    {% block meta %}
+        <dl class="labelvalue">
+            <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.startDate | date("j M Y") }}:</dt>
+            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ account.openingBalance }}</dd>
+            <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.endDate | date("j M Y") }}:</dt>
+            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ account.closingBalance }}</dd>
+        </dl>
+        <a class="edit-link" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
+    {% endblock %}
+{% endembed %}

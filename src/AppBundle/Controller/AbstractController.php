@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\Client;
+use AppBundle\Entity\Report;
 use AppBundle\Service\Client\RestClient;
 
 class AbstractController extends Controller

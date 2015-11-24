@@ -5,29 +5,29 @@
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
-
+    
     {% block leftcontent %}
-        {% include 'AppBundle:Account2:left-nav.html.twig'%}
+        {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
     
     {% block maincontent %}
 
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
         transDomain: translationDomain,
-        pageSectionTitle: 'moneyOut.pageSectionTitle'
+        pageSectionTitle: 'moneyIn.pageSectionTitle'
         } %}
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
-        pageSectionDescription: 'moneyOut.pageSectionDescription'
+        pageSectionDescription: 'moneyIn.pageSectionDescription'
         } %}
 
-        {% include 'AppBundle:Account2:transactions.html.twig' with {
+        {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription',
-        transactionsGrouped: report.groupByCategory(report.transactionsOut),
-        transactionsTotal: report.getTotalAmount(report.transactionsOut),
-        formTransactions: form.transactionsOut
+        transactionsGrouped: report.groupByCategory(report.transactionsIn),
+        transactionsTotal: report.getTotalAmount(report.transactionsIn),
+        formTransactions: form.transactionsIn
         } %}
         
     {% endblock %}

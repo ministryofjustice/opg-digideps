@@ -1,0 +1,34 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+
+    {% set translationDomain = "report-accounts" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+    {% block leftcontent %}
+        {% include 'AppBundle:Account:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% set formId = "account_add_form" %}
+
+    {% block maincontent %}
+
+        {% set translationDomain = "report-accounts" %}
+        {% trans_default_domain translationDomain %}
+
+        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionTitle: 'banks.edit.pageSectionTitle'
+        } %}
+
+        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+        transDomain: translationDomain,
+        pageSectionDescription: 'banks.edit.pageSectionDescription'
+        } %}
+
+        {% include 'AppBundle:Account:_account_form.html.twig' %}
+
+    {% endblock %}
+
+{% endembed %}

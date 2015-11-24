@@ -1,80 +1,32 @@
 page:
   htmlTitle: "Deputy report - accounts | GOV.UK"
   pageSectionTitle: "Accounts"
-  pageSectionDescription: |
-    Tell us about the main bank account or accounts you use regularly to receive money and make payments
-    on behalf of the client. For most people, this is their  current account, and they usually just have one.
-  pageSectionWarning: "Do not include savings or investment accounts, such as ISAs - add these to the assets section."
-  accountAdded: "We’ve added your account"
-form:
-  edit:
-    currencySymbol: "£"
-    accountDetails:
-      subSectionTitle: Edit account details
-    openingBalance:
-      subSectionTitle: Edit the opening balance
-    closingBalance:
-      subSectionTitle: The closing balance of the account
-      subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period.
-    controls:
-      # other controls are taken from the other sections in this file
-      closingDate:
-        legend: "End date of reporting period"
-        legendjs: "End date of reporting period"
-        hint: "(DD/MM/YYYY)"
-      closingDateExplanation:
-        label: Please tell us why the closing dates do not match
-      closingBalance:
-        label: "Closing balance"
-      closingBalanceExplanation:
-        label: Please tell us why the balances does not match
-      cancel:
-        label: Cancel
-      save:
-        label: Save
-      delete:
-        label: Delete
-  delete:
-    legend: "Are you sure you want to delete this account? You will lose any saved data."
-    delete:
-      label: Delete
-    cancel:
-      label: Cancel
-  accountDetails:
-    subSectionTitle: Add your account details
-    controls:
-      bank:
-        label: Bank or building society name
-      accountNumber:
-        label: Last 4 digits of the account number
-        hint: ""
-        preInput: "* * * *"
-      sortCode:
-        legend: Branch sort code
-        hint: ""
-      accountType:
-        label: Account type
-        hint: For example, current account, savings account
-      openingBalance:
-        label: How much was in the account on %startDate%? 
-      closingBalance:
-        label: How much was in the account on %endDate%?
+
+accountForm:
+  bank:
+    label: Bank or building society name
+  accountNumber:
+    label: Last 4 digits of the account number
+    hint: ""
+    preInput: "* * * *"
+  sortCode:
+    legend: Branch sort code
+    hint: ""
+  accountType:
+    label: Account type
+    hint: For example, current account, savings account
+  openingBalance:
+    label: How much was in the account on %startDate%? 
+  closingBalance:
+    label: How much was in the account on %endDate%?
+    
 save:
   label: Save
 cancel:
   label: Cancel
-listing:
-  bank: "Bank or building society name"
-  accountNumber: "Last 4 digits of account number"
-  balance: "Opening balance:"
-  totalBalance: "Total balance:"
-  lastEdited: "Last edited:"
-  created: "Created:"
-  currencySymbol: "£"
-  closingBalance: "Closing balance:"
-  closingDate: "End of year:"
-  addTotalsWarning: Add Money paid in or Money paid out
-  addClosingBalanceWarning: Add the closing balance of the account
+delete:
+    label: Delete
+    message: Are you sure that you want to delete this account?
 
 currencySymbol: "£"
 
@@ -85,7 +37,6 @@ moneyOut:
   pageSectionTitle: Money you have spent on behalf of the client
   pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between 1 December 2014 and 1 December 2015. If your client has more than 1 bank account, add up the totals from all the accounts for each type of payment.
 
-dividends.label: dividends
 
 balance:
     pageSectionTitle: Balance the accounts
@@ -109,4 +60,7 @@ banks:
     accountNumber: Account number
     add:
         pageSectionTitle: Add account
+        pageSectionDescription: Give us details about the client’s account
+    edit:
+        pageSectionTitle: Edit account
         pageSectionDescription: Give us details about the client’s account

@@ -7,7 +7,7 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block leftcontent %}
-        {% include 'AppBundle:Account2:left-nav.html.twig'%}
+        {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
     
     {% block maincontent %}
@@ -27,12 +27,15 @@
 
                 {% if accounts is empty %}
                     <li class="card-item">
-                        <a href="{{ path('add_bank_account' , {'reportId': report.id}) }}" class="card add">Add account</a>
+                        <a href="{{ path('add_account' , {'reportId': report.id}) }}" class="card add">Add account</a>
                         <div class="meta-data"></div>
                     </li>
                 {% else %}
                     {% for account in accounts %}
-                        {% include 'AppBundle:Account2:bank-list-item.html.twig' %}
+                        {% include 'AppBundle:Account:bank-list-item.html.twig' with {
+                            account: account,
+                            report: report
+                        }%}
                     {% endfor %}
                 {% endif %}
                 

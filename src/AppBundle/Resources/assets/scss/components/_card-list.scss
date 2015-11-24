@@ -9,40 +9,36 @@
         padding-bottom: 50px;
         margin-bottom: 50px;
         border-bottom: 1px solid $grey-1;
-        
-        .meta-data {
-            box-sizing: border-box;
-            width: 50%;
-            float: left;
-            padding-left: 15px;
-            
-
-            .labelvalue {
-                @extend %contain-floats;
-                .label {
-                    @include core-19();
-                    box-sizing: border-box;
-                    width: 60%;
-                    padding: 0 10px 0 0;
-                    float: left;
-                }
-                .value {
-                    @include bold-19();
-                    box-sizing: border-box;
-                    width: 40%;
-                    padding: 0 10px 0 0;
-                    float: left;
-                }
-            }
-            
-        }
-        
     }
 
+    .meta-data {
+        box-sizing: border-box;
+        width: 55%;
+        float: left;
+        padding-left: 15px;
+
+
+        .labelvalue {
+            @extend %contain-floats;
+            .label {
+                @include core-19(1.5);
+                padding: 0 10px 0 0;
+                float: left;
+                clear: both;
+            }
+            .value {
+                @include bold-19(1.5);
+                padding: 0 10px 0 0;
+                float: left;
+            }
+        }
+
+    }
+    
     .card {
         @include border-radius(10px);
         box-sizing: border-box;
-        width: 50%;
+        width: 45%;
         float: left;
         background: #2B8CC4;
         padding: 30px 10px 40px 20px;
@@ -62,6 +58,7 @@
                 width: 50%;
                 padding: 0 10px 0 0;
                 float: left;
+                clear: both;
             }
             .value {
                 @include core-16();
