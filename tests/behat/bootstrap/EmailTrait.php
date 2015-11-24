@@ -169,7 +169,7 @@ trait EmailTrait
                throw new \RuntimeException("node #$id not found");
            }
            $textContent = $element->textContent;
-           if (strpos($textContent, $mustContain) === false) {
+           if (strpos(strtolower($textContent), strtolower($mustContain)) === false) {
                throw new \RuntimeException("#$id element: $mustContain' not found inside '$textContent'");
            }
         }
