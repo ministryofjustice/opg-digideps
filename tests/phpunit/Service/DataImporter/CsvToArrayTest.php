@@ -8,11 +8,10 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
     
     public function testgetData1()
     {
-        $object = new CsvToArray(__DIR__ . '/csv1.csv');
+        $object = new CsvToArray(__DIR__ . '/csv1.csv', false);
         $object->setExpectedColumns($this->columns);
         $data = $object->getData();
-
-        $this->assertCount(24, $data); 
+        $this->assertCount(24, $data);
 
         $this->assertEquals(['Case' => '20000037',
             'Surname' => 'SMITH',
@@ -33,7 +32,7 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetDataMissingFile()
     {
-        new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv');
+        new CsvToArray(__DIR__ . '/THISFILEDOESNOTEXIST.csv', false);
     }
     
     /**
@@ -41,14 +40,14 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
      */
     public function testgetDataInvalidFormat()
     {
-        $object = new CsvToArray(__DIR__ . '/invalid.csv');
+        $object = new CsvToArray(__DIR__ . '/invalid.csv', false);
         $object->setExpectedColumns($this->columns);
         $object->getData();
     }
     
     public function testgetDataMissingColumns()
     {
-        $object = new CsvToArray(__DIR__ . '/missing-columns.csv');
+        $object = new CsvToArray(__DIR__ . '/missing-columns.csv', false);
         $object->setExpectedColumns($this->columns);
         
         try {
@@ -58,6 +57,23 @@ class CsvToArrayTest extends \PHPUnit_Framework_TestCase
             $this->assertContains('Surname', $e->getMessage());
             $this->assertContains('Dep Surname', $e->getMessage());
         }
+    }
+
+    public function testMixedNewLines()
+    {
+        $object = new CsvToArray(__DIR__ . '/broken-new-lines.csv', false);
+        $object->setExpectedColumns($this->columns);
+        $data = $object->getData();
+        $this->assertCount(23, $data);
+    }
+
+
+    public function testMixedNewLinesNormalise()
+    {
+        $object = new CsvToArray(__DIR__ . '/broken-new-lines.csv', true);
+        $object->setExpectedColumns($this->columns);
+        $data = $object->getData();
+        $this->assertCount(25, $data);
     }
 
 }
