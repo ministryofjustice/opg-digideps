@@ -145,6 +145,13 @@ form {
     &.sub-section-title {
         padding-left: 15px;
     }
+    
+    .pre-input-text {
+        @include core-36(1.5);
+        float:left;
+        height: 39px;
+        padding-right: 10px;
+    }
 }
 
 .form-group_button-bar {

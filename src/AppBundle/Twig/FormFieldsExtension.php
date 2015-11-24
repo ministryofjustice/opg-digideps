@@ -337,6 +337,10 @@ class FormFieldsExtension extends \Twig_Extension
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass']: "";
+
+        //Text to insert to the left of an input, e.g. * * * * for account
+        $preInputTextTrans =  $this->translator->trans($translationKey.'.preInput', [],$domain);
+        $preInputText =  ($preInputTextTrans != $translationKey.'.preInput')? $preInputTextTrans: null;
         
         return [ 
             'labelText' => $labelText,
@@ -347,7 +351,8 @@ class FormFieldsExtension extends \Twig_Extension
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
             'formGroupClass' => $formGroupClass,
-            'labelRaw' => !empty($vars['labelRaw'])
+            'labelRaw' => !empty($vars['labelRaw']),
+            'preInputText' => $preInputText
         ];
     }
     

@@ -30,11 +30,6 @@ form#account_add_form {
     #account_accountNumber {
         width: 100px;
         max-width: 100px;
-
-        &:before {
-            content: "* * * *";
-        }
-        
     }
     
     .form-group {

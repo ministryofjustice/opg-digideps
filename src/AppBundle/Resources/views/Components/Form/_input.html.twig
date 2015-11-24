@@ -25,7 +25,11 @@
 
     {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
 
-
+    {% if (preInputText is defined) and (preInputText is not empty) %}
+        <span class="pre-input-text">{{ preInputText }}</span>
+    {% endif %}
+    
+    
     {% if inputPrefix is defined and inputPrefix is not empty %}
         <span class="input-group-prefix">{{ inputPrefix }}</span>
     {% endif %}

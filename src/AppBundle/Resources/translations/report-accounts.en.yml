@@ -48,6 +48,7 @@ form:
       accountNumber:
         label: Last 4 digits of the account number
         hint: ""
+        preInput: "* * * *"
       sortCode:
         legend: Branch sort code
         hint: ""
