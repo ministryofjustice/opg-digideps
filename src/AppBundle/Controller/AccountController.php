@@ -10,7 +10,7 @@ use AppBundle\Exception as AppExceptions;
 class AccountController extends RestController
 {    
     /**
-     * @Route("/report/accounts/{id}")
+     * @Route("/report/{id}/accounts")
      * @Method({"GET"})
      */
     public function getAccountsAction(Request $request, $id)
@@ -48,8 +48,7 @@ class AccountController extends RestController
         
         $data = $this->deserializeBodyContent($request, [
            'bank' => 'notEmpty', 
-           'sort_code' => 'notEmpty', 
-           'opening_date' => 'notEmpty', 
+           'sort_code' => 'notEmpty',
            'opening_balance' => 'notEmpty'
         ]);
         
@@ -85,7 +84,7 @@ class AccountController extends RestController
      * @Route("/account/{id}")
      * @Method({"PUT"})
      */
-    public function edit(Request $request, $id)
+    public function editAccountAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
