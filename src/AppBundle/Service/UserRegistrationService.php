@@ -93,14 +93,13 @@ class UserRegistrationService
         
         $clientRepo = $this->em->getRepository('AppBundle\Entity\Client');
         if ($clientRepo->findOneBy(['caseNumber'=>$caseNumber])) {
-            throw new \RuntimeException("Case number already used", 425);
+            throw new \RuntimeException("User registration: Case number already used", 425);
         }
         
         $casRec = $this->casRecRepo->findOneBy($criteria); /** @var $casRec CasRec */
         
         if (!$casRec) {
-            $message = sprintf("User [%s] and client [%s, case number: %s] not found in CasRec.", $user->getLastname(), $client->getLastname(), $caseNumber);
-            throw new \RuntimeException($message, 421);
+            throw new \RuntimeException("User registration: not found", 421);
         }
         
         // if the postcode is set in CASREC, it has to match to the given one
@@ -110,7 +109,7 @@ class UserRegistrationService
                 $user->getLastname(), $client->getLastname(), $caseNumber,
                 $casRec->getDeputyPostCode(), $user->getAddressPostcode());
 
-            throw new \RuntimeException($message, 424);
+            throw new \RuntimeException("User registration: postcode mismatch", 424);
         }
         
         return $casRec;
