@@ -36,6 +36,24 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals($expected, CasRec::normaliseSurname($input));
     }
+
+
+
+    public static function normaliseCaseNumberProvider()
+    {
+        return [
+            [ '   12345678   ', '12345678'],
+            [ ' 1234567T '    , '1234567t' ],
+        ];
+    }
+
+    /**
+     * @dataProvider normaliseCaseNumberProvider
+     */
+    public function testnormaliseCaseNumber($input, $expected)
+    {
+        $this->assertEquals($expected, CasRec::normaliseDeputyNo($input));
+    }
     
 
 }

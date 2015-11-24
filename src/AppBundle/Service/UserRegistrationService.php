@@ -99,13 +99,18 @@ class UserRegistrationService
         $casRec = $this->casRecRepo->findOneBy($criteria); /** @var $casRec CasRec */
         
         if (!$casRec) {
-            throw new \RuntimeException("User and client not found in casrec.", 421);
+            $message = sprintf("User [%s] and client [%s, case number: %s] not found in CasRec.", $user->getLastname(), $client->getLastname(), $caseNumber);
+            throw new \RuntimeException($message, 421);
         }
         
         // if the postcode is set in CASREC, it has to match to the given one
         if ($casRec->getDeputyPostCode() && 
             $casRec->getDeputyPostCode() != CasRec::normalisePostCode($user->getAddressPostcode())) {
-            throw new \RuntimeException("User and client found, but postcode mismatch", 424);
+            $message = sprintf("User [%s] and client [%s, case number: %s] found in CasRec, but wrong postcode: [%s] expected, [%s] given",
+                $user->getLastname(), $client->getLastname(), $caseNumber,
+                $casRec->getDeputyPostCode(), $user->getAddressPostcode());
+
+            throw new \RuntimeException($message, 424);
         }
         
         return $casRec;

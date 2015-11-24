@@ -110,6 +110,8 @@ class CasRec
     public static function normaliseCaseNumber($value)
     {
         $value = trim($value);
+        $value = strtolower($value);
+        $value = preg_replace('#^([a-z0-9]+/)#i', '', $value);
         
         return $value;
     }

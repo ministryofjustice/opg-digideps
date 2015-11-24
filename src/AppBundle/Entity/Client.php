@@ -205,7 +205,8 @@ class Client
      */
     public function setCaseNumber($caseNumber)
     {
-        $this->caseNumber = trim($caseNumber);
+        // normalise case number in order to understand if it's already used when registering and checking with CASREC
+        $this->caseNumber = CasRec::normaliseCaseNumber($caseNumber);
 
         return $this;
     }
