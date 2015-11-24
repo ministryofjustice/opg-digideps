@@ -7,7 +7,6 @@ use AppBundle\Exception\RestClientException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
-use AppBundle\Service\DataImporter\CsvToArray;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
