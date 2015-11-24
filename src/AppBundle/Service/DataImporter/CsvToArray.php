@@ -8,22 +8,44 @@ class CsvToArray
     const ENCLOSURE = '"';
     const ESCAPE = "\\";
 
+    /**
+     * @var resource
+     */
     private $handle;
+
+    /**
+     * @var array
+     */
     private $expectedColumns = [];
+
+    /**
+     * @var boolean
+     */
+    private $normaliseNewLines;
 
     /**
      * @param string $file path to file
      * @param array $expectedColumns e.g. ['Case','Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode']
+     * @param boolean $normaliseNewLines
      * @throws \RuntimeException
      */
-    public function __construct($file)
+    public function __construct($file, $normaliseNewLines)
     {
-        ini_set('auto_detect_line_endings', true);
+        $this->normaliseNewLines = $normaliseNewLines;
 
         if (!file_exists($file)) {
             throw new \RuntimeException("file $file not found");
         }
-        $this->handle = fopen($file, 'r');
+
+        // if line endings need to be normalised, the stream is replaced with a string stream with the content replaced
+        if ($this->normaliseNewLines) {
+            $content = str_replace(["\r\n", "\r"], ["\n", "\n"], file_get_contents($file));
+            $this->handle = fopen('data://text/plain,' . $content, 'r');
+        } else {
+            ini_set('auto_detect_line_endings', true);
+            $this->handle = fopen($file, 'r');
+        }
+
     }
     
     public function setExpectedColumns(array $expectedColumns)
@@ -76,7 +98,10 @@ class CsvToArray
     public function __destruct()
     {
         fclose($this->handle);
-        ini_set('auto_detect_line_endings', false);
+
+        if ($this->normaliseNewLines) {
+            ini_set('auto_detect_line_endings', false);
+        }
     }
 
 }
