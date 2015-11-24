@@ -36,7 +36,13 @@ class SelfRegisterController extends RestController
             throw new \RuntimeException("Invalid registration data: " . $errors);
         }
 
-        $user = $this->container->get('user.selfRegistration')->selfRegisterUser($selfRegisterData);
+        try {
+            $user = $this->container->get('user.selfRegistration')->selfRegisterUser($selfRegisterData);
+            $this->get('logger')->info("CasRec register success: ", ['extra' => ['page'=>'user_registration', 'success'=>true] + $selfRegisterData->toArray()]);
+        } catch (\Exception $e) {
+            $this->get('logger')->warning("CasRec register failed:", ['extra'=> ['page'=>'user_registration', 'success'=>false] + $selfRegisterData->toArray()]);
+            throw $e;
+        }
 
         return ['id'=>$user->getId()];
     }
