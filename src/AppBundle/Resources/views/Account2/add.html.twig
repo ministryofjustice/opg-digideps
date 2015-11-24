@@ -34,13 +34,14 @@
         {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
         {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
         {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}
+        
         {{ form_input(form.openingBalance, '', {
-            'labelText': 'form.accountDetails.controls.openingBalance.label' | trans,
+            'labelText': 'form.accountDetails.controls.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}),
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number'
         } ) }}
         {{ form_input(form.closingBalance, 'form.accountDetails.controls.closingBalance', {
-            'labelText': 'form.accountDetails.controls.closingBalance.label' | trans,
+            'labelText': 'form.accountDetails.controls.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}),
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number'
         } ) }}

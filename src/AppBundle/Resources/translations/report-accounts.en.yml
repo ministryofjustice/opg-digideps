@@ -56,9 +56,9 @@ form:
         label: Account type
         hint: For example, current account, savings account
       openingBalance:
-        label: How much was in the account on {{ startDate }}? 
+        label: How much was in the account on %startDate%? 
       closingBalance:
-        label: How much was in the account on {{ endDate }}?
+        label: How much was in the account on %endDate%?
 save:
   label: Save
 cancel:
