@@ -238,6 +238,21 @@ class Report {
     private $calculatedBalance;
 
     /**
+     * @JMS\Type("double")
+     *
+     * @var double
+     */
+    private $totalsOffset;
+
+
+    /**
+     * @JMS\Type("boolean")
+     *
+     * @var boolean
+     */
+    private $totalsMatch;
+
+    /**
      * 
      * @return integer $id
      */
@@ -905,5 +920,39 @@ class Report {
     {
         $this->calculatedBalance = $calculatedBalance;
     }
+
+    /**
+     * @return float
+     */
+    public function getTotalsOffset()
+    {
+        return $this->totalsOffset;
+    }
+
+    /**
+     * @param float $totalsOffset
+     */
+    public function setTotalsOffset($totalsOffset)
+    {
+        $this->totalsOffset = $totalsOffset;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isTotalsMatch()
+    {
+        return $this->totalsMatch;
+    }
+
+    /**
+     * @param boolean $totalsMatch
+     */
+    public function setTotalsMatch($totalsMatch)
+    {
+        $this->totalsMatch = $totalsMatch;
+    }
+
+
 
 }
