@@ -126,7 +126,11 @@ class AccountController extends RestController
         if (array_key_exists('bank', $data)) {
            $account->setBank($data['bank']);
         }
-        
+
+        if (array_key_exists('account_type', $data)) {
+            $account->setAccountType($data['account_type']);
+        }
+
         if (array_key_exists('sort_code', $data)) {
            $account->setSortCode($data['sort_code']);
         }

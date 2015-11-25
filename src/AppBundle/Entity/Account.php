@@ -36,6 +36,14 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic"})
+     *
+     * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
+     */
+    private $accountType;
+
+    /**
+     * @var string
+     * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
@@ -171,6 +179,23 @@ class Account
     {
         return $this->bank;
     }
+
+    /**
+     * @return string
+     */
+    public function getAccountType()
+    {
+        return $this->accountType;
+    }
+
+    /**
+     * @param string $accountType
+     */
+    public function setAccountType($accountType)
+    {
+        $this->accountType = $accountType;
+    }
+
 
     /**
      * Set sortCode
