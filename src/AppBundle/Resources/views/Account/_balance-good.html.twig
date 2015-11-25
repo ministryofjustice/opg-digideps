@@ -59,7 +59,7 @@ pageSectionDescription: 'balance.good.pageSectionDescription'
 
     <tr class="solid-row">
         <td class="title">{{ 'balance.totalOutInPeriod' | trans }}:</td>
-        <td class="value">-{{ 'currencySymbol' | trans }} £{{ report.moneyOutTotal  | number_format(2, '.', ',') }}</td>
+        <td class="value">-{{ 'currencySymbol' | trans }} {{ report.moneyOutTotal  | number_format(2, '.', ',') }}</td>
     </tr>
 
     <tr class="spacer borderless"><td colspan="2"></td></tr>
