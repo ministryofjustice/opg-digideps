@@ -13,6 +13,7 @@ use Doctrine\ORM\QueryBuilder;
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  */
 class Report 
 {
@@ -230,19 +231,19 @@ class Report
      * @JMS\Groups({"transactions"})
      * @JMS\Accessor(getter="getMoneyInTotal")
      */
-    private $moneyInTotal;
+    //private $moneyInTotal;
 
     /**
      * @JMS\Groups({"transactions"})
      * @JMS\Accessor(getter="getMoneyOutTotal")
      */
-    private $moneyOutTotal;
+    //private $moneyOutTotal;
 
     /**
      * @JMS\Groups({ "transactions"})
      * @JMS\Accessor(getter="getMoneyTotal")
      */
-    private $moneyTotal;
+    //private $moneyTotal;
 
      /**
      * Constructor
@@ -545,7 +546,7 @@ class Report
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Account[]
      */
     public function getAccounts()
     {
@@ -876,6 +877,8 @@ class Report
     }
 
     /**
+     * Virtual JMS property with IN transaction
+     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"transactionsIn"})
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
@@ -891,6 +894,8 @@ class Report
     }
 
     /**
+     * Virtual JMS property with OUT transaction
+     *
      * @JMS\VirtualProperty
      * @JMS\Groups({"transactionsOut"})
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
@@ -905,26 +910,6 @@ class Report
         });
     }
 
-
-    /**
-     * Get account balance offset
-     */
-    public function getBalanceOffset()
-    {
-        return ($this->closingBalance - $this->getCurrentBalance());
-    }
-
-    /**
-     * Gets current account balance
-     * @return integer $balance
-     */
-    public function getCurrentBalance()
-    {
-        $balance = 0;
-
-
-        return $balance;
-    }
 
 
     /**
@@ -941,42 +926,6 @@ class Report
 
 
     /**
-     * @return float
-     */
-    public function getMoneyInTotal()
-    {
-        return 0;
-//        $ret = 0.0;
-//        foreach ($this->getMoneyIn() as $t) {
-//            $ret += $t->getAmount();
-//        }
-//        return $ret;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoneyOutTotal()
-    {
-        return 0;
-//        $ret = 0.0;
-//        foreach ($this->getMoneyOut() as $money) {
-//            $ret += $money->getAmount();
-//        }
-//        return $ret;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoneyTotal()
-    {
-        //TODO Fix
-        return 0; //$this->getOpeningBalance() + $this->getMoneyInTotal() - $this->getMoneyOutTotal();
-    }
-
-
-    /**
      * @param string $transactionTypeId
      *
      * @return AccountTransaction
@@ -986,6 +935,83 @@ class Report
         return $this->getTransactions()->filter(function(Transaction $transaction) use($transactionTypeId) {
             return $transaction->getTransactionTypeId() == $transactionTypeId;
         })->first();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("money_in_total")
+     */
+    public function getMoneyInTotal()
+    {
+        $ret = 0;
+        foreach ($this->getTransactionsIn() as $t) {
+            $ret += $t->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("money_out_total")
+     */
+    public function getMoneyOutTotal()
+    {
+        $ret = 0;
+        foreach ($this->getTransactionsOut() as $t) {
+            $ret += $t->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("accounts_opening_balance_total")
+     */
+    public function getAccountsOpeningBalanceTotal()
+    {
+        $ret = 0;
+        foreach ($this->getAccounts() as $a) {
+            $ret += $a->getOpeningBalance();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("accounts_closing_balance_total")
+     */
+    public function getAccountsClosingBalanceTotal()
+    {
+        $ret = 0;
+        foreach ($this->getAccounts() as $a) {
+            $ret += $a->getClosingBalance();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("calculated_balance")
+     */
+    public function getCalculatedBalance()
+    {
+        return $this->getAccountsOpeningBalanceTotal()
+        + $this->getMoneyInTotal()
+        - $this->getMoneyOutTotal();
     }
 
 }
