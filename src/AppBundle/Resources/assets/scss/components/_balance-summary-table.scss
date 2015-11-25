@@ -1,5 +1,7 @@
 table.money-table {
     
+    margin: 30px 0 50px 0;
+    
     td {
         padding: 14px 25px 10px 25px;
     }
@@ -24,7 +26,6 @@ table.money-table {
         }
         
     }
-
 
     tr.split-row {
         td.title {
@@ -56,6 +57,32 @@ table.money-table {
             background: $turquoise;
             color: $white;
         }
+        
+        &.orange {
+            border-color: $orange;
+            td.title {
+                color: $black;
+            }
+            td.value {
+                background: $orange;
+                color: $black;
+                border-bottom-color: $orange;
+            }
+        }
+
+        &.black {
+            border-color: $black;
+            td.title {
+                color: $black;
+            }
+            td.value {
+                background: $black;
+                color: $white;
+                border-bottom-color: $black;
+            }
+        }
+        
+        
     }
     
     tr.medium-bottom-margin {
@@ -69,6 +96,7 @@ table.money-table {
     tr.spacer {
         td {
             padding: 15px 25px 15px 25px;
+            border: 0;
         }
     }
     

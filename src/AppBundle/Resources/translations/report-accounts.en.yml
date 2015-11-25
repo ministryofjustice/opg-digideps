@@ -26,7 +26,7 @@ accountForm:
     label: How much was in the account on %endDate%?
     
 save:
-  label: Save
+  label: Save and continue
 cancel:
   label: Cancel
 delete:
@@ -44,18 +44,34 @@ moneyOut:
 
 
 balance:
-    pageSectionTitle: Balance the accounts
-    balancesMatch: Money in and money out match up
-    pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
-    accountsBalanced: Accounts Balanced
-    accountsBalancedMessage: Money in and money out match up
-    balanceAfterReported: Balance after reported money in and money out
-    actualBalance: Actual balance from all bank account
-    totalBankStart: Totals from bank accounts at start of reporting period
+    good:
+      pageSectionTitle: Balance the accounts
+      pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
+      accountsBalanced: Accounts Balanced
+      accountsBalancedMessage: Money in and money out match the balance
+    bad:
+      pageSectionTitle: Balance the accounts
+      pageSectionDescription: The client’s accounts are not balanced. There is a difference of £10,000.00 between the total money in and out and the final balance.
+      accountsBalanced: Accounts not Balanced
+      accountsBalancedMessage: Money in and money out don’t match the balance
+      totalAfterMoneyInOut: Total balance after money in and money out
+      totalFromAccounts: Total balance of all bank accounts
+      unaccounted: Unaccounted for
+      extraAmount: Extra amount
+      summaryBalanceInOut: Balance after total money in and mouney out
+      totalOfAllAccounts: Total balance of all bank accounts
+      checkYourAccounts: Check your accounts
+      goBack: Go back and check that money in and money out matches your records of money coming in and out of the client’s accounts
+      cantFind: Can’t find the problem?
+      formtitle:
+        label: If you can’t find where the extra amount has come, tell us why
+    balanceAfterReported: Total money in and money out
+    totalBankStart: Totals from all bank accounts at start of reporting period
     totalInDuringPeriod: Total money in during reporting period
     totalFromAllIn: Total from all opening balances and money in
     totalOutInPeriod: Total money out during the reporting period
-    finalBalance: Balance after reported money in and money out
+    finalBalance: Balance after money in and money out
+    actualBalance: Total balance from all bank accounts
     
 banks:
     pageSectionTitle: Client's bank accounts

@@ -107,18 +107,24 @@ class AccountController extends AbstractController
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
+
+        $form = $this->createForm(new FormDir\ReasonForBalanceType(), $report);
+
+        if($form->isValid()){
+
+            $data = $form->getData();
+            $this->get('restClient')->put('report/'. $reportId,$data);
+
+            return $this->redirect($this->generateUrl('assets', ['reportId'=>$reportId]));
+
+        }
         
         $client = $this->getClient($report->getClient());
-
-        $accounts = $report->getAccounts();
-
-        $account = new EntityDir\Account();
-        $account->setReportObject($report);
-
+        
         return [
             'report' => $report,
             'client' => $client,
-            'accounts' => $accounts,
+            'form' => $form->createView(),
             'subsection' => 'balance'
         ];
         

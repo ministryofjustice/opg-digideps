@@ -3,20 +3,20 @@
 
 {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
 transDomain: translationDomain,
-pageSectionTitle: 'balance.pageSectionTitle'
+pageSectionTitle: 'balance.good.pageSectionTitle'
 } %}
 
 {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
 transDomain: translationDomain,
-pageSectionDescription: 'balance.pageSectionDescription'
+pageSectionDescription: 'balance.good.pageSectionDescription'
 } %}
 
 <div class="hero">
-    <h2 class="heading">{{ 'balance.accountsBalanced' | trans }}</h2>
-    <div class="message">{{ 'balance.accountsBalancedMessage' | trans }}</div>
+    <h2 class="heading">{{ 'balance.good.accountsBalanced' | trans }}</h2>
+    <div class="message">{{ 'balance.good.accountsBalancedMessage' | trans }}</div>
 </div>
 
-<div class="hero-split">
+<div class="hero split-two">
     <div class="hero-column">
         <div class="message">
             {{ 'balance.balanceAfterReported' | trans }}:

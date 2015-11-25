@@ -1,1 +1,112 @@
-Did not balance
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+{% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
+transDomain: translationDomain,
+pageSectionTitle: 'balance.bad.pageSectionTitle'
+} %}
+
+{% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+transDomain: translationDomain,
+pageSectionDescription: 'balance.bad.pageSectionDescription'
+} %}
+
+<div class="hero orange compact">
+    <h2 class="heading">{{ 'balance.bad.accountsBalanced' | trans }}</h2>
+    <div class="message">{{ 'balance.bad.accountsBalancedMessage' | trans }}</div>
+</div>
+
+<div class="hero split-three orange compact">
+    <div class="hero-column">
+        <div class="message">{{ 'balance.bad.totalAfterMoneyInOut' | trans }}:</div>
+        <div class="total">
+            {{ 'currencySymbol' |trans }}
+            {{ report.calculatedBalance | number_format(2, '.', ',') }}
+        </div>
+    </div>
+    <div class="hero-column">
+        <div class="message">
+            {{ 'balance.bad.totalFromAccounts' | trans }}:
+        </div>
+        <div class="total">
+            {{ 'currencySymbol' | trans }}
+            {{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
+        </div>
+    </div>
+    <div class="hero-column">
+        <div class="message">
+            <b>{{ 'balance.bad.unaccounted' | trans }}:</b>
+        </div>
+        <div class="total">
+            {{ 'currencySymbol' | trans }}
+            {{ report.totalsOffset | abs | number_format(2, '.', ',') }}
+        </div>
+    </div>
+</div>
+
+<table class="money-table">
+    <tr class="solid-row">
+        <td class="title">{{ 'balance.totalBankStart' | trans }}:</td>
+        <td class="value">{{ 'currencySymbol' | trans }}
+            {{ report.accountsOpeningBalanceTotal | number_format(2, '.', ',') }}</td>
+    </tr>
+    <tr class="solid-row">
+        <td class="title">{{ 'balance.totalInDuringPeriod' | trans }}:</td>
+        <td class="value">+{{ 'currencySymbol' | trans }}
+            {{ report.moneyInTotal  | number_format(2, '.', ',') }}</td>
+    </tr>
+    <tr class="split-row">
+        <td class="title right">{{ 'balance.totalFromAllIn' | trans }}:</td>
+        <td class="value">{{ 'currencySymbol' | trans }}
+            {{ (report.accountsOpeningBalanceTotal + report.moneyInTotal)  | number_format(2, '.', ',') }}
+        </td>
+    </tr>
+
+    <tr class="spacer"><td colspan="2"></td></tr>
+
+    <tr class="solid-row">
+        <td class="title">{{ 'balance.totalOutInPeriod' | trans }}:</td>
+        <td class="value">-
+            {{ 'currencySymbol' | trans }}
+            {{ report.moneyOutTotal  | number_format(2, '.', ',') }}</td>
+    </tr>
+
+    <tr class="spacer borderless"><td colspan="2"></td></tr>
+
+    <tr class="split-row highlighted-row black">
+        <td class="title">{{ 'balance.bad.summaryBalanceInOut' | trans }}:</td>
+        <td class="value">{{ 'currencySymbol' | trans }}{{ report.calculatedBalance | number_format(2, '.', ',') }}</td>
+    </tr>
+    <tr class="split-row highlighted-row black">
+        <td class="title">{{ 'balance.bad.totalOfAllAccounts' | trans }}:</td>
+        <td class="value">{{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}</td>
+    </tr>
+
+    <tr class="spacer"><td colspan="2"></td></tr>
+    
+    <tr class="split-row highlighted-row orange">
+        <td class="title">{{ 'balance.bad.unaccounted' | trans }}:</td>
+        <td class="value">{{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | number_format(2, '.', ',') }}</td>
+    </tr>
+    
+</table>
+
+<h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
+<p class="page-section-description ">{{ 'balance.bad.goBack' | trans }}</p>
+
+<h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
+{{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    {{ form_input(form.accountBalanceExplanation, 'balance.bad.formtitle', {
+        'inputClass': 'expanding'
+    }) }}
+    
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+    transDomain: translationDomain,
+    section: 'accounts',
+    showDelete: false,
+    showCancel: false
+    } %}
+
+{{ form_end(form) }}
+

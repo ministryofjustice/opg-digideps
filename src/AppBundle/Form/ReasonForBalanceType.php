@@ -6,13 +6,13 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints as Constraints;
 
-class ReasonForBalance extends AbstractType
+class ReasonForBalanceType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('reasonForBalance','textarea', [ 'constraints' => [ new Constraints\NotBlank([ 'message' => 'balance.bad.reason']) ]])
+            ->add('accountBalanceExplanation','textarea')
             ->add('save', 'submit');
         
     }

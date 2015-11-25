@@ -253,6 +253,12 @@ class Report {
     private $totalsMatch;
 
     /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $accountBalanceExplanation;
+    
+    /**
      * 
      * @return integer $id
      */
@@ -953,6 +959,21 @@ class Report {
         $this->totalsMatch = $totalsMatch;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAccountBalanceExplanation()
+    {
+        return $this->accountBalanceExplanation;
+    }
 
+    /**
+     * @param mixed $accountBalanceExplanation
+     */
+    public function setAccountBalanceExplanation($accountBalanceExplanation)
+    {
+        $this->accountBalanceExplanation = $accountBalanceExplanation;
+    }
 
+    
 }
