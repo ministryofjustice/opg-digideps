@@ -1015,7 +1015,7 @@ class Report
      */
     public function getTotalsMatch()
     {
-        return round($this->getCalculatedBalance(),2) == round($this->getAccountsClosingBalanceTotal(),2);
+        return round($this->getCalculatedBalance(), 2) === round($this->getAccountsClosingBalanceTotal(), 2);
     }
 
 }
