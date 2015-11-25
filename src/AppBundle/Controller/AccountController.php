@@ -33,7 +33,7 @@ class AccountController extends AbstractController
      */
     public function moneyinAction(Request $request, $reportId) {
 
-        $report = $this->getReport($reportId, [ 'transactionsIn', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactionsIn', 'basic', 'balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -68,7 +68,7 @@ class AccountController extends AbstractController
      */
     public function moneyoutAction(Request $request, $reportId) 
     {
-        $report = $this->getReport($reportId, [ 'transactionsOut', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactionsOut', 'basic', 'balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -102,7 +102,7 @@ class AccountController extends AbstractController
     public function balanceAction($reportId) 
     {
         
-        $report = $this->getReport($reportId, [ 'basic']);
+        $report = $this->getReport($reportId, [ 'basic', 'balance']);
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");

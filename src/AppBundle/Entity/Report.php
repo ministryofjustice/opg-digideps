@@ -202,6 +202,42 @@ class Report {
     private $transactionsOut;
 
     /**
+     * @JMS\Type("double")
+     *
+     * @var double
+     */
+    private $moneyInTotal;
+
+    /**
+     * @JMS\Type("double")
+     *
+     * @var double
+     */
+    private $moneyOutTotal;
+
+
+    /**
+     * @JMS\Type("double")
+     *
+     * @var double
+     */
+    private $accountsOpeningBalanceTotal;
+
+    /**
+     * @JMS\Type("double")
+     *
+     * @var double
+     */
+    private $accountsClosingBalanceTotal;
+
+    /**
+     * @JMS\Type("double")
+     *
+     * @var double
+     */
+    private $calculatedBalance;
+
+    /**
      * 
      * @return integer $id
      */
@@ -791,16 +827,83 @@ class Report {
     }
 
     /**
-     * @param Transaction[] $transactions
-     *
      * @return float
      */
-    public function getTotalAmount(array $transactions)
+    public function getMoneyInTotal()
     {
-        return array_sum(array_map(function ($transaction){
-            return $transaction->getAmount();
-        }, $transactions));
+        return $this->moneyInTotal;
     }
 
-    
+    /**
+     * @param float $moneyInTotal
+     */
+    public function setMoneyInTotal($moneyInTotal)
+    {
+        $this->moneyInTotal = $moneyInTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getMoneyOutTotal()
+    {
+        return $this->moneyOutTotal;
+    }
+
+    /**
+     * @param float $moneyOutTotal
+     */
+    public function setMoneyOutTotal($moneyOutTotal)
+    {
+        $this->moneyOutTotal = $moneyOutTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAccountsOpeningBalanceTotal()
+    {
+        return $this->accountsOpeningBalanceTotal;
+    }
+
+    /**
+     * @param float $accountsOpeningBalanceTotal
+     */
+    public function setAccountsOpeningBalanceTotal($accountsOpeningBalanceTotal)
+    {
+        $this->accountsOpeningBalanceTotal = $accountsOpeningBalanceTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAccountsClosingBalanceTotal()
+    {
+        return $this->accountsClosingBalanceTotal;
+    }
+
+    /**
+     * @param float $accountsClosingBalanceTotal
+     */
+    public function setAccountsClosingBalanceTotal($accountsClosingBalanceTotal)
+    {
+        $this->accountsClosingBalanceTotal = $accountsClosingBalanceTotal;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCalculatedBalance()
+    {
+        return $this->calculatedBalance;
+    }
+
+    /**
+     * @param float $calculatedBalance
+     */
+    public function setCalculatedBalance($calculatedBalance)
+    {
+        $this->calculatedBalance = $calculatedBalance;
+    }
+
 }
