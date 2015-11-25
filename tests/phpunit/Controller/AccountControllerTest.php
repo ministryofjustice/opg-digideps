@@ -55,21 +55,21 @@ class AccountControllerTest extends AbstractTestController
     
     public function testgetAccountsAuth()
     {
-        $url = '/report/accounts/' . self::$report1->getId();
+        $url = '/report/' . self::$report1->getId() . '/accounts';
         $this->assertEndpointNeedsAuth('GET', $url); 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin); 
     }
     
     public function testgetAccountsAcl()
     {
-        $url2 = '/report/accounts/' . self::$report2->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/accounts';
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy); 
     }
     
     public function testgetAccounts()
     {
         // assert data is retrieved
-        $data = $this->assertJsonRequest('GET', '/report/accounts/' . self::$report1->getId(), [
+        $data = $this->assertJsonRequest('GET', '/report/'.self::$report1->getId().'/accounts', [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
