@@ -227,24 +227,6 @@ class Report
      */
     private $reasonNotAllAgreed;
 
-    /**
-     * @JMS\Groups({"transactions"})
-     * @JMS\Accessor(getter="getMoneyInTotal")
-     */
-    //private $moneyInTotal;
-
-    /**
-     * @JMS\Groups({"transactions"})
-     * @JMS\Accessor(getter="getMoneyOutTotal")
-     */
-    //private $moneyOutTotal;
-
-    /**
-     * @JMS\Groups({ "transactions"})
-     * @JMS\Accessor(getter="getMoneyTotal")
-     */
-    //private $moneyTotal;
-
      /**
      * Constructor
      */
@@ -1012,6 +994,28 @@ class Report
         return $this->getAccountsOpeningBalanceTotal()
         + $this->getMoneyInTotal()
         - $this->getMoneyOutTotal();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("totals_offset")
+     */
+    public function getTotalsOffset()
+    {
+        return $this->getCalculatedBalance() - $this->getAccountsClosingBalanceTotal();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("totals_match")
+     */
+    public function getTotalsMatch()
+    {
+        return round($this->getCalculatedBalance(),2) == round($this->getAccountsClosingBalanceTotal(),2);
     }
 
 }
