@@ -2,13 +2,12 @@
     @include core-19();
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 ;
+    border-bottom: 1px solid $grey-2;
     
     .card-item {
         @extend %contain-floats;
-        padding-bottom: 50px;
-        margin-bottom: 50px;
-        border-bottom: 1px solid $grey-1;
+        margin: 30px 0 50px 0;
     }
 
     .meta-data {

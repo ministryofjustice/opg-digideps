@@ -38,9 +38,7 @@
 //DIGIDEPS
 @import "components/colours";
 @import "components/popups/session-timeout";
-@import "components/account";
-@import "components/account-header";
-@import "components/account-transactions";
+@import "components/account-form";
 @import "components/alert";
 @import "components/app-typography";
 @import "components/bread-crumb";
@@ -70,11 +68,9 @@
 @import "components/sub-section-description";
 @import "components/sub-section-title";
 @import "components/user-list";
-@import "components/financial-transactions";
 @import "components/external-report";
 @import "components/feedback";
 @import "components/terms";
-@import "components/formattedreport";
 @import "components/help";
 @import "components/accordian";
 @import "components/help-item";
@@ -100,3 +96,4 @@
 @import "components/expandingtransactiontable";
 @import "components/balance-summary-table";
 @import "components/card-list";
+@import "components/banks";

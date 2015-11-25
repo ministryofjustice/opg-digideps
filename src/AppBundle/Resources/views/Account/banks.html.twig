@@ -25,12 +25,7 @@
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
 
-                {% if accounts is empty %}
-                    <li class="card-item">
-                        <a href="{{ path('add_account' , {'reportId': report.id}) }}" class="card add">Add account</a>
-                        <div class="meta-data"></div>
-                    </li>
-                {% else %}
+                {% if accounts is not empty %}
                     {% for account in accounts %}
                         {% include 'AppBundle:Account:bank-list-item.html.twig' with {
                             account: account,
@@ -38,10 +33,25 @@
                         }%}
                     {% endfor %}
                 {% endif %}
-                
+                <li class="card-item">
+                    <a href="{{ path('add_account' , {'reportId': report.id}) }}" class="card add">Add account</a>
+                    <div class="meta-data"></div>
+                </li>
             {% endblock %}
             
         {% endembed %}
+        
+        <dl class="labelvalue right-inline transaction big-value">
+            <dt class="label">Actual balance from all accounts:</dt>
+            <dd class="value">£3,000.00</dd>
+        </dl>
+
+
+        <nav id="bottom-button-bar">
+            <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" id="continue-button" class="button">Save and continue</a>
+            &nbsp;Next section: <b>Balance Accounts</b>
+            
+        </nav>
         
     {% endblock %}
 
