@@ -21,13 +21,12 @@
             @extend %contain-floats;
             .label {
                 @include core-19(1.5);
-                padding: 0 10px 0 0;
                 float: left;
                 clear: both;
             }
             .value {
                 @include bold-19(1.5);
-                padding: 0 10px 0 0;
+                padding-left: 10px;
                 float: left;
             }
         }

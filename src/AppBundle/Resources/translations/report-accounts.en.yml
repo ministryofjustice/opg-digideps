@@ -1,6 +1,11 @@
 page:
   htmlTitle: "Deputy report - accounts | GOV.UK"
   pageSectionTitle: "Accounts"
+nav:
+  moneyIn: Money in
+  moneyOut: Money out
+  bankAccounts: Bank accounts
+  balanceAccounts: Balance accounts
 
 accountForm:
   bank:

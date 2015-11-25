@@ -43,7 +43,9 @@
         
         <dl class="labelvalue right-inline transaction big-value">
             <dt class="label">Actual balance from all accounts:</dt>
-            <dd class="value">£3,000.00</dd>
+            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}
+                {{ report.accountsClosingBalanceTotal == null ? '-,-' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}
+            </dd>
         </dl>
 
 

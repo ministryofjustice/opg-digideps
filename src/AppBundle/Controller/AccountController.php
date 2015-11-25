@@ -134,7 +134,7 @@ class AccountController extends AbstractController
     {
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
 
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, ['basic','balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }

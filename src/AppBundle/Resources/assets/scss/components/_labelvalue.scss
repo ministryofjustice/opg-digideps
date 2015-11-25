@@ -16,13 +16,15 @@
         }
         .value {
             margin-left: 20px;
+            padding-right: 5px;
         }
         
     }
 
     &.transaction {
 
-        padding: 20px 0 40px 0;
+        padding-top: 20px;
+        padding-bottom: 40px;
         border-bottom: 1px solid $grey-2;
         margin-bottom: 20px;
 
