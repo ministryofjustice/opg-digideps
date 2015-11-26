@@ -136,11 +136,15 @@ account:
         date: Please enter a valid date
     bank:
         notBlank: Enter the bank or building society name
+        minMessage: The bank or building society name must be at least {{ limit }} characters long
         maxMessage: The bank or building society name can't be longer than {{ limit }} letters
+    accountType:
+          notBlank: Enter the account type
+          maxMessage: The account type can't be longer than {{ limit }} letters
     sortCode:
         notBlank: Enter the sort code
         type: The sort code must be numbers
-        length: The sort code must be at least {{ limit }} numbers long
+        exactMessage: The sort code must be at least {{ limit }} numbers long
     accountNumber:
         notBlank: Enter the last four numbers of the account number
         type: The account number must be numbers
