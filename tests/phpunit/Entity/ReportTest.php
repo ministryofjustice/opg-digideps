@@ -88,18 +88,18 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
 
+        // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
         $this->report->addAccount((new Account())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
         $this->report->addTransaction((new Transaction($this->report, new TransactionTypeIn(), 1500)));
         $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), 400)));
-        $calculatedBalance = 1000 + 1500 - 400 - 2000;
 
-
-        $this->assertEquals($calculatedBalance, $this->report->getTotalsOffset());
+        $this->assertEquals(100, $this->report->getTotalsOffset());
         $this->assertEquals(false, $this->report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), 400)));
+        $this->report->addTransaction((new Transaction($this->report, new TransactionTypeOut(), 100)));
 
+        $this->assertEquals(0, 1000 + 1500 - 400 - 100 - 2000);
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
     }
