@@ -257,7 +257,13 @@ class Report {
      * @var string
      */
     private $accountBalanceExplanation;
-    
+
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $balanceMismatchExplanation;
+
     /**
      * 
      * @return integer $id
@@ -973,6 +979,22 @@ class Report {
     public function setAccountBalanceExplanation($accountBalanceExplanation)
     {
         $this->accountBalanceExplanation = $accountBalanceExplanation;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBalanceMismatchExplanation()
+    {
+        return $this->balanceMismatchExplanation;
+    }
+
+    /**
+     * @param string $balanceMismatchExplanation
+     */
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
+    {
+        $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
 
     
