@@ -254,10 +254,11 @@ class Report {
 
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"balance_mismatch_explanation"})
      * @var string
      */
-    private $accountBalanceExplanation;
-    
+    private $balanceMismatchExplanation;
+
     /**
      * 
      * @return integer $id
@@ -960,19 +961,19 @@ class Report {
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getAccountBalanceExplanation()
+    public function getBalanceMismatchExplanation()
     {
-        return $this->accountBalanceExplanation;
+        return $this->balanceMismatchExplanation;
     }
 
     /**
-     * @param mixed $accountBalanceExplanation
+     * @param string $balanceMismatchExplanation
      */
-    public function setAccountBalanceExplanation($accountBalanceExplanation)
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
     {
-        $this->accountBalanceExplanation = $accountBalanceExplanation;
+        $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
 
     

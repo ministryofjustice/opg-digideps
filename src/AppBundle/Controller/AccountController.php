@@ -99,7 +99,7 @@ class AccountController extends AbstractController
      * @Template()
      * @return array
      */
-    public function balanceAction($reportId) 
+    public function balanceAction(Request $request, $reportId)
     {
         
         $report = $this->getReport($reportId, [ 'basic', 'balance']);
@@ -109,13 +109,16 @@ class AccountController extends AbstractController
         }
 
         $form = $this->createForm(new FormDir\ReasonForBalanceType(), $report);
+        $form->handleRequest($request);
 
-        if($form->isValid()){
+        if ($form->isValid()) {
 
             $data = $form->getData();
-            $this->get('restClient')->put('report/'. $reportId,$data);
+            $this->get('restClient')->put('report/' . $reportId, $data, [
+                'deserialise_group' => 'balance_mismatch_explanation'
+            ]);
 
-            return $this->redirect($this->generateUrl('assets', ['reportId'=>$reportId]));
+            return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
 
         }
         

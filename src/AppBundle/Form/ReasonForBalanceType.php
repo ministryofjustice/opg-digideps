@@ -12,7 +12,7 @@ class ReasonForBalanceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('accountBalanceExplanation','textarea')
+            ->add('balanceMismatchExplanation','textarea')
             ->add('save', 'submit');
         
     }
