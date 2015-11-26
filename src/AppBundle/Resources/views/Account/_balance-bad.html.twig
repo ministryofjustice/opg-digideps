@@ -13,7 +13,7 @@ pageSectionDescription: 'balance.bad.pageSectionDescription'
 
 <div class="hero orange compact">
     <h2 class="heading">{{ 'balance.bad.accountsBalanced' | trans }}</h2>
-    <div class="message">{{ 'balance.bad.accountsBalancedMessage' | trans }}</div>
+    <div class="message">{{ 'balance.bad.accountsBalancedMessage' | trans({'%totalOffset%':  report.totalsOffset  }) }}</div>
 </div>
 
 <div class="hero split-three orange compact">
