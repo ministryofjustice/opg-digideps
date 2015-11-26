@@ -181,7 +181,9 @@ class AccountController extends AbstractController
 
             $data = $form->getData();
             $data->setReport($reportId);
-            $this->get('restClient')->post('report/' . $reportId . '/account', $account);
+            $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
+                'deserialise_group' => 'add_edit'
+            ]);
 
             return $this->redirect($this->generateUrl('accounts_banks', ['reportId' => $reportId]));
 
@@ -225,7 +227,9 @@ class AccountController extends AbstractController
 
             $data = $form->getData();
             $data->setReport($reportId);
-            $restClient->put('/account/' . $id, $account);
+            $restClient->put('/account/' . $id, $account, [
+                'deserialise_group' => 'add_edit'
+            ]);
 
             return $this->redirect($this->generateUrl('accounts_banks', ['reportId'=>$reportId]));
         
