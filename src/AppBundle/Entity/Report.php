@@ -254,12 +254,7 @@ class Report {
 
     /**
      * @JMS\Type("string")
-     * @var string
-     */
-    private $accountBalanceExplanation;
-
-    /**
-     * @JMS\Type("string")
+     * @JMS\Groups({"balance_mismatch_explanation"})
      * @var string
      */
     private $balanceMismatchExplanation;
@@ -963,22 +958,6 @@ class Report {
     public function setTotalsMatch($totalsMatch)
     {
         $this->totalsMatch = $totalsMatch;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAccountBalanceExplanation()
-    {
-        return $this->accountBalanceExplanation;
-    }
-
-    /**
-     * @param mixed $accountBalanceExplanation
-     */
-    public function setAccountBalanceExplanation($accountBalanceExplanation)
-    {
-        $this->accountBalanceExplanation = $accountBalanceExplanation;
     }
 
     /**
