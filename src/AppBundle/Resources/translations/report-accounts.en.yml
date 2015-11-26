@@ -8,7 +8,7 @@ nav:
   balanceAccounts: Balance accounts
     
 save:
-  label: Save and continue
+  label: Save
 cancel:
   label: Cancel
 

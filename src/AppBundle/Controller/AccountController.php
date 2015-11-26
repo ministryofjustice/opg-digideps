@@ -118,8 +118,6 @@ class AccountController extends AbstractController
                 'deserialise_group' => 'balance_mismatch_explanation'
             ]);
 
-            return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
-
         }
         
         $client = $this->getClient($report->getClient());
