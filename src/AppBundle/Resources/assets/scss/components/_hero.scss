@@ -10,6 +10,7 @@
         color: $white;
         padding-bottom: 50px;
     }
+    
     .message {
         @include core-24();
         color: $white;
@@ -23,6 +24,7 @@
             @include bold-24();
         }
     }
+    
     .total {
         @include bold-24();
         color: $white;
@@ -94,9 +96,12 @@
     &.orange {
         background: $orange;
         
-        h2,.message,.total {
+        h2,
+        .message,
+        .total {
             color: $black;
         }
+        
     }
     
     &.compact {

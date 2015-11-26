@@ -11,9 +11,11 @@
         
         text-align: right;
         
-        .label, .value {
+        .label, 
+        .value {
             display: inline;
         }
+        
         .value {
             margin-left: 20px;
             padding-right: 5px;

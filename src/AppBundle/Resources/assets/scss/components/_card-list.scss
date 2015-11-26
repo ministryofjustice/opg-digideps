@@ -2,7 +2,7 @@
     @include core-19();
     list-style: none;
     padding: 0;
-    margin: 0 ;
+    margin: 0;
     border-bottom: 1px solid $grey-2;
     
     .card-item {
@@ -19,16 +19,19 @@
 
         .labelvalue {
             @extend %contain-floats;
+            
             .label {
                 @include core-19(1.5);
                 float: left;
                 clear: both;
             }
+            
             .value {
                 @include bold-19(1.5);
                 padding-left: 10px;
                 float: left;
             }
+        
         }
 
     }
@@ -38,7 +41,7 @@
         box-sizing: border-box;
         width: 45%;
         float: left;
-        background: #2B8CC4;
+        background: $light-blue;
         padding: 30px 10px 40px 20px;
         color: $white;
 
@@ -58,6 +61,7 @@
                 float: left;
                 clear: both;
             }
+            
             .value {
                 @include core-16();
                 box-sizing: border-box;
@@ -65,6 +69,7 @@
                 padding: 0;
                 float: left;
             }
+            
         }
 
         .add-link {
@@ -80,20 +85,21 @@
         }
 
         &.add {
-            background: $grey-3 url(images/roundplus.png) center 25px no-repeat;
+            background: $grey-3 url('images/roundplus.png') center 25px no-repeat;
             background-size: 61px 61px;
             padding: 110px 0 30px 0;
             text-align: center;
             color: $black;
             text-decoration: none;
             
-            &:hover, &:focus {
+            &:hover, 
+            &:focus {
                 background-color: $yellow;
                 outline: none;
             }
 
             @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
-                background-image: url(images/roundplus_2x.png);
+                background-image: url('images/roundplus_2x.png');
             }            
         }
         

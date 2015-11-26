@@ -41,7 +41,7 @@
             this.shouldDisplayDescription($target.closest('.transaction'));
         }.bind(this);
     };
-    ExpandingTransactionTable.prototype.getFormSubmitHandler = function (target) {
+    ExpandingTransactionTable.prototype.getFormSubmitHandler = function () {
         return function (e) {
             var $target = $(e.target);
             this.handleFormSubmit($target);
@@ -77,7 +77,7 @@
         this.updateGrandTotal();
 
     };
-    ExpandingTransactionTable.prototype.handleFormSubmit = function (target) {
+    ExpandingTransactionTable.prototype.handleFormSubmit = function () {
         var clearDescription = this.clearDescription;
         $('.transaction', this.container).each(function (index, element) {
             clearDescription(element);

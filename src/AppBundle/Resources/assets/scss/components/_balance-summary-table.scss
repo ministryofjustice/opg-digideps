@@ -1,15 +1,17 @@
 table.money-table {
     
-    margin: 30px 0 50px 0;
+    margin: 30px 0 30px 0;
     
     td {
         padding: 14px 25px 10px 25px;
+        
+        &.value,
+        &.right {
+            text-align: right;
+        }
+        
     }
-    
-    
-    td.value {
-        text-align: right;
-    }
+
     
     tr.solid-row {
         
@@ -40,50 +42,58 @@ table.money-table {
             color: $black;
             background: $grey-3;
         }
-    }
 
-    tr.split-row.highlighted-row {
-        
-        border: 1px solid $turquoise;
-        
-        td.title {
-            @include bold-19();
-            background: $white;
-            color: $turquoise;
-        }
+        &.highlighted-row {
 
-        td.value {
-            @include bold-24();
-            background: $turquoise;
-            color: $white;
-        }
-        
-        &.orange {
-            border-color: $orange;
+            border: 1px solid $turquoise;
+
             td.title {
-                color: $black;
+                @include bold-19();
+                background: $white;
+                color: $turquoise;
             }
-            td.value {
-                background: $orange;
-                color: $black;
-                border-bottom-color: $orange;
-            }
-        }
 
-        &.black {
-            border-color: $black;
-            td.title {
-                color: $black;
-            }
             td.value {
-                background: $black;
+                @include bold-24();
+                background: $turquoise;
                 color: $white;
-                border-bottom-color: $black;
             }
+
+            &.orange {
+                border-color: $orange;
+                
+                td.title {
+                    color: $black;
+                }
+                
+                td.value {
+                    background: $orange;
+                    color: $black;
+                    border-bottom-color: $orange;
+                }
+                
+            }
+
+            &.black {
+                border-color: $black;
+                
+                td.title {
+                    color: $black;
+                }
+                
+                td.value {
+                    background: $black;
+                    color: $white;
+                    border-bottom-color: $black;
+                }
+                
+            }
+
+
         }
-        
-        
     }
+
+
     
     tr.medium-bottom-margin {
         margin-bottom: 20px;
@@ -104,10 +114,6 @@ table.money-table {
         td {
             border: 0;
         }
-    }
-    
-    td.right {
-        text-align: right;
     }
     
 }
