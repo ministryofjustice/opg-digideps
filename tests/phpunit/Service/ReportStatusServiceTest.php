@@ -14,6 +14,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
     private $translator;
     
     public function setUp() {
+        $this->markTestSkipped('deprecated');
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('trans')->with('decision',[], 'status')->andReturn("Decision")
