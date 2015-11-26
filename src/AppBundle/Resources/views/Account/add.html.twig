@@ -14,17 +14,10 @@
     {% set formId = "account_add_form" %}
     
     {% block maincontent %}
+
+        <h2 class="page-section-title">{{ 'banks.add.pageSectionTitle' | trans }}</h2>
+        <p class="page-section-description">{{ 'banks.add.pageSectionDescription' | trans }}</p>
         
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionTitle: 'banks.add.pageSectionTitle'
-        } %}
-
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'banks.add.pageSectionDescription'
-        } %}
-
         {% include 'AppBundle:Account:_account_form.html.twig' %}
         
     {% endblock %}

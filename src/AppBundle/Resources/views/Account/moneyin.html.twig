@@ -12,13 +12,8 @@
     
     {% block maincontent %}
 
-        <h2 class="page-section-title heading-medium-large ">
-            {{ 'moneyIn.pageSectionTitle' | trans }}
-        </h2>
-
-        <p class="page-section-description">
-            {{ 'moneyIn.pageSectionDescription' | trans({'%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}
-        </p>
+        <h2 class="page-section-title">{{ 'moneyIn.pageSectionTitle' | trans }}</h2>
+        <p class="page-section-description">{{ 'moneyIn.pageSectionDescription' | trans({'%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
 
         {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,

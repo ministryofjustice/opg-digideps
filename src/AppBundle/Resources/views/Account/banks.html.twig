@@ -12,15 +12,8 @@
     
     {% block maincontent %}
 
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionTitle: 'banks.pageSectionTitle'
-        } %}
-
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'banks.pageSectionDescription'
-        } %}
+        <h2 class="page-section-title">{{ 'banks.pageSectionTitle' | trans }}</h2>
+        <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans }}</p>
         
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
@@ -42,11 +35,9 @@
         {% endembed %}
         
         <dl class="labelvalue right-inline transaction big-value">
-            <dt class="label">Actual balance from all accounts:</dt>
-            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ report.accountsClosingBalanceTotal == null ? '-,-' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}
-            </dd>
+            <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>
+            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ report.accountsClosingBalanceTotal == null ? '-,-' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}</dd>
         </dl>
-        
         
     {% endblock %}
 

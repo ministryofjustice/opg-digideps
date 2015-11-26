@@ -58,4 +58,5 @@ banks:
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number
+    totalBalance: Actual balance from all accounts
     
