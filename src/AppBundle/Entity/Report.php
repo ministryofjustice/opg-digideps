@@ -60,6 +60,7 @@ class Report
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
     
