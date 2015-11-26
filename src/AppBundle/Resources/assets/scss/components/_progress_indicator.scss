@@ -51,7 +51,7 @@ ol.progress {
 
             }
             
-            &:before {
+            &::before {
                 
                 @include border-radius(100%);
 
@@ -130,7 +130,7 @@ ol.progress {
                 margin-right: $spacingforchevron;
             }
             
-            .progress__step:before {
+            .progress__step::before {
                 color: $light-blue;
                 background-color: $white;
                 
@@ -170,7 +170,7 @@ ol.progress {
                 color: $turquoise;
             }
             
-            .progress__step:before {
+            .progress__step::before {
                 color: $white;
                 text-indent: -9999px;
                 background: $turquoise url("images/progress-tick.png") center 3px no-repeat;
