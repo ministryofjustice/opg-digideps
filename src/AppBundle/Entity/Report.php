@@ -228,6 +228,14 @@ class Report
      */
     private $reasonNotAllAgreed;
 
+    /**
+     * @var string
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
+     */
+    private $balanceMismatchExplanation;
+
      /**
      * Constructor
      */
@@ -850,6 +858,24 @@ class Report
     {
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
     }
+
+    /**
+     * @return string
+     */
+    public function getBalanceMismatchExplanation()
+    {
+        return $this->balanceMismatchExplanation;
+    }
+
+    /**
+     * @param string $balanceMismatchExplanation
+     */
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
+    {
+        $this->balanceMismatchExplanation = $balanceMismatchExplanation;
+    }
+
+
 
     /**
      * @return Transaction[]

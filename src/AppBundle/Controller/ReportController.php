@@ -39,6 +39,11 @@ class ReportController extends RestController
         $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
         $report->setCourtOrderType($courtOrderType);
 
+        $this->validateArray($reportData, [
+            'start_date' => 'notEmpty',
+            'end_date' => 'notEmpty',
+        ]);
+
         // add other stuff
         $report->setStartDate(new \DateTime($reportData['start_date']));
         $report->setEndDate(new \DateTime($reportData['end_date']));
@@ -202,6 +207,9 @@ class ReportController extends RestController
             $report->setFurtherInformation($data['further_information']);
         }
 
+        if (array_key_exists('balance_mismatch_explanation', $data)) {
+            $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
+        }
 
         $this->getEntityManager()->flush($report);
 

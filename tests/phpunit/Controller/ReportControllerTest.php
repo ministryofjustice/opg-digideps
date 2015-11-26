@@ -309,13 +309,15 @@ class ReportControllerTest extends AbstractTestController
                 ],
                 'transactions_out' => [
                     ['id'=>'cash-withdrawn', 'amount'=>24, 'more_details'=>'to pay bills'],
-                ]
+                ],
+                'balance_mismatch_explanation' => 'bme'
             ]
         ]);
 
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals('2015-01-29', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-29', $report->getEndDate()->format('Y-m-d'));
+        $this->assertEquals('bme', $report->getBalanceMismatchExplanation());
 
         // assert transactions changes
         $tDividend = $report->getTransactionByTypeId('dividends');
