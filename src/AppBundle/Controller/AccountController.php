@@ -177,14 +177,14 @@ class AccountController extends AbstractController
 
         $form->handleRequest($request);
 
-        if($form->isValid()){
+        if ($form->isValid()) {
 
             $data = $form->getData();
             $data->setReport($reportId);
-            $this->get('restClient')->post('report/'.$reportId.'/account', $account);
-            
-            return $this->redirect($this->generateUrl('accounts_banks', ['reportId'=>$reportId]) );
-        
+            $this->get('restClient')->post('report/' . $reportId . '/account', $account);
+
+            return $this->redirect($this->generateUrl('accounts_banks', ['reportId' => $reportId]));
+
         }
 
         $client = $this->getClient($report->getClient());
