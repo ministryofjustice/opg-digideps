@@ -277,7 +277,7 @@ describe('Expanding Transaction Table Tests', function () {
 
             });
         });
-        describe('clear further info', function () {
+        describe('clear further info when no total at submission time', function () {
             it('should set a further info value to null if a number goes from something to 0', function () {
                 var movingSection = $('.section:nth-child(6)', placeholder);
                 var moreDetails = $('.transaction-more-details', movingSection);
@@ -288,7 +288,10 @@ describe('Expanding Transaction Table Tests', function () {
                 moreDetails.val('test');
                 value.val("0").trigger('keyup');
 
+                expect(moreDetails.val()).to.equal("test");
+                expandingTransactionTable.handleFormSubmit();    
                 expect(moreDetails.val()).to.equal("");
+                
             });
             it('should set a further info value to null if a number goes from something to null', function () {
                 var movingSection = $('.section:nth-child(6)', placeholder);
@@ -300,7 +303,10 @@ describe('Expanding Transaction Table Tests', function () {
                 moreDetails.val('test');
                 value.val("").trigger('keyup');
 
+                expect(moreDetails.val()).to.equal("test");
+                expandingTransactionTable.handleFormSubmit();
                 expect(moreDetails.val()).to.equal("");
+                
             });
         });
     });

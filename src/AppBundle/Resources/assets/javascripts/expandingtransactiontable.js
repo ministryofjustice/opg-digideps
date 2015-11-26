@@ -12,6 +12,7 @@
         this.inputs = this.container.find('.transaction-value');
         this.subTotals = this.container.find('.summary .sub-total .value');
         this.grandTotal = this.container.find('.grand-total .value');
+        this.form = this.container.find('form');
         
         this.addElementLevelEvents();
         this.closeAll();
@@ -20,10 +21,12 @@
     
     ExpandingTransactionTable.prototype.addElementLevelEvents = function () {
         this.clickHandler = this.getSummaryClickHandler();
-        $('.summary', this.element).on('click', this.clickHandler);
-        
         this.totalChangeHandler = this.getTotalChangeHandler();
+        this.formSubmitHandler = this.getFormSubmitHandler();
+        
+        $('.summary', this.element).on('click', this.clickHandler);
         this.inputs.on('keyup input paste', this.totalChangeHandler);
+        this.form.on('submit', this.formSubmitHandler);
     };
     ExpandingTransactionTable.prototype.getSummaryClickHandler = function () {
         return function (e) {
@@ -36,6 +39,12 @@
             
             this.handleTotalChange($target);
             this.shouldDisplayDescription($target.closest('.transaction'));
+        }.bind(this);
+    };
+    ExpandingTransactionTable.prototype.getFormSubmitHandler = function (target) {
+        return function (e) {
+            var $target = $(e.target);
+            this.handleFormSubmit($target);
         }.bind(this);
     };
     ExpandingTransactionTable.prototype.handleSummaryClick = function (target) {
@@ -67,6 +76,12 @@
 
         this.updateGrandTotal();
 
+    };
+    ExpandingTransactionTable.prototype.handleFormSubmit = function (target) {
+        var clearDescription = this.clearDescription;
+        $('.transaction', this.container).each(function (index, element) {
+            clearDescription(element);
+        });           
     };
     ExpandingTransactionTable.prototype.updateGrandTotal = function () {
         var total = 0;
@@ -102,12 +117,18 @@
 
         if (isNaN(value) || value === 0) {
             transaction.addClass('hide-description');
-            $('.transaction-more-details', transaction).val('');
         } else {
             transaction.removeClass('hide-description');
         }
     };
-    
+    ExpandingTransactionTable.prototype.clearDescription = function (transaction) {
+        var valueElement = $('.transaction-value', transaction);
+        var value = parseFloat(valueElement.val().replace(/,/g , ""));
+
+        if (isNaN(value) || value === 0) {
+            $('.transaction-more-details', transaction).val('');
+        }
+    };
     root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 
 }).call(this);
