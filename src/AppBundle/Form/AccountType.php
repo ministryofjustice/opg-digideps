@@ -44,6 +44,7 @@ class AccountType extends AbstractType
     {
         $resolver->setDefaults( [
             'translation_domain' => 'report-account-form',
+            'validation_groups' => ['add_edit'],
         ]);
     }
 }
