@@ -14,6 +14,7 @@ class ListAccountsDueTest extends WebTestCase
 {
     public function setUp()
     {
+        $this->markTestSkipped('deprecated');
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
             ->shouldReceive('getId')->andReturn(1)

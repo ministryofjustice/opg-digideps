@@ -12,6 +12,7 @@ use Mockery as m;
 class AccountContinueTest extends WebTestCase
 {
     public function setUp() {
+        $this->markTestSkipped('deprecated');
         $client = static::createClient([ 'environment' => 'test',
             'debug' => false]);
         $this->twig = $client->getContainer()->get('templating');
