@@ -47,9 +47,9 @@ class AccountController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $data = $this->deserializeBodyContent($request, [
-           'bank' => 'notEmpty', 
+           'bank' => 'notEmpty',
            'sort_code' => 'notEmpty',
-           'opening_balance' => 'notEmpty'
+           'opening_balance' => 'mustExist'
         ]);
         
         $account = new EntityDir\Account();
