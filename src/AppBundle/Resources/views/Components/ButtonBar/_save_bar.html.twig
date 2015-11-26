@@ -12,7 +12,7 @@
     {% set showCancel = true %}
 {% endif %}
 
-<div id="save-{{ section }}" class="save-section group">
+<div id="save-{{ section }}" class="save-section">
     
     <div class="save-bar button-bar">
         {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
@@ -22,7 +22,7 @@
                 transDomain: translationDomain,
                 linkButtonLabel: 'cancel.label',
                 linkClass: 'button-link behat-link-cancel-edit',
-                linkHref: path(section ~ 's', {'reportId': report.id})
+                linkHref: app.request.headers.get('referer')
             } %}
         {% endif %}
 

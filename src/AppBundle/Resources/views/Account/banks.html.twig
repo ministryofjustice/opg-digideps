@@ -43,16 +43,13 @@
         
         <dl class="labelvalue right-inline transaction big-value">
             <dt class="label">Actual balance from all accounts:</dt>
-            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}
-                {{ report.accountsClosingBalanceTotal == null ? '-,-' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}
+            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ report.accountsClosingBalanceTotal == null ? '-,-' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}
             </dd>
         </dl>
-
-
+        
         <nav id="bottom-button-bar">
             <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" id="continue-button" class="button">Save and continue</a>
-            &nbsp;Next section: <b>Balance Accounts</b>
-            
+            &nbsp;Next section: <b>{{ 'nav.balanceAccounts' | trans }}</b>
         </nav>
         
     {% endblock %}

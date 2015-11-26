@@ -20,8 +20,7 @@ pageSectionDescription: 'balance.bad.pageSectionDescription'
     <div class="hero-column">
         <div class="message">{{ 'balance.bad.totalAfterMoneyInOut' | trans }}:</div>
         <div class="total">
-            {{ 'currencySymbol' |trans }}
-            {{ report.calculatedBalance | number_format(2, '.', ',') }}
+            {{ 'currencySymbol' |trans }}{{ report.calculatedBalance | number_format(2, '.', ',') }}
         </div>
     </div>
     <div class="hero-column">
@@ -29,8 +28,7 @@ pageSectionDescription: 'balance.bad.pageSectionDescription'
             {{ 'balance.bad.totalFromAccounts' | trans }}:
         </div>
         <div class="total">
-            {{ 'currencySymbol' | trans }}
-            {{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
+            {{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
         </div>
     </div>
     <div class="hero-column">
@@ -38,8 +36,7 @@ pageSectionDescription: 'balance.bad.pageSectionDescription'
             <b>{{ 'balance.bad.unaccounted' | trans }}:</b>
         </div>
         <div class="total">
-            {{ 'currencySymbol' | trans }}
-            {{ report.totalsOffset | abs | number_format(2, '.', ',') }}
+            {{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | number_format(2, '.', ',') }}
         </div>
     </div>
 </div>
@@ -47,28 +44,22 @@ pageSectionDescription: 'balance.bad.pageSectionDescription'
 <table class="money-table">
     <tr class="solid-row">
         <td class="title">{{ 'balance.totalBankStart' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}
-            {{ report.accountsOpeningBalanceTotal | number_format(2, '.', ',') }}</td>
+        <td class="value">{{ 'currencySymbol' | trans }}{{ report.accountsOpeningBalanceTotal | number_format(2, '.', ',') }}</td>
     </tr>
     <tr class="solid-row">
         <td class="title">{{ 'balance.totalInDuringPeriod' | trans }}:</td>
-        <td class="value">+{{ 'currencySymbol' | trans }}
-            {{ report.moneyInTotal  | number_format(2, '.', ',') }}</td>
+        <td class="value">+{{ 'currencySymbol' | trans }}{{ report.moneyInTotal  | number_format(2, '.', ',') }}</td>
     </tr>
     <tr class="split-row">
         <td class="title right">{{ 'balance.totalFromAllIn' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}
-            {{ (report.accountsOpeningBalanceTotal + report.moneyInTotal)  | number_format(2, '.', ',') }}
-        </td>
+        <td class="value">{{ 'currencySymbol' | trans }}{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal)  | number_format(2, '.', ',') }}</td>
     </tr>
 
     <tr class="spacer"><td colspan="2"></td></tr>
 
     <tr class="solid-row">
         <td class="title">{{ 'balance.totalOutInPeriod' | trans }}:</td>
-        <td class="value">-
-            {{ 'currencySymbol' | trans }}
-            {{ report.moneyOutTotal  | number_format(2, '.', ',') }}</td>
+        <td class="value">-{{ 'currencySymbol' | trans }}{{ report.moneyOutTotal  | number_format(2, '.', ',') }}</td>
     </tr>
 
     <tr class="spacer borderless"><td colspan="2"></td></tr>

@@ -1,6 +1,6 @@
 {% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
 
-    {% set translationDomain = "report-accounts" %}
+    {% set translationDomain = "report-account-form" %}
     {% trans_default_domain translationDomain %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
@@ -13,10 +13,7 @@
     {% set formId = "account_add_form" %}
 
     {% block maincontent %}
-
-        {% set translationDomain = "report-accounts" %}
-        {% trans_default_domain translationDomain %}
-
+        
         {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
         transDomain: translationDomain,
         pageSectionTitle: 'banks.edit.pageSectionTitle'

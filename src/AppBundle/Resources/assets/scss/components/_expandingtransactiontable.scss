@@ -67,6 +67,9 @@
             padding: 20px 10px 20px 0;
             color: $black;
             
+            .currency {
+                @include bold-24();
+            }
             .value {
                 @include bold-24(); 
             }

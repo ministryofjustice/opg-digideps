@@ -10,30 +10,30 @@
             </div>
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
-                {% if formTransactions[id].moreDetails is defined %}
-                {%     set formGroupClass = 'form-group-compound' %}
-                {% else %}
-                {%     set formGroupClass = '' %}
-                {% endif %}
-                <div class="transaction">
-                    {#access the element via ID, set from the model therefore matching#}
-                    {{ form_row(formTransactions[id].id) }}
-                    {{ form_row(formTransactions[id].type) }}
-
-                    {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
-                        'inputPrefix' : '£',
-                        'inputClass' : 'form-control__number transaction-value',
-                        'formGroupClass': formGroupClass
-                    }) }}
-
                     {% if formTransactions[id].moreDetails is defined %}
-                        {{ form_input(formTransactions[id].moreDetails, '', {
-                            'labelText': 'form.moreDetails' | trans,
-                            'formGroupClass': 'form-group-combo-description',
-                            'inputClass': 'expanding transaction-more-details'
-                        }) }}
+                    {%     set formGroupClass = 'form-group-compound' %}
+                    {% else %}
+                    {%     set formGroupClass = '' %}
                     {% endif %}
-                </div>
+                    <div class="transaction">
+                        {#access the element via ID, set from the model therefore matching#}
+                        {{ form_row(formTransactions[id].id) }}
+                        {{ form_row(formTransactions[id].type) }}
+    
+                        {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
+                            'inputPrefix' : '£',
+                            'inputClass' : 'form-control__number transaction-value',
+                            'formGroupClass': formGroupClass
+                        }) }}
+    
+                        {% if formTransactions[id].moreDetails is defined %}
+                            {{ form_input(formTransactions[id].moreDetails, '', {
+                                'labelText': 'form.moreDetails' | trans,
+                                'formGroupClass': 'form-group-combo-description',
+                                'inputClass': 'expanding transaction-more-details'
+                            }) }}
+                        {% endif %}
+                    </div>
                 {% endfor %}
                 <div class="sub-total">
                     Total {{ ('form.categories.' ~ category)  | trans  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',') }}</span>
@@ -41,15 +41,15 @@
             </div>
         </div>
         {% endfor %}
-        <div class="grand-total">{{ (subsection ~ '.grandtotal')| trans }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactionsTotal | number_format(2, '.', ',')}}</span></div>
+        <div class="grand-total">{{ (subsection ~ '.grandtotal')| trans }}: <span class="currency">{{ 'currencySymbol' | trans }}</span><span class="value">{{ transactionsTotal | number_format(2, '.', ',')}}</span></div>
     </div>
 
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save, 'save', {
-        'labelText': ( 'form.save.label') | trans,
-        'buttonClass': 'behat-link-save'
-    }) }}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        showDelete: false,
+        showCancel: false,
+        section: 'account'
+    } %}
 
 {{ form_end(form) }}
 

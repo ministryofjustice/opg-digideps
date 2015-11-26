@@ -6,41 +6,20 @@ nav:
   moneyOut: Money out
   bankAccounts: Bank accounts
   balanceAccounts: Balance accounts
-
-accountForm:
-  bank:
-    label: Bank or building society name
-  accountNumber:
-    label: Last 4 digits of the account number
-    hint: ""
-    preInput: "* * * *"
-  sortCode:
-    legend: Branch sort code
-    hint: ""
-  accountType:
-    label: Account type
-    hint: For example, current account, savings account
-  openingBalance:
-    label: How much was in the account on %startDate%? 
-  closingBalance:
-    label: How much was in the account on %endDate%?
     
 save:
   label: Save and continue
 cancel:
   label: Cancel
-delete:
-    label: Delete
-    message: Are you sure that you want to delete this account?
 
 currencySymbol: "£"
 
 moneyIn:
   pageSectionTitle: Money coming into the client’s accounts
-  pageSectionDescription: Tell us about money paid into the client’s accounts between 1 December 2014 and  1 December 2015. If your client has more than 1 bank account, add up the totals from all the accounts for each income category.
+  pageSectionDescription: Tell us about money paid into the client’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, add up the totals from all the accounts for each income category.
 moneyOut:
   pageSectionTitle: Money you have spent on behalf of the client
-  pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between 1 December 2014 and 1 December 2015. If your client has more than 1 bank account, add up the totals from all the accounts for each type of payment.
+  pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, add up the totals from all the accounts for each type of payment.
 
 
 balance:
@@ -79,9 +58,4 @@ banks:
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number
-    add:
-        pageSectionTitle: Add account
-        pageSectionDescription: Give us details about the client’s account
-    edit:
-        pageSectionTitle: Edit account
-        pageSectionDescription: Give us details about the client’s account
+    

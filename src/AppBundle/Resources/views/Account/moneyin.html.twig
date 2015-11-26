@@ -12,19 +12,16 @@
     
     {% block maincontent %}
 
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionTitle: 'moneyIn.pageSectionTitle'
-        } %}
+        <h2 class="page-section-title heading-medium-large ">
+            {{ 'moneyIn.pageSectionTitle' | trans }}
+        </h2>
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'moneyIn.pageSectionDescription'
-        } %}
+        <p class="page-section-description">
+            {{ 'moneyIn.pageSectionDescription' | trans({'%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}
+        </p>
 
         {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription',
         transactionsGrouped: report.groupByCategory(report.transactionsIn),
         transactionsTotal: report.getMoneyInTotal,
         formTransactions: form.transactionsIn

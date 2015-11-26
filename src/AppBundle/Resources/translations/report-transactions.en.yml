@@ -1,6 +1,6 @@
+save:
+  label: Save and continue
 form:
-  save:
-    label: Save
   categories:
     household-bills: Household bills
     care: Care

@@ -14,13 +14,11 @@
     {% block meta %}
         <dl class="labelvalue">
             <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.startDate | date("j M Y") }}:</dt>
-            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}
-                {{ account.openingBalance == null ? '—,-' : (account.openingBalance | number_format(2, '.', ',')) }}
+            <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ account.openingBalance == null ? '—,-' : (account.openingBalance | number_format(2, '.', ',')) }}
             </dd>
             <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.endDate | date("j M Y") }}:</dt>
             <dd class="value">
-                {{ 'currencySymbol' | trans({}, translationDomain) }}
-                {{ account.closingBalance == null ? '-,-' : (account.closingBalance | number_format(2, '.', ',')) }}
+                {{ 'currencySymbol' | trans({}, translationDomain) }}{{ account.closingBalance == null ? '-,-' : (account.closingBalance | number_format(2, '.', ',')) }}
             </dd>
         </dl>
         <a class="edit-link" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>

@@ -9,27 +9,24 @@
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
-    
+
     {% block maincontent %}
 
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionTitle: 'moneyOut.pageSectionTitle'
-        } %}
+        <h2 class="page-section-title heading-medium-large ">
+            {{ 'moneyOut.pageSectionTitle' | trans }}
+        </h2>
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'moneyOut.pageSectionDescription'
-        } %}
+        <p class="page-section-description">
+            {{ 'moneyOut.pageSectionDescription' | trans({'%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}
+        </p>
 
         {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription',
         transactionsGrouped: report.groupByCategory(report.transactionsOut),
         transactionsTotal: report.getMoneyOutTotal,
         formTransactions: form.transactionsOut
         } %}
-        
+
     {% endblock %}
 
 {% endembed %}

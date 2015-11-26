@@ -1,8 +1,6 @@
-{% set translationDomain = "report-accounts" %}
-{% trans_default_domain translationDomain %}
 <nav id="account-sub-nav">
-    <a href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" {% if subsection == 'moneyin' %}class="active"{% endif %}>{{ 'nav.moneyIn' | trans }}</a>
-    <a href="{{ path('accounts_moneyout' , {'reportId': report.id}) }}" {% if subsection == 'moneyout' %}class="active"{% endif %}>{{ 'nav.moneyOut' | trans }}</a>
-    <a href="{{ path('accounts_banks' , {'reportId': report.id}) }}" {% if subsection == 'banks' %}class="active"{% endif %}>{{ 'nav.bankAccounts' | trans }}</a>
-    <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" {% if subsection == 'balance' %}class="active"{% endif %}>{{ 'nav.balanceAccounts' | trans }}</a>
+    <a href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" {% if subsection == 'moneyin' %}class="active"{% endif %}>{{ 'nav.moneyIn' | trans({}, "report-accounts") }}</a>
+    <a href="{{ path('accounts_moneyout' , {'reportId': report.id}) }}" {% if subsection == 'moneyout' %}class="active"{% endif %}>{{ 'nav.moneyOut' | trans({}, "report-accounts") }}</a>
+    <a href="{{ path('accounts_banks' , {'reportId': report.id}) }}" {% if subsection == 'banks' %}class="active"{% endif %}>{{ 'nav.bankAccounts' | trans({}, "report-accounts") }}</a>
+    <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" {% if subsection == 'balance' %}class="active"{% endif %}>{{ 'nav.balanceAccounts' | trans({}, "report-accounts") }}</a>
 </nav>

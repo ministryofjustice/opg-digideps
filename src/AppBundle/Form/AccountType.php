@@ -43,7 +43,7 @@ class AccountType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults( [
-            'translation_domain' => 'report-accounts',
+            'translation_domain' => 'report-account-form',
         ]);
     }
 }
