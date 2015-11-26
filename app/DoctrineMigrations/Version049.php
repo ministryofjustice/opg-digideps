@@ -22,39 +22,39 @@ class Version049 extends AbstractMigration
             return preg_replace('/(-+)/i', '-', preg_replace('/([^a-z0-9])/i', '-', strtolower($string)));
         };
 
-        // TRANSACTIONS
+        // TRANSACTIONS (sync with google doc "Deputy report card sort". Updated on 26/11/2015 12:25)
         $rows = [
             'in' => [
                 'income-earnings' => [
-                    ['dividends', false],
-                    ['income-from-investments', false],
-                    ['account-interest', false],
-                    ['salary-or-wages', false],
-                    ['income-from-property-rental', false],
+                    ['dividends'],
+                    ['income-from-investments'],
+                    ['account-interest'],
+                    ['salary-or-wages'],
+                    ['income-from-property-rental'],
                 ],
                 'state-benefits' => [
-                    ['attendance-allowance', false],
-                    ['disability-living-allowance', false],
-                    ['personal-independence-payment', false],
-                    ['severe-disablement-allowance', false],
-                    ['winter-fuel-cold-weather-payment', false],
-                    ['housing-benefit', false],
-                    ['employment-support-allowance', false],
-                    ['incapacity-benefit', false],
-                    ['income-support', false],
-                    ['pension-credit', false],
-                    ['universal-credit', false],
+                    ['attendance-allowance'],
+                    ['disability-living-allowance'],
+                    ['personal-independence-payment'],
+                    ['severe-disablement-allowance'],
+                    ['winter-fuel-cold-weather-payment'],
+                    ['housing-benefit'],
+                    ['employment-support-allowance'],
+                    ['incapacity-benefit'],
+                    ['income-support'],
+                    ['pension-credit'],
+                    ['universal-credit'],
                 ],
                 'pensions' => [
-                    ['personal-pension', false],
-                    ['state-pension', false],
+                    ['personal-pension'],
+                    ['state-pension'],
                 ],
                 'damages' => [
                     ['compensation-or-damages-award', true],
                 ],
                 'one-off' => [
-                    ['bequest-received', false],
-                    ['gift-received', false],
+                    ['bequest-received'],
+                    ['gift-received'],
                     ['sale-of-property', true],
                     ['sale-of-asset', true],
                 ],
@@ -62,47 +62,47 @@ class Version049 extends AbstractMigration
                     ['transfers-in-from-client-s-other-accounts', true],
                 ],
                 'other' => [
-                    ['refunds', false],
-                    ['anything-else', false],
+                    ['refunds'],
+                    ['anything-else'],
                 ],
             ],
             'out' => [
                 'household-bills' => [
-                    ['water', false],
-                    ['gas', false],
-                    ['electricity', false],
-                    ['telephone', false],
-                    ['council-tax', false],
-                    ['property-maintenance-improvement', false],
-                    ['rent', false],
-                    ['mortgage', false],
-                    ['accommodation-service-charge', false],
-                    ['buildings-or-contents-insurance', false],
+                    ['water'],
+                    ['gas'],
+                    ['electricity'],
+                    ['telephone'],
+                    ['council-tax'],
+                    ['property-maintenance-improvement', true],
+                    ['rent'],
+                    ['mortgage'],
+                    ['accommodation-service-charge'],
+                    ['buildings-or-contents-insurance'],
                 ],
                 'care' => [
-                    ['care-fees', false],
-                    ['medical-expenses', false],
-                    ['medical-insurance', false],
+                    ['care-fees'],
+                    ['medical-expenses'],
+                    ['medical-insurance'],
                 ],
                 'client-spending-money' => [
-                    ['food', false],
-                    ['toiletries', false],
-                    ['clothes', false],
-                    ['personal-allowance-pocket-money', false],
-                    ['holidays', false],
-                    ['day-trips', false],
-                    ['transport-bus-train-taxi-fares', false],
+                    ['food'],
+                    ['toiletries'],
+                    ['clothes'],
+                    ['personal-allowance-pocket-money'],
+                    ['holidays'],
+                    ['day-trips'],
+                    ['transport-bus-train-taxi-fares'],
                 ],
                 'fees' => [
-                    ['tax-payments-to-hmrc', false],
-                    ['security-bond', false],
+                    ['tax-payments-to-hmrc'],
+                    ['security-bond'],
                     ['solicitor-fees', true],
                     ['accountant-fees', true],
-                    ['opg-fees', false],
+                    ['opg-fees'],
                 ],
                 'major-purchases' => [
-                    ['stocks-or-shares', false],
-                    ['investment-bonds', false],
+                    ['stocks-or-shares'],
+                    ['investment-bonds'],
                     ['investment-account', true],
                     ['purchase-over-1000', true],
                 ],
@@ -111,9 +111,9 @@ class Version049 extends AbstractMigration
                     ['gifts', true],
                 ],
                 'debt-payments' => [
-                    ['loans', false],
-                    ['credit-cards', false],
-                    ['arrears', false],
+                    ['loans'],
+                    ['credit-cards'],
+                    ['arrears'],
                 ],
                 'moving-money' => [
                     ['transfers-out-to-other-client-accounts', true],
@@ -128,7 +128,8 @@ class Version049 extends AbstractMigration
             foreach ($categories as $category => $transactions) { //in / out
                 foreach ($transactions as $transaction) {
                     $displayOrder++;
-                    list($id, $hasMoreDetails) = $transaction;
+                    $id = $transaction[0];
+                    $hasMoreDetails = !empty($transaction[1]);
                     $hasMoreDetailsBool = $hasMoreDetails ? 'true' : 'false';
                     $sql = "INSERT INTO transaction_type (display_order, type, id, has_more_details, category)
                       VALUES('$displayOrder', '$type', '$id', $hasMoreDetailsBool, '$category');";
