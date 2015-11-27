@@ -9,8 +9,8 @@ form:
     major-purchases: Major purchases
     spending-on-other-people: Spending on other people
     debt-payments: Debt payments
-    moving-money: Moving Money
-    income-earnings: Income/Earnings
+    moving-money: Moving money
+    income-earnings: Income and earnings
     state-benefits: State benefits
     pensions: Pensions
     damages: Damages
@@ -29,27 +29,27 @@ form:
     income-from-property-rental:
       label: Income from property rental
     attendance-allowance:
-      label: Attendance Allowance
+      label: Attendance allowance
     disability-living-allowance:
-      label: Disability Living Allowance
+      label: Disability living allowance
     personal-independence-payment:
-      label: Personal Independence Payment
+      label: Personal independence payment
     severe-disablement-allowance:
-      label: Severe Disablement Allowance
+      label: Severe disablement allowance
     winter-fuel-cold-weather-payment:
-      label: Winter Fuel/Cold Weather payment
+      label: Winter fuel/cold weather payment
     housing-benefit:
-      label: Housing Benefit
+      label: Housing benefit
     employment-support-allowance:
-      label: Employment Support Allowance
+      label: Employment support allowance
     incapacity-benefit:
-      label: Incapacity Benefit
+      label: Incapacity benefit
     income-support:
-      label: Income Support
+      label: Income support
     pension-credit:
-      label: Pension Credit
+      label: Pension credit
     universal-credit:
-      label: Universal Credit
+      label: Universal credit
     personal-pension:
       label: Personal pension
     state-pension:
@@ -65,7 +65,7 @@ form:
     sale-of-asset:
       label: Sale of asset
     moving-money:
-      label: Moving Money
+      label: Moving money
     transfers-in-from-client-s-other-accounts:
       label: Transfers in from client's other accounts
     refunds:
@@ -125,13 +125,13 @@ form:
     opg-fees:
       label: OPG fees
     stocks-or-shares:
-      label: Stocks or Shares
+      label: Stocks or shares
     investment-bonds:
-      label: Investment Bonds
+      label: Investment bonds
     investment-account:
-      label: Investment Account
+      label: Investment account
     purchase-over-1000:
-      label: Purchase over £1,000
+      label: Purchases over £1,000
     deputy-expenses:
       label: Deputy expenses
     gifts:

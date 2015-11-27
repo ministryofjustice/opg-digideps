@@ -36,7 +36,7 @@
                     </div>
                 {% endfor %}
                 <div class="sub-total">
-                    Total {{ ('form.categories.' ~ category)  | trans  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',') }}</span>
+                    Total {{ ('form.categories.' ~ category)  | trans | lower  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',') }}</span>
                 </div>
             </div>
         </div>

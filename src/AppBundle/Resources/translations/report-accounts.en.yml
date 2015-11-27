@@ -54,7 +54,7 @@ balance:
     
 banks:
     pageSectionTitle: Client's bank accounts
-    pageSectionDescription: Add all the client's bank and building society accounts, including savings accounts and ISA's
+    pageSectionDescription: Add all the client's bank and building society accounts, including savings accounts and ISAs
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number
