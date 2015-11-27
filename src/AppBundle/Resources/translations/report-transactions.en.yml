@@ -130,6 +130,7 @@ form:
       moreInformations: Enter the type of benefit the client gets
     households-bills-other:
       label: Other
+      moreInformations: Give us more information
     client-transport-bus-train-taxi-fares:
       label: Client transport eg bus, train, taxi fares
     food:
