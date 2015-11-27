@@ -2,9 +2,9 @@
 
 {{ form_start(form, {attr: {id: 'account-form' } }) }}
 
-        {{ form_input(form.accountType, 'accountForm.accountType') }}
         {{ form_input(form.bank, 'accountForm.bank') }}
-        
+        {{ form_input(form.accountType, 'accountForm.accountType') }}
+ 
         {{ form_number(form.accountNumber, 'accountForm.accountNumber', {
             'inputType' : 'Number'
         }) }}
