@@ -28,7 +28,7 @@
     
                         {% if formTransactions[id].moreDetails is defined %}
                             {{ form_input(formTransactions[id].moreDetails, '', {
-                                'labelText': 'form.moreDetails' | trans,
+                                'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans,
                                 'formGroupClass': 'form-group-combo-description',
                                 'inputClass': 'expanding transaction-more-details'
                             }) }}
