@@ -40,6 +40,7 @@ class FormFieldsExtension extends \Twig_Extension
             'form_select' => new \Twig_Function_Method($this, 'renderFormDropDown'),
             'form_known_date' => new \Twig_Function_Method($this, 'renderFormKnownDate'),
             'form_sort_code' => new \Twig_Function_Method($this, 'renderFormSortCode'),
+            'form_number' => new \Twig_Function_Method($this, 'renderFormNumber'),
             'form_cancel' => new \Twig_Function_Method($this, 'renderFormCancelLink'),
             'form_checkbox_group' => new \Twig_Function_Method($this, 'renderCheckboxGroup'),
             'form_checkbox' => new \Twig_Function_Method($this, 'renderCheckboxInput')
@@ -63,6 +64,15 @@ class FormFieldsExtension extends \Twig_Extension
         );
     }
 
+    public function renderFormNumber($element, $elementName,array $vars = [], $transIndex = null )
+    {
+        //generate input field html using variables supplied
+        echo $this->environment->render(
+            'AppBundle:Components/Form:_number.html.twig',
+            $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
+        );
+    }
+    
     /**
      * Renders form checkbox field
      *
@@ -337,9 +347,6 @@ class FormFieldsExtension extends \Twig_Extension
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass']: "";
-
-        $inputType = isset($vars['inputType']) ? $vars['inputType']: "text";
-        
         
         //Text to insert to the left of an input, e.g. * * * * for account
         $preInputTextTrans =  $this->translator->trans($translationKey.'.preInput', [],$domain);
@@ -355,8 +362,7 @@ class FormFieldsExtension extends \Twig_Extension
             'inputPrefix' => $inputPrefix,
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
-            'preInputText' => $preInputText,
-            'inputType' => $inputType
+            'preInputText' => $preInputText
         ];
     }
     

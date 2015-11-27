@@ -5,7 +5,7 @@
         {{ form_input(form.accountType, 'accountForm.accountType') }}
         {{ form_input(form.bank, 'accountForm.bank') }}
         
-        {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
+        {{ form_number(form.accountNumber, 'accountForm.accountNumber', {
             'inputType' : 'Number'
         }) }}
         
@@ -13,13 +13,13 @@
             'inputType' : 'Number'
         }) }}
         
-        {{ form_input(form.openingBalance, '', {
+        {{ form_number(form.openingBalance, '', {
             'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number',
             'inputType' : 'Number'
         } ) }}
-        {{ form_input(form.closingBalance, 'accountForm.closingBalance', {
+        {{ form_number(form.closingBalance, 'accountForm.closingBalance', {
             'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
             'inputClass' : 'form-control__number',
