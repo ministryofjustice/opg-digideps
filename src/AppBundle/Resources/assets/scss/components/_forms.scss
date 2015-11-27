@@ -216,7 +216,6 @@ form {
 
 .form-label {
     margin-bottom: 5px;
-    width: 50%;
     
     @include media(mobile) {
         width: auto;

@@ -75,13 +75,15 @@
     
 </table>
 
+
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
-<p class="page-section-description ">{{ 'balance.bad.goBack' | trans }}</p>
+<p class="page-section-description ">{{ 'balance.bad.goBack' | trans({'%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}) }) | raw }}</p>
 
 <h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.balanceMismatchExplanation, 'balance.bad.formtitle', {
+        'labelText': 'balance.bad.formtitle.label' | trans( {'%difference%': report.totalsOffset  | abs | number_format(2, '.', ',')}),
         'inputClass': 'expanding'
     }) }}
     

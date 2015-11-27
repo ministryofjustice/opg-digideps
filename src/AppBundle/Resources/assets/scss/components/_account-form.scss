@@ -16,10 +16,6 @@ form#account-form {
         position: relative;
     }
     
-    .form-label {
-        width: auto;
-    }
-    
     .input-group-prefix {
         @include core-24();
         margin: 2px 0 0 2px;

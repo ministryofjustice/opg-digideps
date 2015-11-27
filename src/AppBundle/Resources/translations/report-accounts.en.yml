@@ -31,19 +31,19 @@ balance:
     bad:
       pageSectionTitle: Balance the accounts
       pageSectionDescription: The client’s accounts are not balanced. There is a difference of £%totalOffset% between the total money in and out and the final balance.
-      accountsBalanced: Accounts not Balanced
+      accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut: Total balance after money in and money out
       totalFromAccounts: Total balance of all bank accounts
       unaccounted: Unaccounted for
       extraAmount: Extra amount
-      summaryBalanceInOut: Balance after total money in and mouney out
+      summaryBalanceInOut: Balance after total money in and money out
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
-      goBack: Go back and check that money in and money out matches your records of money coming in and out of the client’s accounts
+      goBack: Go back and check that <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> matches your records of money coming in and out of the client’s accounts
       cantFind: Can’t find the problem?
       formtitle:
-        label: If you can’t find where the extra amount has come, tell us why
+        label: If you can’t find where the <b>£%difference%</b> has come, tell us why
     balanceAfterReported: Total money in and money out
     totalBankStart: Totals from all bank accounts at start of reporting period
     totalInDuringPeriod: Total money in during reporting period
@@ -58,5 +58,5 @@ banks:
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number
-    totalBalance: Actual balance from all accounts
+    totalBalance: Total balance from all accounts
     
