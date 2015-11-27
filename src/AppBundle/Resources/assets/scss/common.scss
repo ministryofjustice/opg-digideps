@@ -17,15 +17,15 @@
 @import 'design-patterns/media-player';
 
 //Elements
+@import 'reset';
+@import 'helpers';
 @import 'details';
 @import 'elements-typography';
 @import 'forms';
-@import 'helpers';
 @import 'icons';
 @import 'layout';
 @import 'lists';
 @import 'panels';
-@import 'reset';
 @import 'tables';
 
 @import 'forms/form-block-labels';

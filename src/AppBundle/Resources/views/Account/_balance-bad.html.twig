@@ -34,50 +34,8 @@
     </div>
 </div>
 
-<table class="money-table">
-    <tr class="solid-row">
-        <td class="title">{{ 'balance.totalBankStart' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}{{ report.accountsOpeningBalanceTotal | number_format(2, '.', ',') }}</td>
-    </tr>
-    <tr class="solid-row">
-        <td class="title">{{ 'balance.totalInDuringPeriod' | trans }}:</td>
-        <td class="value">+{{ 'currencySymbol' | trans }}{{ report.moneyInTotal  | number_format(2, '.', ',') }}</td>
-    </tr>
-    <tr class="split-row">
-        <td class="title right">{{ 'balance.totalFromAllIn' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}{{ (report.accountsOpeningBalanceTotal + report.moneyInTotal)  | number_format(2, '.', ',') }}</td>
-    </tr>
-
-    <tr class="spacer"><td colspan="2"></td></tr>
-
-    <tr class="solid-row">
-        <td class="title">{{ 'balance.totalOutInPeriod' | trans }}:</td>
-        <td class="value">-{{ 'currencySymbol' | trans }}{{ report.moneyOutTotal  | number_format(2, '.', ',') }}</td>
-    </tr>
-
-    <tr class="spacer borderless"><td colspan="2"></td></tr>
-
-    <tr class="split-row highlighted-row black">
-        <td class="title">{{ 'balance.bad.summaryBalanceInOut' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}{{ report.calculatedBalance | number_format(2, '.', ',') }}</td>
-    </tr>
-    <tr class="split-row highlighted-row black">
-        <td class="title">{{ 'balance.bad.totalOfAllAccounts' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}</td>
-    </tr>
-
-    <tr class="spacer"><td colspan="2"></td></tr>
-    
-    <tr class="split-row highlighted-row orange">
-        <td class="title">{{ 'balance.bad.unaccounted' | trans }}:</td>
-        <td class="value">{{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | number_format(2, '.', ',') }}</td>
-    </tr>
-    
-</table>
-
-
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
-<p class="page-section-description ">{{ 'balance.bad.goBack' | trans({'%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}) }) | raw }}</p>
+<p class="page-section-description ">{{ 'balance.bad.goBack' | trans({'%accountsLink%': path('accounts_banks', {'reportId': report.id}), '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}) }) | raw }}</p>
 
 <h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
