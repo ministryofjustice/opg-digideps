@@ -1,34 +1,36 @@
 {% set translationDomain = "report-account-form" %}
 
+{{ form_errors_list(form) }}
+
 {{ form_start(form, {attr: {id: 'account-form' } }) }}
 
-        {{ form_input(form.bank, 'accountForm.bank') }}
-        {{ form_input(form.accountType, 'accountForm.accountType') }}
- 
-        {{ form_number(form.accountNumber, 'accountForm.accountNumber', {
-            'inputType' : 'Number'
-        }) }}
-        
-        {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
-            'inputType' : 'Number'
-        }) }}
-        
-        {{ form_number(form.openingBalance, '', {
-            'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
-            'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
-        } ) }}
-        {{ form_number(form.closingBalance, 'accountForm.closingBalance', {
-            'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
-            'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
-        } ) }}
+    {{ form_input(form.bank, 'accountForm.bank') }}
+    {{ form_input(form.accountType, 'accountForm.accountType') }}
 
-        {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-        transDomain: translationDomain,
-        section: 'account'
-        } %}
+    {{ form_number(form.accountNumber, 'accountForm.accountNumber', {
+        'inputType' : 'Number'
+    }) }}
+    
+    {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
+        'inputType' : 'Number'
+    }) }}
+    
+    {{ form_number(form.openingBalance, '', {
+        'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    } ) }}
+    {{ form_number(form.closingBalance, 'accountForm.closingBalance', {
+        'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    } ) }}
 
-        {{ form_end(form) }}
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+    transDomain: translationDomain,
+    section: 'account'
+    } %}
+
+    {{ form_end(form) }}
 
 {{ form_end(form) }}

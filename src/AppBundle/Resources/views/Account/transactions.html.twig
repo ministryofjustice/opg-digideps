@@ -8,6 +8,9 @@
                 <div class="title">{{ ('form.categories.' ~ category)  | trans  }}</div>
                 <div class="sub-total">{{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',')}}</span></div>
             </div>
+
+            {{ form_errors_list(form) }}
+            
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
                     {% if formTransactions[id].moreDetails is defined %}
