@@ -1,8 +1,14 @@
 {% set translationDomain = "report-accounts" %}
 {% trans_default_domain translationDomain %}
 
+{% if report.totalsOffset < 0 %}
+    {% set moreless = "more" %}
+{% else %}
+    {% set moreless = "less" %}
+{% endif %}
+
 <h2 class="page-section-title">{{ 'balance.bad.pageSectionTitle' | trans }}</h2>
-<p class="page-section-description">{{ 'balance.bad.pageSectionDescription' | trans({'%totalOffset%':  report.totalsOffset | abs | number_format(2, '.', ',') }) }}</p>
+<p class="page-section-description">{{ 'balance.bad.pageSectionDescription' | trans({'%more%': moreless, '%totalOffset%':  report.totalsOffset | abs | number_format(2, '.', ',') }) }}</p>
 
 <div class="hero orange compact">
     <h2 class="heading">{{ 'balance.bad.accountsBalanced' | trans }}</h2>

@@ -30,7 +30,7 @@ balance:
       accountsBalancedMessage: Money in and money out match the balance
     bad:
       pageSectionTitle: Balance the accounts
-      pageSectionDescription: The client’s accounts are not balanced. There is a difference of £%totalOffset% between the total money in and out and the final balance.
+      pageSectionDescription: You have reported £%totalOffset% %more% in the total money in and out than in the final balance of the client’s accounts. This means we haven’t been able to balance the accounts.      
       accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut: Total balance after money in and money out
