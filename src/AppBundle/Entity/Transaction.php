@@ -3,7 +3,11 @@ namespace AppBundle\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\ExecutionContextInterface;
 
+/**
+ * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"transactions"})
+ */
 class Transaction
 {
     /**
@@ -141,5 +145,20 @@ class Transaction
         $this->moreDetails = $moreDetails;
     }
 
+    
+    /**
+     * @param ExecutionContextInterface $context
+     */
+    public function moreDetailsValidate(ExecutionContextInterface $context)
+    {
+        $moreDetailsClean = trim($this->getMoreDetails(), " \n");
+        if ($this->getHasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
+            $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
+        }
+        
+        if ($moreDetailsClean && !$this->getAmount()) {
+            $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
+        }
+    }
 
 }
