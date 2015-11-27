@@ -26,7 +26,7 @@ balance:
     good:
       pageSectionTitle: Balance the accounts
       pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
-      accountsBalanced: Accounts Balanced
+      accountsBalanced: Accounts balanced
       accountsBalancedMessage: Money in and money out match the balance
     bad:
       pageSectionTitle: Balance the accounts
@@ -43,7 +43,7 @@ balance:
       goBack: Go back and check that <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> matches your records of money coming in and out of the client’s accounts
       cantFind: Can’t find the problem?
       formtitle:
-        label: If you can’t find where the <b>£%difference%</b> has come, tell us why
+        label: If you can’t find where the <b>£%difference%</b> has come from, tell us why
     balanceAfterReported: Total money in and money out
     totalBankStart: Totals from all bank accounts at start of reporting period
     totalInDuringPeriod: Total money in during reporting period
