@@ -16,14 +16,12 @@
         {{ form_number(form.openingBalance, '', {
             'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number',
-            'inputType' : 'Number'
+            'inputClass' : 'form-control__number'
         } ) }}
         {{ form_number(form.closingBalance, 'accountForm.closingBalance', {
             'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number',
-            'inputType' : 'Number'
+            'inputClass' : 'form-control__number'
         } ) }}
 
         {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {

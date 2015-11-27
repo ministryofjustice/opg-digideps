@@ -20,11 +20,10 @@
                         {{ form_row(formTransactions[id].id) }}
                         {{ form_row(formTransactions[id].type) }}
     
-                        {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
+                        {{ form_number(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
-                            'formGroupClass': formGroupClass,
-                            'inputType' : 'Number'
+                            'formGroupClass': formGroupClass
                         }) }}
     
                         {% if formTransactions[id].moreDetails is defined %}
