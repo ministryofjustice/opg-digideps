@@ -5,18 +5,11 @@ namespace Application\Migrations;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-
-class Version050 extends AbstractMigration implements ContainerAwareInterface
+/**
+ * add account.account_type
+ */
+class Version050 extends AbstractMigration
 {
-    private $container;
-
-    public function setContainer(ContainerInterface $container = null)
-    {
-        $this->container = $container;
-    }
-    
     /**
      * @param Schema $schema
      */
@@ -25,9 +18,8 @@ class Version050 extends AbstractMigration implements ContainerAwareInterface
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('SELECT COUNT(*) FROM migrations'); //just to avoid warning
+        $this->addSql('ALTER TABLE account ADD account_type VARCHAR(125) DEFAULT NULL');
     }
-
 
     /**
      * @param Schema $schema
@@ -36,5 +28,7 @@ class Version050 extends AbstractMigration implements ContainerAwareInterface
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+
+        $this->addSql('ALTER TABLE account DROP account_type');
     }
 }

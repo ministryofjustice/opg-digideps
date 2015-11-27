@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * add account.account_type
+ * report ADD balance_mismatch_explanation
  */
 class Version051 extends AbstractMigration
 {
@@ -18,7 +18,7 @@ class Version051 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE account ADD account_type VARCHAR(125) DEFAULT NULL');
+        $this->addSql('ALTER TABLE report ADD balance_mismatch_explanation TEXT DEFAULT NULL');
     }
 
     /**
@@ -29,6 +29,6 @@ class Version051 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE account DROP account_type');
+        $this->addSql('ALTER TABLE report DROP balance_mismatch_explanation');
     }
 }

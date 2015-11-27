@@ -25,25 +25,26 @@ class Version049 extends AbstractMigration
         // TRANSACTIONS (sync with google doc "Deputy report card sort". Updated on 26/11/2015 12:25)
         $rows = [
             'in' => [
-                'income-earnings' => [
+                'income-and-earnings' => [
+                    ['account-interest'],
                     ['dividends'],
                     ['income-from-investments'],
-                    ['account-interest'],
-                    ['salary-or-wages'],
                     ['income-from-property-rental'],
+                    ['salary-or-wages'],
                 ],
                 'state-benefits' => [
                     ['attendance-allowance'],
                     ['disability-living-allowance'],
-                    ['personal-independence-payment'],
-                    ['severe-disablement-allowance'],
-                    ['winter-fuel-cold-weather-payment'],
-                    ['housing-benefit'],
                     ['employment-support-allowance'],
+                    ['housing-benefit'],
                     ['incapacity-benefit'],
                     ['income-support'],
                     ['pension-credit'],
+                    ['personal-independence-payment'],
+                    ['severe-disablement-allowance'],
                     ['universal-credit'],
+                    ['winter-fuel-cold-weather-payment'],
+                    ['other-benefits', true],
                 ],
                 'pensions' => [
                     ['personal-pension'],
@@ -53,72 +54,84 @@ class Version049 extends AbstractMigration
                     ['compensation-or-damages-award', true],
                 ],
                 'one-off' => [
-                    ['bequest-received'],
-                    ['gift-received'],
-                    ['sale-of-property', true],
+                    ['bequest-or-inheritance'],
+                    ['cash-gift-received'],
+                    ['refunds'],
                     ['sale-of-asset', true],
+                    ['sale-of-investment', true],
+                    ['sale-of-property', true],
                 ],
                 'moving-money' => [
                     ['transfers-in-from-client-s-other-accounts', true],
                 ],
-                'other' => [
-                    ['refunds'],
-                    ['anything-else'],
+                'moneyin-other' => [
+                    ['anything-else', true],
                 ],
             ],
             'out' => [
                 'household-bills' => [
-                    ['water'],
-                    ['gas'],
-                    ['electricity'],
-                    ['telephone'],
+                    ['broadband'],
                     ['council-tax'],
+                    ['electricity'],
+                    ['food'],
+                    ['gas'],
+                    ['insurance-eg-life-home-contents'],
+                    ['other-insurance'],
                     ['property-maintenance-improvement', true],
-                    ['rent'],
-                    ['mortgage'],
-                    ['accommodation-service-charge'],
-                    ['buildings-or-contents-insurance'],
+                    ['telephone'],
+                    ['tv-services'],
+                    ['water'],
+                    ['households-bills-other', true],
                 ],
-                'care' => [
+                'accommodation' => [
+                    ['accommodation-service-charge'],
+                    ['mortgage'],
+                    ['rent'],
+                ],
+                'care-and-medical' => [
                     ['care-fees'],
+                    ['care-fees-arrears'],
+                    ['local-authority-charges-for-care'],
                     ['medical-expenses'],
                     ['medical-insurance'],
                 ],
-                'client-spending-money' => [
-                    ['food'],
-                    ['toiletries'],
+                'client-expenses' => [
+                    ['client-transport-bus-train-taxi-fares'],
                     ['clothes'],
-                    ['personal-allowance-pocket-money'],
-                    ['holidays'],
                     ['day-trips'],
-                    ['transport-bus-train-taxi-fares'],
+                    ['holidays'],
+                    ['personal-allowance-pocket-money'],
+                    ['toiletries'],
                 ],
                 'fees' => [
-                    ['tax-payments-to-hmrc'],
-                    ['security-bond'],
-                    ['solicitor-fees', true],
-                    ['accountant-fees', true],
+                    ['deputy-security-bond'],
                     ['opg-fees'],
+                    ['other-fees', true],
+                    ['professional-fees-eg-solicitor-accountant', true],
+                    ['your-deputy-expenses', true],
                 ],
                 'major-purchases' => [
-                    ['stocks-or-shares'],
-                    ['investment-bonds'],
-                    ['investment-account', true],
+                    ['investment-bonds-purchased', true],
+                    ['investment-account-purchased', true],
                     ['purchase-over-1000', true],
+                    ['stocks-and-shares-purchased', true],
                 ],
                 'spending-on-other-people' => [
-                    ['deputy-expenses', true],
                     ['gifts', true],
                 ],
-                'debt-payments' => [
+                'debt-and-charges' => [
+                    ['bank-charges'],
+                    ['credit-cards-charges'],
                     ['loans'],
-                    ['credit-cards'],
-                    ['arrears'],
+                    ['tax-payments-to-hmrc'],
                 ],
                 'moving-money' => [
-                    ['transfers-out-to-other-client-accounts', true],
                     ['cash-withdrawn', true],
+                    ['transfers-out-to-other-accounts', true],
                 ],
+                'moneyout-other' => [
+                    'anything-else-paid-out'
+                ]
             ],
         ];
 
@@ -129,8 +142,7 @@ class Version049 extends AbstractMigration
                 foreach ($transactions as $transaction) {
                     $displayOrder++;
                     $id = $transaction[0];
-                    $hasMoreDetails = !empty($transaction[1]);
-                    $hasMoreDetailsBool = $hasMoreDetails ? 'true' : 'false';
+                    $hasMoreDetailsBool = empty($transaction[1]) ? 'false' : 'true';
                     $sql = "INSERT INTO transaction_type (display_order, type, id, has_more_details, category)
                       VALUES('$displayOrder', '$type', '$id', $hasMoreDetailsBool, '$category');";
                     $this->addSql($sql);
