@@ -10,7 +10,7 @@ form:
     major-purchases: Major purchases
     spending-on-other-people: Spending on other people
     debt-and-charges: Debts and charges
-    moving-money: Moving Money
+    moving-money: Moving money
     income-and-earnings: Income and earnings
     state-benefits: State benefits
     pensions: Pensions
@@ -31,52 +31,52 @@ form:
     income-from-property-rental:
       label: Income from property rental
     attendance-allowance:
-      label: Attendance allowance
+      label: Attendance Allowance
     disability-living-allowance:
-      label: Disability living allowance
+      label: Disability Living Allowance
     personal-independence-payment:
-      label: Personal independence payment
+      label: Personal Independence Payment
     severe-disablement-allowance:
-      label: Severe disablement allowance
+      label: Severe Disablement Allowance
     winter-fuel-cold-weather-payment:
-      label: Winter fuel/cold weather payment
+      label: Winter Fuel/Cold Weather payment
     housing-benefit:
-      label: Housing benefit
+      label: Housing Benefit
     employment-support-allowance:
-      label: Employment support allowance
+      label: Employment Support Allowance
     incapacity-benefit:
-      label: Incapacity benefit
+      label: Incapacity Benefit
     income-support:
-      label: Income support
+      label: Income Support
     pension-credit:
-      label: Pension credit
+      label: Pension Credit
     universal-credit:
-      label: Universal credit
+      label: Universal Credit
     personal-pension:
       label: Personal pension
     state-pension:
-      label: State pension
+      label: State Pension
     compensation-or-damages-award:
       label: Compensation or damages award
-      moreInformations: For each amount, give us the date and a description of the award
+      moreInformations: For each amount, give the date and a description of the award
     bequest-or-inheritance:
       label: Bequest or inheritance
     cash-gift-received:
       label: Cash gift received
     sale-of-property:
       label: Sale of property
-      moreInformations: For each property, give us the address, the date it was sold and the value
+      moreInformations: For each property, give the address, the date it was sold and the value
     sale-of-investment:
       label: Sale of investment
-      moreInformations: For each investment, give us a description, the date it was sold and the value
+      moreInformations: For each investment, give a description, the date it was sold and the value
     sale-of-asset:
       label: Sale of asset
-      moreInformations: For each asset, give us a description, the date it was sold and the value
+      moreInformations: For each asset, give a description, the date it was sold and the value
     moving-money:
       label: Moving money
     transfers-in-from-client-s-other-accounts:
       label: Transfers in from client's other accounts
-      moreInformations: Tell us the bank or building society name, the last 4 digits of the account number and the amount transferred
+      moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
     refunds:
       label: Refunds
     anything-else:
@@ -89,7 +89,7 @@ form:
     water:
       label: Water
     insurance-eg-life-home-contents:
-      label: Insurance e.g. life, home and contents
+      label: Insurance eg life, home and contents
     other-insurance:
       label: Other insurance
     gas:
@@ -101,7 +101,7 @@ form:
     council-tax:
       label:
       label:
-      label: Council tax
+      label: Council Tax
     property-maintenance-improvement:
       label: Property maintenance/improvement
       moreInformations: Give us more information
@@ -127,11 +127,11 @@ form:
       label: Medical insurance
     other-benefits:
       label: Other benefits
-      moreInformations: Tell us what type of benefit the client gets
+      moreInformations: Enter the type of benefit the client gets
     households-bills-other:
       label: Other
     client-transport-bus-train-taxi-fares:
-      label: Client transport - bus, train, taxi fares
+      label: Client transport eg bus, train, taxi fares
     food:
       label: Food
     toiletries:
@@ -139,7 +139,7 @@ form:
     clothes:
       label: Clothes
     personal-allowance-pocket-money:
-      label: Personal allowance/pocket money
+      label: Personal allowance or pocket money
     holidays:
       label: Holidays
     day-trips:
@@ -156,22 +156,22 @@ form:
     accountant-fees:
       label: Accountant fees
     professional-fees-eg-solicitor-accountant:
-      label: Professional fees, e.g. solicitor or accountant fees
-      moreInformations: For each fee tell us the date, the amount and what it was for
+      label: Professional fees, eg solicitor or accountant fees
+      moreInformations: For each fee enter the date, the amount and what it was for
     your-deputy-expenses:
       label: Your deputy expenses
-      moreInformations: For each expense tell us the date, the amount and what it was for
+      moreInformations: For each expense enter the date, the amount and what it was for
     opg-fees:
       label: OPG fees
     stocks-and-shares-purchased:
       label: Stocks and shares purchased
-      moreInformations: For stocks and shares tell us the date, a description and the value
+      moreInformations: For stocks and shares enter the date, a description and the value
     investment-bonds-purchased:
       label: Investment bond purchased
-      moreInformations: For each bond tell us the date and the value
+      moreInformations: For each bond enter the date and the value
     investment-account-purchased:
       label: Investment account purchased
-      moreInformations: For each new investment tell us the date, a description and the value
+      moreInformations: For each new investment enter the date, a description and the value
     purchase-over-1000:
       label: Purchases over £1,000
       moreInformations: Give us more information
@@ -179,7 +179,7 @@ form:
       label: Deputy expenses
     gifts:
       label: Gifts
-      moreInformations: For each gift tell us the date, the amount and what it was for
+      moreInformations: For each gift enter the date, the amount and what it was for
     bank-charges:
       label: Bank charges
     loans:
@@ -190,10 +190,10 @@ form:
       label: Tax payments to HMRC
     transfers-out-to-other-accounts:
       label: Transfers out to other accounts
-      moreInformations: Tell us the bank or building society name, the last 4 digits of the account number and the amount transferred
+      moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
     cash-withdrawn:
       label: Cash withdrawn
-      moreInformations: For each withdrawal tell us the date, the amount and what it was for
+      moreInformations: For each withdrawal enter the date, the amount and what it was for
     anything-else-paid-out: 
       label: Anything else paid out
       moreInformations: Give us more information
