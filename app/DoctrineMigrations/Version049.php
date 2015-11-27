@@ -130,7 +130,7 @@ class Version049 extends AbstractMigration
                     ['transfers-out-to-other-accounts', true],
                 ],
                 'moneyout-other' => [
-                    'anything-else-paid-out'
+                    ['anything-else-paid-out'],
                 ]
             ],
         ];
@@ -140,6 +140,9 @@ class Version049 extends AbstractMigration
         foreach ($rows as $type => $categories) {
             foreach ($categories as $category => $transactions) { //in / out
                 foreach ($transactions as $transaction) {
+                    if (!is_array($transaction)) {
+                        throw new \Exception("format error for transaction");
+                    }
                     $displayOrder++;
                     $id = $transaction[0];
                     $hasMoreDetailsBool = empty($transaction[1]) ? 'false' : 'true';
