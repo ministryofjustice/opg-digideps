@@ -19,7 +19,7 @@ moneyIn:
   pageSectionDescription: Tell us about money paid into the client’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, <b>add up the totals from all the accounts for each income category</b>.
 moneyOut:
   pageSectionTitle: Money you have spent on behalf of the client
-  pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, add up the totals from all the accounts for each type of payment.
+  pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, <b>add up the totals from all the accounts for each type of payment</b>.
 
 
 balance:
