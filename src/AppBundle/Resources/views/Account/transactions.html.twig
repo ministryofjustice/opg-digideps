@@ -23,7 +23,8 @@
                         {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
-                            'formGroupClass': formGroupClass
+                            'formGroupClass': formGroupClass,
+                            'inputType' : 'Number'
                         }) }}
     
                         {% if formTransactions[id].moreDetails is defined %}

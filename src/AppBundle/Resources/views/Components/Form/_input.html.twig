@@ -33,9 +33,9 @@
         <span class="input-group-prefix">{{ inputPrefix }}</span>
     {% endif %}
     {% if element.vars.valid %}
-        {{ form_widget(element, { 'attr': {'class': class } }) }}
+        {{ form_widget(element, { 'type': inputType, 'attr': {'class': class } }) }}
     {% else %}
-        {{ form_widget(element, { 'attr': {'class': class, 'aria-invalid':'true' } }) }}
+        {{ form_widget(element, {'type': inputType, 'attr': {'class': class, 'aria-invalid':'true' } }) }}
     {% endif %}
 
 </div>

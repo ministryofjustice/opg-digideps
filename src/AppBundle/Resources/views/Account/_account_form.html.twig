@@ -4,18 +4,26 @@
 
         {{ form_input(form.accountType, 'accountForm.accountType') }}
         {{ form_input(form.bank, 'accountForm.bank') }}
-        {{ form_input(form.accountNumber, 'accountForm.accountNumber') }}
-        {{ form_sort_code(form.sortCode, 'accountForm.sortCode') }}
+        
+        {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
+            'inputType' : 'Number'
+        }) }}
+        
+        {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
+            'inputType' : 'Number'
+        }) }}
         
         {{ form_input(form.openingBalance, '', {
             'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
+            'inputClass' : 'form-control__number',
+            'inputType' : 'Number'
         } ) }}
         {{ form_input(form.closingBalance, 'accountForm.closingBalance', {
             'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
-            'inputClass' : 'form-control__number'
+            'inputClass' : 'form-control__number',
+            'inputType' : 'Number'
         } ) }}
 
         {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
@@ -26,9 +34,3 @@
         {{ form_end(form) }}
 
 {{ form_end(form) }}
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        new GOVUK.SelectionButtons(":radio");
-    });
-</script>
