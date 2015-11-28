@@ -60,3 +60,20 @@
         new GOVUK.ExpandingTransactionTable('.expanding-transaction-table');
     });
 </script>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var transactionHasChanged = false;
+        var message = "{{ 'leaveWarning' | trans | raw }}";
+        
+        $(".transaction-value").on("keyup input paste", function(){
+            transactionHasChanged = true;
+        });
+        $('form').on('submit', function(e) {
+            transactionHasChanged = false;
+            return true;
+        });
+        $(window).bind("beforeunload",function() {
+            if (transactionHasChanged) return message;
+        });
+    });
+</script>
