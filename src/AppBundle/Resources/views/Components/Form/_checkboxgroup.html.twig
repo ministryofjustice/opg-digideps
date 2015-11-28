@@ -1,6 +1,6 @@
 {% if vertical is defined and vertical == true %}
     {% trans_default_domain translationDomain %}
-    <fieldset class="{{ fieldSetClass }} form-group form-group__radiobox-group radio-vertical-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+    <fieldset class="{{ fieldSetClass }} form-group form-group__radiobox-group radio-vertical-group {% if not element.vars.valid %}error {% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
         <legend class="{{ legendClass }}">{{ legendText }}</legend>
         <p class="form-hint">{{ hintText }}</p>
         {% if not element.vars.valid %}
@@ -16,16 +16,12 @@
         {% endfor %}
     </fieldset>
 {% else %}
-    <div class="form-group form-group__checkbox-group {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+    <div class="form-group form-group__checkbox-group {% if not element.vars.valid %}error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 
         <fieldset class="{{ fieldSetClass }}">
             <legend class="{{ legendClass }}">{{ legendText }}</legend>
             <p class="form-hint">{{ hintText }}</p>
-            {% if not element.vars.valid %}
-                <ul class="errors">
-                    <li class="error-message">{{ form_errors(element) }}</li>
-                </ul>
-            {% endif %}
+            { form_errors(element) }}
             {% for key,choiceElement in element %}
 
                 {% set labelClasss = items[key].labelClass is defined ?  items[key].labelClass : '' %}
