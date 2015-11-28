@@ -1,5 +1,7 @@
 {% trans_default_domain "report-transactions" %}
 
+{{ form_errors_list(form) }}
+
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
     <div class="sections">
         {% for category, transactions in transactionsGrouped %}
@@ -8,9 +10,6 @@
                 <div class="title">{{ ('form.categories.' ~ category)  | trans  }}</div>
                 <div class="sub-total">{{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',')}}</span></div>
             </div>
-
-            {{ form_errors_list(form) }}
-            
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
                     {% if formTransactions[id].moreDetails is defined %}

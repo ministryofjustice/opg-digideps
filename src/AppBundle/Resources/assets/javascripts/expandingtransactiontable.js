@@ -12,11 +12,11 @@
         this.inputs = this.container.find('.transaction-value');
         this.subTotals = this.container.find('.summary .sub-total .value');
         this.grandTotal = this.container.find('.grand-total .value');
-        this.form = this.container.find('form');
         
         this.addElementLevelEvents();
         this.closeAll();
         this.setInitialDescriptionVisibility();
+        this.openSectionsWithErrors();
     };
     
     ExpandingTransactionTable.prototype.addElementLevelEvents = function () {
@@ -26,7 +26,7 @@
         
         $('.summary', this.element).on('click', this.clickHandler);
         this.inputs.on('keyup input paste', this.totalChangeHandler);
-        this.form.on('submit', this.formSubmitHandler);
+        this.container.on('submit', this.formSubmitHandler);
     };
     ExpandingTransactionTable.prototype.getSummaryClickHandler = function () {
         return function (e) {
@@ -55,7 +55,6 @@
         if (section.hasClass('open')) {
             section.removeClass('open');
         } else {
-            this.closeAll();
             section.addClass('open');
         }
 
@@ -114,8 +113,9 @@
     ExpandingTransactionTable.prototype.shouldDisplayDescription = function (transaction) {
         var valueElement = $('.transaction-value', transaction);
         var value = parseFloat(valueElement.val().replace(/,/g , ""));
-
-        if (isNaN(value) || value === 0) {
+        var hasError = $('.error', transaction).length > 0;
+        
+        if (isNaN(value) && !hasError || value === 0 && !hasError) {
             transaction.addClass('hide-description');
         } else {
             transaction.removeClass('hide-description');
@@ -129,6 +129,12 @@
             $('.transaction-more-details', transaction).val('');
         }
     };
+    ExpandingTransactionTable.prototype.openSectionsWithErrors = function () {
+        $('.error', this.container).each(function (index, element) {
+           $(element).closest('.section').addClass('open'); 
+        });
+    };
+    
     root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 
 }).call(this);

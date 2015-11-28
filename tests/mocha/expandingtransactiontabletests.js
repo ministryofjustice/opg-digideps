@@ -30,7 +30,7 @@ describe('Expanding Transaction Table Tests', function () {
             var visible = $('.detail', section).is(':visible');
             expect(visible).to.be.true;
         });
-        it('should close other sections when you open one', function () {
+        it('should allow two sections to be open at once', function () {
             var sections = $('.section', placeholder);
             
             var first = $(sections[0]);
@@ -43,8 +43,20 @@ describe('Expanding Transaction Table Tests', function () {
 
             $('.summary', second).trigger('click');
         
-            expect($('.detail', first).is(':visible')).to.be.false;
+            expect($('.detail', first).is(':visible')).to.be.true;
             expect($('.detail', second).is(':visible')).to.be.true;
+            
+        });
+        it('should start with a section open if it contains errors', function () {
+            
+            placeholder.text('').append(template.clone());
+            
+            var addError = $('#add-error', placeholder);
+
+            addError.addClass('error');
+            expandingTransactionTable = new GOVUK.ExpandingTransactionTable('#template .expanding-transaction-table', placeholder);
+
+            expect($('#damages-section .detail', placeholder).is(':visible')).to.be.true;
             
         });
     });
@@ -275,6 +287,16 @@ describe('Expanding Transaction Table Tests', function () {
                 var valueVisible = $('.form-group-combo-description .form-control', damagesSection).is(':visible');
                 expect(valueVisible).to.be.false;
 
+            });
+            it('should show further information if it initially loads with an error', function () {
+                placeholder.text('').append(template.clone());
+
+                var addError = $('#add-error', placeholder);
+
+                addError.addClass('error');
+                expandingTransactionTable = new GOVUK.ExpandingTransactionTable('#template .expanding-transaction-table', placeholder);
+
+                expect($('#transactions_transactionsIn_18_moreDetails', placeholder).is(':visible')).to.be.true;
             });
         });
         describe('clear further info when no total at submission time', function () {

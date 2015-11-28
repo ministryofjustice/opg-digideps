@@ -11,7 +11,7 @@ form:
     spending-on-other-people: Spending on other people
     debt-and-charges: Debts and charges
     moving-money: Moving money
-    income-earnings: Income and earnings
+    income-and-earnings: Income and earnings
     state-benefits: State benefits
     pensions: Pensions
     damages: Damages
@@ -185,8 +185,10 @@ form:
       label: Bank charges
     loans:
       label: Loans
-    credit-cards-charges:
+    credit-card-charges:
       label: Credit cards charges
+    arrears:
+      label: Arrears
     tax-payments-to-hmrc:
       label: Tax payments to HMRC
     transfers-out-to-other-accounts:
