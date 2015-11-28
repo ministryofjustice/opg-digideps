@@ -20,8 +20,6 @@ class AccountController extends AbstractController
     public function accountsAction($reportId)
     {
         return $this->redirect($this->generateUrl('accounts_moneyin', [ 'reportId' => $reportId]));
-        
-        // todo Check the referrer url, if it came from adding a bank account then direct them to the bank account list instead.
     }
     
     /**
@@ -45,7 +43,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
             ]);
-            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId'=>$reportId]) );
+            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId'=>$reportId]) );
         }
 
         $client = $this->getClient($report->getClient());
@@ -80,7 +78,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
-            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId'=>$reportId]) );
+            return $this->redirect($this->generateUrl('accounts_banks', ['reportId'=>$reportId]) );
         }
         
         $client = $this->getClient($report->getClient());
@@ -117,7 +115,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' . $reportId, $data, [
                 'deserialise_group' => 'balance_mismatch_explanation'
             ]);
-
+            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
         
         $client = $this->getClient($report->getClient());

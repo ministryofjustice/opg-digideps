@@ -8,7 +8,7 @@ nav:
   balanceAccounts: Balance accounts
     
 save:
-  label: Save
+  label: Save and continue
 cancel:
   label: Cancel
 
@@ -17,12 +17,16 @@ currencySymbol: "£"
 moneyIn:
   pageSectionTitle: Money coming into the client’s accounts
   pageSectionDescription: Tell us about money paid into the client’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, <b>add up the totals from all the accounts for each income category</b>.
+moneyin:
+  nextSection: Money out
 moneyOut:
   pageSectionTitle: Money you have spent on behalf of the client
   pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, <b>add up the totals from all the accounts for each type of payment</b>.
-
+moneyout:
+  nextSection: Bank accounts
 
 balance:
+    nextSection: Assets
     good:
       pageSectionTitle: Balance the accounts
       pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
@@ -53,6 +57,7 @@ balance:
     actualBalance: Total balance from all bank accounts
     
 banks:
+    nextSection: Balance accounts
     pageSectionTitle: Client's bank accounts
     pageSectionDescription: Add all the client's bank and building society accounts, including savings accounts and ISAs
     balanceOn: Balance on

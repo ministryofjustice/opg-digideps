@@ -1,5 +1,5 @@
 save:
-  label: Save
+  label: Save and continue
 form:
   categories:
     household-bills: Household bills

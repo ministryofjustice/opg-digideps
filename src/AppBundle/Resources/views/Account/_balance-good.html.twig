@@ -28,3 +28,8 @@
     </div>
 </div>
 
+<div id="save-accounts" class="save-section">
+    <a href="{{ path('assets' , {'reportId': report.id}) }}" class="button">{{ 'save.label' | trans }}</a> <span class="next-section">Next section: <b>{{ 'balance.nextSection' | trans }}</b></span>
+    <div><a href="/report/{{report.id}}/overview" class="button-secondary" id="bottom-overview-button">Save and return to report overview</a></div>
+</div>
+

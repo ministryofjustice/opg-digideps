@@ -38,7 +38,11 @@
             <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>
             <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ report.accountsClosingBalanceTotal == null ? '--:--' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}</dd>
         </dl>
-        
+
+        <div id="save-accounts" class="save-section">
+            <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" class="button">{{ 'save.label' | trans }}</a> <span class="next-section">Next section: <b>{{ 'banks.nextSection' | trans }}</b></span>
+            <div><a href="/report/{{report.id}}/overview" class="button-secondary" id="bottom-overview-button">Save and return to report overview</a></div>
+        </div>
     {% endblock %}
 
 {% endembed %}
