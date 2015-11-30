@@ -20,13 +20,11 @@ class AccountType extends AbstractType
         $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false]);
 
         $builder->add('openingBalance', 'number', [
-            'grouping' => true,
             'precision' => 2,
             'invalid_message' => 'account.openingBalance.type',
             
         ]);
         $builder->add('closingBalance', 'number', [
-            'grouping' => true,
             'precision' => 2,
             'invalid_message' => 'account.closingBalance.type'
         ]);
