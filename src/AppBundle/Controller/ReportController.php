@@ -158,8 +158,8 @@ class ReportController extends RestController
         foreach (['transactions_in', 'transactions_out'] as $tk) {
             if (isset($data[$tk])) {
                 foreach ($data[$tk] as $transactionRow) {
-                    $t = $report->getTransactionByTypeId($transactionRow['id']);
-                    $t->setAmount($transactionRow['amount']);
+                    $t = $report->getTransactionByTypeId($transactionRow['id']); /* @var $t EntityDir\Transaction */
+                    $t->setAmount($transactionRow['amount'] ?: null);
                     if (array_key_exists('more_details', $transactionRow)) {
                         $t->setMoreDetails($transactionRow['more_details']);
                     }
