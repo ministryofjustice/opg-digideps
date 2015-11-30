@@ -10,21 +10,23 @@ class FormErrorsFormatterTest extends \PHPUnit_Framework_TestCase
 {
     public function testToArray()
     {
-        $error1 = m::mock('Symfony\Component\Form\FormError')
-            ->shouldReceive('getMessage')->andReturn('error1')
-            ->getMock();
-
-        $error2 = m::mock('Symfony\Component\Form\FormError')
+        // subelement1
+        $subError1 = m::mock('Symfony\Component\Form\FormError')
             ->shouldReceive('getMessage')->andReturn('error2')
             ->getMock();
 
-        $element1 = m::mock('Symfony\Component\Form\FormInterface')
+        $subElement1 = m::mock('Symfony\Component\Form\FormInterface')
             ->shouldReceive('getName')->andReturn('subelement1')
-            ->shouldReceive('getErrors')->andReturn([$error2])
+            ->shouldReceive('getErrors')->andReturn([$subError1])
             ->shouldReceive('getIterator')->andReturn(new \ArrayIterator([]))
             ->getMock();
 
-        $iterator = new \ArrayIterator([$element1]);
+        $iterator = new \ArrayIterator([$subElement1]);
+
+        // root
+        $error1 = m::mock('Symfony\Component\Form\FormError')
+            ->shouldReceive('getMessage')->andReturn('error1')
+            ->getMock();
 
         $form = m::mock('Symfony\Component\Form\FormInterface')
             ->shouldReceive('getName')->andReturn('root')
