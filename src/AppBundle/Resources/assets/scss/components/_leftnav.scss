@@ -41,20 +41,20 @@ $darkblue: #175ea5;
         border-left: 1px solid $grey-2;
     }
     
-    .sub-section-title-container {
+}
 
-        @extend %contain-floats;
-        
-        h1 {
-            @include bold-36();
-            float: left;
-        }
-        
-        #helpline {
-            float: right;
-        }
-        
-        
+.page-section-title-container {
+
+    @extend %contain-floats;
+
+    h1 {
+        @include bold-36();
+        float: left;
     }
-    
+
+    #helpline {
+        float: right;
+    }
+
+
 }

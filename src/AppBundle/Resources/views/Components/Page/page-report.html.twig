@@ -26,6 +26,11 @@
         {% endblock %}
     {% endif %}
 
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>{% block title %}{% endblock %}</h1>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </div>
+    
     {% block errorSummary %}
         {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
     {% endblock %}
@@ -34,9 +39,6 @@
         <div id="pagebody-left-content">
            {% block pageBody %}{% endblock %}
         </div>
-        {% if showHelp %}
-            {% include 'AppBundle:Components/Page:_help.html.twig' %}
-        {% endif %}
     </div>
 
 {% endblock %}
