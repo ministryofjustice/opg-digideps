@@ -268,10 +268,10 @@ ul.form-hint {
     padding: 4px 9px 0 8px;
     border: 0;
 
-    .field-with-errors & {
-        border: 0;
-        border-right: 0;
-        margin: 2px;
+    .error & {
+        margin-top: 4px;
+        left: 17px;
+        
     }
 }
 

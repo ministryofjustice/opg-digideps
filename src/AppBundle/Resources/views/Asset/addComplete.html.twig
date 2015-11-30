@@ -17,10 +17,7 @@
         pageSectionDescription: 'page.pageSectionDescription'
         } %}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
-
+        
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
           {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
@@ -28,7 +25,10 @@
           subSectionTitle: 'page.subSectionTitleAdd'
           } %}
 
-          {{ form_input(form.value, 'value', {
+        {{ form_errors_list(form) }}
+
+
+        {{ form_input(form.value, 'value', {
           'inputPrefix' : 'currencySymbol',
           'inputClass' : 'form-control__number'
           } ) }}

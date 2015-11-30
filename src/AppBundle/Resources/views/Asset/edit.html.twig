@@ -28,8 +28,11 @@
                 transDomain: translationDomain,
                 subSectionTitle: subSectionTitleText
             } %}
-    
-            {{ form_input(form.value, 'value', {
+
+        {{ form_errors_list(form) }}
+
+
+        {{ form_input(form.value, 'value', {
                 'inputPrefix' : 'currencySymbol',
                 'inputClass' : 'form-control__number'
             } ) }}

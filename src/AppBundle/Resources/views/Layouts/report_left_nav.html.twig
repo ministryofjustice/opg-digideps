@@ -6,11 +6,7 @@
         {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
     {% endblock %}
 
-
-    {% block errorSummary %}
-        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
-    {% endblock %}
-
+    
     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
         'report': report
     } %}
