@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormError;
 
 class FormErrorsFormatter
 {
-    public function toArray(Form $form)
+    public function toArray(FormInterface $form)
     {
         $ret = [];
         $this->formErrorsToJson($form, $ret);
