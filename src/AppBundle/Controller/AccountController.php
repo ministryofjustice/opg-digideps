@@ -295,7 +295,9 @@ class AccountController extends AbstractController
             $form->handleRequest($request);
 
             if (!$form->isValid()) {
-                throw new \RuntimeException($form->getErrorsAsString());
+                $errorsArray = $this->get('formErrorsFormatter')->toArray($form);
+
+                return new JsonResponse(['success' => false, 'errors' => $errorsArray], 500);
             }
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
                 'deserialise_group' => $type,
@@ -306,6 +308,8 @@ class AccountController extends AbstractController
             return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
         }
     }
+
+
 
 
 }
