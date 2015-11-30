@@ -108,6 +108,7 @@ form {
 }
 
 .form-group {
+    position: relative;
 
     float: none; /* Only flat left if within a form container. */
     form & {
@@ -260,12 +261,12 @@ ul.form-hint {
     @include core-24();
     margin: 2px 0 0 2px;
     position: absolute;
-    right: 121px;
+    left: 0px;
     width: 10px;
     background: $grey-3;
     font-size: 19px;
-    padding: 4px 8px 2px;
-    border: 1px solid $grey-2;
+    padding: 4px 9px 0 8px;
+    border: 0;
 
     .field-with-errors & {
         border: 0;
