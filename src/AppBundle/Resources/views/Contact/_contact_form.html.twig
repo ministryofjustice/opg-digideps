@@ -11,6 +11,8 @@
         subSectionTitle: subSectionTitleText
     } %}
 
+    {{ form_errors_list(form) }}
+
     {{ form_input(form.contactName, 'contactName') }}
     {{ form_input(form.relationship, 'relationship') }}
     {{ form_input(form.explanation, 'explanation', {inputClass: 'expanding'}) }}

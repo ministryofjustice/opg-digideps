@@ -6,17 +6,14 @@
         {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
     {% endblock %}
 
-
-    {% block errorSummary %}
-        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
-    {% endblock %}
-
+    
     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
         'report': report
     } %}
     
     <div class="left-nav-container">
-        <div id="sub-section-title-container" class="sub-section-title-container">
+
+        <div id="page-section-title-container" class="page-section-title-container">
             <h1>{% block title %}{% endblock %}</h1>
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </div>

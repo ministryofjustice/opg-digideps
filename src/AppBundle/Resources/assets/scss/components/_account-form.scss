@@ -1,29 +1,8 @@
 form#account-form {
 
-    @extend %contain-floats;
-    
-    .sub-section-description {
-        width: 50%;
-        margin-right: 50%;
-    }
-    
     #account_accountNumber {
         width: 100px;
         max-width: 100px;
-    }
-    
-    .form-group {
-        position: relative;
-    }
-    
-    .input-group-prefix {
-        @include core-24();
-        margin: 2px 0 0 2px;
-        padding: 4px 9px 0 8px;
-        border: 0;
-        position: absolute;
-        left: 0;
-        width: 10px;
     }
     
 }

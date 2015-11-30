@@ -5,16 +5,11 @@
 
 {% block bodyClasses %}safeguarding-page{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-{% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 
 {% block pageBody %}
-
-    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionTitle: 'page.pageSectionTitle'
-    } %}
-
+    
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
     transDomain: translationDomain,
     pageSectionDescription: 'page.pageSectionDescription'

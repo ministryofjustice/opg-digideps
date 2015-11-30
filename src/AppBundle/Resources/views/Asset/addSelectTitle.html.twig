@@ -5,24 +5,15 @@
     
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
-
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    
     {% block pageBody %}
 
-        
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionTitle: 'page.pageSectionTitle'
-        } %}
         
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
         } %}
-
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
-
         
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'asset-form-add-select-title' } }) }}
         
@@ -30,9 +21,10 @@
           transDomain: translationDomain,
           subSectionTitle: 'page.subSectionTitleAdd'
           } %}
-
+        
           {{ form_select(form.title, 'title') }}
 
+        
           {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
             {{ form_submit(form.next,'form.newAsset.controls.next', { 'buttonClass': '' }) }}
             

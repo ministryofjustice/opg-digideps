@@ -16,8 +16,7 @@ class TransactionSingleType extends AbstractType
                  ->add('id', 'hidden')
                  ->add('type', 'hidden')
                  ->add('amount', 'number', [
-                     'error_bubbling' => false, 
-                     'grouping' => true, 
+                     'error_bubbling' => false,
                      'precision' => 2,
                      'invalid_message'=>'account.moneyInOut.amount.notNumeric'
                  ]);
