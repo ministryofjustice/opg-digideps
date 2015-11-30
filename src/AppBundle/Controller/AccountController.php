@@ -283,25 +283,28 @@ class AccountController extends AbstractController
      */
     public function moneySaveJson(Request $request, $reportId, $type)
     {
-        $report = $this->getReport($reportId, [ $type, 'basic', 'balance']);
-        if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
-        }
+        try {
+            $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
+            if ($report->getSubmitted()) {
+                throw new \RuntimeException("Report already submitted and not editable.");
+            }
 
-        $form = $this->createForm(new FormDir\TransactionsType($type), $report, [
-            'method'=>'PUT'
-        ]);
-        $form->handleRequest($request);
+            $form = $this->createForm(new FormDir\TransactionsType($type), $report, [
+                'method' => 'PUT'
+            ]);
+            $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
+            if (!$form->isValid()) {
+                throw new \RuntimeException($form->getErrorsAsString());
+            }
+            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
                 'deserialise_group' => $type,
             ]);
+            return new JsonResponse(['success' => true]);
 
-            return new JsonResponse(['success'=>true]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
         }
-
-        return new Response(['error'=>$form->getErrorsAsString()]);
     }
 
 
