@@ -185,7 +185,7 @@ form:
       label: Bank charges
     loans:
       label: Loans
-    credit-card-charges:
+    credit-cards-charges:
       label: Credit cards charges
     arrears:
       label: Arrears
