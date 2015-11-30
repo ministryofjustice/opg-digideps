@@ -55,6 +55,7 @@ class AccountController extends AbstractController
             'report' => $report,
             'client' => $client,
             'subsection' => 'moneyin',
+            'jsonEndpoint' => 'transactionsIn',
             'form' => $form->createView()
         ];
         
@@ -89,6 +90,7 @@ class AccountController extends AbstractController
             'report' => $report,
             'client' => $client,
             'subsection' => "moneyout",
+            'jsonEndpoint' => 'transactionsIn',
             'form' => $form->createView()
         ];
         
@@ -268,7 +270,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/{type}.json", name="accounts_money_save",
+     * @Route("/report/{reportId}/accounts/{type}.json", name="accounts_money_save_json",
      *     requirements={"type"="transactionsIn|transactionsOut"}
      * )
      * @Method({"PUT"})
