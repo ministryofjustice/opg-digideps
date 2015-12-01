@@ -11,16 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends AbstractController
 {
-
-    /**
-     * @Route("/report/{reportId}/accounts", name="accounts")
-     * @param integer $reportId
-     * @return RedirectResponse
-     */
-    public function accountsAction($reportId)
-    {
-        return $this->redirect($this->generateUrl('accounts_moneyin', [ 'reportId' => $reportId]));
-    }
     
     /**
      * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
@@ -78,7 +68,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
-            return $this->redirect($this->generateUrl('accounts_banks', ['reportId'=>$reportId]) );
+            return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]) );
         }
         
         $client = $this->getClient($report->getClient());
@@ -130,7 +120,7 @@ class AccountController extends AbstractController
     }
     
     /**
-     * @Route("/report/{reportId}/accounts/banks", name="accounts_banks")
+     * @Route("/report/{reportId}/accounts", name="accounts")
      * @param integer $reportId
      * @Template()
      * @return array
@@ -154,7 +144,6 @@ class AccountController extends AbstractController
             'subsection' => 'banks'
         ];
     }
-    
     
     /**
      * @Route("/{reportId}/accounts/banks/add", name="add_account")
@@ -183,7 +172,7 @@ class AccountController extends AbstractController
                 'deserialise_group' => 'add_edit'
             ]);
 
-            return $this->redirect($this->generateUrl('accounts_banks', ['reportId' => $reportId]));
+            return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
 
         }
 
@@ -229,7 +218,7 @@ class AccountController extends AbstractController
                 'deserialise_group' => 'add_edit'
             ]);
 
-            return $this->redirect($this->generateUrl('accounts_banks', ['reportId'=>$reportId]));
+            return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
         
         }
 
@@ -260,7 +249,7 @@ class AccountController extends AbstractController
             $restClient->delete("/account/{$id}");
         }
 
-        return $this->redirect($this->generateUrl('accounts_banks', [ 'reportId' => $reportId ]));
+        return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $reportId ]));
 
     }
     
