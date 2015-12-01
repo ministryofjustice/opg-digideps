@@ -68,7 +68,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
-            return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]) );
+            return $this->redirect($this->generateUrl('accounts_balance', ['reportId'=>$reportId]) );
         }
         
         $client = $this->getClient($report->getClient());

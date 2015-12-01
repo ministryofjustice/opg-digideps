@@ -40,7 +40,7 @@
         </dl>
 
         <div id="save-accounts" class="save-section">
-            <a href="{{ path('accounts_balance' , {'reportId': report.id}) }}" class="button">{{ 'save.label' | trans }}</a> <span class="next-section">Next section: <b>{{ 'banks.nextSection' | trans }}</b></span>
+            <a href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" class="button">{{ 'save.label' | trans }}</a> <span class="next-section">Next section: <b>{{ 'banks.nextSection' | trans }}</b></span>
             <div><a href="/report/{{report.id}}/overview" class="button-secondary" id="bottom-overview-button">Save and return to report overview</a></div>
         </div>
     {% endblock %}
