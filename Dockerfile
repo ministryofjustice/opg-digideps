@@ -1,4 +1,4 @@
-FROM registry.service.dsd.io/opguk/php-fpm:0.1.78
+FROM registry.service.dsd.io/opguk/php-fpm:0.1.124
 
 RUN curl --silent --location https://deb.nodesource.com/setup_5.x | bash -
 
