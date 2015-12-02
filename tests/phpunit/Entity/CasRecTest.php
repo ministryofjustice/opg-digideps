@@ -25,7 +25,10 @@ class CasRecTest extends \PHPUnit_Framework_TestCase
             ["D'SOUZA GAIR", 'dsouzagair'],
             ['KNIGHT- PREISS', 'knightpreiss'],
             ['PHIPPS - THE MARQUIS OF NORMANBY', 'phippsthemarquisofnormanby'],
-            
+            // accent conversion
+            ['Villanueva Cortés', 'villanuevacortes'],
+            ['Ní  Fhatharta', 'nifhatharta'],
+            [' Müller ', 'muller'],
         ];
     }
     
