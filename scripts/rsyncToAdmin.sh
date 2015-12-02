@@ -2,7 +2,11 @@
 
 # Script to sync client to admin, and update the YML file with admin-specific params (env and redis_dsn)
 #
-
+# to use with fswatch:
+# brew install fswatch
+# fswatch -o ~/www/opg-digi-deps-client | (while read; do sh ~/www/opg-digi-deps-client/scripts/rsyncToAdmin.sh; done)
+#
+echo File changed !
 # paths (keep traling slash)
 CLIENT_PATH=~/www/opg-digi-deps-client/
 ADMIN_PATH=~/www/opg-digi-deps-admin/
