@@ -5,7 +5,10 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,7 +31,7 @@ class AccountController extends AbstractController
         
         $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
-        
+
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
@@ -37,11 +40,12 @@ class AccountController extends AbstractController
         }
 
         $client = $this->getClient($report->getClient());
-        
+
         return [
             'report' => $report,
             'client' => $client,
             'subsection' => 'moneyin',
+            'jsonEndpoint' => 'transactionsIn',
             'form' => $form->createView()
         ];
         
@@ -76,6 +80,7 @@ class AccountController extends AbstractController
             'report' => $report,
             'client' => $client,
             'subsection' => "moneyout",
+            'jsonEndpoint' => 'transactionsIn',
             'form' => $form->createView()
         ];
         
@@ -252,5 +257,48 @@ class AccountController extends AbstractController
         return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $reportId ]));
 
     }
-    
+
+    /**
+     * @Route("/report/{reportId}/accounts/{type}.json", name="accounts_money_save_json",
+     *     requirements={"type"="transactionsIn|transactionsOut"}
+     * )
+     * @Method({"PUT"})
+     *
+     * @param Request $request
+     * @param integer $reportId
+     * @param string $type
+     *
+     * @return JsonResponse
+     */
+    public function moneySaveJson(Request $request, $reportId, $type)
+    {
+        try {
+            $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
+            if ($report->getSubmitted()) {
+                throw new \RuntimeException("Report already submitted and not editable.");
+            }
+
+            $form = $this->createForm(new FormDir\TransactionsType($type), $report, [
+                'method' => 'PUT'
+            ]);
+            $form->handleRequest($request);
+
+            if (!$form->isValid()) {
+                $errorsArray = $this->get('formErrorsFormatter')->toArray($form);
+
+                return new JsonResponse(['success' => false, 'errors' => $errorsArray], 500);
+            }
+            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
+                'deserialise_group' => $type,
+            ]);
+            return new JsonResponse(['success' => true]);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
 }

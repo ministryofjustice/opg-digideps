@@ -18,6 +18,9 @@ class TransactionsType extends AbstractType
      */
     public function __construct($property)
     {
+        if (!in_array($property, ['transactionsIn', 'transactionsOut'])) {
+            throw new \InvalidArgumentException(__METHOD__ . ": $property not valid");
+        }
         $this->property = $property;
     }
 
