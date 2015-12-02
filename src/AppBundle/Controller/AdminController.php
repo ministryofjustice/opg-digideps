@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
@@ -115,8 +116,12 @@ class AdminController extends AbstractController
      */
     public function deleteConfirmAction($id)
     {
-       $user = $this->getRestClient()->get("user/{$id}", 'User'); 
-       
+       $user = $this->getRestClient()->get("user/{$id}", 'User');
+
+        if ('ROLE_ADMIN' === $user->getRole()['role']) {
+            throw new DisplayableException('Cannot delete ADMIN users.');
+        }
+
        return [ 'user' => $user ];
     }
     

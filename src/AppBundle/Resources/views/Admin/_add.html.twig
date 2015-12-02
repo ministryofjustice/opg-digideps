@@ -28,8 +28,7 @@
                     linkClass: 'button-link',
                     linkHref: path('admin_homepage')
                     } %}
-             
-             {% if (app.user.id  != user.id) and (app.user.roleId != user.roleId) %}
+             {% if app.user.id != user.id and user.role.role != 'ROLE_ADMIN' %}
                     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                            transDomain: 'admin',
                            linkButtonLabel: 'delete.label',
