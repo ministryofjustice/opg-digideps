@@ -87,7 +87,7 @@ class RestClient
      /**
      * Error Messages
      */
-    const ERROR_CONNECT = 'API not available.';
+    const ERROR_CONNECT = 'API returned an exception.';
     const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
     const ERROR_FORMAT = 'Cannot decode endpoint response';
 

@@ -106,7 +106,7 @@ class IndexController extends AbstractController
         } else if ($request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
-            $this->get('logger')->error("Session timeout from API server.");
+            $this->get('logger')->notice("Session timeout from API server.");
         }
             
         return $this->render('AppBundle:Index:login.html.twig', $vars);
