@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
+use AppBundle\Exception\DisplayableException;
 use AppBundle\Form as FormDir;
 use AppBundle\Model\Email;
 use AppBundle\Service\Client\RestClient;
@@ -84,12 +85,12 @@ class AdminController extends AbstractController
             throw new \Exception('User does not exists');
         }
         
-        
         $form = $this->createForm(new FormDir\AddUserType([
             'roles' => $this->getRestClient()->get('role', 'Role[]'),
-            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin')
+            'roleIdEmptyValue' => $this->get('translator')->trans('roleId.defaultOption', [], 'admin'),
+            'roleIdDisabled' => $user->getId() == $this->getUser()->getId()
         ]), $user );
-    
+
         if($request->getMethod() == "POST"){
             $form->handleRequest($request);
             
@@ -110,14 +111,23 @@ class AdminController extends AbstractController
      * @Route("/delete-confirm/{id}", name="admin_delete_confirm")
      * @Method({"GET"})
      * @Template()
-     * 
+     *
+     *
      * @param type $id
      */
     public function deleteConfirmAction($id)
     {
-       $user = $this->getRestClient()->get("user/{$id}", 'User'); 
-       
-       return [ 'user' => $user ];
+        $userToDelete = $this->getRestClient()->get("user/{$id}", 'User');
+
+        if (!$this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            throw new DisplayableException('Only Admin can delete users');
+        }
+
+        if ($this->getUser()->getId() == $userToDelete->getId()) {
+            throw new DisplayableException('Cannot delete logged user');
+        }
+
+        return [ 'user' => $userToDelete ];
     }
     
     /**

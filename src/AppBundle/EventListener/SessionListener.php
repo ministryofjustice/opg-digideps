@@ -6,6 +6,7 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bridge\Monolog\Logger;
 
 /**
  * Redirect to login page when session is Idle for more than `idleTimeout` amount in seconds
@@ -24,15 +25,21 @@ class SessionListener
      * @var Router
      */
     private $router;
-    
+
+    /**
+     * @var Logger
+     */
+    private $logger;
+
 
     /**
      * @param array $options keys: idleTimeout (seconds)
      * @throws \InvalidArgumentException
      */
-    public function __construct(Router $router, array $options)
+    public function __construct(Router $router, Logger $logger, array $options)
     {
         $this->router = $router;
+        $this->logger = $logger;
         $this->idleTimeout = (int)$options['idleTimeout'];
         
         if ($this->idleTimeout < 5) {
@@ -51,7 +58,7 @@ class SessionListener
         }
         if ($this->hasReachedTimeout($event)) {
             $this->handleTimeout($event);
-            
+            $this->logger->notice("Timeout reached, user redirected to login page");
             return;
         }
         
