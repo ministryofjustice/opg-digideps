@@ -15,6 +15,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
     {
         $this->event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $this->router = m::mock('Symfony\Bundle\FrameworkBundle\Routing\Router');
+        $this->logger = m::mock('Symfony\Bridge\Monolog\Logger');
     }
     
     
@@ -24,7 +25,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoMasterWrongCtor()
     {
-       new SessionListener($this->router, ['idleTimeout' => 0]);
+       new SessionListener($this->router, $this->logger, ['idleTimeout' => 0]);
     }
     
     /**
@@ -32,7 +33,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoMasterReq()
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, $this->logger, ['idleTimeout'=>600]);
         
         
         $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::SUB_REQUEST);
@@ -45,7 +46,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoSession()
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, $this->logger, ['idleTimeout'=>600]);
         
         $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         $event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
@@ -59,7 +60,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequestNoLastUsed()
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>600]);
+        $object = new SessionListener($this->router, $this->logger, ['idleTimeout'=>600]);
         
         $event = m::mock('Symfony\Component\HttpKernel\Event\GetResponseEvent');
         
@@ -90,7 +91,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function onKernelRequest($idleTimeout, $lastUsedRelativeToCurrentTime, $callsToManualExpire)
     {
-        $object = new SessionListener($this->router, ['idleTimeout'=>$idleTimeout]);
+        $object = new SessionListener($this->router, $this->logger, ['idleTimeout'=>$idleTimeout]);
         
         $this->event->shouldReceive('getRequestType')->andReturn(HttpKernelInterface::MASTER_REQUEST);
         $this->event->shouldReceive('getRequest->hasSession')->andReturn(true);
@@ -98,6 +99,7 @@ class SessionListenerTest extends \PHPUnit_Framework_TestCase
         $this->event->shouldReceive('getRequest->getSession->getMetadataBag->getLastUsed')->andReturn(time() + $lastUsedRelativeToCurrentTime);
         
         // expectations
+        $this->logger->shouldReceive('notice')->times($callsToManualExpire);
         $this->event->shouldReceive('getRequest->getSession->invalidate')->times($callsToManualExpire);
         $this->event->shouldReceive('getRequest->getSession->set')->times($callsToManualExpire)->with('_security.secured_area.target_path', 'URI');
         $this->event->shouldReceive('getRequest->getSession->set')->times($callsToManualExpire)->with('loggedOutFrom', 'timeout');
