@@ -150,12 +150,10 @@ class RestInputOuputFormatter
     {
         $e = $event->getException();
         $message = $e->getMessage();
-        $code = $e->getCode();
-        
-        // log exception
-        $this->logger->warning($message);
-        
-        // transform message and code 
+        $code = (int)$e->getCode();
+        $level = 'warning'; //defeault exception level, unless override
+
+        // transform message and code
         if ($code < 400 || $code > 599) {
             $code = 500;
         }
@@ -165,7 +163,15 @@ class RestInputOuputFormatter
         if ($e instanceof AccessDeniedHttpException) {
             $code = 403;
         }
-        
+
+        //simple timeout
+        if (419 === $code) {
+            $level = 'info';
+        }
+
+        // log exception
+        $this->logger->log($level, $message);
+
         $data = array(
             'success' => false, 
             'data' => ($e instanceof HasDataInterface) ? $e->getData() : '', 
