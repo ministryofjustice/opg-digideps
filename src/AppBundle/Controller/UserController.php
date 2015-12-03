@@ -64,8 +64,9 @@ class UserController extends RestController
     public function update(Request $request, $id)
     {
         $user = $this->findEntityBy('User', $id, 'User not found'); /* @var $user User */
-        if ($this->getUser()->getId() != $user->getId()) {
-            throw $this->createAccessDeniedException("Not authorised to change other user's data");
+
+        if ($this->getUser()->getId() != $user->getId() && !$this->isGranted(EntityDir\Role::ADMIN)) {
+            throw $this->createAccessDeniedException("Non-admin not authorised to change other user's data");
         }
         
         $data = $this->deserializeBodyContent($request);

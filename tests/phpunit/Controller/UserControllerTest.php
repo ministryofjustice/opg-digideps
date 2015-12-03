@@ -105,11 +105,17 @@ class UserControllerTest extends AbstractTestController
     
     public function testUpdateAcl()
     {
+        $url = '/user/'.self::$deputy1->getId();
         $url2 = '/user/'.self::$deputy2->getId();
-        
+
+        // deputy can only change their data
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
+
+        // admin can change any user
+        $this->assertEndpointAllowedFor('PUT', $url, self::$tokenAdmin);
+        $this->assertEndpointAllowedFor('PUT', $url2, self::$tokenAdmin);
     }
-    
+
     public function testUpdate()
     {
         $deputyId = self::$deputy1->getId();

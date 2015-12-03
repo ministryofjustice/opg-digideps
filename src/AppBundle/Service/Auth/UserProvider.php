@@ -61,8 +61,7 @@ class UserProvider implements UserProviderInterface
 
         $userId = $this->redis->get($token);
         if (!$userId) {
-            $this->logger->warning("token $username not found");
-            throw new \RuntimeException('Token non existing or not valid', 419);
+            throw new \RuntimeException("Token $username expired", 419);
         }
 
         $user = $this->em->getRepository('AppBundle\Entity\User')->find($userId);
