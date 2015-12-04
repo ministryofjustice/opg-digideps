@@ -33,7 +33,8 @@ class AccountMigrationTest extends WebTestCase
         //report 1
         $report = $reports[1];
         $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(['in'=>0, 'out'=>0], $report['transactions_new_sum']);
+        $this->assertEquals(0, $report['transactions_new_sum']['in'], '', 0.1);
+        $this->assertEquals(0, $report['transactions_new_sum']['out'], '', 0.1);
         $this->assertCount(1, $report['accounts']);
         // 1st account
         $account = $report['accounts'][1];
@@ -64,7 +65,20 @@ class AccountMigrationTest extends WebTestCase
     {
         $this->am->migrateAccounts();
 
+        // get updated data
+        $reports = $this->am->getReports();
 
+        //report 1
+        $report = $reports[1];
+        $this->assertCount(0, $report['transactions_new']);
+        $this->assertEquals(190, $report['transactions_new_sum']['in'], '', 0.1);
+        $this->assertEquals(630, $report['transactions_new_sum']['out'], '', 0.1);
+
+        //report 2
+        $report = $reports[2];
+        $this->assertCount(0, $report['transactions_new']);
+        $this->assertEquals(101.1 + 91, $report['transactions_new_sum']['in']);
+        $this->assertEquals(102 + 92, $report['transactions_new_sum']['out']);
     }
 
 //    public function tearDown()
