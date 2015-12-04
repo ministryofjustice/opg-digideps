@@ -26,38 +26,45 @@ class AccountMigrationTest extends WebTestCase
 
         $this->am = new AccountMigration($em->getConnection());
         $reports = $this->am->getReports();
+        file_put_contents(__DIR__.'/res.txt', print_r($reports, true));
 
         $this->assertCount(2, $reports, '#reports mismatch');
 
-        //r1
+        //report 1
         $report = $reports[1];
         $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(0, $report['transactions_new_sum']);
+        $this->assertEquals(['in'=>0, 'out'=>0], $report['transactions_new_sum']);
         $this->assertCount(1, $report['accounts']);
         // 1st account
         $account = $report['accounts'][1];
         $this->assertCount(40, $account['transactions_old']);
-        $this->assertEquals(820, $account['transactions_old_sum']);
-        $this->assertEquals(820, $account['transactions_old_sum']);
+        $this->assertEquals(2.00, $account['transactions_old']['attendance_allowance']['amount']);
+        $this->assertEquals(190.0, $account['transactions_old_sum']['in']);
+        $this->assertEquals(630.0, $account['transactions_old_sum']['out']);
 
-        //r2
+        //report 2
         $report = $reports[2];
         $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(0, $report['transactions_new_sum']);
+        $this->assertEquals(0, $report['transactions_new_sum']['in']);
+        $this->assertEquals(0, $report['transactions_new_sum']['out']);
         $this->assertCount(2, $report['accounts']);
         // 1st account
         $account = $report['accounts'][2];
         $this->assertCount(40, $account['transactions_old']);
-        $this->assertEquals(203, $account['transactions_old_sum']);
+        $this->assertEquals(101.1, $account['transactions_old_sum']['in'], '', 0.1);
+        $this->assertEquals(102, $account['transactions_old_sum']['out'], '', 0.1);
         // 2nd account
         $account = $report['accounts'][3];
         $this->assertCount(40, $account['transactions_old']);
-        $this->assertEquals(183, $account['transactions_old_sum']);
+        $this->assertEquals(91, $account['transactions_old_sum']['in'], '', 0.1);
+        $this->assertEquals(92, $account['transactions_old_sum']['out']);
     }
 
     public function testMigrateAccounts()
     {
         $this->am->migrateAccounts();
+
+
     }
 
 //    public function tearDown()

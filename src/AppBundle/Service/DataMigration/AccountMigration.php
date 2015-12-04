@@ -20,7 +20,7 @@ class AccountMigration
     public function migrateAccounts()
     {
         $data = $this->getReports();
-//        print_r($data);die;
+
     }
 
     private function fetchAll($query, $key = 'id')
@@ -54,7 +54,11 @@ class AccountMigration
             // add old transaction to account
             foreach ($reports[$k]['accounts'] as $ka => $account) {
                 $reports[$k]['accounts'][$ka]['transactions_old'] =
-                    $this->fetchAll('SELECT * from account_transaction WHERE account_id = ' . $account['id'], 'account_transaction_type_id');
+                    $this->fetchAll('SELECT * from account_transaction at
+                        LEFT JOIN account_transaction_type att
+                        ON at.account_transaction_type_id = att.id
+
+                        WHERE account_id = ' . $account['id'], 'account_transaction_type_id');
                 $reports[$k]['accounts'][$ka]['transactions_old_sum'] =
                     $this->calculateTotals($reports[$k]['accounts'][$ka]['transactions_old']);
             }
@@ -63,14 +67,14 @@ class AccountMigration
         return $reports;
     }
 
-    private function calculateTotals(array $array, $key = 'amount')
+    private function calculateTotals(array $transactions, $key = 'amount')
     {
-        $values = array_map(function ($e) use ($key) {
-            return $e[$key];
-        }, $array);
+        $ret = ['in'=>0.0, 'out'=>0.0];
 
-        return array_sum($values);
-
+        foreach ($transactions as $t) {
+            $ret[$t['type']] += $t['amount'];
+        }
+        return $ret;
     }
 
 }
