@@ -33,22 +33,26 @@ class AccountMigrationTest extends WebTestCase
         $report = $reports[1];
         $this->assertCount(0, $report['transactions_new']);
         $this->assertEquals(0, $report['transactions_new_sum']);
-        //
         $this->assertCount(1, $report['accounts']);
-        $this->assertCount(40, $report['accounts'][1]['transactions_old']);
-        $this->assertEquals(820, $report['accounts'][1]['transactions_old_sum']);
+        // 1st account
+        $account = $report['accounts'][1];
+        $this->assertCount(40, $account['transactions_old']);
+        $this->assertEquals(820, $account['transactions_old_sum']);
+        $this->assertEquals(820, $account['transactions_old_sum']);
 
         //r2
         $report = $reports[2];
         $this->assertCount(0, $report['transactions_new']);
         $this->assertEquals(0, $report['transactions_new_sum']);
-        //
         $this->assertCount(2, $report['accounts']);
-        $this->assertCount(40, $report['accounts'][2]['transactions_old']);
-        $this->assertEquals(203, $report['accounts'][2]['transactions_old_sum']);
-        $this->assertCount(40, $report['accounts'][3]['transactions_old']);
-        $this->assertEquals(183,$report['accounts'][3]['transactions_old_sum']);
-
+        // 1st account
+        $account = $report['accounts'][2];
+        $this->assertCount(40, $account['transactions_old']);
+        $this->assertEquals(203, $account['transactions_old_sum']);
+        // 2nd account
+        $account = $report['accounts'][3];
+        $this->assertCount(40, $account['transactions_old']);
+        $this->assertEquals(183, $account['transactions_old_sum']);
     }
 
     public function testMigrateAccounts()
