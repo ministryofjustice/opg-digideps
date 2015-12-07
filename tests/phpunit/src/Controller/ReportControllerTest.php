@@ -178,20 +178,19 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(26, $data['transactions_in']);
+        $this->assertCount(28, $data['transactions_in']);
         $first = array_shift($data['transactions_in']);
-        $this->assertArrayHasKey('id', $first);
-        $this->assertArrayHasKey('type', $first);
-        $this->assertArrayHasKey('category', $first);
-        $this->assertArrayHasKey('has_more_details', $first);
-
+        $this->assertEquals(['id' =>'account-interest',
+            'type' =>'in',
+            'category' => 'income-and-earnings',
+            'has_more_details' => ''], $first);
 
         //  assert transactionsOut
         $data = $this->assertJsonRequest('GET', $url . '?groups=transactionsOut', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(36, $data['transactions_out']);
+        $this->assertCount(43, $data['transactions_out']);
         $first = array_shift($data['transactions_out']);
         $this->assertArrayHasKey('id', $first);
         $this->assertArrayHasKey('type', $first);
@@ -206,7 +205,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertEquals(62, count($data['transactions_in'] + $data['transactions_out']));
+        $this->assertEquals(28+43, count($data['transactions_in'] + $data['transactions_out']));
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
     }

@@ -22,11 +22,15 @@ class AccountMigrationTest extends WebTestCase
         //migrate from version 47 (that will test the migration too)
         exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
 
+        // create client
         $client = self::createClient([ 'environment' => 'test',
             'debug' => true ]);
         $em = $client->getContainer()->get('em');
 
+        // create class
         $this->am = new AccountMigration($em->getConnection());
+
+        /// assert added data from SQL is correct
         $this->initialReports = $this->am->getReports();
         $this->account1 = $this->initialReports[1]['accounts'][1];
         $this->account2 = $this->initialReports[2]['accounts'][2];
@@ -95,14 +99,14 @@ class AccountMigrationTest extends WebTestCase
 
     }
 
-//    public function tearDown()
-//    {
-//        exec('php app/console cache:clear --env=test');
-//        exec('php app/console doctrine:query:sql "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;" --env=test');
-//        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
-//        exec('php app/console doctrine:schema:validate --env=test');
-//        exec('php app/console digideps:add-user deputy@example.org --firstname=test --lastname=deputy --role=2 --password=Abcd1234 --env=test');
-//        exec('php app/console digideps:add-user admin@example.org --firstname=test --lastname=admin  --role=1 --password=Abcd1234 --env=test');
-//    }
+    public function tearDown()
+    {
+        exec('php app/console cache:clear --env=test');
+        exec('php app/console doctrine:query:sql "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;" --env=test');
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
+        exec('php app/console doctrine:schema:validate --env=test');
+        exec('php app/console digideps:add-user deputy@example.org --firstname=test --lastname=deputy --role=2 --password=Abcd1234 --env=test');
+        exec('php app/console digideps:add-user admin@example.org --firstname=test --lastname=admin  --role=1 --password=Abcd1234 --env=test');
+    }
 
 }
