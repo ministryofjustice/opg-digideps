@@ -893,7 +893,7 @@ COPY account_transaction (id, account_id, account_transaction_type_id, amount, m
 71	2	sale_of_investments_property_or_assets	\N	\N
 72	2	gifts	\N	\N
 73	2	major_purchases_eg_property_vehicles	\N	\N
-74	2	compensation_or_damages_awards	\N	\N
+74	2	compensation_or_damages_awards	1.20	cda_desc1
 75	2	transfers_in_from_client_s_other_accounts	\N	\N
 76	2	property_maintenance_or_improvement	\N	\N
 77	2	any_other_money_paid_in_and_not_listed_above	\N	\N
@@ -931,7 +931,7 @@ COPY account_transaction (id, account_id, account_transaction_type_id, amount, m
 111	3	sale_of_investments_property_or_assets	\N	\N
 112	3	gifts	\N	\N
 113	3	major_purchases_eg_property_vehicles	\N	\N
-114	3	compensation_or_damages_awards	\N	\N
+114	3	compensation_or_damages_awards	3.40	cda_desc2
 115	3	transfers_in_from_client_s_other_accounts	\N	\N
 116	3	property_maintenance_or_improvement	\N	\N
 117	3	any_other_money_paid_in_and_not_listed_above	\N	\N

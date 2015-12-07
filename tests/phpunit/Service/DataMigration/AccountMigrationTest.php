@@ -49,14 +49,18 @@ class AccountMigrationTest extends WebTestCase
         $this->assertCount(2, $this->initialReports[2]['accounts']);
         // 1st account
         $this->assertCount(40,  $this->initialReports[2]['accounts'][2]['transactions_old']);
-        $this->assertEquals(101.1,  $this->initialReports[2]['accounts'][2]['transactions_old_sum']['in'], '', 0.1);
+        $this->assertEquals(102.2,  $this->initialReports[2]['accounts'][2]['transactions_old_sum']['in'], '', 0.1);
         $this->assertEquals(102,  $this->initialReports[2]['accounts'][2]['transactions_old_sum']['out'], '', 0.1);
         // 2nd account
         $this->assertCount(40,  $this->initialReports[2]['accounts'][3]['transactions_old']);
-        $this->assertEquals(91,  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['in'], '', 0.1);
+        $this->assertEquals(94.4,  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['in'], '', 0.1);
         $this->assertEquals(92,  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['out']);
+        // single transaction check
+        $this->assertEquals(1.20, $this->initialReports[2]['accounts'][2]['transactions_old']['compensation_or_damages_awards']['amount']);
+        $this->assertEquals('cda_desc1', $this->initialReports[2]['accounts'][2]['transactions_old']['compensation_or_damages_awards']['more_details']);
+        $this->assertEquals(3.40, $this->initialReports[2]['accounts'][3]['transactions_old']['compensation_or_damages_awards']['amount']);
+        $this->assertEquals('cda_desc2', $this->initialReports[2]['accounts'][3]['transactions_old']['compensation_or_damages_awards']['more_details']);
 
-//        file_put_contents(__DIR__ . '/input.txt', print_r($this->initialReports, true));
     }
 
     public function testMigrateAccounts()
@@ -66,6 +70,7 @@ class AccountMigrationTest extends WebTestCase
         // get updated data
         $reports = $this->am->getReports();
 
+//        file_put_contents(__DIR__ . '/input.txt', print_r($this->initialReports, true));
 //        file_put_contents(__DIR__ . '/output.txt', print_r($reports, true));
 
         //report 1
@@ -77,8 +82,13 @@ class AccountMigrationTest extends WebTestCase
         //report 2
         $report = $reports[2];
         $this->assertCount(40, $report['transactions_new']);
+        // check totals in and out are the sum of the two report's accounts
         $this->assertEquals($this->initialReports[2]['accounts'][2]['transactions_old_sum']['in'] + $this->initialReports[2]['accounts'][3]['transactions_old_sum']['in'], $report['transactions_new_sum']['in'], '', 0.1);
         $this->assertEquals($this->initialReports[2]['accounts'][2]['transactions_old_sum']['out'] +  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['out'], $report['transactions_new_sum']['out']);
+        // check single transaction: amount is the sum, and more_details is merged
+        $this->assertEquals($this->initialReports[2]['accounts'][2]['transactions_old']['compensation_or_damages_awards']['amount'] + $this->initialReports[2]['accounts'][3]['transactions_old']['compensation_or_damages_awards']['amount'], $report['transactions_new']['compensation-or-damages-award']['amount']);
+        $this->assertEquals($this->initialReports[2]['accounts'][2]['transactions_old']['compensation_or_damages_awards']['more_details']."\n".$this->initialReports[2]['accounts'][3]['transactions_old']['compensation_or_damages_awards']['more_details'], $report['transactions_new']['compensation-or-damages-award']['more_details']);
+
     }
 
 //    public function tearDown()
