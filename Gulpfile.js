@@ -84,6 +84,10 @@ gulp.task('sass.images', function(callback) {
     
     gulp.src(config.sassSrc + '/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+
+    gulp.src('./node_modules/govuk-elements/public/images/**/*')
+        .pipe(gulp.dest('./web/images'));
+    
     callback();
 });
 gulp.task('sass.fonts', function() {

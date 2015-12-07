@@ -1,0 +1,40 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+{% block pageTitle %}Digideps Styleguide{% endblock %}
+
+{% block pageContent %}
+    
+    <div class="grid-row">
+        <header id="page-header" class="column-two-thirds">
+            <h1 class="heading-xlarge">Digideps Style Guide</h1>
+            <p class="lede">This guide shows extensions to the standard GDS elements collection for 
+                the MOJ Digideps webservice.</p>
+        </header>
+    </div>
+    
+    <div class="grid-row">
+        <div class="column-third">
+            <h2 class="heading-medium"><a href="{{ path('elements_layout') }}">Layout</a></h2>
+            <p>Layout helpers</p>
+        </div>
+        <div class="column-third">
+            <h2 class="heading-medium"><a href="typography">Typography</a></h2>
+            <p>Custom typography styles and spacing unique to Digideps</p>
+        </div>
+        <div class="column-third">
+            <h2 class="heading-medium"><a href="colour">Colour</a></h2>
+            <p>Additional colours created for Digideps site, variations on core GDS colours</p>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="column-third">
+            <h2 class="heading-medium"><a href="data">Data</a></h2>
+            <p>Layouts and helpers for data related layouts</p>
+        </div>
+        <div class="column-third">
+            <h2 class="heading-medium"><a href="forms">Form elements</a></h2>
+            <p>Extra field types and form elements</p>
+        </div>
+    </div>
+    
+{% endblock %}

@@ -10,14 +10,13 @@
     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
         'report': report
     } %}
+
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>{% block title %}{% endblock %}</h1>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </div>
     
     <div class="left-nav-container">
-
-        <div id="page-section-title-container" class="page-section-title-container">
-            <h1>{% block title %}{% endblock %}</h1>
-            {% include 'AppBundle:Components:_helpline.html.twig' %}
-        </div>
-    
         <div class="row">
             <div class="left-nav">
                 {% block leftcontent %}{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+
+
+{% block pageTitle %}Digideps Styleguide{% endblock %}
+
+{% block pageContent %}
+<link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+
+{% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+} %}
+    
+<div class="grid-row">
+    <header id="page-header" class="column-two-thirds">
+        <h1 class="heading-xlarge">
+            <span class="heading-secondary">Digideps Elements</span>
+            Layouts
+        </h1>
+        
+        <p class="lede">
+            Extra layouts used within the site for navigation or content display
+        </p>
+    </header>
+</div>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h2 class="heading-small heading-contents">Contents:</h2>
+        <ul class="list list-contents">
+            <li>
+                <a href="#left-tabnav">Left tabbed nav</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h3 class="heading-medium">Left tabbed nav</h3>
+        <p>This provides a split navigation with a list of sub-sections on the left hand side, with a highlight for the current section,
+        and a main content section on the right hand side. The CSS looks for the first title, or paragraph, in the right side content area 
+        and sets it top margin to 0 so it lines up with the top of the section and line up with the left tabs</p>
+    </div>
+</div>
+<div class="example">
+        {% include 'AppBundle:Element:_lefttab.html.twig' %}
+</div>
+<pre><code class="language-markup">&lt;div class="left-nav-container">
+    &lt;div class="left-nav">
+        &lt;nav id="account-sub-nav">
+            &lt;a href="#" class="active">Tab 1</a>
+            &lt;a href="#">Tab 2</a>
+            &lt;a href="#">Tab 3</a>
+        &lt;/nav>
+    &lt;/div>
+    &lt;div class="right-content">
+        &lt;form method="post" action="#">
+            &lt;h3 class="heading-large">Add a new contact&lt;/h3>
+            &lt;div id="form-group-contact_contactName" class="form-group ">
+                &lt;label class="form-label" for="contact_contactName">Contact name&lt;/label>
+                &lt;input type="text" id="contact_contactName" name="contact[contactName]" class="form-control" />
+            &lt;/div>
+            &lt;input type="submit" class="button" value="Save"/>
+        &lt;/form>
+    &lt;/div>
+&lt;/div></code></pre>
+
+    
+    
+<script src="/prism/prism.js"></script>
+{% endblock %}
