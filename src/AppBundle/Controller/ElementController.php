@@ -48,6 +48,9 @@ class ElementController extends AbstractController
      */
     public function twigComponentsAction()
     {
+        $decision = new EntityDir\Decision;
+        
+        
         $client = [
             'fullname' => 'Zac Tolley'
         ];
