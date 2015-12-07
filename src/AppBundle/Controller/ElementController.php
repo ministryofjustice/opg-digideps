@@ -25,7 +25,7 @@ class ElementController extends AbstractController
 
     /**
      * @Route("/layout", name="elements_layout")
-     * @Template("AppBundle:Element:layout.html.twig")
+     * @Template("AppBundle:Element/layout:layout.html.twig")
      */
     public function layoutAction()
     {
@@ -41,4 +41,25 @@ class ElementController extends AbstractController
         ];
     
     }
+
+    /**
+     * @Route("/twigcomponents", name="elements_twig")
+     * @Template("AppBundle:Element/Twig:twig.html.twig")
+     */
+    public function twigComponentsAction()
+    {
+
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Twig components']
+
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb
+        ];
+
+    }
+    
+    
 }
