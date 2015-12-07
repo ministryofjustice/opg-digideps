@@ -7,6 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class AccountMigrationTest extends WebTestCase
 {
+    /**
+     * @var AccountMigration
+     */
+    private $am;
 
     public function setUp()
     {
@@ -15,50 +19,44 @@ class AccountMigrationTest extends WebTestCase
         exec("$export psql -U api -c 'DROP SCHEMA IF EXISTS public cascade'", $out1);
         exec("$export psql -U api < ".__DIR__."/oldTransactions.sql" , $out2);
 
-        //migrate from version 47 (that will test migration too)
+        //migrate from version 47 (that will test the migration too)
         exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
-
-//        $this->assertCount(211, $out2, "cannot import SQL file for account migration testing");
 
         $client = self::createClient([ 'environment' => 'test',
             'debug' => true ]);
         $em = $client->getContainer()->get('em');
 
         $this->am = new AccountMigration($em->getConnection());
-        $reports = $this->am->getReports();
-        file_put_contents(__DIR__.'/res.txt', print_r($reports, true));
+        $this->initialReports = $this->am->getReports();
 
-        $this->assertCount(2, $reports, '#reports mismatch');
+        $this->assertCount(2, $this->initialReports, '#reports mismatch');
 
         //report 1
-        $report = $reports[1];
-        $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(0, $report['transactions_new_sum']['in'], '', 0.1);
-        $this->assertEquals(0, $report['transactions_new_sum']['out'], '', 0.1);
-        $this->assertCount(1, $report['accounts']);
+        $this->assertCount(0, $this->initialReports[1]['transactions_new']);
+        $this->assertEquals(0, $this->initialReports[1]['transactions_new_sum']['in'], '', 0.1);
+        $this->assertEquals(0, $this->initialReports[1]['transactions_new_sum']['out'], '', 0.1);
+        $this->assertCount(1, $this->initialReports[1]['accounts']);
         // 1st account
-        $account = $report['accounts'][1];
-        $this->assertCount(40, $account['transactions_old']);
-        $this->assertEquals(2.00, $account['transactions_old']['attendance_allowance']['amount']);
-        $this->assertEquals(190.0, $account['transactions_old_sum']['in']);
-        $this->assertEquals(630.0, $account['transactions_old_sum']['out']);
+        $this->assertCount(40, $this->initialReports[1]['accounts'][1]['transactions_old']);
+        $this->assertEquals(2.00, $this->initialReports[1]['accounts'][1]['transactions_old']['attendance_allowance']['amount']);
+        $this->assertEquals(190.0, $this->initialReports[1]['accounts'][1]['transactions_old_sum']['in']);
+        $this->assertEquals(630.0, $this->initialReports[1]['accounts'][1]['transactions_old_sum']['out']);
 
         //report 2
-        $report = $reports[2];
-        $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(0, $report['transactions_new_sum']['in']);
-        $this->assertEquals(0, $report['transactions_new_sum']['out']);
-        $this->assertCount(2, $report['accounts']);
+        $this->assertCount(0, $this->initialReports[2]['transactions_new']);
+        $this->assertEquals(0, $this->initialReports[2]['transactions_new_sum']['in']);
+        $this->assertEquals(0, $this->initialReports[2]['transactions_new_sum']['out']);
+        $this->assertCount(2, $this->initialReports[2]['accounts']);
         // 1st account
-        $account = $report['accounts'][2];
-        $this->assertCount(40, $account['transactions_old']);
-        $this->assertEquals(101.1, $account['transactions_old_sum']['in'], '', 0.1);
-        $this->assertEquals(102, $account['transactions_old_sum']['out'], '', 0.1);
+        $this->assertCount(40,  $this->initialReports[2]['accounts'][2]['transactions_old']);
+        $this->assertEquals(101.1,  $this->initialReports[2]['accounts'][2]['transactions_old_sum']['in'], '', 0.1);
+        $this->assertEquals(102,  $this->initialReports[2]['accounts'][2]['transactions_old_sum']['out'], '', 0.1);
         // 2nd account
-        $account = $report['accounts'][3];
-        $this->assertCount(40, $account['transactions_old']);
-        $this->assertEquals(91, $account['transactions_old_sum']['in'], '', 0.1);
-        $this->assertEquals(92, $account['transactions_old_sum']['out']);
+        $this->assertCount(40,  $this->initialReports[2]['accounts'][3]['transactions_old']);
+        $this->assertEquals(91,  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['in'], '', 0.1);
+        $this->assertEquals(92,  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['out']);
+
+//        file_put_contents(__DIR__ . '/input.txt', print_r($this->initialReports, true));
     }
 
     public function testMigrateAccounts()
@@ -68,17 +66,19 @@ class AccountMigrationTest extends WebTestCase
         // get updated data
         $reports = $this->am->getReports();
 
+//        file_put_contents(__DIR__ . '/output.txt', print_r($reports, true));
+
         //report 1
         $report = $reports[1];
-        $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(190, $report['transactions_new_sum']['in'], '', 0.1);
-        $this->assertEquals(630, $report['transactions_new_sum']['out'], '', 0.1);
+        $this->assertCount(40, $report['transactions_new']);
+        $this->assertEquals($this->initialReports[1]['accounts'][1]['transactions_old_sum']['in'], $report['transactions_new_sum']['in'], '', 0.1);
+        $this->assertEquals($this->initialReports[1]['accounts'][1]['transactions_old_sum']['out'], $report['transactions_new_sum']['out'], '', 0.1);
 
         //report 2
         $report = $reports[2];
-        $this->assertCount(0, $report['transactions_new']);
-        $this->assertEquals(101.1 + 91, $report['transactions_new_sum']['in']);
-        $this->assertEquals(102 + 92, $report['transactions_new_sum']['out']);
+        $this->assertCount(40, $report['transactions_new']);
+        $this->assertEquals($this->initialReports[2]['accounts'][2]['transactions_old_sum']['in'] + $this->initialReports[2]['accounts'][3]['transactions_old_sum']['in'], $report['transactions_new_sum']['in'], '', 0.1);
+        $this->assertEquals($this->initialReports[2]['accounts'][2]['transactions_old_sum']['out'] +  $this->initialReports[2]['accounts'][3]['transactions_old_sum']['out'], $report['transactions_new_sum']['out']);
     }
 
 //    public function tearDown()
