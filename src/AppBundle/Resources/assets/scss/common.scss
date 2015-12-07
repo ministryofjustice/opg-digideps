@@ -47,13 +47,11 @@ $path: '/images/';
 @import "components/data-item";
 @import "components/data-list";
 @import "components/error-page";
-@import "components/element";
 @import "components/forms";
 @import "components/helpers";
 @import "components/layout";
 @import "components/nav-tabs";
 @import "components/notification-summary";
-@import "components/page-body";
 @import "components/page-report-content";
 @import "components/page-header";
 @import "components/page-section-description";
@@ -64,12 +62,8 @@ $path: '/images/';
 @import "components/progress_indicator";
 @import "components/report-submission";
 @import "components/report-list";
-@import "components/report-meta-data";
 @import "components/report-overview";
-@import "components/sub-section-description";
-@import "components/sub-section-title";
 @import "components/user-list";
-@import "components/external-report";
 @import "components/feedback";
 @import "components/terms";
 @import "components/help";
@@ -98,7 +92,9 @@ $path: '/images/';
 @import "components/card-list";
 
 
-
+b {
+    font-weight: bold;
+}
 
 // Example boxes
 // ==========================================================================

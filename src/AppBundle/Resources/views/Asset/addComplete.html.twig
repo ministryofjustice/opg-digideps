@@ -12,18 +12,9 @@
     
     {% block pageBody %}
         
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
-
-        
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
-          {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-          transDomain: translationDomain,
-          subSectionTitle: 'page.subSectionTitleAdd'
-          } %}
+        <h3 class="heading-medium">{{ 'page.subSectionTitleAdd' | trans({}, translationDomain) }}</h3>
 
         {{ form_errors_list(form) }}
 

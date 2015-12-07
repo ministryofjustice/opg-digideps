@@ -13,7 +13,26 @@
 
     <!-- Report Header -->
     <div class="grid-row">
+        <h2 class="heading-large">Report Header</h2>
+        <i>AppBundle:Components/PageHeader:_report-header.html.twig</i>
+        <p>Header used throughout the Deputy Report side, requires <b>report</b> and <b>client</b></p>
         
+        <div class="example">
+            {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
+        </div>
+        
+        <pre><code class="markup">
+<header class="page-report-header page-header">
+    <div class="page-header-titles">
+        <h1 class="report-title">2014 to 2015 report
+            Zac Tolley</div>
+        </h1>
+    </div>
+
+</header>                
+        </code></pre>
+    
+    
     </div>
     
     

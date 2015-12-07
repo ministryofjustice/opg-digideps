@@ -48,7 +48,16 @@ class ElementController extends AbstractController
      */
     public function twigComponentsAction()
     {
-
+        $client = [
+            'fullname' => 'Zac Tolley'
+        ];
+        
+        $report = [
+            'id' => 1,
+            'period' => '2014 to 2015',
+            'client' => $client
+        ];
+        
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
             ['label' => 'Twig components']
@@ -56,7 +65,9 @@ class ElementController extends AbstractController
         ];
 
         return [
-            'breadCrumb' => $breadCrumb
+            'breadCrumb' => $breadCrumb,
+            'report' => $report,
+            'client' => $client
         ];
 
     }

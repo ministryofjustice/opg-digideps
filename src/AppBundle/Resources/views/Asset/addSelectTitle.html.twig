@@ -17,11 +17,8 @@
         
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'asset-form-add-select-title' } }) }}
         
-          {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-          transDomain: translationDomain,
-          subSectionTitle: 'page.subSectionTitleAdd'
-          } %}
-        
+          <h3 class="heading-medium">{{ 'page.subSectionTitleAdd' | trans({}, translationDomain) }}</h3>
+
           {{ form_select(form.title, 'title') }}
 
         

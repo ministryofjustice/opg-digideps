@@ -18,6 +18,10 @@ form {
         border-left: 3px solid $grey-2;
         padding-left: 15px;
 
+        h3.heading-medium:first-child {
+            margin-top: 0;
+        }
+        
         .form-date {
             .form-group {
                 input {
@@ -141,10 +145,6 @@ form {
     textarea.form-control {
         height: 7em;
         width: 65%;
-    }
-
-    &.sub-section-title {
-        padding-left: 15px;
     }
     
     .pre-input-text {

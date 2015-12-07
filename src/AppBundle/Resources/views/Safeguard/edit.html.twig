@@ -25,10 +25,7 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'form.contact.subSectionTitle'
-    } %}
+    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({}, translationDomain) }}</h3>
 
     <div class="form-section">
         {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {

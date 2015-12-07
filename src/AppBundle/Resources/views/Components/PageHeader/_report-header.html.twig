@@ -1,11 +1,10 @@
 {% set translationDomain = "report-common" %}
 {% trans_default_domain translationDomain %}
 
-<header class="page-report-header page-header">
-    <div class="page-header-titles">
-        <h1 class="report-title">{{ report.period }} {{ 'report.header.report' | trans }}
-            <div class="client-name">{{ client.fullname }}</div>
-        </h1>
-    </div>
-
+<header class="page-report-header">
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">{{ report.period }} {{ 'report.header.report' | trans }}</span>
+        {{ client.fullname }}
+    </h1>
 </header>
+
