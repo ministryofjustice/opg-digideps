@@ -3,8 +3,8 @@
     <h2>
         <span class="section-number">Section 6</span>
         Bank accounts
-    </h2>                
-    {% for account in report.accounts %}            
+    </h2>
+    {% for account in report.accounts %}
         <fieldset class="account-details">
             <div class="half-width">
                 <div class="form-group form-group-vertical">
@@ -27,135 +27,141 @@
                 </div>
             </div>
         </fieldset>
-        
-        <h3>Summary of money paid in</h3>
-        <fieldset class="money-in">
-            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
-                transactions: account.moneyIn,
-                total: account.moneyInTotal,
-                footerTitle: 'moneyInFooter',
-                moneyType: "moneyIn"
-            } %}                        
-        </fieldset>
-        
-        <h3>Summary of money paid out</h3>
-        <fieldset class="money-out">
-            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
-                transactions: account.moneyOut,
-                total: account.moneyOutTotal,
-                footerTitle: 'moneyOutFooter',
-                moneyType: "moneyOut"
-            } %}
-        </fieldset>
-
-        
-        <h3>Balancing the account</h3>
-        
-        <ul class="balancing">
-            <li class="balancing-item transaction">
-                <div class="transaction-label">
-                    Opening balance for reporting period
-                    <span class="sub-label">(as shown on bank statement)</span>
-                </div>
-                <div class="transaction-value">
-                    <span class="currency">£</span>
-                    <span class="balancing-opening-balance amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
-                </div>
-                <div class="box-right">Box 1</div>
-            </li>
-            <li class="balancing-item transaction">
-                <div class="transaction-label">
-                    Total money paid in
-                </div>
-                <div class="transaction-value">
-                    <span class="currency">£</span>
-                    <span class="balancing-total-in amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
-                </div>
-                <div class="box-right">Box 2</div>
-            </li>
-            <li class="balancing-item transaction">
-                <div class="transaction-label">
-                    Sub-total 1
-                    <span class="sub-label">(box 1 plus box 2)</span>
-                </div>
-                <div class="transaction-value">
-                    <span class="currency">£</span>
-                    <span class="balancing-sub-total amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
-                </div>
-                <div class="box-right">Box 3</div>
-            </li>
-            <li class="balancing-item transaction">
-                <div class="transaction-label">
-                    Total money paid out
-                </div>
-                <div class="transaction-value">
-                    <span class="currency">£</span>
-                    <span class="balancing-total-out amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
-                </div>
-                <div class="box-right">Box 4</div>
-            </li>
-            <li class="balancing-item transaction">
-                <div class="transaction-label">
-                    Sub-total 2
-                    <span class="sub-label">(box 3 minus box 4)</span>
-                </div>
-                <div class="transaction-value">
-                    <span class="currency">£</span>
-                    <span class="balancing-sub-total-2 amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
-                </div>
-                <div class="box-right">Box 5</div>
-            </li>
-            <li class="balancing-item transaction">
-                <div class="transaction-label">
-                    Closing balance for reporting period
-                    <span class="sub-label">(as shown on bank statement)</span>
-                </div>
-                <div class="transaction-value">
-                    <span class="currency">£</span>
-                    <span class="balancing-closing-balance amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
-                </div>
-                <div class="box-right">Box 6</div>
-            </li>
-        </ul>
-        
-        <fieldset class="accountBalance_closingBalanceExplanation">
-            <div class="form-group form-group-vertical">
-                <div class="label">If the figures in box 5 and box 6 are different, tell us why (for example, if you’ve rounded up or down any amounts or you have used a different date on the bank statement).</div>
-                <div class="textarea">{% if account.closingBalanceExplanation %}{{ account.closingBalanceExplanation }}{% endif %}</div>
-            </div>
-        </fieldset>
-        
-        <fieldset class="account-date-explanation">
-        
-            <div class="label intro">If the dates used to calculate the opening and closing balances are different from the reporting period shown on the front page, write the dates you used below.</div>
-        
-            <div class="form-group form-group-vertical half-width">
-                <div class="label">From</div>
-                <div class="value">
-                    {% if account.openingDateExplanation or account.closingDateExplanation %}
-                        {{ account.openingDate | date("d/m/Y") }}
-                    {% endif %}
-                </div>
-            </div>
-            
-            <div class="form-group form-group-vertical half-width">
-                <div class="label">To</div>
-                <div class="value">
-                    {% if account.openingDateExplanation or account.closingDateExplanation %}
-                        {{ account.closingDate | date("d/m/Y") }}
-                    {% endif %}
-                </div>
-            </div>
-
-            <div class="form-group form-group-vertical full-width">
-                <div class="label">Tell us why the dates are different.</div>
-                <div class="textarea">
-                    {% if account.openingDateExplanation or account.closingDateExplanation %}
-                        {{ account.openingDateExplanation}}<br/>
-                        {{ account.closingDateExplanation}}
-                    {% endif %}
-                </div>
-            </div>
-        </fieldset>
     {% endfor %}
+
+    <h3>Summary of money paid in</h3>
+
+    <fieldset class="money-in">
+        {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+        transactions: report.transactionsIn,
+        total: report.noneyInTotal,
+        footerTitle: 'moneyInFooter',
+        moneyType: "moneyIn"
+        } %}
+    </fieldset>
+
+    <h3>Summary of money paid out</h3>
+    <fieldset class="money-out">
+        {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+        transactions: report.transactionsOut,
+        total: report.noneyOutTotal,
+        footerTitle: 'moneyOutFooter',
+        moneyType: "moneyOut"
+        } %}
+    </fieldset>
+
+
+    <h3>Balancing the accounts (not updated with new account section data)</h3>
+
+    <ul class="balancing">
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Opening balance for reporting period
+                <span class="sub-label">(as shown on bank statement)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">£</span>
+                <span class="balancing-opening-balance amount">{{ account.openingBalance | number_format(2, '.', ',') }}</span>
+            </div>
+            <div class="box-right">Box 1</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Total money paid in
+            </div>
+            <div class="transaction-value">
+                <span class="currency">£</span>
+                <span class="balancing-total-in amount">{{ account.moneyInTotal | number_format(2, '.', ',') }}</span>
+            </div>
+            <div class="box-right">Box 2</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Sub-total 1
+                <span class="sub-label">(box 1 plus box 2)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">£</span>
+                <span class="balancing-sub-total amount">{{ (account.moneyInTotal + account.openingBalance) | number_format(2, '.', ',') }}</span>
+            </div>
+            <div class="box-right">Box 3</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Total money paid out
+            </div>
+            <div class="transaction-value">
+                <span class="currency">£</span>
+                <span class="balancing-total-out amount">{{ account.moneyOutTotal | number_format(2, '.', ',') }}</span>
+            </div>
+            <div class="box-right">Box 4</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Sub-total 2
+                <span class="sub-label">(box 3 minus box 4)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">£</span>
+                <span class="balancing-sub-total-2 amount">{{ ((account.moneyInTotal + account.openingBalance ) - account.moneyOutTotal) | number_format(2, '.', ',') }}</span>
+            </div>
+            <div class="box-right">Box 5</div>
+        </li>
+        <li class="balancing-item transaction">
+            <div class="transaction-label">
+                Closing balance for reporting period
+                <span class="sub-label">(as shown on bank statement)</span>
+            </div>
+            <div class="transaction-value">
+                <span class="currency">£</span>
+                <span class="balancing-closing-balance amount">{{ account.closingBalance | number_format(2, '.', ',') }}</span>
+            </div>
+            <div class="box-right">Box 6</div>
+        </li>
+    </ul>
+
+    <fieldset class="accountBalance_closingBalanceExplanation">
+        <div class="form-group form-group-vertical">
+            <div class="label">If the figures in box 5 and box 6 are different, tell us why (for example, if you’ve
+                rounded up or down any amounts or you have used a different date on the bank statement).
+            </div>
+            <div class="textarea">{% if account.closingBalanceExplanation %}{{ account.closingBalanceExplanation }}{% endif %}</div>
+        </div>
+    </fieldset>
+
+    <fieldset class="account-date-explanation">
+
+        <div class="label intro">If the dates used to calculate the opening and closing balances are different from the
+            reporting period shown on the front page, write the dates you used below.
+        </div>
+
+        <div class="form-group form-group-vertical half-width">
+            <div class="label">From</div>
+            <div class="value">
+                {% if account.openingDateExplanation or account.closingDateExplanation %}
+                    {{ account.openingDate | date("d/m/Y") }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group form-group-vertical half-width">
+            <div class="label">To</div>
+            <div class="value">
+                {% if account.openingDateExplanation or account.closingDateExplanation %}
+                    {{ account.closingDate | date("d/m/Y") }}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="form-group form-group-vertical full-width">
+            <div class="label">Tell us why the dates are different.</div>
+            <div class="textarea">
+                {% if account.openingDateExplanation or account.closingDateExplanation %}
+                    {{ account.openingDateExplanation }}<br/>
+                    {{ account.closingDateExplanation }}
+                {% endif %}
+            </div>
+        </div>
+    </fieldset>
+
 </div>
