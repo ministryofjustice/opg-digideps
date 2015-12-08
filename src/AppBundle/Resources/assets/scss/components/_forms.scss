@@ -129,13 +129,7 @@ form {
     select.form-control {
         width: 100%;
     }
-
-    .input-group-prefix {
-        + input {
-            padding-left: 2em;
-        }
-    }
-
+    
     &.form-inline {
         .form-label {
             float: left;
@@ -258,20 +252,24 @@ ul.form-hint {
 }
 
 .input-group-prefix {
-    @include core-24();
-    margin: 2px 0 0 2px;
+    @include core-19();
+    margin: 0;
     position: absolute;
-    left: 0;
+    left: 2px;
+    bottom: 2px;
     width: 10px;
     background: $grey-3;
-    font-size: 19px;
-    padding: 4px 9px 0 8px;
+    padding: 5px 9px 4px 8px;
     border: 0;
 
+    + input {
+        padding-left: 2em;
+        margin: 0;
+    }
+    
     .error & {
         margin-top: 4px;
         left: 17px;
-        
     }
 }
 

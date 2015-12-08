@@ -11,7 +11,7 @@ $darkblue: #175ea5;
     .left-nav {
         
         @include grid-column(1 / 4);
-        padding-right: 0;
+        padding: 0;
         
         nav a {
             @include core-19();
