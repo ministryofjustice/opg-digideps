@@ -1,8 +1,6 @@
-form#account-form {
-
-    #account_accountNumber {
-        width: 100px;
-        max-width: 100px;
-    }
-    
+input.account-number,
+.form-group .form-control.account-number {
+    width: 100px;
+    max-width: 100px;
 }
+    

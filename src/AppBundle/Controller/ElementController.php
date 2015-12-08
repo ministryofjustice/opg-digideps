@@ -48,8 +48,6 @@ class ElementController extends AbstractController
      */
     public function twigComponentsAction()
     {
-        $decision = new EntityDir\Decision;
-        
         
         $client = [
             'fullname' => 'Zac Tolley'
@@ -74,6 +72,38 @@ class ElementController extends AbstractController
         ];
 
     }
+
+    /**
+     * @Route("/formcomponents", name="elements_form")
+     * @Template("AppBundle:Element/form:form.html.twig")
+     */
+    public function formComponentsAction()
+    {
+
+        $client = [
+            'fullname' => 'Zac Tolley'
+        ];
+
+        $report = [
+            'id' => 1,
+            'period' => '2014 to 2015',
+            'client' => $client
+        ];
+
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Form elements']
+
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb,
+            'report' => $report,
+            'client' => $client
+        ];
+
+    }
+    
     
     
 }
