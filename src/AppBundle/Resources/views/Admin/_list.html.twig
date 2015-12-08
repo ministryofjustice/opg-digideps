@@ -79,7 +79,11 @@
                 {% if currentOffset == offset %}
                     {{ loop.index }}
                 {% else %}
-                    <a href="{{  path("admin_homepage", {"offset": currentOffset}) }}#users-list-title">{{ loop.index }}</a> 
+                    <a href="{{  path("admin_homepage", {
+                        "offset": currentOffset,
+                        'sort_order': app.request.query.get('sort_order'),
+                        'order_by': app.request.query.get('order_by')}
+                    ) }}#users-list-title">{{ loop.index }}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}
