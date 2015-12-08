@@ -1,7 +1,5 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
-
-
 {% block pageTitle %}Digideps Styleguide{% endblock %}
 
 {% block pageContent %}
@@ -34,10 +32,7 @@
                     <a href="#pre-input">Pre input text field</a>
                 </li>
                 <li>
-                    <a href="#horizontal">Horizontal field</a>
-                </li>
-                <li>
-                    <a href="#date-field">Short date field</a>
+                    <a href="#short-date-field">Short date field</a>
                 </li>
                 <li>
                     <a href="#sort-code">Sort code field</a>
@@ -46,7 +41,7 @@
                     <a href="#radio-vertical">Vertical Radio</a>
                 </li>
                 <li>
-                    <a href="#date-field">Short date fields</a>
+                    <a href="#horizontal">Horizontal field</a>
                 </li>
                 <li>
                     <a href="#expanding-transactions">Expanding transaction table</a>
@@ -58,7 +53,7 @@
         </div>
     </div>
     
-    <!-- Prefix Field -->
+    <!-- prefix field -->
     <div class="grid-row">
         <div id="prefix" class="column-two-thirds">
             <h3 class="heading-large">Prefix field</h3>
@@ -80,7 +75,7 @@
 &lt;/div></code></pre>
     </div>
 
-    <!-- Pre input text Field -->
+    <!-- pre input -->
     <div class="grid-row">
         <div id="pre-input" class="column-two-thirds">
             <h3 class="heading-large">Pre input text field</h3>
@@ -101,8 +96,56 @@
     &lt;input type="text" id="accno" name="account[accno]" class="form-control account-number" maxlength="4"/>
 &lt;/div></code></pre>
     </div>
+    
+    <!-- short date field -->
+    <div class="grid-row">
+        <div id="short-date-field" class="column-two-thirds">
+            <h3 class="heading-large">Short date field</h3>
+            <p>Another date pattern, this is a variation on the regular date field but only captures month and year</p>
+        </div>
+    </div>
+    <div class="example">
+        <div class="form-group form-date">
+            <fieldset>
+                <legend class="form-label">When was the care plan last reviewed?</legend>
+                <p class="form-hint">(MM/YYYY)</p>
 
-    <!-- sort Field -->
+                <input type="hidden" id="day" name="form[date][day]" value="01" />
+
+                <div class="form-group form-group-month">
+                    <label for="month" class="visuallyhidden">Month</label>
+                    <input type="number" id="month" name="form[date][month]" class="form-control" pattern="[0-9]" maxlength="2"/>
+                </div>
+
+                <div class="form-group form-group-year">
+                    <label for="year" class="visuallyhidden">Year</label>
+                    <input type="number" id="year" name="form[date][year]" class="form-control" pattern="[0-9]" maxlength="4"/>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="html">
+        <pre><code class="language-markup">&lt;div class="form-group form-date">
+    &lt;fieldset>
+        &lt;legend class="form-label">When was the care plan last reviewed?&lt;/legend>
+        &lt;p class="form-hint">(MM/YYYY)&lt;/p>
+
+        &lt;input type="hidden" id="day" name="form[date][day]" value="01" />
+
+        &lt;div class="form-group form-group-month">
+            &lt;label for="month" class="visuallyhidden">Month&lt;/label>
+            &lt;input type="number" id="month" name="form[date][month]" class="form-control" pattern="[0-9]" maxlength="2"/>
+        &lt;/div>
+
+        &lt;div class="form-group form-group-year">
+            &lt;label for="year" class="visuallyhidden">Year&lt;/label>
+            &lt;input type="number" id="year" name="form[date][year]" class="form-control" pattern="[0-9]" maxlength="4"/>
+        &lt;/div>
+    &lt;/fieldset>
+&lt;/div></code></pre>
+    </div>
+
+    <!-- sort field -->
     <div class="grid-row">
         <div id="sort-code" class="column-two-thirds">
             <h3 class="heading-large">Sort code field</h3>
@@ -155,10 +198,10 @@
     &lt;/fieldset>
 &lt;/div></code></pre>
     </div>
+    
 
 
-    
-    
+
 
     <script src="/prism/prism.js"></script>
 {% endblock %}
