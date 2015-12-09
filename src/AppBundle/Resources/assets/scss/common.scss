@@ -79,18 +79,26 @@ $path: '/images/';
 @import "components/reportstatus";
 @import "components/overviewsections";
 @import "components/helpline";
-
-@import "elements/icon";
-@import "elements/forms/form-date";
-@import "elements/forms/form-last-four-digits";
-@import "elements/forms/form-sort-code";
-@import "elements/forms/form-validation";
-
 @import "components/report-meta-data";
-
 @import "components/account";
 @import "components/account-header";
 @import "components/account-transactions";
 @import "components/financial-transactions";
 @import "components/external-report";
 @import "components/formattedreport";
+
+
+
+
+
+
+
+
+
+
+
+@import "elements/icon";
+@import "elements/forms/form-date";
+@import "elements/forms/form-last-four-digits";
+@import "elements/forms/form-sort-code";
+@import "elements/forms/form-validation";
