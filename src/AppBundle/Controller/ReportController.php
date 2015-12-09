@@ -104,7 +104,7 @@ class ReportController extends RestController
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         // send report if submitted
-        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId' => $currentReport->getId()])->getContent();
+        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId' => $currentReport->getId(), 'addLayout'=>true])->getContent();
 
         $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
         $this->getMailSender()->send($reportEmail, [ 'html'], 'secure-smtp');
@@ -122,14 +122,22 @@ class ReportController extends RestController
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-    public function formattedAction($reportId)
+    /**
+     * @Route("/report/{reportId}/formatted/{addLayout}")
+     * @Method({"GET"})
+     */
+    public function formattedAction($reportId, $addLayout)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $report = $this->getRepository('Report')->find($reportId); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        return $this->render('AppBundle:Report:formatted.html.twig', [
+        $template = $addLayout
+                  ? 'AppBundle:Report:formatted.html.twig'
+                  : 'AppBundle:Report:formatted_body.html.twig';
+
+        return $this->render($template, [
                 'report' => $report,
                 'client' => $report->getClient(),
                 'assets' => $report->getAssets(),

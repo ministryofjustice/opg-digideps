@@ -239,8 +239,9 @@
             }
 
             .transaction-label {
-                width: 75%;
+                width: 70%;
                 float: left;
+                margin-left: 10px;
             }
             .transaction-value {
                 @include inline-block();

@@ -1,13 +1,18 @@
-{% set translationDomain = "accounts" %}
+{% set translationDomain = "report-transactions" %}
 {% trans_default_domain translationDomain %}
 
 <li class="transaction">
-    <div class="transaction-label">{{ transaction.type | trans }}</div>
+    <div class="transaction-label">
+        {{ ('form.entries.' ~ transaction.transactionTypeId ~ '.label') | trans }}
+    </div>
     <div class="transaction-value">
         <span class="currency">{{ 'currencySymbol' | trans }}</span>
         <span class="amount">{{ transaction.amount | number_format(2, '.', ',') }}</span>
     </div>
     {% if transaction.moreDetails %}
-        <div class="transaction-detail">{{ transaction.moreDetails }}</div>
+        <div class="transaction-label" style="margin-top: 5px">
+            {{ ('form.entries.' ~ transaction.transactionTypeId ~ '.moreInformations') | trans }}
+            <div class="transaction-detail" style="width: 100%">{{ transaction.moreDetails }}</div>
+        </div>
     {% endif %}
 </li>
