@@ -9,6 +9,7 @@
     {% for categoryId, transactionGroup in report.groupByCategory(transactions) %}
         <fieldset class="money-in">
             {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+            'categoryId': categoryId,
             'transactions': transactionGroup.entries,
             'total': transactionGroup.amountTotal,
             'moneyType': moneyType

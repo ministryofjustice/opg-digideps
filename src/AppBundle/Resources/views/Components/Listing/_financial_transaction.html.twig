@@ -10,8 +10,9 @@
         <span class="amount">{{ transaction.amount | number_format(2, '.', ',') }}</span>
     </div>
     {% if transaction.moreDetails %}
-        <br/>
-        {{ ('form.entries.' ~ transaction.transactionTypeId ~ '.moreInformations') | trans }}<br/>
-        <div class="transaction-detail">{{ transaction.moreDetails }}</div>
+        <div class="transaction-label" style="margin-top: 5px">
+            {{ ('form.entries.' ~ transaction.transactionTypeId ~ '.moreInformations') | trans }}
+            <div class="transaction-detail" style="width: 100%">{{ transaction.moreDetails }}</div>
+        </div>
     {% endif %}
 </li>
