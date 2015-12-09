@@ -153,3 +153,4 @@ gulp.task('dev', function (callback) {
 gulp.task('watchsass', function(callback) {
     gulp.watch(config.sassSrc + '/**/*', ['lint.sass','sass.application','sass.images','sass.fonts']);
 });
+
