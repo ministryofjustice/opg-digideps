@@ -24,11 +24,7 @@ formTitle: "form.editYourDetails.subSectionTitle" | trans
     {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
 {% endif %}
 
-
-{% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-transDomain: translationDomain,
-subSectionTitle: 'form.changeYourPassword.subSectionTitle'
-} %}
+<h3 class="heading-medium">{{ 'form.changeYourPassword.subSectionTitle' | trans({}, translationDomain) }}</h3>
 
 {{ form_input(form.password.current_password,'form.changeYourPassword.controls.currentPassword') }}
 {{ form_input(form.password.plain_password.first,'form.changeYourPassword.controls.newPassword') }}
