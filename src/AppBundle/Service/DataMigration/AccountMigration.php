@@ -34,12 +34,12 @@ class AccountMigration
         'transfers_in_from_client_s_other_accounts' => 'transfers-in-from-client-s-other-accounts',
         'any_other_money_paid_in_and_not_listed_above' => 'anything-else',
         'care_fees_or_local_authority_charges_for_care' => 'care-fees', // / local-authority-charges-for-care
-        'accommodation_costs_eg_rent_mortgage_service_charges' => 'accommodation-service-charge', // / mortgage / rent
+        'accommodation_costs_eg_rent_mortgage_service_charges' => 'accommodation-other', // / mortgage / rent
         'household_bills_eg_water_gas_electricity_phone_council_tax' => 'households-bills-other',
         'day_to_day_living_costs_eg_food_toiletries_clothing_sundries' => 'toiletries',
-        'debt_payments_eg_loans_cards_care_fee_arrears' => 'credit-cards-charges', // / loans
+        'debt_payments_eg_loans_cards_care_fee_arrears' => 'debt-and-charges-other', // / loans
         'travel_costs_for_client_eg_bus_train_taxi_fares' => 'client-transport-bus-train-taxi-fares',
-        'holidays_or_day_trips' => 'day-trips', // / holidays
+        'holidays_or_day_trips' => 'holidays', // / holidays
         'tax_payable_to_hmrc' => 'tax-payments-to-hmrc',
         'insurance_eg_life_home_and_contents' => 'insurance-eg-life-home-contents',
         'office_of_the_public_guardian_fees' => 'opg-fees',
