@@ -50,7 +50,7 @@ gulp.task('sass.application', function () {
         .pipe(sass(config.sass))
         .pipe(importCss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-    
+
 });
 gulp.task('sass.application-ie7', function () {
 
@@ -81,7 +81,7 @@ gulp.task('sass.application-print', function () {
 gulp.task('sass.images', function(callback) {
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
-    
+
     gulp.src(config.sassSrc + '/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
     callback();
@@ -89,7 +89,7 @@ gulp.task('sass.images', function(callback) {
 gulp.task('sass.fonts', function() {
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*').pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css').pipe(gulp.dest(config.webAssets + '/stylesheets'));
-    
+
 });
 
 gulp.task('images', function () {
@@ -129,7 +129,7 @@ gulp.task('lint.js', function (callback) {
     gulp.src(config.jsSrc + '/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
-    
+
     callback();
 });
 
@@ -146,4 +146,3 @@ gulp.task('default', function(callback) {
 gulp.task('dev', function (callback) {
     runSequence('gettag', 'clean', ['sass','images','js'], 'watch', callback);
 });
-

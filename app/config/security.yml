@@ -59,5 +59,6 @@ security:
         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/terms, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/elements, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/$ , roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/ , roles: IS_AUTHENTICATED_FULLY }    
