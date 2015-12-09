@@ -1,4 +1,4 @@
-    #!/bin/bash
+#!/bin/bash
 set -e
 #let's configure environment
 run-parts /etc/my_init.d
