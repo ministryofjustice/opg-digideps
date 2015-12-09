@@ -18,20 +18,21 @@ RUN  gem install sass scss_lint
 # build app dependencies
 COPY composer.json /app/
 COPY composer.lock /app/
-RUN  chown -R app /app
 WORKDIR /app
 USER app
 ENV  HOME /app
 RUN  composer install --prefer-source --no-interaction --no-scripts
+COPY package.json /app/
+RUN  npm install
 
 # install remaining parts of app
 ADD  . /app
 USER root
-RUN  chown -R app /app
+RUN find . -not -user app -exec chown app:app {} \;
 USER app
 ENV  HOME /app
+#do we still need the post-install-cmd
 RUN  composer run-script post-install-cmd --no-interaction
-RUN  npm install
 RUN  npm run build
 
 # cleanup
