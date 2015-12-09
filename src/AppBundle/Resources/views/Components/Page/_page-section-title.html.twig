@@ -1,4 +1,5 @@
 <!--Component: Page/page-section-title-->
-<h2 class="page-section-title heading-medium-large ">
-    {{ pageSectionTitle|trans({}, transDomain) }}
-</h2>
+<div id="page-section-title-container" class="page-section-title-container">
+    <h1>{% block title %}{% endblock %}</h1>
+    {% include 'AppBundle:Components:_helpline.html.twig' %}
+</div>

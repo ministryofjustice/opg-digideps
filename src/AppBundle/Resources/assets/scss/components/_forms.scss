@@ -18,6 +18,10 @@ form {
         border-left: 3px solid $grey-2;
         padding-left: 15px;
 
+        h3.heading-medium:first-child {
+            margin-top: 0;
+        }
+        
         .form-date {
             .form-group {
                 input {
@@ -36,11 +40,10 @@ form {
                 width: 100%;
             }
 
-            .form-control__postcode, 
-            .form-control__number {
+            .form-control__postcode {
                 width: 22%;
             }
-
+            
             fieldset.stacked {
                 label.block-label {
                     width: 85%;
@@ -104,6 +107,7 @@ form {
 }
 
 .form-group {
+    position: relative;
 
     float: none; /* Only flat left if within a form container. */
     form & {
@@ -120,13 +124,7 @@ form {
     select.form-control {
         width: 100%;
     }
-
-    .input-group-prefix {
-        + input {
-            padding-left: 2em;
-        }
-    }
-
+    
     &.form-inline {
         .form-label {
             float: left;
@@ -137,9 +135,12 @@ form {
         height: 7em;
         width: 65%;
     }
-
-    &.sub-section-title {
-        padding-left: 15px;
+    
+    .pre-input-text {
+        @include core-36(1.5);
+        float: left;
+        height: 39px;
+        padding-right: 10px;
     }
 }
 
@@ -194,17 +195,17 @@ form {
     opacity: .6;
 }
 
-.form-control__postcode {
+.form-control.form-control__postcode {
     width: 25%;
 }
 
-.form-control__number {
-    width: 25%;
+.form-control.form-control__number {
+    width: 75%;
+    max-width: 230px;
 }
 
 .form-label {
     margin-bottom: 5px;
-    width: 50%;
     
     @include media(mobile) {
         width: auto;
@@ -246,16 +247,24 @@ ul.form-hint {
 }
 
 .input-group-prefix {
+    @include core-19();
+    margin: 0;
     position: absolute;
+    left: 2px;
+    bottom: 2px;
+    width: 10px;
     background: $grey-3;
-    font-size: 19px;
-    padding: 4px 8px 2px;
-    border: 1px solid $grey-2;
+    padding: 5px 9px 4px 8px;
+    border: 0;
 
-    .field-with-errors & {
-        border: 0;
-        border-right: 0;
-        margin: 2px;
+    + input {
+        padding-left: 2em;
+        margin: 0;
+    }
+    
+    .error & {
+        margin-top: 4px;
+        left: 17px;
     }
 }
 
