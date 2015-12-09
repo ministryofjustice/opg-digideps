@@ -62,7 +62,7 @@ class FormFieldsExtension extends \Twig_Extension
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
-
+    
     /**
      * Renders form checkbox field
      *
@@ -351,7 +351,7 @@ class FormFieldsExtension extends \Twig_Extension
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
             'formGroupClass' => $formGroupClass,
-            'labelRaw' => !empty($vars['labelRaw'])
+            'labelRaw' => !empty($vars['labelRaw']),
             'preInputText' => $preInputText
         ];
     }
