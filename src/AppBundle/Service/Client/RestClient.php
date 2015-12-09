@@ -267,6 +267,9 @@ class RestClient
             'addAuthToken' => true,
         ]);
 
+        if ($expectedResponseType == 'string') {
+            return $response->getBody();
+        }
         $responseArray = $this->extractDataArray($response);
         if ($expectedResponseType == 'array') {
             return $responseArray;

@@ -257,19 +257,15 @@ class ReportController extends AbstractController
         
         $report = $this->getReport($reportId, [ 'transactions', 'basic']);
         $client = $this->getClient($report->getClient());
-        
-        $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
-        $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
-        $assets = $restClient->get('report/' . $reportId . '/assets', 'Asset[]');
-        
+
+        $body = $restClient->get('report/' . $reportId . '/formatted/1', 'string');
+
         return [
             'report' => $report,
             'client' => $client,
-            'contacts' => $contacts,
-            'decisions' => $decisions,
-            'assets' => $assets,
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
+            'body' => $body
         ];
     }
 
