@@ -11,7 +11,6 @@ RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.
 # build app dependencies
 COPY composer.json /app/
 COPY composer.lock /app/
-RUN  chown -R app /app
 WORKDIR /app
 USER app
 ENV  HOME /app
@@ -20,7 +19,7 @@ RUN  composer install --prefer-source --no-interaction --no-scripts
 # install remaining parts of app
 ADD  . /app
 USER root
-RUN  chown -R app /app
+RUN find . -not -user app -exec chown app:app {} \;
 USER app
 ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
