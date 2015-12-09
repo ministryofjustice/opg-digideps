@@ -9,10 +9,6 @@ activeTab: "tab-accounts"
     {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionTitle: 'page.pageSectionTitle'
-        } %}
 
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
