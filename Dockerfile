@@ -11,6 +11,7 @@ RUN  apt-get update && apt-get install -y \
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN  curl -L https://www.npmjs.com/install.sh | sh
+RUN  npm config set loglevel verbose
 RUN  npm install --global gulp
 RUN  apt-get install -y ruby
 RUN  gem install sass scss_lint
