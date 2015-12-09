@@ -177,3 +177,16 @@ $declaration-margin: 170px;
         }
     }
 }
+
+.page-report-header,
+.external-report-section-declaration {
+    .item-data-fixed {
+        .item-label {
+            width: $declaration-margin;
+        }
+        
+        .item-value {
+            margin-left: $declaration-margin;
+        }
+    }
+}
