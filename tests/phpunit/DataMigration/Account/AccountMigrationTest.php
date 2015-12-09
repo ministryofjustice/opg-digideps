@@ -20,7 +20,7 @@ class AccountMigrationTest extends WebTestCase
         exec("$export psql -U api < ".__DIR__."/oldTransactions.sql" , $out2);
 
         //migrate from version 47 (that will test the migration too)
-        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test 051');
 
         // create client
         $client = self::createClient([ 'environment' => 'test',
@@ -73,7 +73,11 @@ class AccountMigrationTest extends WebTestCase
 
     public function testMigrateAccounts()
     {
-        $this->am->migrateAccounts();
+        // migrate until 52
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test', $out);
+        $this->assertContains('added 80 new transactions', implode("",$out));
+
+        //$this->am->migrateAccounts();
 
         // get updated data
         $reports = $this->am->getReports();

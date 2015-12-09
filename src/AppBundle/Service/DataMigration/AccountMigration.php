@@ -106,6 +106,7 @@ class AccountMigration
             "INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)"
             . " VALUES(:id, :transaction_type_id, :amount, :md)");
 
+        $added = 0;
         foreach($dataToInsert as $reportId => $row) {
             foreach($row as $newTypeId => $t) {
                 $params = [
@@ -115,8 +116,11 @@ class AccountMigration
                     ':md' => implode("\n", array_filter($t['more_details'])),
                 ];
                 $stmt->execute($params);
+                $added++;
             }
         }
+
+        return $added;
     }
 
 
