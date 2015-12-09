@@ -1043,7 +1043,28 @@ class Report
      */
     public function getTotalsMatch()
     {
-        return round($this->getCalculatedBalance(), 2) === round($this->getAccountsClosingBalanceTotal(), 2);
+        return abs($this->getTotalsOffset()) < 0.2;
+    }
+
+    /**
+     * @param Transaction[] $transactions
+     *
+     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
+     */
+    public function groupByCategory($transactions)
+    {
+        $ret = [];
+
+        foreach ($transactions as $id => $transaction) {
+            $cat = $transaction->getCategoryString();
+            if (!isset($ret[$cat])) {
+                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
+            }
+            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
+            $ret[$cat]['amountTotal'] += $transaction->getAmount();
+        }
+
+        return $ret;
     }
 
 }

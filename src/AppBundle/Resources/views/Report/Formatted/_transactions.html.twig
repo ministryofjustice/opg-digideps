@@ -1,0 +1,30 @@
+<div class="section" id="transactions">
+
+
+    <h2>
+        <span class="section-number">Section {{ section }}</span>
+        Summary of money paid {{ type }}
+    </h2>
+
+    {% for categoryId, transactionGroup in report.groupByCategory(transactions) %}
+        <fieldset class="money-in">
+            {% include 'AppBundle:Components/Listing:_financial_transactions.html.twig' with {
+            'transactions': transactionGroup.entries,
+            'total': transactionGroup.amountTotal,
+            'moneyType': moneyType
+            } %}
+        </fieldset>
+    {% endfor %}
+    <br/>
+
+    <div class="financial-transactions">
+        <dl class="financial-transactions-total">
+            <dt class="financial-transactions-total-label" style="font-weight: normal">
+            <h3>Money {{ type }} total</h3>
+            </dt>
+            <dd class="financial-transactions-total-value" id="{{ moneyType }}Total">
+                &pound; {{ total | number_format(2, '.', ',') }}
+            </dd>
+        </dl>
+    </div>
+</div>

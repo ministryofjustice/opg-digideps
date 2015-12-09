@@ -1,7 +1,8 @@
-{% set translationDomain = "accounts" %}
+{% set translationDomain = "report-transactions" %}
 {% trans_default_domain translationDomain %}
 
 <div class="financial-transactions">
+
 
     {% if title is defined %}<h3 class="financial-transactions-title heading-medium-large">{{ title | trans }}</h3>{% endif %}
     <ul class="financial-transactions-list">
@@ -12,17 +13,14 @@
     {% endfor %}
     </ul>
 
-    <dl class="financial-transactions-total">
-        <dt class="financial-transactions-total-label">
-            {% if footerTitle is defined %}
-                {{ footerTitle | trans }}
-            {% endif %}
-        </dt>
-        <dd class="financial-transactions-total-value" id="{{ moneyType }}Total">
-            {% if footerTotalPrefix is defined %}{{ footerTotalPrefix | trans }}{% endif %}
-            {{ 'currencySymbol' | trans }}
-            {{ total | number_format(2, '.', ',') }}
-        </dd>
-    </dl>
+    <li class="transaction" style="border-bottom:none">
+        <div class="transaction-label">
+                &nbsp;
+        </div>
+        <div class="">Total:
+            <span class="currency">{{ 'currencySymbol' | trans }}</span>
+            <span class="">{{ total | number_format(2, '.', ',') }}</span>
+        </div>
+    </li>
 
 </div>
