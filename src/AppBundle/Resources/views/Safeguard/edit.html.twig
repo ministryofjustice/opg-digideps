@@ -1,143 +1,143 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig'%}
 
-    {% set translationDomain = "report-safeguarding" %}
-    {% trans_default_domain translationDomain %}
+{% set translationDomain = "report-safeguarding" %}
+{% trans_default_domain translationDomain %}
 
-    {% block bodyClasses %}safeguarding-page{% endblock %}
-    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+{% block bodyClasses %}safeguarding-page{% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
 
-    {% block pageBody %}
+{% block pageBody %}
+    
+    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
+    transDomain: translationDomain,
+    pageSectionDescription: 'page.pageSectionDescription'
+    } %}
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
 
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+          transDomain: translationDomain
+    } %}
 
-        {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-        transDomain: translationDomain
-        } %}
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-        {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({}, translationDomain) }}</h3>
 
-        <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({}, translationDomain) }}</h3>
-
-        <div class="form-section">
-            {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
-                'fieldSetClass' : 'inline do-you-live-radio',
-                'legendClass' : 'form-label',
-                'items': [
+    <div class="form-section">
+        {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
+            'fieldSetClass' : 'inline do-you-live-radio',
+            'legendClass' : 'form-label',
+            'items': [
                 {'labelClass': 'block-label', 'elementClass': '' },
                 {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+            ]
+        }) }}
+        <div id="visit-questions">
+            {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
+                'legendClass' : 'form-label',
+                'vertical': true
             }) }}
-            <div id="visit-questions">
-                {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
-                    'legendClass' : 'form-label',
-                    'vertical': true
-                }) }}
 
-                {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
-                    'legendClass' : 'form-label',
-                    'vertical': true
-                }) }}
+            {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
+                'legendClass' : 'form-label',
+                'vertical': true
+            }) }}
 
-                {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
+            {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
                 'howOftenDoYouWriteEmailOrLetter', {
-                    'legendClass' : 'form-label',
-                    'vertical': true
-                }) }}
-
-                {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople,
-                'howOftenDoesClientSeeOtherPeople', {
-                    'legendClass' : 'form-label',
-                    'vertical': true
-                }) }}
-
-                {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
-            </div>
-        </div>
-
-        <div class="form-section">
-
-            {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
-                'fieldSetClass' : 'inline does-client-receive-care',
                 'legendClass' : 'form-label',
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
-                ]
+                'vertical': true
             }) }}
 
-            <div id="care-questions">
-                {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
-                    'fieldSetClass' : 'stacked',
-                    'legendClass' : 'form-label',
-                    'items': [
+            {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople,
+                'howOftenDoesClientSeeOtherPeople', {
+                'legendClass' : 'form-label',
+                'vertical': true
+            }) }}
+
+            {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+        </div>
+    </div>
+
+    <div class="form-section">
+
+        {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
+            'fieldSetClass' : 'inline does-client-receive-care',
+            'legendClass' : 'form-label',
+            'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+
+        <div id="care-questions">
+            {{ form_checkbox_group(form.howIsCareFunded, 'howIsCareFunded', {
+                'fieldSetClass' : 'stacked',
+                'legendClass' : 'form-label',
+                'items': [
                     {'labelClass': 'block-label', 'elementClass': '' },
                     {'labelClass': 'block-label', 'elementClass': '' },
                     {'labelClass': 'block-label', 'elementClass': '' }
-                    ]
-                }) }}
-            </div>
-        </div>
-        <div class="form-section">
-            {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
-        </div>
-        <div class="form-section">
-            {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
-                'fieldSetClass' : 'inline care-plan',
-                'legendClass' : 'form-label',
-                'items': [
-                {'labelClass': 'block-label', 'elementClass': '' },
-                {'labelClass': 'block-label', 'elementClass': '' }
                 ]
             }) }}
-
-            <div id="care-plan-questions">
-                {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed', {
-                    'showDay': 'false'
-                }) }}
-            </div>
         </div>
+    </div>
+    <div class="form-section">
+        {{ form_input(form.whoIsDoingTheCaring,'whoIsDoingTheCaring', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    </div>
+    <div class="form-section">
+        {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
+            'fieldSetClass' : 'inline care-plan',
+            'legendClass' : 'form-label',
+            'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
 
-        {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-        {{ form_submit(form.save,'form.saveAndContinue') }}
-        {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+        <div id="care-plan-questions">
+            {{ form_known_date(form.whenWasCarePlanLastReviewed, 'whenWasCarePlanLastReviewed', {
+                'showDay': 'false'
+            }) }}
+        </div>
+    </div>
 
-        {{ form_end(form) }}
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.saveAndContinue') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
-        {{form(form)}}
+    {{ form_end(form) }}
 
-        <script type="text/javascript">
-            $(document).ready(function() {
-                $('.radio-vertical-group').each(function(index, element) {
-                    new opg.RadioGroup(element);
-                });
-                new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-                new opg.RadioHide({
-                    radio:'.do-you-live-radio input[type=radio]',
-                    content: '#visit-questions',
-                    hideOnYes: true
-                });
-                new opg.RadioHide({
-                    radio:'.does-client-receive-care input[type=radio]',
-                    content: '#care-questions',
-                    hideOnYes: false
-                });
-                new opg.RadioHide({
-                    radio:'.care-plan input[type=radio]',
-                    content: '#care-plan-questions',
-                    hideOnYes: false
-                });
+    {{form(form)}}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.radio-vertical-group').each(function(index, element) {
+                new opg.RadioGroup(element);
             });
-        </script>
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio:'.do-you-live-radio input[type=radio]',
+                content: '#visit-questions',
+                hideOnYes: true
+            });
+            new opg.RadioHide({
+                radio:'.does-client-receive-care input[type=radio]',
+                content: '#care-questions',
+                hideOnYes: false
+            });
+            new opg.RadioHide({
+                radio:'.care-plan input[type=radio]',
+                content: '#care-plan-questions',
+                hideOnYes: false
+            });
+        });
+    </script>
 
-    {% endblock %}
+{% endblock %}
 
 {% endembed %}

@@ -1,10 +1,14 @@
 .overview-sections {
 
     color: $text-colour;
+    list-style: inherit;
+    
+    
     
     .overview-section {
 
         margin-top: 30px;
+        display: block;
 
         @include media(mobile) {
             margin-top: 0;
@@ -35,6 +39,7 @@
             > a {
                 text-decoration: none;
                 color: $black;
+                display: block;
             }
 
             .heading {

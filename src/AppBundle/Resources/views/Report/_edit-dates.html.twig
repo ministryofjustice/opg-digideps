@@ -8,9 +8,9 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form'  }}) }}
 
-<h3 class="heading-medium">{{ 'form.subSectionTitle'| trans({}, translationDomain) }}</h3>
+    <h3 class="heading-medium">{{ 'form.subSectionTitle'| trans({}, translationDomain) }}</h3>
 
-{{ form_known_date(form.startDate, 'form.controls.startDate') }}
+    {{ form_known_date(form.startDate, 'form.controls.startDate') }}
 
     {{ form_known_date(form.endDate, 'form.controls.endDate') }}
 
@@ -19,10 +19,10 @@
     {{ form_submit(form.save,'form.controls.save') }}
 
     {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'form.controls.cancel.label',
-    linkClass: 'button-link',
-    linkHref: path('client_home')
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('client_home')
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

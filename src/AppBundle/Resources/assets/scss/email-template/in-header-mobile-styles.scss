@@ -105,10 +105,13 @@ http://pugetworks.com/2011/04/css-media-queries-for-targeting-different-mobile-d
 @media only screen and (-webkit-device-pixel-ratio:.75){
   /* Put CSS for low density (ldpi) Android layouts in here */
 }
+
 @media only screen and (-webkit-device-pixel-ratio:1){
   /* Put CSS for medium density (mdpi) Android layouts in here */
 }
+
 @media only screen and (-webkit-device-pixel-ratio:1.5){
   /* Put CSS for high density (hdpi) Android layouts in here */
 }
+
 /* end Android targeting */

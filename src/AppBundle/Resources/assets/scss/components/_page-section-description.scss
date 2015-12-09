@@ -1,10 +1,6 @@
 .page-section-description {
-    width: 65%;
     margin-bottom: 30px;
-
-    @include media(mobile) {
-        width: auto;
-    }
+    max-width: 692px;
     
     .report-overview & {
         margin-bottom: 20px;
