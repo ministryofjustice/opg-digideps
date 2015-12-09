@@ -7,6 +7,7 @@ use AppBundle\Service\Mailer\MailSenderMock;
 
 class ReportControllerTest extends AbstractTestController
 {
+
     private static $deputy1;
     private static $client1;
     private static $report1;
@@ -35,14 +36,14 @@ class ReportControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
     }
-    
+
     /**
-     * clear fixtures 
+     * clear fixtures
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-        
+
         self::fixtures()->clear();
     }
 
@@ -77,25 +78,26 @@ class ReportControllerTest extends AbstractTestController
     }
 
     private $fixedData = [
-            'court_order_type' => 1,
-            'start_date' => '2015-01-01',
-            'end_date' => '2015-12-31',
-        ];
+        'court_order_type' => 1,
+        'start_date' => '2015-01-01',
+        'end_date' => '2015-12-31',
+    ];
 
     public function testAdd()
     {
         $url = '/report';
-        
+
         $reportId = $this->assertJsonRequest('POST', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-                'data' => ['client' => self::$client1->getId()] + $this->fixedData
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => ['client' => self::$client1->getId()] + $this->fixedData
         ])['data']['report'];
 
         self::fixtures()->clear();
 
         // assert creation
-        $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $report = self::fixtures()->getRepo('Report')->find($reportId);
+        /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
@@ -108,22 +110,23 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
 
     }
-    
+
     public function testEdit()
     {
         $url = '/report';
 
         //POST but passes ID in the request
         $reportId = $this->assertJsonRequest('POST', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-                'data' => ['id' => self::$report1->getId()] + $this->fixedData
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+            'data' => ['id' => self::$report1->getId()] + $this->fixedData
         ])['data']['report'];
 
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $report = self::fixtures()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $report = self::fixtures()->getRepo('Report')->find($reportId);
+        /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
         $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
@@ -157,9 +160,9 @@ class ReportControllerTest extends AbstractTestController
 
         // assert get groups=basic
         $data = $this->assertJsonRequest('GET', $url, [
-                'mustSucceed' => true,
-                'AuthToken' => self::$tokenDeputy,
-            ])['data'];
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
         $this->assertArrayHasKey('contacts', $data);
         $this->assertArrayHasKey('accounts', $data);
         $this->assertArrayHasKey('decisions', $data);
@@ -178,20 +181,19 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(26, $data['transactions_in']);
+        $this->assertCount(28, $data['transactions_in']);
         $first = array_shift($data['transactions_in']);
-        $this->assertArrayHasKey('id', $first);
-        $this->assertArrayHasKey('type', $first);
-        $this->assertArrayHasKey('category', $first);
-        $this->assertArrayHasKey('has_more_details', $first);
-
+        $this->assertEquals(['id' => 'account-interest',
+            'type' => 'in',
+            'category' => 'income-and-earnings',
+            'has_more_details' => ''], $first);
 
         //  assert transactionsOut
         $data = $this->assertJsonRequest('GET', $url . '?groups=transactionsOut', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(36, $data['transactions_out']);
+        $this->assertCount(43, $data['transactions_out']);
         $first = array_shift($data['transactions_out']);
         $this->assertArrayHasKey('id', $first);
         $this->assertArrayHasKey('type', $first);
@@ -200,13 +202,13 @@ class ReportControllerTest extends AbstractTestController
 
 
         // both
-        $q = http_build_query(['groups'=>['transactionsIn','transactionsOut','basic']]);
+        $q = http_build_query(['groups' => ['transactionsIn', 'transactionsOut', 'basic']]);
         //assert both groups (quick)
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertEquals(62, count($data['transactions_in'] + $data['transactions_out']));
+        $this->assertEquals(28 + 43, count($data['transactions_in'] + $data['transactions_out']));
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
     }
@@ -214,15 +216,15 @@ class ReportControllerTest extends AbstractTestController
     public function testSubmitAuth()
     {
         $url = '/report/' . self::$report1->getId() . '/submit';
-        
+
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
-    
+
     public function testSubmitAcl()
     {
         $url2 = '/report/' . self::$report2->getId() . '/submit';
-        
+
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
@@ -244,7 +246,8 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         // assert account created with transactions
-        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId);
+        /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(false, $report->isAllAgreed());
         $this->assertEquals('dont agree reason', $report->getReasonNotAllAgreed());
@@ -268,7 +271,8 @@ class ReportControllerTest extends AbstractTestController
         ]);
 
         // assert account created with transactions
-        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId);
+        /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(true, $report->isAllAgreed());
 
@@ -302,19 +306,20 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'start_date' => '2015-01-29',
-                'end_date' =>  '2015-12-29',
+                'end_date' => '2015-12-29',
                 'transactions_in' => [
-                    ['id'=>'dividends', 'amount'=>1200, 'more_details'=>''],
-                    ['id'=>'income-from-investments', 'amount'=>760],
+                    ['id' => 'dividends', 'amount' => 1200, 'more_details' => ''],
+                    ['id' => 'income-from-investments', 'amount' => 760],
                 ],
                 'transactions_out' => [
-                    ['id'=>'cash-withdrawn', 'amount'=>24, 'more_details'=>'to pay bills'],
+                    ['id' => 'cash-withdrawn', 'amount' => 24, 'more_details' => 'to pay bills'],
                 ],
                 'balance_mismatch_explanation' => 'bme'
             ]
         ]);
 
-        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId); /* @var $report \AppBundle\Entity\Report */
+        $report = self::fixtures()->clear()->getRepo('Report')->find($reportId);
+        /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals('2015-01-29', $report->getStartDate()->format('Y-m-d'));
         $this->assertEquals('2015-12-29', $report->getEndDate()->format('Y-m-d'));
         $this->assertEquals('bme', $report->getBalanceMismatchExplanation());
@@ -338,5 +343,40 @@ class ReportControllerTest extends AbstractTestController
         $tGifts = $report->getTransactionByTypeId('gifts');
         $this->assertEquals(null, $tGifts->getAmount());
     }
+
+
+    public function testFormattedAuth()
+    {
+        $url = '/report/' . self::$report1->getId() . '/formatted/0';
+        $this->assertEndpointNeedsAuth('GET', $url);
+
+        $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
+    }
+
+
+    public function testFormattedAcl()
+    {
+        $url2 = '/report/' . self::$report2->getId() . '/formatted/0';
+
+        $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
+    }
+
+
+    public function testFormatted()
+    {
+        $url = '/report/' . self::$report1->getId() . '/formatted/0';
+
+
+        $this->getClient()->request(
+            'GET',
+            $url,
+            [], [],
+            ['HTTP_AuthToken'=>self::$tokenDeputy]
+        );
+
+        $responseContent = $this->getClient()->getResponse()->getContent();
+        $this->assertContains('I confirm I have had regard', $responseContent);
+    }
+
 
 }
