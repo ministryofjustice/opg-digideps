@@ -87,6 +87,7 @@ class Version049 extends AbstractMigration
                     ['accommodation-service-charge'],
                     ['mortgage'],
                     ['rent'],
+                    ['accommodation-other', true],
                 ],
                 'care-and-medical' => [
                     ['care-fees'],
@@ -124,6 +125,7 @@ class Version049 extends AbstractMigration
                     ['credit-cards-charges'],
                     ['loans'],
                     ['tax-payments-to-hmrc'],
+                    ['debt-and-charges-other', true],
                 ],
                 'moving-money' => [
                     ['cash-withdrawn', true],
