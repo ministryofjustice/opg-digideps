@@ -16,11 +16,8 @@ var gulp = require('gulp'),
 var config = {
     sass: {
         includePaths: [
-            'node_modules/govuk-elements/public/sass/elements/',
-            'node_modules/govuk-elements/public/sass/elements/forms',
             'node_modules/govuk_frontend_toolkit/stylesheets',
-            'node_modules/govuk__template_mustache/assets/stylesheets',
-            'node_modules/moj-template/source/assets/stylesheets'
+            'node_modules/govuk-elements/public/sass'
         ]
     },
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
@@ -108,7 +105,6 @@ gulp.task('js.uglify', function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
-            './node_modules/moj-template/source/assets/javascripts/moj.js',
             config.jsSrc + '/*.js'])
         .pipe(concat('application.js'))
         .pipe(gulp.dest(config.webAssets + '/javascripts'))
