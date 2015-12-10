@@ -26,10 +26,6 @@
         
         #pagebody-left-content {
             @include grid-column(3 / 4, $full-width: tablet);
-
-            header.page-header {
-                margin-top: 0;
-            }
         }
         
         #pagebody-right-content {

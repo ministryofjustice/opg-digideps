@@ -28,7 +28,7 @@ form .form-group.button-bar {
 
     @include core-19();
 
-    margin: 40px 0;
+    margin: 30px 0;
     padding: 10px;
     background-color: $grey-3;
     
@@ -49,4 +49,28 @@ nav#bottom-button-bar {
 .save-section {
     float: none;
     clear: both;
+    margin: 30px 0 30px 0;
+}
+
+.next-section {
+    padding-left: 15px;
+}
+
+#bottom-overview-button {
+    margin-top: 30px;
+}
+
+.button-link {
+    margin-left: 15px;
+    top: 1px;
+    position: relative;
+}
+
+.button-warning {
+    margin-left: 60px;
+}
+
+.right-link {
+    margin-right: 297px;
+    float: right;
 }

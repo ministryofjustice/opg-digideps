@@ -5,11 +5,10 @@
 {% endif %}
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'decision-form' }}) }}
- 
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-        transDomain: translationDomain,
-        subSectionTitle: subSectionTitleText
-    } %}
+
+    <h3 class="heading-medium">{{ subSectionTitleText | trans({}, translationDomain) }}</h3>
+
+    {{ form_errors_list(form) }}
 
     {{ form_input(form.description,'description', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
 

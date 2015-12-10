@@ -1,0 +1,160 @@
+.expanding-transaction-table {
+    
+    margin-top: 60px;
+    
+    .sections {
+        
+        .section {
+            
+            padding-bottom: 30px;
+            margin-bottom: 30px;
+            border-bottom: 1px solid $grey-2;
+            
+            .summary {
+                @extend %contain-floats;
+                cursor: pointer;
+                
+                .title {
+                    @include core-19();
+                    float: left;
+                    color: $link-colour;
+                    padding-left: 30px;
+                    background-image: url('images/icons/solid-arrow.png');
+                    background-position: 0 -80px;
+                    background-repeat: no-repeat;
+
+                }
+                
+                .sub-total {
+                    @include bold-19();
+                    float: right;
+                    padding-right: 10px;
+                }
+            }
+
+            .detail {
+                display: none;
+            }
+            
+            &.open {
+                
+                .summary {
+                    
+                    .title {
+                        background-position: 0 0;
+                    }
+                    
+                    .sub-total {
+                        display: none;
+                    }
+                    
+                }
+                
+                .detail {
+                    display: block;
+                    border-top: 1px solid $grey-2;
+                    margin-top: 30px;
+                }
+            
+            }
+
+        }
+        
+        .grand-total {
+            @include core-19();       
+            text-align: right;
+            background: $grey-2;
+            padding: 20px 10px 20px 0;
+            color: $black;
+            
+            .currency {
+                @include bold-24();
+            }
+            
+            .value {
+                @include bold-24(); 
+            }
+        
+        }
+    }
+    
+    .transactions {
+        @extend %contain-floats;
+        background: $grey-3;
+        padding: 20px 10px 20px 30px;
+        
+        .transaction {
+
+            padding: 0;
+            border-bottom: 0;
+            position: relative;
+            
+            .input-group-prefix {
+                left: auto;
+                right: 121px;
+            }
+
+            .form-group {
+                border-bottom: 1px solid $grey-1;
+            }
+            
+            .form-control__number {
+                width: 150px;
+            }
+            
+            .form-group-combo-description {
+                
+                .form-label {
+                    float: none;
+                    clear: both;
+                    display: block;
+                }
+                
+                .form-control {
+                    float: none;
+                    width: 100%;
+                    max-width: 100%;
+                    margin-bottom: 15px;
+                }
+                
+            }
+        
+            
+            &.hide-description {
+                .form-group-combo-description {
+                    border-bottom: 0;
+                    margin-bottom: 20px;
+
+                    .form-label {
+                        display: none;
+                    }
+
+                    .form-control {
+                        display: none;
+                    }
+                }
+            }
+        }
+        
+        .sub-total {
+            @include bold-19();
+            float: right;
+        }
+        
+    }
+
+}
+
+.form-horizontal {
+
+    .form-label {
+        float: left;
+        padding-top: 7px;
+        width: auto;
+    }
+    
+    .form-control {
+        float: right;
+    }
+
+}

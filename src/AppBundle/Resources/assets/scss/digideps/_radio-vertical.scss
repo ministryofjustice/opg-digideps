@@ -38,13 +38,9 @@
             width: 100%;
             text-align: center;
             vertical-align: middle;
-            height: 3.5em;
+            height: 5em;
             float: none;
             background: $grey-3;
-            
-            @include media($max_width: 850px) {
-                height: 5em;
-            }
             
             @include media($max_width: 767px) {
                 height: auto;
