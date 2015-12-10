@@ -54,18 +54,3 @@ $darkblue: #175ea5;
     
 }
 
-.page-section-title-container {
-
-    @extend %contain-floats;
-
-    h1 {
-        @include bold-36();
-        float: left;
-    }
-
-    #helpline {
-        float: right;
-    }
-
-
-}

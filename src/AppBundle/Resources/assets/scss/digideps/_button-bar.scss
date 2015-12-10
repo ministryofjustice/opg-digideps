@@ -40,6 +40,18 @@ form .form-group.button-bar {
 
 .button {
     @include core-19();
+    @include button;
+}
+
+.button-secondary{
+    @include core-19();
+    @include button($grey-3);
+}
+
+.button-warning{
+    @include core-19();
+    @include button($red);
+    margin-left: 60px;
 }
 
 nav#bottom-button-bar {
@@ -64,10 +76,6 @@ nav#bottom-button-bar {
     margin-left: 15px;
     top: 1px;
     position: relative;
-}
-
-.button-warning {
-    margin-left: 60px;
 }
 
 .right-link {
