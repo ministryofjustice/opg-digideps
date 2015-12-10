@@ -1,6 +1,6 @@
 FROM registry.service.dsd.io/opguk/php-fpm:0.1.124
 
-RUN curl --silent --location https://deb.nodesource.com/setup_5.x | bash -
+RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis \
