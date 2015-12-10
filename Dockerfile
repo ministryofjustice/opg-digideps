@@ -10,7 +10,8 @@ RUN  apt-get update && apt-get install -y \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
-#upgrade npm
+
+#we need npm3 for "npm run build" to work
 RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
