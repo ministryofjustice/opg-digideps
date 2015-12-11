@@ -56,6 +56,9 @@ form .form-group.button-bar {
 
 .button-link {
     line-height: 2.5;
+    margin-left: 15px;
+    top: 1px;
+    position: relative;
 }
 
 nav#bottom-button-bar {
@@ -74,12 +77,6 @@ nav#bottom-button-bar {
 
 #bottom-overview-button {
     margin-top: 30px;
-}
-
-.button-link {
-    margin-left: 15px;
-    top: 1px;
-    position: relative;
 }
 
 .right-link {

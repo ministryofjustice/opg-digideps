@@ -3,7 +3,7 @@ $path: '/images/';
 
 @import "main";
 
-//DIGIDEPS
+/* DIGIDEPS */
 @import "digideps/colours";
 @import "digideps/popups/session-timeout";
 @import "digideps/alert";
@@ -55,5 +55,5 @@ $path: '/images/';
 @import "digideps/forms/form-date";
 @import "digideps/forms/form-last-four-digits";
 @import "digideps/forms/form-sort-code";
-
+@import "digideps/external-report";
 @import "digideps/example";

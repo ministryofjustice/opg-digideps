@@ -31,10 +31,7 @@
         } %}
     {% endif %}
     <div class="external-report-section" id="decisions-section">
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionTitle: 'decisionsMadeAsDeputy'
-        } %}
+        <h1 class="heading-large">{{ 'decisionsMadeAsDeputy' | trans({},translationDomain) }}</h1>
 
         {% if report.decisions | length == 0 %}
             <p class="page-section-description">{{ report.reasonForNoDecisions }}</p>
@@ -49,10 +46,7 @@
 
 
     <div class="external-report-section" id="contacts-section">
-        {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionTitle: 'pages.reportPeriod.healthAndWelfare.contacts.subSectionTitle'
-        } %}
+        <h1 class="heading-large">{{ 'pages.reportPeriod.healthAndWelfare.contacts.subSectionTitle' | trans({},translationDomain) }}</h1>
 
         {% if report.contacts | length == 0 %}
             <p class="page-section-description">{{ report.reasonForNoContacts }}</p>
@@ -76,11 +70,7 @@
         {% endif %}
 
         <div class="external-report-section" id="accounts-section">
-            {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-                transDomain: translationDomain,
-                pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.accounts.subSectionTitle'
-            } %}
-
+            <h1 class="heading-large">{{ 'pages.reportPeriod.propertyAndAffairs.accounts.subSectionTitle' | trans({},translationDomain) }}</h1>
             {% if report.accounts | length > 0 %}
                 {% include 'AppBundle:Account:_report_accounts.html.twig' with {
                     'accounts': report.accounts
@@ -89,11 +79,7 @@
         </div>
 
         <div class="external-report-section" id="assets-section">
-            {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-                transDomain: translationDomain,
-                pageSectionTitle: 'pages.reportPeriod.propertyAndAffairs.assets.subSectionTitle'
-            } %}
-
+            <h1 class="heading-large">{{ 'pages.reportPeriod.propertyAndAffairs.assets.subSectionTitle' | trans({},translationDomain) }}</h1>
             {% if report.assets | length == 0 %}
                 {% if report.noAssetToAdd == true %}
                     <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
@@ -110,10 +96,8 @@
 
         {% if  report.furtherInformation %}
           <div class="external-report-section" id="additional-info-section">
-              {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-                  transDomain: translationDomain,
-                  pageSectionTitle: 'pages.additionalInformation.subSectionTitle'
-              } %}
+              <h1 class="heading-large">{{ 'pages.additionalInformation.subSectionTitle' | trans({},translationDomain) }}</h1>
+
               <p class="page-section-description">{{ report.furtherInformation | nl2br }}</p>
           </div>
         {% endif %}
