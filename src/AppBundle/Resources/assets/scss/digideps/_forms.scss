@@ -246,7 +246,7 @@ ul.form-hint {
 
 .input-group-prefix {
     @include core-19();
-    margin: 2px 0 0 2px;
+    margin: 2px 0 0 2px ;
     position: absolute;
     width: 10px;
     background: $grey-3;
@@ -259,8 +259,7 @@ ul.form-hint {
     }
     
     .error & {
-        margin-top: 4px;
-        left: 17px;
+        margin: 4px 0 0 4px;
     }
 }
 
