@@ -1,21 +1,18 @@
 FROM registry.service.dsd.io/opguk/php-fpm:0.1.124
 
-# adds nodejs pkg repository
-RUN  curl --silent --location https://deb.nodesource.com/setup_4.x | bash -
+RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis \
-     dos2unix postgresql-client \
-     nodejs ruby && \
+     nodejs dos2unix postgresql-client && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
-
-#we need npm3 for "npm run build" to work
-RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
+RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  npm install --global gulp
+RUN  apt-get install -y ruby
 RUN  gem install sass scss_lint
 
 # build app dependencies
