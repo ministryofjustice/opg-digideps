@@ -1,4 +1,4 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+{% embed 'AppBundle:Components/Page:page-accounts.html.twig' with {
 activeTab: "tab-accounts"
 } %}
     {% set translationDomain = "report-account" %}
@@ -26,6 +26,7 @@ activeTab: "tab-accounts"
     {% set tabClasses = [] %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans({'%accountName%': account.bank}) }} {% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }} {% endblock %}    
     {% block contentClass %}{{ parent() }} report-money-input js-report-money-input{% endblock %}
 
     {% block pageBody %}

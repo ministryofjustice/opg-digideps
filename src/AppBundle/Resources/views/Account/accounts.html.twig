@@ -1,4 +1,4 @@
-{% embed 'AppBundle:Components/Page:page-report.html.twig' with {
+{% embed 'AppBundle:Components/Page:page-accounts.html.twig' with {
 activeTab: "tab-accounts"
 } %}
     {% set translationDomain = "report-accounts" %}
@@ -6,10 +6,14 @@ activeTab: "tab-accounts"
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-accounts-input{% endblock %}
-    {% block title %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-
+        <div id="page-section-title-container" class="page-section-title-container">
+            <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </div>
+        
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
