@@ -5,6 +5,7 @@
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} report-submission js-report-assets-input{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageNavigation %}
         {# no navigation bar for declaration #}

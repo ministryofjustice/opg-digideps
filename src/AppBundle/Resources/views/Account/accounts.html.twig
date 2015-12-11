@@ -26,9 +26,6 @@ activeTab: "tab-accounts"
         {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
               transDomain: translationDomain
         } %}
-        {% block validationSummary %}
-            {{ form_errors_list(form) }}
-        {% endblock %}
 
         {% set isAccountPageWithAtLeastOneAccount = (accounts is not empty) and (action == 'list') %}
         {% include 'AppBundle:Account:_account_form.html.twig' with {
