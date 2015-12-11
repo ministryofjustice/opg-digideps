@@ -60,8 +60,8 @@ class SafeguardingType extends AbstractType
                  	 ))
 
 		        ->add('howIsCareFunded', 'choice', array(
-                    	'choices' => [ 'client_pays_for_all'=>'Client pays for all their own care', 
-                    	               'client_gets_financial_help'=>'Client gets some financial help (for example, from local authority or NHS)',
+                    	'choices' => [ 'client_pays_for_all'=>'%client% pays for all their own care', 
+                    	               'client_gets_financial_help'=>'%client% gets some financial help (for example, from local authority or NHS)',
                     	               'all_care_is_paid_by_someone_else' => 'All care paid for by someone else (for example, by the local authority or NHS)' ],
                     	'expanded' => true
                  	 ))

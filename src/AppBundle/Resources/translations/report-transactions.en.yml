@@ -5,7 +5,7 @@ form:
     household-bills: Household bills
     accommodation: Accommodation
     care-and-medical: Care and medical
-    client-expenses: Client's expenses
+    client-expenses: %client%'s expenses
     fees: Fees
     major-purchases: Major purchases
     spending-on-other-people: Spending on other people
@@ -75,7 +75,7 @@ form:
     moving-money:
       label: Moving money
     transfers-in-from-client-s-other-accounts:
-      label: Transfers in from client's other accounts
+      label: Transfers in from %client%'s other accounts
       moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
     refunds:
       label: Refunds
@@ -127,12 +127,12 @@ form:
       label: Medical insurance
     other-benefits:
       label: Other benefits
-      moreInformations: Enter the type of benefit the client gets
+      moreInformations: Enter the type of benefit %client% gets
     households-bills-other:
       label: Other
       moreInformations: Give us more information
     client-transport-bus-train-taxi-fares:
-      label: Client transport eg bus, train, taxi fares
+      label: Transport eg bus, train, taxi fares
     food:
       label: Food
     toiletries:

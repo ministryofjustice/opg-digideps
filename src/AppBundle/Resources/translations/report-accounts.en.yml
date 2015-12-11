@@ -15,13 +15,13 @@ cancel:
 currencySymbol: "£"
 
 moneyIn:
-  pageSectionTitle: Money coming into the client’s accounts
-  pageSectionDescription: Tell us about money paid into the client’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, <b>add up the totals from all the accounts for each income category</b>.
+  pageSectionTitle: Money coming into %client%’s accounts
+  pageSectionDescription: Tell us about money paid into %client%’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If %client% has more than 1 bank account, <b>add up the totals from all the accounts for each income category</b>.
 moneyin:
   nextSection: Money out
 moneyOut:
-  pageSectionTitle: Money you have spent on behalf of the client
-  pageSectionDescription: Tell us about money you have spent on the client’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If your client has more than 1 bank account, <b>add up the totals from all the accounts for each type of payment</b>.
+  pageSectionTitle: Money you have spent on behalf of %client%
+  pageSectionDescription: Tell us about money you have spent on %client%’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If %client% has more than 1 bank account, <b>add up the totals from all the accounts for each type of payment</b>.
 moneyout:
   nextSection: Balance accounts
 
@@ -34,7 +34,7 @@ balance:
       accountsBalancedMessage: Money in and money out match the balance
     bad:
       pageSectionTitle: Balance the accounts
-      pageSectionDescription: You have reported £%totalOffset% %more% in the total money in and out than in the final balance of the client’s accounts. This means we haven’t been able to balance the accounts.      
+      pageSectionDescription: You have reported £%totalOffset% %more% in the total money in and out than in the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.      
       accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut: Total balance after money in and money out
@@ -44,7 +44,7 @@ balance:
       summaryBalanceInOut: Balance after total money in and money out
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
-      goBack: Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> matches your records of money coming in and out of the client’s accounts. You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
+      goBack: Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> matches your records of money coming in and out of %client%’s accounts. You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
       cantFind: Can’t find the problem?
       formtitle:
         label: If you can’t find where the <b>£%difference%</b> has come from, tell us why
@@ -58,8 +58,8 @@ balance:
     
 banks:
     nextSection: Money in
-    pageSectionTitle: Client's bank accounts
-    pageSectionDescription: Add all the client's bank and building society accounts, including savings accounts and ISAs
+    pageSectionTitle: %client%'s bank accounts
+    pageSectionDescription: Add all %client%'s bank and building society accounts, including savings accounts and ISAs
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number
