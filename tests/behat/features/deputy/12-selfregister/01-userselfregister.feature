@@ -17,7 +17,7 @@ Feature: User Self Registration
             | self_registration_clientLastname | Cross  tolley  |
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
-        Then I should see a "#error-heading" element
+        Then I should see a "#error-summary" element
         And I save the page as "selfreg-error-mismatch"
         And I should be on "/register"
         #

@@ -20,11 +20,19 @@
 
 {% block validationSummary %}
     {{ form_errors_list(form) }}
+    
+    {% if error is defined %}
+        <div id="error-summary" class="error-summary" role="group" aria-labelledby="error-summary-heading" tabindex="-1" class="behat-region-header-errors">
+            <h1 class="heading-small error-summary-heading" id="error-summary-heading">There are some problems on this page</h1>
+            <ul class="error-summary-list">
+                <li>{{ error }}</li>
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
 
 
 {% block pageBody %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
     {{ form_input(form.email,'email', { 'labelClass': 'required' }) }}
