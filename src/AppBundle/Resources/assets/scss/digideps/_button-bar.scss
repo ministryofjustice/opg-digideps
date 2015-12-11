@@ -43,15 +43,19 @@ form .form-group.button-bar {
     @include button;
 }
 
-.button-secondary{
+.button-secondary {
     @include core-19();
     @include button($grey-3);
 }
 
-.button-warning{
+.button-warning {
     @include core-19();
     @include button($red);
     margin-left: 60px;
+}
+
+.button-link {
+    line-height: 2.5;
 }
 
 nav#bottom-button-bar {
