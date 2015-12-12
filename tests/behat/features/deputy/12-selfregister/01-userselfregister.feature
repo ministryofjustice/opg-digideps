@@ -69,7 +69,7 @@ Feature: User Self Registration
             # add case number already used
             | self_registration_caseNumber     | 11112222      |
         And I press "self_registration_save"
-        Then I should see a "#error-heading" element
+        Then I should see a "#error-summary" element
         And I save the page as "selfreg-error-casenumber-already-used"
 
     @deputy
