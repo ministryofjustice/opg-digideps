@@ -1,20 +1,21 @@
 # This file is auto-generated during the composer install
 parameters:
     locale: en
-    secret: {{ getv "/secret" }}
-    api_base_url: {{ getv "/api/url" }}
-    api_client_secret: {{ getv "/api/client/secret" }}
-    non_admin_host: {{ getv "/nonadmin/host" }}
+    secret: {{ getv "/frontend/secret" }}
+    api_base_url: {{ getv "/frontend/api/url" }}
+    api_client_secret: {{ getv "/frontend/api/client/secret" }}
+    non_admin_host: {{ getv "/frontend/nonadmin/host" }}
     admin_host: http://digideps-admin.local
-    env: {{ getv "/role" }}
+    env: {{ getv "/frontend/role" }}
     session_expire_seconds: 3900
     session_popup_show_after: 3600
-    session_cookie_secure: {{ getv "/session/cookie/secure" }}
-    redis_dsn: '{{getv "/session/redis/dsn" }}'
+    session_cookie_secure: {{ getv "/frontend/session/cookie/secure" }}
+    redis_dsn: '{{getv "/frontend/session/redis/dsn" }}'
     session_prefix: dd_session
     use_redis: true
     session_engine: redis
     log_level: info
     log_path: /var/log/app/application.log
-    ga: {{ getv "/ga" }}
-    behat_controller_enabled: {{ getv "/behat/controller/enabled" }}
+    ga: {{ getv "/frontend/ga" }}
+    opg_docker_tag: {{ getv "/opg/docker/tag" }}
+    behat_controller_enabled: {{ getv "/frontend/behat/controller/enabled" }}
