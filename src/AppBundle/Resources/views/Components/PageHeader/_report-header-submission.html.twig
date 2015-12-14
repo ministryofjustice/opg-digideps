@@ -2,11 +2,10 @@
 {% trans_default_domain translationDomain %}
 
 <header class="page-report-header page-header">
-    <div class="page-header-titles">
-        <h1 class="heading-large report-title">{{ report.period }} {{ 'report.header.report' | trans }}
-            <div class="heading-large client-name">{{ client.fullname }}</div>
-        </h1>
-    </div>
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">{{ report.period }} {{ 'report.header.report' | trans }}</span>
+        {{ client.fullname }}
+    </h1>
     <div class="item">
         <dl class="item-data item-data-fixed">
             <dt class="item-label">{{ 'report.header.reportingPeriod' | trans }}</dt>

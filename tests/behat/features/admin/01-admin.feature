@@ -42,7 +42,7 @@ Feature: admin / admin
             | set_password_password_first   | Abcd1234 |
             | set_password_password_second  | Abcd1234 |
         And I press "set_password_save"
-        Then I should not see the "header errors" region
+        Then I should not see an "#error-summary" element
         And I should be on "/user/details"
 
 

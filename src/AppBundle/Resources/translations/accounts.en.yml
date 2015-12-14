@@ -16,9 +16,9 @@ moneyOutTitle: Money paid out
 moneyInFooter: Money in total
 moneyOutFooter: Money out total
 
-
+# deprecated
 disability_living_allowance_or_personal_independence_payment: Disability Living Allowance or Personal Independence Payment
-attendance_allowance: Attendance Allowance
+attendance_allowance: Attendance allowance
 employment_support_allowance_or_incapacity_benefit: Employment Support Allowance or Incapacity Benefit
 severe_disablement_allowance: Severe Disablement Allowance
 income_support_or_pension_credit: Income Support or Pension Credit
@@ -59,3 +59,7 @@ property_maintenance_or_improvement: Property maintenance or improvement
 investments_eg_shares_bonds_savings: Investments, eg shares, bonds, savings
 transfers_out_to_other_client_s_accounts: Transfers out to client’s other accounts
 any_other_money_paid_out_and_not_listed_above: Any other money paid out and not listed above
+#end deprecated
+
+
+

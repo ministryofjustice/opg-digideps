@@ -31,19 +31,13 @@
 
 <div {% if hideForm %} class="visuallyhidden" {% endif %}>
 
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'form.accountDetails.subSectionTitle'
-    } %}
+    <h3 class="heading-medium">{{ "form.accountDetails.subSectionTitle" | trans({}, translationDomain) }}</h3>
 
     {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
     {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
     {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}
 
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'form.openingBalance.subSectionTitle'
-    } %}
+    <h3 class="heading-medium">{{ "form.openingBalance.subSectionTitle" | trans({}, translationDomain) }}</h3>
 
     {# opening balance logic (shared template) #}
     {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {

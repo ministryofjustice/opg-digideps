@@ -62,7 +62,7 @@ class FormFieldsExtension extends \Twig_Extension
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
-
+    
     /**
      * Renders form checkbox field
      *
@@ -338,6 +338,10 @@ class FormFieldsExtension extends \Twig_Extension
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass']: "";
         
+        //Text to insert to the left of an input, e.g. * * * * for account
+        $preInputTextTrans =  $this->translator->trans($translationKey.'.preInput', [],$domain);
+        $preInputText =  ($preInputTextTrans != $translationKey.'.preInput')? $preInputTextTrans: null;
+        
         return [ 
             'labelText' => $labelText,
             'hintText' => $hintText,
@@ -347,7 +351,8 @@ class FormFieldsExtension extends \Twig_Extension
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
             'formGroupClass' => $formGroupClass,
-            'labelRaw' => !empty($vars['labelRaw'])
+            'labelRaw' => !empty($vars['labelRaw']),
+            'preInputText' => $preInputText
         ];
     }
     

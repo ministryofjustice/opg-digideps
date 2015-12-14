@@ -99,3 +99,5 @@ services:
         arguments:  [ @service_container ]
         tags:
             - { name: monolog.processor, method: processRecord }
+    formErrorsFormatter:
+            class: AppBundle\Service\FormErrorsFormatter

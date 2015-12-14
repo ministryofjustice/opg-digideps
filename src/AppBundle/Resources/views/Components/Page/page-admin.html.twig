@@ -29,10 +29,7 @@
         aria-expanded="true" aria-labelledby="tab-overview-panel">
     {% endblock %}
     <a name="pageBody"></a>
-    {% block validationSummary %}{% endblock %}
-    {% block errorSummary %}
-        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
-    {% endblock %}
+    {{ form_errors_list(form) }}
 
     <div id="page-body">
 

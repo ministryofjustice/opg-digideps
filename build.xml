@@ -84,7 +84,7 @@
     </target>
     
     <target name="build-assets" description="Clean and build all front end static assets" depends="front-end-tools">
-        <exec command="npm run all"></exec>
+        <exec command="npm run build"></exec>
     </target>
 
     <target name="check" depends="check-validation,phplint">

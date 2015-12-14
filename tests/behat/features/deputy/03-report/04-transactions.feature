@@ -25,14 +25,8 @@ Feature: deputy / report / account transactions
         Then the following fields should have an error:
             | transactions_moneyIn_0_amount  |
             | transactions_moneyIn_4_amount  |
-            | transactions_moneyOut_11_id |
-            | transactions_moneyOut_11_type |
-            | transactions_moneyOut_11_amount |
             | transactions_moneyOut_11_moreDetails |
-            | transactions_moneyOut_12_id |
-            | transactions_moneyOut_12_type |
             | transactions_moneyOut_12_amount |
-            | transactions_moneyOut_12_moreDetails |
         And I save the page as "report-account-transactions-errors"   
         # right values
         When I fill in the following:

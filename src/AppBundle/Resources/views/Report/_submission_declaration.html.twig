@@ -3,10 +3,7 @@
 
 <div class="external-report-section external-report-section-declaration">
 
-    {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
-        transDomain: "report-declaration",
-        pageSectionTitle: 'page.pageSectionTitle'
-    } %}
+    <h1 class="heading-large">{{ 'page.pageSectionTitle' | trans({},'report-declaration') }}</h1>
 
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: "report-declaration",

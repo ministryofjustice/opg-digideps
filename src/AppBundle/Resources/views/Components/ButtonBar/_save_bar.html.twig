@@ -16,13 +16,17 @@
     
     <div class="save-bar button-bar">
         {{ form_submit(form.save,'save', { 'buttonClass': '' }) }}
+        
+        {% if nextSection is defined %}
+            <span class="next-section">Next section: <b>{{ nextSection | trans }}</b></span>
+        {% endif %}
 
         {% if showCancel == true %}
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
                 transDomain: translationDomain,
                 linkButtonLabel: 'cancel.label',
                 linkClass: 'button-link behat-link-cancel-edit',
-                linkHref: path(section ~ 's', {'reportId': report.id})
+                linkHref: app.request.headers.get('referer')
             } %}
         {% endif %}
 
@@ -83,4 +87,7 @@
         </script>
     {% endif %}
 
+    {% if nextSection is defined %}
+    <div><a href="/report/{{report.id}}/overview" class="button-secondary" id="bottom-overview-button">Save and return to report overview</a></div>
+    {% endif %}
 </div>

@@ -17,26 +17,23 @@
     {% endblock %}
 
     <a name="pageBody"></a>
-
-    {% if showNav == true %}
-        {% block pageNavigation %}
-            {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
-                'report': report
-            } %}
-        {% endblock %}
-    {% endif %}
-
-    {% block errorSummary %}
-        {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
+    
+    {% block pageNavigation %}
+        {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+            'report': report
+        } %}
     {% endblock %}
 
+
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>{% block title %}{% endblock %}</h1>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </div>
+    
     <div id="page-body">
         <div id="pagebody-left-content">
            {% block pageBody %}{% endblock %}
         </div>
-        {% if showHelp %}
-            {% include 'AppBundle:Components/Page:_help.html.twig' %}
-        {% endif %}
     </div>
 
 {% endblock %}

@@ -24,7 +24,6 @@
     "gulp-watch": "^4.3.5",
     "jquery": "1.11.*",
     "mocha": "*",
-    "moj-template": "ztolley/moj_template",
     "run-sequence": "^1.1.4",
     "sinon": "*"
   }
