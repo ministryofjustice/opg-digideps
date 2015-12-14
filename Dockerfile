@@ -53,3 +53,4 @@ ADD  docker/my_init.d /etc/my_init.d
 RUN  chmod a+x /etc/my_init.d/*
 
 ENV  OPG_SERVICE client
+ENV  OPG_DOCKER_TAG 0.0.0
