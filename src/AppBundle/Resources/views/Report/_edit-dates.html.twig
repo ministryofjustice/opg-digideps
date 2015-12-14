@@ -8,10 +8,7 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form'  }}) }}
 
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-        transDomain: translationDomain,
-        subSectionTitle: 'form.subSectionTitle'
-    } %}
+    <h3 class="heading-medium">{{ 'form.subSectionTitle'| trans({}, translationDomain) }}</h3>
 
     {{ form_known_date(form.startDate, 'form.controls.startDate') }}
 

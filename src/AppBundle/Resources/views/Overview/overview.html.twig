@@ -13,13 +13,7 @@
         {% block pageHeader %}
             {% include 'AppBundle:Overview:_header.html.twig' %}
         {% endblock %}
-
-        <a name="pageBody"></a>
-    
-        {% block errorSummary %}
-            {% include 'AppBundle:Components/Alerts:_error-summary.html.twig' %}
-        {% endblock %}
-
+        
         {%include 'AppBundle:Overview:_period.html.twig' with {
             report: report
         } %}
@@ -29,7 +23,7 @@
         } %}
     </div>
     <div id="pagebody-right-content">
-        {%include 'AppBundle:Overview:_helpline.html.twig' %}
+        {%include 'AppBundle:Components:_helpline.html.twig' %}
         {%include 'AppBundle:Overview:_status.html.twig' with { report: report } %}
     </div>
 </div>

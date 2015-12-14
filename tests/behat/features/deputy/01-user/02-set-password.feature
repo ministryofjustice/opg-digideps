@@ -55,7 +55,7 @@ Feature: deputy / user / set password
             | login_email     | behat-user@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         And I press "login_login"
-        Then I should not see the "header errors" region
+        Then I should not see an "#error-summary" element
 
    
     

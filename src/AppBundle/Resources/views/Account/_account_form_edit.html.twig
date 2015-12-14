@@ -6,11 +6,8 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'report-form in-page-form', id: formId } }) }}
 
     {# main form #}
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'form.edit.accountDetails.subSectionTitle'
-    } %}
-    
+    <h3 class="heading-medium">{{ "form.edit.accountDetails.subSectionTitle" | trans({}, translationDomain) }}</h3>
+        
     {# start common form elements #}
     
     {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
@@ -18,10 +15,7 @@
     {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}
 
     {# opening balance part #}
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'form.edit.openingBalance.subSectionTitle'
-    } %}
+    <h3 class="heading-medium">{{ "form.edit.openingBalance.subSectionTitle" | trans({}, translationDomain) }}</h3>
     
     {# opening balance logic (shared template) #}
     {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
@@ -33,10 +27,7 @@
     {# closing balance part #}
     {% if form.closingDate is defined and form.closingBalance is defined %}
         
-        {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-        transDomain: translationDomain,
-        subSectionTitle: 'form.edit.closingBalance.subSectionTitle'
-        } %}
+        <h3 class="heading-medium">{{ "form.edit.closingBalance.subSectionTitle" | trans({}, translationDomain) }}</h3>
 
         {% include 'AppBundle:Components/Page:_sub-section-description.html.twig' with {
         transDomain: translationDomain,

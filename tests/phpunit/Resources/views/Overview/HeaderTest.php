@@ -57,7 +57,7 @@ class HeaderTest extends WebTestCase
         $crawler = new Crawler($html);
 
         // Has a head submit element
-        $headerSubmitElement = $crawler->filter('#page-report-header #header-report-submit');
+        $headerSubmitElement = $crawler->filter('#header-report-submit');
         $this->assertEquals(1, $headerSubmitElement->count());
         
         // The header has a link that links to the report submission

@@ -6,11 +6,7 @@
 <div id="closing-balance" class="behat-region-account-closing-balance-form account-closing-balance-form {% if hideForm %}visuallyhidden{% endif %}">
     {{ form_start(closingBalanceForm, {attr: {novalidate: 'novalidate',class: 'report-form in-page-form' }}) }}
 
-    {% include 'AppBundle:Components/Page:_sub-section-title.html.twig' with {
-    transDomain: translationDomain,
-    subSectionTitle: 'form.closing.subSectionTitle',
-    iconClass: 'icon icon__notification'
-    } %}
+    <h3 class="heading-medium">{{ "form.closing.subSectionTitle" | trans({}, translationDomain) }}</h3>
 
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
     transDomain: translationDomain,

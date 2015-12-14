@@ -1,31 +1,22 @@
-<div class="form-group sort-code-wrapper {% if not element.vars.valid %}field-with-errors behat-region-form-errors{% endif %}">
+<div id="form-group-{{ element.vars.id }}" class="form-group sort-code-wrapper {% if not element.vars.valid %}error{% endif %}">
     <fieldset>
         <legend class="form-label">{{ legendText }}</legend>
         <div class="form-sort-code">
-            <ul class="errors">
-                {% if not element.vars.valid %}
-                    <li class="error-message">{{ form_errors(element) }}</li>
-                {% endif %}
-            </ul>
+            {{ form_errors(element) }}
             <div class="form-group">
                 {{ form_label(element.sort_code_part_1,'Sort Code part 1', {'label_attr': {'for': 'account_sortCode_sort_code_part_1', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control'} }) }}
+                {{ form_widget(element.sort_code_part_1, { 'attr': {'class': 'sort-code-part form-control', 'min': '10', 'max': '99' } }) }}
             </div>
             <div class="separator">-</div>
             <div class="form-group">
                 {{ form_label(element.sort_code_part_2,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_2', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.sort_code_part_2, { 'attr': {'class': 'sort-code-part form-control'} }) }}
+                {{ form_widget(element.sort_code_part_2, {'attr': {'class': 'sort-code-part form-control', 'min': '10', 'max': '99'} }) }}
             </div>
             <div class="separator">-</div>
             <div class="form-group">
                 {{ form_label(element.sort_code_part_3,'Sort Code part 2', {'label_attr': {'for': 'account_sortCode_sort_code_part_3', 'class': 'visuallyhidden' } }) }}
-                {{ form_widget(element.sort_code_part_3, { 'attr': {'class': 'sort-code-part form-control'} }) }}
+                {{ form_widget(element.sort_code_part_3, { 'attr': { 'class': 'sort-code-part form-control', 'min': '10', 'max': '99'} }) }}
             </div>
         </div>
     </fieldset>
 </div>
-<script type="text/javascript">
-    $(document).ready(function() {
-        opg.SortCodeValidate('.sort-code-wrapper');
-    });
-</script>

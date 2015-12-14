@@ -13,7 +13,9 @@ trait FormTrait
      */
     public function theFormShouldBeInvalid()
     {
-        $this->iShouldSeeTheBehatElement('form-errors', 'region');
+        if (!$this->getSession()->getPage()->has('css','.form-group.error')) {
+            throw new \RuntimeException("No errors found");    
+        }    
     }
     
     /**
@@ -21,7 +23,9 @@ trait FormTrait
      */
     public function theFormShouldBeValid()
     {
-        $this->iShouldNotSeeTheBehatElement('form-errors', 'region');
+        if ($this->getSession()->getPage()->has('css','.form-group.error')) {
+            throw new \RuntimeException("Errors found");    
+        }
     }
     
     /**
@@ -33,8 +37,8 @@ trait FormTrait
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
     {
         $fields = array_keys($table->getRowsHash());
-        $errorRegionCss = self::behatElementToCssSelector('form-errors', 'region');
-        $errorRegions = $this->getSession()->getPage()->findAll('css', $errorRegionCss);
+
+        $errorRegions = $this->getSession()->getPage()->findAll('css', ".form-group.error");
         $foundIdsWithErrors = [];
         foreach ($errorRegions as $errorRegion) {
             $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");

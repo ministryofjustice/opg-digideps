@@ -7,17 +7,7 @@ var opg = opg || {};
     var container;
     var noneNumericError = 'Sort code must be numeric';
     var errors;
-
-    function skipToNext(event) {
-        
-        var target = $(event.target);
-        
-        if(target.val().length == target.attr('maxlength') && target[0] !== sortCodeParts[sortCodeParts.length -1] ) {
-            var nextField = $('input', target.parent().nextAll(".form-group")[0]);
-            nextField.focus();
-        }    
-    }
-
+    
     function showErrorDescription() {
         if ($('.form-sort-code .field-with-errors').length > 0){
             errors.empty().append('<li class="error-message">' + noneNumericError + '</li>');    
@@ -48,7 +38,7 @@ var opg = opg || {};
         errors = container.find('.errors');
         sortCodeParts = container.find(".sort-code-part");
         
-        sortCodeParts.on('propertychange input', skipToNext);
+        //sortCodeParts.on('propertychange input', skipToNext);
         sortCodeParts.on('blur', validateField);
     };
 
