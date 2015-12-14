@@ -41,12 +41,10 @@ form .form-group.button-bar {
 
 
 .button-secondary {
-
     @include button($grey-3);
 }
 
 .button-warning {
-
     @include button($red);
     margin-left: 60px;
 }
