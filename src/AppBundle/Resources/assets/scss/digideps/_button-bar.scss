@@ -38,18 +38,11 @@ form .form-group.button-bar {
     
 }
 
-.button {
-    @include core-19();
-    @include button;
-}
-
 .button-secondary {
-    @include core-19();
     @include button($grey-3);
 }
 
 .button-warning {
-    @include core-19();
     @include button($red);
     margin-left: 60px;
 }
