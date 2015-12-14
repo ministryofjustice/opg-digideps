@@ -7,7 +7,7 @@
     bootstrap="bootstrap.php"
 >
     <testsuites>
-        <testsuite name="tests">
+        <testsuite name="dataMigration">
             <directory>./</directory>
         </testsuite>
     </testsuites>

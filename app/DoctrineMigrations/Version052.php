@@ -2,6 +2,7 @@
 
 namespace Application\Migrations;
 
+use AppBundle\Service\DataMigration\AccountMigration;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
@@ -26,37 +27,19 @@ class Version052 extends AbstractMigration implements ContainerAwareInterface
      */
     public function up(Schema $schema)
     {
+        $memLimitInit = ini_get('memory_limit');
+        ini_set('memory_limit', '2048M');
+
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('SELECT COUNT(*) FROM migrations'); //just to avoid warning
-    }
+        $em = $this->container->get('em');
+        $am = new AccountMigration($em->getConnection());
+        $added = $am->migrateAccounts();
 
+        $this->write(__CLASS__ . ": added $added new transactions");
 
-    public function postUp(Schema $schema)
-    {
-        $em = $this->container->get('doctrine.orm.entity_manager');
-        $pdo = $em->getConnection(); /* @var $pdo \PDO */
-
-        $types = $pdo->query('SELECT * FROM transaction_type ORDER BY display_order ASC')->fetchAll();
-        $reports = $pdo->query('SELECT r.id, COUNT(t.id)  from report r LEFT JOIN transaction t on t.report_id = r.id GROUP BY r.id')->fetchAll();
-
-        $changed = 0;
-        $stmt = $pdo->prepare("INSERT INTO transaction(report_id, transaction_type_id) VALUES(:id, :type)");
-        foreach ($reports as $report) {
-            $reportId = $report['id'];
-            if ($report['count'] == 0) {
-                $this->write("Adding transaction to report $reportId");
-                foreach ($types as $type) {
-                    $stmt->bindParam(':id', $report['id'], \PDO::PARAM_INT);
-                    $stmt->bindParam(':type', $type['id'], \PDO::PARAM_STR);
-                    $stmt->execute();
-                    $changed++;
-                }
-            }
-        }
-
-        $this->write(__CLASS__ . ": added transactions to $changed reports");
+        ini_set('memory_limit', $memLimitInit);
     }
 
     /**
