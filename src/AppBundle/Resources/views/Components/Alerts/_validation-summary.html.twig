@@ -6,7 +6,7 @@
             {# form generic errors #}
             {% if formUncaughtErrors %}
                 {% for formError in formUncaughtErrors %}
-                    <h2 id="error-heading"> {{ formError.message }} </h2>
+                    <h2 id="error-heading"> {{ formError.message | nl2br }} </h2>
                 {% endfor %}
             {% else %}
                 <h2 id="error-heading">There are some problems on this page you need to fix before you can continue.</h2>
