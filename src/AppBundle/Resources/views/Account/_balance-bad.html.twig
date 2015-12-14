@@ -7,7 +7,7 @@
     {% set moreless = "less" %}
 {% endif %}
 
-<h2 class="page-section-title">{{ 'balance.bad.pageSectionTitle' | trans }}</h2>
+<h3 class="heading-medium-large">{{ 'balance.bad.pageSectionTitle' | trans }}</h3>
 <p class="page-section-description">{{ 'balance.bad.pageSectionDescription' | trans({'%more%': moreless, '%totalOffset%':  report.totalsOffset | abs | number_format(2, '.', ',') }) }}</p>
 
 <div class="hero orange compact">

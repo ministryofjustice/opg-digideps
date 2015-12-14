@@ -1,43 +1,7 @@
-//MOJ-Template
-@import "moj-template";
-
-//Frontend toolkit
-@import 'colours';
-@import 'conditionals';
-@import 'css3';
-@import 'device-pixels';
-@import 'font_stack';
-@import 'grid_layout';
-@import 'measurements';
-@import 'shims';
-@import 'typography';
-@import 'url-helpers';
-@import 'design-patterns/alpha-beta';
-@import 'design-patterns/buttons';
-@import 'design-patterns/media-player';
-
-//Elements
 $path: '/images/';
-@import 'reset';
-@import 'helpers';
-@import 'details';
-@import 'elements-typography';
-@import 'forms';
-@import 'icons';
-@import 'layout';
-@import 'lists';
-@import 'panels';
-@import 'tables';
-@import 'breadcrumb';
+@import "main";
 
-@import 'forms/form-block-labels';
-@import 'forms/form-date';
-@import 'forms/form-validation';
-
-
-
-
-//DIGIDEPS
+/* DIGIDEPS */
 @import "digideps/colours";
 @import "digideps/popups/session-timeout";
 @import "digideps/alert";
@@ -55,7 +19,7 @@ $path: '/images/';
 @import "digideps/page-header";
 @import "digideps/page-section-description";
 @import "digideps/page-section-list";
-@import "digideps/page-section-title";
+@import "digideps/section-title";
 @import "digideps/page-section-warning";
 @import "digideps/page-service-content";
 @import "digideps/progress_indicator";
@@ -84,19 +48,6 @@ $path: '/images/';
 @import "digideps/card-list";
 @import "digideps/account-form";
 @import "digideps/balance-summary-table";
-
-
-
-
-
-
-
-
-
-
-
-
-
 @import "digideps/icon";
 @import "digideps/forms/form-date";
 @import "digideps/forms/form-last-four-digits";

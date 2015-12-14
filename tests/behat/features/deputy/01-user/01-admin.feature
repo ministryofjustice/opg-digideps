@@ -11,7 +11,7 @@ Feature: deputy / user / add user
             | login_email     | admin@publicguardian.gsi.gov.uk |
             | login_password  |  WRONG PASSWORD !! |
         And I click on "login"
-        Then I should see the "header errors" region
+        Then I should see an "#error-summary" element
         And I save the page as "admin-login-error1"
         # test user email in caps
         When I fill in the following:
