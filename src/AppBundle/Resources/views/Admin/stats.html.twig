@@ -1,0 +1,43 @@
+{% extends 'AppBundle:Components/Page:page-admin.html.twig' %}
+
+{% trans_default_domain "admin" %} 
+
+{% block pageTitle %}Administration - Upload users{% endblock %}
+{% block contentClass %}{{ parent() }} admin-users{% endblock %}
+{% block title %}Upload users{% endblock %}
+
+{% block validationSummary %}
+{% endblock %}
+
+{% block pageNavigation %}
+{% endblock %}
+
+{% block pageBody %}
+
+    {# dynamically display data #}
+    <table class="stats">
+        {# header #}
+        <thead>
+        <tr>
+            {% for key, column in data|first %}
+                <th nowrap>{{ key  | replace({'_': ' '}) | capitalize }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {# rows #}
+        {% for row in data %}
+            <tr>
+                {% for column in row %}
+                    <td>{{ column }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <img width="17" height="16" title="CSV" alt="CSV" src="data:image/gif;base64,R0lGODlhEQAQAMQUAPj4+PHx8fLy8rCwsPn5+eTk5PT09Pr6+vPz8/v7+/39/ejo6O7u7qampt3d3aKiotra2n5+fjMzM////////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAABQALAAAAAARABAAAAVhIEVFZGmKqBhNbMuSqeq6axSv8wtBNornpt4oN+NRCIQB0eV4HAIBwLJVEAQkWOwkq5VMFgCsANLyuryMsAShZHG93oQ6SjRLFOv3llsuHAwGZFMTAg0+O4iJiEJBjSUUIQA7" />
+    <a href="{{ path(app.request.attributes.get('_route'), {'format': 'csv'}) }}">Export to CSV</a>
+
+    
+    
+{% endblock %}

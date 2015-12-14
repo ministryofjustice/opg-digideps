@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Service\DataImporter\CsvToArray;
 use Symfony\Component\Form\FormError;
 use AppBundle\Exception\RestClientException;
@@ -199,6 +200,40 @@ class AdminController extends AbstractController
             'currentRecords' => $this->getRestClient()->get("casrec/count", 'array'),
             'form' => $form->createView(),
             'maxUploadSize' => min([ini_get('upload_max_filesize'), ini_get('post_max_size')])
+        ];
+    }
+
+    /**
+     * @Route("/stats", name="admin_stats")
+     * @Template
+     */
+    public function statsAction(Request $request)
+    {
+        $data = $this->getRestClient()->get('stats/users', 'array');
+
+        if ($request->query->get('format')=='csv') {
+
+            $response = new Response();
+            $response->headers->set('Cache-Control', 'private');
+            $response->headers->set('Content-type', 'plain/text');
+            $response->headers->set('Content-type', 'application/octet-stream');
+            $response->headers->set('Content-Disposition', 'attachment; filename="dd-stats-'.date('Y-m-d').'.csv";');
+            $response->sendHeaders();
+
+            // array to CSV
+            $out = fopen('php://memory', 'w');
+            fputcsv($out, array_keys($data[0]));
+            foreach($data as $row) {
+                fputcsv($out, $row);
+            }
+            rewind($out);
+            $response->setContent(stream_get_contents($out));
+
+            return $response;
+        }
+
+        return [
+            'data' => $data
         ];
     }
 }
