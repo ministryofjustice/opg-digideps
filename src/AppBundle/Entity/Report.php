@@ -526,7 +526,7 @@ class Report
     /**
      * Get accounts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Account[]
      */
     public function getAccounts()
     {
@@ -846,6 +846,22 @@ class Report
     public function setReasonNotAllAgreed($reasonNotAllAgreed)
     {
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
+    }
+
+    public function isDue()
+    {
+        if (!$this->getEndDate() instanceof \DateTime) {
+            return false;
+        }
+
+        // reset time on dates
+        $today = new \DateTime;
+        $today->setTime(0, 0, 0);
+
+        $reportDueOn = clone $this->getEndDate();
+        $reportDueOn->setTime(0, 0, 0);
+
+        return $today >= $reportDueOn;
     }
 
 

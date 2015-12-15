@@ -92,12 +92,12 @@ class Fixtures
         foreach ($settersMap as $k=>$v) {
             $ret->$k($v);
         }
+
         $this->em->persist($ret);
         
         return $ret;
     }
-    
-    
+
     /**
      * @return EntityDir\Contact
      */
@@ -200,6 +200,11 @@ class Fixtures
     public function getRepo($entity)
     {
          return $this->em->getRepository("AppBundle\\Entity\\{$entity}");
+    }
+
+    public function getConnection()
+    {
+        return $this->em->getConnection();
     }
     
 }
