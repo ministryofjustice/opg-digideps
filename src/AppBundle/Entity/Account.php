@@ -484,7 +484,10 @@ class Account
         
         return $balance;
     }
-    
+
+    /**
+     * @return AccountTransaction[]
+     */
     public function getTransactions()
     {
         return $this->transactions;
