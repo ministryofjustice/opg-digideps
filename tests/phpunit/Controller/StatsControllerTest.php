@@ -84,12 +84,12 @@ class StatsControllerTest extends AbstractTestController
         ])['data'];
 
         $first = array_shift($data);
-        $this->assertEquals('deputy@example.org', $first['email']);
-        $this->assertEquals(true, $first['is_active']);
-        $this->assertEquals(1, $first['reports_unsubmitted']);
-        $this->assertEquals(1, $first['reports_submitted']);
-        $this->assertEquals(1, $first['reports_unsubmitted_bank_accounts']);
-        $this->assertEquals(9, $first['reports_unsubmitted_completed_transactions']);
+        $this->assertArrayHasKey('is_active', $first);
+        $this->assertArrayHasKey('email', $first);
+        $this->assertArrayHasKey('reports_unsubmitted', $first);
+        $this->assertArrayHasKey('reports_submitted', $first);
+        $this->assertArrayHasKey('reports_unsubmitted_bank_accounts', $first);
+        $this->assertArrayHasKey('reports_unsubmitted_completed_transactions', $first);
     }
 
 }
