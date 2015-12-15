@@ -93,9 +93,6 @@ class Fixtures
             $ret->$k($v);
         }
 
-        // REMOVE THIS ON ACOUNTS_Mk2
-        $this->em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($ret);
-
         $this->em->persist($ret);
         
         return $ret;

@@ -49,7 +49,9 @@ class StatsControllerTest extends AbstractTestController
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-        
+
+        self::fixtures()->getConnection()->query('DELETE FROM account_transaction WHERE account_id = '.self::$account1->getId())->execute();
+
         self::fixtures()->clear();
     }
 
