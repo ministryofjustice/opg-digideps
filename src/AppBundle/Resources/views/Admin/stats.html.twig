@@ -20,7 +20,7 @@
         <thead>
         <tr>
             {% for key, column in data|first %}
-                <th nowrap>{{ key  | replace({'_': ' '}) | capitalize }}</th>
+                <th>{{ key  | replace({'_': ' '}) | capitalize }}</th>
             {% endfor %}
         </tr>
         </thead>
