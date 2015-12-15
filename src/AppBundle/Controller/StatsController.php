@@ -21,31 +21,67 @@ class StatsController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $connection = $this->get('em')->getConnection();
-
-        $sql = 'SELECT
+        $rows = $this->getQueryResults(
+            'SELECT
             u.id as user_id, u.email, u.firstname, u.lastname,
             u.registration_date as created_at,
             u.active as is_active,
-            length(u.address1)>0 as has_details,
-            COUNT(c.id)>0 as has_client,
-            COUNT(r.id) as reports,
-            COUNT(r.submitted)>0 as has_report_submitted
+            length(u.address1)>0 as has_details
             FROM dd_user u
-            LEFT JOIN deputy_case dc ON u.id= dc.user_id
-            LEFT JOIN client c ON c.id = dc.client_id
-            LEFT JOIN report r ON r.client_id=c.id
             WHERE u.role_id=2
-            GROUP BY (u.id)
-            ORDER BY u.id DESC;';
+            ORDER BY u.id DESC;');
 
-        $ret = $connection->query($sql)->fetchAll();
+        // add data
+        foreach ($rows as &$row) {
+            $userId = $row['user_id'];
 
-        return $ret;
+            // reports
+            $reports = $this->getQueryResults(
+                'SELECT * from report r
+                LEFT JOIN client c ON r.client_id = c.id
+                LEFT JOIN deputy_case dc ON dc.client_id = ' . $userId);
 
+            $reportsSubmitted = array_filter($reports, function ($report) {
+                return $report['submitted'];
+            });
+            $reportsUnsubmitted = array_filter($reports, function ($report) {
+                return !$report['submitted'];
+            });
 
+            $row['reports_unsubmitted'] = count($reportsUnsubmitted);
+            $row['reports_submitted'] = count($reportsSubmitted);
+
+            // bank accounts
+            foreach ($reportsUnsubmitted as $reportId) {
+                $banks = $this->getQueryResults(
+                    'SELECT a.bank_name, COUNT(at.id)
+                    FROM account a
+                    LEFT JOIN account_transaction at ON at.account_id = a.id
+                    WHERE a.report_id = ' . $reportId['id'] . '
+                    AND at.amount IS NOT NULL
+                    GROUP BY (a.id)');
+            }
+            $row['reports_unsubmitted_bank_accounts'] = count($banks);
+            $row['reports_unsubmitted_completed_transactions'] = array_sum(array_map(function ($b) {
+                return $b['count'];
+            }, $banks));
+
+        }
+
+        return $rows;
     }
-    
 
-    
+    /**
+     * @param $sql
+     *
+     * @return array
+     */
+    private function getQueryResults($sql)
+    {
+        $connection = $this->get('em')->getConnection();
+
+        return $connection->query($sql)->fetchAll();
+    }
+
+
 }
