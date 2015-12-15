@@ -480,7 +480,7 @@ class Client
     /**
      * Get reports
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Report[]
      */
     public function getReports()
     {

@@ -452,5 +452,61 @@ class Account
         return $this->report;
     }
 
+    /**
+     * Get account balance offset
+     */
+    public function getBalanceOffset()
+    {
+        return ($this->closingBalance - $this->getCurrentBalance());
+    }
+    
+    /**
+     * Gets current account balance
+     * @return integer $balance
+     */
+    public function getCurrentBalance()
+    {
+        $balance = 0;
+        
+        
+        return $balance;
+    }
+
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    public function setTransactions($transactions)
+    {
+        $this->transactions = $transactions;
+        return $this;
+    }
+    
+    /**
+     * @param AccountTransaction $transaction
+     */
+    public function addTransaction(AccountTransaction $transaction)
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * @return AccountTransaction[]
+     */
+    public function getMoneyIn()
+    {
+        return $this->getTransactions()->filter(function(AccountTransaction $transaction) {
+            return $transaction->getTransactionType() instanceof AccountTransactionTypeIn;
+        });
+    }
+
 
 }
