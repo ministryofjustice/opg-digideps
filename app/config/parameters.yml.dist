@@ -28,6 +28,7 @@ parameters:
     use_redis: true
     session_prefix: application_session
     ga: null
+    opg_docker_tag: 0.0.0
     behat_controller_enabled: true
     log_level: info
     log_path: /var/log/app/application.log
