@@ -88,9 +88,11 @@ class StatsControllerTest extends AbstractTestController
         $first = array_shift($data);
         $this->assertArrayHasKey('is_active', $first);
         $this->assertArrayHasKey('email', $first);
+        $this->assertArrayHasKey('total_reports', $first);
         $this->assertArrayHasKey('active_reports', $first);
-        $this->assertArrayHasKey('active_reports_bank_accounts', $first);
-        $this->assertArrayHasKey('active_reports_transactions', $first);
+        $this->assertArrayHasKey('active_reports_due', $first);
+        $this->assertArrayHasKey('active_reports_added_bank_accounts', $first);
+        $this->assertArrayHasKey('active_reports_added_transactions', $first);
     }
 
 }
