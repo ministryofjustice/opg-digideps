@@ -68,15 +68,15 @@ form:
       label: Sale of property
       moreInformations: For each property, give the address, the date it was sold and the value
     sale-of-investment:
-      label: Sale of investment
+      label: Sale of investments
       moreInformations: For each investment, give a description, the date it was sold and the value
     sale-of-asset:
-      label: Sale of asset
+      label: Sale of assets
       moreInformations: For each asset, give a description, the date it was sold and the value
     moving-money:
       label: Moving money
     transfers-in-from-client-s-other-accounts:
-      label: Transfers in from client's other accounts
+      label: Transfers from client's other accounts
       moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
     refunds:
       label: Refunds
@@ -194,12 +194,14 @@ form:
       label: Loans
     credit-cards-charges:
       label: Credit cards charges
+    unpaid-care-fees:
+      label: Unpaid care fees
     arrears:
       label: Arrears
     tax-payments-to-hmrc:
       label: Tax payments to HMRC
     transfers-out-to-other-accounts:
-      label: Transfers out to other accounts
+      label: Transfers to client's other accounts
       moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
     cash-withdrawn:
       label: Cash withdrawn

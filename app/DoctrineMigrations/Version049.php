@@ -91,7 +91,6 @@ class Version049 extends AbstractMigration
                 ],
                 'care-and-medical' => [
                     ['care-fees'],
-                    ['care-fees-arrears'],
                     ['local-authority-charges-for-care'],
                     ['medical-expenses'],
                     ['medical-insurance'],
@@ -123,6 +122,7 @@ class Version049 extends AbstractMigration
                 'debt-and-charges' => [
                     ['bank-charges'],
                     ['credit-cards-charges'],
+                    ['unpaid-care-fees'],
                     ['loans'],
                     ['tax-payments-to-hmrc'],
                     ['debt-and-charges-other', true],
