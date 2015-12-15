@@ -22,14 +22,22 @@ class StatsController extends RestController
         $ret = [];
         $this->denyAccessUnlessGranted(EntityDir\Role::ADMIN);
 
-        $deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
-        $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
+        //$deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
+        // pre-join data to reduce number of queries
+        // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
+        $qb = $this->get('em')->createQuery(
+            "SELECT u, c, r, a, t, role FROM AppBundle\Entity\User u
+                LEFT JOIN u.role role
+                LEFT JOIN u.clients c
+                LEFT JOIN c.reports r
+                LEFT JOIN r.accounts a
+                LEFT JOIN a.transactions t
+                WHERE role.role = 'ROLE_LAY_DEPUTY'");
+        $users = $qb->getResult();
 
-//        $qb = $this->get('em')->createQueryBuilder();
-//        $qb->select('count(user.id)');
-//        $qb->from('AppBundle\Entity\User','user');
-//
-//        $count = $qb->getQuery()->getSingleScalarResult();
+        // alternative without join and lazy-loading
+        // $deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
+        // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
 
         foreach ($users as $user) { /** @var $user EntityDir\User */
             $row = [
