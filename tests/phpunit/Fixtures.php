@@ -92,12 +92,15 @@ class Fixtures
         foreach ($settersMap as $k=>$v) {
             $ret->$k($v);
         }
+
+        // REMOVE THIS ON ACOUNTS_Mk2
+        $this->em->getRepository('AppBundle\Entity\Account')->addEmptyTransactionsToAccount($ret);
+
         $this->em->persist($ret);
         
         return $ret;
     }
-    
-    
+
     /**
      * @return EntityDir\Contact
      */
@@ -200,6 +203,11 @@ class Fixtures
     public function getRepo($entity)
     {
          return $this->em->getRepository("AppBundle\\Entity\\{$entity}");
+    }
+
+    public function getConnection()
+    {
+        return $this->em->getConnection();
     }
     
 }
