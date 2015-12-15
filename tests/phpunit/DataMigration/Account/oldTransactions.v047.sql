@@ -1013,14 +1013,6 @@ COPY asset (id, report_id, description, asset_value, last_edit, title, valuation
 SELECT pg_catalog.setval('asset_id_seq', 1, false);
 
 
---
--- Data for Name: audit_log_entry; Type: TABLE DATA; Schema: public; Owner: api
---
-
-COPY audit_log_entry (id, performed_by_user_id, user_edited_id, performed_by_user_name, performed_by_user_email, ip_address, created_at, action, user_edited_name, user_edited_email) FROM stdin;
-1	2	\N	Admin User	admin@publicguardian.gsi.gov.uk	192.168.59.3	2015-12-03 16:36:28	login	\N	\N
-2	2	4	Admin User	admin@publicguardian.gsi.gov.uk	192.168.59.3	2015-12-03 16:36:39	user_add	eee ccc	elvis.ciotti@digital.justice.gov.uk
-\.
 
 
 --
@@ -1099,10 +1091,9 @@ SELECT pg_catalog.setval('court_order_type_id_seq', 2, true);
 --
 
 COPY dd_user (id, role_id, firstname, lastname, password, email, active, salt, registration_date, registration_token, email_confirmed, token_date, address1, address2, address3, address_postcode, address_country, phone_main, phone_alternative, last_logged_in, deputy_no) FROM stdin;
-1	5	AD user	AD surname	9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==	ad@publicguardian.gsi.gov.uk	t	\N	2015-12-03 14:22:49		\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-3	2	Lay Deputy	User	igYBkwGpWwBgl+LmEbwWA7UnwUIWBbfwXd/X42/Pr3Ila/SwO7WorqTdy1PBss82ViGfgN5dXoRA+/7JL5u7bg==	laydeputy@publicguardian.gsi.gov.uk	t	\N	2015-12-03 14:22:49		\N	\N	plat house	lyon road	\N	ha12ex	GB	123456789754	\N	2015-12-03 16:28:26	\N
-2	1	Admin	User	9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==	admin@publicguardian.gsi.gov.uk	t	\N	2015-12-03 14:22:49		\N	\N	\N	\N	\N	\N	\N	\N	\N	2015-12-03 16:36:28	\N
-4	2	eee	ccc	9k4PZrYAhWIMcVCELlGk/xJmzYtFLGmta924lBP/VvM4T7sfEDomfn373dueeyh+CADl/aPlzOQV0h+3h1N3Wg==	elvis.ciotti@digital.justice.gov.uk	t	\N	2015-12-03 16:36:38		\N	2015-12-03 16:36:38	plat house	lyon road	\N	ha12ex	GB	123456789754	\N	2015-12-03 16:37:12	\N
+1	5	AD user	AD surname	test	test1@publicguardian.gsi.gov.uk	t	\N	2015-12-03 14:22:49		\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+3	2	Lay Deputy	User	test	test2@publicguardian.gsi.gov.uk	t	\N	2015-12-03 14:22:49		\N	\N	plat house	lyon road	\N	ha12ex	GB	123456789754	\N	2015-12-03 16:28:26	\N
+4	2	eee	ccc	test	test3@publicguardian.gsi.gov.uk	t	\N	2015-12-03 16:36:38		\N	2015-12-03 16:36:38	plat house	lyon road	\N	ha12ex	GB	123456789754	\N	2015-12-03 16:37:12	\N
 \.
 
 

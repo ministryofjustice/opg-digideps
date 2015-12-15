@@ -17,7 +17,7 @@ class AccountMigrationTest extends WebTestCase
         // import database at version 4 with some old account and transactions
         $export = "export PGHOST=postgres; export PGPASSWORD=api; export PGDATABASE=digideps_unit_test; export PGUSER=api;";
         exec("$export psql -U api -c 'DROP SCHEMA IF EXISTS public cascade'", $out1);
-        exec("$export psql -U api < ".__DIR__."/oldTransactions.sql" , $out2);
+        exec("$export psql -U api < ".__DIR__."/oldTransactions.v047.sql" , $out2);
 
         //migrate from version 47 (that will test the migration too)
         exec('php app/console doctrine:migrations:migrate --no-interaction --env=test 051');
@@ -81,9 +81,6 @@ class AccountMigrationTest extends WebTestCase
 
         // get updated data
         $reports = $this->am->getReports();
-
-//        file_put_contents(__DIR__ . '/input.txt', print_r($this->initialReports, true));
-//        file_put_contents(__DIR__ . '/output.txt', print_r($reports, true));
 
         //report 1
         $report = $reports[1];
