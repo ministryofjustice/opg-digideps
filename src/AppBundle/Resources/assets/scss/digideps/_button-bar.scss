@@ -38,8 +38,20 @@ form .form-group.button-bar {
     
 }
 
-.button {
-    @include core-19();
+.button-secondary {
+    @include button($grey-3);
+}
+
+.button-warning {
+    @include button($red);
+    margin-left: 60px;
+}
+
+.button-link {
+    line-height: 2.5;
+    margin-left: 15px;
+    top: 1px;
+    position: relative;
 }
 
 nav#bottom-button-bar {
@@ -58,16 +70,6 @@ nav#bottom-button-bar {
 
 #bottom-overview-button {
     margin-top: 30px;
-}
-
-.button-link {
-    margin-left: 15px;
-    top: 1px;
-    position: relative;
-}
-
-.button-warning {
-    margin-left: 60px;
 }
 
 .right-link {

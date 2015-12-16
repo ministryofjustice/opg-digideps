@@ -1,18 +1,20 @@
-FROM registry.service.dsd.io/opguk/php-fpm:0.1.124
+FROM registry.service.dsd.io/opguk/php-fpm:0.1.128
 
-RUN curl --silent --location https://deb.nodesource.com/setup_0.12 | bash -
+# adds nodejs pkg repository
+RUN  curl --silent --location https://deb.nodesource.com/setup_4.x | bash -
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis \
-     nodejs dos2unix postgresql-client && \
+     dos2unix postgresql-client \
+     nodejs ruby && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
+#upgrade npm
+RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
-RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  npm install --global gulp
-RUN  apt-get install -y ruby
 RUN  gem install sass scss_lint
 
 # build app dependencies
@@ -51,3 +53,4 @@ ADD  docker/my_init.d /etc/my_init.d
 RUN  chmod a+x /etc/my_init.d/*
 
 ENV  OPG_SERVICE client
+ENV  OPG_DOCKER_TAG 0.0.0

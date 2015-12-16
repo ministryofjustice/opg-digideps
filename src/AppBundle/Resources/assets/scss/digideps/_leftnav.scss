@@ -45,8 +45,7 @@ $darkblue: #175ea5;
         h3:first-child,
         h4:first-child,
         h5:first-child,
-        p:first-child
-        {
+        p:first-child {
             margin-top: 0;
         }
         
@@ -54,18 +53,3 @@ $darkblue: #175ea5;
     
 }
 
-.page-section-title-container {
-
-    @extend %contain-floats;
-
-    h1 {
-        @include bold-36();
-        float: left;
-    }
-
-    #helpline {
-        float: right;
-    }
-
-
-}

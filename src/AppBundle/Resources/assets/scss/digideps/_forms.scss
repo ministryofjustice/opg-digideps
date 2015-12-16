@@ -29,7 +29,7 @@ form {
                 }
             }
         }
-
+        
         .form-group {
 
             textarea.form-control {
@@ -107,8 +107,6 @@ form {
 }
 
 .form-group {
-    position: relative;
-
     float: none; /* Only flat left if within a form container. */
     form & {
         float: left;
@@ -248,10 +246,8 @@ ul.form-hint {
 
 .input-group-prefix {
     @include core-19();
-    margin: 0;
+    margin: 2px 0 0 2px;
     position: absolute;
-    left: 2px;
-    bottom: 2px;
     width: 10px;
     background: $grey-3;
     padding: 5px 9px 4px 8px;
@@ -263,8 +259,7 @@ ul.form-hint {
     }
     
     .error & {
-        margin-top: 4px;
-        left: 17px;
+        margin: 4px 0 0 4px;
     }
 }
 

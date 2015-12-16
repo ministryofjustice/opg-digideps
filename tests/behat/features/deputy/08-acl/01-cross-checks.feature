@@ -12,7 +12,7 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
             | login_email     | behat-user@publicguardian.gsi.gov.ukk |
             | login_password  | Abcd1234 |
         And I click on "login"
-        Then I should see the "header errors" region
+        Then I should see an "#error-summary" element
         And I should be on "/login"
 
 

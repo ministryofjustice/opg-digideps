@@ -113,6 +113,9 @@ form:
       label: Mortgage
     accommodation-service-charge:
       label: Accommodation service charge
+    accommodation-other:
+      label: Other
+      moreInformations: Give us more information
     buildings-or-contents-insurance:
       label: Buildings or contents insurance
     care-fees:
@@ -147,6 +150,9 @@ form:
       label: Day trips
     tax-payments-to-hmrc:
       label: Tax payments to HMRC
+    debt-and-charges-other:
+      label: Other
+      moreInformations: Give us more information
     deputy-security-bond:
       label: Deputy security bond
     solicitor-fees:
@@ -187,6 +193,8 @@ form:
       label: Loans
     credit-cards-charges:
       label: Credit cards charges
+    unpaid-care-fees:
+      label: Unpaid care fees
     arrears:
       label: Arrears
     tax-payments-to-hmrc:
