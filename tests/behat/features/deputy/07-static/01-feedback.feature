@@ -18,6 +18,7 @@ Feature:  provide feedback
             | feedback_satisfactionLevel_1 | Satisfied |
         And I press "feedback_save"
         Then the form should be valid
+        And I should see a "#feedback-thankyou" element
         And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "I found it to be really easy"
         And the last email should contain "I think it needs an iPhone app"
@@ -28,21 +29,41 @@ Feature:  provide feedback
     Scenario: I give feedback on all fields including email and it is emailed to OPG
         Given I am not logged in
         And I reset the email log
-        And I am on the feedback page
+        # wrong email
+        When I am on the feedback page
         And I fill in the following:
+            | feedback_emailYesNo_0 | yes |
             | feedback_email | wron |
         And I press "feedback_save"
         Then the following fields should have an error:
             |feedback_email |
+        When I am on the feedback page
+        # empty email
         When I am on the feedback page
         And I fill in the following:
             | feedback_difficulty | I found it to be really easy |
             | feedback_ideas | I think it needs an iPhone app |
             | feedback_help_3 | No, I filled in this form myself |
             | feedback_satisfactionLevel_1 | Satisfied |
+            | feedback_emailYesNo_0 | no |
             | feedback_email | behat-feedback-sender-custom@publicguardian.gsi.gov.uk |
         And I press "feedback_save"
         Then the form should be valid
+        And I should see a "#feedback-thankyou" element
+        And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
+        And the last email should not contain "behat-feedback-sender-custom@publicguardian.gsi.gov.uk"
+        # add email
+        When I am on the feedback page
+        And I fill in the following:
+            | feedback_difficulty | I found it to be really easy |
+            | feedback_ideas | I think it needs an iPhone app |
+            | feedback_help_3 | No, I filled in this form myself |
+            | feedback_satisfactionLevel_1 | Satisfied |
+            | feedback_emailYesNo_0 | yes |
+            | feedback_email | behat-feedback-sender-custom@publicguardian.gsi.gov.uk |
+        And I press "feedback_save"
+        Then the form should be valid
+        And I should see a "#feedback-thankyou" element
         And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "behat-feedback-sender-custom@publicguardian.gsi.gov.uk"
 
@@ -56,6 +77,7 @@ Feature:  provide feedback
             | feedback_help_3 | No, I filled in this form myself |
         And I press "feedback_save"
         Then the form should be valid
+        And I should see a "#feedback-thankyou" element
         And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "No, I filled in this form myself"
     
@@ -91,4 +113,5 @@ Feature:  provide feedback
             | feedback_difficulty | I found it to be really easy |
         And I press "feedback_save"
         Then the form should be valid
+        And I should see a "#feedback-thankyou" element
         And the "Back to deputy report" link url should contain "/client"

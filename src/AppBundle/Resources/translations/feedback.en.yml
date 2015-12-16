@@ -6,7 +6,8 @@ ideas.label: Do you have any ideas for how it could be improved?
 
 satisfactionLevel.legend: Overall, how did you feel about the service you received today?
 help.legend: Did you have any help filling in this form?
-email.label: If you need someone to contact you please provide your email address
+emailYesNo.label: Do you need someone to contact you ?
+email.label: Please provide your email address
 back.label: Back to deputy report
 send.label: Send feedback
 
