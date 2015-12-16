@@ -923,7 +923,7 @@ class Report
 
 
     /**
-     * @param AccountTransaction $transaction
+     * @param Transaction $transaction
      */
     public function addTransaction(Transaction $transaction)
     {
@@ -938,7 +938,7 @@ class Report
     /**
      * @param string $transactionTypeId
      *
-     * @return AccountTransaction
+     * @return Transaction
      */
     public function getTransactionByTypeId($transactionTypeId)
     {
