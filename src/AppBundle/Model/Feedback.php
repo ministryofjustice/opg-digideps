@@ -27,6 +27,11 @@ class Feedback
      */
     private $help;
 
+    /**
+     * @JMS\Type("string")
+     */
+    private $email;
+
 
     public function getDifficulty()
     {
@@ -71,4 +76,22 @@ class Feedback
         $this->help = $help;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @param mixed $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+
 }

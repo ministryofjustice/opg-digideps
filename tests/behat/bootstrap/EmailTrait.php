@@ -199,4 +199,16 @@ trait EmailTrait
         }
     }
 
+    /**
+     * @Then the last email should not contain :text
+     */
+    public function mailNoContainsText($text)
+    {
+        $mailContent = $this->getEmailMockFromApi()['parts'][0]['body'];
+
+        if (strpos($mailContent, $text) !== FALSE) {
+            throw new \Exception("Text: $text unexpected in email. Body: \n $mailContent");
+        }
+    }
+
 }
