@@ -2,11 +2,11 @@ page:
     htmlTitle: "Deputy report - safeguarding | GOV.UK"
     safeguardInfoSaved: Your changes were saved
     pageSectionTitle: Safeguarding
-    pageSectionDescription: Tell us about how the client is cared for and what contact they have with you and other people. We need to know how you check whether their needs are met. We ask this because OPG has a duty to protect people who don't have the mental capacity to make decisions for themselves.
+    pageSectionDescription: Tell us about how %client% is cared for and what contact they have with you and other people. We need to know how you check whether their needs are met. We ask this because OPG has a duty to protect people who don't have the mental capacity to make decisions for themselves.
     safeguardinfoSaved: Safeguarding information has been saved.
 form:
     contact:
-        subSectionTitle: Contact with the client?
+        subSectionTitle: Contact with %client%
     saveAndContinue.label: Save and continue to accounts
 
 
@@ -16,23 +16,23 @@ once_a_month: At least once a month
 more_than_twice_a_year: More than twice a year
 once_a_year: Once a year
 less_than_once_a_year: Less than once a year
-client_pays_for_all: Client pays for all their own care
+client_pays_for_all: %client% pays for all their own care
 
 
-doYouLiveWithClient.label: Do you live with the client?
-howOftenDoYouVisit.label: How often do you or other deputies visit the client?
-howOftenDoYouPhoneOrVideoCall.label: How often do you or other deputies phone or video call the client?
-howOftenDoYouWriteEmailOrLetter.label: How often do you or other deputies write emails or letters to the client?
-howOftenDoesClientSeeOtherPeople.label: How often does the client see other people?
+doYouLiveWithClient.label: Do you live with %client%?
+howOftenDoYouVisit.label: How often do you or other deputies visit %client%?
+howOftenDoYouPhoneOrVideoCall.label: How often do you or other deputies phone or video call %client%?
+howOftenDoYouWriteEmailOrLetter.label: How often do you or other deputies write emails or letters to %client%?
+howOftenDoesClientSeeOtherPeople.label: How often does %client% see other people?
 anythingElseToTell.label: Is there anything else you want to tell us? (optional)
-doesClientReceivePaidCare.label: Does the client receive care which is paid for?
+doesClientReceivePaidCare.label: Does %client% receive care which is paid for?
 doesClientReceivePaidCare.hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
 howIsCareFunded.label: How is the care funded?
-client_gets_financial_help: Client gets some financial help (for example, from the local authority NHS)
+client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
 all_care_is_paid_by_someone_else: All care is paid for by someone else (for example, by the local authority or NHS)
 whoIsDoingTheCaring.label: Who is doing the caring?
 whoIsDoingTheCaring.hint: For example, local authority or private residential care, live-in or visiting care workers, family members.
-doesClientHaveACarePlan.label: Does the client have a care plan?
+doesClientHaveACarePlan.label: Does %client% have a care plan?
 whenWasCarePlanLastReviewed:
     label: When was the care plan last reviewed?
     hint: (MM/YYYY)

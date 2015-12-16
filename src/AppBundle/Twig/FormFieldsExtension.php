@@ -104,14 +104,19 @@ class FormFieldsExtension extends \Twig_Extension
         //get legendText translation. Look for a .legend value, if there isn't one then try the top level
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
         
-        if ($legendTextTrans != $translationKey.'.legend') {
-            $legendText = $legendTextTrans;
+        if (isset($vars['legendText'])) {
+            $legendText = $vars['legendText'];
         } else {
-            $legendTextTrans = $this->translator->trans($translationKey . '.label', [],$domain);
-            if ($legendTextTrans != $translationKey.'.label') {
+
+            if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
-                $legendText = null;
+                $legendTextTrans = $this->translator->trans($translationKey . '.label', [], $domain);
+                if ($legendTextTrans != $translationKey . '.label') {
+                    $legendText = $legendTextTrans;
+                } else {
+                    $legendText = null;
+                }
             }
         }
         

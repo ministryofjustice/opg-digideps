@@ -6,7 +6,7 @@
 
 {{ form_start(editForm, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
-    <h3 class="heading-medium">{{ subSectionTitleText | trans }}</h3>
+    <h3 class="heading-medium">{{ subSectionTitleText | trans({'%client%':client.firstname}, translationDomain) }}</h3>
 
     {{ form_input(editForm.value, 'form.newAsset.controls.value', {
         'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
