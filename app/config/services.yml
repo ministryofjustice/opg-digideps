@@ -82,6 +82,7 @@ services:
         class: AppBundle\Form\FeedbackType
         calls:
             - [ setTranslator, [@translator] ]
+            - [ setSecurityContext, [@security.context] ]
         tags:
             - { name: form.type, alias: feedback }
     app.form.type.feedbackReport:
