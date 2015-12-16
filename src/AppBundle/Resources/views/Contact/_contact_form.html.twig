@@ -11,7 +11,9 @@
     {{ form_errors_list(form) }}
 
     {{ form_input(form.contactName, 'contactName') }}
-    {{ form_input(form.relationship, 'relationship') }}
+    {{ form_input(form.relationship, 'relationship', {
+        'labelText': 'relationship.label' | trans({'%client%':client.firstname}, translationDomain)    
+    }) }}
     {{ form_input(form.explanation, 'explanation', {inputClass: 'expanding'}) }}
     {{ form_input(form.address, 'address') }}
     {{ form_input(form.address2, 'address2') }}
