@@ -1,0 +1,136 @@
+
+
+.pagination {
+    display: block;
+    padding: 2em 0 0 0;
+    margin: 4em 0 0 0;
+    border-top: 1px solid #bfc1c3
+}
+
+@media (max-width: 640px) {
+    .pagination {
+        margin: 2em 0 0 0
+    }
+}
+
+.pagination ul {
+    margin: 0;
+    padding: 0
+}
+
+.pagination li {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.14286;
+    font-weight: 400;
+    text-transform: none;
+    float: left;
+    list-style: none;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    width: 49%
+}
+
+@media (min-width: 641px) {
+    .pagination li {
+        font-size: 16px;
+        line-height: 1.25
+    }
+}
+
+.pagination li a {
+    background-color: transparent;
+    display: block;
+    color: #005ea5;
+    text-decoration: none
+}
+
+.pagination li a:hover, .pagination li a:active {
+    background-color: #f8f8f8
+}
+
+.pagination li a .pagination-label {
+    font-family: "nta", Arial, sans-serif;
+    font-size: 20px;
+    line-height: 1.11111;
+    font-weight: 400;
+    text-transform: none;
+    margin-bottom: 0.1em;
+    display: block
+}
+
+@media (min-width: 641px) {
+    .pagination li a .pagination-label {
+        font-size: 27px;
+        line-height: 1.25
+    }
+}
+
+.pagination li a .pagination-part-title {
+    text-decoration: underline
+}
+
+.pagination li.next {
+    float: right;
+    text-align: right
+}
+
+.pagination li.next a:before {
+    background: transparent url(https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-0fa429eadf557102b8e1ca6bf7220f7e61812efbc4f52ed40e5aedd11474635f.png) no-repeat -102px -11px;
+    margin: -4px -32px 0 0;
+    display: block;
+    float: right;
+    width: 30px;
+    height: 38px;
+    content: " "
+}
+
+.pagination li.previous a:before {
+    background: transparent url(https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-0fa429eadf557102b8e1ca6bf7220f7e61812efbc4f52ed40e5aedd11474635f.png) no-repeat -20px -11px;
+    margin: -4px 0 0 -32px;
+    display: block;
+    float: left;
+    width: 30px;
+    height: 38px;
+    content: " "
+}
+
+.pagination li.previous {
+    float: left;
+    text-align: left
+}
+
+.pagination li.previous a {
+    padding: 0.75em 0 0.75em 3em
+}
+
+.pagination li.next a {
+    padding: 0.75em 3em 0.75em 0
+}
+
+@media (max-width: 640px) {
+    .pagination li.previous, .pagination li.next {
+        float: none;
+        width: 100%
+    }
+    .pagination li.next a {
+        text-align: right
+    }
+}
+
+.pagination .first, .pagination .last {
+    min-height: 4.5em
+}
+
+.pagination .first span, .pagination .last span {
+    display: block;
+    min-height: 4.5em;
+    padding: 0.75em 5%;
+    width: 90%
+}
+
+.pagination .first .pagination-label, .pagination .last .pagination-label {
+    display: block;
+    margin-bottom: 0.5em
+}
