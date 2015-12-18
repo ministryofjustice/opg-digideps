@@ -1,0 +1,77 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+<div class="hero orange compact" style="color: #FFF; font-size: 2em">
+    <div class="hero-column">
+    {{ 'balance.incomplete.alertBox' | trans }}
+    </div>
+</div>
+
+<p class="page-section-description">
+    {{ 'balance.incomplete.pageSectionDescription' | trans | nl2br }}
+</p>
+
+    
+{% if not report.hasMoneyIn %}
+    <div>
+      <a href="{{ path('accounts_moneyin', {'reportId': report.id}) }}">
+        <h3>{{ 'balance.incomplete.moneyIn.title' | trans }}</h3>
+        <span class="edit-link" href="{{ path('accounts_moneyin', {'reportId': report.id}) }}" style="float: right">
+            {{ 'balance.incomplete.moneyIn.addLink' | trans }}
+        </span>
+        <p class="sub-section-description">
+            {{ 'balance.incomplete.moneyIn.description' | trans({
+                '%client%': client.fullname
+            }) }}
+        </p>
+       </a>         
+    </div>
+{% endif %}
+
+{% if not report.hasMoneyOut %}
+    <div>
+      <a href="{{ path('accounts_moneyout', {'reportId': report.id}) }}">
+        <h3 >{{ 'balance.incomplete.moneyOut.title' | trans }}</h3>
+        <span class="edit-link" href="{{ path('accounts_moneyout', {'reportId': report.id}) }}" style="float: right">
+            {{ 'balance.incomplete.moneyOut.addLink' | trans }}
+        </span>
+        <p class="sub-section-description">
+            {{ 'balance.incomplete.moneyOut.description' | trans({
+                '%client%': client.fullname
+            }) }}
+        </p>
+             </a>         
+    </div>
+{% endif %}
+
+
+{% if not report.hasAccounts %}
+    <div>
+      <a href="{{ path('accounts', {'reportId': report.id}) }}">
+        <h3 >{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
+        <span class="edit-link" href="{{ path('accounts', {'reportId': report.id}) }}" style="float: right">
+            {{ 'balance.incomplete.noAccounts.addLink' | trans }}
+        </span>
+        <p class="sub-section-description">
+            {{ 'balance.incomplete.noAccounts.description' | trans({
+                '%client%': client.fullname
+            }) }}
+        </p>
+             </a>         
+    </div>
+{% elseif report.getAccountsWithNoClosingBalance %}
+    <div>
+        <h3 >{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
+        <ul class="card-list">
+        {% for account in report.getAccountsWithNoClosingBalance %}
+                    {% include 'AppBundle:Account:bank-list-item-incomplete.html.twig' with {
+                account: account,
+                report: report
+            }%}
+
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+

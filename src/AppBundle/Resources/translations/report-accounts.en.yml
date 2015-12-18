@@ -55,6 +55,26 @@ balance:
     totalOutInPeriod: Total money out during the reporting period
     finalBalance: Balance after money in and money out
     actualBalance: Total balance from all bank accounts
+    incomplete:
+        alertBox: Accounts incomplete
+        pageSectionDescription: |
+            We don't have all the information we need to balance your accounts
+            We still need you to tell us about:
+        moneyIn:
+            title: Money in
+            description: You need to tell us about money that has come into %client%'s accounts during the reporting period
+            addLink: Add money in
+        moneyOut:
+            title: Money out
+            description: You need to tell us about money that has gone out of %client%'s accounts during the reporting period
+            addLink: Add money out
+        noAccounts:
+            title: Bank accounts
+            description: You need to give details of at least 1 bank account that you use on behalf of %client%
+            addLink: Add bank accounts
+        accounts:
+            missing: Tell us how much money was in the account on %closingDate%
+            editLink: Edit this account
     
 banks:
     nextSection: Money in

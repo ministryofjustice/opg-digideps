@@ -94,8 +94,11 @@ class AccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         
         $report = $this->getReport($reportId, [ 'basic', 'balance']);
+        $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
+        $report->setAccounts($accounts);
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");

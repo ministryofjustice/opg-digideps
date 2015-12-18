@@ -1,0 +1,22 @@
+{% set translationDomain = "report-accounts" %}
+{% trans_default_domain translationDomain %}
+
+{% embed "AppBundle:Components/Listing:_card_item.html.twig" %}
+    {% block card %}
+        <div class="account card-title">{{ account.bank }} {{ account.accountType }}</div>
+        <dl class="labelvalue">
+            <dt class="label">{{ 'banks.accountNumber' | trans({}, translationDomain) }}:</dt>
+            <dd class="value">0000{{ account.accountNumber }}</dd>
+            <dt class="label">{{ 'banks.sortCode' | trans({}, translationDomain) }}:</dt>
+            <dd class="value">{{ account.sortCode }}</dd>
+        </dl>
+    {% endblock %}
+    {% block meta %}
+        {{ 'balance.incomplete.accounts.missing' | trans({
+             '%closingDate%': (account.closingDate | date)
+        }, translationDomain) }}
+        <a class="edit-link" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">
+            {{ 'balance.incomplete.accounts.editLink' | trans({}, translationDomain) }}
+        </a>
+    {% endblock %}
+{% endembed %}
