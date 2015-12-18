@@ -19,10 +19,7 @@
 }
 
 .pagination li {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 14px;
-    line-height: 1.14286;
-    font-weight: 400;
+    @include core-19();
     text-transform: none;
     float: left;
     list-style: none;
@@ -32,17 +29,10 @@
     width: 49%
 }
 
-@media (min-width: 641px) {
-    .pagination li {
-        font-size: 16px;
-        line-height: 1.25
-    }
-}
-
 .pagination li a {
     background-color: transparent;
     display: block;
-    color: #005ea5;
+    color: $link-colour;
     text-decoration: none
 }
 
@@ -51,20 +41,10 @@
 }
 
 .pagination li a .pagination-label {
-    font-family: "nta", Arial, sans-serif;
-    font-size: 20px;
-    line-height: 1.11111;
-    font-weight: 400;
+    @include core-27();
     text-transform: none;
     margin-bottom: 0.1em;
     display: block
-}
-
-@media (min-width: 641px) {
-    .pagination li a .pagination-label {
-        font-size: 27px;
-        line-height: 1.25
-    }
 }
 
 .pagination li a .pagination-part-title {
