@@ -5,8 +5,11 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form in-page-form behat-region-no-assets-selected' } }) }}
 
-    <p class="page-section-description ">{{ 'no_assets.description'| trans }}</p>
-    {{ form_checkbox(form.noAssetToAdd,'no_assets', { 'labelClass': 'required'}) }}
+    <p class="page-section-description ">{{ 'no_assets.description'| trans({'%client%':client.firstname}, translationDomain) }}</p>
+    {{ form_checkbox(form.noAssetToAdd,'no_assets', { 
+        'labelClass': 'required',
+        'labelText': 'no_assets.label' | trans({'%client%':client.firstname}, translationDomain)
+    }) }}
 
     {{ form_submit(form.saveNoAsset,'save') }}
 

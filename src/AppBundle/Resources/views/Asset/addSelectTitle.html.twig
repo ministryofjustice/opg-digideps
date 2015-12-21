@@ -5,16 +5,13 @@
     
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }}{% endblock %}
     
     {% block pageBody %}
 
-        
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
-        
+        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%':client.firstname}, translationDomain) }}</p>
+
+
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'asset-form-add-select-title' } }) }}
         
           <h3 class="heading-medium">{{ 'page.subSectionTitleAdd' | trans({}, translationDomain) }}</h3>
