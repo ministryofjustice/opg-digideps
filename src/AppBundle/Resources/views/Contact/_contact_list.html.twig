@@ -10,7 +10,7 @@
             </div>
             <dl class="report-list__item-fields">
                 <div class="report-list__item-fields-row">
-                    <dt class="report-list__item-fields-term">{{ 'view_contact.relationship' | trans }}</dt>
+                    <dt class="report-list__item-fields-term">{{ 'view_contact.relationship' | trans({'%client%':client.firstname}, translationDomain) }}</dt>
                     <dd class="report-list__item-fields-description">{{ contact.relationship }}</dd>
                 </div>
                 <div class="report-list__item-fields-row">

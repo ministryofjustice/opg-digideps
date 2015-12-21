@@ -8,7 +8,7 @@
     
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }}{% endblock %}
     
     {% block pageBody %}
         

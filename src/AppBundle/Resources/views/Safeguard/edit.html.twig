@@ -9,12 +9,9 @@
 
 
 {% block pageBody %}
-    
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}
 
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%':client.firstname}, translationDomain) }}</p>
+    
     {% block validationSummary %}
         {{ form_errors_list(form) }}
     {% endblock %}
@@ -25,12 +22,13 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({}, translationDomain) }}</h3>
+    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({'%client%':client.firstname}, translationDomain)  }}</h3>
 
     <div class="form-section">
         {{ form_checkbox_group(form.doYouLiveWithClient, 'doYouLiveWithClient', {
             'fieldSetClass' : 'inline do-you-live-radio',
             'legendClass' : 'form-label',
+            'legendText' : 'doYouLiveWithClient.label' | trans({'%client%':client.firstname}, translationDomain),
             'items': [
                 {'labelClass': 'block-label', 'elementClass': '' },
                 {'labelClass': 'block-label', 'elementClass': '' }
@@ -39,16 +37,19 @@
         <div id="visit-questions">
             {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
                 'legendClass' : 'form-label',
+                'legendText' : 'howOftenDoYouVisit.label' | trans({'%client%':client.firstname}, translationDomain),
                 'vertical': true
             }) }}
 
             {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
                 'legendClass' : 'form-label',
+                'legendText' : 'howOftenDoYouPhoneOrVideoCall.label' | trans({'%client%':client.firstname}, translationDomain),
                 'vertical': true
             }) }}
 
             {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
                 'howOftenDoYouWriteEmailOrLetter', {
+                'legendText' : 'howOftenDoYouWriteEmailOrLetter.label' | trans({'%client%':client.firstname}, translationDomain),
                 'legendClass' : 'form-label',
                 'vertical': true
             }) }}
@@ -56,6 +57,7 @@
             {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople,
                 'howOftenDoesClientSeeOtherPeople', {
                 'legendClass' : 'form-label',
+                'legendText' : 'howOftenDoesClientSeeOtherPeople.label' | trans({'%client%':client.firstname}, translationDomain),
                 'vertical': true
             }) }}
 
@@ -68,6 +70,7 @@
         {{ form_checkbox_group(form.doesClientReceivePaidCare, 'doesClientReceivePaidCare', {
             'fieldSetClass' : 'inline does-client-receive-care',
             'legendClass' : 'form-label',
+            'legendText' : 'doesClientReceivePaidCare.label' | trans({'%client%':client.firstname}, translationDomain),
             'items': [
                 {'labelClass': 'block-label', 'elementClass': '' },
                 {'labelClass': 'block-label', 'elementClass': '' }
@@ -93,6 +96,7 @@
         {{ form_checkbox_group(form.doesClientHaveACarePlan, 'doesClientHaveACarePlan', {
             'fieldSetClass' : 'inline care-plan',
             'legendClass' : 'form-label',
+            'legendText' : 'doesClientHaveACarePlan.label' | trans({'%client%':client.firstname}, translationDomain),
             'items': [
                 {'labelClass': 'block-label', 'elementClass': '' },
                 {'labelClass': 'block-label', 'elementClass': '' }
