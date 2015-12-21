@@ -42,7 +42,14 @@
             {% endif %}
         {% endif %}
 
-        {% include 'AppBundle:Contact:_continue.html.twig' with {'report': report} %}
+        {% if (contacts is empty and report.reasonForNoContacts() is not empty ) or (contacts is not empty) %}
+            {% include 'AppBundle:Components:nextprevious.html.twig' with {
+            'previousLink': path("contacts" , {'reportId': report.id }),
+            'previousLabel': 'Contacts',
+            'nextLink': path("safeguarding" , {'reportId': report.id }),
+            'nextLabel': 'Safeguarding'
+            } %}
+        {% endif %}
 
     {% endblock %}
 

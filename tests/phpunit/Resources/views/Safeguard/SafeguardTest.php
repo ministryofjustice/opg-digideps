@@ -5,7 +5,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
 
-class SafeguardContinueTest extends WebTestCase
+class SafeguardTest extends WebTestCase
 {
     public function setUp() {
         $client = static::createClient([ 'environment' => 'test',
@@ -27,15 +27,21 @@ class SafeguardContinueTest extends WebTestCase
             ->getMock();
 
 
-        $html = $this->twig->render('AppBundle:Safeguard:_continue.html.twig', [
+        $html = $this->twig->render('AppBundle:Safeguard:edit.html.twig', [
             'report' => $report,
             'action' => 'list'
         ]);
 
         $crawler = new Crawler($html);
 
-        $this->assertCount(1, $crawler->filter('#continue-button'));
-        $this->assertEquals("/report/1/accounts", $crawler->filter('#continue-button')->eq(0)->attr('href'));
+        $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
+        $this->assertEquals("Contacts", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
+
+
+        $this->assertCount(1, $crawler->filter('nav.pagination .next'));
+        $this->assertEquals("/report/1/safeguarding", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals("Safeguarding", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
 
     }
 
@@ -51,14 +57,15 @@ class SafeguardContinueTest extends WebTestCase
             ->getMock();
 
 
-        $html = $this->twig->render('AppBundle:Safeguard:_continue.html.twig', [
+        $html = $this->twig->render('AppBundle:Safeguard:edite.html.twig', [
             'report' => $report,
             'action' => 'list'
         ]);
 
         $crawler = new Crawler($html);
 
-        $this->assertCount(0, $crawler->filter('#continue-button'));
+        $this->assertCount(0, $crawler->filter('nav.pagination .next'));
+        $this->assertCount(0, $crawler->filter('nav.pagination .previous'));
 
 
     }

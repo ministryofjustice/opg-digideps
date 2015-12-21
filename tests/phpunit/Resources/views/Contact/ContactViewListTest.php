@@ -32,7 +32,7 @@ class ContactViewListTest extends WebTestCase
     // Continue Button
 
     /** @test */
-    public function showContinueWhenThereAreContacts() {
+    public function showNextPreviousWhenThereAreContacts() {
 
         $contact = $this->getMockContact();
 
@@ -52,13 +52,19 @@ class ContactViewListTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $this->assertCount(1, $crawler->filter('#continue-button'));
-        $this->assertEquals("/report/1/safeguarding", $crawler->filter('#continue-button')->eq(0)->attr('href'));
+        $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
+        $this->assertEquals("Contacts", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
+
+
+        $this->assertCount(1, $crawler->filter('nav.pagination .next'));
+        $this->assertEquals("/report/1/safeguarding", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals("Safeguarding", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
 
     }
 
     /** @test */
-    public function showContinueWhenNoContactsAndReason() {
+    public function showNextPreviousWhenNoContactsAndReason() {
 
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
@@ -76,14 +82,20 @@ class ContactViewListTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
+        
+        $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
+        $this->assertEquals("Contacts", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
 
-        $this->assertCount(1, $crawler->filter('#continue-button'));
-        $this->assertEquals("/report/1/safeguarding", $crawler->filter('#continue-button')->eq(0)->attr('href'));
+
+        $this->assertCount(1, $crawler->filter('nav.pagination .next'));
+        $this->assertEquals("/report/1/safeguarding", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals("Safeguarding", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
 
     }
 
     /** @test */
-    public function showContinueWhenNoContactsNoReasonAndDue() {
+    public function showNextPreviousWhenNoContactsNoReasonAndDue() {
 
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
@@ -102,7 +114,8 @@ class ContactViewListTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $this->assertCount(0, $crawler->filter('#continue-button'));
+        $this->assertCount(0, $crawler->filter('nav.pagination .next'));
+        $this->assertCount(0, $crawler->filter('nav.pagination .previous'));
     }
 
 

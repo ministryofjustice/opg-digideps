@@ -32,7 +32,7 @@ class DecisionViewListTest extends WebTestCase
     // Continue Button
     
     /** @test */
-    public function showContinueWhenThereAreDecisions() {
+    public function showNextWhenThereAreDecisions() {
 
         $decision = $this->getMockDecision();
                        
@@ -52,13 +52,14 @@ class DecisionViewListTest extends WebTestCase
 
         $crawler = new Crawler($html);
         
-        $this->assertCount(1, $crawler->filter('#continue-button'));
-        $this->assertEquals("/report/1/contacts", $crawler->filter('#continue-button')->eq(0)->attr('href'));
+        $this->assertCount(1, $crawler->filter('nav.pagination .next'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals("Contacts", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
         
     }
 
     /** @test */
-    public function showContinueWhenNoDecisionAndReason() {
+    public function showNextWhenNoDecisionAndReason() {
 
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
@@ -77,13 +78,14 @@ class DecisionViewListTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $this->assertCount(1, $crawler->filter('#continue-button'));
-        $this->assertEquals("/report/1/contacts", $crawler->filter('#continue-button')->eq(0)->attr('href'));
+        $this->assertCount(1, $crawler->filter('nav.pagination .next'));
+        $this->assertEquals("/report/1/contacts", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals("Contacts", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
 
     }
     
     /** @test */
-    public function showContinueWhenNoDecisionsNoReasonAndDue() {
+    public function dontShowNextWhenNoDecisionsNoReasonAndDue() {
 
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
@@ -102,7 +104,7 @@ class DecisionViewListTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $this->assertCount(0, $crawler->filter('#continue-button'));
+        $this->assertCount(0, $crawler->filter('nav.pagination .next'));
     }
     
     

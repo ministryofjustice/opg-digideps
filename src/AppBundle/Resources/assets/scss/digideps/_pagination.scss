@@ -1,116 +1,134 @@
-
-
+/* guides pagination */
 .pagination {
     display: block;
+    margin: 2em 0 0 0;
     padding: 2em 0 0 0;
-    margin: 4em 0 0 0;
-    border-top: 1px solid #bfc1c3
-}
+    border-top: 1px solid $border-colour;
 
-@media (max-width: 640px) {
-    .pagination {
-        margin: 2em 0 0 0
+    @include media-down(mobile) {
+        margin: 1em 0 0 0;
+        padding: 1em 0 0 0;
     }
-}
 
-.pagination ul {
-    margin: 0;
-    padding: 0
-}
-
-.pagination li {
-    @include core-19();
-    text-transform: none;
-    float: left;
-    list-style: none;
-    text-align: right;
-    margin: 0;
-    padding: 0;
-    width: 49%
-}
-
-.pagination li a {
-    background-color: transparent;
-    display: block;
-    color: $link-colour;
-    text-decoration: none
-}
-
-.pagination li a:hover, .pagination li a:active {
-    background-color: #f8f8f8
-}
-
-.pagination li a .pagination-label {
-    @include core-27();
-    text-transform: none;
-    margin-bottom: 0.1em;
-    display: block
-}
-
-.pagination li a .pagination-part-title {
-    text-decoration: underline
-}
-
-.pagination li.next {
-    float: right;
-    text-align: right
-}
-
-.pagination li.next a:before {
-    background: transparent url(https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-0fa429eadf557102b8e1ca6bf7220f7e61812efbc4f52ed40e5aedd11474635f.png) no-repeat -102px -11px;
-    margin: -4px -32px 0 0;
-    display: block;
-    float: right;
-    width: 30px;
-    height: 38px;
-    content: " "
-}
-
-.pagination li.previous a:before {
-    background: transparent url(https://assets.digital.cabinet-office.gov.uk/static/arrow-sprite-0fa429eadf557102b8e1ca6bf7220f7e61812efbc4f52ed40e5aedd11474635f.png) no-repeat -20px -11px;
-    margin: -4px 0 0 -32px;
-    display: block;
-    float: left;
-    width: 30px;
-    height: 38px;
-    content: " "
-}
-
-.pagination li.previous {
-    float: left;
-    text-align: left
-}
-
-.pagination li.previous a {
-    padding: 0.75em 0 0.75em 3em
-}
-
-.pagination li.next a {
-    padding: 0.75em 3em 0.75em 0
-}
-
-@media (max-width: 640px) {
-    .pagination li.previous, .pagination li.next {
-        float: none;
-        width: 100%
+    ul {
+        margin: 0;
+        padding: 0;
     }
-    .pagination li.next a {
-        text-align: right
+
+    li {
+        @include core-19($line-height: (20 / 19));
+        float: left;
+        list-style: none;
+        text-align: right;
+        margin: 0;
+        padding: 0;
+        width: 49%;
+
+        a {
+            background-color: transparent;
+            display: block;
+            color: $link-colour;
+            text-decoration: none;
+
+            @include ie-lte(7) {
+                height: 4.5em;
+            }
+
+            &:hover,
+            &:active {
+                background-color: $canvas-colour;
+            }
+
+            .pagination-label {
+                @include core-27($line-height: (33.75 / 27));
+                margin-bottom: 0.1em;
+                display: block;
+            }
+
+            .pagination-part-title {
+                text-decoration: underline;
+            }
+        }
+
+        &.next {
+            float: right;
+            text-align: right;
+        }
+
+        &.next a:before {
+            background: transparent file-url("arrow-sprite.png") no-repeat -102px -11px;
+            margin: -4px -32px 0 0;
+            display: block;
+            float: right;
+            width: 30px;
+            height: 38px;
+            content: " ";
+        }
+
+        &.previous a:before {
+            background: transparent file-url("arrow-sprite.png") no-repeat -20px -11px;
+            margin: -4px 0 0 -32px;
+            display: block;
+            float: left;
+            width: 30px;
+            height: 38px;
+            content: " ";
+        }
+
+        &.previous {
+            float: left;
+            text-align: left;
+        }
+
+        &.previous a {
+            padding: 0.75em 0 0.75em 3em;
+        }
+
+        &.next a {
+            padding: 0.75em 3em 0.75em 0;
+        }
+
+        @include media-down(mobile) {
+            &.previous,
+            &.next {
+                float: none;
+                width: 100%;
+            }
+
+            &.next a {
+                text-align: right;
+            }
+        }
     }
-}
 
-.pagination .first, .pagination .last {
-    min-height: 4.5em
-}
+    .first,
+    .last {
+        min-height: 4.5em;
 
-.pagination .first span, .pagination .last span {
-    display: block;
-    min-height: 4.5em;
-    padding: 0.75em 5%;
-    width: 90%
-}
+        @include ie-lte(7) {
+            height: 4.5em;
+        }
 
-.pagination .first .pagination-label, .pagination .last .pagination-label {
-    display: block;
-    margin-bottom: 0.5em
+        span {
+            display: block;
+            min-height: 4.5em;
+            padding: 0.75em 5%;
+            width: 90%;
+
+            @include ie-lte(7) {
+                height: 4.5em;
+            }
+        }
+
+        .pagination-label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+    }
+
+    @include ie(6) {
+        .first {
+            text-align: left;
+        }
+    }
 }
