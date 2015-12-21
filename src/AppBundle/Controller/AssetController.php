@@ -186,6 +186,7 @@ class AssetController extends AbstractController
         
         return [
             'form' => $form->createView(),
+            'client' => $report->getClientObject(),
             'report' => $report
         ];
     }
