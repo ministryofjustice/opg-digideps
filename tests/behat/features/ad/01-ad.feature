@@ -20,7 +20,6 @@ Feature: admin / admin
         When I open the "/user/activate/" link from the email
         Then the response status code should be 200
         And I save the page as "ad-step1"
-        And the "set_password_email" field should contain "behat-ad-user@publicguardian.gsi.gov.uk"
         # only testing the correct case, as the form is the same for deputy
         When I fill in the following: 
             | set_password_password_first   | Abcd1234 |

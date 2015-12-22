@@ -13,7 +13,11 @@
     <span class="status {{ state }}">{{ status }}</span>
 
     <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" href="{{ path(subSection, {reportId: report.id}) }}" >
-        {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+        {% if state == 'not-started' %}
+            {{ (subSection ~ '.start') | trans({}, translationDomain) }}
+        {% else %}
+            {{ (subSection ~ '.edit') | trans({}, translationDomain) }}
+        {% endif %}
     </span>
 
     {%  if description is defined and description %}
