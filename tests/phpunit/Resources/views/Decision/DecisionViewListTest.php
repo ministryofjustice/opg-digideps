@@ -85,7 +85,7 @@ class DecisionViewListTest extends WebTestCase
     }
     
     /** @test */
-    public function dontShowNextWhenNoDecisionsNoReasonAndDue() {
+    /*public function dontShowNextWhenNoDecisionsNoReasonAndDue() {
 
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
@@ -106,7 +106,7 @@ class DecisionViewListTest extends WebTestCase
 
         $this->assertCount(0, $crawler->filter('nav.pagination .next'));
     }
-    
+    */
     
     // Show List or Add
         
