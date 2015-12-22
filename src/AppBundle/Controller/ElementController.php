@@ -103,7 +103,24 @@ class ElementController extends AbstractController
         ];
 
     }
-    
-    
-    
+
+
+    /**
+     * @Route("/hero", name="elements_hero")
+     * @Template("AppBundle:Element:hero.html.twig")
+     */
+    public function heroAction()
+    {
+
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Hero elements']
+
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb
+        ];
+
+    }
 }
