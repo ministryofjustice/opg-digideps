@@ -43,8 +43,13 @@
             {% endif %}
         {% endif %}
         
-        {% include 'AppBundle:Decision:_continue.html.twig' with {'report': report} %}
-        
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'nextLink': path("contacts" , {'reportId': report.id }),
+        'nextLabel': 'Contacts'
+        } %}
     {% endblock %}
 
 {% endembed %}
