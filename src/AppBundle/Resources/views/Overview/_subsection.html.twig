@@ -4,7 +4,7 @@
     {% set allowEdit = true %}
 {% endif %}
 
-<div id="{{ subSection }}-sub-section" class="sub-section">
+<div id="{{ subSection }}-sub-section" class="descriptive-list-item">
     {% if allowEdit == true %}
         <a id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
     {% endif %}
@@ -21,7 +21,7 @@
     </span>
 
     {%  if description is defined and description %}
-        <p class="sub-section-description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%':client.firstname}, translationDomain ) }}</p>
+        <p class="description">{{ (subSection ~ '.subSectionDescription') | trans({'%client%':client.firstname}, translationDomain ) }}</p>
     {%  endif %}
 
 

@@ -40,13 +40,13 @@ $darkblue: #175ea5;
         @include grid-column(3 / 4);
         border-left: 1px solid $grey-2;
 
-        h1:first-child,
-        h2:first-child,
-        h3:first-child,
-        h4:first-child,
-        h5:first-child,
-        p:first-child,
-        div:first-child {
+        > h1:first-child,
+        > h2:first-child,
+        > h3:first-child,
+        > h4:first-child,
+        > h5:first-child,
+        > p:first-child,
+        > div:first-child {
             margin-top: 0;
         }
         
