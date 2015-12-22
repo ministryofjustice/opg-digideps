@@ -48,7 +48,14 @@
             'showAddForm': true,
             'form': form
         } %}
-        
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'nextLink': path("contacts" , {'reportId': report.id }),
+        'nextLabel': 'Contacts'
+        } %}
     {% endblock %}
 
 {% endembed %}

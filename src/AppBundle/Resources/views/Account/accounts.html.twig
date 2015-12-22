@@ -36,12 +36,7 @@ activeTab: "tab-accounts"
         {% if accounts is not empty %}
             {% include 'AppBundle:Account:_listAccounts.html.twig' %}
         {% endif %}
-
-        {% include 'AppBundle:Account:_continue.html.twig' with {
-        'report': report,
-        'action' : action
-        } %}
-
+        
     {% endblock %}
 
 {% endembed %}
