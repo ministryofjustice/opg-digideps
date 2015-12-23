@@ -24,4 +24,13 @@
 
     {% endblock %}
 
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("accounts_moneyin" , {'reportId': report.id }),
+        'previousLabel': 'Money in',
+        'nextLink': path("accounts_balance" , {'reportId': report.id }),
+        'nextLabel': 'Balance accounts'
+        } %}
+    {% endblock %}
+
 {% endembed %}
