@@ -48,7 +48,7 @@ class SectionsTest extends WebTestCase
         ]);
         
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#decisions-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#decisions-sub-section .description');
        
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -69,7 +69,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#contacts-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#contacts-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -90,7 +90,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#safeguarding-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#safeguarding-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -110,7 +110,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#accounts-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#accounts-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -131,7 +131,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#assets-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#assets-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 

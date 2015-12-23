@@ -23,60 +23,32 @@
             </p>
         </header>
     </div>
+
     <div class="grid-row">
         <div class="column-two-thirds">
             <h2 class="heading-small heading-contents">Contents:</h2>
             <ul class="list list-contents">
                 <li>
-                    <a href="#left-tabnav">Left tabbed nav</a>
+                    <a href="#left-tabnav">Left tabbed navigation</a>
+                </li>
+                <li>
+                    <a href="#nextprev">Next/Previous navigation</a>
+                </li>
+                <li>
+                    <a href="#descriptive">Descriptive list item</a>
+                </li>
+                <li>
+                    <a href="#cards">Card list</a>
                 </li>
             </ul>
         </div>
     </div>
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <h3 class="heading-large">Left tabbed nav</h3>
-            <p>This provides a split navigation with a list of sub-sections on the left hand side, with a highlight for the current section,
-            and a main content section on the right hand side. The CSS looks for the first title, or paragraph, in the right side content area 
-            and sets it top margin to 0 so it lines up with the top of the section and line up with the left tabs</p>
-        </div>
-    </div>
-    <div class="example">
-            {% include 'AppBundle:Element/layout/lefttab:_example.html.twig' %}
-    </div>
-    <div class="html">
-        {% include 'AppBundle:Element/layout/lefttab:_html.html.twig' %}
-    </div>
-
-    <div class="grid-row">
-        <div class="column-two-thirds">
-            <h3 class="heading-large">Next/Previous Navigation</h3>
-            <p>The Next Previous navigation pattern makes it easy to move through each section in a site. The pattern shown is used through sites 
-            in Gov.uk but not listed in styles in the elements guide.</p>
-        </div>
-    </div>
-    <div class="example">
-        <nav class="pagination" role="navigation" aria-label="Pagination">
-            <ul class="group">
-                <li class="previous">
-                    <a title="Navigate to previous part" rel="prev" href="#">
-                        <span class="pagination-label">Previous</span>
-                        <span class="pagination-part-title">Contacts</span>
-                    </a>
-                </li>
-                <li class="next">
-                    <a title="Navigate to next part" rel="next" href="#">
-                        <span class="pagination-label">Next</span>
-                        <span class="pagination-part-title">Safeguarding</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
     
     
-    
-    
+    {% include 'AppBundle:Element/layout:lefttab.html.twig' %}
+    {% include 'AppBundle:Element/layout:nextprev.html.twig' %}
+    {% include 'AppBundle:Element/layout:descriptivelistitem.html.twig' %}
+    {% include 'AppBundle:Element/layout:_cardlist.html.twig' %}
     
     <script src="/prism/prism.js"></script>
 {% endblock %}
