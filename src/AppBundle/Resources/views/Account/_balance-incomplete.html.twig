@@ -2,7 +2,7 @@
 {% trans_default_domain translationDomain %}
 
 <div class="hero yellow">
-    <h2 class="heading">{{ 'balance.incomplete.alertBox' | trans }}</h2>
+    <h2 class="heading heading-medium">{{ 'balance.incomplete.alertBox' | trans }}</h2>
 </div>
 
 <p class="page-section-description">{{ 'balance.incomplete.pageSectionDescription' | trans | nl2br }}</p>
@@ -11,7 +11,7 @@
 {% if not report.hasAccounts %}
     <div class="descriptive-list-item">
         <a href="{{ path('accounts', {'reportId': report.id}) }}">
-            <h3 class="heading">{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
+            <h3 class="heading heading-medium">{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
         <span class="edit-link" href="{{ path('accounts', {'reportId': report.id}) }}" style="float: right">
             {{ 'balance.incomplete.noAccounts.addLink' | trans }}
         </span>
@@ -21,8 +21,8 @@
         </a>
     </div>
 {% elseif report.getAccountsWithNoClosingBalance %}
-    <div class="descriptive-list-item">
-        <h3 class="heading">{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
+    <div>
+        <h3 class="heading heading-medium">{{ 'balance.incomplete.noAccounts.title' | trans }}</h3>
         <ul class="card-list">
             {% for account in report.getAccountsWithNoClosingBalance %}
                 {% include 'AppBundle:Account:bank-list-item-incomplete.html.twig' with {
@@ -37,7 +37,7 @@
 {% if not report.hasMoneyIn %}
     <div class="descriptive-list-item">
         <a href="{{ path('accounts_moneyin', {'reportId': report.id}) }}">
-            <h3 class="heading">{{ 'balance.incomplete.moneyIn.title' | trans }}</h3>
+            <h3 class="heading heading-medium">{{ 'balance.incomplete.moneyIn.title' | trans }}</h3>
         <span class="edit-link" href="{{ path('accounts_moneyin', {'reportId': report.id}) }}" style="float: right">
             {{ 'balance.incomplete.moneyIn.addLink' | trans }}
         </span>
@@ -51,7 +51,7 @@
 {% if not report.hasMoneyOut %}
     <div class="descriptive-list-item">
         <a href="{{ path('accounts_moneyout', {'reportId': report.id}) }}">
-            <h3 class="heading">{{ 'balance.incomplete.moneyOut.title' | trans }}</h3>
+            <h3 class="heading heading-medium">{{ 'balance.incomplete.moneyOut.title' | trans }}</h3>
         <span class="edit-link" href="{{ path('accounts_moneyout', {'reportId': report.id}) }}" style="float: right">
             {{ 'balance.incomplete.moneyOut.addLink' | trans }}
         </span>

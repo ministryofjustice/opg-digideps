@@ -26,7 +26,8 @@ class AccountType extends AbstractType
         ]);
         $builder->add('closingBalance', 'number', [
             'precision' => 2,
-            'invalid_message' => 'account.closingBalance.type'
+            'invalid_message' => 'account.closingBalance.type',
+            'required' => false
         ]);
 
         $builder->add('save', 'submit');

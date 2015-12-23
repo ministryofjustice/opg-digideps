@@ -10,7 +10,6 @@
 
     .heading {
         @include box-sizing(border-box);
-        @include bold-24();
         @include inline-block();
         margin: 20px 10px 15px 5px;
         width: 45%;
@@ -18,7 +17,6 @@
         color: $black;
 
         @include media(mobile) {
-            font-size: 16px;
             width: auto;
             margin: 10px 10px 10px 5px;
         }

@@ -9,7 +9,7 @@
         <a id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
     {% endif %}
     
-    <h3 class="heading">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
+    <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
     <span class="status {{ state }}">{{ status }}</span>
 
     <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" href="{{ path(subSection, {reportId: report.id}) }}" >
