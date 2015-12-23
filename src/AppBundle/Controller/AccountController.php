@@ -96,7 +96,7 @@ class AccountController extends AbstractController
     {
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         
-        $report = $this->getReport($reportId, [ 'basic', 'balance']);
+        $report = $this->getReport($reportId, [ 'basic', 'balance', 'transactionsIn', 'transactionsOut']);
         $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
         $report->setAccounts($accounts);
         
