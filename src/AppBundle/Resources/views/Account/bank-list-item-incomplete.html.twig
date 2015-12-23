@@ -13,7 +13,7 @@
     {% endblock %}
     {% block meta %}
         {{ 'balance.incomplete.accounts.missing' | trans({
-             '%closingDate%': (account.closingDate | date)
+             '%closingDate%': (account.closingDate | date("j M Y"))
         }, translationDomain) }}
         <a class="edit-link" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">
             {{ 'balance.incomplete.accounts.editLink' | trans({}, translationDomain) }}
