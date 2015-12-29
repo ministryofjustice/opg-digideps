@@ -111,13 +111,11 @@
     </div>
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'form.saveAndContinue') }}
+    {{ form_submit(form.save,'form.save') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
-
-    {{form(form)}}
-
+    
     <script type="text/javascript">
         $(document).ready(function() {
             $('.radio-vertical-group').each(function(index, element) {
@@ -142,6 +140,15 @@
         });
     </script>
 
+{% endblock %}
+
+{% block pageBodyFooterNav %}
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("contacts" , {'reportId': report.id }),
+    'previousLabel': 'Contacts',
+    'nextLink': path("accounts" , {'reportId': report.id }),
+    'nextLabel': 'Accounts'
+    } %}
 {% endblock %}
 
 {% endembed %}

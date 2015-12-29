@@ -3,14 +3,13 @@ $darkblue: #175ea5;
 .left-nav-container {
     
     @extend %site-width-container;
-    
-    .row {
-        @extend %grid-row;
-    }
+    @extend %contain-floats;
     
     .left-nav {
-        
-        @include grid-column(1 / 4);
+        box-sizing: border-box;
+        width: 25%;
+        float: left;
+        margin: 0;
         padding: 0;
         
         nav a {
@@ -37,19 +36,23 @@ $darkblue: #175ea5;
     }
     
     .right-content {
-        @include grid-column(3 / 4);
+        box-sizing: border-box;
+        width: 75%;
+        float: left;
+        margin: 0;
+        padding: 0 15px;
         border-left: 1px solid $grey-2;
 
-        h1:first-child,
-        h2:first-child,
-        h3:first-child,
-        h4:first-child,
-        h5:first-child,
-        p:first-child {
+        > h1:first-child,
+        > h2:first-child,
+        > h3:first-child,
+        > h4:first-child,
+        > h5:first-child,
+        > p:first-child,
+        > div:first-child {
             margin-top: 0;
         }
         
     }
     
 }
-
