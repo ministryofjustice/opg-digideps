@@ -11,7 +11,9 @@
                 {% if report.submitted %}
                     {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
                 {% else %}
-                    <a href="{{ linkToReportOverviewPage }}#account-header" class="behat-link-report-{{ report.getPeriod | behat_namify }}">
+                    <a href="{{ linkToReportOverviewPage }}#account-header" 
+                       id="report-{{ report.startDate | date("Y") }}"
+                       class="behat-link-report-{{ report.getPeriod | behat_namify }}">
                         {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
                     </a>
                 {% endif %}
