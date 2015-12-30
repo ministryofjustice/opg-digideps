@@ -2,11 +2,13 @@ FROM registry.service.dsd.io/opguk/php-fpm:0.1.128
 
 RUN  apt-get update && apt-get install -y \
      php-pear php5-curl php5-memcached php5-redis php5-pgsql \
-     nodejs dos2unix postgresql-client && \
+     nodejs dos2unix postgresql-client ruby && \
      apt-get clean && apt-get autoremove && \
      rm -rf /var/lib/cache/* /var/lib/log/* /tmp/* /var/tmp/*
 
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
+
+RUN  gem install sass
 
 # build app dependencies
 COPY composer.json /app/
@@ -41,3 +43,6 @@ RUN  chmod a+x /etc/my_init.d/*
 
 ENV  OPG_SERVICE api
 ADD  docker/beaver.d /etc/beaver.d
+
+RUN mkdir -p /app/src/AppBundle/Resources/views/css
+RUN sass --load-path /app/components/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/css/formatted-report.html.twig

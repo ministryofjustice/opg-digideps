@@ -1,12 +1,24 @@
+$is-ie: false !default;
+$mobile-ie6: true !default;
+
+@import "colours";
+@import "conditionals";
+@import "shims";
+
 @mixin formatted-reg($size) {
     font-size: $size;
     font-family: Helvetica, Arial;
 }
+
 @mixin formatted-bold($size) {
     font-size: $size;
     font-family: Helvetica, Arial;
     font-weight: bold;
 }
+
+@import "digideps/safeguarding";
+@import "digideps/grid";
+@import "digideps/fieldsets";
 
 .formatted-report {
 
@@ -15,6 +27,8 @@
     box-sizing: border-box;
     overflow: hidden;
     color: #000000;
+    max-width: 595px;
+    margin: 0 auto;
 
     #report-header {
         @include formatted-bold(27px);
@@ -59,137 +73,10 @@
     .intro {
         margin-bottom: 10px;
     }
-    .three-quarter-width {
-        width: 75%;
-    }
-    .one-quarter-width {
-        width: 25%;
-    }
-    .half-width {
-        width: 48%;
-        *width: 44%;
-        float: left;
-    }
-    .half-width.right {
-        float: right;
-        margin-left: 2%;
-    }
-    .one-third-width {
-        width: 33%;
-        float: left;
-    }
-    .two-thirds-width {
-        width: 66%;
-        float: left;
-    }
-
 
     .section {
         @extend %contain-floats;
         margin-bottom: 40px;
-    }
-
-    fieldset {
-        @extend %contain-floats;
-        box-sizing: border-box;
-        padding: 10px 20px 0 20px;
-        margin: 20px 0 0 0;
-        border: 0;
-        background: #cdcfcd;
-
-        .left-label {
-            float: left;
-            margin-right: 20px;
-        }
-        .list-label {
-            @include formatted-bold(19px);
-            margin-bottom: 10px;
-        }
-
-        p {
-            margin-bottom: 20px;
-
-            &:first-child {
-                margin-top: 20px;
-            }
-        }
-
-        .half-width {
-            .value, .textarea {
-                width: 85%;
-            }
-        }
-
-        .full-width {
-            clear: both;
-        }
-
-        .checkbox {
-            @include inline-block();
-            @include formatted-bold(18px);
-            background: #fff;
-            width: .75em;
-            padding: 4px 10px 2px 10px;
-            margin-right: 15px;
-            border: solid 1px #000;
-        }
-
-        .checkboxes {
-            h3 {
-                @include formatted-bold(19px);
-                margin-bottom: 5px;
-            }
-            .form-group {
-                display: inline-block;
-                margin-right: 20px;
-            }
-            .form-group.half-width,
-            .form-group.three-quarter-width,
-            .form-group.one-quarter-width,
-            .form-group.one-third-width,
-            .form-group.two-thirds-width {
-                margin-right: 0;
-            }
-            .checkbox {
-                margin-right: 5px;
-            }
-        }
-        .checkboxes.horizontal {
-            .label {
-                display: inline-block;
-            }
-            .label.intro, .intro {
-                display: block;
-            }
-            h3 {
-                margin-bottom: 10px;
-            }
-        }
-    }
-    fieldset.single-field-fieldset {
-        padding: 15px 20px 15px 20px;
-        .label {
-            @include formatted-bold(19px);
-        }
-        .value {
-            float: left;
-            width: 50%;
-        }
-    }
-    fieldset.full-width-extension {
-        float: left;
-        margin-top: 0;
-        width: 100%;
-
-        .textarea {
-            width: 95%;
-        }
-    }
-    fieldset.extended-down {
-        padding-bottom: 20px;
-    }
-    fieldset.assets-total-value {
-        margin-top: 50px;
     }
 
     .form-group {
@@ -223,65 +110,6 @@
         }
     }
 
-    .financial-transactions {
-        background: #cdcfcd;;
-        @extend %contain-floats;
-
-        .transaction {
-            @include formatted-reg(19px);
-            @extend %contain-floats;
-            margin: 0;
-            padding: 10px 0 10px 0;
-            border-bottom: 1px solid #000;
-            
-            &:first-child {
-                margin-top: 0;
-            }
-
-            .transaction-label {
-                width: 70%;
-                float: left;
-                margin-left: 10px;
-            }
-            .transaction-value {
-                @include inline-block();
-                width: 25%;
-            }
-
-
-            .amount {
-                @include inline-block();
-                padding: 2px 10px 2px 10px;
-                width: 110px;
-                background: #fff;
-                @include formatted-reg(18px);
-                color: #454572;
-            }
-
-            .transaction-detail {
-                background: #fff;
-                @include formatted-reg(18px);
-                color: #454572;
-                float: none;
-                margin-top: 5px;
-            }
-        }
-
-        .financial-transactions-total {
-            @include formatted-reg(20px);
-            .financial-transactions-total-label {
-                width: 75%;
-            }
-        }
-
-    }
-
-    #accounts-section {
-        h3 {
-            margin: 40px 0 0 0;
-        }
-    }
-
     .balancing {
         @extend %contain-floats;
         margin-top: 40px;
@@ -298,7 +126,7 @@
             color: #000;
             padding: 12px 0 0 0;
             display: inline;
-            
+
             width: 10%;
             text-align: center;
             vertical-align: middle;
@@ -313,7 +141,7 @@
             border-bottom: none;
             padding: 5px;
             *height: 50px;
-            
+
             .transaction-label {
                 width: 63%;
                 @include formatted-reg(17px);
@@ -325,7 +153,6 @@
                 display: block;
                 @include formatted-reg(17px);
             }
-
 
         }
 
@@ -384,7 +211,7 @@
 
         .asset-item {
             @extend %contain-floats;
-            clear:both;
+            clear: both;
             padding-top: 0;
 
             .form-group.asset-description {
@@ -411,98 +238,10 @@
         }
     }
 
-    table#safeguarding-visits-subsection {
-
-        th,td {
-            box-sizing: border-box;
-            width: 22%;
-
-            &:first-child {
-                width: 34%;
-            }
-        }
-
-
-        thead th {
-            text-align: center;
-            padding: 0 30px;
-        }
-
-        tbody th {
-            text-align: left;
-            font-weight: bold;
-        }
-
-        tr {
-            padding: 10px 0;
-        }
-
-        td {
-            text-align: center;
-
-        }
-
-        .checkbox {
-            margin: 10px 20px;
-        }
-    }
-
-    table.yesno, #safegaurding-care-funding table {
-
-        margin: 10px 0;
-
-        .checkbox {
-            width: .75em;
-        }
-        .label {
-            padding-left: 10px;
-            width: 5em;
-        }
-    }
-
-    #safegaurding-care-funding table .label {
-        width: auto;
-    }
-
-    #safeguarding-contact, #care-arrangements-subsection {
-        margin-top: 10px;
-    }
-
     .fieldset-outer-title {
         margin-top: 30px;
     }
 
-    #safeguarding-contact .intro {
-        font-weight: bold;
-    }
-
-    #safeguarding-visitors-subsection {
-
-        .form-group {
-            box-sizing: border-box;
-            width: 33%;
-            padding-right: 20px;
-            margin-right: 0;
-        }
-
-        table {
-            .checkbox {
-                margin-bottom: 10px;
-            }
-
-            .label  {
-                width: 200px;
-                display:table-cell;
-            }
-        }
-
-
-    }
-
-    #care-plan-subsection .form-group-vertical .value {
-        width: 10em;
-    }
-    
     .question {
         @include formatted-reg(17px);
     }

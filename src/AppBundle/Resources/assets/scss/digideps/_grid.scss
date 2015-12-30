@@ -1,0 +1,23 @@
+.three-quarter-width {
+    width: 75%;
+}
+.one-quarter-width {
+    width: 25%;
+}
+.half-width {
+    width: 48%;
+    *width: 44%;
+    float: left;
+}
+.half-width.right {
+    float: right;
+    margin-left: 2%;
+}
+.one-third-width {
+    width: 33%;
+    float: left;
+}
+.two-thirds-width {
+    width: 66%;
+    float: left;
+}

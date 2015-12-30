@@ -11,22 +11,8 @@
                 'safeguarding': report.safeguarding
             } %}
         {% endif %}
-        {% include 'AppBundle:Report:Formatted/_accounts.html.twig' %}
-        {% include 'AppBundle:Report:Formatted/_transactions.html.twig' with {
-            'section': 7,
-            'type': 'in',
-            'moneyType': 'moneyIn',
-            'transactions': report.transactionsIn,
-            'total':  report.getMoneyInTotal
-        }%}
-        {% include 'AppBundle:Report:Formatted/_transactions.html.twig' with {
-            'section': 8,
-            'type': 'out',
-            'moneyType': 'moneyOut',
-            'transactions': report.transactionsOut,
-            'total':  report.getMoneyOutTotal
-        }%}
-        {% include 'AppBundle:Report:Formatted/_balance.html.twig' %}
+        {% include 'AppBundle:Report:Formatted/Accounts/_good.html.twig' %}
+        {% include 'AppBundle:Report:Formatted/Accounts/_summary.html.twig' %}
         {% include 'AppBundle:Report:Formatted/_assets.html.twig' %}
 
         {% if report.furtherInformation %}
