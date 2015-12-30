@@ -76,8 +76,12 @@ gulp.task('sass.application-print', function () {
 
 });
 gulp.task('sass.images', function(callback) {
+
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
+
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
+        .pipe(gulp.dest('./web/images'));
 
     gulp.src(config.sassSrc + '/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
