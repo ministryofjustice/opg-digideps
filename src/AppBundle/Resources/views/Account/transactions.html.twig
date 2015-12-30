@@ -7,7 +7,7 @@
         {% for category, transactions in transactionsGrouped %}
         <div class="section">
             <div class="summary">
-                <div class="title">{{ ('form.categories.' ~ category)  | trans  }}</div>
+                <div class="title">{{ ('form.categories.' ~ category)  | trans({'%client%':client.firstname}, 'report-transactions')  }}</div>
                 <div class="sub-total">{{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',')}}</span></div>
             </div>
             <div class="detail transactions">
@@ -22,15 +22,16 @@
                         {{ form_row(formTransactions[id].id) }}
                         {{ form_row(formTransactions[id].type) }}
     
-                        {{ form_number(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
+                        {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
+                            'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%':client.firstname}, 'report-transactions'),
                             'formGroupClass': formGroupClass
                         }) }}
     
                         {% if formTransactions[id].moreDetails is defined %}
                             {{ form_input(formTransactions[id].moreDetails, '', {
-                                'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans,
+                                'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans({'%client%':client.firstname}, 'report-transactions'),
                                 'formGroupClass': 'form-group-combo-description',
                                 'inputClass': 'expanding transaction-more-details'
                             }) }}
@@ -51,7 +52,6 @@
         showDelete: false,
         showCancel: false,
         section: 'account',
-        nextSection: subsection ~ '.nextSection'
     } %}
 
 {{ form_end(form) }}
@@ -72,6 +72,7 @@
         $('form').on('submit', function(e) {
             transactionHasChanged = false;
 
+            /*
             $.ajax({
                 url: "{{ path('accounts_money_save_json', {'reportId': report.id, 'type': jsonEndpoint}) }}",
                 type: "put",
@@ -85,6 +86,8 @@
             });
 
             return false;
+            */
+            return true;
         });
         $(window).bind("beforeunload",function() {
             if (transactionHasChanged) return message;

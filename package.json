@@ -10,7 +10,7 @@
     "chai": "*",
     "del": "^2.0.2",
     "event-stream": "^3.3.1",
-    "govuk-elements": "alphagov/govuk_elements",
+    "govuk-elements": "alphagov/govuk_elements#v0.1.1",
     "gulp": "^3.9.0",
     "gulp-concat": "*",
     "gulp-import-css": "^0.1.2",
@@ -24,7 +24,6 @@
     "gulp-watch": "^4.3.5",
     "jquery": "1.11.*",
     "mocha": "*",
-    "moj-template": "ztolley/moj_template",
     "run-sequence": "^1.1.4",
     "sinon": "*"
   }

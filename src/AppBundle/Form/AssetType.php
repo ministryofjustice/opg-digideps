@@ -16,7 +16,8 @@ class AssetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options) 
     {
         $builder->add('title', 'hidden') //use the AssetTypeTile to display the title
-                ->add('value', 'number', [
+                ->add('value', 'number', [ 
+                    'grouping' => true, 
                     'precision' => 2, 
                     'invalid_message' => 'asset.value.type'
                 ])

@@ -30,7 +30,7 @@ currencySymbol: "£"
 banks:
   add:
     pageSectionTitle: Add account
-    pageSectionDescription: Give us details about the client’s account
+    pageSectionDescription: Give us details about %client%’s account
   edit:
     pageSectionTitle: Edit account
-    pageSectionDescription: Give us details about the client’s account
+    pageSectionDescription: Give us details about %client%’s account

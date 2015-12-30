@@ -41,9 +41,15 @@
                 <div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>
             {% endif %}
         {% endif %}
-
-        {% include 'AppBundle:Contact:_continue.html.twig' with {'report': report} %}
-
+        
     {% endblock %}
 
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("decisions" , {'reportId': report.id }),
+        'previousLabel': 'Decisions',
+        'nextLink': path("safeguarding" , {'reportId': report.id }),
+        'nextLabel': 'Safeguarding'
+        } %}
+    {% endblock %}
 {% endembed %}

@@ -25,14 +25,12 @@ class ListAccountsDueTest extends WebTestCase
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(true)
-            ->shouldReceive('getCountValidTotals')->andReturn(0)
             ->getMock();
         
         $account2 = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(true)
-            ->shouldReceive('getCountValidTotals')->andReturn(1)
             ->getMock();
         
         $account3 = m::mock('AppBundle\Entity\Account')

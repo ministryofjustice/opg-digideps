@@ -47,6 +47,7 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
+                    <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
                 {% endif %}
                 
                 {% if is_granted('ROLE_AD') %}

@@ -27,25 +27,31 @@ contacts:
     subSectionTitle: "Contacts"
     subSectionDescription: "Give us the details of people you consulted about %client%"
     edit: "Edit contacts"
+    start: "Start contacts"
 decisions:
     subSectionTitle: "Decisions"
     subSectionDescription: "Add the significant decisions you've made for %client%"
     edit: "Edit decisions"
+    start: "Start decisions"
 accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add details of all income and spending in the reporting period"
     edit: "Edit accounts"
+    start: "Start accounts"
 safeguarding:
     subSectionTitle: "Safeguarding"
     subSectionDescription: "We need to know about your involvement with %client%'s care"
     edit: "Edit safeguarding"
+    start: "Start safeguarding"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Add %client%'s property, investments and other valuables"
     edit: "Edit assets"
+    start: "Start assets"
 report_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"
+    start: "Start sign and submit"
   
 
 additionalInformation:

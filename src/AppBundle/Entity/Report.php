@@ -10,7 +10,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @JMS\ExclusionPolicy("none")
  * @Assert\Callback(methods={"isValidEndDate", "isValidDateRange"})
  */
-class Report {
+class Report
+{
     
     const PROPERTY_AND_AFFAIRS = 2;
     
@@ -974,6 +975,56 @@ class Report {
     public function setBalanceMismatchExplanation($balanceMismatchExplanation)
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
+    }
+    
+    /**
+     ** @return boolean
+     */
+    public function hasAccounts()
+    {
+        return count($this->getAccounts()) > 0;
+    }
+    
+    /**
+     ** @return boolean
+     */
+    public function hasMoneyIn()
+    {
+        return count(array_filter($this->getTransactionsIn()?:[], function($t){
+            return $t->getAmount() !== null;
+        })) > 0;
+    }
+    
+     /**
+     ** @return boolean
+     */
+    public function hasMoneyOut()
+    {
+        return count(array_filter($this->getTransactionsOut()?:[], function($t){
+            return $t->getAmount() !== null;
+        })) > 0;
+    }
+    
+    
+    /**
+     ** @return Account[]
+     */
+    public function getAccountsWithNoClosingBalance()
+    {
+        return array_filter($this->getAccounts(), function($account){
+            /** @var $account Account */
+            return $account->getClosingBalance() === null;
+        });
+    }
+    
+    /**
+     ** @return boolean
+     */
+    public function isIncomplete()
+    {
+        return !$this->hasMoneyIn() 
+            || !$this->hasMoneyOut() 
+            || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
 
     

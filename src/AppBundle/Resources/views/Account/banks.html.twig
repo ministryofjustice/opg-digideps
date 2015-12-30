@@ -12,8 +12,8 @@
     
     {% block maincontent %}
 
-        <h2 class="page-section-title">{{ 'banks.pageSectionTitle' | trans }}</h2>
-        <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans }}</p>
+        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }}</h3>
+        <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans({'%client%':client.firstname}, translationDomain) }}</p>
         
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
@@ -39,10 +39,17 @@
             <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ report.accountsClosingBalanceTotal == null ? '--:--' : (report.accountsClosingBalanceTotal | number_format(2, '.', ',')) }}</dd>
         </dl>
 
-        <div id="save-accounts" class="save-section">
-            <a href="{{ path('accounts_moneyin' , {'reportId': report.id}) }}" class="button">{{ 'save.label' | trans }}</a> <span class="next-section">Next section: <b>{{ 'banks.nextSection' | trans }}</b></span>
-            <div><a href="/report/{{report.id}}/overview" class="button-secondary" id="bottom-overview-button">Save and return to report overview</a></div>
-        </div>
+
     {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("safeguarding" , {'reportId': report.id }),
+        'previousLabel': 'Safeguarding',
+        'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
+        'nextLabel': 'Money in'
+        } %}
+    {% endblock %}
+
 
 {% endembed %}

@@ -8,7 +8,7 @@
     
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }}{% endblock %}
     
     {% block pageBody %}
         
@@ -35,5 +35,12 @@
         {{ form_end(form) }}
         
     {% endblock %}
-
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("accounts_balance" , {'reportId': report.id }),
+        'previousLabel': 'Balance accounts',
+        'nextLink': path("report_overview" , {'reportId': report.id }),
+        'nextLabel': 'Report overview'
+        } %}
+    {% endblock %}
 {% endembed %}

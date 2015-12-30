@@ -11,7 +11,6 @@ Feature: deputy / user / set password
         When I open the "/user/activate/" link from the email
         Then the response status code should be 200
         And I save the page as "deputy-step1"
-        And the "set_password_email" field should contain "behat-user@publicguardian.gsi.gov.uk"
          # empty
         When I fill in the following: 
             | set_password_password_first   |  |
@@ -55,7 +54,7 @@ Feature: deputy / user / set password
             | login_email     | behat-user@publicguardian.gsi.gov.uk |
             | login_password  | Abcd1234 |
         And I press "login_login"
-        Then I should not see the "header errors" region
+        Then I should not see an "#error-summary" element
 
    
     

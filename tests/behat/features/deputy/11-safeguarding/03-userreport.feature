@@ -120,11 +120,11 @@ Feature: Safeguarding OPG Report
         When I load the application status from "safereportsubmitted2"
         And I am logged in as "behat-safe-userreport@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I view the users latest report
-        Then the "Do you live with the client?" question should be answered with "Yes"
-        And I should not see "How often do you or other deputies visit the client?" text
-        And I should not see "How often do you or other deputies phone or vieo call the client?" text
-        And I should not see "How often do you or other deputies write emails or letters to the client?" text
-        And I should not see "How often does the client see other people?" text
+        Then the "Do you live with Peter?" question should be answered with "Yes"
+        And I should not see "How often do you or other deputies visit Peter?" text
+        And I should not see "How often do you or other deputies phone or video call Peter?" text
+        And I should not see "How often do you or other deputies write emails or letters to Peter?" text
+        And I should not see "How often does Peter see other people?" text
         And I should not see "Is there anything else you want to tell us? (optional)" in the "safeguarding" section
         And I save the page as "safeguarding-userreport-live-with-client"
 
@@ -144,11 +144,11 @@ Feature: Safeguarding OPG Report
             | safeguarding_anythingElseToTell | nothing to report |
         And I submit the report with further info "More info."
         And I view the users latest report
-        Then the "Do you live with the client?" question should be answered with "No"
-        Then the "How often do you or other deputies visit the client?" question should be answered with "Every day"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "Every day"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "Every day"
-        Then the "How often does the client see other people?" question should be answered with "Every day"
+        Then the "Do you live with Peter?" question should be answered with "No"
+        Then the "How often do you or other deputies visit Peter?" question should be answered with "Every day"
+        Then the "How often do you or other deputies phone or video call Peter?" question should be answered with "Every day"
+        Then the "How often do you or other deputies write emails or letters to Peter?" question should be answered with "Every day"
+        Then the "How often does Peter see other people?" question should be answered with "Every day"
         And I save the page as "safeguarding-userreport-doesnt-live-with-client"
 
     @safeguarding @user-report @deputy
@@ -167,10 +167,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_anythingElseToTell | nothing to report |
         And I submit the report with further info "More info."
         And I view the users latest report
-        Then the "How often do you or other deputies visit the client?" question should be answered with "at least once a week"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "at least once a week"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "at least once a week"
-        Then the "How often does the client see other people?" question should be answered with "at least once a week"
+        Then the "How often do you or other deputies visit Peter?" question should be answered with "at least once a week"
+        Then the "How often do you or other deputies phone or video call Peter?" question should be answered with "at least once a week"
+        Then the "How often do you or other deputies write emails or letters to Peter?" question should be answered with "at least once a week"
+        Then the "How often does Peter see other people?" question should be answered with "at least once a week"
 
     @safeguarding @user-report @deputy
     Scenario: When dont live with the client, all visists are once a month
@@ -188,10 +188,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_anythingElseToTell | nothing to report |
         And I submit the report with further info "More info."
         And I view the users latest report
-        Then the "How often do you or other deputies visit the client?" question should be answered with "at least once a month"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "at least once a month"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "at least once a month"
-        Then the "How often does the client see other people?" question should be answered with "at least once a month"
+        Then the "How often do you or other deputies visit Peter?" question should be answered with "at least once a month"
+        Then the "How often do you or other deputies phone or video call Peter?" question should be answered with "at least once a month"
+        Then the "How often do you or other deputies write emails or letters to Peter?" question should be answered with "at least once a month"
+        Then the "How often does Peter see other people?" question should be answered with "at least once a month"
 
     @safeguarding @user-report @deputy
     Scenario: When dont live with the client, all visists are twice a year
@@ -209,10 +209,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_anythingElseToTell | nothing to report |
         And I submit the report with further info "More info."
         And I view the users latest report
-        Then the "How often do you or other deputies visit the client?" question should be answered with "more than twice a year"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "more than twice a year"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "more than twice a year"
-        Then the "How often does the client see other people?" question should be answered with "more than twice a year"
+        Then the "How often do you or other deputies visit Peter?" question should be answered with "more than twice a year"
+        Then the "How often do you or other deputies phone or video call Peter?" question should be answered with "more than twice a year"
+        Then the "How often do you or other deputies write emails or letters to Peter?" question should be answered with "more than twice a year"
+        Then the "How often does Peter see other people?" question should be answered with "more than twice a year"
 
     @safeguarding @user-report @deputy
     Scenario: When dont live with the client, all visists are once a year
@@ -230,10 +230,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_anythingElseToTell | nothing to report |
         And I submit the report with further info "More info."
         And I view the users latest report
-        Then the "How often do you or other deputies visit the client?" question should be answered with "once a year"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "once a year"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "once a year"
-        Then the "How often does the client see other people?" question should be answered with "once a year"
+        Then the "How often do you or other deputies visit Peter?" question should be answered with "once a year"
+        Then the "How often do you or other deputies phone or video call Peter?" question should be answered with "once a year"
+        Then the "How often do you or other deputies write emails or letters to Peter?" question should be answered with "once a year"
+        Then the "How often does Peter see other people?" question should be answered with "once a year"
 
     @safeguarding @user-report @deputy
     Scenario: When dont live with the client, all visists are less than once a year
@@ -251,10 +251,10 @@ Feature: Safeguarding OPG Report
             | safeguarding_anythingElseToTell | nothing to report |
         And I submit the report with further info "More info."
         And I view the users latest report
-        Then the "How often do you or other deputies visit the client?" question should be answered with "Less than once a year"
-        Then the "How often do you or other deputies phone or video call the client?" question should be answered with "Less than once a year"
-        Then the "How often do you or other deputies write emails or letters to the client?" question should be answered with "Less than once a year"
-        Then the "How often does the client see other people?" question should be answered with "Less than once a year"
+        Then the "How often do you or other deputies visit Peter?" question should be answered with "Less than once a year"
+        Then the "How often do you or other deputies phone or video call Peter?" question should be answered with "Less than once a year"
+        Then the "How often do you or other deputies write emails or letters to Peter?" question should be answered with "Less than once a year"
+        Then the "How often does Peter see other people?" question should be answered with "Less than once a year"
 
     @safeguarding @user-report @deputy
     Scenario: When dont live with the client, provide extra info
@@ -286,7 +286,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Does the client receive care which is paid for?" question should be answered with "No"
+        Then the "Does Peter receive care which is paid for?" question should be answered with "No"
         And I should not see "How is the care funded?" text
         And I save the page as "safeguarding-userreport-care-not-funded"
 
@@ -302,8 +302,8 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
-        Then the "How is the care funded?" question should be answered with "Client pays for all their own care"
+        Then the "Does Peter receive care which is paid for?" question should be answered with "Yes"
+        Then the "How is the care funded?" question should be answered with "They pay for all their own care"
         And I save the page as "safeguarding-userreport-care-funded"
 
     @safeguarding @user-report @deputy
@@ -318,8 +318,8 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
-        Then the "How is the care funded?" question should be answered with "Client gets some financial help (for example, from the local authority NHS)"
+        Then the "Does Peter receive care which is paid for?" question should be answered with "Yes"
+        Then the "How is the care funded?" question should be answered with "Peter Gets Some Financial Help (For Example, From The Local Authority NHS)"
 
     @safeguarding @user-report @deputy
     Scenario: When care is funded, and all funded from someone else
@@ -333,7 +333,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Does the client receive care which is paid for?" question should be answered with "Yes"
+        Then the "Does Peter receive care which is paid for?" question should be answered with "Yes"
         Then the "How is the care funded?" question should be answered with "All care is paid for by someone else (for example, by the local authority or NHS)"
 
     @safeguarding @user-report @deputy
@@ -364,7 +364,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Does the client have a care plan?" question should be answered with "No"
+        Then the "Does Peter have a care plan?" question should be answered with "No"
         And I should not see "When was the care plan last reviewed?" text
         And I save the page as "safeguarding-userreport-no-care-plan"
 
@@ -381,7 +381,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
-        Then the "Does the client have a care plan?" question should be answered with "Yes"
+        Then the "Does Peter have a care plan?" question should be answered with "Yes"
         Then the "When was the care plan last reviewed?" question should be answered with "02/2015"
         And I save the page as "safeguarding-userreport-care-plan"
 

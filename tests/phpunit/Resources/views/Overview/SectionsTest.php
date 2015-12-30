@@ -48,7 +48,7 @@ class SectionsTest extends WebTestCase
         ]);
         
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#decisions-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#decisions-sub-section .description');
        
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -69,7 +69,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#contacts-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#contacts-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -90,7 +90,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#safeguarding-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#safeguarding-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -110,7 +110,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#accounts-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#accounts-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -131,7 +131,7 @@ class SectionsTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        $descriptionElement = $crawler->filter('#assets-sub-section .sub-section-description');
+        $descriptionElement = $crawler->filter('#assets-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
 
@@ -394,6 +394,270 @@ class SectionsTest extends WebTestCase
     }
     
     
+    /** @test */
+    public function showStartWhenThenAreNoDecisionsOrReason() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getDecisionsState')->andReturn("not-started")
+            ->shouldReceive('getDecisionsStatus')->andReturn("0 Decisions")
+            ->getMock();
+        
+        
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#decisions-sub-section .edit-link');
+
+        $this->assertContains("Start decisions", $linkElement->eq(0)->text());
+    
+    }
+
+    /** @test */
+    public function showEditWhenThenAreDecisions() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getDecisionsState')->andReturn("done")
+            ->shouldReceive('getDecisionsStatus')->andReturn("1 Decision")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#decisions-sub-section .edit-link');
+
+        $this->assertContains("Edit decisions", $linkElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function showStartWhenThenAreNoContactsOrReason() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getContactsState')->andReturn("not-started")
+            ->shouldReceive('getContactsStatus')->andReturn("0 Contacts")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#contacts-sub-section .edit-link');
+
+        $this->assertContains("Start contacts", $linkElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function showEditWhenThenAreContacts() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getContactsState')->andReturn("done")
+            ->shouldReceive('getContactsStatus')->andReturn("1 Contact")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#contacts-sub-section .edit-link');
+
+        $this->assertContains("Edit contacts", $linkElement->eq(0)->text());
+
+    }
+    
+    /** @test */
+    public function showStartWhenThenIsNoSafeguardingData() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getSafeguardingStatus')->andReturn("notstarted")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
+
+        $this->assertContains("Start safeguarding", $linkElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function showEditWhenThenIsSafeguardingData() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getSafeguardingState')->andReturn("done")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
+
+        $this->assertContains("Edit safeguarding", $linkElement->eq(0)->text());
+
+    }
+    
+    /** @test */
+    public function showStartWhenThenAreNoAccounts() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getAccountsState')->andReturn("not-started")
+            ->shouldReceive('getAccountsStatus')->andReturn("0 Accounts")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#accounts-sub-section .edit-link');
+
+        $this->assertContains("Start accounts", $linkElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function showEditWhenThenAreAccountsMidEdit() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getAccountsState')->andReturn("incomplete")
+            ->shouldReceive('getAccountsStatus')->andReturn("1 Accounts")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#accounts-sub-section .edit-link');
+
+        $this->assertContains("Edit accounts", $linkElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function showEditWhenThenAreAccounts() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getAccountsState')->andReturn("done")
+            ->shouldReceive('getAccountsStatus')->andReturn("1 Accounts")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#accounts-sub-section .edit-link');
+
+        $this->assertContains("Edit accounts", $linkElement->eq(0)->text());
+
+    }
+    
+    /** @test */
+    public function showStartWhenThenAreNoAssets() {
+        $this->setupReport();
+
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getAssetsState')->andReturn("not-started")
+            ->shouldReceive('getAssetsStatus')->andReturn("0 Assets")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#assets-sub-section .edit-link');
+
+        $this->assertContains("Start assets", $linkElement->eq(0)->text());
+
+    }
+
+    /** @test */
+    public function showStartWhenThenAreAssets() {
+        $this->setupReport();
+        
+        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getAssetsState')->andReturn("done")
+            ->shouldReceive('getAssetsStatus')->andReturn("1 Assets")
+            ->getMock();
+
+
+        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
+            'report' => $this->report,
+            'reportStatus' => $this->reportStatus,
+            'client' => $this->reportClient
+        ]);
+
+        $crawler = new Crawler($html);
+        $linkElement = $crawler->filter('#assets-sub-section .edit-link');
+
+        $this->assertContains("Edit assets", $linkElement->eq(0)->text());
+
+    }
+   
+   
+   
     private function setupReport() 
     {
         $this->report = m::mock('AppBundle\Entity\Report')

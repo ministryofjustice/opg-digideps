@@ -36,7 +36,6 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
             ]);
-            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId'=>$reportId]) );
         }
 
         $client = $this->getClient($report->getClient());
@@ -72,7 +71,6 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
-            return $this->redirect($this->generateUrl('accounts_balance', ['reportId'=>$reportId]) );
         }
         
         $client = $this->getClient($report->getClient());
@@ -94,8 +92,11 @@ class AccountController extends AbstractController
      */
     public function balanceAction(Request $request, $reportId)
     {
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         
-        $report = $this->getReport($reportId, [ 'basic', 'balance']);
+        $report = $this->getReport($reportId, [ 'basic', 'balance','transactionsIn', 'transactionsOut']);
+        $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
+        $report->setAccounts($accounts);
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
@@ -110,7 +111,6 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' . $reportId, $data, [
                 'deserialise_group' => 'balance_mismatch_explanation'
             ]);
-            return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
         
         $client = $this->getClient($report->getClient());

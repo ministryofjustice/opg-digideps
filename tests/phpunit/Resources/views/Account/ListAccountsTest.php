@@ -26,7 +26,6 @@ class ListAccountsTest extends WebTestCase
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('getBank')->andReturn('hsbc bank')
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(false)
-            ->shouldReceive('getCountValidTotals')->andReturn(0)
             ->getMock();
         
         $account2 = m::mock('AppBundle\Entity\Account')
@@ -34,7 +33,6 @@ class ListAccountsTest extends WebTestCase
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('getBank')->andReturn('halifax bank')
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(false)
-            ->shouldReceive('getCountValidTotals')->andReturn(0)
             ->getMock();
 
         // create WebClient and Crawler

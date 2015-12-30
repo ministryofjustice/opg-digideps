@@ -102,7 +102,6 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"closing_balance"})
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance", "add_edit"})
      * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance", "add_edit"})
      * @JMS\Groups({"balance", "edit_details_report_due","edit_details", "add_edit"})
@@ -473,24 +472,6 @@ class Account
         return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
     }
     
-    /**
-     * @return integer
-     */
-    public function getCountValidTotals()
-    {
-        $ret = 0;
-        
-        foreach ($this->getMoneyIn() as $t) {
-            $ret += $t->getAmount() === null ? 0 : 1;
-        }
-        
-        foreach ($this->getMoneyOut() as $t) {
-            $ret += $t->getAmount() === null ? 0 : 1;
-        }
-
-        return $ret;
-    }
-
     
     /**
      * @return string

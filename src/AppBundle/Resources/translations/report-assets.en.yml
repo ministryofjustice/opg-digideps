@@ -1,7 +1,7 @@
 page:
   htmlTitle: "Deputy report - assets | GOV.UK"
-  pageSectionTitle: "Client's assets"
-  pageSectionDescription: "Add details of any property, savings or investments owned by your client."
+  pageSectionTitle: "%client%'s assets"
+  pageSectionDescription: "Add details of any property, savings or investments owned by %client%."
   pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
   subSectionTitleAdd: Add an asset
@@ -31,9 +31,9 @@ next:
 editLink: "Edit this asset"
 
 no_assets:
-    label: My client has no assets
-    description: If your client has no assets, please click the checkbox below.
-    selected: Your client has no assets
+    label: %client% has no assets
+    description: If %client% has no assets, please click the checkbox below.
+    selected: %client% has no assets
 save:
     label: Save
 cancel:

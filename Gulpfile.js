@@ -16,11 +16,8 @@ var gulp = require('gulp'),
 var config = {
     sass: {
         includePaths: [
-            'node_modules/govuk-elements/public/sass/elements/',
-            'node_modules/govuk-elements/public/sass/elements/forms',
             'node_modules/govuk_frontend_toolkit/stylesheets',
-            'node_modules/govuk__template_mustache/assets/stylesheets',
-            'node_modules/moj-template/source/assets/stylesheets'
+            'node_modules/govuk-elements/public/sass'
         ]
     },
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
@@ -50,7 +47,7 @@ gulp.task('sass.application', function () {
         .pipe(sass(config.sass))
         .pipe(importCss())
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
-    
+
 });
 gulp.task('sass.application-ie7', function () {
 
@@ -79,21 +76,25 @@ gulp.task('sass.application-print', function () {
 
 });
 gulp.task('sass.images', function(callback) {
+
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
-    
+
+    gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/gov.uk_logotype_crown.png')
+        .pipe(gulp.dest('./web/images'));
+
     gulp.src(config.sassSrc + '/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
 
     gulp.src('./node_modules/govuk-elements/public/images/**/*')
         .pipe(gulp.dest('./web/images'));
-    
+
     callback();
 });
 gulp.task('sass.fonts', function() {
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*').pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
     gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css').pipe(gulp.dest(config.webAssets + '/stylesheets'));
-    
+
 });
 
 gulp.task('images', function () {
@@ -108,7 +109,6 @@ gulp.task('js.uglify', function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
-            './node_modules/moj-template/source/assets/javascripts/moj.js',
             config.jsSrc + '/*.js'])
         .pipe(concat('application.js'))
         .pipe(gulp.dest(config.webAssets + '/javascripts'))
@@ -133,7 +133,7 @@ gulp.task('lint.js', function (callback) {
     gulp.src(config.jsSrc + '/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
-    
+
     callback();
 });
 

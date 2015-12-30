@@ -1,0 +1,37 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+{% block pageTitle %}Deputyship Report{% endblock %}
+{% block contentClass %}page-report-content{% endblock %}
+
+{% if (showNav is not defined) %}
+{%     set showNav = true %}
+{% endif %}
+
+{% if (showHelp is not defined) %}
+{%     set showHelp = true %}
+{% endif %}
+
+
+{% block pageContent %}
+    {% block pageHeader %}
+        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
+    {% endblock %}
+
+    <a name="pageBody"></a>
+    
+    {% block pageNavigation %}
+        {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+            'report': report
+        } %}
+    {% endblock %}
+    
+    <div id="page-body">
+       {% block pageBody %}{% endblock %}
+    </div>
+
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("safeguarding" , {'reportId': report.id }),
+    'previousLabel': 'Safeguarding',
+    'nextLink': path("assets" , {'reportId': report.id }),
+    'nextLabel': 'Assets'
+    } %}
+{% endblock %}

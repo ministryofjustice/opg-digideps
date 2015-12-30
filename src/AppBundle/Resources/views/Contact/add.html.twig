@@ -15,12 +15,20 @@
         pageSectionDescription: 'page.pageSectionDescription'
         } %}
 
-       {% include 'AppBundle:Contact:_contact_form.html.twig' with {
-            'translationDomain': translationDomain,
-            'showAddForm': true,
-            'form': form
+        {% include 'AppBundle:Contact:_contact_form.html.twig' with {
+        'translationDomain': translationDomain,
+        'showAddForm': true,
+        'form': form
         } %}
-
     {% endblock %}
 
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("decisions" , {'reportId': report.id }),
+        'previousLabel': 'Decisions',
+        'nextLink': path("safeguarding" , {'reportId': report.id }),
+        'nextLabel': 'Safeguarding'
+        } %}
+    {% endblock %}
+    
 {% endembed %}

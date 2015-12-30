@@ -249,7 +249,7 @@ class ReportController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/display", name="report_display")
-     * @Template()
+     * @Template("AppBundle:Report:display_api.html.twig")
      */
     public function displayAction($reportId, $isEmailAttachment = false)
     {

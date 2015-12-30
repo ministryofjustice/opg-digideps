@@ -29,7 +29,9 @@
         aria-expanded="true" aria-labelledby="tab-overview-panel">
     {% endblock %}
     <a name="pageBody"></a>
-    {{ form_errors_list(form) }}
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
 
     <div id="page-body">
 

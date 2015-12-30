@@ -12,8 +12,8 @@
 
     {% block maincontent %}
 
-        <h2 class="page-section-title">{{ 'moneyOut.pageSectionTitle' | trans }} </h2>
-        <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({'%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
+        <h3 class="heading-medium-large">{{ 'moneyOut.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }} </h3>
+        <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({'%client%':client.firstname, '%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
 
         {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,
@@ -22,6 +22,15 @@
         formTransactions: form.transactionsOut
         } %}
 
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("accounts_moneyin" , {'reportId': report.id }),
+        'previousLabel': 'Money in',
+        'nextLink': path("accounts_balance" , {'reportId': report.id }),
+        'nextLabel': 'Balance accounts'
+        } %}
     {% endblock %}
 
 {% endembed %}

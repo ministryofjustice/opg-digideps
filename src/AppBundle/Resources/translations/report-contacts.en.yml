@@ -9,7 +9,7 @@ contactName:
     label: Contact name
     hint: ''
 relationship:
-    label: Relationship to the client
+    label: Relationship to %client%
     hint: ''
 explanation:
     label: Reason for contact
@@ -57,7 +57,7 @@ no_contact:
 pageTitle: "Deputy report - contacts | GOV.UK"
 view_contact:
     edit: Edit this contact
-    relationship: Relationship to the client
+    relationship: Relationship to %client%
     reason: Reason for contact
     address: Address
     phone: Work phone
