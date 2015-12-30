@@ -41,7 +41,15 @@
 </div>
 
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
-<p class="page-section-description ">{{ 'balance.bad.goBack' | trans({'%client%': client.firstname, '%accountsLink%': path('accounts', {'reportId': report.id}), '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}) }) | raw }}</p>
+<p class="balance-warning page-section-warning">
+    <span class="icon icon__notification"></span>
+    <span class="page-section-description">{{ 'balance.bad.goBack' | trans({
+        '%client%': client.firstname, 
+        '%accountsLink%': path('accounts', {'reportId': report.id}), 
+        '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , 
+        '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}) 
+    }) | raw }}</span>
+</p>
 
 <h3 class="heading-medium">{{ 'balance.bad.cantFind' | trans }}</h3>
 {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}

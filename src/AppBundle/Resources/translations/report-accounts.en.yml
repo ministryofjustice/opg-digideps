@@ -44,7 +44,10 @@ balance:
       summaryBalanceInOut: Balance after total money in and money out
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
-      goBack: Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> matches your records of money coming in and out of %client%’s accounts. You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
+      goBack: |
+         Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> 
+         matches your records of money coming in and out of %client%’s accounts. 
+         You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
       cantFind: Can’t find the problem?
       formtitle:
         label: If you can’t find where the <b>£%difference%</b> has come from, tell us why
