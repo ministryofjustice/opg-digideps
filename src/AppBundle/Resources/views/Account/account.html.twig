@@ -122,7 +122,7 @@ activeTab: "tab-accounts"
             $(".account-transactions").on("keyup input paste", ".form-row input.form-control__number", function(){
                 transactionHasChanged = true;
             });
-            $('form').on('submit', function(e) {
+            $('form#transactions-form').on('submit', function(e) {
                 transactionHasChanged = false;
                 return true;
             });
