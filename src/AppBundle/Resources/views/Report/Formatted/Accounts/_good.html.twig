@@ -2,22 +2,18 @@
 
     <h2><span class="section-number">Section 5:</span> Accounts</h2>
 
-    <div class="hero hero-grey">
+    <div class="hero">
         <h2 class="heading">These accounts balance</h2>
     </div>
 
-    <div class="hero hero-grey split-two">
-        <div class="hero-column">
-            <div class="message">Balance after income and expenditure:</div>
-            <div class="total">£{{ report.calculatedBalance | number_format(2, '.', ',') }}
-            </div>
-        </div>
-        <div class="hero-column">
-            <div class="message">Actual balance from all bank accounts and cash in hand:</div>
-            <div class="total">£{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
-            </div>
-        </div>
+    <div class="hero half-width first">
+        <div class="message">Balance after income and expenditure:</div>
+        <div class="total">£{{ report.calculatedBalance | number_format(2, '.', ',') }}</div>
     </div>
-
-
+    
+    <div class="hero half-width">
+        <div class="message">Actual balance from all bank accounts and cash in hand:</div>
+        <div class="total">£{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}</div>
+    </div>
+    
 </div>

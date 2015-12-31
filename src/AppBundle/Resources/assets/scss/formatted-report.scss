@@ -1,9 +1,11 @@
 $is-ie: false !default;
 $mobile-ie6: true !default;
+$path: "/images";
 
 @import "colours";
 @import "conditionals";
 @import "shims";
+@import "digideps/helpers";
 
 @mixin formatted-reg($size) {
     font-size: $size;
@@ -20,6 +22,7 @@ $mobile-ie6: true !default;
 @import "digideps/label-value";
 @import "digideps/grid";
 @import "digideps/assets";
+@import "digideps/tables";
 
 .formatted-report {
 
@@ -149,7 +152,7 @@ $mobile-ie6: true !default;
         margin-top: 30px;
     }
 
-    .question, th {
+    .question {
         @include formatted-reg(17px);
         font-weight: normal;
         margin: 10px 0 10px 0;

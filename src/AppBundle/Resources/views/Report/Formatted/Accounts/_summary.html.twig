@@ -1,14 +1,14 @@
 <div id="account-summary" class="summary-container">
-    <h3>Summary</h3>
+    <h3 class="heading">Summary</h3>
     <div>
-        <h4>Accounts summary</h4>
-        <table>
+        <h4 class="heading">Accounts summary</h4>
+        <table class="money">
             <thead>
                 <tr>
                     <th scope="col">&nbsp;</th>
-                    <th class="grey numeric" scope="col">Opening balance</th>
-                    <th class="numeric" scope="col">Change</th>
-                    <th class="grey numeric" scope="col">Closing balance</th>
+                    <th class="grey" scope="col">Opening balance</th>
+                    <th class="" scope="col">Change</th>
+                    <th class="grey " scope="col">Closing balance</th>
                 </tr>
             </thead>
             <tbody>
@@ -19,9 +19,9 @@
                         <div class="account-name">{{ account.bank }}</div>
                         <div class="account-number">****{{ account.accountNumber }}, {{ account.sortCode | split('', 2) | join('-') }}</div>
                     </td>
-                    <td class="numeric">£{{ account.openingBalance }}</td>
-                    <td class="numeric">£ {{ (account.closingBalance - account.openingBalance) | number_format(2, '.', ',') }}</td>
-                    <td class="numeric">£{{ account.closingBalance }}</td>
+                    <td class="numeric grey">£{{ account.openingBalance }}</td>
+                    <td class="numeric ">£ {{ (account.closingBalance - account.openingBalance) | number_format(2, '.', ',') }}</td>
+                    <td class="numeric grey">£{{ account.closingBalance }}</td>
                 </tr>
             {% endfor %}
                 <tr class="totals">
@@ -34,8 +34,8 @@
         </table>
     </div>
     <div>
-        <h4>Balance after income and expenditure</h4>
-        <table>
+        <h4 class="heading">Balance after income and expenditure</h4>
+        <table class="money">
             <tbody>
                 <tr>
                     <td>Total of all opening balances:</td>
@@ -49,7 +49,7 @@
                     <td>Total money out:</td>
                     <td class="grey numeric">£{{ report.moneyOutTotal | number_format(2, '.', ',')}}</td>
                 </tr>
-                <tr class="total">
+                <tr class="totals">
                     <td>&nbsp;</td>
                     <td class="numeric reverse">£{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',')}}</td>
                 </tr>
