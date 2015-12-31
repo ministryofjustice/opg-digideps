@@ -15,6 +15,15 @@
         <h3 class="heading-medium-large">{{ 'moneyOut.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }} </h3>
         <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({'%client%':client.firstname, '%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
 
+         {% if not report.hasMoneyOut %}
+            <div>
+                <span class="icon icon__notification_yellow_small"></span>
+                <span class="page-section-description left-margin">
+                    {{ 'moneyOut.noEntriesWarning' | trans({'%client%':client.firstname}, translationDomain)}}
+                </span>  
+            </div>
+        {% endif %}
+        
         {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,
         transactionsGrouped: report.groupByCategory(report.transactionsOut),
