@@ -88,6 +88,7 @@ banks:
     accountNumber: Account number
     totalBalance: Total balance from all accounts
     balanceUnknown: Unknown
+    accountMissingWarning: You must add at least 1 bank account
     balanceMissingWarning: Balance on %date% is missing
     balanceMissingWarningBottom: |
         You will be able to see this total when you have added the balance 

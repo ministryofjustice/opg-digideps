@@ -25,6 +25,13 @@
                             report: report
                         }%}
                     {% endfor %}
+                {% else %}
+                    <div>
+                        <span class="icon icon__notification_yellow_small"></span>
+                        <span class="page-section-description left-margin">
+                            {{ 'banks.accountMissingWarning' | trans({}, translationDomain)}}
+                        </span>  
+                    </div>
                 {% endif %}
                 <li class="card-item">
                     <a href="{{ path('add_account' , {'reportId': report.id}) }}" class="card add">Add account</a>
