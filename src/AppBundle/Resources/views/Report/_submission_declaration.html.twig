@@ -1,7 +1,7 @@
 {% set translationDomain = "report-declaration" %}
 {% trans_default_domain translationDomain %}
 
-<div class="external-report-section external-report-section-declaration">
+<div class="box">
 
     {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
         transDomain: "report-declaration",
@@ -15,9 +15,9 @@
     } %}
 
     <div class="item">
-        <dl class="item-data item-data-fixed">
-            <dt class="item-label">{{ 'status' | trans() }}</dt>
-            <dd class="item-value" id="statusString">
+        <dl class="labelvalue">
+            <dt class="label">{{ 'status' | trans() }}</dt>
+            <dd class="value" id="statusString">
                 {% if (report.isAllAgreed == true) %}
                     {{ 'deputyAgreed' | trans() }}
                 {% else %}
@@ -26,13 +26,13 @@
             </dd>
 
             {% if (report.isAllAgreed == false) %}
-                <dt class="item-label">{{ 'partAgreedReason' | trans() }}</dt>
-                <dd class="item-value">{{ report.reasonNotAllAgreed }}</dd>
+                <dt class="label">{{ 'partAgreedReason' | trans() }}</dt>
+                <dd class="value">{{ report.reasonNotAllAgreed }}</dd>
             {% endif %}
-            <dt class="item-label">{{ 'declarationTime' | trans() }}</dt>
-            <dd class="item-value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
-            <dt class="item-label">{{ 'deputyName' | trans() }}</dt>
-            <dd class="item-value" id="statusDeputyName">{{ deputy.fullname }}</dd>
+            <dt class="label">{{ 'declarationTime' | trans() }}</dt>
+            <dd class="value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>
+            <dt class="label">{{ 'deputyName' | trans() }}</dt>
+            <dd class="value" id="statusDeputyName">{{ deputy.fullname }}</dd>
         </dl>
     </div>
 </div>

@@ -17,12 +17,11 @@ table#safeguarding-visits-subsection {
 
     thead th {
         text-align: center;
-        padding: 0 30px;
+        padding: 0 10px;
     }
 
     tbody th {
         text-align: left;
-        font-weight: bold;
     }
 
     tr {
@@ -31,23 +30,17 @@ table#safeguarding-visits-subsection {
 
     td {
         text-align: center;
-
-    }
-
-    .checkbox {
-        margin: 10px 20px;
+        .checkbox {
+            margin: 5px 0;
+        }
     }
 }
 
 table.yesno, #safegaurding-care-funding table {
 
     margin: 10px 0;
-
-    .checkbox {
-        width: .75em;
-    }
+    
     .label {
-        padding-left: 10px;
         width: 5em;
     }
 }
@@ -70,10 +63,6 @@ table.yesno, #safegaurding-care-funding table {
     }
 
     table {
-        .checkbox {
-            margin-bottom: 10px;
-        }
-
         .label {
             width: 200px;
             display: table-cell;

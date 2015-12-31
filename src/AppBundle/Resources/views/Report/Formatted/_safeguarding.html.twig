@@ -4,7 +4,7 @@
         Safeguarding
     </h2>
     <h3 class="fieldset-outer-title">Contact with client</h3>
-    <fieldset id="safeguarding-contact">
+    <div class="box" id="safeguarding-contact">
         <div id="do-you-live-with-the-client" class="checkboxes horizontal">
             <div class="question">Do you live with the client?</div>
 
@@ -20,7 +20,7 @@
         </div>
 
 {% if safeguarding.doYouLiveWithClient == 'no' %}
-        <div class="intro">If ‘No’, how often do you or other deputies contact the client?</div>
+        <div class="question">If ‘No’, how often do you or other deputies contact the client?</div>
         <table id="safeguarding-visits-subsection">
             <thead>
                 <tr>
@@ -69,9 +69,9 @@
                 </tr>
             </tbody>
         </table>
-    </fieldset>
+    </div>
 
-    <fieldset id="safeguarding-visitors-subsection">
+    <div class="box" id="safeguarding-visitors-subsection">
         <div class="checkboxes horizontal">
             <div class="question">How often does the client see other people</div>
             <table>
@@ -105,19 +105,19 @@
                 </tr>
             </table>
         </div>
-    </fieldset>
+    </div>
 
-    <fieldset id="safeguarding-furtherinfo-subsection">
-        <div class="form-group form-group-vertical">
-            <div class="label intro">Is there anything else you want to tell us? (optional)</div>
-            <div class="textarea safeguarding-furtherinfo-field">{{safeguarding.anythingElseToTell}}</div>
-        </div>
+    <div class="box" id="safeguarding-furtherinfo-subsection">
+        <dl class="labelvalue">
+            <div class="label">Is there anything else you want to tell us? (optional)</div>
+            <div class="value textarea">{{safeguarding.anythingElseToTell}}</div>
+        </dl>
 
 {% endif %}
-    </fieldset>
+    </div>
 
     <h3 class="fieldset-outer-title">Care arrangements</h3>
-    <fieldset id="care-arrangements-subsection">
+    <div class="box" id="care-arrangements-subsection">
 
         <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
             <div class="question">Does the client receive care which is paid for?</div>
@@ -163,22 +163,19 @@
             <div class="textarea">{{ safeguarding.whoIsDoingTheCaring }}</div>
         </div>
 
-    </fieldset>
+    </div>
 
-    <fieldset id="care-plan-subsection">
-        <div class="checkboxes horizontal">
-            <div class="question">If there is a care plan, when was it last reviewed?</div>
-            <div class="form-group form-group-vertical two-thirds-width">
-                <div class="value" id="safeguarding-last-review-date">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</div>
-                <div class="label">Review date</div>
-            </div>
-            <div class="form-group right-label one-third-width">
-                <div class="checkbox" data-checkbox="there-is-no-care-plan">
-                        {% if safeguarding.doesClientHaveACarePlan == 'no' %}X{% else %}&nbsp;{% endif %}</div>
-                <div class="label">There is no care plan</div>
-            </div>
-        </div>
-    </fieldset>
+    <div class="box" id="care-plan-subsection">
+        <div class="question">If there is a care plan, when was it last reviewed?</div>
+        <dl class="labelvalue inline">
+            <dd class="checkbox">{% if safeguarding.doesClientHaveACarePlan == 'no' %}X{% else %}&nbsp;{% endif %}</dd>
+            <dt class="label">There is no care plan</dt>
+        </dl>
+        <dl class="labelvalue">
+            <dt class="label">Review date</dt>
+            <dd class="value">{% if safeguarding.doesClientHaveACarePlan == 'yes' %}{{ safeguarding.whenWasCarePlanLastReviewed | date("m / Y") }}{% else %} {% endif %}</dd>
+        </dl>
+    </div>
 
 
 </div>

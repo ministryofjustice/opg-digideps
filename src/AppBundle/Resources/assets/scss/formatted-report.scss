@@ -9,7 +9,6 @@ $mobile-ie6: true !default;
     font-size: $size;
     font-family: Helvetica, Arial;
 }
-
 @mixin formatted-bold($size) {
     font-size: $size;
     font-family: Helvetica, Arial;
@@ -17,13 +16,15 @@ $mobile-ie6: true !default;
 }
 
 @import "digideps/safeguarding";
+@import "digideps/box";
+@import "digideps/label-value";
 @import "digideps/grid";
-@import "digideps/fieldsets";
+@import "digideps/assets";
 
 .formatted-report {
 
     @extend %contain-floats;
-
+    @include formatted-reg(17px);
     box-sizing: border-box;
     overflow: hidden;
     color: #000000;
@@ -38,11 +39,14 @@ $mobile-ie6: true !default;
         width: 200px;
         border-left: 3px solid #000000;
     }
-
+    
+    h2, h3 {
+        margin: 0 0 20px 0;
+    }
+    
     h1 {
         @include formatted-bold(27px);
         width: 60%;
-        margin: 0 0 20px 0;
     }
     h2 {
         clear: both;
@@ -57,19 +61,12 @@ $mobile-ie6: true !default;
     h3 {
         @include formatted-bold(19px);
     }
-
-    .value, .textarea, .item-value {
-        @include formatted-reg(17px);
-        background: #ffffff;
-        color: #454572;
-        padding: 1px 5px 0 5px;
-        border: 1px solid #000;
-        min-height: 25px;
+    
+    ul {
+        list-style: none;
+        padding-left: 0;
     }
-    .label, .item-label {
-        @include formatted-reg(17px);
-        *width: 90.5%;
-    }
+    
     .intro {
         margin-bottom: 10px;
     }
@@ -78,37 +75,17 @@ $mobile-ie6: true !default;
         @extend %contain-floats;
         margin-bottom: 40px;
     }
-
-    .form-group {
-        @extend %contain-floats;
-        margin-bottom: 15px;
-    }
-    .form-group-vertical {
-        .label {
-            display: block;
-        }
-        .value, .textarea {
-            width: 90.5%;
-        }
-    }
-
+    
     .box-list {
         @extend %contain-floats;
-
+        list-style: none;
+        padding-left: 0;
+        
         .box-list-item {
             @extend %contain-floats;
-            margin-bottom: 20px;
         }
     }
 
-    .decision-item {
-        border-bottom: 1px solid $grey-2;
-        *border-bottom: none;
-
-        &:last-child {
-            border-bottom: none;
-        }
-    }
 
     .balancing {
         @extend %contain-floats;
@@ -166,84 +143,16 @@ $mobile-ie6: true !default;
         }
     }
 
-    #declaration {
-        .external-report-section {
-            background: #cdcfcd;
-            width: 66%;
-            h2 {
-                background: #fff;
-                padding: 0 0 30px 0;
-                margin: 0;
-            }
-            .item {
 
-                padding-bottom: 30px;
-
-                .item-data {
-                    width: auto;
-                    padding: 0 20px 0 20px;
-                    .item-value {
-                        width: 50%;
-                        margin-bottom: 5px;
-                    }
-                }
-            }
-
-            .page-section-description {
-                width: auto;
-                padding: 20px;
-                margin-bottom: 0;
-            }
-
-        }
-
-    }
-    #assets-section {
-        h3 {
-            margin: 30px 0 0 0;
-        }
-
-        .asset-group {
-            fieldset {
-                *padding-bottom: 20px;
-            }
-        }
-
-        .asset-item {
-            @extend %contain-floats;
-            clear: both;
-            padding-top: 0;
-
-            .form-group.asset-description {
-                width: 48%;
-                padding-right: 2%;
-                *width: 30%;
-                float: left;
-            }
-            .form-group.asset-valuationDate {
-                width: 22%;
-                padding-right: 3%;
-                *width: 30%;
-                float: left;
-            }
-            .form-group.asset-value {
-                width: 22%;
-                padding-right: 3%;
-                *width: 30%;
-                float: left;
-            }
-            .form-group.assets-total-value {
-                float: right;
-            }
-        }
-    }
 
     .fieldset-outer-title {
         margin-top: 30px;
     }
 
-    .question {
+    .question, th {
         @include formatted-reg(17px);
+        font-weight: normal;
+        margin: 10px 0 10px 0;
     }
 
 }

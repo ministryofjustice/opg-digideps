@@ -3,83 +3,79 @@
         <span class="section-number">Section 1</span>
         Deputy and client information
     </h2>            
-    <fieldset class="single-field-fieldset three-quarter-width" id="case-number">
-        <div class="label left-label">Case number</div>
-        <div class="value right-value" id="caseNumber">{{ client.getCaseNumber }}</div>
-    </fieldset>
-    <fieldset class="case-number-subsection three-quarter-width">
+    <div class="box" id="case-number">
+        <dl class="labelvalue right-inline">
+            <dt class="label">Case number</dt>
+            <dd class="value" id="caseNumber">{{ client.getCaseNumber }}</dd>
+        </dl>
+    </div>
+    
+    <div class="box">
         <h3>Reporting period</h3>
         
-        <div class="form-group form-group-vertical half-width" id="report-start-date">
-            <div class="label">Start date</div>
-            <div class="value">{{ report.startDate | date("d / m / Y") }}</div>
-        </div>
-        
-        <div class="form-group form-group-vertical half-width" id="report-end-date">
-            <div class="label">End date</div>
-            <div class="value">{{ report.endDate | date("d / m / Y") }}</div>
-        </div>
-    </fieldset>
-    <fieldset id="deputy-details-subsection" class="extended-down half-width">
-        <h3>Deputy details</h3>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">First names</div>
-            <div class="value">{{deputy.firstname}}</div>
-        </div>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">Last name</div>
-            <div class="value">{{deputy.lastname}}</div>
-        </div>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">Address</div>
-            <div class="textarea address-value">
-                {{ deputy.address1 }}<br/>
-                {{ deputy.address2 }}<br/>
-                {{ deputy.address3 }}<br/>
-                {{ deputy.addressPostcode }}
-            </div>
-        </div>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">Telephone number</div>
-            <div class="value">{{deputy.phoneMain}}</div>
+        <dl class="labelvalue half-width first" id="report-start-date">
+            <dt class="label">Start date</dt>
+            <dd class="value">{{ report.startDate | date("d / m / Y") }}</dd>
+        </dl>
+
+        <dl class="labelvalue half-width">
+            <dt class="label">End date</dt>
+            <dd class="value">{{ report.endDate | date("d / m / Y") }}</dd>
+        </dl>
+
+    </div>
+    
+    <div class="box">
+        <div id="deputy-details-subsection" class="half-width first">
+            <h3>Deputy details</h3>
+            
+            <dl class="labelvalue">
+
+                <dt class="label">First names</dt>
+                <dd class="value">{{deputy.firstname}}</dd>
+            
+                <dt class="label">Last name</dt>
+                <dd class="value">{{deputy.lastname}}</dd>
+
+                <dt class="label">Address</dt>
+                <dd class="value textarea address-value">
+                    {{ deputy.address1 }}<br/>
+                    {{ deputy.address2 }}<br/>
+                    {{ deputy.address3 }}<br/>
+                    {{ deputy.addressPostcode }}
+                </dd>
+
+                <dt class="label">Telephone number</dt>
+                <dd class="value">{{deputy.phoneMain}}</dd>
+            </dl>        
         </div>        
-    </fieldset>        
-    <fieldset class="client-details-subsection half-width right" id="client-details-subsection">
-        <h3>Client details</h3>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">First names</div>
-            <div class="value">{{ client.firstname }}</div>
+        <div id="client-details-subsection" class="half-width">
+            <h3>Client details</h3>
+
+            <dl class="labelvalue">
+                <dt class="label">First names</dt>
+                <dd class="value">{{ client.firstname }}</dd>
+
+                <dt class="label">Last name</dt>
+                <dd class="value" id="ClientLastName">{{ client.lastname }}</dd>
+
+                <dt class="label">Address</dt>
+                <dd class="value textarea address-value">
+                    {{ client.address }}<br/>
+                    {{ client.address2 }}<br/>
+                    {{ client.county }}<br/>
+                    {{ client.postcode }}
+                </dd>
+
+                <dt class="label">Telephone number</dt>
+                <dd class="value">{{client.phone}}</dd>
+            </dl>
         </div>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">Last name</div>
-            <div class="value" id="ClientLastName">{{ client.lastname }}</div>
-        </div>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">Address</div>
-            <div class="textarea address-value">
-                {{ client.address }}<br/>
-                {{ client.address2 }}<br/>
-                {{ client.county }}<br/>
-                {{ client.postcode }}
-            </div>
-        </div>
-        
-        <div class="form-group form-group-vertical">
-            <div class="label">Telephone number</div>
-            <div class="value">{{client.phone}}</div>
-        </div>
-    </fieldset>
-    <fieldset class="full-width-extension">
-        <div class="form-group form-group-vertical" id="deputy-email">
-            <div class="label">Email (optional)</div>
-            <div class="value">{{deputy.email}}</div>
-        </div>
-    </fieldset>
+        <dl class="labelvalue">
+            <dt class="label">Email (optional)</dt>
+            <dd class="value">{{deputy.email}}</dd>
+        </dl>
+    </div>
+    
+
 </div>

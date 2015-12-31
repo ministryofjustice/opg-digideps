@@ -1,0 +1,18 @@
+.box {
+    @extend %contain-floats;
+    box-sizing: border-box;
+    padding: 10px 20px 10px 20px;
+    margin: 20px 0 0 0;
+    border: 0;
+    background: #cdcfcd;
+    clear: both;
+    
+    > h3,
+    > div {
+        margin-top: 0;
+    }
+    
+    &.compact {
+        margin-top: 0;
+    }
+}
