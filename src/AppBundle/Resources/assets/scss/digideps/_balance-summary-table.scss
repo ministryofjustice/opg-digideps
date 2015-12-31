@@ -124,8 +124,19 @@ table.money-table {
     width: 95%;
     
     .page-section-description {
-        margin-left: 50px;
         display: block;
         margin-bottom: 0px;
+        
+        &.left-margin {
+            margin-left: 40px;
+        }
+
+        &.left-margin-big {
+            margin-left: 50px;
+        }
+        
+        &.big {
+            font-size: 1.15em;
+        }
     }
 }

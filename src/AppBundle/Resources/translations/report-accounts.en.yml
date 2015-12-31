@@ -87,4 +87,9 @@ banks:
     sortCode: Sort code
     accountNumber: Account number
     totalBalance: Total balance from all accounts
+    balanceUnknown: Unknown
+    balanceMissingWarning: Balance on %date% is missing
+    balanceMissingWarningBottom: |
+        You will be able to see this total when you have added the balance 
+        on the %date% for all the %client%'s accounts
     

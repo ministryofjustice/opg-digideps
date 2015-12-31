@@ -43,7 +43,7 @@
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
 <p class="balance-warning page-section-warning">
     <span class="icon icon__notification"></span>
-    <span class="page-section-description">{{ 'balance.bad.goBack' | trans({
+    <span class="page-section-description left-margin-big">{{ 'balance.bad.goBack' | trans({
         '%client%': client.firstname, 
         '%accountsLink%': path('accounts', {'reportId': report.id}), 
         '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) , 
