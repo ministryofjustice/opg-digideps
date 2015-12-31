@@ -34,36 +34,39 @@
             
         {% endembed %}
         
-        <dl class="labelvalue right-inline transaction big-value">
-            <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>
-           
-            {% if report.accountsClosingBalanceTotal == null %}
-                <dd class="value unknown">
-                     {{ 'banks.balanceUnknown' | trans({}, translationDomain) }}
+        {% if accounts is not empty %}
+        
+            <dl class="labelvalue right-inline transaction big-value">
+                <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>
+
+                {% if report.accountsClosingBalanceTotal == null %}
+                    <dd class="value unknown">
+                         {{ 'banks.balanceUnknown' | trans({}, translationDomain) }}
+                    </dd>
+                {% else %}
+                   <dd class="value">
+                     {{ 'currencySymbol' | trans({}, translationDomain) }}
+                     {{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
+                   </dd>
+                {% endif %}
+
                 </dd>
-            {% else %}
-               <dd class="value">
-                 {{ 'currencySymbol' | trans({}, translationDomain) }}
-                 {{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
-               </dd>
+            </dl>
+
+            {% if report.accountsClosingBalanceTotal == null %} 
+             <dl>
+                <div class="balance-warning page-section-warning">
+                    <span class="icon icon__notification_yellow_small"></span>
+                    <span class="page-section-description left-margin big">{{ 'banks.balanceMissingWarningBottom' | trans({
+                        '%date%': report.endDate | date("j M Y"),
+                        '%client%': client.firstname
+                    }, translationDomain) | nl2br }}</span>  
+                </div>
+             </dl>
             {% endif %}
-               
-            </dd>
-        </dl>
-            
-        {% if report.accountsClosingBalanceTotal == null %} 
-         <dl>
-            <div class="balance-warning page-section-warning">
-                <span class="icon icon__notification_yellow_small"></span>
-                <span class="page-section-description left-margin big">{{ 'banks.balanceMissingWarningBottom' | trans({
-                    '%date%': report.endDate | date("j M Y"),
-                    '%client%': client.firstname
-                }, translationDomain) | nl2br }}</span>  
-            </div>
-         </dl>
-        {% endif %}
 
-
+          {% endif %}
+    
     {% endblock %}
 
     {% block pageBodyFooterNav %}
