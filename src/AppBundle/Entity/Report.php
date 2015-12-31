@@ -996,15 +996,22 @@ class Report
     }
 
     /**
+     * Return sum of closing balances (if all of them have a value, otherwise returns null)
+     * 
      * @JMS\VirtualProperty
      * @JMS\Groups({"balance"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_closing_balance_total")
+     * 
+     * @return float 
      */
     public function getAccountsClosingBalanceTotal()
     {
         $ret = 0;
         foreach ($this->getAccounts() as $a) {
+            if ($a->getClosingBalance() === null) {
+                return null;
+            }
             $ret += $a->getClosingBalance();
         }
 
