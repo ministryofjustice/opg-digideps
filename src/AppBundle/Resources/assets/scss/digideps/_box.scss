@@ -49,10 +49,15 @@
     
 }
 
+#balance {
+    overflow: hidden;
+    margin-bottom: 40px;
+}
+
 .summary-container {
   
     border: 1px solid #000;
-    margin-bottom: 40px;
+    margin: 40px 0 40px 0;
     
     > h3.heading {
         @include formatted-bold(24px);
