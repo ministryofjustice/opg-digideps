@@ -30,7 +30,7 @@ class ReportController extends AbstractController
         $request = $this->getRequest();
         $restClient = $this->get('restClient');
        
-        $client = $this->getClient($clientId);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => [ "basic"]]]);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
@@ -52,7 +52,7 @@ class ReportController extends AbstractController
                 $report->setCourtOrderType($allowedCourtOrderTypes[0]);
             }
         }
-        $report->setClient($client->getId());
+        $report->setClient($client);
         
         
         $form = $this->createForm(new FormDir\ReportType(), $report,
@@ -73,16 +73,14 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $this->getClient($report->getClient());
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         return [
             'report' => $report,
-            'client' => $client,
             'reportStatus' => $reportStatusService,
         ];
     }
@@ -198,9 +196,6 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
 
-
-        $client = $this->getClient($report->getClient());
-
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
         $request = $this->getRequest();
 
@@ -217,7 +212,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'client' => $client,
             'form' => $form->createView()
         ];
     }
@@ -238,11 +232,8 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
         
-        $client = $this->getClient($report->getClient());
-
         return [
             'report' => $report,
-            'client' => $client,
         ];
     }
 
@@ -256,13 +247,11 @@ class ReportController extends AbstractController
         $restClient = $this->get('restClient');
         
         $report = $this->getReport($reportId, [ 'transactions', 'basic']);
-        $client = $this->getClient($report->getClient());
 
         $body = $restClient->get('report/' . $reportId . '/formatted/1', 'string');
 
         return [
             'report' => $report,
-            'client' => $client,
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
             'body' => $body

@@ -25,7 +25,15 @@ span.icon {
     background-position: 0 0;
     width: 35px;
     height: 35px;
-
+    
   }
-
+  
+  &__notification_yellow_small {
+    background-image: url('images/icons/icon-notification-yellow-24.png');
+    background-position: 0 0;
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin: 0px 5px;
+  }
 }

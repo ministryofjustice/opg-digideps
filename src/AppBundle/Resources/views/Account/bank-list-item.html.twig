@@ -17,10 +17,28 @@
             <dd class="value">{{ 'currencySymbol' | trans({}, translationDomain) }}{{ account.openingBalance == null ? '—,-' : (account.openingBalance | number_format(2, '.', ',')) }}
             </dd>
             <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.endDate | date("j M Y") }}:</dt>
-            <dd class="value">
-                {{ 'currencySymbol' | trans({}, translationDomain) }}{{ account.closingBalance == null ? '--:--' : (account.closingBalance | number_format(2, '.', ',')) }}
-            </dd>
+            {% if account.closingBalance == null %}
+              <dd class="value unknown">
+                  {{ 'banks.balanceUnknown' | trans({}, translationDomain) }}
+              </dd>
+            {% else %}
+              <dd class="value">
+                {{ 'currencySymbol' | trans({}, translationDomain) }}
+                {{ account.closingBalance | number_format(2, '.', ',') }}
+              </dd>
+            {% endif %}
+            
         </dl>
         <a class="edit-link" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
+        
+        {% if account.closingBalance == null %}
+        <div class="warning">
+            <span class="icon icon__notification_yellow_small"></span>
+            <p>{{ 'banks.balanceMissingWarning' | trans({
+                '%date%': report.endDate | date("j M Y")
+            }, translationDomain)}}</p>
+        </div>
+        {% endif %}
+       
     {% endblock %}
 {% endembed %}

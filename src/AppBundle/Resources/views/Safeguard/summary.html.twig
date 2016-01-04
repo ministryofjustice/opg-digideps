@@ -6,7 +6,7 @@
 
 <div id="safeguarding-contact">
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%':client.firstname}, 
+        options: {'%client%': report.client.firstname}, 
         question: 'doYouLiveWithClient',
         answer: safeguarding.doYouLiveWithClient
     } %}
@@ -16,32 +16,32 @@
     <div id="safeguarding-contact-intervals">
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%':client.firstname},
+        options: {'%client%': report.client.firstname},
         question: 'howOftenDoYouVisit',
         answer: safeguarding.howOftenDoYouVisit
         } %}
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%':client.firstname},
+        options: {'%client%': report.client.firstname},
         question: 'howOftenDoYouPhoneOrVideoCall',
         answer: safeguarding.howOftenDoYouPhoneOrVideoCall
         } %}
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%':client.firstname}, 
+        options: {'%client%': report.client.firstname}, 
         question: 'howOftenDoYouWriteEmailOrLetter',
         answer: safeguarding.howOftenDoYouWriteEmailOrLetter
         } %}
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%':client.firstname}, 
+        options: {'%client%': report.client.firstname}, 
         question: 'howOftenDoesClientSeeOtherPeople',
         answer: safeguarding.howOftenDoesClientSeeOtherPeople
         } %}
 
         {% if safeguarding.anythingElseToTell %}
             {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-            options: {'%client%':client.firstname}, 
+            options: {'%client%': report.client.firstname}, 
             question: 'anythingElseToTell',
             answer: safeguarding.anythingElseToTell
             } %}
@@ -51,13 +51,13 @@
 
 
 {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-options: {'%client%':client.firstname}, 
+options: {'%client%': report.client.firstname}, 
 question: 'doesClientReceivePaidCare',
 answer: safeguarding.doesClientReceivePaidCare
 } %}
 {% if safeguarding.doesClientReceivePaidCare == 'yes' %}
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%':client.firstname}, 
+        options: {'%client%': report.client.firstname}, 
         question: 'howIsCareFunded',
         answer: safeguarding.howIsCareFunded
     } %}
@@ -65,21 +65,21 @@ answer: safeguarding.doesClientReceivePaidCare
 
 
 {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-    options: {'%client%':client.firstname}, 
+    options: {'%client%': report.client.firstname}, 
     question: 'whoIsDoingTheCaring',
     answer: safeguarding.whoIsDoingTheCaring
 } %}
 
 
 {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-options: {'%client%':client.firstname}, 
+options: {'%client%': report.client.firstname}, 
 question: 'doesClientHaveACarePlan',
 answer: safeguarding.doesClientHaveACarePlan
 } %}
 {% if safeguarding.doesClientHaveACarePlan == 'yes' %}
     {% set carePlanDate = safeguarding.whenWasCarePlanLastReviewed.format("m/Y") %}
     {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-    options: {'%client%':client.firstname}, 
+    options: {'%client%': report.client.firstname}, 
     question: 'whenWasCarePlanLastReviewed',
     answer: carePlanDate
     } %}

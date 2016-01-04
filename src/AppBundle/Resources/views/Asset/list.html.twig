@@ -5,11 +5,11 @@
     
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}{% endblock %}
     
     {% block pageBody %}
 
-        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%':client.firstname}, translationDomain) }}</p>
+        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
         
         {% if report.assets is not empty %}
             {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {

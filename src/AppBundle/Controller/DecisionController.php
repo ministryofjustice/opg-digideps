@@ -21,10 +21,8 @@ class DecisionController extends AbstractController
         
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
-        $client = $this->getClient($report->getClient());
-
         
         if (empty($decisions) && $report->isDue() == false) {
             return $this->redirect($this->generateUrl('add_decision', ['reportId'=>$reportId]) );
@@ -33,7 +31,6 @@ class DecisionController extends AbstractController
         return [
             'decisions' => $decisions,
             'report' => $report,
-            'client' => $client
         ];
         
     }
@@ -45,7 +42,7 @@ class DecisionController extends AbstractController
      */
     public function addAction(Request $request, $reportId) {
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         
         $decision = new EntityDir\Decision;
         $form = $this->createForm(new FormDir\DecisionType(), $decision);
@@ -65,12 +62,9 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) );
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $client
         ];
 
     }
@@ -84,7 +78,7 @@ class DecisionController extends AbstractController
 
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         if (!in_array($id, $report->getDecisions())) {
             throw new \RuntimeException("Decision not found.");
@@ -104,12 +98,9 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $client
         ];
 
     }
@@ -159,7 +150,7 @@ class DecisionController extends AbstractController
      */  
     public function noneReasonAction(Request $request, $reportId) {
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
@@ -173,13 +164,10 @@ class DecisionController extends AbstractController
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
             
         }
-
-        $client = $this->getClient($report->getClient());
         
         return [
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $client
         ];
         
     }
@@ -194,7 +182,7 @@ class DecisionController extends AbstractController
     {
 
         $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId'=>$reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 

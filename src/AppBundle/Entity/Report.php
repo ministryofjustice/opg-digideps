@@ -49,8 +49,8 @@ class Report
     private $submitDate;
     
     /**
-     * @JMS\Type("integer")
-     * @var integer $client
+     * @JMS\Type("AppBundle\Entity\Client")
+     * @var Client $client
      */
     private $client;
     
@@ -69,19 +69,10 @@ class Report
     
     
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("array<AppBundle\Entity\Account>")
      * @var Account[]
      */
     private $accounts;
-    
-    /**
-     * This is not used. For consistency, it should hold the account objects, and $accounts should hold integers
-     * 
-     * @JMS\Type("array<AppBundle\Entity\Account>")
-     * @JMS\Accessor(getter="getAccounts", setter="setAccounts")
-     * @var array $accountObs
-     */
-    private $accountObjs;
     
     /**
      * @JMS\Type("array")
@@ -157,10 +148,7 @@ class Report
      */
     private $reportSeen;
     
-    /**
-     * @var Client 
-     */
-    private $clientObject;
+    
 
     /**
      * @var boolean
@@ -404,7 +392,7 @@ class Report
      * @param integer $client
      * @return \AppBundle\Entity\Report
      */
-    public function setClient($client)
+    public function setClient(Client $client)
     {
         $this->client = $client;
         return $this;
@@ -453,27 +441,11 @@ class Report
     public function setAccounts($accounts)
     {
         foreach ($accounts as $account) {
-            $account->setReportObject($this);
+            $account->setReport($this);
         }
         
         $this->accounts = $accounts;
         return $this;
-    }
-    
-    /**
-     * 
-     * @return array $outstandingAccounts
-     */
-    public function getOutstandingAccounts()
-    {  
-        $outstandingAccounts = [];
-        
-        foreach ($this->accounts as $account){
-            if(!$account->hasClosingBalance()){
-                    $outstandingAccounts[] = $account;
-            }
-        }
-        return $outstandingAccounts;
     }
     
     /**
@@ -723,19 +695,6 @@ class Report
         return $this->reportSeen;
     }
     
-    /**
-     * @return Client
-     */
-    public function getClientObject()
-    {
-        return $this->clientObject;
-    }
-
-
-    public function setClientObject(Client $clientObject)
-    {
-        $this->clientObject = $clientObject;
-    }
     
     public function getSectionCount() {
         if ($this->courtOrderType == $this::PROPERTY_AND_AFFAIRS) {
@@ -1026,6 +985,5 @@ class Report
             || !$this->hasMoneyOut() 
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
-
     
 }
