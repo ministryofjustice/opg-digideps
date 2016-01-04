@@ -10,6 +10,7 @@ use AppBundle\Exception as AppExceptions;
 class AccountController extends RestController
 {    
     /**
+     * @deprecated in favour of report/{id}?group=[accounts]
      * @Route("/report/{id}/accounts")
      * @Method({"GET"})
      */
