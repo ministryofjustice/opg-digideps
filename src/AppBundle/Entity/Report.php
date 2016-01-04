@@ -425,16 +425,6 @@ class Report
     }
     
     /**
-     * @return array of integers (Account IDs)
-     */
-    public function getAccountIds()
-    {
-        return array_map(function($account) {
-            return $account->getId();
-        }, $this->accounts);
-    }
-    
-    /**
      * @param array $accounts
      * @return \AppBundle\Entity\Report
      */
@@ -995,6 +985,22 @@ class Report
     public function hasAssetWithId($id)
     {
         foreach ($this->getAssets() as $asset) {
+            if ($asset->getId() == $id) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @param integer $id
+     * 
+     * @return boolean
+     */
+    public function hasAaccountWithId($id)
+    {
+        foreach ($this->getAccounts() as $asset) {
             if ($asset->getId() == $id) {
                 return true;
             }
