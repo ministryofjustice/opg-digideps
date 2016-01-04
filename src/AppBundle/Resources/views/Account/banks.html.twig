@@ -18,8 +18,8 @@
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
 
-                {% if accounts is not empty %}
-                    {% for account in accounts %}
+                {% if report.accounts is not empty %}
+                    {% for account in report.accounts %}
                         {% include 'AppBundle:Account:bank-list-item.html.twig' with {
                             account: account,
                             report: report
@@ -41,7 +41,7 @@
             
         {% endembed %}
         
-        {% if accounts is not empty %}
+        {% if report.accounts is not empty %}
         
             <dl class="labelvalue right-inline transaction big-value">
                 <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>

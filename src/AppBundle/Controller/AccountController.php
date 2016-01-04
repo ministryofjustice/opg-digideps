@@ -132,20 +132,16 @@ class AccountController extends AbstractController
      */
     public function banksAction($reportId) 
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-
-        $report = $this->getReport($reportId, ['basic','balance']);
+        $report = $this->getReport($reportId, ['basic', 'balance', 'accounts']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         
         $client = $this->getClient($report->getClient());
-        $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
         
         return [
             'report' => $report,
             'client' => $client,
-            'accounts' => $accounts,
             'subsection' => 'banks'
         ];
     }
@@ -160,7 +156,7 @@ class AccountController extends AbstractController
     public function addAction(Request $request, $reportId) 
     {
 
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
 
         $account = new EntityDir\Account();
         $account->setReportObject($report);
@@ -204,9 +200,11 @@ class AccountController extends AbstractController
 
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'accounts']);
 
-        if (!in_array($id, $report->getAccounts())) {
+        if (0 === count(array_filter($report->getAccounts(), function($account) use ($id) {
+            return $account->getId() == $id;
+        }))) {
             throw new \RuntimeException("Account not found.");
         }
         
@@ -247,7 +245,7 @@ class AccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         if(!empty($report) && in_array($id, $report->getAccounts())){

@@ -21,7 +21,7 @@ class DecisionController extends AbstractController
         
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
         $client = $this->getClient($report->getClient());
 
@@ -45,7 +45,7 @@ class DecisionController extends AbstractController
      */
     public function addAction(Request $request, $reportId) {
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         
         $decision = new EntityDir\Decision;
         $form = $this->createForm(new FormDir\DecisionType(), $decision);
@@ -84,7 +84,7 @@ class DecisionController extends AbstractController
 
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
 
         if (!in_array($id, $report->getDecisions())) {
             throw new \RuntimeException("Decision not found.");
@@ -159,7 +159,7 @@ class DecisionController extends AbstractController
      */  
     public function noneReasonAction(Request $request, $reportId) {
         
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report);
@@ -194,7 +194,7 @@ class DecisionController extends AbstractController
     {
 
         $actionUrl = $this->generateUrl('edit_decisions_nonereason', ['reportId'=>$reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         $form = $this->createForm(new FormDir\ReasonForNoDecisionType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 

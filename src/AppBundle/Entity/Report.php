@@ -69,18 +69,10 @@ class Report
     
     
     /**
-     * @JMS\Type("array")
+     * @JMS\Type("array<AppBundle\Entity\Account>")
      * @var Account[]
      */
     private $accounts;
-    
-    /**
-     * This is not used. For consistency, it should hold the account objects, and $accounts should hold integers
-     * 
-     * @JMS\Type("array<AppBundle\Entity\Account>")
-     * @var array $accountObs
-     */
-    private $accountObjs;
     
     /**
      * @JMS\Type("array")
@@ -1009,17 +1001,5 @@ class Report
             || !$this->hasMoneyOut() 
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
-    
-    public function getAccountObjs()
-    {
-        return $this->accountObjs;
-    }
-
-
-    public function setAccountObjs($accountObjs)
-    {
-        $this->accountObjs = $accountObjs;
-    }
-
     
 }

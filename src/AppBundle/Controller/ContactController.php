@@ -23,7 +23,7 @@ class ContactController extends AbstractController
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
 
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
         $client = $this->getClient($report->getClient());
 
@@ -46,7 +46,7 @@ class ContactController extends AbstractController
      */
     public function addAction(Request $request, $reportId) {
 
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
 
         $contact = new EntityDir\Contact;
         $form = $this->createForm(new FormDir\ContactType(), $contact);
@@ -84,7 +84,7 @@ class ContactController extends AbstractController
 
         $restClient = $this->get('restClient');
 
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
 
         if (!in_array($id, $report->getContacts())) {
             throw new \RuntimeException("Contact not found.");
@@ -155,7 +155,7 @@ class ContactController extends AbstractController
      */
     public function noneReasonAction(Request $request, $reportId) {
 
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
 
         $form = $this->createForm(new FormDir\ReasonForNoContactType(), $report);
         $form->handleRequest($request);
@@ -188,7 +188,7 @@ class ContactController extends AbstractController
     {
 
         $actionUrl = $this->generateUrl('edit_contacts_nonereason', ['reportId'=>$reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
         $form = $this->createForm(new FormDir\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 
