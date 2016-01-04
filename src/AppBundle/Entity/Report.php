@@ -35,8 +35,7 @@ class Report
      * @var integer
      * 
      * @JMS\Groups({"basic"})
-     * @JMS\Accessor(getter="getClientId")
-     * @JMS\Type("integer")
+     * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
