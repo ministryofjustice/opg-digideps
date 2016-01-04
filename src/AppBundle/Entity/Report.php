@@ -75,20 +75,20 @@ class Report
     private $accounts;
     
     /**
-     * @JMS\Type("array")
-     * @var array $contacts
+     * @JMS\Type("array<AppBundle\Entity\Contact>")
+     * @var Contact[]
      */
     private $contacts;
     
     /**
-     * @JMS\Type("array")
-     * @var array $assets
+     * @JMS\Type("array<AppBundle\Entity\Asset>")
+     * @var Asset[]
      */
     private $assets;
     
     /**
-     * @JMS\Type("array")
-     * @var array $decisions
+     * @JMS\Type("array<AppBundle\Entity\Decision>")
+     * @var Decision[]
      */
     private $decisions;
     

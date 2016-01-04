@@ -20,11 +20,8 @@ class ContactController extends AbstractController
      */
     public function listAction($reportId) 
     {
-
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
-        $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'contacts']);
+        $contacts = $report->getContacts();
 
         if (empty($contacts) && $report->isDue() == false) {
             return $this->redirect($this->generateUrl('add_contact', ['reportId'=>$reportId]) );
@@ -53,9 +50,11 @@ class ContactController extends AbstractController
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReport($report->getId());
+            $data->setReport($report);
 
-            $this->get('restClient')->post('report/contact', $data);
+            $this->get('restClient')->post('report/contact', $data, [
+                'deserialise_group' => 'Default'
+            ]);
 
             //lets clear any reason for no contacts they might have added previously
             $report->setReasonForNoContacts(null);
@@ -77,23 +76,17 @@ class ContactController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $id) {
 
-        $restClient = $this->get('restClient');
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        if (!in_array($id, $report->getContacts())) {
-            throw new \RuntimeException("Contact not found.");
-        }
-        $contact = $restClient->get('report/contact/' . $id, 'Contact');
-
+        $contact = $this->get('restClient')->get('report/contact/' . $id, 'Contact');
+        $contact->setReport($report);
+        
         $form = $this->createForm(new FormDir\ContactType(), $contact);
         $form->handleRequest($request);
 
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReport($reportId);
-
             $this->get('restClient')->put('report/contact', $data);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId'=>$reportId]));
@@ -115,10 +108,12 @@ class ContactController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['basic']);
+        $report = $this->getReport($reportId, ['basic', 'contacts']);
 
-        if(!empty($report) && in_array($id, $report->getContacts())){
-            $this->get('restClient')->delete("/report/contact/{$id}");
+        foreach ($report->getContacts() as $contact) {
+            if ($contact->getId() == $id) {
+                $this->get('restClient')->delete("/report/contact/{$id}");
+            }
         }
 
         return $this->redirect($this->generateUrl('contacts', [ 'reportId' => $reportId ]));

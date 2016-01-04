@@ -27,14 +27,13 @@ class Client
     private $firstname;
     
     /**
-     * @JMS\Accessor(setter="addUsers", getter="getUsers")
+     * @JMS\Accessor(setter="addUsers")
      * @JMS\Type("array")
      * @var array $users
      */
     private $users;
     
     /**
-     * @JMS\Accessor(setter="addReports")
      * @JMS\Type("array")
      * @var array $reports
      */
@@ -189,10 +188,10 @@ class Client
     }
     
     /**
-     * @param type $reports
+     * @param Report[] $reports
      * @return \AppBundle\Entity\Client
      */
-    public function addReports($reports)
+    public function setReports($reports)
     {
         $this->reports = $reports;
         return $this;

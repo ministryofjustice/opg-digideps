@@ -81,8 +81,8 @@ class Contact
     private $phone;
     
     /**
-     *
-     * @JMS\Type("integer")
+     * @JMS\Groups({"ReportId"})
+     * @JMS\Type("AppBundle\Entity\Report")
      */
     private $report;
     
@@ -200,6 +200,16 @@ class Contact
     public function getReport()
     {
         return $this->report;
+    }
+    
+    /**
+     * @JMS\VirtualProperty
+     * 
+     * @return integer
+     */
+    public function getReportId()
+    {
+        return $this->report ? $this->report->getId() : null;
     }
     
     public function setReport($report)
