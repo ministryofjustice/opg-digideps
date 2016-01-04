@@ -95,7 +95,7 @@ class User implements AdvancedUserInterface
     
     /**
      * @JMS\Type("array<AppBundle\Entity\Client>")
-     * @var array
+     * @var Client[]
      */
     private $clients;
     
