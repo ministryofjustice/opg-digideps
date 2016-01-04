@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 use Doctrine\ORM\QueryBuilder;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Asset
@@ -15,7 +16,9 @@ class Asset
 {
     /**
      * @var integer
-     *
+     * @JMS\Type("integer")
+     * @JMS\Groups({"asset"})
+     * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -25,13 +28,16 @@ class Asset
 
     /**
      * @var string
-     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"asset"})
+     * 
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var string
+     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -39,6 +45,7 @@ class Asset
 
     /**
      * @var \DateTime
+     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
@@ -46,6 +53,7 @@ class Asset
 
     /**
      * @var string
+     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
@@ -53,6 +61,7 @@ class Asset
 
     /**
      * @var \Date
+     * @JMS\Groups({"asset"})
      *
      * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */

@@ -69,7 +69,7 @@ class Report
     private $decisions;
     
     /**
-     * @JMS\Groups({"assets"})
+     * @JMS\Groups({"asset"})
      * @JMS\Type("array<AppBundle\Entity\Asset>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
      */
@@ -1032,5 +1032,5 @@ class Report
 
         return $today >= $reportDueOn;
     }
-
+    
 }
