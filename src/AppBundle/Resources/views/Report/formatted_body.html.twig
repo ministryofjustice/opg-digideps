@@ -11,8 +11,9 @@
                 'safeguarding': report.safeguarding
             } %}
         {% endif %}
-        {% include 'AppBundle:Report:Formatted/Accounts/_good.html.twig' %}
-        {% include 'AppBundle:Report:Formatted/Accounts/_summary.html.twig' %}
+        
+        {% include 'AppBundle:Report:Formatted/Accounts/_accounts.html.twig' %}
+        
         {% include 'AppBundle:Report:Formatted/_assets.html.twig' %}
 
         {% if report.furtherInformation %}

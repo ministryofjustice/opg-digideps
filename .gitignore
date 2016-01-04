@@ -21,3 +21,4 @@ vendor/*
 components/*
 web/elb_healthcheck.html
 build
+src/AppBundle/Resources/views/css
