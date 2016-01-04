@@ -45,4 +45,4 @@ ENV  OPG_SERVICE api
 ADD  docker/beaver.d /etc/beaver.d
 
 RUN mkdir -p /app/src/AppBundle/Resources/views/css
-RUN sass --load-path /app/components/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/css/formatted-report.html.twig
+RUN sass --load-path /app/vendor/alphagov/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/css/formatted-report.html.twig
