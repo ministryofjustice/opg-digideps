@@ -116,7 +116,9 @@ class Contact
 
     /**
      * @var integer
-     *
+     * @JMS\Groups({"report"})
+     * @JMS\Type("AppBundle\Entity\Report")
+     * 
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="contacts")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
