@@ -986,4 +986,21 @@ class Report
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
     
+    
+    /**
+     * @param integer $id
+     * 
+     * @return boolean
+     */
+    public function hasAssetWithId($id)
+    {
+        foreach ($this->getAssets() as $asset) {
+            if ($asset->getId() == $id) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
 }

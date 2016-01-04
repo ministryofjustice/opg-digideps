@@ -157,7 +157,7 @@ class AccountController extends AbstractController
         if ($form->isValid()) {
 
             $data = $form->getData();
-            $data->setReport($reportId);
+            $data->setReport($report);
             $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
                 'deserialise_group' => 'add_edit'
             ]);
@@ -202,7 +202,7 @@ class AccountController extends AbstractController
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReport($reportId);
+            $data->setReport($report);
             $restClient->put('/account/' . $id, $account, [
                 'deserialise_group' => 'add_edit'
             ]);
