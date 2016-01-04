@@ -11,6 +11,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Safeguarding
 {
+    use Traits\HasReportTrait;
+    
     /**
      * @JMS\Type("integer")
      * @var integer
@@ -24,7 +26,7 @@ class Safeguarding
      * @JMS\Groups({"safeguarding"})
      * @var Report
      */
-    private $report;
+    //private $report;
     
     /**
      * @JMS\Type("string")
@@ -124,34 +126,6 @@ class Safeguarding
     {
         $this->id = $id;
         return $this;
-    }
-
-
-    public function setReportId($reportId)
-    {
-        $this->reportId = $reportId;
-    }
-
-    public function getReportId()
-    {
-        return $this->reportId;
-    }
-
-
-    /**
-     * @return Safeguarding
-     */
-    public function getReport()
-    {
-        return $this->report;
-    }
-
-    /**
-     * @param Report $report
-     */
-    public function setReport(Report $report)
-    {
-        $this->report = $report;
     }
 
     /**

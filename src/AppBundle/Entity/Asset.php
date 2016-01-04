@@ -6,6 +6,8 @@ use JMS\Serializer\Annotation as JMS;
 
 class Asset
 {
+    use Traits\HasReportTrait;
+    
     /**
      *
      * @JMS\Type("integer")
@@ -43,11 +45,6 @@ class Asset
      * @JMS\Type("DateTime")
      */
     private $valuationDate;
-    
-    /**
-     * @JMS\Type("integer")
-     */
-    private $report;
     
     public function getId()
     {
@@ -101,16 +98,5 @@ class Asset
     public function getValuationDate()
     {
         return $this->valuationDate;
-    }
-    
-    public function setReport($report)
-    {
-        $this->report = $report;
-        return $this;
-    }
-    
-    public function getReport()
-    {
-        return $this->report;
     }
 }

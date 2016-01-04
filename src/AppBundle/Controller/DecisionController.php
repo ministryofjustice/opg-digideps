@@ -19,10 +19,9 @@ class DecisionController extends AbstractController
      */
     public function listAction($reportId) {
         
-        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
-        
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
-        $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'decisions']);
+
+        $decisions = $report->getDecisions();
         
         if (empty($decisions) && $report->isDue() == false) {
             return $this->redirect($this->generateUrl('add_decision', ['reportId'=>$reportId]) );
@@ -45,19 +44,18 @@ class DecisionController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         
         $decision = new EntityDir\Decision;
+        $decision->setReport($report);
         $form = $this->createForm(new FormDir\DecisionType(), $decision);
         $form->handleRequest($request);
 
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReportId($reportId);
+            $data->setReport($report);
 
-            $this->get('restClient')->post('report/decision', $data);
-
-            //lets clear any reason for no decisions they might have added previously
-            $report->setReasonForNoDecisions(null);
-            $this->get('restClient')->put('report/'. $report->getId(),$report);
+            $this->get('restClient')->post('report/decision', $data, [
+                'deserialise_group' => 'Default'
+            ]);
             
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]) );
         }
@@ -80,9 +78,6 @@ class DecisionController extends AbstractController
         
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        if (!in_array($id, $report->getDecisions())) {
-            throw new \RuntimeException("Decision not found.");
-        }
         $decision = $restClient->get('report/decision/' . $id, 'Decision');
         
         $form = $this->createForm(new FormDir\DecisionType(), $decision);
@@ -91,9 +86,11 @@ class DecisionController extends AbstractController
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReportId($reportId);
+            $data->setReport($report);
 
-            $restClient->put('report/decision', $data);
+            $restClient->put('report/decision', $data, [
+                 'deserialise_group' => 'Default'
+            ]);
             
             return $this->redirect($this->generateUrl('decisions', ['reportId'=>$reportId]));
         }
@@ -115,11 +112,13 @@ class DecisionController extends AbstractController
     public function deleteAction($reportId, $id)
     {
         //just do some checks to make sure user is allowed to delete this contact
-        $report = $this->getReport($reportId, ['basic']);
+        $report = $this->getReport($reportId, ['basic', 'decisions']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
-        
-        if(!empty($report) && in_array($id, $report->getDecisions())){
-            $restClient->delete("/report/decision/{$id}");
+
+        foreach ($report->getDecisions() as $decision) {
+            if ($decision->getId() == $id) {
+                $restClient->delete("/report/decision/{$id}");
+            }
         }
         
         return $this->redirect($this->generateUrl('decisions', [ 'reportId' => $reportId ]));

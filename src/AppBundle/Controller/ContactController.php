@@ -52,13 +52,10 @@ class ContactController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
+            // update contact. The API will also delete reason for no contact
             $this->get('restClient')->post('report/contact', $data, [
                 'deserialise_group' => 'Default'
             ]);
-
-            //lets clear any reason for no contacts they might have added previously
-            $report->setReasonForNoContacts(null);
-            $this->get('restClient')->put('report/'. $report->getId(),$report);
 
             return $this->redirect($this->generateUrl('contacts', ['reportId'=>$reportId]));
         }

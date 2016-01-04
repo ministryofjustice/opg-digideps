@@ -11,6 +11,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Account
 {
+    use Traits\HasReportTrait;
+    
     const OPENING_DATE_SAME_YES = 'yes';
     const OPENING_DATE_SAME_NO = 'no';
     /**
@@ -142,11 +144,6 @@ class Account
      * @var \DateTime 
      */
     private $createdAt;
-    
-    /**
-     * @JMS\Type("AppBundle\Entity\Report")
-     */
-    private $report;
 
     public function getId()
     {
@@ -324,18 +321,6 @@ class Account
         $this->createdAt = $createdAt;
     }
         
-    public function getReport()
-    {
-        return $this->report;
-    }
-    
-    
-    public function setReport($report)
-    {
-        $this->report = $report;
-        return $this;
-    }
-    
     /**
      * Add violation if Opening date is not the same as the report start date and there is not explanation
      */
