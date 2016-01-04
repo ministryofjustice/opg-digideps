@@ -73,7 +73,8 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts']);
+        $report->setAccounts($report->getAccountObjs()); // TODO replace accountsObj -> accounts
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }

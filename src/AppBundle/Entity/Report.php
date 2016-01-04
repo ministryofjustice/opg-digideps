@@ -78,7 +78,6 @@ class Report
      * This is not used. For consistency, it should hold the account objects, and $accounts should hold integers
      * 
      * @JMS\Type("array<AppBundle\Entity\Account>")
-     * @JMS\Accessor(getter="getAccounts", setter="setAccounts")
      * @var array $accountObs
      */
     private $accountObjs;
@@ -458,22 +457,6 @@ class Report
         
         $this->accounts = $accounts;
         return $this;
-    }
-    
-    /**
-     * 
-     * @return array $outstandingAccounts
-     */
-    public function getOutstandingAccounts()
-    {  
-        $outstandingAccounts = [];
-        
-        foreach ($this->accounts as $account){
-            if(!$account->hasClosingBalance()){
-                    $outstandingAccounts[] = $account;
-            }
-        }
-        return $outstandingAccounts;
     }
     
     /**
@@ -1025,6 +1008,17 @@ class Report
         return !$this->hasMoneyIn() 
             || !$this->hasMoneyOut() 
             || count($this->getAccountsWithNoClosingBalance()) > 0;
+    }
+    
+    public function getAccountObjs()
+    {
+        return $this->accountObjs;
+    }
+
+
+    public function setAccountObjs($accountObjs)
+    {
+        $this->accountObjs = $accountObjs;
     }
 
     

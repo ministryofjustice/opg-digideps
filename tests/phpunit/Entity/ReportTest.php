@@ -43,20 +43,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     }
 
     /** @test */
-    public function getOutstandingAccounts()
-    {
-        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(false,true,false);
-        
-        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
-        
-        $accounts = $this->report->getOutstandingAccounts();
-        
-        $this->assertInternalType('array', $accounts);
-        $this->assertEquals(count($accounts),2);
-        $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
-    }
-    
-    /** @test */
     public function sectionCountForProperty() {
         $this->report->setCourtOrderType(REPORT::PROPERTY_AND_AFFAIRS);
         $this->AssertEquals(5, $this->report->getSectionCount());
