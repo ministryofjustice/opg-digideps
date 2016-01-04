@@ -43,17 +43,6 @@ class AbstractController extends Controller
     }
 
 
-    /**
-     * @param integer $clientId
-     * @param integer $userId for secutity check (if present)
-     * @param array $groups
-     * 
-     * @return Client
-     */
-    public function getClient($clientId, array $groups = [ "basic"])
-    {
-        return $this->getRestClient()->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
-    }
 
 
     /**
