@@ -67,6 +67,13 @@ class Fixtures
         $this->em->persist($cot);
         
         $report = new EntityDir\Report;
+        
+        // start/end dates from today for 365 days
+        $today = new DateTime();
+        $report->setStartDate($today);
+        $today->modify('+365 days');
+        $report->setEndDate($today);
+        
         $report->setClient($client);
         $report->setCourtOrderType($cot);
         foreach ($settersMap as $k=>$v) {

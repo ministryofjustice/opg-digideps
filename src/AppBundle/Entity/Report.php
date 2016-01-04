@@ -35,8 +35,7 @@ class Report
      * @var integer
      * 
      * @JMS\Groups({"basic"})
-     * @JMS\Accessor(getter="getClientId")
-     * @JMS\Type("integer")
+     * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
@@ -51,9 +50,9 @@ class Report
     private $contacts;
     
     /**
-     * @JMS\Groups({"basic"})
-     * @JMS\Accessor(getter="getAccountIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"accounts"})
+     * @JMS\Accessor(getter="getAccounts")
+     * @JMS\Type("array<AppBundle\Entity\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
@@ -63,13 +62,6 @@ class Report
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
-    
-    /**
-     * @JMS\Groups({"accounts"})
-     * @JMS\Accessor(getter="getAccounts", setter="addAccount")
-     * @JMS\Type("array<AppBundle\Entity\Account>")
-     */
-    private $accountObjs;
     
     /**
      * @JMS\Groups({ "basic"})
@@ -545,17 +537,6 @@ class Report
         return $this->accounts;
     }
     
-    public function getAccountIds()
-    {
-        $accounts = [];
-        if(!empty($this->accounts)){
-            foreach($this->accounts as $account){
-                $accounts[] = $account->getId();
-            }
-        }
-        return $accounts;
-    }
-
     /**
      * Add decisions
      *

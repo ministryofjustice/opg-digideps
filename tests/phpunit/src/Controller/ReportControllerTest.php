@@ -70,10 +70,7 @@ class ReportControllerTest extends AbstractTestController
     {
         $url = '/report';
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
-            'id' => self::$report2->getId()
-        ]);
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
-            'client' => self::$client2->getId()
+            'client' => ['id'=>self::$client2->getId()]
         ]);
     }
 
@@ -90,7 +87,7 @@ class ReportControllerTest extends AbstractTestController
         $reportId = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['client' => self::$client1->getId()] + $this->fixedData
+            'data' => ['client' => ['id'=>self::$client1->getId()]] + $this->fixedData
         ])['data']['report'];
 
         self::fixtures()->clear();
@@ -109,27 +106,6 @@ class ReportControllerTest extends AbstractTestController
         $this->assertCount($transactionTypesCount, $report->getTransactions());
         $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
 
-    }
-
-    public function testEdit()
-    {
-        $url = '/report';
-
-        //POST but passes ID in the request
-        $reportId = $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'data' => ['id' => self::$report1->getId()] + $this->fixedData
-        ])['data']['report'];
-
-        self::fixtures()->clear();
-
-        // assert account created with transactions
-        $report = self::fixtures()->getRepo('Report')->find($reportId);
-        /* @var $report \AppBundle\Entity\Report */
-        $this->assertEquals(self::$client1->getId(), $report->getClient()->getId());
-        $this->assertEquals('2015-01-01', $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals('2015-12-31', $report->getEndDate()->format('Y-m-d'));
     }
 
 
@@ -152,7 +128,6 @@ class ReportControllerTest extends AbstractTestController
 
     /**
      * @depends testAdd
-     * @depends testEdit
      */
     public function testGetById()
     {
@@ -164,17 +139,22 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('contacts', $data);
-        $this->assertArrayHasKey('accounts', $data);
         $this->assertArrayHasKey('decisions', $data);
         $this->assertArrayHasKey('assets', $data);
         $this->assertArrayHasKey('court_order_type', $data);
         $this->assertArrayHasKey('report_seen', $data);
         $this->assertArrayNotHasKey('transactions', $data);
         $this->assertEquals(self::$report1->getId(), $data['id']);
-        $this->assertEquals(self::$client1->getId(), $data['client']);
-        $this->assertEquals('2015-01-01', $data['start_date']);
-        $this->assertEquals('2015-12-31', $data['end_date']);
+        $this->assertEquals(self::$client1->getId(), $data['client']['id']);
+         $this->assertArrayHasKey('start_date', $data);
+          $this->assertArrayHasKey('end_date', $data);
 
+        // assert accounts
+         $data = $this->assertJsonRequest('GET', $url . '?groups=accounts', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertArrayHasKey('accounts', $data);
 
         //  assert transactionsIn
         $data = $this->assertJsonRequest('GET', $url . '?groups=transactionsIn', [
@@ -193,7 +173,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertCount(43, $data['transactions_out']);
+        $this->assertCount(45, $data['transactions_out']);
         $first = array_shift($data['transactions_out']);
         $this->assertArrayHasKey('id', $first);
         $this->assertArrayHasKey('type', $first);
@@ -208,7 +188,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertEquals(28 + 43, count($data['transactions_in'] + $data['transactions_out']));
+        $this->assertEquals(28 + 45, count($data['transactions_in'] + $data['transactions_out']));
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
     }

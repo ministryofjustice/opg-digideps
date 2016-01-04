@@ -20,20 +20,15 @@ class ReportController extends RestController
 
         $reportData = $this->deserializeBodyContent($request);
 
-        if (!empty($reportData['id'])) {
-            //throw new \RuntimeException(__METHOD__ . 'DEPRECTED, use PUT endpoint to modify report');
-            // DEPRECATED ???
-            // get existing report
-            $report = $this->findEntityBy('Report', $reportData['id']);
-            $this->denyAccessIfReportDoesNotBelongToUser($report);
-        } else {
-            // new report
-            $client = $this->findEntityBy('Client', $reportData['client']);
-            $this->denyAccessIfClientDoesNotBelongToUser($client);
-
-            $report = new EntityDir\Report();
-            $report->setClient($client);
+        // new report
+        if (empty($reportData['client']['id'])) {
+            throw new \InvalidArgumentException("Missing client.id");
         }
+        $client = $this->findEntityBy('Client', $reportData['client']['id']);
+        $this->denyAccessIfClientDoesNotBelongToUser($client);
+
+        $report = new EntityDir\Report();
+        $report->setClient($client);
 
         // add court order type
         $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
