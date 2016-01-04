@@ -444,7 +444,7 @@ class Report
     public function setAccounts($accounts)
     {
         foreach ($accounts as $account) {
-            $account->setReportObject($this);
+            $account->setReport($this);
         }
         
         $this->accounts = $accounts;

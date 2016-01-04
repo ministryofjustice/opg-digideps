@@ -159,7 +159,7 @@ class AccountController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
 
         $account = new EntityDir\Account();
-        $account->setReportObject($report);
+        $account->setReport($report);
         
         $form = $this->createForm(new FormDir\AccountType(), $account);
 

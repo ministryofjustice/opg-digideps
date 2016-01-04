@@ -144,7 +144,7 @@ account:
     sortCode:
         notBlank: Enter the sort code
         type: The sort code must be numbers
-        exactMessage: The sort code must be at least {{ limit }} numbers long
+        length: The sort code must be {{ limit }} numbers long
     accountNumber:
         notBlank: Enter the last four numbers of the account number
         type: The account number must be numbers

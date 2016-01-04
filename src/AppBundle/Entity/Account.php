@@ -144,16 +144,9 @@ class Account
     private $createdAt;
     
     /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"add"})
+     * @JMS\Type("AppBundle\Entity\Report")
      */
     private $report;
-    
-    /**
-     * @var Report
-     */
-    private $reportObject;
-
 
     public function getId()
     {
@@ -343,24 +336,6 @@ class Account
         return $this;
     }
     
-    public function setReportObject(Report $reportObject = null)
-    {
-        $this->reportObject = $reportObject;
-        return $this;
-    }
-    
-    /**
-     * @return Report
-     */
-    public function getReportObject($validate = false)
-    {
-        if ($validate && !$this->reportObject instanceof Report) {
-            throw new \RuntimeException("Report object not found.");
-        }
-        
-        return $this->reportObject;
-    }
-    
     /**
      * Add violation if Opening date is not the same as the report start date and there is not explanation
      */
@@ -408,12 +383,8 @@ class Account
         if (!$this->getOpeningDate()) {
             return false;
         }
-        if (!$this->reportObject) {
-            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
-            error_log(__METHOD__ . ' : account reportObject not available', E_WARNING);
-            return false;
-        }
-        return $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
+        
+        return $this->report->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
     }
     
     /**
@@ -424,11 +395,8 @@ class Account
         if (!$this->getClosingDate()) {
             return false;
         }
-        if (!$this->reportObject) {
-            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
-            throw new \RuntimeException(__METHOD__ . ' : account reportObject not available');
-        }
-        return $this->reportObject->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
+        
+        return $this->report->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
     }
     
     /**
