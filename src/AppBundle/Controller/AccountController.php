@@ -24,7 +24,7 @@ class AccountController extends AbstractController
      */
     public function moneyinAction(Request $request, $reportId) {
 
-        $report = $this->getReport($reportId, [ 'transactionsIn', 'basic', 'balance']);
+        $report = $this->getReport($reportId, [ 'transactionsIn', 'basic', 'client', 'balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -38,11 +38,8 @@ class AccountController extends AbstractController
             ]);
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'report' => $report,
-            'client' => $client,
             'subsection' => 'moneyin',
             'jsonEndpoint' => 'transactionsIn',
             'form' => $form->createView()
@@ -59,7 +56,7 @@ class AccountController extends AbstractController
      */
     public function moneyoutAction(Request $request, $reportId) 
     {
-        $report = $this->getReport($reportId, [ 'transactionsOut', 'basic', 'balance']);
+        $report = $this->getReport($reportId, [ 'transactionsOut', 'basic', 'client', 'balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -73,10 +70,8 @@ class AccountController extends AbstractController
             ]);
         }
         
-        $client = $this->getClient($report->getClient());
         return [
             'report' => $report,
-            'client' => $client,
             'subsection' => "moneyout",
             'jsonEndpoint' => 'transactionsIn',
             'form' => $form->createView()
@@ -94,7 +89,7 @@ class AccountController extends AbstractController
     {
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         
-        $report = $this->getReport($reportId, [ 'basic', 'balance','transactionsIn', 'transactionsOut']);
+        $report = $this->getReport($reportId, [ 'basic', 'balance', 'client', 'transactionsIn', 'transactionsOut']);
         $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
         $report->setAccounts($accounts);
         
@@ -113,11 +108,8 @@ class AccountController extends AbstractController
             ]);
         }
         
-        $client = $this->getClient($report->getClient());
-        
         return [
             'report' => $report,
-            'client' => $client,
             'form' => $form->createView(),
             'subsection' => 'balance'
         ];
@@ -132,16 +124,13 @@ class AccountController extends AbstractController
      */
     public function banksAction($reportId) 
     {
-        $report = $this->getReport($reportId, ['basic', 'balance', 'accounts']);
+        $report = $this->getReport($reportId, ['basic', 'client', 'balance', 'accounts']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         
-        $client = $this->getClient($report->getClient());
-        
         return [
             'report' => $report,
-            'client' => $client,
             'subsection' => 'banks'
         ];
     }
@@ -156,7 +145,7 @@ class AccountController extends AbstractController
     public function addAction(Request $request, $reportId) 
     {
 
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'client']);
 
         $account = new EntityDir\Account();
         $account->setReport($report);
@@ -177,11 +166,8 @@ class AccountController extends AbstractController
 
         }
 
-        $client = $this->getClient($report->getClient());
-        
         return [
             'report' => $report,
-            'client' => $client,
             'subsection' => 'banks',
             'form' => $form->createView()
         ]; 
@@ -200,7 +186,7 @@ class AccountController extends AbstractController
 
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'accounts']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
 
         if (0 === count(array_filter($report->getAccounts(), function($account) use ($id) {
             return $account->getId() == $id;
@@ -225,11 +211,8 @@ class AccountController extends AbstractController
         
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'report' => $report,
-            'client' => $client,
             'subsection' => 'banks',
             'form' => $form->createView()
         ];
@@ -245,7 +228,7 @@ class AccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
         if(!empty($report) && in_array($id, $report->getAccounts())){

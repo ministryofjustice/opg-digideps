@@ -55,9 +55,8 @@ class SafeguardController extends AbstractController{
         
         return[ 'report' => $report,
                 'reportStatus' => $reportStatusService,
-                'client' => $this->getClient($report->getClient()),
                 'form' => $form->createView(),
-              ];
+        ];
     }
 
 }

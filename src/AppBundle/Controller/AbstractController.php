@@ -97,16 +97,11 @@ class AbstractController extends Controller
      *
      * @throws \RuntimeException if report is submitted
      */
-    protected function getReportIfReportNotSubmitted($reportId, array $groups, $addClient = true)
+    protected function getReportIfReportNotSubmitted($reportId, array $groups)
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
-        }
-
-        if ($addClient) {
-            $client = $this->getClient($report->getClient());
-            $report->setClientObject($client);
         }
 
         return $report;

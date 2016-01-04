@@ -49,8 +49,8 @@ class Report
     private $submitDate;
     
     /**
-     * @JMS\Type("integer")
-     * @var integer $client
+     * @JMS\Type("AppBundle\Entity\Client")
+     * @var Client $client
      */
     private $client;
     
@@ -148,10 +148,7 @@ class Report
      */
     private $reportSeen;
     
-    /**
-     * @var Client 
-     */
-    private $clientObject;
+    
 
     /**
      * @var boolean
@@ -395,7 +392,7 @@ class Report
      * @param integer $client
      * @return \AppBundle\Entity\Report
      */
-    public function setClient($client)
+    public function setClient(Client $client)
     {
         $this->client = $client;
         return $this;
@@ -698,19 +695,6 @@ class Report
         return $this->reportSeen;
     }
     
-    /**
-     * @return Client
-     */
-    public function getClientObject()
-    {
-        return $this->clientObject;
-    }
-
-
-    public function setClientObject(Client $clientObject)
-    {
-        $this->clientObject = $clientObject;
-    }
     
     public function getSectionCount() {
         if ($this->courtOrderType == $this::PROPERTY_AND_AFFAIRS) {

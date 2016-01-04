@@ -23,9 +23,8 @@ class ContactController extends AbstractController
 
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
 
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
-        $client = $this->getClient($report->getClient());
 
         if (empty($contacts) && $report->isDue() == false) {
             return $this->redirect($this->generateUrl('add_contact', ['reportId'=>$reportId]) );
@@ -34,7 +33,6 @@ class ContactController extends AbstractController
         return [
             'contacts' => $contacts,
             'report' => $report,
-            'client' => $client
         ];
 
     }
@@ -46,7 +44,7 @@ class ContactController extends AbstractController
      */
     public function addAction(Request $request, $reportId) {
 
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         $contact = new EntityDir\Contact;
         $form = $this->createForm(new FormDir\ContactType(), $contact);
@@ -66,12 +64,9 @@ class ContactController extends AbstractController
             return $this->redirect($this->generateUrl('contacts', ['reportId'=>$reportId]));
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $client
         ];
 
     }
@@ -84,7 +79,7 @@ class ContactController extends AbstractController
 
         $restClient = $this->get('restClient');
 
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         if (!in_array($id, $report->getContacts())) {
             throw new \RuntimeException("Contact not found.");
@@ -104,12 +99,9 @@ class ContactController extends AbstractController
             return $this->redirect($this->generateUrl('contacts', ['reportId'=>$reportId]));
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $client
         ];
 
     }
@@ -155,7 +147,7 @@ class ContactController extends AbstractController
      */
     public function noneReasonAction(Request $request, $reportId) {
 
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         $form = $this->createForm(new FormDir\ReasonForNoContactType(), $report);
         $form->handleRequest($request);
@@ -169,12 +161,9 @@ class ContactController extends AbstractController
 
         }
 
-        $client = $this->getClient($report->getClient());
-
         return [
             'form' => $form->createView(),
             'report' => $report,
-            'client' => $client
         ];
 
     }
@@ -188,7 +177,7 @@ class ContactController extends AbstractController
     {
 
         $actionUrl = $this->generateUrl('edit_contacts_nonereason', ['reportId'=>$reportId]);
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
         $form = $this->createForm(new FormDir\ReasonForNoContactType(), $report, ['action' => $actionUrl]);
         $form->handleRequest($request);
 

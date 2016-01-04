@@ -39,7 +39,7 @@ class ReportType extends AbstractType
                                                  'empty_data' => null ,
                                                  'empty_value' => 'Please select ..'] )*/
                 ->add('courtOrderType', 'hidden')
-                ->add('client', 'hidden')
+//                ->add('client', 'hidden')
                 ->add('save', 'submit');
     }
     

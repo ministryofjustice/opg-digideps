@@ -16,7 +16,7 @@
             {{ 'balance.incomplete.noAccounts.addLink' | trans }}
         </span>
             <p class="description">
-                {{ 'balance.incomplete.noAccounts.description' | trans({'%client%': client.firstname}) }}
+                {{ 'balance.incomplete.noAccounts.description' | trans({'%client%': report.client.firstname}) }}
             </p>
         </a>
     </div>
@@ -42,7 +42,7 @@
             {{ 'balance.incomplete.moneyIn.addLink' | trans }}
         </span>
             <p class="description">
-                {{ 'balance.incomplete.moneyIn.description' | trans({'%client%': client.firstname}) }}
+                {{ 'balance.incomplete.moneyIn.description' | trans({'%client%': report.client.firstname}) }}
             </p>
         </a>
     </div>
@@ -57,7 +57,7 @@
         </span>
             <p class="description">
                 {{ 'balance.incomplete.moneyOut.description' | trans({
-                    '%client%': client.firstname
+                    '%client%': report.client.firstname
                 }) }}
             </p>
         </a>

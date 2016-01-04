@@ -12,8 +12,8 @@
     
     {% block maincontent %}
 
-        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%':client.firstname}, translationDomain) }}</h3>
-        <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans({'%client%':client.firstname}, translationDomain) }}</p>
+        <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%':report.client.firstname}, translationDomain) }}</h3>
+        <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
         
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
@@ -66,7 +66,7 @@
                     <span class="icon icon__notification_yellow_small"></span>
                     <span class="page-section-description left-margin big">{{ 'banks.balanceMissingWarningBottom' | trans({
                         '%date%': report.endDate | date("j M Y"),
-                        '%client%': client.firstname
+                        '%client%': report.client.firstname
                     }, translationDomain) | nl2br }}</span>  
                 </div>
              </dl>
