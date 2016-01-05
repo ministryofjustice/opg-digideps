@@ -23,7 +23,7 @@ class SafeguardingController extends RestController
         $safeguarding = new EntityDir\Safeguarding();
         $data = $this->deserializeBodyContent($request);
         
-        $report = $this->findEntityBy('Report', $data['report']['id']);
+        $report = $this->findEntityBy('Report', $data['report_id']);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $safeguarding->setReport($report);
