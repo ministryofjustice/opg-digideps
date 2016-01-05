@@ -43,8 +43,7 @@ class SectionsTest extends WebTestCase
         
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
            'report' => $this->report,
-            'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
+            'reportStatus' => $this->reportStatus
         ]);
         
         $crawler = new Crawler($html);
@@ -64,8 +63,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -85,8 +83,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -126,8 +123,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
+            'reportStatus' => $this->reportStatus
         ]);
 
         $crawler = new Crawler($html);
@@ -408,7 +404,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -432,7 +427,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -456,7 +450,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -480,7 +473,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -503,7 +495,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -526,7 +517,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -550,7 +540,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -574,7 +563,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -598,7 +586,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -622,7 +609,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -646,7 +632,6 @@ class SectionsTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'client' => $this->reportClient
         ]);
 
         $crawler = new Crawler($html);
@@ -660,12 +645,19 @@ class SectionsTest extends WebTestCase
    
     private function setupReport() 
     {
+        $this->reportClient = m::mock('AppBundle\Entity\Client')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getFullname")->andReturn("Fred Smith")
+            ->shouldReceive("getFirstname")->andReturn("Fred")
+            ->getMock();
+        
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getSubmitted')->andReturn(false)
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('isDue')->andReturn(true)
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
+            ->shouldReceive('getClient')->andReturn($this->reportClient)
             ->getMock();
         
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
@@ -683,11 +675,7 @@ class SectionsTest extends WebTestCase
             ->shouldReceive('isReadyToSubmit')->andReturn(true)
             ->getMock();
 
-        $this->reportClient = m::mock('AppBundle\Entity\Client')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive("getFullname")->andReturn("Fred Smith")
-            ->shouldReceive("getFirstname")->andReturn("Fred")
-            ->getMock();
+        
     }   
     
 }

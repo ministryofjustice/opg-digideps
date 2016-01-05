@@ -38,9 +38,9 @@ abstract class ControllerTestCase extends WebTestCase {
 
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('get')->withArgs(["report/1", "Report",[ 'query' => [ 'groups' => [ 'transactions', 'basic']]]])->andReturn($this->report)
+            ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])->andReturn($this->report)
 
-            ->shouldReceive('get')->withArgs(['client/1', 'Client', [ 'query' => [ 'groups' => [ "basic"]]]])->andReturn($this->client)
+            ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
             ->getMock();
 
         static::$kernel->getContainer()->set('restClient', $this->restClient);
