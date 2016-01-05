@@ -143,6 +143,27 @@ class ReportController extends RestController
                 'deputy' => $report->getClient()->getUsers()->first(),
         ]);
     }
+    
+    /**
+     * @Route("/report/{reportId}/pdf")
+     * @Method({"GET"})
+     */
+    public function PdfAction($reportId)
+    {
+        // Get the html
+        
+        // convert html string to base64 string
+        
+        // Post the html to http://wkhtmltopdf:80/
+        // { 
+        //   'contents': base64String
+        // }
+        // Make sure http header is set to 'Content-Type': 'application/json'
+        
+        // receive reponse content which should be application/pdf
+        
+        // pass the result onto the client calling this, make sure to set the application/pdf content type also
+    }
 
 
     /**
