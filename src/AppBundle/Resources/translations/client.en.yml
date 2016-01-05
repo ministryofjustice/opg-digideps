@@ -45,7 +45,7 @@ form:
       cancel:
         label: "Cancel"
   editClientForm:
-    subSectionTitle: "Edit client's details"
+    subSectionTitle: "Edit %client%'s details"
     controls:
       cancel:
         label: "Cancel"
