@@ -36,6 +36,8 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
             ]);
+            
+            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
         }
 
         return [
@@ -68,6 +70,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
+            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
         }
         
         return [
