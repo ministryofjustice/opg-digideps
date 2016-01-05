@@ -107,7 +107,7 @@ contact:
         notBlank: Enter the contact's postcode
         maxMessage: The postcode can't be longer than {{ limit }} characters
     relationship:
-        notBlank: Enter the contact's relationship to the client
+        notBlank: Enter the contact's relationship to %client%
         minMessage: This description is too short
         maxMessage: The description can't be longer than {{ limit }} letters
     explanation:
@@ -124,7 +124,7 @@ decision:
     clientInvolvedBoolean:
         notBlank: Choose Yes or No
     clientInvolvedDetails:
-        notBlank: Tell us if you involved the client
+        notBlank: Tell us if you involved %client%
         length: This description must be at least {{ limit }} letters long
     no-decision-reason:
         notBlank: Enter a reason here
@@ -194,7 +194,7 @@ asset:
         notBlank: Enter the date the asset was valued
         date: Enter a valid date
     no_assets:
-        notBlank: Tell us if the client has no assets to add
+        notBlank: Tell us if %client% has no assets to add
 # validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:
@@ -235,7 +235,7 @@ safeguarding:
     howIsCareFunded:
         notBlank: Select one option
     whoIsDoingTheCaring:
-        notBlank: Give us more details about who is caring for the client
+        notBlank: Give us more details about who is caring for %client%
     whenWasCarePlanLastReviewed:
         notBlank: Please enter last review date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY

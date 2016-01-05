@@ -2,7 +2,7 @@ page:
   htmlTitle: "Deputy report - money paid in and out | GOV.UK"
   pageSectionTitle: "Bank or building society accounts"
   totalBalance: Total balance
-  pageSectionWarning: Add and edit totals for the reporting period for the client's account.
+  pageSectionWarning: Add and edit totals for the reporting period for %client%'s account.
   currencySymbol: "£"
   header:
     bankBuildingSociety:
