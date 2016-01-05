@@ -141,7 +141,7 @@ class ContactControllerTest extends AbstractTestController
         $url2 = '/report/contact';
         
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy, [
-            'report'=> self::$report2->getId()
+            'report_id'=> self::$report2->getId()
         ]); 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy, [
             'id' => self::$contact2->getId()
@@ -155,7 +155,7 @@ class ContactControllerTest extends AbstractTestController
         // empty params
         $errorMessage = $this->assertJsonRequest('POST', $url, [
             'data' => [
-                'report'=>self::$report1->getId()
+                'report_id'=>self::$report1->getId()
             ],
             'mustFail' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -197,7 +197,7 @@ class ContactControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
-            'data'=> ['report'=> self::$report1->getId()] + $this->dataUpdate
+            'data'=> ['report_id'=> self::$report1->getId()] + $this->dataUpdate
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 

@@ -138,9 +138,6 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
-        $this->assertArrayHasKey('contacts', $data);
-        $this->assertArrayHasKey('decisions', $data);
-        $this->assertArrayHasKey('assets', $data);
         $this->assertArrayHasKey('court_order_type', $data);
         $this->assertArrayHasKey('report_seen', $data);
         $this->assertArrayNotHasKey('transactions', $data);
@@ -150,12 +147,28 @@ class ReportControllerTest extends AbstractTestController
           $this->assertArrayHasKey('end_date', $data);
 
         // assert accounts
-         $data = $this->assertJsonRequest('GET', $url . '?groups=accounts', [
+        $data = $this->assertJsonRequest('GET', $url . '?groups=accounts', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
         $this->assertArrayHasKey('accounts', $data);
 
+        // assert decisions
+        $data = $this->assertJsonRequest('GET', $url . '?groups=decisions', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertArrayHasKey('decisions', $data);
+        
+        // assert assets
+        $data = $this->assertJsonRequest('GET', $url . '?groups=assets', [
+            'mustSucceed' => true,
+            'AuthToken' => self::$tokenDeputy,
+        ])['data'];
+        $this->assertArrayHasKey('assets', $data);
+        
+        
+        
         //  assert transactionsIn
         $data = $this->assertJsonRequest('GET', $url . '?groups=transactionsIn', [
             'mustSucceed' => true,

@@ -52,6 +52,8 @@ class DecisionController extends RestController
             $this->denyAccessIfReportDoesNotBelongToUser($report);
             $decision = new EntityDir\Decision();
             $decision->setReport($report);
+            $report->setReasonForNoDecisions(null);
+            $this->persistAndFlush($report);
         }
 
         $this->validateArray($data, [
@@ -67,7 +69,7 @@ class DecisionController extends RestController
         ]);
 
         $this->persistAndFlush($decision);
-
+        
         return ['id' => $decision->getId()];
     }
 

@@ -42,16 +42,14 @@ class Report
     private $client;
     
     /**
-     * @JMS\Groups({"basic"})
-     * @JMS\Accessor(getter="getContactIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"contacts"})
+     * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
     
     /**
      * @JMS\Groups({"accounts"})
-     * @JMS\Accessor(getter="getAccounts")
      * @JMS\Type("array<AppBundle\Entity\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
@@ -64,17 +62,15 @@ class Report
     private $transactions;
     
     /**
-     * @JMS\Groups({ "basic"})
-     * @JMS\Accessor(getter="getDecisionIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"decisions"})
+     * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
     private $decisions;
     
     /**
-     * @JMS\Groups({"basic"})
-     * @JMS\Accessor(getter="getAssetIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"asset"})
+     * @JMS\Type("array<AppBundle\Entity\Asset>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
      */
     private $assets;
@@ -492,17 +488,6 @@ class Report
     {
         return $this->contacts;
     }
-    
-    public function getContactIds()
-    {   
-        $contacts = [];
-        if(!empty($this->contacts)){
-            foreach($this->contacts as $contact){
-                $contacts[] = $contact->getId();
-            }
-        }
-        return $contacts;
-    }
 
     /**
      * Add accounts
@@ -570,18 +555,6 @@ class Report
         return $this->decisions;
     }
 
-    
-    public function getDecisionIds()
-    {
-        $decisions = [];
-        if(!empty($this->decisions)){
-            foreach($this->decisions as $decision){
-                $decisions[] = $decision->getId();
-            }
-        }
-        return $decisions;
-    }
-    
     /**
      * Add assets
      *
@@ -640,17 +613,6 @@ class Report
         ksort($ret);
     
         return $ret;
-    }
-
-    public function getAssetIds()
-    {
-        $assets = [];
-        if(!empty($this->assets)){
-            foreach($this->assets as $asset){
-                $assets[] = $asset->getId();
-            }
-        }
-        return $assets;
     }
     
     /**
@@ -1070,5 +1032,5 @@ class Report
 
         return $today >= $reportDueOn;
     }
-
+    
 }
