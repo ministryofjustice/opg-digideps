@@ -8,6 +8,7 @@ Feature: deputy / report / add contact, decision, assets
         And I follow "edit-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
+        When I follow "add-contacts-button"
         And I press "contact_save"
         And I save the page as "report-contact-add-error"
         Then the following fields should have an error:
@@ -35,6 +36,7 @@ Feature: deputy / report / add contact, decision, assets
         And I follow "edit-decisions"
         And I save the page as "report-decision-empty"
         # form errors
+        When I follow "add-decisions-button"
         When I press "decision_save"
         And I save the page as "report-decision-add-error"
         Then the following fields should have an error:
@@ -68,6 +70,7 @@ Feature: deputy / report / add contact, decision, assets
         And I follow "edit-assets"
         And I save the page as "report-assets-empty"
         # wrong form
+        When I follow "add-assets-button"
         And I press "asset_title_next"
         And I save the page as "report-assets-title-add-error-empty"
         Then the following fields should have an error:

@@ -44,7 +44,11 @@
             </div>
         </div>
         {% endfor %}
-        <div class="grand-total">{{ (subsection ~ '.grandtotal')| trans }}: <span class="currency">{{ 'currencySymbol' | trans }}</span><span class="value">{{ transactionsTotal | number_format(2, '.', ',')}}</span></div>
+        <div class="grand-total">
+            {{ (subsection ~ '.grandtotal')| trans }}: 
+            <span class="currency">{{ 'currencySymbol' | trans }}</span>
+            <span class="value behat-region-transaction-total">{{ transactionsTotal | number_format(2, '.', ',')}}</span>
+        </div>
     </div>
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
