@@ -8,6 +8,7 @@ use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 
 
@@ -261,6 +262,22 @@ class ReportController extends AbstractController
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
         ];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/pdf", name="report_pdf")
+     * @Template()
+     */
+    public function pdfAction($reportId, $isEmailAttachment = false)
+    {
+        $restClient = $this->get('restClient');
+        
+        $pdf = $restClient->get('report/' . $reportId . '/pdf', 'raw');
+        
+        $response = new Response($pdf);
+        $response->headers->set('Content-Type', 'application/pdf');
+        
+        return $response;
     }
 
     private function groupAssets($assets)
