@@ -236,8 +236,7 @@ class ReportController extends AbstractController
             'report' => $report,
         ];
     }
-
-
+    
     /**
      * @Route("/report/{reportId}/display", name="report_display")
      * @Template("AppBundle:Layouts:raw.html.twig")
@@ -258,6 +257,20 @@ class ReportController extends AbstractController
         ];
     }
 
+    /**
+     * @Route("/report/{reportId}/pdf", name="report_pdf")
+     */
+    public function displayPdf($reportId, $isEmailAttachment = false)
+    {
+        $restClient = $this->get('restClient');
+        $pdf = $restClient->get('report/' . $reportId . '/pdf', 'string');
+        return $pdf;
+    }
+    
+    
+    
+    
+    
     private function groupAssets($assets)
     {
         $assetGroups = array();
