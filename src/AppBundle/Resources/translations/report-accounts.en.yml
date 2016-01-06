@@ -40,11 +40,11 @@ balance:
       accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut: 
-        title: Total balance after money in and money out
-        subtitle: This figure was taken from information you provided
+        title: "Total balance after money in and money out:"
+        subtitle: This is what you entered for the opening balance, income and spending
       totalFromAccounts: 
-        title: Total balance of all bank accounts
-        subtitle: This figure was taken from your bank statements
+        title: "Total balance of all bank accounts:"
+        subtitle: This is what you entered for the closing balance on end date
       missingAmount: "Missing amount:"
       unaccounted: Unaccounted for
       extraAmount: Extra amount
