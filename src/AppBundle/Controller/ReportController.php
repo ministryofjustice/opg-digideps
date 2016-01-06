@@ -153,26 +153,33 @@ class ReportController extends RestController
     {
         $wkHtmlToPdfUrl = 'http://wkhtmltopdf:80';
         
-        $html = $this->forward('AppBundle:Report:formatted', array(
-            'reportId'  => $reportId,
-        ));
+        try {
+            $html = $this->forward('AppBundle:Report:formatted', array(
+                'reportId'  => $reportId,
+                'addLayout' => false
+            ))->getContent();
+            
+            // TODO: move to a service (where guzzle could be injected, and the URL too)
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $wkHtmlToPdfUrl);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $body = json_encode([
+                'contents' => base64_encode($html)
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 
+
+            $pdf = curl_exec($ch);
+
+            $response = new Response($pdf);
+            $response->headers->set('Content-Type', 'application/pdf');
+
+            return $response;
         
-        // TODO: move to a service (where guzzle could be injected, and the URL too)
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $wkHtmlToPdfUrl);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $body = json_encode([
-            'contents' => base64_encode($html)
-        ]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 
+        } catch (\Exception $e) {
+            throw $e;
+        }
         
-        $pdf = curl_exec($ch);
-        
-        $response = new Response($pdf);
-        $response->headers->set('Content-Type', 'application/pdf');
-        
-        return $response;
     }
 
 
