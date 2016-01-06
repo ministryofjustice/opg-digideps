@@ -31,7 +31,7 @@ description:
   label: Description
   hint: Give details of the decision here.
 clientInvolvedBoolean:
-  legend: %client%'s' involvement
+  legend: %client%'s involvement
   hint: Did you involve %client% in this decision?
   defaultOption: Please select...
 clientInvolvedDetails:
