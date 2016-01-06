@@ -17,7 +17,7 @@ Feature: Safeguarding Data entry
             | courtDate | 1 | 1 | 2015 |
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
-            | phone | 0123456789  
+            | phone | 07814000111 | 
       And I set the report start date to "1/1/2015"
       And I set the report end date to "1/1/2016"
       Then the URL should match "report/\d+/overview"
@@ -167,7 +167,7 @@ Feature: Safeguarding Data entry
         And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_0" should be checked
         And the "safeguarding_whenWasCarePlanLastReviewed_month" field should contain "01"
-        And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2015"
+        And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2016"
 
     @safeguarding @entry @deputy
     Scenario: Client does not have care plan
