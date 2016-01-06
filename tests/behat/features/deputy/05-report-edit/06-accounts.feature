@@ -15,11 +15,12 @@ Feature: deputy / report / edit accounts
       When I set the client details to:
             | name | Peter | White | 
             | caseNumber | 12345ABC |
-            | courtDate | 1 | 1 | 2014 |
+            | courtDate | 1 | 1 | 2015 |
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
-            | phone | 0123456789  |
-      And I set the report end date to "1/1/2015"
+            | phone | 0123456789 |
+        And I set the report start date to "1/1/2015"
+        And I set the report end date to "1/1/2016"
       Then the URL should match "report/\d+/overview"
       Then I am on "/logout"
       And I reset the email log
@@ -39,7 +40,7 @@ Feature: deputy / report / edit accounts
             | account_sortCode_sort_code_part_3 | 22 |
             | account_openingDate_day   | 1 |
             | account_openingDate_month | 2 |
-            | account_openingDate_year  | 2014 |
+            | account_openingDate_year  | 2015 |
             | account_openingBalance  | 100.00 |
             | account_openingDateExplanation | Test One |
         And I press "account_save"
@@ -56,7 +57,7 @@ Feature: deputy / report / edit accounts
         Then I fill in the following:
             | accountBalance_closingDate_day   | 1 | 
             | accountBalance_closingDate_month | 1 | 
-            | accountBalance_closingDate_year  | 2015 | 
+            | accountBalance_closingDate_year  | 2016 | 
             | accountBalance_closingBalance    | 100.00 |
         And I press "accountBalance_save"
         And I click on "edit-account-details"

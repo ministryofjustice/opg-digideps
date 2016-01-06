@@ -134,17 +134,15 @@ Feature: User Self Registration
             | client_firstname | Fred |
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
-            | client_courtDate_year | 2014 |
+            | client_courtDate_year | 2015 |
             | client_address |  address1 |
             | client_country | GB |
             | client_postcode | SW1 1RH |
             | client_allowedCourtOrderTypes_1 | 1 |
         And I press "client_save"
         Then the URL should match "/report/create/\d+"
-        And I fill in the following:
-            | report_endDate_day | 1 |
-            | report_endDate_month | 1 |
-            | report_endDate_year | 2015 |
+        And I set the report start date to "1/1/2015"
+        And I set the report end date to "1/1/2016"
         Then I press "report_save"
         Then the URL should match "/report/\d+/overview"
         Then I go to "/logout"
