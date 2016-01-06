@@ -43,9 +43,11 @@ Feature: Safeguarding OPG Report
         And I add the following bank account:
             | bank    | HSBC - main account |
             | accountNumber | 8765 |
+            | accountType | cash |
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 |
             | openingBalance  | 155.000 |
+            | closingBalance  |  5855.19 |
+        And I add the following transactions
             | moneyIn_0    | 10000.01 |
             | moneyIn_1    | 200.01 |
             | moneyIn_2    | 300.01 |
@@ -86,8 +88,6 @@ Feature: Safeguarding OPG Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 |
-            | closingBalance | 5855.19 |
         And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |

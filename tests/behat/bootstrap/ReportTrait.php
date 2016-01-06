@@ -295,61 +295,52 @@ trait ReportTrait
         $this->clickLink("edit-accounts");
 
         // expand form if collapsed
-        if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
+        //if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
             $this->clickOnBehatLink('add-account');
-        }
+        //}
 
         $rows = $table->getRowsHash();
 
         $this->fillField('account_bank', $rows['bank']);
         $this->fillField('account_accountNumber', $rows['accountNumber']);
+        $this->fillField('account_accountType', $rows['accountType']);
         $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
         $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
         $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
 
-        $datePieces = explode('/', $rows['openingDate']);
-        $this->fillField('account_openingDate_day', $datePieces[0]);
-        $this->fillField('account_openingDate_month', $datePieces[1]);
-        $this->fillField('account_openingDate_year', $datePieces[2]);
-        if (isset($rows['openingDateExplanation'])) {
-            $this->fillField('account_openingDateExplanation', $rows['openingDateExplanation']);
-        }
         $this->fillField('account_openingBalance', $rows['openingBalance']);
+        $this->fillField('account_closingBalance', $rows['closingBalance']);
 
         $this->pressButton("account_save");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
 
-        // open account and add transactions
-        $this->clickOnBehatLink('account-' . $rows['accountNumber']);
-        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
-        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 
-        // add closing balance
-        if (isset($rows['closingDate'])) {
-            $closingDatePieces = explode('/', $rows['closingDate']);
-            $this->fillField('accountBalance_closingDate_day', $closingDatePieces[0]);
-            $this->fillField('accountBalance_closingDate_month', $closingDatePieces[1]);
-            $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
-            $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
-            $this->pressButton("accountBalance_save");
-
-            if (isset($rows['closingBalanceExplanation']) || isset($rows['closingDateExplanation'])) {
-                $this->theFormShouldBeInvalid();
-
-                if (isset($rows['closingBalanceExplanation'])) {
-                    $this->fillField('accountBalance_closingBalanceExplanation', $rows['closingBalanceExplanation']);
-                }
-                if (isset($rows['closingDateExplanation'])) {
-                    $this->fillField('accountBalance_closingDateExplanation', $rows['closingDateExplanation']);
-                }
-
-                $this->pressButton("accountBalance_save");
-            }
-
-            $this->theFormShouldBeValid();
-            $this->assertResponseStatus(200);
-        }
+//        // add closing balance
+//        if (isset($rows['closingDate'])) {
+//            $closingDatePieces = explode('/', $rows['closingDate']);
+//            $this->fillField('accountBalance_closingDate_day', $closingDatePieces[0]);
+//            $this->fillField('accountBalance_closingDate_month', $closingDatePieces[1]);
+//            $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
+//            $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
+//            $this->pressButton("accountBalance_save");
+//
+//            if (isset($rows['closingBalanceExplanation']) || isset($rows['closingDateExplanation'])) {
+//                $this->theFormShouldBeInvalid();
+//
+//                if (isset($rows['closingBalanceExplanation'])) {
+//                    $this->fillField('accountBalance_closingBalanceExplanation', $rows['closingBalanceExplanation']);
+//                }
+//                if (isset($rows['closingDateExplanation'])) {
+//                    $this->fillField('accountBalance_closingDateExplanation', $rows['closingDateExplanation']);
+//                }
+//
+//                $this->pressButton("accountBalance_save");
+//            }
+//
+//            $this->theFormShouldBeValid();
+//            $this->assertResponseStatus(200);
+//        }
     }
 
     private function addTransactions(array $rows, $prefix, $buttonId)

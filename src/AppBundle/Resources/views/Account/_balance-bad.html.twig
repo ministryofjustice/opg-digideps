@@ -34,7 +34,7 @@
         <div class="message">
             <b>{{ 'balance.bad.unaccounted' | trans }}:</b>
         </div>
-        <div class="total">
+        <div class="total behat-region-unaccounted-for">
             {{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | number_format(2, '.', ',') }}
         </div>
     </div>

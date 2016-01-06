@@ -11,87 +11,80 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Safeguarding
 {
+    use Traits\HasReportTrait;
+    
     /**
      * @JMS\Type("integer")
      * @var integer
      */
     private $id;
 
-
-    /**
-     * Only used to hold the Report object, needed by the validators for date range reasons
-     * @JMS\Type("AppBundle\Entity\Report")
-     * @JMS\Groups({"safeguarding"})
-     * @var Report
-     */
-    private $report;
-    
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding"})
-     * @JMS\Groups({"safeguarding"})
+     * 
      */
     private $doYouLiveWithClient;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouVisit.notBlank", groups={"safeguarding-no"} )
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $howOftenDoYouVisit;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouPhoneOrVideoCall.notBlank", groups={"safeguarding-no"})
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $howOftenDoYouPhoneOrVideoCall;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouWriteEmailOrLetter.notBlank", groups={"safeguarding-no"})
-     * @JMS\Groups({"safeguarding"})    
+     *     
      */
     private $howOftenDoYouWriteEmailOrLetter;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoesClientSeeOtherPeople.notBlank", groups={"safeguarding-no"})
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $howOftenDoesClientSeeOtherPeople;
 
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $anythingElseToTell;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $doesClientHaveACarePlan;
 
@@ -99,7 +92,7 @@ class Safeguarding
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
      * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
-     * @JMS\Groups({"safeguarding"})     
+     *      
      */
     private $whenWasCarePlanLastReviewed;
 
@@ -118,40 +111,11 @@ class Safeguarding
 
     /**
      * @param integer $id
-     * @return \AppBundle\Entity\Report
      */
     public function setId($id)
     {
         $this->id = $id;
         return $this;
-    }
-
-
-    public function setReportId($reportId)
-    {
-        $this->reportId = $reportId;
-    }
-
-    public function getReportId()
-    {
-        return $this->reportId;
-    }
-
-
-    /**
-     * @return Safeguarding
-     */
-    public function getReport()
-    {
-        return $this->report;
-    }
-
-    /**
-     * @param Report $report
-     */
-    public function setReport(Report $report)
-    {
-        $this->report = $report;
     }
 
     /**

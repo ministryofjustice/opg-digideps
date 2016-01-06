@@ -29,7 +29,7 @@
             {% endif %}
             
         </dl>
-        <a class="edit-link" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
+        <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
         
         {% if account.closingBalance == null %}
         <div class="warning">

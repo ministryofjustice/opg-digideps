@@ -36,6 +36,8 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
             ]);
+            
+            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
         }
 
         return [
@@ -68,6 +70,7 @@ class AccountController extends AbstractController
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsOut',
             ]);
+            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
         }
         
         return [
@@ -157,7 +160,7 @@ class AccountController extends AbstractController
         if ($form->isValid()) {
 
             $data = $form->getData();
-            $data->setReport($reportId);
+            $data->setReport($report);
             $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
                 'deserialise_group' => 'add_edit'
             ]);
@@ -176,7 +179,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/report/{reportId}/accounts/banks/{id}/edit", name="edit_account")
      * @param integer $reportId
-     * @param integer $id
+     * @param integer $id account Id
      * @param Request $request
      * @Template()
      * @return array
@@ -188,10 +191,8 @@ class AccountController extends AbstractController
 
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
 
-        if (0 === count(array_filter($report->getAccounts(), function($account) use ($id) {
-            return $account->getId() == $id;
-        }))) {
-            throw new \RuntimeException("Account not found.");
+        if (!$report->hasAaccountWithId($id)) {
+            throw new \RuntimeException("Account not found."); 
         }
         
         $account = $restClient->get('report/account/' . $id, 'Account');
@@ -202,7 +203,7 @@ class AccountController extends AbstractController
         if($form->isValid()){
 
             $data = $form->getData();
-            $data->setReport($reportId);
+            $data->setReport($report);
             $restClient->put('/account/' . $id, $account, [
                 'deserialise_group' => 'add_edit'
             ]);
@@ -228,10 +229,10 @@ class AccountController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
 
-        if(!empty($report) && in_array($id, $report->getAccounts())){
+        if ($report->hasAaccountWithId($id)) {
             $restClient->delete("/account/{$id}");
         }
 

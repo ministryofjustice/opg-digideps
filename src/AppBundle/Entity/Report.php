@@ -75,20 +75,20 @@ class Report
     private $accounts;
     
     /**
-     * @JMS\Type("array")
-     * @var array $contacts
+     * @JMS\Type("array<AppBundle\Entity\Contact>")
+     * @var Contact[]
      */
     private $contacts;
     
     /**
-     * @JMS\Type("array")
-     * @var array $assets
+     * @JMS\Type("array<AppBundle\Entity\Asset>")
+     * @var Asset[]
      */
     private $assets;
     
     /**
-     * @JMS\Type("array")
-     * @var array $decisions
+     * @JMS\Type("array<AppBundle\Entity\Decision>")
+     * @var Decision[]
      */
     private $decisions;
     
@@ -422,16 +422,6 @@ class Report
     public function getAccounts()
     {
         return $this->accounts;
-    }
-    
-    /**
-     * @return array of integers (Account IDs)
-     */
-    public function getAccountIds()
-    {
-        return array_map(function($account) {
-            return $account->getId();
-        }, $this->accounts);
     }
     
     /**
@@ -984,6 +974,39 @@ class Report
         return !$this->hasMoneyIn() 
             || !$this->hasMoneyOut() 
             || count($this->getAccountsWithNoClosingBalance()) > 0;
+    }
+    
+    
+    /**
+     * @param integer $id
+     * 
+     * @return boolean
+     */
+    public function hasAssetWithId($id)
+    {
+        foreach ($this->getAssets() as $asset) {
+            if ($asset->getId() == $id) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @param integer $id
+     * 
+     * @return boolean
+     */
+    public function hasAaccountWithId($id)
+    {
+        foreach ($this->getAccounts() as $asset) {
+            if ($asset->getId() == $id) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
 }
