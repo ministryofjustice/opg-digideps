@@ -116,8 +116,13 @@ activeTab: "tab-accounts"
 
     <script type="text/javascript">
         var transactionHasChanged = false;
-        var message = "{{ 'leaveWarning' | trans | raw }}";
-
+        
+        {% if closingBalanceFormShow  %}
+            var message = "{{ 'leaveWithClosingWarning' | trans | raw }}";
+        {% else %}
+            var message = "{{ 'leaveWarning' | trans | raw }}";
+        {% endif %}
+        
         $( document ).ready(function() {
             $(".account-transactions").on("keyup input paste", ".form-row input.form-control__number", function(){
                 transactionHasChanged = true;
