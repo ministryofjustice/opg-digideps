@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
@@ -148,21 +149,30 @@ class ReportController extends RestController
      * @Route("/report/{reportId}/pdf")
      * @Method({"GET"})
      */
-    public function PdfAction($reportId)
+    public function pdfAction($reportId)
     {
-        // Get the html
+        $wkHtmlToPdfUrl = 'http://wkhtmltopdf:80';
         
-        // convert html string to base64 string
+        $html = $this->forward('AppBundle:Report:formatted', array(
+            'reportId'  => $reportId,
+        ));
         
-        // Post the html to http://wkhtmltopdf:80/
-        // { 
-        //   'contents': base64String
-        // }
-        // Make sure http header is set to 'Content-Type': 'application/json'
+        // TODO: move to a service (where guzzle could be injected, and the URL too)
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $wkHtmlToPdfUrl);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $body = json_encode([
+            'contents' => base64_encode($html)
+        ]);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 
         
-        // receive reponse content which should be application/pdf
+        $pdf = curl_exec($ch);
         
-        // pass the result onto the client calling this, make sure to set the application/pdf content type also
+        $response = new Response($pdf);
+        $response->headers->set('Content-Type', 'application/pdf');
+        
+        return $response;
     }
 
 
