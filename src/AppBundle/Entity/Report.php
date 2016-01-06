@@ -218,7 +218,7 @@ class Report
 
     /**
      * @var string
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "basic"})
      * @JMS\Type("string")
      *
      * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
@@ -987,7 +987,7 @@ class Report
 
     /**
      * @JMS\VirtualProperty
-     * @JMS\Groups({"balance"})
+     * @JMS\Groups({"balance", "basic"})
      * @JMS\Type("boolean")
      * @JMS\SerializedName("totals_match")
      */
