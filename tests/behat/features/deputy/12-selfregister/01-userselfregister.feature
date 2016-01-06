@@ -143,7 +143,6 @@ Feature: User Self Registration
         Then the URL should match "/report/create/\d+"
         And I set the report start date to "1/1/2015"
         And I set the report end date to "1/1/2016"
-        Then I press "report_save"
         Then the URL should match "/report/\d+/overview"
         Then I go to "/logout"
         And I am logged in as "behat-zac.tolley@digital.justice.gov.uk" with password "Abcd1234"
