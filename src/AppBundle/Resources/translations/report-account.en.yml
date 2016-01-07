@@ -134,3 +134,4 @@ moneyOut:
 save:
   label: "Save"
 leaveWarning: "You haven't saved the transactions you have entered. Do you want to leave without saving?"
+leaveWithClosingWarning: "You have entered some new amounts under money in or money out. You will need to save these before you can save the closing balance. Stay on this page and scroll down to save the amounts you entered for money in and money out."

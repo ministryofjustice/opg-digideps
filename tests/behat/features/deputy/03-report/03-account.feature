@@ -3,7 +3,6 @@ Feature: deputy / report / account
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the "2015" report overview page
         And I follow "edit-accounts"
         And I save the page as "report-account-empty"
         # empty form
@@ -50,7 +49,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 66 |
             | account_openingDate_day   | 5 |
             | account_openingDate_month | 4 |
-            | account_openingDate_year  | 2015 |
+            | account_openingDate_year  | 2016 |
             | account_openingBalance  | 1,155.00 |
         And I press "account_save"
         Then the following fields should have an error:
@@ -78,7 +77,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: edit 1st account (HSBC - main account) 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the account "8765" page of the "2015" report
+        And I am on the account "8765" page of the "2016" report
         And I click on "edit-account-details"
         And I save the page as "report-account-edit-start"
         # assert fields are filled in from db correctly
@@ -90,7 +89,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 66 |
             | account_openingDate_day   | 05 |
             | account_openingDate_month | 04 |
-            | account_openingDate_year  | 2015 |
+            | account_openingDate_year  | 2016 |
             | account_openingBalance  | 1,155.00 |
         # check invalid values
         When I fill in the following:
@@ -124,7 +123,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 56 |
             | account_openingDate_day   | 1 |
             | account_openingDate_month | 2 |
-            | account_openingDate_year  | 2015 |
+            | account_openingDate_year  | 2016 |
             | account_openingBalance  | 1,150.00 |
         And I press "account_save"
         # check values are saved
@@ -137,7 +136,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 56 |
             | account_openingDate_day   | 01 |
             | account_openingDate_month | 02 |
-            | account_openingDate_year  | 2015 |
+            | account_openingDate_year  | 2016 |
             | account_openingBalance  | 1,150.00 |
         And I save the page as "report-account-edit-reloaded"
     
@@ -161,23 +160,23 @@ Feature: deputy / report / account
       Then the response status code should be 200
       And the form should be valid
       When I click on "account-9999"
-      Then I should see "01/01/2015" in the "opening-balance" region
+      Then I should see "01/01/2016" in the "opening-balance" region
       
       
     @deputy
     Scenario: edit account with no default opening date
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I am on the account "9999" page of the "2015" report
+      And I am on the account "9999" page of the "2016" report
       And I click on "edit-account-details"
       Then the following fields should have the corresponding values:
             | account_openingDate_day   | 01 |
             | account_openingDate_month | 01 |
-            | account_openingDate_year  | 2015 |
+            | account_openingDate_year  | 2016 |
             | account_openingDateExplanation | | 
       When I fill in the following:
             | account_openingDate_day   | 02 |
             | account_openingDate_month | 02 |
-            | account_openingDate_year  | 2015 |
+            | account_openingDate_year  | 2016 |
       And I press "account_save"
       Then the following fields should have an error:
             | account_openingDate_day |
@@ -189,7 +188,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: delete account 9999 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the "2015" report
+        And I am on the accounts page of the "2016" report
         When I click on "account-9999"
         And I click on "edit-account-details"
         # delete and cancel
@@ -205,7 +204,7 @@ Feature: deputy / report / account
         Given I save the application status into "report-no-totals"
         Given I set the report 1 end date to 3 days ago
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the "2015" report
+        And I am on the accounts page of the "2016" report
         Then I should not see the "account-closing-balance-form" region
         Then I load the application status from "report-no-totals"
     
