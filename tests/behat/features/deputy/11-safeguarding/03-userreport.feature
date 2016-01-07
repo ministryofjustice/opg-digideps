@@ -47,47 +47,47 @@ Feature: Safeguarding OPG Report
             | sortCode | 88 | 77 | 66 |
             | openingBalance  | 155.000 |
             | closingBalance  |  5855.19 |
-        And I add the following transactions
-            | moneyIn_0    | 10000.01 |
-            | moneyIn_1    | 200.01 |
-            | moneyIn_2    | 300.01 |
-            | moneyIn_3    | 400.01 |
-            | moneyIn_4    | 500.01 |
-            | moneyIn_5    | 600.01 |
-            | moneyIn_6    | 700.01 |
-            | moneyIn_7    | 800.01 |
-            | moneyIn_8    | 900.01 |
-            | moneyIn_9    | 1000.01 |
-            | moneyIn_10   | 1100.01 |
-            | moneyIn_11   | 1,200.01 |
-            | moneyIn_12   | 1,300.01 |
-            | moneyIn_13   | 1,400.01 |
-            | moneyIn_14   | 1,500.01 |
-            | moneyIn_15   | 1,600.01 | more-details-in-15 |
-            | moneyIn_16   | 1,700.01 | more-details-in-16 |
-            | moneyIn_17   | 1,800.01 | more-details-in-17 |
-            | moneyIn_18   | 1,800.01 | more-details-in-18 |
-            | moneyOut_0   | 100.00 |
-            | moneyOut_1   | 200.00 |
-            | moneyOut_2   | 300.00 |
-            | moneyOut_3   | 400.00 |
-            | moneyOut_4   | 500.00 |
-            | moneyOut_5   | 600.00 |
-            | moneyOut_6   | 700.00 |
-            | moneyOut_7   | 800.00 |
-            | moneyOut_8   | 900.00 |
-            | moneyOut_9   | 1000.00 |
-            | moneyOut_10  | 1100.00 |
-            | moneyOut_11  | 1,200.00 | more-details-out-11 |
-            | moneyOut_12  | 1,300.00 | more-details-out-12 |
-            | moneyOut_13  | 1,400.00 | more-details-out-13 |
-            | moneyOut_14  | 1,500.00 | more-details-out-14 |
-            | moneyOut_15  | 1,600.00 | more-details-out-15 |
-            | moneyOut_16  | 1,700.00 | more-details-out-16 |
-            | moneyOut_17  | 1,800.00 | more-details-out-17 |
-            | moneyOut_18  | 1,900.00 | more-details-out-18 |
-            | moneyOut_19  | 2,000.00 | more-details-out-19 |
-            | moneyOut_20  | 2,100.00 | more-details-out-20 |
+#        And I add the following transactions
+#            | moneyIn_0    | 10000.01 |
+#            | moneyIn_1    | 200.01 |
+#            | moneyIn_2    | 300.01 |
+#            | moneyIn_3    | 400.01 |
+#            | moneyIn_4    | 500.01 |
+#            | moneyIn_5    | 600.01 |
+#            | moneyIn_6    | 700.01 |
+#            | moneyIn_7    | 800.01 |
+#            | moneyIn_8    | 900.01 |
+#            | moneyIn_9    | 1000.01 |
+#            | moneyIn_10   | 1100.01 |
+#            | moneyIn_11   | 1,200.01 |
+#            | moneyIn_12   | 1,300.01 |
+#            | moneyIn_13   | 1,400.01 |
+#            | moneyIn_14   | 1,500.01 |
+#            | moneyIn_15   | 1,600.01 | more-details-in-15 |
+#            | moneyIn_16   | 1,700.01 | more-details-in-16 |
+#            | moneyIn_17   | 1,800.01 | more-details-in-17 |
+#            | moneyIn_18   | 1,800.01 | more-details-in-18 |
+#            | moneyOut_0   | 100.00 |
+#            | moneyOut_1   | 200.00 |
+#            | moneyOut_2   | 300.00 |
+#            | moneyOut_3   | 400.00 |
+#            | moneyOut_4   | 500.00 |
+#            | moneyOut_5   | 600.00 |
+#            | moneyOut_6   | 700.00 |
+#            | moneyOut_7   | 800.00 |
+#            | moneyOut_8   | 900.00 |
+#            | moneyOut_9   | 1000.00 |
+#            | moneyOut_10  | 1100.00 |
+#            | moneyOut_11  | 1,200.00 | more-details-out-11 |
+#            | moneyOut_12  | 1,300.00 | more-details-out-12 |
+#            | moneyOut_13  | 1,400.00 | more-details-out-13 |
+#            | moneyOut_14  | 1,500.00 | more-details-out-14 |
+#            | moneyOut_15  | 1,600.00 | more-details-out-15 |
+#            | moneyOut_16  | 1,700.00 | more-details-out-16 |
+#            | moneyOut_17  | 1,800.00 | more-details-out-17 |
+#            | moneyOut_18  | 1,900.00 | more-details-out-18 |
+#            | moneyOut_19  | 2,000.00 | more-details-out-19 |
+#            | moneyOut_20  | 2,100.00 | more-details-out-20 |
         And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
             | safeguarding_doesClientReceivePaidCare_1 | no |
