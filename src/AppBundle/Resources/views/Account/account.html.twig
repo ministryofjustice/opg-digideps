@@ -60,11 +60,9 @@ activeTab: "tab-accounts"
         hideForm: (not formEditShow)
         } %}
 
-        {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionWarning: 'page.pageSectionWarning'
-        } %}
-
+        <div class="page-section-warning">
+            <p>{{ 'page.pageSectionWarning' | trans({'%client%':client.firstname}, translationDomain) }}</p>
+        </div>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: "transactions-form" }}) }}
 
