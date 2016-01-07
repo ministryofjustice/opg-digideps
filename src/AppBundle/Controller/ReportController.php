@@ -8,6 +8,7 @@ use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 
 
@@ -97,7 +98,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, ['basic', 'transactions']); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -146,7 +147,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic' ,'transactions']); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -261,6 +262,22 @@ class ReportController extends AbstractController
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
         ];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/pdf", name="report_pdf")
+     * @Template()
+     */
+    public function pdfAction($reportId, $isEmailAttachment = false)
+    {
+        $restClient = $this->get('restClient');
+        
+        $pdf = $restClient->get('report/' . $reportId . '/pdf', 'raw');
+        
+        $response = new Response($pdf);
+        $response->headers->set('Content-Type', 'application/pdf');
+        
+        return $response;
     }
 
     private function groupAssets($assets)

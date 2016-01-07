@@ -7,8 +7,8 @@ Feature: deputy / report / submit
         And I click on "client-home"
         Then I should not see the "download-2015-report" link
         When I click on "report-2015"    
-        And I confirm the report is ready to be submitted
         And I follow "edit-report_add_further_info"
+        #And I fill in "report_add_info_furtherInformation" with "test"
         Then I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         And I save the page as "report-submit-declaration"

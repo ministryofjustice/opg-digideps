@@ -119,3 +119,4 @@ Feature: deputy / report / add contact, decision, assets
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
+        And the form should be valid

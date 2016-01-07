@@ -617,5 +617,22 @@ trait ReportTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
+    
+    
+    /**
+     * @Given the report should be submittable
+     */
+    public function theReportShouldBeSubmittable()
+    {
+        $this->assertSession()->elementExists('css', '#edit-report_add_further_info');
+    }
+    
+    /**
+     * @Given the report should not be submittable
+     */
+    public function theReportShouldNotBeSubmittable()
+    {
+        $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
+    }
 
 }
