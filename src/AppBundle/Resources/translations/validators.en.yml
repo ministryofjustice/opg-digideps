@@ -235,7 +235,7 @@ safeguarding:
     howIsCareFunded:
         notBlank: Select one option
     whoIsDoingTheCaring:
-        notBlank: Give us more details about who is caring for %client%
+        notBlank: Give us more details about who is caring for the client
     whenWasCarePlanLastReviewed:
         notBlank: Please enter last review date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
