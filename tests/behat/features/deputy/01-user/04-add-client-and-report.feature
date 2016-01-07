@@ -67,7 +67,7 @@ Feature: deputy / user / add client and report
        When I set the client details to:
             | name | Peter | White | 
             | caseNumber | 12345ABC |
-            | courtDate | 1 | 1 | 2015 |
+            | courtDate | 1 | 1 | 2016 |
             | allowedCourtOrderTypes_1 | 1 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
@@ -79,7 +79,7 @@ Feature: deputy / user / add client and report
             | client_caseNumber | 12345ABC |
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
-            | client_courtDate_year | 2015 |
+            | client_courtDate_year | 2016 |
             | client_allowedCourtOrderTypes_1 | 1 |
             | client_address |  1 South Parade |
             | client_address2 | First Floor  |
@@ -94,12 +94,11 @@ Feature: deputy / user / add client and report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then the URL should match "report/create/\d+"
         And I save the page as "deputy-step4"
-        Then the following fields should have the corresponding values:
+        # missing D,M,Y
+        When I fill in the following:
             | report_startDate_day | 01 |
             | report_startDate_month | 01 |
             | report_startDate_year | 2015 |
-        # missing D,M,Y
-        When I fill in the following:
             | report_endDate_day |  |
             | report_endDate_month |  |
             | report_endDate_year |  |
@@ -112,13 +111,19 @@ Feature: deputy / user / add client and report
         Then the form should be invalid
         # invalid date
         When I fill in the following:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2015 |
             | report_endDate_day | 99 |
             | report_endDate_month | 99 |
-            | report_endDate_year | 2015 |
+            | report_endDate_year | 2016 |
         And I press "report_save"
         Then the form should be invalid
         # date before report
         When I fill in the following:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2015 |
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2010 |
@@ -126,6 +131,9 @@ Feature: deputy / user / add client and report
         Then the form should be invalid
         # date range too high
         When I fill in the following:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2015 |
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
             | report_endDate_year | 2016 |
@@ -133,7 +141,14 @@ Feature: deputy / user / add client and report
         Then the form should be invalid
         And I save the page as "deputy-step4-error"
         # valid form
-        When I set the report end date to "31/12/2015"
+        Then I fill in the following:
+            | report_startDate_day | 01 |
+            | report_startDate_month | 01 |
+            | report_startDate_year | 2016 |
+            | report_endDate_day | 31 |
+            | report_endDate_month | 12 |
+            | report_endDate_year | 2016 |
+        And I press "report_save"
         Then the URL should match "report/\d+/overview"
 
 
@@ -155,7 +170,7 @@ Feature: deputy / user / add client and report
         And I should see the "edit-client-details" link
         And I should see "12345ABC" in the "case-number" region
         And I should see "1 South Parade" in the "client-address" region
-        And I should see the "report-2015" link
+        And I should see the "report-2016" link
         And I should not see the "create-new-report" link
         And I save the page as "deputy-client-home"
         
@@ -168,6 +183,6 @@ Feature: deputy / user / add client and report
     @deputy
     Scenario: report-overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I am on client home "client-home" and I click first report "report-2015"
+        Given I am on client home "client-home" and I click first report "report-2016"
         Then the URL should match "report/\d+/overview"
         And I save the page as "deputy-report-overview"

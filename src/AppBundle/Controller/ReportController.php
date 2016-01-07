@@ -42,8 +42,6 @@ class ReportController extends AbstractController
             // new report
             $report = new EntityDir\Report();
             
-            // check if this  user already has another report, if not start date should be court order date
-            $report->setStartDate($client->getCourtDate());
             //if client has property & affairs and health & welfare then give them property & affairs
             //else give them health and welfare
             if(count($allowedCourtOrderTypes) > 1){

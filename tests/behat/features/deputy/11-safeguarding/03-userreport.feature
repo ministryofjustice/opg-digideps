@@ -13,11 +13,12 @@ Feature: Safeguarding OPG Report
       And I set the client details to:
             | name | Peter | White |
             | caseNumber | 12345ABC |
-            | courtDate | 1 | 1 | 2014 |
+            | courtDate | 1 | 1 | 2015 |
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
-      And I set the report end date to "1/1/2015"
+      And I set the report start date to "1/1/2015"
+      And I set the report end date to "1/1/2016"
       Then the URL should match "report/\d+/overview"
       Then I am on "/logout"
       And I reset the email log
@@ -37,14 +38,14 @@ Feature: Safeguarding OPG Report
             | Fred Smith |  Social Worke  | Advices on benefits available | Town Hall     |Maidenhead | Berkshire | SL1 1RR  | GB |
         And I add the following assets:
             | title        | value       |  description       | valuationDate |
-            | Vehicles    | 12000.00    |  Mini cooper       | 10/11/2015 |
+            | Vehicles    | 12000.00    |  Mini cooper       | 10/11/2016 |
             | Property    | 250000.0    | 2 beds flat in HA2 |            |
-            | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2015 |
+            | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2016 |
         And I add the following bank account:
             | bank    | HSBC - main account |
             | accountNumber | 8765 |
             | sortCode | 88 | 77 | 66 |
-            | openingDate   | 1/1/2014 |
+            | openingDate   | 1/1/2015 |
             | openingBalance  | 155.000 |
             | moneyIn_0    | 10000.01 |
             | moneyIn_1    | 200.01 |
@@ -86,7 +87,7 @@ Feature: Safeguarding OPG Report
             | moneyOut_18  | 1,900.00 | more-details-out-18 |
             | moneyOut_19  | 2,000.00 | more-details-out-19 |
             | moneyOut_20  | 2,100.00 | more-details-out-20 |
-            | closingDate    | 1 /1/2015 |
+            | closingDate    | 1 /1/2016 |
             | closingBalance | 5855.19 |
         And I set the following safeguarding information:
             | safeguarding_doYouLiveWithClient_0 | yes |
@@ -345,7 +346,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
-            | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+            | safeguarding_whenWasCarePlanLastReviewed_year | 2016 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
@@ -360,7 +361,7 @@ Feature: Safeguarding OPG Report
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
-            | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+            | safeguarding_whenWasCarePlanLastReviewed_year | 2016 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
@@ -377,12 +378,12 @@ Feature: Safeguarding OPG Report
             | safeguarding_doesClientReceivePaidCare_1 | no |
             | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whenWasCarePlanLastReviewed_month | 2 |
-            | safeguarding_whenWasCarePlanLastReviewed_year | 2015 |
+            | safeguarding_whenWasCarePlanLastReviewed_year | 2016 |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I submit the report with further info "More info."
         Then I view the users latest report
         Then the "Does Peter have a care plan?" question should be answered with "Yes"
-        Then the "When was the care plan last reviewed?" question should be answered with "02/2015"
+        Then the "When was the care plan last reviewed?" question should be answered with "02/2016"
         And I save the page as "safeguarding-userreport-care-plan"
 
         
