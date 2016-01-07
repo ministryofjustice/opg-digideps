@@ -15,7 +15,39 @@
     <div class="message">{{ 'balance.bad.accountsBalancedMessage' | trans }}</div>
 </div>
 
-<div class="hero split-three orange compact">
+<div class="hero two-columns lightorange compact">
+    <div class="left">
+        <div class="title">{{ 'balance.bad.totalAfterMoneyInOut.title' | trans }}</div>
+        <p class="description compact">{{ 'balance.bad.totalAfterMoneyInOut.subtitle' | trans }}</p>
+    </div>
+    <div class="right">
+       {{ 'currencySymbol' |trans }}{{ report.calculatedBalance | number_format(2, '.', ',') }}
+    </div>
+</div>
+
+
+<div class="hero two-columns lightorange compact">
+    <div class="left">
+        <div class="title">{{ 'balance.bad.totalFromAccounts.title' | trans }}</div>
+        <p class="description compact">{{ 'balance.bad.totalFromAccounts.subtitle' | trans({'%endDate%': report.endDate | date("j F Y")}) }}</p>
+    </div>
+    <div class="right">
+        {{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
+    </div>
+</div>
+    
+<div class="hero two-columns orange compact white-text ">
+    <div class="left">
+        <div class="title text-medium">
+        {{ 'balance.bad.missingAmount' | trans }}
+        </div>
+    </div>
+    <div class="right text-big behat-region-unaccounted-for">
+         {{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | number_format(2, '.', ',') }}
+    </div>
+</div>
+
+{#<div class="hero split-three orange compact">
     <div class="hero-column">
         <div class="message">{{ 'balance.bad.totalAfterMoneyInOut' | trans }}:</div>
         <div class="total">
@@ -38,7 +70,7 @@
             {{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | number_format(2, '.', ',') }}
         </div>
     </div>
-</div>
+</div>#}
 
 <h3 class="heading-medium">{{ 'balance.bad.checkYourAccounts' | trans }}</h3>
 <p class="balance-warning page-section-warning">
