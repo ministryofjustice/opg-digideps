@@ -44,7 +44,7 @@ balance:
         subtitle: This is what you entered for the opening balance, income and spending
       totalFromAccounts: 
         title: "Total balance of all bank accounts:"
-        subtitle: This is what you entered for the closing balance on end date
+        subtitle: This is what you entered for the closing balance on %endDate%
       missingAmount: "Missing amount:"
       unaccounted: Unaccounted for
       extraAmount: Extra amount

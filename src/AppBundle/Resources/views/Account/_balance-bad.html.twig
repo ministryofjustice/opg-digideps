@@ -29,7 +29,7 @@
 <div class="hero two-columns lightorange compact">
     <div class="left">
         <div class="title">{{ 'balance.bad.totalFromAccounts.title' | trans }}</div>
-        <p class="description compact">{{ 'balance.bad.totalFromAccounts.subtitle' | trans }}</p>
+        <p class="description compact">{{ 'balance.bad.totalFromAccounts.subtitle' | trans({'%endDate%': report.endDate | date("j F Y")}) }}</p>
     </div>
     <div class="right">
         {{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
