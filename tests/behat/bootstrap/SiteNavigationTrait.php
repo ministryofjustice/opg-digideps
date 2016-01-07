@@ -26,6 +26,7 @@ trait SiteNavigationTrait
     
     /**
      * @Given I am on admin page :path
+     * @Given I go to admin page :path
      */
     public function iAmOnAdminPage($path)
     {

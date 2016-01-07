@@ -36,7 +36,11 @@ trait DebugTrait
         if (200 != (int)$session->getStatusCode()) {
             //read page H1
             preg_match('#<h1>[\n\s]*(.+)[\n\s]*</h1>#is', $data, $matches);
-            echo "- Error: ". (isset($matches[1]) ? $matches[1] : '[not readable]');
+            if (isset($matches[1])) {
+                echo "- Error: ".$matches[1];
+            } else {
+                echo "- Page content: [".$data . ']';
+            }
         }
     }
     
