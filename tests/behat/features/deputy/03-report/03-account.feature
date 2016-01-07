@@ -3,7 +3,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the "2015" report
+        And I am on the accounts page of the "2016" report
         And I save the page as "report-account-empty"
         # empty form
         When I follow "add-account"
@@ -64,7 +64,7 @@ Feature: deputy / report / account
     @deputy
     Scenario: edit 1st account (HSBC - main account)
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the account "8765" page of the "2015" report
+        And I am on the account "8765" page of the "2016" report
         And I save the page as "report-account-edit-start"
         # assert fields are filled in from db correctly
         Then the following fields should have the corresponding values:

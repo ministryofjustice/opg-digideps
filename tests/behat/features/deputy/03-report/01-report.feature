@@ -79,5 +79,3 @@ Feature: deputy / report / edit and test tabs
         # disabled element are not visible from behat
         And I should not see a "report_submit_submitReport" element
         And I should not see a ".report_submission_period" element
-        # set back report not to be due
-        And I set the report 1 end date to 3 days ahead
