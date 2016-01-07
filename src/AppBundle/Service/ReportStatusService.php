@@ -170,7 +170,7 @@ class ReportStatusService
     {
         if ($this->missingAccounts()) {
             return $this::NOTSTARTED;
-        } else if ($this->hasOutstandingAccounts()) {
+        } else if ($this->hasOutstandingAccounts() || $this->missingBalance()) {
             return $this::INCOMPLETE;
         } else {
             return $this::DONE;
@@ -193,9 +193,17 @@ class ReportStatusService
     public function isReadyToSubmit()
     {
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
-            return !$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingContacts() && !$this->missingAssets() && !$this->missingDecisions() && !$this->missingSafeguarding();
+            return !$this->hasOutstandingAccounts() 
+                && !$this->missingAccounts() 
+                && !$this->missingBalance()
+                && !$this->missingContacts() 
+                && !$this->missingAssets() 
+                && !$this->missingDecisions() 
+                && !$this->missingSafeguarding();
         } else {
-            return !$this->missingContacts() && !$this->missingDecisions() && !$this->missingSafeguarding();
+            return !$this->missingContacts() 
+                && !$this->missingDecisions() 
+                && !$this->missingSafeguarding();
         }
     }
 
@@ -248,7 +256,14 @@ class ReportStatusService
     {
         return empty($this->report->getAccounts());
     }
-
+    
+    /** @return boolean */
+    public function missingBalance()
+    {
+        $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
+        
+        return !$balanceValid;
+    }
 
     /**
      * @return string $status | null
@@ -271,7 +286,7 @@ class ReportStatusService
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
             $count = 5;
 
-            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts()) {
+            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingBalance()) {
                 $count--;
             }
 

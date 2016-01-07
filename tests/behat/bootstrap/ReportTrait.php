@@ -138,7 +138,7 @@ trait ReportTrait
     /**
      * @When I set the report end date to :endDateDMY
      */
-    public function iSetTheReportStartDateToAndEndDateTo($endDateDMY)
+    public function iSetTheReportEndDateToAndEndDateTo($endDateDMY)
     {
         /* $startDatePieces = explode('/', $startDateDMY);
           $this->fillField('report_startDate_day', $startDatePieces[0]);
@@ -153,6 +153,17 @@ trait ReportTrait
         $this->pressButton('report_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
+    }
+
+    /**
+     * @When I set the report start date to :endDateDMY
+     */
+    public function iSetTheReportStartDateToAndEndDateTo($startDateDMY)
+    {
+        $startDatePieces = explode('/', $startDateDMY);
+        $this->fillField('report_startDate_day', $startDatePieces[0]);
+        $this->fillField('report_startDate_month', $startDatePieces[1]);
+        $this->fillField('report_startDate_year', $startDatePieces[2]);
     }
 
 
@@ -616,6 +627,23 @@ trait ReportTrait
         $this->pressButton("report_saveNoAsset");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
+    }
+    
+    
+    /**
+     * @Given the report should be submittable
+     */
+    public function theReportShouldBeSubmittable()
+    {
+        $this->assertSession()->elementExists('css', '#edit-report_add_further_info');
+    }
+    
+    /**
+     * @Given the report should not be submittable
+     */
+    public function theReportShouldNotBeSubmittable()
+    {
+        $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
     }
 
 }

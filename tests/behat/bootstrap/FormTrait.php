@@ -13,6 +13,7 @@ trait FormTrait
      */
     public function theFormShouldBeInvalid()
     {
+        $this->assertResponseStatus(200);
         if (!$this->getSession()->getPage()->has('css','.form-group.error')) {
             throw new \RuntimeException("No errors found");    
         }    
@@ -23,6 +24,7 @@ trait FormTrait
      */
     public function theFormShouldBeValid()
     {
+        $this->assertResponseStatus(200);
         if ($this->getSession()->getPage()->has('css','.form-group.error')) {
             throw new \RuntimeException("Errors found");    
         }

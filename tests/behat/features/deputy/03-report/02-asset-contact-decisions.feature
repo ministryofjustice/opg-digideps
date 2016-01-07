@@ -4,7 +4,6 @@ Feature: deputy / report / add contact, decision, assets
     Scenario: add contact
         Given I load the application status from "report-empty"
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the "2015" report overview page
         And I follow "edit-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
@@ -32,7 +31,6 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: add decision
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the "2015" report overview page
         And I follow "edit-decisions"
         And I save the page as "report-decision-empty"
         # form errors
@@ -66,7 +64,6 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: add asset
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        #And I am on the "2015" report overview page
         And I follow "edit-assets"
         And I save the page as "report-assets-empty"
         # wrong form
@@ -89,7 +86,7 @@ Feature: deputy / report / add contact, decision, assets
             | asset_description | Alfa Romeo 156 JTD |
             | asset_valuationDate_day | 99 |
             | asset_valuationDate_month |  |
-            | asset_valuationDate_year | 2015 |
+            | asset_valuationDate_year | 2016 |
         And I press "asset_save"
         And I save the page as "report-assets-add-error-date"
         Then the following fields should have an error:
@@ -102,7 +99,7 @@ Feature: deputy / report / add contact, decision, assets
         When I add the following assets:
           | title        | value       |  description        | valuationDate |
           | Property    | 250000.00   |  2 beds flat in HA2 |               |
-          | Vehicles    | 13000.00   |  Alfa Romeo 156 JTD |    10/11/2015  |
+          | Vehicles    | 13000.00   |  Alfa Romeo 156 JTD |    10/11/2016  |
         And I should see "2 beds flat in HA2" in the "list-assets" region
         And I should see "£250,000.00" in the "list-assets" region
         Then I should see "Alfa Romeo 156 JTD" in the "list-assets" region
@@ -119,3 +116,4 @@ Feature: deputy / report / add contact, decision, assets
             | safeguarding_doesClientHaveACarePlan_1 | no |
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
+        And the form should be valid
