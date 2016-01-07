@@ -5,7 +5,7 @@ nav:
   moneyIn: Money in
   moneyOut: Money out
   bankAccounts: Bank accounts
-  balanceAccounts: Balance accounts
+  balanceAccounts: Balance
     
 save:
   label: Save
