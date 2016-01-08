@@ -15,12 +15,18 @@
     {{ form_checkbox_group(form.clientInvolvedBoolean, 'clientInvolvedBoolean', {
         'fieldSetClass' : 'inline',
         'legendClass' : 'form-label',
+        'legendText' : 'clientInvolvedBoolean.legend' | trans({'%client%': report.client.firstname}, translationDomain),
+        'hintText' : 'clientInvolvedBoolean.hint' | trans({'%client%': report.client.firstname}, translationDomain),
         'items': [
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' }]
     }) }}
 
-    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+    {{ form_input(form.clientInvolvedDetails,'clientInvolvedDetails', { 
+        'labelClass': 'required', 
+        'inputClass': 'expanding',
+        'hintText': 'clientInvolvedDetails.hint'| trans({'%client%': report.client.firstname}, translationDomain)
+    }) }}
     
         
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {

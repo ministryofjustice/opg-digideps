@@ -3,7 +3,7 @@ Feature: deputy / report / account transactions
     @deputy
     Scenario: money in 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the "2015" report
+        And I am on the accounts page of the "2016" report
         And I follow "account-moneyin"
         # check no data was previously saved 
         Then the following fields should have the corresponding values:
@@ -44,7 +44,7 @@ Feature: deputy / report / account transactions
     @deputy
     Scenario: money out 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the accounts page of the "2015" report
+        And I am on the accounts page of the "2016" report
         And I follow "account-moneyout"
         # check no data was previously saved 
         Then the following fields should have the corresponding values:

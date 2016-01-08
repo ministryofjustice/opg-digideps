@@ -9,25 +9,20 @@
 
     {% block pageBody %}
 
-
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
-
+        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
+        
         <div class="help-items">
             <section class="help-item">
                 <h3 class="summary heading-medium">Why does OPG need to know this?</h3>
-                <p class="content page-section-description">We need to know the important decisions you've made for the client so we
-                    can build a picture about the client's finances and their well being.
+                <p class="content page-section-description">We need to know the important decisions you've made to help us understand how you're managing {{ report.client.firstname }}'s finances and wellbeing.</p>
                 <p class="content page-section-description">This is because OPG has a responsibility to protect people who don't have
                     the mental capacity to make decisions for themselves.</p>
             </section>
             <section class="help-item">
                 <h3 class="summary heading-medium">What is a significant decision?</h3>
-                <p class="content page-section-description">Significant decisions are any important decisions you make for the
-                    client - not just financial decisions. We need to know about any decisions that have
-                    a big impact on the client's well-being or circumstances.</p>
+                <p class="content page-section-description">Significant decisions are any important decisions you make for 
+                    {{ report.client.firstname }} - not just financial decisions. We need to know about any decisions that have
+                    a big impact on {{ report.client.firstname }}'s wellbeing or circumstances.</p>
                 <p class="content list-into">Significant decisions might be:</p>
                 <ul class="content list-bullet">
                     <li>buying or selling or renting property</li>
@@ -35,8 +30,8 @@
                     <li>holidays or frequent day trips</li>
                     <li>home improvements</li>
                     <li>making gifts</li>
-                    <li>moving the client to another nursing or care home</li>
-                    <li>changing their day centre</li>
+                    <li>moving {{ report.client.firstname }} to another nursing or care home</li>
+                    <li>changing day centres</li>
                 </ul>
                 <p class="content page-section-description">Decisions you do <b>not</b> need to include here are small, day-to-day decisions
                     such as buying food or toiletries</p>
