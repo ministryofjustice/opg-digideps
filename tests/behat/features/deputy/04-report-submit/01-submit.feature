@@ -77,32 +77,22 @@ Feature: deputy / report / submit
         And I click on "client-home"
         And I edit lastest active report
         When I click on "client-home"
-        And I click on "report-2016-to-2016"
+        And I click on "report-2016-to-2017"
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
         And I should see a "#edit-accounts" element
         And I should see a "#edit-assets" element
-#        When I follow "edit-accounts"
-#        And I click on "account-1234"
-#        # check no data was previously saved
-#        Then the following fields should have the corresponding values:
-#            | transactions_moneyIn_0_amount        |  |
-#            | transactions_moneyIn_15_amount       |  |
-#            | transactions_moneyIn_15_moreDetails  |  |
-#            | transactions_moneyOut_0_amount       |  |
-#            | transactions_moneyOut_11_amount      |  |
-#            | transactions_moneyOut_11_moreDetails |  |
-#        And I save the page as "report-account-transactions-empty"
-#        #check account details
-#        And I click on "edit-account-details"
-#        Then the following fields should have the corresponding values:
-#            | account_bank    | HSBC main account |
-#            | account_accountNumber | 1234 |
-#            | account_sortCode_sort_code_part_1 | 12 |
-#            | account_sortCode_sort_code_part_2 | 34 |
-#            | account_sortCode_sort_code_part_3 | 56 |
-#            | account_openingBalance  | -3,000.50 |
+        When I follow "edit-accounts"
+        And I click on "account-8765"
+        # check no data was previously saved
+        Then the following fields should have the corresponding values:
+            | account_bank  | HSBC main account |
+            | account_openingBalance  | 1155.00 |
+        When I click on "account-moneyin"
+        Then I should see an "#transactions_transactionsIn_0_amount" element
+        When I click on "account-moneyout"
+        Then I should see an "#transactions_transactionsOut_0_amount" element
         
 
     @deputy
@@ -118,7 +108,8 @@ Feature: deputy / report / submit
         And the URL "/report/1/contacts" should not be accessible
         And the URL "/report/1/decisions" should not be accessible
         And the URL "/report/1/accounts" should not be accessible
-        And the URL "/report/1/account/1" should not be accessible
+        And the URL "/report/1/accounts/banks/1/edit" should not be accessible
+        And the URL "/report/1/accounts/banks/1/delete" should not be accessible
         And the URL "/report/1/assets" should not be accessible
         
     @deputy
