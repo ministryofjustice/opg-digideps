@@ -247,7 +247,7 @@ class ReportController extends AbstractController
         
         $report = $this->getReport($reportId, [ 'transactions', 'basic']);
 
-        $body = $restClient->get('report/' . $reportId . '/formatted/1', 'string');
+        $body = $restClient->get('report/' . $reportId . '/formatted/1', 'raw');
 
         return [
             'report' => $report,
@@ -259,9 +259,8 @@ class ReportController extends AbstractController
     
     /**
      * @Route("/report/{reportId}/pdf", name="report_pdf")
-     * @Template()
      */
-    public function pdfAction($reportId, $isEmailAttachment = false)
+    public function pdfAction($reportId)
     {
         $restClient = $this->get('restClient');
         
@@ -272,20 +271,6 @@ class ReportController extends AbstractController
         
         return $response;
     }
-
-    /**
-     * @Route("/report/{reportId}/pdf", name="report_pdf")
-     */
-    public function displayPdf($reportId, $isEmailAttachment = false)
-    {
-        $restClient = $this->get('restClient');
-        $pdf = $restClient->get('report/' . $reportId . '/pdf', 'string');
-        return $pdf;
-    }
-    
-    
-    
-    
     
     private function groupAssets($assets)
     {
