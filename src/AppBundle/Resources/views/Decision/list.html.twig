@@ -9,16 +9,11 @@
 
     {% block pageBody %}
 
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-            transDomain: translationDomain,
-            pageSectionDescription: 'page.pageSectionDescription'
-        } %}
+        <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
+
 
         {% if report.decisions %}
-            {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-                transDomain: translationDomain,
-                pageSectionDescription: 'page.pageSectionEditInfo'
-            } %}
+            <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans }}</p>
         {% endif %}
         
         {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
@@ -27,8 +22,7 @@
             'transDomain': translationDomain,
             'data': report.decisions
         } %}
-
-
+        
         {% if decisions is not empty %}
             {% include 'AppBundle:Decision:_decision_list.html.twig' with {
             'report': report,

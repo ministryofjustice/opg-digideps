@@ -31,12 +31,12 @@ description:
   label: Description
   hint: Give details of the decision here.
 clientInvolvedBoolean:
-  legend: Client involvement
-  hint: Did you involve your client in this decision ?
+  legend: %client%'s involvement
+  hint: Did you involve %client% in this decision?
   defaultOption: Please select...
 clientInvolvedDetails:
   label: " "
-  hint: If yes, tell us how you involved the client in the decision. If no, tell us why that has not been possible.
+  hint: If yes, tell us how you involved %client% in the decision. If no, tell us why that has not been possible.
 save:
   label: Save
 cancel:

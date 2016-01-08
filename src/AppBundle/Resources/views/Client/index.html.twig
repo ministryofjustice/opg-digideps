@@ -46,10 +46,8 @@
         } %}
     {% endif %}
 
-    {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-    transDomain: translationDomain,
-    pageSectionDescription: 'page.pageSectionDescription'
-    } %}
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%':client.firstname}, translationDomain) }}</p>
+
 
     {% if hideForm %}
         {% include 'AppBundle:Client:_show.html.twig' with {
