@@ -5,7 +5,7 @@ nav:
   moneyIn: Money in
   moneyOut: Money out
   bankAccounts: Bank accounts
-  balanceAccounts: Balance accounts
+  balanceAccounts: Balance
     
 save:
   label: Save
@@ -39,8 +39,13 @@ balance:
       pageSectionDescription: You have reported £%totalOffset% %more% in the total money in and out than in the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.      
       accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
-      totalAfterMoneyInOut: Total balance after money in and money out
-      totalFromAccounts: Total balance of all bank accounts
+      totalAfterMoneyInOut: 
+        title: "Total balance after money in and money out:"
+        subtitle: This is what you entered for the opening balance, income and spending
+      totalFromAccounts: 
+        title: "Total balance of all bank accounts:"
+        subtitle: This is what you entered for the closing balance on %endDate%
+      missingAmount: "Missing amount:"
       unaccounted: Unaccounted for
       extraAmount: Extra amount
       summaryBalanceInOut: Balance after total money in and money out

@@ -98,16 +98,20 @@ class FormFieldsExtension extends \Twig_Extension
         $domain = $element->parent->vars['translation_domain'];
 
         //sort hint text translation
-        $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
-        $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
-        
-        //get legendText translation. Look for a .legend value, if there isn't one then try the top level
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+        if (isset($vars['hintText'])) {
+            $hintText = $vars['hintText'];
+        } else {
+            $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
+            $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;           
+        }
         
         if (isset($vars['legendText'])) {
             $legendText = $vars['legendText'];
         } else {
-
+            
+            //get legendText translation. Look for a .legend value, if there isn't one then try the top level
+            $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
+            
             if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
@@ -272,7 +276,7 @@ class FormFieldsExtension extends \Twig_Extension
     }
     
     /**
-     * get form errors lits and render them inside Components/Alerts:error_summary.html.twig
+     * get form errors list and render them inside Components/Alerts:error_summary.html.twig
      * Usage: {{ form_errors_list(form) }}
      * 
      * @param FormView $form
@@ -323,10 +327,13 @@ class FormFieldsExtension extends \Twig_Extension
         //lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
-        
-        //sort hint text translation
-        $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
-        $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+
+        if (isset($vars['hintText'])) {
+            $hintText = $vars['hintText'];
+        } else {
+            $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
+            $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+        }
 
         //sort hintList text translation
         $hintListTextTrans =  $this->translator->trans($translationKey.'.hintList', [],$domain);

@@ -901,7 +901,7 @@ class Report
     {
         return $this->totalsMatch;
     }
-
+    
     /**
      * @param boolean $totalsMatch
      */

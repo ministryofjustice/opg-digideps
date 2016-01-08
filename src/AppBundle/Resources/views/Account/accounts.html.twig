@@ -14,11 +14,8 @@ activeTab: "tab-accounts"
             {% include 'AppBundle:Components:_helpline.html.twig' %}
         </div>
         
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
-
+        <p class="page-section-description">{{ 'page.pageSectionDescription'| trans({'%client%':client.firstname}, translationDomain) }}</p>
+        
         {% include 'AppBundle:Components/Page:_page-section-warning.html.twig' with {
         transDomain: translationDomain,
         pageSectionWarning: 'page.pageSectionWarning'
