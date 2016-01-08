@@ -11,7 +11,7 @@
     {% endblock %}
 
     {% block maincontent %}
-        {% if report.isIncomplete() %}
+        {% if report.isMissingMoneyOrAccountsOrClosingBalance() %}
             {% include 'AppBundle:Account:_balance-incomplete.html.twig'%}
         {% elseif report.isTotalsMatch %}
             {% include 'AppBundle:Account:_balance-good.html.twig'%}

@@ -28,6 +28,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('trans')->with('noassets',[], 'status')->andReturn("No assets")
             ->shouldReceive('trans')->with('nocontacts',[], 'status')->andReturn("No contacts")
             ->shouldReceive('trans')->with('notstarted',[], 'status')->andReturn("Not started")
+            ->shouldReceive('trans')->with('notFinished',[], 'status')->andReturn("Not finished")
             ->shouldReceive('trans')->with('finished',[], 'status')->andReturn("Finished")
             ->getMock();
 
@@ -589,40 +590,102 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals("Finished", $answer);
     }
-
-    /** @test */
-    public function indicateAccountsNotStarted() {
-        $accounts = array();
+    
+    
+    public function accountsStateProvider()
+    {
+        return [
+            // grey if has nothing
+            [[], false, false, false, false, ReportStatusService::STATUS_GREY],
+            
+            // green when has account, has moneyin, moneyout, total match (or explanation given)
+            [[true, true], true, true, true, false, ReportStatusService::STATUS_GREEN],
+            [[true, true], true, true, false, true, ReportStatusService::STATUS_GREEN],
+            
+             // amber in all the other cases 
+            [[true], false, false, false, false,  ReportStatusService::STATUS_AMBER], //only one account
+            [[], true, false, false, false,  ReportStatusService::STATUS_AMBER], //only money in
+            [[], false, true, false, false,  ReportStatusService::STATUS_AMBER], //only money out
+            [[], true, true, true, false, ReportStatusService::STATUS_AMBER], //everything except account
+            [[true], false, true, true, false, ReportStatusService::STATUS_AMBER], //everything except moneyin
+            [[true], true, false, true, false, ReportStatusService::STATUS_AMBER], //everything except moneyout
+            [[true], true, true, false, false,  ReportStatusService::STATUS_AMBER], // account ,money in and out but not balance
+            [[true, false], true, true, false, true, ReportStatusService::STATUS_AMBER], // one account has missing balance
+            
+        ];
+    }
+    
+    /** 
+     * @test 
+     * @dataProvider accountsStateProvider
+     */
+    public function getAccountsState($accounts, $hasMoneyIn, $hasMoneyOut, $isTotalMatch, $balanceExpl, $expectedState)
+    {
+        $accountsMocks = [];
+        foreach ($accounts as $hasClosingBalance) {
+            $accountsMocks[] = m::mock('AppBundle\Entity\Account')
+                ->shouldReceive('hasClosingBalance')->andReturn($hasClosingBalance)->getMock();
+        }
         
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAccounts')->andReturn($accounts)
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
+            ->shouldReceive('hasMoneyIn')->andReturn($hasMoneyIn)
+            ->shouldReceive('hasMoneyOut')->andReturn($hasMoneyOut)
+            ->shouldReceive('getAccounts')->andReturn($accountsMocks)
+            ->shouldReceive('isTotalsMatch')->andReturn($isTotalMatch)
+            ->shouldReceive('getBalanceMismatchExplanation')->andReturn($balanceExpl)
             ->getMock();
-
+            
         $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getAccountsStatus();
-
-        $this->assertEquals("Not started", $answer);
+        $this->assertEquals($expectedState, $reportStatusService->getAccountsState());
     }
-
-    /** @test */
-    public function indicateAccountsAdded() {
-        $accounts = array(1,2);
-
+    
+    public function accountsStatusProvider()
+    {
+        return [
+            // if has nothing
+            [[], false, false, false, false, "Not started"],
+            
+            // account, has moneyin, moneyout, total match (or explanation given)
+            [[true], true, true, true, false, "Finished"],
+            [[true], true, true, false, true, "Finished"],
+            
+             // all the other cases 
+            [[true], false, false, false, false,  "Not finished"], //only one account
+            [[], true, false, false, false,  "Not finished"], //only money in
+            [[], false, true, false, false,  "Not finished"], //only money out
+            [[], true, true, true, false, "Not finished"], //everything except account
+            [[true], false, true, true, false, "Not finished"], //everything except moneyin
+            [[true], true, false, true, false, "Not finished"], //everything except moneyout
+            [[true], true, true, false, false,  "Not finished"], // account ,money in and out but not balance
+            [[true, false], true, true, false, true, "Not finished"]
+            
+        ];
+    }
+    
+    /** 
+     * @test 
+     * @dataProvider accountsStatusProvider
+     */
+    public function getAccountsStatus($accounts, $hasMoneyIn, $hasMoneyOut, $isTotalMatch, $balanceExpl, $expectedStatus)
+    {
+        $accountsMocks = [];
+        foreach ($accounts as $hasClosingBalance) {
+            $accountsMocks[] = m::mock('AppBundle\Entity\Account')
+                ->shouldReceive('hasClosingBalance')->andReturn($hasClosingBalance)->getMock();
+        }
+        
         $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAccounts')->andReturn($accounts)
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
+            ->shouldReceive('hasMoneyIn')->andReturn($hasMoneyIn)
+            ->shouldReceive('hasMoneyOut')->andReturn($hasMoneyOut)
+            ->shouldReceive('getAccounts')->andReturn($accountsMocks)
+            ->shouldReceive('isTotalsMatch')->andReturn($isTotalMatch)
+            ->shouldReceive('getBalanceMismatchExplanation')->andReturn($balanceExpl)
             ->getMock();
-
+            
         $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getAccountsStatus();
-
-        $this->assertEquals("2 Accounts", $answer);
-    }    
+        $this->assertEquals($expectedStatus, $reportStatusService->getAccountsStatus());
+    }
+    
     
     /** @test */
     public function indicateSingleAssetStatus() {
@@ -835,67 +898,6 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $reportStatusService = new ReportStatusService($report, $this->translator);
 
         $answer = $reportStatusService->getSafeguardingState();
-
-        $this->assertEquals(ReportStatusService::DONE, $answer);
-    }
-
-    /** @test */
-    public function indicateAccountsStateNotStarted() {
-        $accounts = array();
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAccounts')->andReturn($accounts)
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getAccountsState();
-
-        $this->assertEquals(ReportStatusService::NOTSTARTED, $answer);
-    }
-    
-    /** @test */
-    public function indicateAccountsStateInProgress() {
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(false)
-            ->getMock();
-        
-        $accounts = array($account);
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAccounts')->andReturn($accounts)
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getAccountsState();
-
-        $this->assertEquals(ReportStatusService::INCOMPLETE, $answer);    
-    }
-    
-    /** @test */
-    public function indicateAccountsStateDone() {
-        $account = m::mock('AppBundle\Entity\Account')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('hasClosingBalance')->andReturn(true)
-            ->getMock();
-
-        $accounts = array($account);
-
-        $report = m::mock('AppBundle\Entity\Report')
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getAccounts')->andReturn($accounts)
-            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
-            ->getMock();
-
-        $reportStatusService = new ReportStatusService($report, $this->translator);
-
-        $answer = $reportStatusService->getAccountsState();
 
         $this->assertEquals(ReportStatusService::DONE, $answer);
     }
