@@ -132,7 +132,7 @@ class Version049 extends AbstractMigration
                     ['transfers-out-to-other-accounts', true],
                 ],
                 'moneyout-other' => [
-                    ['anything-else-paid-out'],
+                    ['anything-else-paid-out', true],
                 ]
             ],
         ];
