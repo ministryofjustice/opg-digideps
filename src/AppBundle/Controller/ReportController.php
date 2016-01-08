@@ -156,7 +156,7 @@ class ReportController extends RestController
         try {
             $html = $this->forward('AppBundle:Report:formatted', array(
                 'reportId'  => $reportId,
-                'addLayout' => false
+                'addLayout' => true
             ))->getContent();
             
             // TODO: move to a service (where guzzle could be injected, and the URL too)

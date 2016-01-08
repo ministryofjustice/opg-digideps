@@ -3,12 +3,7 @@
     margin: 0;
     padding: 0;
     
-    .label {
-        @include formatted-reg(16px);
-    }
-
     .value {
-        @include formatted-reg(16px);
         background: #ffffff;
         color: #454572;
         padding: 2px 5px 0 5px;
@@ -37,7 +32,6 @@
 }
 
 .textarea {
-    @include formatted-reg(16px);
     background: #ffffff;
     color: #454572;
     padding: 2px 5px 0 5px;
@@ -49,9 +43,7 @@
 .checkbox {
     display: -moz-inline-stack;
     display: inline-block;
-    font-size: 18px;
-    font-family: Helvetica, Arial;
-    font-weight: bold;
+    @include formatted-bold($medium);
     background: #fff;
     width: .75em;
     padding: 4px 10px 2px 10px;
@@ -64,11 +56,12 @@
     margin-bottom: 40px;
     
     .category {
+        page-break-inside: avoid;
+        
         h3 {
-            @include formatted-bold(18px);
             border-bottom: 1px solid $grey-2;
             border-top: 1px solid $grey-2;
-            padding: 10px 0 10px 20px;
+            padding: 5px 0 5px 20px;
             margin: 0;
         }
         .transactions {
@@ -91,14 +84,15 @@
         display: inline-block;
         box-sizing: border-box;
         margin:0;
-        padding: 5px 0 5px 0;
+        padding: 2px 0 2px 0;
+        width: 450px;
     }
     .value {
         display: inline-block;
         box-sizing: border-box;
-        width: 130px;
+        width: 100px;
         margin: 0;
-        padding: 5px 10px 5px 5px;
+        padding: 2px 10px 2px 5px;
 
         background: $grey-1;
         color: $white;
@@ -122,15 +116,15 @@
         border-bottom: 1px solid $grey-2;
 
         .label {
-            @include formatted-bold(18px);
+            @include formatted-bold($medium);
             color: $black;
-            padding: 20px 0 20px 20px;
+            padding: 10px 0 10px 20px;
         }
         .value {
-            @include formatted-bold(18px);
+            @include formatted-bold($medium);
             color: $white;
             background: $black;
-            padding: 20px 10px 20px 5px;
+            padding: 10px 10px 10px 5px;
         }
     }
     

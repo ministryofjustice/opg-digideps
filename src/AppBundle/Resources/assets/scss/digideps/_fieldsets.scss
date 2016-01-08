@@ -11,7 +11,7 @@ fieldset {
         margin-right: 20px;
     }
     .list-label {
-        @include formatted-bold(19px);
+        @include formatted-bold($medium);
         margin-bottom: 10px;
     }
 
@@ -35,7 +35,7 @@ fieldset {
 
     .checkbox {
         @include inline-block();
-        @include formatted-bold(18px);
+        @include formatted-bold($medium);
         background: #fff;
         width: .75em;
         padding: 4px 10px 2px 10px;
@@ -45,7 +45,6 @@ fieldset {
 
     .checkboxes {
         h3 {
-            @include formatted-bold(19px);
             margin-bottom: 5px;
         }
         .form-group {
@@ -78,7 +77,7 @@ fieldset {
 fieldset.single-field-fieldset {
     padding: 15px 20px 15px 20px;
     .label {
-        @include formatted-bold(19px);
+        @include formatted-bold($medium);
     }
     .value {
         float: left;
