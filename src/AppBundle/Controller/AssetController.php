@@ -148,7 +148,7 @@ class AssetController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
-        if (!$report->hasAssetWithId($id)) {
+        if ($report->hasAssetWithId($id)) {
             $restClient->delete("/report/asset/{$id}");
         }
         
