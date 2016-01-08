@@ -973,6 +973,7 @@ class Report
     {
         return !$this->hasMoneyIn() 
             || !$this->hasMoneyOut() 
+            || !$this->hasAccounts()
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
     
