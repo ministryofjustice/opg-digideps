@@ -239,15 +239,15 @@ class ReportController extends AbstractController
     
     /**
      * @Route("/report/{reportId}/display", name="report_display")
-     * @Template("AppBundle:Layouts:raw.html.twig")
+     * @Template()
      */
     public function displayAction($reportId, $isEmailAttachment = false)
     {
         $restClient = $this->get('restClient');
         
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, ['basic']);
 
-        $body = $restClient->get('report/' . $reportId . '/formatted/1', 'raw');
+        $body = $restClient->get('report/' . $reportId . '/formatted/0', 'raw');
 
         return [
             'report' => $report,

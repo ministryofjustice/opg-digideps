@@ -16,5 +16,7 @@
             <dd class="item-value">{{ report.client.getCaseNumber }}&nbsp;</dd>
         </dl>
     </div>
+    
+    <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
 
 </header>

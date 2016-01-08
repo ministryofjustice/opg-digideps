@@ -4,23 +4,15 @@
 {% set page = 'reportPeriod' %}
 
 {% set translationDomain = "report-display" %}
-
-{% if constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') == report.courtOrderType %}
-    {% set reportType = "propertyAndAffairs" %}
-{% else %}
-    {% set reportType = "healthAndWelfare" %}
-{% endif %}
-
 {% block pageContent %}
 
-    {% if not isEmailAttachment%}
-        {% if report.submitted == true %}
-            <div class="navigation-back report-back">
-              <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to your client</a>
-            </div>
-        {% endif %}
-            
+
+    {% if report.submitted == true %}
+        <div class="navigation-back report-back">
+          <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to your client</a>
+        </div>
     {% endif %}
+
 
     <!-- set class to external-report -->
     {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
@@ -30,82 +22,10 @@
         transDomain: translationDomain
         } %}
     {% endif %}
-    <div class="external-report-section" id="decisions-section">
-        <h1 class="heading-large">{{ 'decisionsMadeAsDeputy' | trans({},translationDomain) }}</h1>
 
-        {% if report.decisions | length == 0 %}
-            <p class="page-section-description">{{ report.reasonForNoDecisions }}</p>
-        {% else %}
-            {% include 'AppBundle:Decision:_decision_list.html.twig' with {
-            'report': report,
-            'decisions': decisions,
-            'transDomain': translationDomain
-            } %}
-        {% endif %}
-    </div>
+    {{ body | raw }}
 
-
-    <div class="external-report-section" id="contacts-section">
-        <h1 class="heading-large">{{ 'pages.reportPeriod.healthAndWelfare.contacts.subSectionTitle' | trans({},translationDomain) }}</h1>
-
-        {% if report.contacts | length == 0 %}
-            <p class="page-section-description">{{ report.reasonForNoContacts }}</p>
-        {% else %}
-            {% include 'AppBundle:Contact:_contact_list.html.twig' with {
-                'report': report,
-                'contacts': contacts,
-                'transDomain': translationDomain
-            } %}
-        {% endif %}
-    </div>
-
-    {% if reportType is sameas("propertyAndAffairs") %}
-
-        {% if report.safeguarding is not null %}
-        <div class="external-report-section" id="safeguarding-section">
-            {% include 'AppBundle:Safeguard:summary.html.twig' with {
-                'safeguarding': report.safeguarding,
-            } %}
-        </div>
-        {% endif %}
-
-        <div class="external-report-section" id="accounts-section">
-            <h1 class="heading-large">{{ 'pages.reportPeriod.propertyAndAffairs.accounts.subSectionTitle' | trans({},translationDomain) }}</h1>
-            {% if report.accounts | length > 0 %}
-                {% include 'AppBundle:Account:_report_accounts.html.twig' with {
-                    'accounts': report.accounts
-                } %}
-            {% endif %}
-        </div>
-
-        <div class="external-report-section" id="assets-section">
-            <h1 class="heading-large">{{ 'pages.reportPeriod.propertyAndAffairs.assets.subSectionTitle' | trans({},translationDomain) }}</h1>
-            {% if report.assets | length == 0 %}
-                {% if report.noAssetToAdd == true %}
-                    <p class="page-section-description">{{ 'pages.reportPeriod.propertyAndAffairs.assets.noAssets' | trans({}, translationDomain) }}</p>
-                {% endif %}    
-            {% else %}
-                {% include 'AppBundle:Asset:_asset_list.html.twig' with {
-                'report': report,
-                'assets': assets,
-                'transDomain': 'report-assets',
-                } %}
-            {% endif %}
-        </div>
-
-
-        {% if  report.furtherInformation %}
-          <div class="external-report-section" id="additional-info-section">
-              <h1 class="heading-large">{{ 'pages.additionalInformation.subSectionTitle' | trans({},translationDomain) }}</h1>
-
-              <p class="page-section-description">{{ report.furtherInformation | nl2br }}</p>
-          </div>
-        {% endif %}
-
-        {% if report.submitted == true %}
-            {% include 'AppBundle:Report:_submission_declaration.html.twig' %}
-        {% endif %}
-    {% endif %}
+   
 {% endblock %}
 
 {% block popups %}

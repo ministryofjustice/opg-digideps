@@ -1,0 +1,55 @@
+.external-report .formatted-report {
+
+    width: 800px;
+    margin: 0 auto;
+
+    h1, 
+    #case-number,
+    #report-header,
+    #report-dates
+    {
+        display: none;
+    }
+    
+    #safeguarding-section table {
+        width: auto;
+        td,
+        th {
+            border-bottom: none;
+        }
+        td.checkbox {
+            border-bottom: 1px solid $black;
+        }
+    }
+
+    .hero {
+        margin: 0;
+        h2, .message, .total {
+            color: #000;
+        }
+    }
+
+    #decisions-list {
+        .value.textarea {
+            font-size: 19px;
+            font-weight: bold;
+        }
+    }
+    
+}
+    
+.page-report-header {
+    @extend %contain-floats;
+    .item {
+        width: 50%;
+        float: left;
+        margin-top: 0;
+    }
+    .pdflink {
+        background: url("images/pdf.png") top left no-repeat;
+        padding-left: 40px;
+        float: right;
+        height: 32px;
+        padding-top: 5px;
+    }
+}
