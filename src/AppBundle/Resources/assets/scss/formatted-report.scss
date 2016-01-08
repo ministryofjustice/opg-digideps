@@ -162,4 +162,7 @@ $small: 12px;
         page-break-after: auto;
     }
     
+    .dont-break {
+        page-break-inside: avoid;
+    }
 }

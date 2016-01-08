@@ -17,7 +17,7 @@
     }
 
     &.inline {
-        
+        @extend %contain-floats;
         .label,
         .value {
             display: inline;

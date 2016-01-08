@@ -77,7 +77,7 @@
             <div class="label">If the figures in box 5 and box 6 are different, tell us why (for example, if you’ve
                 rounded up or down any amounts or you have used a different date on the bank statement).
             </div>
-            <div class="textarea">{% if not report.getTotalsMatch %}{{ report.balanceMismatchExplanation }}{% endif %}</div>
+            <div class="value textarea">{% if not report.getTotalsMatch %}{{ report.balanceMismatchExplanation }}{% endif %}</div>
         </div>
     </fieldset>
 
