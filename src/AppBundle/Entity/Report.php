@@ -969,7 +969,7 @@ class Report
     /**
      ** @return boolean
      */
-    public function isIncomplete()
+    public function isMissingMoneyOrAccountsOrClosingBalance()
     {
         return !$this->hasMoneyIn() 
             || !$this->hasMoneyOut() 

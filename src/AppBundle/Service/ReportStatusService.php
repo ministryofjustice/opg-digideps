@@ -160,48 +160,39 @@ class ReportStatusService
     /** @return string */
     public function getAccountsState()
     {
-        if (!$this->accountStarted()) {
+        // not started
+        if ($this->missingAccounts()
+            && !$this->report->hasMoneyIn() 
+            && !$this->report->hasMoneyOut()) {
            return self::STATUS_GREY;
         } 
         
-        if ($this->missingBalance()) {
-            return self::STATUS_AMBER;
+        // all done
+        if (!$this->missingAccounts()
+            && !$this->hasOutstandingAccounts()
+            && $this->report->hasMoneyIn() 
+            && $this->report->hasMoneyOut() 
+            && !$this->missingBalance()) {
+            return self::DONE;
         }
         
-        return self::DONE;
+        // amber in all the other cases
+        return self::STATUS_AMBER;
     }
     
     
     /** @return string */
     public function getAccountsStatus()
     {
-        // at least one bank account or one transaction => notFinished
-        // the above + balance matching => finished
-        
-        if (!$this->accountStarted()) {
-           return $this->translator->trans('notstarted', [], 'status');
-        } 
-        
-        if ($this->missingBalance()) {
-             return $this->translator->trans('notFinished', [], 'status');
+        switch ($this->getAccountsState()) {
+            case self::STATUS_GREY:
+                return $this->translator->trans('notstarted', [], 'status');
+            case self::STATUS_GREEN:
+                return $this->translator->trans('finished', [], 'status');
+           default:
+                return $this->translator->trans('notFinished', [], 'status');
         }
-        
-        return $this->translator->trans('finished', [], 'status');
     }
-    
-    /**
-     * @return boolean
-     */
-    private function accountStarted()
-    {
-        $hasAtLeastOneAccount = count($this->report->getAccounts()) > 0;
-        
-//        var_dump($this->report);
-        
-        return $hasAtLeastOneAccount || $this->report->hasMoneyIn() || $this->report->hasMoneyOut();
-    }
-
-
 
     /** @return string */
     public function getAssetsState()
