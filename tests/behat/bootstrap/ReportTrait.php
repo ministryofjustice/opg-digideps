@@ -326,35 +326,35 @@ trait ReportTrait
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
         
-        $this->clickLink('account-moneyin');
-        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
-        
-        $this->clickLink('account-moneyout');
-        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
+//        $this->clickLink('account-moneyin');
+//        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
+//        
+//        $this->clickLink('account-moneyout');
+//        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 
     }
 
-    private function addTransactions(array $rows, $prefix, $buttonId)
-    {
-        $records = $this->getRowsMatching($rows, $prefix);
-        if (!$records) {
-            return;
-        }
-
-        foreach ($records as $key => $value) {
-            if (is_array($value)) { 
-                $this->fillField("transactions_{$key}_amount", $value[0]);
-                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
-            } else {
-                $this->fillField("transactions_{$key}_amount", $value);
-            }
-        }
-
-        // save and return to page
-        $this->pressButton($buttonId);
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
+//    private function addTransactions(array $rows, $prefix, $buttonId)
+//    {
+//        $records = $this->getRowsMatching($rows, $prefix);
+//        if (!$records) {
+//            return;
+//        }
+//
+//        foreach ($records as $key => $value) {
+//            if (is_array($value)) { 
+//                $this->fillField("transactions_{$key}_amount", $value[0]);
+//                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
+//            } else {
+//                $this->fillField("transactions_{$key}_amount", $value);
+//            }
+//        }
+//
+//        // save and return to page
+//        $this->pressButton($buttonId);
+//        $this->theFormShouldBeValid();
+//        $this->assertResponseStatus(200);
+//    }
 
     /**
      * @param array $rows
@@ -362,17 +362,17 @@ trait ReportTrait
      *
      * @return array
      */
-    private function getRowsMatching(array $rows, $needle)
-    {
-        $ret = $rows;
-        foreach ($ret as $k => $value) {
-            if (strpos($k, $needle) === false) {
-                unset($ret[$k]);
-            }
-        }
-
-        return $ret;
-    }
+//    private function getRowsMatching(array $rows, $needle)
+//    {
+//        $ret = $rows;
+//        foreach ($ret as $k => $value) {
+//            if (strpos($k, $needle) === false) {
+//                unset($ret[$k]);
+//            }
+//        }
+//
+//        return $ret;
+//    }
 
      /**
      * @When I submit the report with further info :moreInfo
