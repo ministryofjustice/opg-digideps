@@ -9,11 +9,18 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ReportStatusService
 {
 
-    const NOTSTARTED = "not-started";
-    const DONE = "done";
-    const INCOMPLETE = "incomplete";
+    const NOTSTARTED = "not-started"; //grey
+    
+    const DONE = "done"; //green
+    const INCOMPLETE = "incomplete"; //orange
     const NOTFINISHED = "notFinished";
     const READYTOSUBMIT = "readyToSubmit";
+    
+    
+    // for status
+    const STATUS_GREY = "not-started";
+    const STATUS_AMBER = "incomplete";
+    const STATUS_GREEN = "done";
 
 
     /** @var Report */
@@ -91,21 +98,6 @@ class ReportStatusService
     }
 
 
-    /** @return string */
-    public function getAccountsStatus()
-    {
-        if ($this->missingAccounts()) {
-            return $this->trans('notstarted');
-        }
-
-        $count = count($this->report->getAccounts());
-        if ($count === 1) {
-            return "1 " . $this->trans("account");
-        } else {
-            return "${count} " . $this->trans("accounts");
-        }
-    }
-
 
     /** @return string */
     public function getAssetsStatus()
@@ -135,9 +127,9 @@ class ReportStatusService
     public function getDecisionsState()
     {
         if ($this->missingDecisions()) {
-            return $this::NOTSTARTED;
+            return self::NOTSTARTED;
         } else {
-            return $this::DONE;
+            return self::DONE;
         }
     }
 
@@ -146,9 +138,9 @@ class ReportStatusService
     public function getContactsState()
     {
         if ($this->missingContacts()) {
-            return $this::NOTSTARTED;
+            return self::NOTSTARTED;
         } else {
-            return $this::DONE;
+            return self::DONE;
         }
     }
 
@@ -157,9 +149,9 @@ class ReportStatusService
     public function getSafeguardingState()
     {
         if ($this->missingSafeguarding()) {
-            return $this::NOTSTARTED;
+            return self::NOTSTARTED;
         } else {
-            return $this::DONE;
+            return self::DONE;
         }
     }
 
@@ -167,23 +159,47 @@ class ReportStatusService
     /** @return string */
     public function getAccountsState()
     {
-        if ($this->missingAccounts()) {
-            return $this::NOTSTARTED;
-        } else if ($this->hasOutstandingAccounts() || $this->missingBalance()) {
-            return $this::INCOMPLETE;
-        } else {
-            return $this::DONE;
+        // not started
+        if ($this->missingAccounts()
+            && !$this->report->hasMoneyIn() 
+            && !$this->report->hasMoneyOut()) {
+           return self::STATUS_GREY;
+        } 
+        
+        // all done
+        if (!$this->missingAccounts()
+            && !$this->hasOutstandingAccounts()
+            && $this->report->hasMoneyIn() 
+            && $this->report->hasMoneyOut() 
+            && !$this->missingBalance()) {
+            return self::DONE;
+        }
+        
+        // amber in all the other cases
+        return self::STATUS_AMBER;
+    }
+    
+    
+    /** @return string */
+    public function getAccountsStatus()
+    {
+        switch ($this->getAccountsState()) {
+            case self::STATUS_GREY:
+                return $this->translator->trans('notstarted', [], 'status');
+            case self::STATUS_GREEN:
+                return $this->translator->trans('finished', [], 'status');
+           default:
+                return $this->translator->trans('notFinished', [], 'status');
         }
     }
-
 
     /** @return string */
     public function getAssetsState()
     {
         if ($this->missingAssets()) {
-            return $this::NOTSTARTED;
+            return self::NOTSTARTED;
         } else {
-            return $this::DONE;
+            return self::DONE;
         }
     }
 
@@ -272,9 +288,9 @@ class ReportStatusService
         $readyToSubmit = $this->isReadyToSubmit();
 
         if ($readyToSubmit && $this->report->isDue()) {
-            return $this::READYTOSUBMIT;
+            return self::READYTOSUBMIT;
         } else {
-            return $this::NOTFINISHED;
+            return self::NOTFINISHED;
         }
     }
 

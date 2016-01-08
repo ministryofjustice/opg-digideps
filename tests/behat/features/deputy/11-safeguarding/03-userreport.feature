@@ -1,7 +1,7 @@
 Feature: Safeguarding OPG Report
 
     @safeguarding @user-report @deputy
-    Scenario: Setup the test user
+    Scenario: user-report Setup the test user
       Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
       When I create a new "Lay Deputy" user "Wilma" "Smith" with email "behat-safe-userreport@publicguardian.gsi.gov.uk"

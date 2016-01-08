@@ -1,7 +1,7 @@
 Feature: Safeguarding Data entry
 
     @safeguarding @entry @deputy
-    Scenario: Setup the test user
+    Scenario: data entry - Setup the test user
       Given I load the application status from "init" 
       And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
       #Then I should see "admin@publicguardian.gsi.gov.uk" in the "users" region
