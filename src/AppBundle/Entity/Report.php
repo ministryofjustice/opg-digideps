@@ -513,7 +513,7 @@ class Report
      */
     public function isValidDateRange(ExecutionContextInterface $context)
     {
-        if(!empty($this->endDate)){
+        if(!empty($this->endDate) && !empty($this->startDate)){
             $dateInterval = $this->startDate->diff($this->endDate);
         }else{
             $context->addViolationAt('endDate','report.endDate.invalidMessage');

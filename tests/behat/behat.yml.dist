@@ -60,14 +60,6 @@ default:
             tags: "@textarea"
         contexts: [ DigidepsBehat\FeatureContext ]
 
-      safeguarding:
-        description: Tests related to the safeguarding section
-        paths:    [ %paths.base%/features ]
-        filters:
-          tags: "@safeguarding&&~@javascript"
-        contexts:
-          - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
       safeguardingentry:
         description: Tests related to the safeguarding section
         paths:    [ %paths.base%/features ]

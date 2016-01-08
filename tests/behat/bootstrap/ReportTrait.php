@@ -325,33 +325,13 @@ trait ReportTrait
         $this->pressButton("account_save");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
+        
+        $this->clickLink('account-moneyin');
+        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
+        
+        $this->clickLink('account-moneyout');
+        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 
-
-//        // add closing balance
-//        if (isset($rows['closingDate'])) {
-//            $closingDatePieces = explode('/', $rows['closingDate']);
-//            $this->fillField('accountBalance_closingDate_day', $closingDatePieces[0]);
-//            $this->fillField('accountBalance_closingDate_month', $closingDatePieces[1]);
-//            $this->fillField('accountBalance_closingDate_year', $closingDatePieces[2]);
-//            $this->fillField('accountBalance_closingBalance', $rows['closingBalance']);
-//            $this->pressButton("accountBalance_save");
-//
-//            if (isset($rows['closingBalanceExplanation']) || isset($rows['closingDateExplanation'])) {
-//                $this->theFormShouldBeInvalid();
-//
-//                if (isset($rows['closingBalanceExplanation'])) {
-//                    $this->fillField('accountBalance_closingBalanceExplanation', $rows['closingBalanceExplanation']);
-//                }
-//                if (isset($rows['closingDateExplanation'])) {
-//                    $this->fillField('accountBalance_closingDateExplanation', $rows['closingDateExplanation']);
-//                }
-//
-//                $this->pressButton("accountBalance_save");
-//            }
-//
-//            $this->theFormShouldBeValid();
-//            $this->assertResponseStatus(200);
-//        }
     }
 
     private function addTransactions(array $rows, $prefix, $buttonId)
@@ -362,7 +342,7 @@ trait ReportTrait
         }
 
         foreach ($records as $key => $value) {
-            if (is_array($value)) {
+            if (is_array($value)) { 
                 $this->fillField("transactions_{$key}_amount", $value[0]);
                 $this->fillField("transactions_{$key}_moreDetails", $value[1]);
             } else {
