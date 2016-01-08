@@ -19,7 +19,7 @@ Feature: deputy / report / edit accounts
 #            | allowedCourtOrderTypes_0 | 2 |
 #            | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
 #            | phone | 0123456789  |
-#      And I set the report end date to "1/1/2015"
+#      And I set the report end date to "1/1/2016"
 #      Then the URL should match "report/\d+/overview"
 #      Then I am on "/logout"
 #      And I reset the email log
@@ -56,7 +56,7 @@ Feature: deputy / report / edit accounts
 #        Then I fill in the following:
 #            | accountBalance_closingDate_day   | 1 |
 #            | accountBalance_closingDate_month | 1 |
-#            | accountBalance_closingDate_year  | 2015 |
+#            | accountBalance_closingDate_year  | 2016 |
 #            | accountBalance_closingBalance    | 100.00 |
 #        And I press "accountBalance_save"
 #        And I click on "edit-account-details"

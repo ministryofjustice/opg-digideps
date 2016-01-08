@@ -44,6 +44,17 @@ trait StatusSnapshotTrait
     }
     
     /**
+     * @Given I reset the behat SQL snapshots
+     */
+    public function deleteBehatSnapshots()
+    {
+        foreach(glob('/tmp/behat/behat-snapshot-*.sql') as $file){ // iterate files
+          if (is_file($file))
+            unlink($file);
+        }
+    }
+    
+    /**
      * @BeforeScenario
      */
     public function dbSnapshotBeforeScenario(BeforeScenarioScope $scope)

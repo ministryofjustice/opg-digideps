@@ -59,7 +59,7 @@ Feature: deputy / report / edit asset
       # add asset 
       When I add the following assets:
         | title        | value       |  description        | valuationDate | 
-        | Vehicles    | 13000.00    |  Alfa Romeo 156 JTD | 10/11/2015 |
+        | Vehicles    | 13000.00    |  Alfa Romeo 156 JTD | 10/11/2016 |
       And I click on "asset-alfa-romeo-156-jtd"
       And I click on "delete-button"
       # check checkbox is reset

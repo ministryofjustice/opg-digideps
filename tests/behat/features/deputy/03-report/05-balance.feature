@@ -4,7 +4,7 @@ Feature: deputy / report / account transactions
     Scenario: money in 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert report not submittable
-        When I am on the "2015" report overview page
+        When I am on the "2016" report overview page
         Then the report should not be submittable
         # assert balance is bad
         When I follow "edit-accounts"
@@ -18,7 +18,7 @@ Feature: deputy / report / account transactions
         And I follow "account-balance"
         Then I should see the "balance-good" region
         # assert report now submittable
-        When I am on the "2015" report overview page
+        When I am on the "2016" report overview page
         Then the report should be submittable
         
        

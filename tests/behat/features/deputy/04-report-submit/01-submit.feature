@@ -5,8 +5,8 @@ Feature: deputy / report / submit
         Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
-        Then I should not see the "download-2015-report" link
-        When I click on "report-2015"    
+        Then I should not see the "download-2016-report" link
+        When I click on "report-2016"    
         And I follow "edit-report_add_further_info"
         #And I fill in "report_add_info_furtherInformation" with "test"
         Then I press "report_add_info_saveAndContinue"
@@ -25,7 +25,7 @@ Feature: deputy / report / submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        And I go to the "2015" report overview page
+        And I go to the "2016" report overview page
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"
@@ -77,7 +77,7 @@ Feature: deputy / report / submit
         And I click on "client-home"
         And I edit lastest active report
         When I click on "client-home"
-        And I click on "report-2015-to-2016"
+        And I click on "report-2016-to-2016"
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -111,9 +111,9 @@ Feature: deputy / report / submit
         When I click on "client-home"
         # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
         Then I should be on "/client/show"
-        Then I should not see the "edit-report-period-2015-report" link
-        And I should not see the "report-2015" link
-        And I should see the "report-2015-submitted-on" region
+        Then I should not see the "edit-report-period-2016-report" link
+        And I should not see the "report-2016" link
+        And I should see the "report-2016-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/contacts" should not be accessible
         And the URL "/report/1/decisions" should not be accessible
@@ -133,7 +133,7 @@ Feature: deputy / report / submit
         # download report from client page
         #When I go to the homepage
         When I click on "client-home"
-        And I click on "download-2015-report"
+        And I click on "download-2016-report"
         And the response should contain "12345ABC"
         And the response should contain "Peter White"
         # test go back link
