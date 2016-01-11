@@ -42,18 +42,9 @@ Feature: deputy / report / submit
         When I go to "/report/1/display"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        # assert email has been sent/wrote into the disk
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
-        # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
-        And the second_last email "application/xml" part should contain the following:
-            | caseNumber | 12345abc |
-#            | ClientLastName | White |
-#            | moneyInTotal |  3,250.00 |
-#            | moneyOutTotal | 7,500.50 |
-#            | assetsTotal | 263,000.00 |
-#            | statusString | Deputy agreed |
-#            | statusDeputyName | John Doe |
+        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-post"
     
 
