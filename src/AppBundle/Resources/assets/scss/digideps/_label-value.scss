@@ -100,6 +100,14 @@
         border: 0;
         text-align: right;
     }
+    
+    .description {
+        border: 1px solid $grey-2;
+        padding: 5px;
+        margin: 5px 0 5px 0;
+        background: $white;
+        width: 75%;
+    }
 
     &.disable {
         .label {
@@ -148,8 +156,7 @@
             
             .label {
                 text-align: right;
-                padding: 20px 0 0 0;
-                width: 435px;
+                width: 80%;
             }
         }
         
