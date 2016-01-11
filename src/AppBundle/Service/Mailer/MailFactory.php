@@ -189,7 +189,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment('report-' . $client->getCaseNumber() . '.html', 'application/xml', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment('report-' . $client->getCaseNumber() . '.pdf', 'application/pdf', $reportContent)]);
 
         return $email;
     }

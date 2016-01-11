@@ -37,7 +37,7 @@ class MessageUtils
         $ret['parts'] = array();
         foreach ($message->getChildren() as $child) {
             $ret['parts'][] = array(
-                'body' => $child->getBody(),
+                'body' => base64_encode($child->getBody()),
                 'contentType' => $child->getContentType(),
             );
         }
@@ -62,7 +62,7 @@ class MessageUtils
         }
         
         foreach ((array)$array['parts'] as $part) {
-            $message->addPart($part['body'], $part['contentType']);
+            $message->addPart($part['body'], base64_decode($part['contentType']));
         }
         
         return $message;

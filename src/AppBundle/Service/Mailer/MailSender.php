@@ -149,10 +149,12 @@ class MailSender
         }
         
         // prepend email into the file
-        array_unshift($emails, MessageUtils::messageToArray($swiftMessage));
+        $messageArray = MessageUtils::messageToArray($swiftMessage);
+        
+        array_unshift($emails, $messageArray);
         
         $ret = file_put_contents($this->mockPath, json_encode($emails));
-
+        
         if (false === $ret) {
             throw new \RuntimeException("Cannot write email into {$this->mockPath}");
         }
