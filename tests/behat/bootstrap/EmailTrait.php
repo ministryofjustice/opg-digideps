@@ -3,6 +3,8 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
+use AppBundle\Service\Mailer\MessageUtils;
+
 
 trait EmailTrait
 {
@@ -145,33 +147,23 @@ trait EmailTrait
     
     
     /**
-     * @Then the :index email :contentType part should contain the following:
+     * @Then the :index email should contain a PDF of at least :minsizekb kb
      */
-    public function theEmailAttachmentShouldContain($index, $contentType, TableNode $table)
+    public function theEmailAttachmentShouldContain($index, $minsizekb)
     {
         $mail = $this->getEmailMockFromApi(true, $index);
         
         // find body of the part with the given contentType
-        $part = array_filter($mail['parts'], function($part) use ($contentType) {
-            return $part["contentType"] === $contentType;
+        $part = array_filter($mail['parts'], function($part) {
+            return $part["contentType"] === 'application/pdf';
         });
         if (empty($part)) {
-            throw new \RuntimeException("part $contentType not found in $index email");
+            throw new \RuntimeException("PDF not found in $index email");
         }
-        $html = array_shift($part)['body'];
-        
-        $doc = new \DOMDocument();    
-        $doc->loadHtml($html);
-        
-        foreach($table->getRowsHash() as $id => $mustContain) {
-           $element = $doc->getElementById($id);
-           if (!$element) {
-               throw new \RuntimeException("node #$id not found");
-           }
-           $textContent = $element->textContent;
-           if (strpos(strtolower($textContent), strtolower($mustContain)) === false) {
-               throw new \RuntimeException("#$id element: $mustContain' not found inside '$textContent'");
-           }
+        $pdfBody = base64_decode(array_shift($part)['body']);
+        $pdfLen = strlen($pdfBody) / 1024;
+        if ($pdfLen < $minsizekb ) {
+            throw new \RuntimeException("found PDF $pdfLen Kb, must be at least $minsizekb Kb");
         }
     }
 
@@ -180,7 +172,7 @@ trait EmailTrait
      */
     private function getLinksFromEmailHtmlBody()
     {
-        $mailContent = $this->getEmailMockFromApi()['parts'][0]['body'];
+        $mailContent = base64_decode($this->getEmailMockFromApi()['parts'][0]['body']);
 
         preg_match_all('#https?://[^\s"<]+#', $mailContent, $matches);
 
@@ -192,7 +184,7 @@ trait EmailTrait
      */
     public function mailContainsText($text)
     {
-        $mailContent = $this->getEmailMockFromApi()['parts'][0]['body'];
+        $mailContent = base64_decode($this->getEmailMockFromApi()['parts'][0]['body']);
 
         if (strpos($mailContent, $text) === FALSE) {
             throw new \Exception("Text: $text not found in email. Body: \n $mailContent");
@@ -204,7 +196,7 @@ trait EmailTrait
      */
     public function mailNoContainsText($text)
     {
-        $mailContent = $this->getEmailMockFromApi()['parts'][0]['body'];
+        $mailContent = base64_decode($this->getEmailMockFromApi()['parts'][0]['body']);
 
         if (strpos($mailContent, $text) !== FALSE) {
             throw new \Exception("Text: $text unexpected in email. Body: \n $mailContent");
