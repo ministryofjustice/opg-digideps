@@ -26,10 +26,23 @@
     
     &.half-width {
         width: 50%;
+        float:left;
         
         &.first {
             margin-right: 0;
             border-right: 1px solid $white;
+        }
+    }
+
+    &.third-width {
+        width: 33.33%;
+        float: left;
+        padding: 10px;
+        border-left: 1px solid $white;
+        
+        &.first {
+            margin-right: 0;
+            border-left: 0;
         }
     }
     
@@ -39,7 +52,9 @@
     }
  
     .message {
-        text-align: center;        
+        text-align: center;
+        height: 65px;
+        font-size: $large;
     }
     
     .total {
@@ -77,4 +92,9 @@
         }
     }
     
+}
+
+.bordered {
+    padding: 10px;
+    border: 1px solid $grey-2;
 }

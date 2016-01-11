@@ -7,7 +7,7 @@ $path: "/images";
 @import "shims";
 @import "digideps/helpers";
 
-$xlarge: 24px;
+$xlarge: 22px;
 $large: 18px;
 $medium: 14px;
 $small: 12px;
@@ -15,6 +15,7 @@ $small: 12px;
 @mixin formatted-reg($size) {
     font-size: $size;
     font-family: Helvetica, Arial;
+    font-weight: normal;
 }
 @mixin formatted-bold($size) {
     font-size: $size;
@@ -57,14 +58,24 @@ $small: 12px;
     }
     h2 {
         clear: both;
-        @include formatted-bold($large);
+        @include formatted-bold($xlarge);
+    }
+    
+    h2.section-heading {
+        clear: both;
+        @include formatted-reg($xlarge);
+        padding-bottom: 10px;
+        border-bottom: 1px solid $grey-2;
 
         .section-number {
-            display: block;
-            @include formatted-reg($large);
-        }
-
+            @include formatted-bold($xlarge);
+        }      
     }
+    
+    h2.sub-title {
+        @include formatted-bold($xlarge);
+    }
+    
     h3 {
         @include formatted-bold($medium);
     }
