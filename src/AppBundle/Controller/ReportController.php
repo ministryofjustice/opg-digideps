@@ -100,7 +100,7 @@ class ReportController extends RestController
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         // send report if submitted
-        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId' => $currentReport->getId(), 'addLayout'=>true])->getContent();
+        $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $currentReport->getId()])->getContent();
 
         $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
         $this->getMailSender()->send($reportEmail, [ 'html'], 'secure-smtp');
