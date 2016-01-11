@@ -25,6 +25,7 @@ RUN find . -not -user app -exec chown app:app {} \;
 USER app
 ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
+RUN sass --load-path /app/vendor/alphagov/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/Css/formatted-report.html.twig
 
 # cleanup
 RUN  rm /app/app/config/parameters.yml
@@ -43,6 +44,3 @@ RUN  chmod a+x /etc/my_init.d/*
 
 ENV  OPG_SERVICE api
 ADD  docker/beaver.d /etc/beaver.d
-
-RUN mkdir -p /app/src/AppBundle/Resources/views/css
-RUN sass --load-path /app/vendor/alphagov/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/css/formatted-report.html.twig
