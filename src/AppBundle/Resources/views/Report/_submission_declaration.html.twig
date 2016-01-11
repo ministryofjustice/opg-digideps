@@ -1,6 +1,6 @@
 {% set translationDomain = "report-declaration" %}
 {% trans_default_domain translationDomain %}
-
+{% if report.submitDate != "" %}
 <div class="box">
 
     {% include 'AppBundle:Components/Page:_page-section-title.html.twig' with {
@@ -36,3 +36,4 @@
         </dl>
     </div>
 </div>
+{% endif %}

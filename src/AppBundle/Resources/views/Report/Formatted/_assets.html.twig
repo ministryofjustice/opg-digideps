@@ -1,56 +1,58 @@
-<div class="section" id="assets-section">
-    <h2 class="section-heading">
-        <span class="section-number">Section 10</span>
-        Client’s assets and debts
-    </h2>
-
-    {% if report.assets | length == 0 %}
-    <div class="box contact-item no-contact">
-        <div class="form-group right-label">
-            <div class="checkbox">X</div>
-            <label>My client has no assets</label>
-        </div>
-    </div>
-    {% else %}
-    {% set assetsTotalValue = 0 %}
-    <ul class="list" id="assets">
-        {% for title, assets in groupAssets %}
-            <li class="asset-group" data-group="{{ title }}">
-                <h3>{{ title }}</h3>
-                <div class="box">
-                    <ul class="asset-group-items">
-                        {% for asset in assets %}
-                            {% set assetsTotalValue = assetsTotalValue + asset.value %}
-                            <li class="asset-item">
-                                <dl class="labelvalue asset-description">
-                                    <dt class="label">Description</dt>
-                                    <dd class="textarea value">{{ asset.description }}</dd>
-                                </dl>
-                                <dl class="labelvalue asset-valuationDate">
-                                    <div class="label">Valuation date</div>
-                                    <div
-                                        class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</div>
-                                </dl>
-                                <dl class="labelvalue asset-value">
-                                    <dt class="label">Value</dt>
-                                    <dd class="value">£{{ asset.value | number_format(2, '.', ',') }}</dd>
-                                </dl>
-                            </li>
-                        {% endfor %}
-                    </ul>
+{% if assets | length > 0 or report.noAssetToAdd == true %}
+    <div class="section" id="assets-section">
+        <h2 class="section-heading">
+            <span class="section-number">Section 10</span>
+            Client’s assets and debts
+        </h2>
+    
+        {% if report.assets | length == 0 %}
+            <div class="box contact-item no-contact">
+                <div class="form-group right-label">
+                    <div class="checkbox">X</div>
+                    <label>My client has no assets</label>
                 </div>
-            </li>
-        {% endfor %}
-
-
-        {# total value #}
-        <li class="box total">
-            <div class="labelvalue inline">
-                <div class="label">Assets Total Value</div>
-                <div class="value" id="assetsTotal">£{{ assetsTotalValue | number_format(2, '.', ',') }}</div>
             </div>
-        </li>
-    </ul>
-
+            {% else %}
+            {% set assetsTotalValue = 0 %}
+            <ul class="list" id="assets">
+                {% for title, assets in groupAssets %}
+                    <li class="asset-group" data-group="{{ title }}">
+                        <h3>{{ title }}</h3>
+                        <div class="box">
+                            <ul class="asset-group-items">
+                                {% for asset in assets %}
+                                    {% set assetsTotalValue = assetsTotalValue + asset.value %}
+                                    <li class="asset-item">
+                                        <dl class="labelvalue asset-description">
+                                            <dt class="label">Description</dt>
+                                            <dd class="textarea value">{{ asset.description }}</dd>
+                                        </dl>
+                                        <dl class="labelvalue asset-valuationDate">
+                                            <div class="label">Valuation date</div>
+                                            <div
+                                                class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</div>
+                                        </dl>
+                                        <dl class="labelvalue asset-value">
+                                            <dt class="label">Value</dt>
+                                            <dd class="value">£{{ asset.value | number_format(2, '.', ',') }}</dd>
+                                        </dl>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </li>
+                {% endfor %}
+        
+        
+                {# total value #}
+                <li class="box total">
+                    <div class="labelvalue inline">
+                        <div class="label">Assets Total Value</div>
+                        <div class="value" id="assetsTotal">£{{ assetsTotalValue | number_format(2, '.', ',') }}</div>
+                    </div>
+                </li>
+            </ul>
+        
+        {% endif %}
+    </div>
 {% endif %}
-</div>
