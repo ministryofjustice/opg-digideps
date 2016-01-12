@@ -151,26 +151,14 @@ class ReportController extends RestController
      */
     public function pdfAction($reportId)
     {
-        $wkHtmlToPdfUrl = 'http://wkhtmltopdf:80';
-        
         try {
             $html = $this->forward('AppBundle:Report:formatted', array(
                 'reportId'  => $reportId,
                 'addLayout' => true
             ))->getContent();
             
-            // TODO: move to a service (where guzzle could be injected, and the URL too)
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $wkHtmlToPdfUrl);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $body = json_encode([
-                'contents' => base64_encode($html)
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $body); 
-
-            $pdf = curl_exec($ch);
-
+            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+            
             $response = new Response($pdf);
             $response->headers->set('Content-Type', 'application/pdf');
 

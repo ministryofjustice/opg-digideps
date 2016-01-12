@@ -23,10 +23,11 @@ class ManageController extends RestController
         list($dbHealthy, $dbError) = $this->dbInfo();
         list($smtpDefaultHealthy, $smtpDefaultError) = $this->smtpDefaultInfo();
         list($smtpSecureHealthy, $smtpSecureError) = $this->smtpSecureInfo();
+        list($wkHtmlToPdfInfoHealthy, $wkHtmlToPdfInfoError) = $this->wkHtmlToPdfInfo();
 
         $data = [
-            'healthy' => $dbHealthy && $smtpDefaultHealthy && $smtpSecureHealthy,
-            'errors' => implode("\n", array_filter([$dbError, $smtpDefaultError, $smtpSecureError])) 
+            'healthy' => $dbHealthy && $smtpDefaultHealthy && $smtpSecureHealthy && $wkHtmlToPdfInfoHealthy,
+            'errors' => implode("\n", array_filter([$dbError, $smtpDefaultError, $smtpSecureError, $wkHtmlToPdfInfoError])) 
         ];
 
         return $data;
@@ -98,6 +99,26 @@ class ManageController extends RestController
             return [true, ''];
         } catch (\Exception $e) {
             return [false, 'SMTP Secure Error: ' . $e->getMessage()];
+        }
+    }
+    
+    /**
+     * @return array [boolean healthy, error string]
+     */
+    private function wkHtmlToPdfInfo()
+    {
+        $this->container->get('wkhtmltopdf')->isAlive();
+        
+        try {
+            $ret = $this->container->get('wkhtmltopdf')->isAlive();
+            
+            if (!$ret) {
+                throw new \RuntimeException('wkhtmltopdf is not responding or did not generate valid PDF');
+            }
+            
+            return [true, ''];
+        } catch (\Exception $e) {
+            return [false, 'wkhtmltopdf HTTP Error: ' . $e->getMessage()];
         }
     }
 
