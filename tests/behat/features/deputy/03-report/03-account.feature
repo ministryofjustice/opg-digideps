@@ -44,8 +44,8 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_1 | 88 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingBalance  | 1155.00 |
-            | account_closingBalance  | 1155.00 |
+            | account_openingBalance  | 1155 |
+            | account_closingBalance  | 1,155.00 |
         And I press "account_save"
         And I save the page as "report-account-list"
         Then the response status code should be 200
@@ -74,8 +74,8 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_1 | 88 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 66 |
-            | account_openingBalance  | 1155.00 |
-            | account_closingBalance  | 1155.00 |
+            | account_openingBalance  | 1,155.00 |
+            | account_closingBalance  | 1,155.00 |
         # right values
         When I fill in the following:
             | account_bank    | HSBC main account |
@@ -84,8 +84,8 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
-            | account_openingBalance  | 1150.00 |
-            | account_closingBalance  | 1155.00 |
+            | account_openingBalance  | 1,150 |
+            | account_closingBalance  | 1,155.00 |
         And I press "account_save"
         # check values are saved
         When I click on "account-8765"
@@ -95,8 +95,8 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
-            | account_openingBalance  | 1150.00 |
-            | account_closingBalance  | 1155.00 |
+            | account_openingBalance  | 1,150.00 |
+            | account_closingBalance  | 1,155.00 |
         And I save the page as "report-account-edit-reloaded"
 
 

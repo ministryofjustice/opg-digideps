@@ -27,11 +27,12 @@ class Transaction
     private $type;
 
      /**
+     * @var decimal
+     * 
      * @JMS\Type("string")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
      * @Assert\Range(min=0, max=10000000000, minMessage = "account.moneyInOut.amount.minMessage", maxMessage = "account.moneyInOut.amount.maxMessage", groups={"transactions"})
-     * @var string
      */
     private $amount;
 

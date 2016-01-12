@@ -21,11 +21,13 @@ class AccountType extends AbstractType
 
         $builder->add('openingBalance', 'number', [
             'precision' => 2,
+            'grouping' => true,
             'invalid_message' => 'account.openingBalance.type',
             
         ]);
         $builder->add('closingBalance', 'number', [
             'precision' => 2,
+            'grouping' => true,
             'invalid_message' => 'account.closingBalance.type',
             'required' => false
         ]);
