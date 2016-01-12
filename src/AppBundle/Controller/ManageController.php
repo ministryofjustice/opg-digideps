@@ -111,11 +111,9 @@ class ManageController extends RestController
         
         try {
             $ret = $this->container->get('wkhtmltopdf')->isAlive();
-            
             if (!$ret) {
-                throw new \RuntimeException('wkhtmltopdf is not responding or did not generate valid PDF');
+                throw new \RuntimeException('service down or created an invalid PDF');
             }
-            
             return [true, ''];
         } catch (\Exception $e) {
             return [false, 'wkhtmltopdf HTTP Error: ' . $e->getMessage()];

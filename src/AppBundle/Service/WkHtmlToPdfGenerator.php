@@ -9,7 +9,11 @@ namespace AppBundle\Service;
 class WkHtmlToPdfGenerator
 {
 
+    /**
+     * @var string 
+     */
     private $url;
+
 
     /**
      * @param string $url
@@ -20,15 +24,17 @@ class WkHtmlToPdfGenerator
         $this->timeoutSeconds = $timeoutSeconds;
     }
 
+
     /**
      * @return boolean true if working
      */
     public function isAlive()
     {
         $pdf = $this->getPdfFromHtml('test');
-       
+
         return strlen($pdf) > 5000 && preg_match('/PDF-\d/', $pdf);
     }
+
 
     /**
      * @param string $html
@@ -37,7 +43,7 @@ class WkHtmlToPdfGenerator
     public function getPdfFromHtml($html)
     {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds); 
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $this->timeoutSeconds);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeoutSeconds); //timeout in seconds        
         curl_setopt($ch, CURLOPT_URL, $this->url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
