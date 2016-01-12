@@ -40,7 +40,9 @@ class Transaction
     private $transactionType;
 
     /**
-     * @var string
+     * @var decimal
+     * 
+     * @JMS\Type("string")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      *
      * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)

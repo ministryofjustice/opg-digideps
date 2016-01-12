@@ -74,8 +74,9 @@ class Account
     private $createdAt;
 
     /**
-     * @var string
+     * @var decimal
      * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Type("string")
      * 
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -90,7 +91,9 @@ class Account
     private $openingDateExplanation;
 
     /**
-     * @var string
+     * @var decimal
+     * 
+     * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic"})
      * 
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)

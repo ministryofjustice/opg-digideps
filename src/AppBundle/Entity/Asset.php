@@ -36,9 +36,11 @@ class Asset
     private $description;
 
     /**
-     * @var string
+     * @var decimal
+     * 
      * @JMS\Groups({"asset"})
-     *
+     * @JMS\Type("string")
+     * 
      * @ORM\Column(name="asset_value", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $value;
