@@ -43,9 +43,9 @@ Feature: Safeguarding OPG Report
 #            | Vehicles    | 13000.00    | Alfa Romeo 156 JTD | 10/11/2016 |
 #        And I add the following bank account:
 #            | bank    | HSBC - main account |
-#            | accountNumber | 8765 |
+#            | accountNumber | 0876 |
 #            | accountType | cash |
-#            | sortCode | 88 | 77 | 66 |
+#            | sortCode | 08 | 77 | 66 |
 #            | openingBalance  | 155.000 |
 #            | closingBalance  |  5855.19 |
 #        And I follow "account-moneyin" 

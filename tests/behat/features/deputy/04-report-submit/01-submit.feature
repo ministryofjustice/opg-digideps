@@ -75,7 +75,7 @@ Feature: deputy / report / submit
         And I should see a "#edit-accounts" element
         And I should see a "#edit-assets" element
         When I follow "edit-accounts"
-        And I click on "account-8765"
+        And I click on "account-0876"
         # check no data was previously saved
         Then the following fields should have the corresponding values:
             | account_bank  | HSBC main account |

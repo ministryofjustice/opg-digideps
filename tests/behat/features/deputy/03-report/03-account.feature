@@ -39,11 +39,11 @@ Feature: deputy / report / account
         # right values
         And I fill in the following:
             | account_bank    | HSBC - main account |
-            | account_accountNumber | 8765 |
+            | account_accountNumber | 0876 |
             | account_accountType | cash | 
-            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_1 | 08 |
             | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
+            | account_sortCode_sort_code_part_3 | 00 |
             | account_openingBalance  | 1155 |
             | account_closingBalance  | 1,155.00 |
         And I press "account_save"
@@ -52,34 +52,34 @@ Feature: deputy / report / account
         And the form should be valid
         And the URL should match "/report/\d+/accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
-        When I click on "account-8765"
+        When I click on "account-0876"
         Then I should not see the "opening-balance-explanation" region
         # refresh page and check values
         When I follow "overview-button"
         Then I follow "edit-accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
-        And I should see "8765" in the "list-accounts" region
+        And I should see "0876" in the "list-accounts" region
         And I should see "£1,155.00" in the "list-accounts" region
 
     @deputy
     Scenario: edit 1st account (HSBC - main account)
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I am on the account "8765" page of the "2016" report
+        And I am on the account "0876" page of the "2016" report
         And I save the page as "report-account-edit-start"
         # assert fields are filled in from db correctly
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC - main account |
-            | account_accountNumber | 8765 |
+            | account_accountNumber | 0876 |
             | account_accountType | cash | 
-            | account_sortCode_sort_code_part_1 | 88 |
+            | account_sortCode_sort_code_part_1 | 08 |
             | account_sortCode_sort_code_part_2 | 77 |
-            | account_sortCode_sort_code_part_3 | 66 |
+            | account_sortCode_sort_code_part_3 | 00 |
             | account_openingBalance  | 1,155.00 |
             | account_closingBalance  | 1,155.00 |
         # right values
         When I fill in the following:
             | account_bank    | HSBC main account |
-            | account_accountNumber | 8765 |
+            | account_accountNumber | 0876 |
             | account_accountType | cash | 
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
@@ -88,10 +88,10 @@ Feature: deputy / report / account
             | account_closingBalance  | 1,155.00 |
         And I press "account_save"
         # check values are saved
-        When I click on "account-8765"
+        When I click on "account-0876"
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC main account |
-            | account_accountNumber | 8765 |
+            | account_accountNumber | 0876 |
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
@@ -107,7 +107,7 @@ Feature: deputy / report / account
             | bank    | temp  |
             | accountNumber | 9999 |
             | accountType | cash |
-            | sortCode | 88 | 77 | 66 |
+            | sortCode | 11 | 22 | 33 |
             | openingBalance  | 100 |
             | closingBalance  | 22 |
         When I click on "account-9999"

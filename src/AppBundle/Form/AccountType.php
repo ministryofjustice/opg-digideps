@@ -16,7 +16,7 @@ class AccountType extends AbstractType
         $builder->add('id', 'hidden');
         $builder->add('accountType', 'text');
         $builder->add('bank', 'text');
-        $builder->add('accountNumber', 'number', ['max_length' => 4]);
+        $builder->add('accountNumber', 'text', ['max_length' => 4]);
         $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false]);
 
         $builder->add('openingBalance', 'number', [
