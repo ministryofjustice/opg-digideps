@@ -6,7 +6,6 @@
     <div class="value">{{ 'currencySymbol' | trans }}{{ transaction.amount | number_format(2, '.', ',') }}</div>
     {% if transaction.moreDetails %}
         <div class="description">
-            {{ ('form.entries.' ~ transaction.transactionTypeId ~ '.moreInformations') | trans }}
             {{ transaction.moreDetails }}
         </div>
     {% endif %}
