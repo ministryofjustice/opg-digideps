@@ -52,14 +52,15 @@
     }
  
     .message {
+        @include core-19();
         text-align: center;
         height: 65px;
-        font-size: $large;
+        
     }
     
     .total {
         text-align: center;
-        @include formatted-bold($large);
+        @include bold-19();
         margin-top: 20px;
     }
     

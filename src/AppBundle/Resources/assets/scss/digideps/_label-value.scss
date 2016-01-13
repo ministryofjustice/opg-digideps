@@ -43,7 +43,7 @@
 .checkbox {
     display: -moz-inline-stack;
     display: inline-block;
-    @include formatted-bold($medium);
+    @include bold-14();
     background: #fff;
     width: .75em;
     padding: 4px 10px 2px 10px;
@@ -124,12 +124,12 @@
         border-bottom: 1px solid $grey-2;
 
         .label {
-            @include formatted-bold($medium);
+            @include bold-14();
             color: $black;
             padding: 10px 0 10px 20px;
         }
         .value {
-            @include formatted-bold($medium);
+            @include bold-14();
             color: $white;
             background: $black;
             padding: 10px 10px 10px 5px;
@@ -156,7 +156,7 @@
             
             .label {
                 text-align: right;
-                width: 80%;
+                width: 70%;
             }
         }
         
