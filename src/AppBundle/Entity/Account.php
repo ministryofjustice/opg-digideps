@@ -83,6 +83,7 @@ class Account
     private $openingBalance;
     
     /**
+     * @deprecated since accounts_mk2
      * @var string
      * @JMS\Groups({"transactions", "basic"})
      * 
@@ -101,6 +102,7 @@ class Account
     private $closingBalance;
 
     /**
+     * @deprecated since accounts_mk2
      * @var string
      * @JMS\Groups({"transactions", "basic"})
      * 
@@ -109,6 +111,7 @@ class Account
     private $closingBalanceExplanation;
     
     /**
+     * @deprecated since accounts_mk2
      * @var \Date
      * @JMS\Groups({"transactions", "basic"})
      * 
@@ -117,6 +120,7 @@ class Account
     private $openingDate;
 
     /**
+     * @deprecated since accounts_mk2
      * @var \Date
      * @JMS\Groups({"transactions", "basic"})
      * 
@@ -125,6 +129,7 @@ class Account
     private $closingDate;
 
     /**
+     * @deprecated since accounts_mk2
      * @var string
      * @JMS\Groups({"transactions", "basic"})
      * 
