@@ -263,11 +263,21 @@ class ReportController extends AbstractController
     public function pdfAction($reportId)
     {
         $restClient = $this->get('restClient');
-        
+
+        $report = $this->getReport($reportId, ['basic']);
         $pdf = $restClient->get('report/' . $reportId . '/pdf', 'raw');
         
         $response = new Response($pdf);
         $response->headers->set('Content-Type', 'application/pdf');
+
+        $name = 'OPG102-' . $report->getClient()->getCaseNumber() . '-' . date_format($report->getEndDate(),'Y') . '.pdf';
+        
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($name) . '"');
+        $response->headers->set('Content-length', $pdf->getSize());
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+        
         
         return $response;
     }
