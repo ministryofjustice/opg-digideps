@@ -1,9 +1,6 @@
 {% if assets | length > 0 or report.noAssetToAdd == true %}
     <div class="section" id="assets-section">
-        <h2 class="section-heading">
-            <span class="section-number">Section 10</span>
-            Client’s assets and debts
-        </h2>
+        <h2 class="section-heading">Client’s assets and debts</h2>
     
         {% if report.assets | length == 0 %}
             <div class="box contact-item no-contact">

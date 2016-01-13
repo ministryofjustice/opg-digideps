@@ -1,9 +1,6 @@
 {% if contacts | length > 0 or report.reasonForNoContacts != "" %}
     <div class="section" id="contacts-section">
-        <h2 class="section-heading">
-            <span class="section-number">Section 3</span>
-            People you consulted
-        </h2>
+        <h2 class="section-heading">People you consulted</h2>
                         
         {% if contacts | length == 0 %}
             <div class="box contact-item no-contact" id="no-contact">

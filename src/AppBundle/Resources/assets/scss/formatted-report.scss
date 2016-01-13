@@ -52,7 +52,7 @@ $small: 12;
     }
     
     h1 {
-        @include bold-24();
+        @include bold-48();
         width: 60%;
     }
     h2 {
@@ -175,4 +175,12 @@ $small: 12;
     .dont-break {
         page-break-inside: avoid;
     }
+
+
+}
+
+.page-report-header {
+    padding-bottom: 20px;
+    border-bottom: 1px solid $grey-2;
+    margin-bottom: 20px;
 }
