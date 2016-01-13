@@ -258,7 +258,7 @@ class ReportController extends AbstractController
     }
     
     /**
-     * @Route("/report/{reportId}/pdf", name="report_pdf")
+     * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
      */
     public function pdfAction($reportId)
     {
