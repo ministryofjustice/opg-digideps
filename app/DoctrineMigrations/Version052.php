@@ -35,10 +35,7 @@ class Version052 extends AbstractMigration implements ContainerAwareInterface
 
         $em = $this->container->get('em');
         $am = new AccountMigration($em->getConnection());
-        $transactionsAdded = $am->migrateAccounts();
-        $this->write(__CLASS__ . ": added $transactionsAdded new transactions");
-        
-        $am->migrateReports();
+        $am->migrateAll();
 
         ini_set('memory_limit', $memLimitInit);
     }

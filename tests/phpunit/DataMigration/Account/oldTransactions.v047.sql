@@ -709,9 +709,11 @@ ALTER TABLE ONLY safeguarding ALTER COLUMN id SET DEFAULT nextval('safeguarding_
 --
 
 COPY account (id, report_id, bank_name, sort_code, account_number, last_edit, created_at, opening_balance, opening_date_explanation, closing_balance, closing_balance_explanation, opening_date, closing_date, closing_date_explanation) FROM stdin;
-1	1	hsbc	121212	1234	2015-12-03 16:30:50	2015-12-03 16:28:44	123.00	\N	123.00	balances does not match	2015-01-01	2015-12-31	closing dates do not match 123
-2	2	e1	888888	1234	2015-12-03 16:37:56	2015-12-03 16:37:42	8.00	\N	\N	\N	2015-01-01	\N	\N
-3	2	e2	111111	1235	2015-12-03 16:38:30	2015-12-03 16:38:19	9.00	\N	\N	\N	2015-01-01	\N	\N
+1	1	hsbc	121212	1234	2015-12-03 16:30:50	2015-12-03 16:28:44	123.00	\N	123.00	explanation1	2015-01-01	2015-12-31	closing dates do not match 123
+2	2	acc2	888888	1234	2015-12-03 16:37:56	2015-12-03 16:37:42	8.00	\N	\N	\N	2015-01-01	\N	\N
+3	2	acc3	111111	1235	2015-12-03 16:38:30	2015-12-03 16:38:19	9.00	\N	\N	\N	2015-01-01	\N	\N
+4	2	acc4	444445	4444	2015-12-03 16:38:30	2015-12-03 16:38:19	9.00	\N	12	explanation4	2015-01-01	\N	\N
+5	2	acc5	555555	5555	2015-12-03 16:38:30	2015-12-03 16:38:19	9.00	\N	12	explanation5	2015-01-01	\N	\N
 \.
 
 

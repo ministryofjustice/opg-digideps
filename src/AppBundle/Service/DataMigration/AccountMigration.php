@@ -62,12 +62,12 @@ class AccountMigration
         $this->pdo = $pdo;
     }
 
-    public function migrateAccounts()
+    public function migrateAll()
     {
         $reports = $this->getReports();
 
-        $oldTypes = $this->fetchAll("SELECT * from account_transaction_type");
-        $newTypes = $this->fetchAll("SELECT * from transaction_type");
+//        $oldTypes = $this->fetchAll("SELECT * from account_transaction_type");
+//        $newTypes = $this->fetchAll("SELECT * from transaction_type");
 
         // DEBUG Data
 //        $toCsv = function($rows) {
@@ -84,9 +84,10 @@ class AccountMigration
         // merge transaction into array
         // sum amounts and string-contact more_details stuff
         $transactionsToInsert = [];
+        $explanationsToAdd = [];
         foreach ($reports as $reportId => $reportData) {
             foreach ($reportData['accounts'] as $account) {
-                //TODO account.account_type
+                // merge transactions
                 foreach ($account['transactions_old'] as $typeId => $tRow) {
                     if (!isset(self::$transactionMap[$typeId])) {
                         throw new \RuntimeException("cannot map old transaction type [$typeId]");
@@ -99,10 +100,15 @@ class AccountMigration
                     $transactionsToInsert[$reportId][$newTypeId]['more_details'][] = $tRow['more_details'];
 
                 }
+                // closing balance explanations
+                if (!empty($account['closing_balance_explanation'])) {
+                    $explanationsToAdd[$reportId][] = [ $account['bank_name'], $account['closing_balance_explanation'] ];
+                }
+                
             }
         }
 
-        //fetch array and add queries
+        // add transactions
         $stmt = $this->pdo->prepare(
             "INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)"
             . " VALUES(:id, :transaction_type_id, :amount, :md)");
@@ -120,13 +126,22 @@ class AccountMigration
                 $added++;
             }
         }
-
-        return $added;
-    }
-
-    public function migrateReports()
-    {
-        //TODO balance_mismatch_explanation
+        
+        
+        // update explanations
+        $stmt = $this->pdo->prepare(
+            "UPDATE report SET balance_mismatch_explanation = :balance_mismatch_explanation WHERE id=:report_id");
+        foreach ($explanationsToAdd as $reportId => $explanations) {
+            $explanationStrings = [];
+            foreach ($explanations as $bankAndExplanation) {
+                $explanationStrings[] = $bankAndExplanation[0] . ': ' . $bankAndExplanation[1];
+            }
+            $params = [
+                ':report_id' => $reportId,
+                ':balance_mismatch_explanation' => implode("\n", $explanationStrings),
+            ];
+            $stmt->execute($params);
+        }
     }
 
     public function getReports()
