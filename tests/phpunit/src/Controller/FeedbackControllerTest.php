@@ -43,7 +43,7 @@ class FeedbackControllerTest extends AbstractTestController
         $this->assertCount(1, MailSenderMock::getMessagesSent()['mailer.transport.smtp.default']);
         $email = MailSenderMock::getMessagesSent()['mailer.transport.smtp.default'][0];
         $this->assertEquals('User Feedback', $email['subject']);
-        $this->assertContains('difficulty-response', $email['parts'][0]['body']);
+        $this->assertContains('difficulty-response', base64_decode($email['parts'][0]['body']));
     }
     
     public function testsendFeedbackReportAuth()
