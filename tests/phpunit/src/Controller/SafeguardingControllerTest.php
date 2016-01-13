@@ -161,7 +161,7 @@ class SafeguardingControllerTest extends AbstractTestController
         $url2put = '/report/safeguarding/' . self::$safeguarding2->getId();
 
         $this->assertEndpointNotAllowedFor('POST', $url2post, self::$tokenDeputy, [
-            'report' => ['id' => self::$report2->getId()]
+            'report_id' => ['id' => self::$report2->getId()]
         ]);
         $this->assertEndpointNotAllowedFor('PUT', $url2put, self::$tokenDeputy);
     }
@@ -244,7 +244,7 @@ class SafeguardingControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['report' => ['id'=>self::$report1->getId()]] + $this->dataUpdate
+            'data' => ['report_id'=>self::$report1->getId()] + $this->dataUpdate
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
