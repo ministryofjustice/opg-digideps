@@ -16,7 +16,7 @@
             {% for account in report.accounts %}
                 <tr>
                     <td>
-                        <div class="account-name">{{ account.bank }}</div>
+                        <div class="account-name">{{ account.bank }} {{ account.accountType }}</div>
                         <div class="account-number">****{{ account.accountNumber }}, {{ account.sortCode | split('', 2) | join('-') }}</div>
                     </td>
                     <td class="numeric grey">£{{ account.openingBalance }}</td>
