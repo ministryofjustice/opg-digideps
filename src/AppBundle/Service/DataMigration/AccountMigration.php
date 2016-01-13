@@ -83,19 +83,20 @@ class AccountMigration
 
         // merge transaction into array
         // sum amounts and string-contact more_details stuff
-        $dataToInsert = [];
+        $transactionsToInsert = [];
         foreach ($reports as $reportId => $reportData) {
             foreach ($reportData['accounts'] as $account) {
+                //TODO account.account_type
                 foreach ($account['transactions_old'] as $typeId => $tRow) {
                     if (!isset(self::$transactionMap[$typeId])) {
                         throw new \RuntimeException("cannot map old transaction type [$typeId]");
                     }
                     $newTypeId = self::$transactionMap[$typeId];
-                    if (!isset($dataToInsert[$reportId][$newTypeId])) {
-                        $dataToInsert[$reportId][$newTypeId] = ['amount'=>0.0, 'more_details'=>null];
+                    if (!isset($transactionsToInsert[$reportId][$newTypeId])) {
+                        $transactionsToInsert[$reportId][$newTypeId] = ['amount'=>0.0, 'more_details'=>null];
                     }
-                    $dataToInsert[$reportId][$newTypeId]['amount'] += $tRow['amount'];
-                    $dataToInsert[$reportId][$newTypeId]['more_details'][] = $tRow['more_details'];
+                    $transactionsToInsert[$reportId][$newTypeId]['amount'] += $tRow['amount'];
+                    $transactionsToInsert[$reportId][$newTypeId]['more_details'][] = $tRow['more_details'];
 
                 }
             }
@@ -107,7 +108,7 @@ class AccountMigration
             . " VALUES(:id, :transaction_type_id, :amount, :md)");
 
         $added = 0;
-        foreach($dataToInsert as $reportId => $row) {
+        foreach($transactionsToInsert as $reportId => $row) {
             foreach($row as $newTypeId => $t) {
                 $params = [
                     ':id' => $reportId,
@@ -123,6 +124,10 @@ class AccountMigration
         return $added;
     }
 
+    public function migrateReports()
+    {
+        //TODO balance_mismatch_explanation
+    }
 
     public function getReports()
     {
