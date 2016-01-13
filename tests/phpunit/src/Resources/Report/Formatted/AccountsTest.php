@@ -13,6 +13,7 @@ class AccountsTest extends AbstractReportTest
 
     public function setup()
     {
+        $this->markTestSkipped();
         parent::setUp();
         $this->setupReport();
     }
