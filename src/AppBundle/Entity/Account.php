@@ -77,6 +77,7 @@ class Account
     private $openingDate;
     
     /**
+     * @deprecated since accounts_mk2
      * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"checkbox_matches_date"})
      * 
      * @var string OPENING_DATE_SAME_* values
@@ -84,6 +85,7 @@ class Account
     private $openingDateMatchesReportDate;
       
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
      */
@@ -113,12 +115,14 @@ class Account
     private $closingBalance;
     
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
     private $closingBalanceExplanation;
     
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
      * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
@@ -128,6 +132,7 @@ class Account
     private $closingDate;
     
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
