@@ -16,7 +16,7 @@ class AccountMigrationTest extends WebTestCase
     {
         // import database at version 4 with some old account and transactions
         $export = "export PGHOST=postgres; export PGPASSWORD=api; export PGDATABASE=digideps_unit_test; export PGUSER=api;";
-        exec("$export psql -U api -c 'DROP SCHEMA IF EXISTS public cascade'", $out1);
+//        exec("$export psql -U api -c 'DROP SCHEMA IF EXISTS public cascade'", $out1);
         exec("$export psql -U api < ".__DIR__."/oldTransactions.v047.sql" , $out2);
 
         //migrate from version 47 (that will test the migration too)
@@ -98,16 +98,13 @@ class AccountMigrationTest extends WebTestCase
         $this->assertEquals($this->account2['transactions_old']['compensation_or_damages_awards']['amount'] + $this->account3['transactions_old']['compensation_or_damages_awards']['amount'], $report['transactions_new']['compensation-or-damages-award']['amount']);
         $this->assertEquals($this->account2['transactions_old']['compensation_or_damages_awards']['more_details']."\n".$this->account3['transactions_old']['compensation_or_damages_awards']['more_details'], $report['transactions_new']['compensation-or-damages-award']['more_details']);
 
+        file_put_contents(__DIR__ . '/new.array', print_r($reports, true));
+        file_put_contents(__DIR__ . '/old.array', print_r($this->initialReports, true));
     }
 
     public function tearDown()
     {
-        exec('php app/console cache:clear --env=test');
-        exec('php app/console doctrine:query:sql "DROP SCHEMA IF EXISTS public cascade; CREATE SCHEMA IF NOT EXISTS public;" --env=test');
-        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test');
-        exec('php app/console doctrine:schema:validate --env=test');
-        exec('php app/console digideps:add-user deputy@example.org --firstname=test --lastname=deputy --role=2 --password=Abcd1234 --env=test');
-        exec('php app/console digideps:add-user admin@example.org --firstname=test --lastname=admin  --role=1 --password=Abcd1234 --env=test');
+        // execute this test separately so that the "src" tests don't get affected
     }
 
 }
