@@ -30,7 +30,6 @@ Feature: deputy / report / edit asset
        And I should see "£10,000.00" in the "list-assets" region
        And I click on "asset-i-love-my-artworks"
        And I click on "delete-button"
-       Then debug
        And I save the page as "report-assets-remove-remove-deleted"
        And the URL should match "/report/\d+/assets"
        Then I should not see "I love my artworks" in the "list-assets" region
