@@ -36,7 +36,7 @@ balance:
       accountsBalancedMessage: Money in and money out match the balance
     bad:
       pageSectionTitle: Balance the accounts
-      pageSectionDescription: You have reported £%totalOffset% %more% in the total money in and out than in the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.      
+      pageSectionDescription: There’s a difference of £%totalOffset% between what you’ve told us the total money in and money out was, and the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.
       accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
       totalAfterMoneyInOut: 
@@ -57,7 +57,7 @@ balance:
          You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
       cantFind: Can’t find the problem?
       formtitle:
-        label: If you can’t find where the <b>£%difference%</b> has come from, tell us why
+        label: You can still submit your report, but you must explain why the accounts don't balance.
     balanceAfterReported: Total money in and money out
     totalBankStart: Totals from all bank accounts at start of reporting period
     totalInDuringPeriod: Total money in during reporting period
