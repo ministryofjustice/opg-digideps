@@ -6,8 +6,8 @@ class ContactControllerTest extends ControllerTestCase
     /** @test */
     public function listActionRedirectToAddIfNoContactsAndNotDue() {
 
-        $this->restClient->shouldReceive('get')->withArgs(['report/1/contacts', 'Contact[]'])->andReturn([]);
         $this->report->shouldReceive('isDue')->andReturn(false);
+        $this->report->shouldReceive('getContacts')->andReturn([]);
 
         $this->frameworkBundleClient->request( "GET","/report/1/contacts");
         $response =  $this->frameworkBundleClient->getResponse();

@@ -1,60 +1,57 @@
 <?php
 namespace AppBundle\Entity;
 
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @Assert\Callback(methods={"moreDetailsValidate"}, groups={"transactions"})
  */
-class AccountTransaction
+class Transaction
 {
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions"})
-     * @var integer
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
      */
     private $id;
-    
-    /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions"})
-     * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
-     * @Assert\Range(min=0, max=10000000000, minMessage = "account.moneyInOut.amount.minMessage", maxMessage = "account.moneyInOut.amount.maxMessage", groups={"transactions"})
-     * @var string
-     */
-    private $amount;
-    
-     /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $type;
-    
-     /**
-     * @JMS\Type("boolean")
-     * @var string
-     */
-    private $hasMoreDetails;
-    
-     /**
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions"})
-     * @var string
-     */
-    private $moreDetails;
-    
-    
-    public function __construct($id, $amount, $hasMoreDetails = false)
-    {
-        $this->id = $id;
-        $this->amount = $amount;
-        $this->hasMoreDetails = $hasMoreDetails;
-    }
 
     /**
-     * @return integer
+     * @JMS\Type("string")
+     */
+    private $category;
+
+    /**
+     * @JMS\Type("string")
+     */
+    private $type;
+
+     /**
+     * @var decimal
+     * 
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
+     * @Assert\Range(min=0, max=10000000000, minMessage = "account.moneyInOut.amount.minMessage", maxMessage = "account.moneyInOut.amount.maxMessage", groups={"transactions"})
+     */
+    private $amount;
+
+    /**
+     * @var string
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Type("boolean")
+     */
+    private $hasMoreDetails;
+
+    /**
+     * @var string
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\Type("string")
+     */
+    private $moreDetails;
+
+    /**
+     * @return mixed
      */
     public function getId()
     {
@@ -62,15 +59,31 @@ class AccountTransaction
     }
 
     /**
-     * @param integer $id
+     * @param mixed $id
      */
     public function setId($id)
     {
         $this->id = $id;
     }
-    
+
     /**
-     * @return string
+     * @return mixed
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @param mixed $category
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @return mixed
      */
     public function getType()
     {
@@ -78,7 +91,7 @@ class AccountTransaction
     }
 
     /**
-     * @param string $type
+     * @param mixed $type
      */
     public function setType($type)
     {
@@ -86,7 +99,7 @@ class AccountTransaction
     }
 
     /**
-     * @return float
+     * @return mixed
      */
     public function getAmount()
     {
@@ -94,35 +107,35 @@ class AccountTransaction
     }
 
     /**
-     * @param float $amount
+     * @param mixed $amount
      */
     public function setAmount($amount)
     {
         $this->amount = $amount;
     }
-    
+
     /**
-     * @return boolean
+     * @return string
      */
-    public function hasMoreDetails()
+    public function getHasMoreDetails()
     {
-      return $this->hasMoreDetails;
+        return $this->hasMoreDetails;
     }
 
     /**
-     * @param boolean $hasMoreDetails
+     * @param string $hasMoreDetails
      */
     public function setHasMoreDetails($hasMoreDetails)
     {
-      $this->hasMoreDetails = $hasMoreDetails;
+        $this->hasMoreDetails = $hasMoreDetails;
     }
-    
+
     /**
      * @return string
      */
     public function getMoreDetails()
     {
-       return $this->moreDetails;
+        return $this->moreDetails;
     }
 
     /**
@@ -130,8 +143,9 @@ class AccountTransaction
      */
     public function setMoreDetails($moreDetails)
     {
-      $this->moreDetails = $moreDetails;
+        $this->moreDetails = $moreDetails;
     }
+
     
     /**
      * @param ExecutionContextInterface $context
@@ -139,7 +153,7 @@ class AccountTransaction
     public function moreDetailsValidate(ExecutionContextInterface $context)
     {
         $moreDetailsClean = trim($this->getMoreDetails(), " \n");
-        if ($this->hasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
+        if ($this->getHasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
         }
         

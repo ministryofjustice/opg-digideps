@@ -10,24 +10,13 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Decision
 {
+    use Traits\HasReportTrait;
+    
     /**
      * @JMS\Type("integer")
      * @var integer
      */
     private $id;
-
-    /**
-     * @JMS\Type("integer")
-     * @var integer
-     */
-    private $reportId;
-    
-    /**
-     * Only used to hold the Report object, needed by the validators for date range reasons
-     * @JMS\Exclude
-     * @var Report
-     */
-    private $report;
     
     /**
      * @JMS\Type("string")
@@ -56,16 +45,6 @@ class Decision
     public function getId()
     {
         return $this->id;
-    }
-
-    public function setReportId($reportId)
-    {
-        $this->reportId = $reportId;
-    }
-
-    public function getReportId()
-    {
-        return $this->reportId;
     }
 
     public function getDescription()
@@ -101,22 +80,6 @@ class Decision
     public function setDescription($description)
     {
         $this->description = $description;
-    }
-    
-    /**
-     * @return Report
-     */
-    public function getReport()
-    {
-        return $this->report;
-    }
-
-    /**
-     * @param Report $report
-     */
-    public function setReport(Report $report)
-    {
-        $this->report = $report;
     }
     
 }

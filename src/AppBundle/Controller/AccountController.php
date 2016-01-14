@@ -1,242 +1,286 @@
 <?php
-
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use AppBundle\Service\ReportStatusService;
-
-
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 class AccountController extends AbstractController
 {
-
+    
     /**
-     * @Route("/report/{reportId}/accounts/{action}", name="accounts", defaults={ "action" = "list"}, requirements={
-     *   "action" = "(add|jsadd|list)"
-     * })
+     * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
+     * @param integer $reportId
+     * @param Request $request
      * @Template()
+     * @return array
      */
-    public function accountsAction($reportId, $action)
-    {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        $request = $this->getRequest();
-        
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+    public function moneyinAction(Request $request, $reportId) {
+
+        $report = $this->getReport($reportId, [ 'transactionsIn', 'basic', 'client', 'balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $this->getClient($report->getClient());
-
-        $accounts = $report->getAccounts();
-
-        $account = new EntityDir\Account();
-        $account->setReportObject($report);
-
-        $form = $this->createForm(new FormDir\AccountType(['jsEnabled'=>('jsadd' === $action)]), $account, [
-             'action' => $this->generateUrl('accounts', [ 'reportId' => $reportId, 'action'=>'add' ]) . "#pageBody"
-        ]);
         
+        $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
-        if ($form->get('save')->isClicked() && $form->isValid()) {
-            $account = $form->getData();
-            $account->setReport($reportId);
 
-            $response = $restClient->post('report/'.$reportId.'/account', $account, [
-                'deserialise_group' => 'add'
+        if ($form->isValid()) {
+            $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
+                'deserialise_group' => 'transactionsIn',
             ]);
             
-            $request->getSession()->getFlashBag()->add(
-                'action', 
-                'page.accountAdded'
-            );
-
-            return $this->redirect(
-                $this->generateUrl('accounts', [ 'reportId' => $reportId ]) . "#pageBody"
-            );
+            return $this->redirect($this->generateUrl('accounts_moneyin', ['reportId' => $reportId]));
         }
 
-        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
-        
         return [
             'report' => $report,
-            'reportStatus' => $reportStatusService,
-            'client' => $client,
-            'action' => $action,
-            'form' => $form->createView(),
-            'accounts' => $accounts,
+            'subsection' => 'moneyin',
+            'jsonEndpoint' => 'transactionsIn',
+            'form' => $form->createView()
         ];
+        
     }
 
     /**
-     * Single account page
-     * - money in/out
-     * - account closing balance
-     * 
-     * @Route("/report/{reportId}/account/{accountId}/{action}", name="account", requirements={
-     *   "accountId" = "\d+",
-     *   "action" = "edit|delete|money-in|money-out|money-both|list"
-     * }, defaults={ "action" = "list"})
+     * @Route("/report/{reportId}/accounts/moneyout", name="accounts_moneyout")
+     * @param integer $reportId
+     * @param Request $request
      * @Template()
+     * @return array
      */
-    public function accountAction($reportId, $accountId, $action)
+    public function moneyoutAction(Request $request, $reportId) 
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, [ 'transactionsOut', 'basic', 'client', 'balance']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        if (!in_array($accountId, $report->getAccountIds())) {
-            throw new \RuntimeException("Bank account not found.");
-        }
-        $client = $this->getClient($report->getClient());
-
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        $account = $restClient->get('report/account/' . $accountId, 'Account', ['query' => [ 'groups' => [ 'transactions' ]]]);
-        $account->setReportObject($report);
         
-        // closing balance logic
-        list($formClosingBalance, $closingBalanceFormIsSubmitted, $formBalanceIsValid) = $this->handleClosingBalanceForm($account);
-//        if ($action == "list") {
-            if ($closingBalanceFormIsSubmitted && $formBalanceIsValid) {
-                $this->get('restClient')->put('account/' .  $account->getId(), $formClosingBalance->getData(), [
-                    'deserialise_group' => 'balance',
-                ]);
-
-                return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#closing-balance');
-            }
-//        }
+        $form = $this->createForm(new FormDir\TransactionsType('transactionsOut'), $report);
+        $form->handleRequest($request);
         
-        // money in/out logic
-        list($formMoneyInOut, $formMoneyIsValid) = $this->handleMoneyInOutForm($account);
-        if ($formMoneyIsValid) {
-            $this->get('restClient')->put('account/' .  $account->getId(), $formMoneyInOut->getData(), [
-                'deserialise_group' => 'transactions',
+        if ($form->isValid()) {
+            $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
+                'deserialise_group' => 'transactionsOut',
             ]);
+            return $this->redirect($this->generateUrl('accounts_moneyout', ['reportId' => $reportId]));
         }
-        
-        // edit/delete logic
-        $editFormHasClosingBalance = $report->isDue() && $account->getCountValidTotals() > 0;
-        list($formEdit, $formEditIsValid, $formDeleteIsValid) = $this->handleAccountEditDeleteForm($account, [
-            'showClosingBalance' => $editFormHasClosingBalance,
-            'showSubmitButton' => $action != 'delete',
-            'showDeleteButton' => $action == 'delete'
-        ]);
-        if ($formEditIsValid) {
-            $this->get('restClient')->put('account/' .  $account->getId(), $formClosingBalance->getData(), [
-                'deserialise_group' => $editFormHasClosingBalance ? 'edit_details_report_due' : 'edit_details',
-            ]);
-            return $this->redirect($this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]));
-        } else if ($formDeleteIsValid) {
-            $this->get('restClient')->delete('account/' .  $account->getId());
-            return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $report->getId()]));
-        }
-        
-       
-        // refresh account data after forms have altered the account's data
-        if ($formBalanceIsValid || $formMoneyIsValid || $formEditIsValid) {
-             // get account from db
-            $refreshedAccount = $restClient->get('report/account/' . $accountId, 'Account', [ 'query' => [ 'groups' => 'transactions']]);
-            $refreshedAccount->setReportObject($report);
-        
-            //TODO try tests without this
-            $account = $refreshedAccount;
-        }
-        $reportStatusService = new ReportStatusService($report, $this->get('translator'));
-        
         
         return [
             'report' => $report,
-            'reportStatus' => $reportStatusService,
-            'client' => $client,
-            // moneyIn/Out form
-            'form' => $formMoneyInOut->createView(),
-            // closing balance form: 
-            // Show the form if on list view, the report is due and the closing balance is not added. 
-            //  also show if the form is submitted but not valid 
-            'closingBalanceForm' => $formClosingBalance->createView(),
-            'closingBalanceFormShow' => ($action == 'list' && $report->isDue() && $account->needsClosingBalanceData() && $account->getCountValidTotals() > 0) 
-                                        || ($closingBalanceFormIsSubmitted && !$formBalanceIsValid),
-            'closingBalanceFormDateExplanationShow' => $account->getClosingDate() && $closingBalanceFormIsSubmitted 
-                                                       && !$account->isClosingDateEqualToReportEndDate(),
-            'closingBalanceFormBalanceExplanationShow' => $account->getClosingBalance() !== null && $closingBalanceFormIsSubmitted 
-                                                          && !$account->isClosingBalanceMatchingTransactionSum(),
-            // edit form: show closing balance/date explanation only in case of mismatch
-            'formEdit' => $formEdit ? $formEdit->createView() : null,
-            'formEditShow' => $action == 'edit' || $action == 'delete',
-            // edit form: show closing date explanation is submitted with a value, or it's just not valid 
-            'formEditClosingDateExplanationShow' => $account->getClosingDate() && !$account->isClosingDateEqualToReportEndDate(),
-            'formEditClosingBalanceExplanationShow' => $account->getClosingBalance() && !$account->isClosingBalanceMatchingTransactionSum(),
-            // delete forms
-            'showDeleteConfirmation' => $action == 'delete',
-            // other date needed for the view (list action mainly)
-            'account' => $account,
-            'actionParam' => $action,
+            'subsection' => "moneyout",
+            'jsonEndpoint' => 'transactionsIn',
+            'form' => $form->createView()
+        ];
+        
+    }
+
+    /**
+     * @Route("/report/{reportId}/accounts/balance", name="accounts_balance")
+     * @param integer $reportId
+     * @Template()
+     * @return array
+     */
+    public function balanceAction(Request $request, $reportId)
+    {
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+        
+        $report = $this->getReport($reportId, [ 'basic', 'balance', 'client', 'transactionsIn', 'transactionsOut']);
+        $accounts = $restClient->get("/report/{$reportId}/accounts", 'Account[]');
+        $report->setAccounts($accounts);
+        
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+
+        $form = $this->createForm(new FormDir\ReasonForBalanceType(), $report);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $data = $form->getData();
+            $this->get('restClient')->put('report/' . $reportId, $data, [
+                'deserialise_group' => 'balance_mismatch_explanation'
+            ]);
+        }
+        
+        return [
+            'report' => $report,
+            'form' => $form->createView(),
+            'subsection' => 'balance'
+        ];
+        
+    }
+    
+    /**
+     * @Route("/report/{reportId}/accounts", name="accounts")
+     * @param integer $reportId
+     * @Template()
+     * @return array
+     */
+    public function banksAction($reportId) 
+    {
+        $report = $this->getReport($reportId, ['basic', 'client', 'balance', 'accounts']);
+        if ($report->getSubmitted()) {
+            throw new \RuntimeException("Report already submitted and not editable.");
+        }
+        
+        return [
+            'report' => $report,
+            'subsection' => 'banks'
         ];
     }
     
     /**
-     * @param EntityDir\Account $account
-     * 
-     * @return [FormDir\AccountTransactionsType, boolean]
+     * @Route("/{reportId}/accounts/banks/add", name="add_account")
+     * @param integer $reportId
+     * @param Request $request
+     * @Template()
+     * @return array    
      */
-    private function handleAccountEditDeleteForm(EntityDir\Account $account, array $options)
+    public function addAction(Request $request, $reportId) 
     {
-        $form = $this->createForm(new FormDir\AccountType($options), $account);
-        $form->handleRequest($this->getRequest());
-        $isEditOrAddSubmitted = $form->has('save') && $form->get('save')->isClicked();
-        $isEditSubmittedAndValid = $isEditOrAddSubmitted && $form->isValid();
-        $isDeleteSubmittedAndValid = $form->has('delete') && $form->get('delete')->isClicked();
+
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'client']);
+
+        $account = new EntityDir\Account();
+        $account->setReport($report);
         
-        // account edit/add post-save logic
-        //TODO refactor in PRE_SUBMIT event
-        if ($form->has('save') && $form->get('save')->isClicked()) {
-            // if closing date is valid, reset the explanation
-            if ($account->isClosingDateEqualToReportEndDate()) {
-                $account->setClosingDateExplanation(null);
-            }
-            // if closing balance is valid, reset the explanation
-            if ($account->isClosingBalanceMatchingTransactionSum()) {
-                $account->setClosingBalanceExplanation(null);
-            }
+        $form = $this->createForm(new FormDir\AccountType(), $account);
+
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+
+            $data = $form->getData();
+            $data->setReport($report);
+            $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
+                'deserialise_group' => 'add_edit'
+            ]);
+
+            return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
+
+        }
+
+        return [
+            'report' => $report,
+            'subsection' => 'banks',
+            'form' => $form->createView()
+        ]; 
+    }
+
+    /**
+     * @Route("/report/{reportId}/accounts/banks/{id}/edit", name="edit_account")
+     * @param integer $reportId
+     * @param integer $id account Id
+     * @param Request $request
+     * @Template()
+     * @return array
+     */
+    public function editAction(Request $request, $reportId, $id) 
+    {
+
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
+
+        if (!$report->hasAaccountWithId($id)) {
+            throw new \RuntimeException("Account not found."); 
         }
         
-        return [$form, $isEditSubmittedAndValid, $isDeleteSubmittedAndValid];
-    }
-    
-    
-    /**
-     * @param EntityDir\Account $account
-     * 
-     * @return [FormDir\AccountTransactionsType, boolean, boolean]
-     */
-    private function handleClosingBalanceForm(EntityDir\Account $account)
-    {
-        $form = $this->createForm(new FormDir\AccountClosingBalanceType(), $account);
-        $form->handleRequest($this->getRequest());
-        $isClicked = $form->get('save')->isClicked();
-        $valid = $isClicked && $form->isValid();
+        $account = $restClient->get('report/account/' . $id, 'Account');
+
+        $form = $this->createForm(new FormDir\AccountType(), $account);
+        $form->handleRequest($request);
+
+        if($form->isValid()){
+
+            $data = $form->getData();
+            $data->setReport($report);
+            $restClient->put('/account/' . $id, $account, [
+                'deserialise_group' => 'add_edit'
+            ]);
+
+            return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
         
-        return [$form, $isClicked, $valid];
+        }
+
+        return [
+            'report' => $report,
+            'subsection' => 'banks',
+            'form' => $form->createView()
+        ];
+
     }
-    
-    
+
     /**
-     * @param EntityDir\Account $account
-     * 
-     * @return [FormDir\AccountTransactionsType, boolean]
+     * @Route("/report/{reportId}/accounts/banks/{id}/delete", name="delete_account")
+     * @param integer $reportId
+     * @param integer $id
+     *
+     * @return RedirectResponse
      */
-    private function handleMoneyInOutForm(EntityDir\Account $account)
+    public function deleteAction($reportId, $id)
     {
-        $form = $this->createForm(new FormDir\AccountTransactionsType(), $account, [
-            'action' => $this->generateUrl('account', [ 'reportId' => $account->getReportObject()->getId(), 'accountId'=>$account->getId() ]) . '#account-header'
-        ]);
-        $form->handleRequest($this->getRequest());
-        $isClicked = $form->get('saveMoneyIn')->isClicked() || $form->get('saveMoneyOut')->isClicked();
-        $valid = $isClicked && $form->isValid();
-        
-        return [$form, $valid];
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
+        $restClient = $this->getRestClient(); /* @var $restClient RestClient */
+
+        if ($report->hasAaccountWithId($id)) {
+            $restClient->delete("/account/{$id}");
+        }
+
+        return $this->redirect($this->generateUrl('accounts', [ 'reportId' => $reportId ]));
+
     }
+
+    /**
+     * @Route("/report/{reportId}/accounts/{type}.json", name="accounts_money_save_json",
+     *     requirements={"type"="transactionsIn|transactionsOut"}
+     * )
+     * @Method({"PUT"})
+     *
+     * @param Request $request
+     * @param integer $reportId
+     * @param string $type
+     *
+     * @return JsonResponse
+     */
+    public function moneySaveJson(Request $request, $reportId, $type)
+    {
+        try {
+            $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
+            if ($report->getSubmitted()) {
+                throw new \RuntimeException("Report already submitted and not editable.");
+            }
+
+            $form = $this->createForm(new FormDir\TransactionsType($type), $report, [
+                'method' => 'PUT'
+            ]);
+            $form->handleRequest($request);
+
+            if (!$form->isValid()) {
+                $errorsArray = $this->get('formErrorsFormatter')->toArray($form);
+
+                return new JsonResponse(['success' => false, 'errors' => $errorsArray], 500);
+            }
+            $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
+                'deserialise_group' => $type,
+            ]);
+            return new JsonResponse(['success' => true]);
+
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
+
+
+
+
 }

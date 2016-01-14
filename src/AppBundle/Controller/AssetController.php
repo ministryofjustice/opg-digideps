@@ -24,17 +24,16 @@ class AssetController extends AbstractController
      */
     public function listAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
-        $assets = $this->get('restClient')->get('report/' . $reportId . '/assets', 'Asset[]');
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset']);
+        $assets = $report->getAssets();
 
         // if there are no assets and the report is not due, show new asset form
-        if (empty($report->getAssets()) && !$report->isDue()) {
+        if (empty($assets) && !$report->isDue()) {
             return $this->redirect($this->generateUrl('asset_add_select_title', [ 'reportId' => $reportId]));
         }
 
         return [
             'report' => $report,
-            'client' => $report->getClientObject(),
             'assets' => $assets
         ];
     }
@@ -50,7 +49,7 @@ class AssetController extends AbstractController
      */
     public function addSelectTitleAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         $form = $this->createForm('asset_title', new EntityDir\Asset, [
             'action' => $this->generateUrl('asset_add_select_title', [ 'reportId' => $reportId])
@@ -63,7 +62,6 @@ class AssetController extends AbstractController
         
         return [
             'report' => $report,
-            'client' => $report->getClientObject(),
             'form' => $form->createView(),
             'showCancelLink' => count($report->getAssets()) > 0,
         ];
@@ -77,7 +75,7 @@ class AssetController extends AbstractController
      */
     public function addCompleteAction(Request $request, $reportId, $title)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         // [.. change form and template (or forward) depending on the asset title ]
         $asset = new EntityDir\Asset();
@@ -91,7 +89,7 @@ class AssetController extends AbstractController
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $asset->setReport($reportId);
+            $asset->setReport($report);
             $this->get('restClient')->post('report/asset', $asset);
 
             $report->setNoAssetToAdd(false);
@@ -102,7 +100,6 @@ class AssetController extends AbstractController
         
         return [
             'report' => $report,
-            'client' => $report->getClientObject(),
             'form' => $form->createView(),
         ];
     }
@@ -116,9 +113,8 @@ class AssetController extends AbstractController
      */
     public function editAction(Request $request, $reportId, $assetId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
-
-        if (!in_array($assetId, $report->getAssets())) {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset']);
+        if (!$report->hasAssetWithId($assetId)) {
             throw new \RuntimeException("Asset not found.");
         }
         $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
@@ -137,7 +133,6 @@ class AssetController extends AbstractController
         return [
             'report' => $report,
             'assetToEdit' => $asset,
-            'client' => $report->getClientObject(),
             'form' => $form->createView(),
         ];
     }
@@ -150,10 +145,10 @@ class AssetController extends AbstractController
      */
     public function deleteAction($reportId, $id)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset']);
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
-        if (in_array($id, $report->getAssets())) {
+        if ($report->hasAssetWithId($id)) {
             $restClient->delete("/report/asset/{$id}");
         }
         
@@ -168,7 +163,7 @@ class AssetController extends AbstractController
      */
     public function _noAssetsAction(Request $request, $reportId)
     {
-        $report = $this->getReportIfReportNotSubmitted($reportId);
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset']);
         $form = $this->createForm(new FormDir\NoAssetToAddType(), $report, []);
         $form->handleRequest($request);
 
@@ -186,7 +181,6 @@ class AssetController extends AbstractController
         
         return [
             'form' => $form->createView(),
-            'client' => $report->getClientObject(),
             'report' => $report
         ];
     }

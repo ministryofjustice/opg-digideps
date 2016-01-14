@@ -9,6 +9,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Contact
 {
+    use Traits\HasReportTrait;
+    
     /**
      * @JMS\Type("integer")
      * @var integer $id
@@ -79,13 +81,6 @@ class Contact
      * @Assert\Length( max=20, maxMessage="contact.phone.maxMessage")
      */
     private $phone;
-    
-    /**
-     *
-     * @JMS\Type("integer")
-     */
-    private $report;
-    
     
     public function getId()
     {
@@ -197,15 +192,5 @@ class Contact
         return $this;
     }
     
-    public function getReport()
-    {
-        return $this->report;
-    }
-    
-    public function setReport($report)
-    {
-        $this->report = $report;
-        return $this;
-    }
     
 }

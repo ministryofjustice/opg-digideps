@@ -14,6 +14,7 @@ class ListAccountsDueTest extends WebTestCase
 {
     public function setUp()
     {
+        $this->markTestSkipped('deprecated');
         // mock data
         $report = m::mock('AppBundle\Entity\Report')
             ->shouldReceive('getId')->andReturn(1)
@@ -24,14 +25,12 @@ class ListAccountsDueTest extends WebTestCase
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(true)
-            ->shouldReceive('getCountValidTotals')->andReturn(0)
             ->getMock();
         
         $account2 = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing()
             ->shouldReceive('getId')->andReturn(1)
             ->shouldReceive('needsClosingBalanceData')->atLeast(1)->andReturn(true)
-            ->shouldReceive('getCountValidTotals')->andReturn(1)
             ->getMock();
         
         $account3 = m::mock('AppBundle\Entity\Account')

@@ -30,7 +30,7 @@ class Fixtures extends \PHPUnit_Framework_TestCase
         
         $account->setId($id);
         $account->setBank(isset($data['bank']) ? $data['bank'] : "account {$id}");
-        isset($data['report']) && $account->setReportObject($data['report']);
+        isset($data['report']) && $account->setReport($data['report']);
         
         foreach(['moneyIn'=>'setMoneyIn', 'moneyOut'=>'setMoneyOut'] as $key=>$setter) {
             if (!isset($data[$key])) {

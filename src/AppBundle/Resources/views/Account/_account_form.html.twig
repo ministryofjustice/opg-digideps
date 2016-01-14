@@ -1,70 +1,36 @@
-{# Required variables: 
- - form
- - hideForm
- - formClass
- - hideForm
- - action
-#}
-{% set translationDomain = "report-accounts" %}
-{% trans_default_domain translationDomain %}
-{% set formId = "account_add_form" %}
+{% set translationDomain = "report-account-form" %}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass, id: formId } }) }}
+{{ form_errors_list(form) }}
 
-{% if hideForm %}
-    {# Then we need to show the Add Button Link #}
-    {% set  params = app.request.attributes.get('_route_params') %}
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {
-    buttonBarClass: 'add-bar js-add-account-button-bar'
-    } %}
+{{ form_start(form, {attr: {id: 'account-form' } }) }}
 
-    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'form.listing.addButton.label',
-    linkClass: 'button-secondary behat-link-add-account',
-    linkId: 'add-account-button',
-    linkHref: path('accounts', {'reportId': params['reportId'], 'action': 'add' }) ~ "#pageBody"
-    } %}
+    {{ form_input(form.bank, 'accountForm.bank') }}
+    {{ form_input(form.accountType, 'accountForm.accountType') }}
 
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-{% endif %}
-
-<div {% if hideForm %} class="visuallyhidden" {% endif %}>
-
-    <h3 class="heading-medium">{{ "form.accountDetails.subSectionTitle" | trans({}, translationDomain) }}</h3>
-
-    {{ form_input(form.bank, 'form.accountDetails.controls.bank') }}
-    {{ form_input(form.accountNumber, 'form.accountDetails.controls.accountNumber') }}
-    {{ form_sort_code(form.sortCode, 'form.accountDetails.controls.sortCode') }}
-
-    <h3 class="heading-medium">{{ "form.openingBalance.subSectionTitle" | trans({}, translationDomain) }}</h3>
-
-    {# opening balance logic (shared template) #}
-    {% include 'AppBundle:Account:_account_form_opening_balance.html.twig' with {
-      form: form, 
-      formId: formId,
-      addMode: true
-    } %}
+    {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
+        'inputClass' : 'account-number'
+    }) }}
     
-    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
-    {{ form_submit(form.save,'form.openingBalance.controls.save') }}
-    {% if hideForm or (action == 'add') %}
+    {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
+        'inputType' : 'Number'
+    }) }}
+    
+    {{ form_input(form.openingBalance, '', {
+        'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    } ) }}
+    {{ form_input(form.closingBalance, 'accountForm.closingBalance', {
+        'labelText': 'accountForm.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    } ) }}
 
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-        transDomain: translationDomain,
-        linkButtonLabel: 'form.openingBalance.controls.cancel.label',
-        linkClass: 'button-link',
-        linkHref: path('accounts', {'reportId': report.id})
-        } %}
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+    transDomain: translationDomain,
+    section: 'account'
+    } %}
 
-    {% endif %}
-    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
-</div>
+    {{ form_end(form) }}
 
 {{ form_end(form) }}
-<script type="text/javascript">
-    $(document).ready(function() {
-        new GOVUK.SelectionButtons(":radio");
-    });
-</script>

@@ -1,0 +1,100 @@
+{% trans_default_domain "report-transactions" %}
+
+{{ form_errors_list(form) }}
+
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
+    <div class="sections">
+        {% for category, transactions in transactionsGrouped %}
+        <div class="section">
+            <div class="summary">
+                <div class="title">{{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | raw  }}</div>
+                <div class="sub-total">{{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',')}}</span></div>
+            </div>
+            <div class="detail transactions">
+                {% for id, transaction in transactions.entries %}
+                    {% if formTransactions[id].moreDetails is defined %}
+                    {%     set formGroupClass = 'form-group-compound' %}
+                    {% else %}
+                    {%     set formGroupClass = '' %}
+                    {% endif %}
+                    <div class="transaction">
+                        {#access the element via ID, set from the model therefore matching#}
+                        {{ form_row(formTransactions[id].id) }}
+                        {{ form_row(formTransactions[id].type) }}
+    
+                        {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
+                            'inputPrefix' : '£',
+                            'inputClass' : 'form-control__number transaction-value',
+                            'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
+                            'formGroupClass': formGroupClass
+                        }) }}
+    
+                        {% if formTransactions[id].moreDetails is defined %}
+                            {{ form_input(formTransactions[id].moreDetails, '', {
+                                'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans({'%client%': report.client.firstname}, 'report-transactions'),
+                                'formGroupClass': 'form-group-combo-description',
+                                'inputClass': 'expanding transaction-more-details'
+                            }) }}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <div class="sub-total">
+                    Total {{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | lower | raw  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | number_format(2, '.', ',') }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="grand-total">
+            {{ (subsection ~ '.grandtotal')| trans }}: 
+            <span class="currency">{{ 'currencySymbol' | trans }}</span>
+            <span class="value behat-region-transaction-total">{{ transactionsTotal | number_format(2, '.', ',')}}</span>
+        </div>
+    </div>
+
+    {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+        transDomain: translationDomain,
+        showDelete: false,
+        showCancel: false,
+        section: 'account',
+    } %}
+
+{{ form_end(form) }}
+
+<script>
+    $( document ).ready(function() {
+        new GOVUK.ExpandingTransactionTable('.expanding-transaction-table');
+    });
+</script>
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var transactionHasChanged = false;
+        var message = "{{ 'leaveWarning' | trans | raw }}";
+        
+        $(".transaction-value").on("keyup input paste", function(){
+            transactionHasChanged = true;
+        });
+        $('form').on('submit', function(e) {
+            transactionHasChanged = false;
+
+            /*
+            $.ajax({
+                url: "{{ path('accounts_money_save_json', {'reportId': report.id, 'type': jsonEndpoint}) }}",
+                type: "put",
+                data: $( this ).serialize() ,
+                success: function (response) {
+                   alert('Form saved');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                   alert('Cannot save form');
+                }
+            });
+
+            return false;
+            */
+            return true;
+        });
+        $(window).bind("beforeunload",function() {
+            if (transactionHasChanged) return message;
+        });
+    });
+</script>

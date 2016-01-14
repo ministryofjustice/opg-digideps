@@ -43,17 +43,6 @@ class AbstractController extends Controller
     }
 
 
-    /**
-     * @param integer $clientId
-     * @param integer $userId for secutity check (if present)
-     * @param array $groups
-     * 
-     * @return Client
-     */
-    public function getClient($clientId, array $groups = [ "basic"])
-    {
-        return $this->getRestClient()->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => $groups]]);
-    }
 
 
     /**
@@ -97,16 +86,11 @@ class AbstractController extends Controller
      *
      * @throws \RuntimeException if report is submitted
      */
-    protected function getReportIfReportNotSubmitted($reportId, $addClient = true)
+    protected function getReportIfReportNotSubmitted($reportId, array $groups)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
-        }
-
-        if ($addClient) {
-            $client = $this->getClient($report->getClient());
-            $report->setClientObject($client);
         }
 
         return $report;

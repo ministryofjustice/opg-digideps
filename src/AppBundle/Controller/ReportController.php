@@ -8,6 +8,7 @@ use AppBundle\Service\ReportStatusService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 
 
@@ -30,7 +31,7 @@ class ReportController extends AbstractController
         $request = $this->getRequest();
         $restClient = $this->get('restClient');
        
-        $client = $this->getClient($clientId);
+        $client = $this->getRestClient()->get('client/' . $clientId, 'Client', [ 'query' => [ 'groups' => [ "basic"]]]);
         
         $allowedCourtOrderTypes = $client->getAllowedCourtOrderTypes();
         
@@ -50,7 +51,7 @@ class ReportController extends AbstractController
                 $report->setCourtOrderType($allowedCourtOrderTypes[0]);
             }
         }
-        $report->setClient($client->getId());
+        $report->setClient($client);
         
         
         $form = $this->createForm(new FormDir\ReportType(), $report,
@@ -71,16 +72,15 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+        // get all the groups (needed to calculate status of each)
+        $report = $this->getReport($reportId, [ 'transactions', 'transactionsIn', 'transactionsOut', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        $client = $this->getClient($report->getClient());
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));
         
         return [
             'report' => $report,
-            'client' => $client,
             'reportStatus' => $reportStatusService,
         ];
     }
@@ -96,7 +96,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, ['basic', 'transactions']); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -104,7 +104,7 @@ class ReportController extends AbstractController
         // check status
         $reportStatusService = new ReportStatusService($report, $translator);
         if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
-            throw new \RuntimeException($translator->trans('submissionExceptions.readyForSubmission',[], 'validators'));
+            throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission',[], 'validators'));
         }
         
         $clients = $this->getUser()->getClients();
@@ -145,7 +145,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic' ,'transactions']); /* @var $report EntityDir\Report */
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -153,7 +153,7 @@ class ReportController extends AbstractController
         // check status
         $reportStatusService = new ReportStatusService($report, $translator);
         if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
-            throw new \RuntimeException($translator->trans('submissionExceptions.readyForSubmission',[], 'validators'));
+            throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission',[], 'validators'));
         }
         
         $clients = $this->getUser()->getClients();
@@ -196,9 +196,6 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
 
-
-        $client = $this->getClient($report->getClient());
-
         $form = $this->createForm('feedback_report', new ModelDir\FeedbackReport());
         $request = $this->getRequest();
 
@@ -215,7 +212,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'client' => $client,
             'form' => $form->createView()
         ];
     }
@@ -236,15 +232,11 @@ class ReportController extends AbstractController
             throw new \RuntimeException($translator->trans('submissionExceptions.submitted',[], 'validators'));
         }
         
-        $client = $this->getClient($report->getClient());
-
         return [
             'report' => $report,
-            'client' => $client,
         ];
     }
-
-
+    
     /**
      * @Route("/report/{reportId}/display", name="report_display")
      * @Template()
@@ -253,24 +245,43 @@ class ReportController extends AbstractController
     {
         $restClient = $this->get('restClient');
         
-        $report = $this->getReport($reportId, [ 'transactions', 'basic']);
-        $client = $this->getClient($report->getClient());
-        
-        $contacts = $restClient->get('report/' . $reportId . '/contacts', 'Contact[]');
-        $decisions = $restClient->get('report/' . $reportId . '/decisions', 'Decision[]');
-        $assets = $restClient->get('report/' . $reportId . '/assets', 'Asset[]');
-        
+        $report = $this->getReport($reportId, ['basic']);
+
+        $body = $restClient->get('report/' . $reportId . '/formatted/0', 'raw');
+
         return [
             'report' => $report,
-            'client' => $client,
-            'contacts' => $contacts,
-            'decisions' => $decisions,
-            'assets' => $assets,
             'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
+            'body' => $body
         ];
     }
+    
+    /**
+     * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
+     */
+    public function pdfAction($reportId)
+    {
+        $restClient = $this->get('restClient');
 
+        $report = $this->getReport($reportId, ['basic']);
+        $pdf = $restClient->get('report/' . $reportId . '/pdf', 'raw');
+        
+        $response = new Response($pdf);
+        $response->headers->set('Content-Type', 'application/pdf');
+
+        $name = 'OPG102-' . $report->getClient()->getCaseNumber() . '-' . date_format($report->getEndDate(),'Y') . '.pdf';
+        
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($name) . '"');
+        $response->headers->set('Content-length', $pdf->getSize());
+
+        // Send headers before outputting anything
+        $response->sendHeaders();
+        
+        
+        return $response;
+    }
+    
     private function groupAssets($assets)
     {
         $assetGroups = array();

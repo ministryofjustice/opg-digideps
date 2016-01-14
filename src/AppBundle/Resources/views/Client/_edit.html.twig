@@ -1,7 +1,7 @@
 {% trans_default_domain translationDomain %}
 
 {% include 'AppBundle:Components/Form:_form-title.html.twig' with {
-formTitle: "form.editClientForm.subSectionTitle" | trans
+formTitle: "form.editClientForm.subSectionTitle" | trans({'%client%': client.firstname}, translationDomain) 
 } %}
 
 {{ form_start(formEditClient, {attr: {novalidate: 'novalidate', class: formClass } }) }}

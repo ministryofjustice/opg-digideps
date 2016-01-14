@@ -1,105 +1,107 @@
 <?php
+
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report;
 use AppBundle\Entity\Account;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ReportStatusService {
+class ReportStatusService
+{
 
-    const NOTSTARTED = "not-started";
-    const DONE = "done";
-    const INCOMPLETE = "incomplete";
+    const NOTSTARTED = "not-started"; //grey
+    
+    const DONE = "done"; //green
+    const INCOMPLETE = "incomplete"; //orange
     const NOTFINISHED = "notFinished";
     const READYTOSUBMIT = "readyToSubmit";
     
+    
+    // for status
+    const STATUS_GREY = "not-started";
+    const STATUS_AMBER = "incomplete";
+    const STATUS_GREEN = "done";
+
+
     /** @var Report */
     private $report;
 
     /** @var TranslatorInterface */
     private $translator;
-    
+
+
     public function __construct(Report $report, TranslatorInterface $translator)
     {
         $this->report = $report;
         $this->translator = $translator;
     }
 
+
     /** @return string */
-    public function getDecisionsStatus() {
-        
+    public function getDecisionsStatus()
+    {
+
         $decisions = $this->report->getDecisions();
-        
+
         if (isset($decisions)) {
-        
+
             $count = count($decisions);
-            
+
             if ($count == 1) {
-                return "1 " . $this->translator->trans('decision',[], 'status');
+                return "1 " . $this->trans('decision');
             } else if ($count > 1) {
-                return "${count} " . $this->translator->trans('decisions',[], 'status');
+                return "${count} " . $this->trans('decisions');
             }
-        
         }
 
         if (empty($this->report->getReasonForNoDecisions())) {
-            return $this->translator->trans('notstarted',[], 'status');
+            return $this->trans('notstarted');
         } else {
-            return $this->translator->trans('nodecisions',[], 'status');
+            return $this->trans('nodecisions');
         }
-        
     }
 
     /** @return string */
-    public function getContactsStatus() {
+    public function getContactsStatus()
+    {
 
         $contacts = $this->report->getContacts();
 
         if (isset($contacts)) {
 
             $count = count($contacts);
-
+            
+            // TODO use transcount
             if ($count == 1) {
-                return "1 " . $this->translator->trans('contact',[], 'status');
+                return "1 " . $this->trans('contact');
             } else if ($count > 1) {
-                return "${count} " . $this->translator->trans('contacts',[], 'status');
+                return "${count} " . $this->trans('contacts');
             }
-
         }
 
         if (empty($this->report->getReasonForNoContacts())) {
-            return $this->translator->trans('notstarted',[], 'status');
+            return $this->trans('notstarted');
         } else {
-            return $this->translator->trans('nocontacts',[], 'status');
+            return $this->trans('nocontacts');
         }
-
     }
 
+
     /** @return string */
-    public function getSafeguardingStatus() {
+    public function getSafeguardingStatus()
+    {
         if ($this->missingSafeguarding()) {
-            return $this->translator->trans('notstarted',[], 'status');
+            return $this->trans('notstarted');
         } else {
-            return $this->translator->trans('finished',[], 'status');
+            return $this->trans('finished');
         }
     }
 
-    /** @return string */
-    public function getAccountsStatus() {
-        if ($this->missingAccounts()) {
-            return $this->translator->trans('notstarted',[], 'status');
-        } 
-        
-        $count = count($this->report->getAccounts());
-        if ($count == 1) {
-            return "1 " . $this->translator->trans("account",[], 'status');
-        } else {
-            return "${count} " . $this->translator->trans("accounts",[], 'status');
-        }
-    }
+
 
     /** @return string */
-    public function getAssetsStatus() {
+    public function getAssetsStatus()
+    {
         $assets = $this->report->getAssets();
 
         if (isset($assets)) {
@@ -107,152 +109,175 @@ class ReportStatusService {
             $count = count($assets);
 
             if ($count == 1) {
-                return "1 " . $this->translator->trans('asset',[], 'status');
+                return "1 " . $this->trans('asset');
             } else if ($count > 1) {
-                return "${count} " . $this->translator->trans('assets',[], 'status');
+                return "${count} " . $this->trans('assets');
             }
+        }
 
+        if ($this->report->getNoAssetToAdd() == true) {
+            return $this->trans('noassets');
+        } else {
+            return $this->trans('notstarted');
+        }
+    }
+
+
+    /** @return string */
+    public function getDecisionsState()
+    {
+        if ($this->missingDecisions()) {
+            return self::NOTSTARTED;
+        } else {
+            return self::DONE;
+        }
+    }
+
+
+    /** @return string */
+    public function getContactsState()
+    {
+        if ($this->missingContacts()) {
+            return self::NOTSTARTED;
+        } else {
+            return self::DONE;
+        }
+    }
+
+
+    /** @return string */
+    public function getSafeguardingState()
+    {
+        if ($this->missingSafeguarding()) {
+            return self::NOTSTARTED;
+        } else {
+            return self::DONE;
+        }
+    }
+
+
+    /** @return string */
+    public function getAccountsState()
+    {
+        // not started
+        if ($this->missingAccounts()
+            && !$this->report->hasMoneyIn() 
+            && !$this->report->hasMoneyOut()) {
+           return self::STATUS_GREY;
+        } 
+        
+        // all done
+        if (!$this->missingAccounts()
+            && !$this->hasOutstandingAccounts()
+            && $this->report->hasMoneyIn() 
+            && $this->report->hasMoneyOut() 
+            && !$this->missingBalance()) {
+            return self::DONE;
         }
         
-        if ($this->report->getNoAssetToAdd() == true) {
-            return $this->translator->trans('noassets',[], 'status');
-        } else {
-            return $this->translator->trans('notstarted',[], 'status');
+        // amber in all the other cases
+        return self::STATUS_AMBER;
+    }
+    
+    
+    /** @return string */
+    public function getAccountsStatus()
+    {
+        switch ($this->getAccountsState()) {
+            case self::STATUS_GREY:
+                return $this->translator->trans('notstarted', [], 'status');
+            case self::STATUS_GREEN:
+                return $this->translator->trans('finished', [], 'status');
+           default:
+                return $this->translator->trans('notFinished', [], 'status');
         }
     }
 
     /** @return string */
-    public function getDecisionsState() {
-        if ($this->missingDecisions()) {
-            return $this::NOTSTARTED;
-        } else {
-            return $this::DONE;
-        }
-    }
-
-    /** @return string */
-    public function getContactsState() {
-        if ($this->missingContacts()) {
-            return $this::NOTSTARTED;
-        } else {
-            return $this::DONE;
-        }
-    }
-
-    /** @return string */
-    public function getSafeguardingState() {
-        if ($this->missingSafeguarding()) {
-            return $this::NOTSTARTED;
-        } else {
-            return $this::DONE;
-        }
-    }
-
-    /** @return string */
-    public function getAccountsState() {
-        if ($this->missingAccounts()) {
-            return $this::NOTSTARTED;
-        } else if ($this->hasOutstandingAccounts()) {
-            return $this::INCOMPLETE;
-        } else {
-            return $this::DONE;
-        }
-    }
-
-    /** @return string */
-    public function getAssetsState() {
+    public function getAssetsState()
+    {
         if ($this->missingAssets()) {
-            return $this::NOTSTARTED;
+            return self::NOTSTARTED;
         } else {
-            return $this::DONE;
-        }    
+            return self::DONE;
+        }
     }
+
 
     /** @return boolean */
     public function isReadyToSubmit()
     {
-        if($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS){
-            if($this->hasOutstandingAccounts() || $this->missingAccounts() || $this->missingContacts() || $this->missingAssets() || $this->missingDecisions() || $this->missingSafeguarding()){
-                return false;
-            }
+        if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
+            return !$this->hasOutstandingAccounts() 
+                && !$this->missingAccounts() 
+                && !$this->missingBalance()
+                && !$this->missingContacts() 
+                && !$this->missingAssets() 
+                && !$this->missingDecisions() 
+                && !$this->missingSafeguarding();
         } else {
-            if($this->missingContacts() || $this->missingDecisions() || $this->missingSafeguarding()){
-                return false;
-            }
+            return !$this->missingContacts() 
+                && !$this->missingDecisions() 
+                && !$this->missingSafeguarding();
         }
-        return true;
     }
 
+
     /** @return boolean */
-    private function missingAssets()
+    public function missingAssets()
     {
-        if( $this->report->getCourtOrderType() != Report::PROPERTY_AND_AFFAIRS ){
-            return false;
-        }
-
-        if(empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd())){
-            return true;
-        }
-        return false;
+        return (empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd()));
     }
 
+
     /** @return boolean */
-    private function missingSafeguarding()
+    public function missingSafeguarding()
     {
         $safeguarding = $this->report->getSafeguarding();
-        
-        if (!isset($safeguarding) || $safeguarding->missingSafeguardingInfo() == true) {
-            return true;
-        }
 
-        return false;
+        return (!$safeguarding || $safeguarding->missingSafeguardingInfo() == true);
     }
+
 
     /** @return boolean */
     public function hasOutstandingAccounts()
     {
-        if(empty($this->report->getOutstandingAccounts())) {
-            return false;
-        }
-
-        /** @var Account $account */
-        foreach($this->report->getAccounts() as $account){
-            if(!$account->hasClosingBalance()){
+        foreach ($this->report->getAccounts() as $account) {
+            if (!$account->hasClosingBalance()) {
                 return true;
             }
         }
+
         return false;
     }
 
+
     /** @return boolean */
-    private function missingContacts()
+    public function missingContacts()
     {
-        if(empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts())){
-            return true;
-        }
-        return false;
+        return (empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts()));
     }
 
+
     /** @return boolean */
-    private function missingDecisions()
+    public function missingDecisions()
     {
-        if(empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions())){
-            return true;
-        }
-        return false;
+        return (empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions()));
     }
 
-    /** @return boolean */
-    private function missingAccounts()
-    {
-        if( $this->report->getCourtOrderType() != Report::PROPERTY_AND_AFFAIRS ){
-            return false;
-        }
 
-        if(empty($this->report->getAccounts())){
-            return true;
-        }
-        return false;
+    /** @return boolean */
+    public function missingAccounts()
+    {
+        return empty($this->report->getAccounts());
+    }
+    
+    /** @return boolean */
+    public function missingBalance()
+    {
+        $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
+        
+        return !$balanceValid;
     }
 
     /**
@@ -261,44 +286,48 @@ class ReportStatusService {
     public function getStatus()
     {
         $readyToSubmit = $this->isReadyToSubmit();
-        
-        if ($readyToSubmit == true && $this->report->isDue()) {
-            return $this::READYTOSUBMIT;
+
+        if ($readyToSubmit && $this->report->isDue()) {
+            return self::READYTOSUBMIT;
         } else {
-            return $this::NOTFINISHED;
+            return self::NOTFINISHED;
         }
     }
 
-    public function getRemainingSectionCount() {
-        
-        $count = 5;
-        
-        if($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS){
-            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() ) {
+
+    public function getRemainingSectionCount()
+    {
+
+        if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
+            $count = 5;
+
+            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingBalance()) {
                 $count--;
-            } 
-            
+            }
+
             if (!$this->missingContacts()) {
                 $count--;
             }
-            
+
             if (!$this->missingAssets()) {
                 $count--;
             }
-            
+
             if (!$this->missingDecisions()) {
                 $count--;
             }
-            
+
             if (!$this->missingSafeguarding()) {
                 $count--;
             }
         } else {
+            $count = 3;
+
             if (!$this->missingContacts()) {
                 $count--;
             }
 
-            if (!$this->missingAssets()) {
+            if (!$this->missingSafeguarding()) {
                 $count--;
             }
 
@@ -306,9 +335,18 @@ class ReportStatusService {
                 $count--;
             }
         }
-        
+
         return $count;
-        
     }
     
+    
+    /**
+     * @param string $key
+     * @return string
+     */
+    private function trans($key)
+    {
+        return  $this->translator->trans($key, [], 'status');
+    }
+
 }

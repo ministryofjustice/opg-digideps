@@ -28,7 +28,7 @@ class ClientController extends AbstractController
         arsort($reports);
         
         $report = new EntityDir\Report();
-        $report->setClient($client->getId());
+        $report->setClient($client);
 
         $formClientNewReport = $this->createForm(new FormDir\ReportType(), $report);
         $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
@@ -40,6 +40,7 @@ class ClientController extends AbstractController
         // edit client form
         if ($clientForm->isValid()) {
             $clientUpdated = $clientForm->getData();
+            $clientUpdated->setId($client->getId());
             $restClient->put('client/upsert', $clientUpdated);
 
             return $this->redirect($this->generateUrl('client_home'));

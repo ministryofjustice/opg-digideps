@@ -9,6 +9,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /** @var  Report $report */
     private $report;
     
+    /** @var  Account $account */
     private $account;
     
     protected function setUp()
@@ -23,25 +24,11 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         m::close();
     }
     
-    public function isDueProvider()
-    {
-        return [
-            ['-1 year', true],
-            ['-1 day', true],
-            ['+0 days', true],
-            
-            ['+1 day', false],
-            ['+7 day', false],
-            ['+14 day', false],
-            ['+1 month', false],
-            ['+1 year', false],
-        ];
-    }
-    
     /**
      * @dataProvider isDueProvider
+     * @test
      */
-    public function testIsDue($endDateModifier, $expected)
+    public function isDue($endDateModifier, $expected)
     {
         $endDate = new \DateTime();
         $endDate->modify($endDateModifier);
@@ -54,21 +41,7 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals($expected, $actual);
     }
-   
-    
-    public function testGetOutstandingAccounts()
-    {
-        $this->account->shouldReceive('hasClosingBalance')->times(3)->andReturn(false,true,false);
-        
-        $this->report->setAccounts([ $this->account, $this->account, $this->account ]);
-        
-        $accounts = $this->report->getOutstandingAccounts();
-        
-        $this->assertInternalType('array', $accounts);
-        $this->assertEquals(count($accounts),2);
-        $this->assertInstanceOf('AppBundle\Entity\Account', $accounts[0]);
-    }
-    
+
     /** @test */
     public function sectionCountForProperty() {
         $this->report->setCourtOrderType(REPORT::PROPERTY_AND_AFFAIRS);
@@ -80,5 +53,131 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->report->setCourtOrderType(1);
         $this->AssertEquals(3, $this->report->getSectionCount());
     }
+
+    /**
+     * @dataProvider getCountValidTotalsProvider
+     * @test
+     */
+    public function getCountValidTotals(array $moneyIn, array $moneyOut, $expected)
+    {
+        $this->markTestSkipped('copied from accountest. replicate logic with new transations');
+        $mi = [];
+        foreach ($moneyIn as $id => $amount) {
+            $mi[] = new AccountTransaction($id, $amount);
+        }
+        $this->account->setMoneyIn($mi);
+
+        $mo = [];
+        foreach ($moneyOut as $id => $amount) {
+            $mo[] = new AccountTransaction($id, $amount);
+        }
+        $this->account->setMoneyOut($mo);
+
+
+        $this->assertEquals($expected, $this->account->getCountValidTotals());
+    }
+
+    /** @test */
+    public function hasMoneyInWhenThereIsMoneyIn()
+    {
+        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(100)
+            ->getMock();
+
+        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(null)
+            ->getMock();
+        
+        $this->report->setTransactionsIn([$transaction1, $transaction2]);
+        
+        $this->assertEquals(true, $this->report->hasMoneyIn());
+    }
+    
+    /** @test */
+    public function hasMoneyInWhenThereIsNoMoneyIn()
+    {
+        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(null)
+            ->getMock();
+
+        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(null)
+            ->getMock();
+
+        $this->report->setTransactionsIn([$transaction1, $transaction2]);
+
+        $this->assertEquals(false, $this->report->hasMoneyIn());  
+    }
+
+    /** @test */
+    public function hasMoneyOutWhenThereIsMoneyOut()
+    {
+        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(100)
+            ->getMock();
+
+        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(null)
+            ->getMock();
+
+        $this->report->setTransactionsOut([$transaction1, $transaction2]);
+
+        $this->assertEquals(true, $this->report->hasMoneyOut());
+    }
+
+    /** @test */
+    public function hasMoneyOutWhenThereIsNoMoneyOut()
+    {
+        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(null)
+            ->getMock();
+
+        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive("getAmount")->andReturn(null)
+            ->getMock();
+
+        $this->report->setTransactionsOut([$transaction1, $transaction2]);
+
+        $this->assertEquals(false, $this->report->hasMoneyOut());
+    }
+    
+    public function getCountValidTotalsProvider()
+    {
+        return [
+            [[]                         , []                            , 0],
+            [['in1'=>null]              , ['out1'=>null]                , 0],
+            [['in1'=>123]               , []                            , 1],
+            [['in1'=>0]                 , []                            , 1],
+            [[]                         , ['out1'=>123]                 , 1],
+            [[]                         , ['out1'=>0]                   , 1],
+            [['in1'=>123]               , ['out1'=>123]                 , 2],
+            [['in1'=>0, 'in2'=>null]    , ['out1'=>123, 'out2'=>null]   , 2],
+        ];
+    }
+
+    public function isDueProvider()
+    {
+        return [
+            ['-1 year', true],
+            ['-1 day', true],
+            ['+0 days', true],
+
+            ['+1 day', false],
+            ['+7 day', false],
+            ['+14 day', false],
+            ['+1 month', false],
+            ['+1 year', false],
+        ];
+    }
+    
+    
     
 }

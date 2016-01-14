@@ -38,6 +38,10 @@ trait LinksTrait
        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
       
        $this->visit("/behat/{$secret}/{$link}");
+       // non-200 response -> debug content
+       if (200 != $this->getSession()->getStatusCode()) {
+          $this->printLastResponse();
+       }
     }
 
     /**

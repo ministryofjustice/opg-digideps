@@ -8,10 +8,11 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"opening_balance"})
  * @Assert\Callback(methods={"isClosingDateValidOrExplanationIsGiven"}, groups={"closing_balance"})
- * @Assert\Callback(methods={"isClosingBalanceMatchingTransactionsSum"}, groups={"closing_balance"})
  */
 class Account
 {
+    use Traits\HasReportTrait;
+    
     const OPENING_DATE_SAME_YES = 'yes';
     const OPENING_DATE_SAME_NO = 'no';
     /**
@@ -22,21 +23,32 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic"})
-     * @Assert\Length(max=100, maxMessage= "account.bank.maxMessage", groups={"basic"})
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "add_edit"})
+     * @Assert\Length(max=100, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "add_edit"})
      * 
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
      * @var string $bank
      */
     private $bank;
+
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="account.accountType.notBlank", groups={"basic", "add_edit"})
+     * @Assert\Length(max=100, maxMessage= "account.accountType.maxMessage", groups={"basic", "add_edit"})
+     *
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     *
+     * @var string $accountType
+     */
+    private $accountType;
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic"})
-     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic"})
-     * @Assert\Length(min=6, minMessage = "account.sortCode.length", groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
+     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "add_edit"})
+     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic", "add_edit"})
+     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "add_edit"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
      * @var string $sortCode
      */
@@ -45,10 +57,10 @@ class Account
     /**
      *
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic"})
-     * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic"})
-     * @Assert\Length(minMessage="account.accountNumber.length",min=4, max=4, groups={"basic"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
+     * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic", "add_edit"})
+     * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic", "add_edit"})
+     * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"basic", "add_edit"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
      * @var string $accountNumber
      */
@@ -58,13 +70,14 @@ class Account
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"opening_balance"})
      * @Assert\Date(message="account.openingDate.date", groups={"opening_balance"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
      * @var \DateTime 
      */
     private $openingDate;
     
     /**
+     * @deprecated since accounts_mk2
      * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"checkbox_matches_date"})
      * 
      * @var string OPENING_DATE_SAME_* values
@@ -72,6 +85,7 @@ class Account
     private $openingDateMatchesReportDate;
       
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
      */
@@ -79,11 +93,12 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add"})
-     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic"})
-     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic"})
-     * @Assert\Range(max=10000000000, maxMessage = "account.openingBalance.outOfRange", groups={"basic"})
-     * 
+     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
+     *
+     * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"basic", "add_edit"})
+     * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"basic", "add_edit"})
+     * @Assert\Range(max=10000000000, maxMessage = "account.openingBalance.outOfRange", groups={"basic", "add_edit"})
+     *
      * @var decimal
      */
     private $openingBalance;
@@ -91,22 +106,23 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.closingBalance.notBlank", groups={"closing_balance"})
-     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance"})
-     * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance"})
-     * @JMS\Groups({"balance", "edit_details_report_due","edit_details"})
+     * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance", "add_edit"})
+     * @Assert\Range(max=10000000000, maxMessage = "account.closingBalance.outOfRange", groups={"closing_balance", "add_edit"})
+     * @JMS\Groups({"balance", "edit_details_report_due","edit_details", "add_edit"})
      * 
      * @var decimal
      */
     private $closingBalance;
     
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
     private $closingBalanceExplanation;
     
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
      * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
@@ -116,6 +132,7 @@ class Account
     private $closingDate;
     
     /**
+     * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
@@ -132,54 +149,6 @@ class Account
      * @var \DateTime 
      */
     private $createdAt;
-    
-    /**
-     * @JMS\Type("integer")
-     * @JMS\Groups({"add"})
-     */
-    private $report;
-    
-    /**
-     * @var Report
-     */
-    private $reportObject;
-    
-    /**
-     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>") 
-     * @JMS\Groups({"transactions"})
-     */
-    private $moneyIn;
-    
-    /**
-     * @JMS\Type("array<AppBundle\Entity\AccountTransaction>")
-     * @JMS\Groups({"transactions"}) 
-     */
-    private $moneyOut;
-    
-    /**
-     * @JMS\Type("double")
-     * @JMS\Groups({"transactions"})
-     */
-    private $moneyInTotal;
-    
-    /**
-     * @JMS\Type("double")
-     * @JMS\Groups({"transactions"})
-     */
-    private $moneyOutTotal;
-    
-    /**
-     * @JMS\Type("double")
-     * @JMS\Groups({"transactions"})
-     */
-    private $moneyTotal;
-    
-    
-    public function __construct()
-    {
-        $this->moneyIn = [];
-        $this->moneyOut = [];
-    }
 
     public function getId()
     {
@@ -357,36 +326,6 @@ class Account
         $this->createdAt = $createdAt;
     }
         
-    public function getReport()
-    {
-        return $this->report;
-    }
-    
-    
-    public function setReport($report)
-    {
-        $this->report = $report;
-        return $this;
-    }
-    
-    public function setReportObject(Report $reportObject = null)
-    {
-        $this->reportObject = $reportObject;
-        return $this;
-    }
-    
-    /**
-     * @return Report
-     */
-    public function getReportObject($validate = false)
-    {
-        if ($validate && !$this->reportObject instanceof Report) {
-            throw new \RuntimeException("Report object not found.");
-        }
-        
-        return $this->reportObject;
-    }
-    
     /**
      * Add violation if Opening date is not the same as the report start date and there is not explanation
      */
@@ -434,12 +373,8 @@ class Account
         if (!$this->getOpeningDate()) {
             return false;
         }
-        if (!$this->reportObject) {
-            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
-            error_log(__METHOD__ . ' : account reportObject not available', E_WARNING);
-            return false;
-        }
-        return $this->reportObject->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
+        
+        return $this->report->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
     }
     
     /**
@@ -450,11 +385,8 @@ class Account
         if (!$this->getClosingDate()) {
             return false;
         }
-        if (!$this->reportObject) {
-            // 'reportObject' needs refactor, 'report' should be the object and not the id, so that more manageable by JMS
-            throw new \RuntimeException(__METHOD__ . ' : account reportObject not available');
-        }
-        return $this->reportObject->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
+        
+        return $this->report->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
     }
     
     /**
@@ -498,69 +430,6 @@ class Account
         return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
     }
     
-    /**
-     * @return integer
-     */
-    public function getCountValidTotals()
-    {
-        $ret = 0;
-        
-        foreach ($this->getMoneyIn() as $t) {
-            $ret += $t->getAmount() === null ? 0 : 1;
-        }
-        
-        foreach ($this->getMoneyOut() as $t) {
-            $ret += $t->getAmount() === null ? 0 : 1;
-        }
-
-        return $ret;
-    }
-    
-    
-    public function getMoneyIn()
-    {
-        return $this->moneyIn;
-    }
-
-    public function getMoneyOut()
-    {
-        return $this->moneyOut;
-    }
-
-    public function setMoneyIn(array $moneyIn)
-    {
-        $this->moneyIn = $moneyIn;
-    }
-
-    public function setMoneyOut(array $moneyOut)
-    {
-        $this->moneyOut = $moneyOut;
-    }
-    
-    /**
-     * @return float
-     */
-    public function getMoneyInTotal()
-    {
-        return $this->moneyInTotal;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoneyOutTotal()
-    {
-        return $this->moneyOutTotal;
-    }
-
-    /**
-     * @return float
-     */
-    public function getMoneyTotal()
-    {
-        return $this->moneyTotal;
-    }
-    
     
     /**
      * @return string
@@ -577,4 +446,22 @@ class Account
     {
         $this->openingDateMatchesReportDate = $openingDateMatchesReportDate;
     }
+
+    /**
+     * @return string
+     */
+    public function getAccountType()
+    {
+        return $this->accountType;
+    }
+
+    /**
+     * @param string $accountType
+     */
+    public function setAccountType($accountType)
+    {
+        $this->accountType = $accountType;
+    }
+    
+    
 }

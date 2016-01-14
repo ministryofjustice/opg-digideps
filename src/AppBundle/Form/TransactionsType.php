@@ -7,26 +7,41 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use AppBundle\Form\Type\AccountNumberType;
 
-class AccountTransactionsType extends AbstractType
+class TransactionsType extends AbstractType
 {
-     public function buildForm(FormBuilderInterface $builder, array $options)
+
+     private $property;
+
+    /**
+     * TransactionsType constructor.
+     * @param $property
+     */
+    public function __construct($property)
+    {
+        if (!in_array($property, ['transactionsIn', 'transactionsOut'])) {
+            throw new \InvalidArgumentException(__METHOD__ . ": $property not valid");
+        }
+        $this->property = $property;
+    }
+
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
      {
          $builder 
                  ->add('id', 'hidden')
-                 ->add('moneyIn',  'collection', ['type' => new AccountTransactionSingleType()])
-                 ->add('moneyOut', 'collection', ['type' => new AccountTransactionSingleType()])
-                 ->add('saveMoneyIn', 'submit')
-                 ->add('saveMoneyOut', 'submit')
+                 ->add($this->property,  'collection', ['type' => new TransactionSingleType()])
+                 ->add('save', 'submit')
                 ;
      }
      
      public function setDefaultOptions(OptionsResolverInterface $resolver)
      {
          $resolver->setDefaults( [
-             'data_class' => 'AppBundle\Entity\Account',
+             'data_class' => 'AppBundle\Entity\Report',
              'validation_groups' => ['transactions'],
              // enable validation on AccountTransactionSingleType collections
              'cascade_validation' => true,
+             'translation_domain' => 'report-transactions',
         ]);
      }
      

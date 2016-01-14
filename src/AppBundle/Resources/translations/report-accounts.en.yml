@@ -1,91 +1,103 @@
 page:
   htmlTitle: "Deputy report - accounts | GOV.UK"
-  pageSectionTitle: "Bank or building society accounts"
-  pageSectionDescription: |
-    Tell us about the main bank account or accounts you use regularly to receive money and make payments
-    on behalf of %client%. For most people, this is their  current account, and they usually just have one.
-  pageSectionWarning: "Do not include savings or investment accounts, such as ISAs - add these to the assets section."
-  accountAdded: "We’ve added your account"
-form:
-  edit:
-    currencySymbol: "£"
-    accountDetails:
-      subSectionTitle: Edit account details
-    openingBalance:
-      subSectionTitle: Edit the opening balance
-    closingBalance:
-      subSectionTitle: The closing balance of the account
-      subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period.
-    controls:
-      # other controls are taken from the other sections in this file
-      closingDate:
-        legend: "End date of reporting period"
-        legendjs: "End date of reporting period"
-        hint: "(DD/MM/YYYY)"
-      closingDateExplanation:
-        label: Please tell us why the closing dates do not match
-      closingBalance:
-        label: "Closing balance"
-      closingBalanceExplanation:
-        label: Please tell us why the balances does not match
-      cancel:
-        label: Cancel
-      save:
-        label: Save
-      delete:
-        label: Delete
-  delete:
-    legend: "Are you sure you want to delete this account? You will lose any saved data."
-    delete:
-      label: Delete
-    cancel:
-      label: Cancel
-  listing:
-  listing:
-    addButton:
-      label: Add another account
-  accountDetails:
-    subSectionTitle: Add your account details
-    controls:
-      bank:
-        label: Enter the bank or building society name
-      accountNumber:
-        label: Last 4 digits of the account number
-        hint: ""
-      sortCode:
-        legend: Branch sort code
-        hint: ""
-  openingBalance:
-    subSectionTitle: Add the opening balance
-    subSectionDescription: The opening balance is the sum of money in the account at the start of your reporting period {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}.
-    controls:
-      openingDateMatchesReportDate:
-        labelYes: " "
-        labelNo: " "
-        legend: Is the start date of your reporting period and the opening balance date the same?
-      openingDate:
-        legend: If you did not open the account on {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}, when is the opening balance date ?
-        legendjs: Add the opening balance date for this account
-        hint: (DD/MM/YYYY)
-      openingBalancePrefix:
-        label: £
-      openingDateExplanation:
-        label: Tell us why the opening date is not {{ boldStart }}{{ reportStartDate }}{{ boldEnd }}.
-      openingBalance:
-        label: Opening balance
-      save:
-        label: Continue
-      cancel:
-        label: Cancel
-listing:
-  bank: "Bank or building society name"
-  accountNumber: "Last 4 digits of account number"
-  balance: "Opening balance:"
-  totalBalance: "Total balance:"
-  lastEdited: "Last edited:"
-  created: "Created:"
-  currencySymbol: "£"
-  closingBalance: "Closing balance:"
-  closingDate: "End of year:"
-  addTotalsWarning: Add Money paid in or Money paid out
-  addClosingBalanceWarning: Add the closing balance of the account
+  pageSectionTitle: "Accounts"
+nav:
+  moneyIn: Money in
+  moneyOut: Money out
+  bankAccounts: Bank accounts
+  balanceAccounts: Balance
+    
+save:
+  label: Save
+cancel:
+  label: Cancel
+
+currencySymbol: "£"
+
+moneyIn:
+  pageSectionTitle: Money coming into %client%’s accounts
+  pageSectionDescription: Tell us about money paid into %client%’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If %client% has more than 1 bank account, <b>add up the totals from all the accounts for each income category</b>.
+  noEntriesWarning: Add money %client% has received below
+moneyin:
+  nextSection: Money out
+moneyOut:
+  pageSectionTitle: Money you have spent on behalf of %client%
+  pageSectionDescription: Tell us about money you have spent on %client%’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If %client% has more than 1 bank account, <b>add up the totals from all the accounts for each type of payment</b>.
+  noEntriesWarning: Add money spent on behalf of %client% 
+moneyout:
+  nextSection: Balance accounts
+
+balance:
+    nextSection: Assets
+    good:
+      pageSectionTitle: Balance the accounts
+      pageSectionDescription: Based on the information you've given us, we successfully balanced your accounts
+      accountsBalanced: Accounts balanced
+      accountsBalancedMessage: Money in and money out match the balance
+    bad:
+      pageSectionTitle: Balance the accounts
+      pageSectionDescription: There’s a difference of £%totalOffset% between what you’ve told us the total money in and money out was, and the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.
+      accountsBalanced: Accounts not balanced
+      accountsBalancedMessage: Money in and money out don’t match the balance
+      totalAfterMoneyInOut: 
+        title: "Total balance after money in and money out:"
+        subtitle: This is what you entered for the opening balance, income and spending
+      totalFromAccounts: 
+        title: "Total balance of all bank accounts:"
+        subtitle: This is what you entered for the closing balance on %endDate%
+      missingAmount: "Missing amount:"
+      unaccounted: Unaccounted for
+      extraAmount: Extra amount
+      summaryBalanceInOut: Balance after total money in and money out
+      totalOfAllAccounts: Total balance of all bank accounts
+      checkYourAccounts: Check your accounts
+      goBack: |
+         Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> 
+         matches your records of money coming in and out of %client%’s accounts. 
+         You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
+      cantFind: Can’t find the problem?
+      formtitle:
+        label: You can still submit your report, but you must explain why the accounts don't balance.
+    balanceAfterReported: Total money in and money out
+    totalBankStart: Totals from all bank accounts at start of reporting period
+    totalInDuringPeriod: Total money in during reporting period
+    totalFromAllIn: Total from all opening balances and money in
+    totalOutInPeriod: Total money out during the reporting period
+    finalBalance: Balance after money in and money out
+    actualBalance: Total balance from all bank accounts
+    incomplete:
+        alertBox: Accounts incomplete
+        pageSectionDescription: |
+            We don't have all the information we need to balance your accounts
+            We still need you to tell us about:
+        moneyIn:
+            title: Money in
+            description: You need to tell us about money that has come into %client%'s accounts during the reporting period
+            addLink: Add money in
+        moneyOut:
+            title: Money out
+            description: You need to tell us about money that has gone out of %client%'s accounts during the reporting period
+            addLink: Add money out
+        noAccounts:
+            title: Bank accounts
+            description: You need to give details of at least 1 bank account that you use on behalf of %client%
+            addLink: Add bank accounts
+        accounts:
+            missing: Tell us how much money was in the account on %closingDate%
+            editLink: Edit this account
+    
+banks:
+    nextSection: Money in
+    pageSectionTitle: %client%'s bank accounts
+    pageSectionDescription: Add all %client%'s bank and building society accounts, including savings accounts and ISAs
+    balanceOn: Balance on
+    sortCode: Sort code
+    accountNumber: Account number
+    totalBalance: Total balance from all accounts
+    balanceUnknown: Unknown
+    accountMissingWarning: You must add at least 1 bank account
+    balanceMissingWarning: Balance on %date% is missing
+    balanceMissingWarningBottom: |
+        You will be able to see this total when you have added the balance 
+        on the %date% for all the %client%'s accounts
+    

@@ -18,11 +18,11 @@ Feature: deputy / acl / security on pages
       When I set the client details to:
             | name | Malicious | Client | 
             | caseNumber | 12345ABC |
-            | courtDate | 1 | 1 | 2015 |
+            | courtDate | 1 | 1 | 2016 |
             | allowedCourtOrderTypes_0 | 2 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
-      And I set the report start date to "1/1/2015"
+      And I set the report start date to "1/1/2016"
       And I set the report end date to "1/1/2016"
       Then the URL should match "report/\d+/overview"
       
@@ -52,10 +52,8 @@ Feature: deputy / acl / security on pages
         | /report/1/assets/add-complete/Antiques | 200 | 
         # accounts
         | /report/1/accounts | 200 | 
-        | /report/1/account/1 | 200 | 
-        | /report/1/account/1/edit | 200 | 
-        | /report/1/account/1/delete | 200 | 
-        | /report/1/accounts/add | 200 | 
+        | /report/1/accounts/banks/1/edit | 200 | 
+        | /report/1/accounts/banks/1/delete | 200 | 
       # behat-malicious CANNOT access the same URLs
       Given I am logged in as "behat-malicious@publicguardian.gsi.gov.uk" with password "Abcd1234"
       # reload the status (as some URLs calls might have deleted data)
@@ -84,12 +82,9 @@ Feature: deputy / acl / security on pages
         | /report/1/assets/add | 500 | 
         | /report/1/assets/add-complete/Antiques | 500 | 
         # accounts
-        | /report/2/accounts | 200 | 
         | /report/1/accounts | 500 | 
-        | /report/1/account/1 | 500 | 
-        | /report/1/account/1/edit | 500 | 
-        | /report/1/account/1/delete | 500 | 
-        | /report/1/accounts/add | 500 | 
+        | /report/1/accounts/banks/1/edit | 500 | 
+        | /report/1/accounts/banks/1/delete | 500 | 
         # submit
         | /report/1/add_further_information | 500 | 
         | /report/1/declaration | 500 | 

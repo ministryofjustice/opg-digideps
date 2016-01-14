@@ -28,7 +28,7 @@
                     <a href="{{ linkToReportOverviewPage }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
                 </span>
                 <a href="{{ linkEditReportingPeriod }}"
-                   class="edit-button edit-report behat-link-edit-report-period-{{ report.getPeriod() }}-report">{{ 'reportDataList.edit'| trans }}</a>
+                   class="edit-button edit-report behat-link-edit-report-period-{{ report.getPeriod() | behat_namify }}-report">{{ 'reportDataList.edit'| trans }}</a>
             {% endif %}            
 
             <dl class="item-data">

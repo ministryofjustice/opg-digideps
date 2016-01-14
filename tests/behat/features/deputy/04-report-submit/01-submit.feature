@@ -2,12 +2,13 @@ Feature: deputy / report / submit
     
     @deputy
     Scenario: report declaration page
+        Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "client-home"
         Then I should not see the "download-2016-report" link
         When I click on "report-2016"    
-        And I confirm the report is ready to be submitted
         And I follow "edit-report_add_further_info"
+        #And I fill in "report_add_info_furtherInformation" with "test"
         Then I press "report_add_info_saveAndContinue"
         Then the URL should match "/report/\d+/declaration"
         And I save the page as "report-submit-declaration"
@@ -41,18 +42,9 @@ Feature: deputy / report / submit
         When I go to "/report/1/display"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
-        # assert email has been sent/wrote into the disk
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
-        # assert confirmation email has been sent
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
-        And the second_last email "application/xml" part should contain the following:
-            | caseNumber | 12345ABC |
-            | ClientLastName | White |
-            | moneyInTotal |  3,250.00 | 
-            | moneyOutTotal | 7,500.50 |
-            | assetsTotal | 263,000.00 |
-            | statusString | Deputy agreed |
-            | statusDeputyName | John Doe |
+        And the second_last email should contain a PDF of at least 40 kb
         And I save the application status into "report-submit-post"
     
 
@@ -83,25 +75,15 @@ Feature: deputy / report / submit
         And I should see a "#edit-accounts" element
         And I should see a "#edit-assets" element
         When I follow "edit-accounts"
-        And I click on "account-1234"
+        And I click on "account-0876"
         # check no data was previously saved
         Then the following fields should have the corresponding values:
-            | transactions_moneyIn_0_amount        |  | 
-            | transactions_moneyIn_15_amount       |  | 
-            | transactions_moneyIn_15_moreDetails  |  | 
-            | transactions_moneyOut_0_amount       |  | 
-            | transactions_moneyOut_11_amount      |  | 
-            | transactions_moneyOut_11_moreDetails |  | 
-        And I save the page as "report-account-transactions-empty"
-        #check account details
-        And I click on "edit-account-details"
-        Then the following fields should have the corresponding values:
-            | account_bank    | HSBC main account | 
-            | account_accountNumber | 1234 |
-            | account_sortCode_sort_code_part_1 | 12 |
-            | account_sortCode_sort_code_part_2 | 34 |
-            | account_sortCode_sort_code_part_3 | 56 |
-            | account_openingBalance  | -3,000.50 |
+            | account_bank  | HSBC main account |
+            | account_openingBalance  | 1,155.00 |
+        When I click on "account-moneyin"
+        Then I should see an "#transactions_transactionsIn_0_amount" element
+        When I click on "account-moneyout"
+        Then I should see an "#transactions_transactionsOut_0_amount" element
         
 
     @deputy
@@ -117,7 +99,8 @@ Feature: deputy / report / submit
         And the URL "/report/1/contacts" should not be accessible
         And the URL "/report/1/decisions" should not be accessible
         And the URL "/report/1/accounts" should not be accessible
-        And the URL "/report/1/account/1" should not be accessible
+        And the URL "/report/1/accounts/banks/1/edit" should not be accessible
+        And the URL "/report/1/accounts/banks/1/delete" should not be accessible
         And the URL "/report/1/assets" should not be accessible
         
     @deputy
