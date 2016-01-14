@@ -50,6 +50,7 @@ class ReportRepository extends EntityRepository
         foreach($accounts as $account){
             $newAccount = new EntityDir\Account();
             $newAccount->setBank($account->getBank());
+            $newAccount->setAccountType($account->getAccountType());
             $newAccount->setSortCode($account->getSortCode());
             $newAccount->setAccountNumber($account->getAccountNumber());
             $newAccount->setOpeningBalance($account->getClosingBalance());

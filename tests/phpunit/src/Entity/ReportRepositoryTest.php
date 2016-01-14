@@ -44,6 +44,7 @@ class ReportRepositoryTest extends WebTestCase
             'setOpeningDate' => new \DateTime('01 January 2014'),
             'setClosingDate' => new \DateTime('31 December 2014'),
             'setBank' => 'NATWEST',
+            'accountType' => 'Current',
             'setSortCode' => '120044',
             'setAccountNumber' => '0012',
             'setCreatedAt' => new \DateTime()
@@ -80,10 +81,12 @@ class ReportRepositoryTest extends WebTestCase
 
         $this->assertCount(1, $newReport->getAccounts());
 
+        /** @var $account Account */
         $account = $newReport->getAccounts()[0];
 
         $this->assertEquals('2014-12-31', $account->getOpeningDate()->format('Y-m-d'));
         $this->assertEquals('NATWEST', $account->getBank());
+        $this->assertEquals('Currenr', $account->getAccountType());
         $this->assertEquals('120044', $account->getSortCode());
         $this->assertEquals('0012', $account->getAccountNumber());
     }
