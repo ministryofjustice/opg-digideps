@@ -1,0 +1,89 @@
+
+#safegaurding-care-funding table .label {
+    width: auto;
+}
+
+
+table#safeguarding-visits-subsection {
+
+    th, td {
+        box-sizing: border-box;
+        width: 22%;
+        padding: 0;
+
+        &:first-child {
+            width: 34%;
+        }
+    }
+
+    thead th {
+        text-align: center;
+        padding: 0 10px;
+    }
+
+    tbody th {
+        text-align: left;
+    }
+
+    tr {
+        padding: 10px 0;
+    }
+
+    td {
+        text-align: center;
+        .checkbox {
+            margin: 5px 0;
+        }
+    }
+}
+
+table.yesno, #safegaurding-care-funding table {
+
+    margin: 10px 0;
+    
+    .label {
+        width: 5em;
+    }
+}
+
+#safeguarding-contact, #care-arrangements-subsection {
+    margin-top: 10px;
+}
+
+#safeguarding-contact .intro {
+    font-weight: bold;
+}
+
+#safeguarding-visitors-subsection {
+
+    .form-group {
+        box-sizing: border-box;
+        width: 33%;
+        padding-right: 20px;
+        margin-right: 0;
+    }
+
+    table {
+        .label {
+            width: 200px;
+            display: table-cell;
+        }
+        td {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+    }
+
+}
+
+#care-plan-subsection .form-group-vertical .value {
+    width: 10em;
+}
+
+#safeguarding-care-funding {
+    table {
+        td {
+            padding: 0;
+        }
+    }
+}

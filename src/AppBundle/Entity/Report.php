@@ -3,6 +3,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use Doctrine\ORM\QueryBuilder;
 
@@ -12,6 +13,7 @@ use Doctrine\ORM\QueryBuilder;
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  */
 class Report 
 {
@@ -20,7 +22,7 @@ class Report
     /**
      * @var integer
      *
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -32,55 +34,49 @@ class Report
     /**
      * @var integer
      * 
-     * @JMS\Groups({"transactions","basic"})
-     * @JMS\Accessor(getter="getClientId")
-     * @JMS\Type("integer")
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("AppBundle\Entity\Client")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Client", inversedBy="reports")
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
     
     /**
-     * @JMS\Groups({"transactions","basic"})
-     * @JMS\Accessor(getter="getContactIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"contacts"})
+     * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
     
     /**
-     * @JMS\Groups({"basic"})
-     * @JMS\Accessor(getter="getAccountIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"accounts"})
+     * @JMS\Type("array<AppBundle\Entity\Account>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
      */
     private $accounts;
-    
+
     /**
-     * @JMS\Groups({"transactions"})
-     * @JMS\Accessor(getter="getAccounts", setter="addAccount")
-     * @JMS\Type("array<AppBundle\Entity\Account>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
+     * @ORM\OrderBy({"id" = "ASC"})
      */
-    private $accountObjs;
+    private $transactions;
     
     /**
-     * @JMS\Groups({"transactions", "basic"})
-     * @JMS\Accessor(getter="getDecisionIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"decisions"})
+     * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
     private $decisions;
     
     /**
-     * @JMS\Groups({"transactions","basic"})
-     * @JMS\Accessor(getter="getAssetIds")
-     * @JMS\Type("array")
+     * @JMS\Groups({"asset"})
+     * @JMS\Type("array<AppBundle\Entity\Asset>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Asset", mappedBy="report", cascade={"persist"})
      */
     private $assets;
 
     /**
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @JMS\Type("AppBundle\Entity\Safeguarding")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
@@ -88,7 +84,7 @@ class Report
 
 
     /**
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
@@ -99,7 +95,7 @@ class Report
     /**
      * @var string
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Type("string")
      * @ORM\Column(name="title", type="string", length=150, nullable=true)
      */
@@ -108,7 +104,7 @@ class Report
     /**
      * @var \Date
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getStartDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="start_date", type="date", nullable=true)
@@ -118,7 +114,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getEndDate")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="end_date", type="date", nullable=true)
@@ -128,7 +124,7 @@ class Report
     /**
      * @var \DateTime
      * 
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getSubmitDate")
      * @JMS\Type("DateTime")
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
@@ -155,7 +151,7 @@ class Report
     /**
      * @var boolean
      * @JMS\Type("boolean")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
@@ -164,7 +160,7 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;
@@ -173,20 +169,15 @@ class Report
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
      **/
     private $reasonForNoDecisions;
 
-
-    /**
-     * @var
-     */
-
     /**
      * @var boolean
      *
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({ "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
@@ -212,7 +203,7 @@ class Report
      * @var boolean
      *
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic","transactions"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="all_agreed", type="boolean", nullable=true)
      */
     private $allAgreed;
@@ -220,20 +211,30 @@ class Report
     /** @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"basic","transactions"})
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
      */
     private $reasonNotAllAgreed;
-    
+
+    /**
+     * @var string
+     * @JMS\Groups({"balance", "basic"})
+     * @JMS\Type("string")
+     *
+     * @ORM\Column(name="balance_mismatch_explanation", type="text", nullable=true)
+     */
+    private $balanceMismatchExplanation;
+
      /**
      * Constructor
      */
     public function __construct()
     {
-        $this->contacts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->accounts = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->decisions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->assets = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->accounts = new ArrayCollection();
+        $this->transactions = new ArrayCollection();
+        $this->decisions = new ArrayCollection();
+        $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
         $this->reportSeen = true;
     }
@@ -468,7 +469,6 @@ class Report
 
         return $this;
     }
-    
     /**
      * Remove contacts
      *
@@ -487,17 +487,6 @@ class Report
     public function getContacts()
     {
         return $this->contacts;
-    }
-    
-    public function getContactIds()
-    {   
-        $contacts = [];
-        if(!empty($this->contacts)){
-            foreach($this->contacts as $contact){
-                $contacts[] = $contact->getId();
-            }
-        }
-        return $contacts;
     }
 
     /**
@@ -533,17 +522,6 @@ class Report
         return $this->accounts;
     }
     
-    public function getAccountIds()
-    {
-        $accounts = [];
-        if(!empty($this->accounts)){
-            foreach($this->accounts as $account){
-                $accounts[] = $account->getId();
-            }
-        }
-        return $accounts;
-    }
-
     /**
      * Add decisions
      *
@@ -577,18 +555,6 @@ class Report
         return $this->decisions;
     }
 
-    
-    public function getDecisionIds()
-    {
-        $decisions = [];
-        if(!empty($this->decisions)){
-            foreach($this->decisions as $decision){
-                $decisions[] = $decision->getId();
-            }
-        }
-        return $decisions;
-    }
-    
     /**
      * Add assets
      *
@@ -647,17 +613,6 @@ class Report
         ksort($ret);
     
         return $ret;
-    }
-
-    public function getAssetIds()
-    {
-        $assets = [];
-        if(!empty($this->assets)){
-            foreach($this->assets as $asset){
-                $assets[] = $asset->getId();
-            }
-        }
-        return $assets;
     }
     
     /**
@@ -848,6 +803,220 @@ class Report
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
     }
 
+    /**
+     * @return string
+     */
+    public function getBalanceMismatchExplanation()
+    {
+        return $this->balanceMismatchExplanation;
+    }
+
+    /**
+     * @param string $balanceMismatchExplanation
+     */
+    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
+    {
+        $this->balanceMismatchExplanation = $balanceMismatchExplanation;
+    }
+
+
+
+    /**
+     * @return Transaction[]
+     */
+    public function getTransactions()
+    {
+        return $this->transactions;
+    }
+
+    /**
+     * Virtual JMS property with IN transaction
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactionsIn"})
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\SerializedName("transactions_in")
+     *
+     * @return Transaction[]
+     */
+    public function getTransactionsIn()
+    {
+        return $this->transactions->filter(function($t) {
+            return $t->getTransactionType() instanceof TransactionTypeIn;
+        });
+    }
+
+    /**
+     * Virtual JMS property with OUT transaction
+     *
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactionsOut"})
+     * @JMS\Type("array<AppBundle\Entity\Transaction>")
+     * @JMS\SerializedName("transactions_out")
+     *
+     * @return Transaction[]
+     */
+    public function getTransactionsOut()
+    {
+        return $this->transactions->filter(function($t) {
+            return $t->getTransactionType() instanceof TransactionTypeOut;
+        });
+    }
+
+
+
+    /**
+     * @param Transaction $transaction
+     */
+    public function addTransaction(Transaction $transaction)
+    {
+        if (!$this->transactions->contains($transaction)) {
+            $this->transactions->add($transaction);
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param string $transactionTypeId
+     *
+     * @return Transaction
+     */
+    public function getTransactionByTypeId($transactionTypeId)
+    {
+        return $this->getTransactions()->filter(function(Transaction $transaction) use($transactionTypeId) {
+            return $transaction->getTransactionTypeId() == $transactionTypeId;
+        })->first();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("money_in_total")
+     */
+    public function getMoneyInTotal()
+    {
+        $ret = 0;
+        foreach ($this->getTransactionsIn() as $t) {
+            $ret += $t->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("money_out_total")
+     */
+    public function getMoneyOutTotal()
+    {
+        $ret = 0;
+        foreach ($this->getTransactionsOut() as $t) {
+            $ret += $t->getAmount();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("accounts_opening_balance_total")
+     */
+    public function getAccountsOpeningBalanceTotal()
+    {
+        $ret = 0;
+        foreach ($this->getAccounts() as $a) {
+            $ret += $a->getOpeningBalance();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * Return sum of closing balances (if all of them have a value, otherwise returns null)
+     * 
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("accounts_closing_balance_total")
+     * 
+     * @return float 
+     */
+    public function getAccountsClosingBalanceTotal()
+    {
+        $ret = 0;
+        foreach ($this->getAccounts() as $a) {
+            if ($a->getClosingBalance() === null) {
+                return null;
+            }
+            $ret += $a->getClosingBalance();
+        }
+
+        return $ret;
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("calculated_balance")
+     */
+    public function getCalculatedBalance()
+    {
+        return $this->getAccountsOpeningBalanceTotal()
+        + $this->getMoneyInTotal()
+        - $this->getMoneyOutTotal();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance"})
+     * @JMS\Type("double")
+     * @JMS\SerializedName("totals_offset")
+     */
+    public function getTotalsOffset()
+    {
+        return $this->getCalculatedBalance() - $this->getAccountsClosingBalanceTotal();
+    }
+
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"balance", "basic"})
+     * @JMS\Type("boolean")
+     * @JMS\SerializedName("totals_match")
+     */
+    public function getTotalsMatch()
+    {
+        return abs($this->getTotalsOffset()) < 0.2;
+    }
+
+    /**
+     * @param Transaction[] $transactions
+     *
+     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
+     */
+    public function groupByCategory($transactions)
+    {
+        $ret = [];
+
+        foreach ($transactions as $id => $transaction) {
+            $cat = $transaction->getCategoryString();
+            if (!isset($ret[$cat])) {
+                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
+            }
+            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
+            $ret[$cat]['amountTotal'] += $transaction->getAmount();
+        }
+
+        return $ret;
+    }
+
     public function isDue()
     {
         if (!$this->getEndDate() instanceof \DateTime) {
@@ -863,6 +1032,5 @@ class Report
 
         return $today >= $reportDueOn;
     }
-
-
+    
 }

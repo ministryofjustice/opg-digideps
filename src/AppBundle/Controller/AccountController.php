@@ -10,7 +10,8 @@ use AppBundle\Exception as AppExceptions;
 class AccountController extends RestController
 {    
     /**
-     * @Route("/report/accounts/{id}")
+     * @deprecated in favour of report/{id}?group=[accounts]
+     * @Route("/report/{id}/accounts")
      * @Method({"GET"})
      */
     public function getAccountsAction(Request $request, $id)
@@ -47,18 +48,15 @@ class AccountController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $data = $this->deserializeBodyContent($request, [
-           'bank' => 'notEmpty', 
-           'sort_code' => 'notEmpty', 
-           'opening_date' => 'notEmpty', 
-           'opening_balance' => 'notEmpty'
+           'bank' => 'notEmpty',
+           'sort_code' => 'notEmpty',
+           'opening_balance' => 'mustExist'
         ]);
         
         $account = new EntityDir\Account();
         $account->setReport($report);
         
         $this->fillAccountData($account, $data);
-        
-        $this->getRepository('Account')->addEmptyTransactionsToAccount($account);
         
         $this->persistAndFlush($account);
         
@@ -87,7 +85,7 @@ class AccountController extends RestController
      * @Route("/account/{id}")
      * @Method({"PUT"})
      */
-    public function edit(Request $request, $id)
+    public function editAccountAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
@@ -97,19 +95,7 @@ class AccountController extends RestController
         $data = $this->deserializeBodyContent($request);
         
         $this->fillAccountData($account, $data);
-        
-        // edit transactions
-        if (isset($data['money_in']) && isset($data['money_out'])) {
-            $transactionRepo = $this->getRepository('AccountTransaction');
-            array_map(function($transactionRow) use ($transactionRepo) {
-                $transactionRepo->find($transactionRow['id'])
-                    ->setAmount($transactionRow['amount'])
-                    ->setMoreDetails($transactionRow['more_details']);
-            }, array_merge($data['money_in'], $data['money_out']));
-            $this->setJmsSerialiserGroups(['transactions']);
-        }
-        
-        
+
         $account->setLastEdit(new \DateTime());
         
         $this->getEntityManager()->flush();
@@ -127,11 +113,7 @@ class AccountController extends RestController
         
         $account = $this->findEntityBy('Account', $id, 'Account not found'); /* @var $account EntityDir\Account */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
-        
-        foreach ($account->getTransactions() as $transaction) {
-            $this->getEntityManager()->remove($transaction);
-        }
-        
+
         $this->getEntityManager()->remove($account);
         
         $this->getEntityManager()->flush();
@@ -145,7 +127,11 @@ class AccountController extends RestController
         if (array_key_exists('bank', $data)) {
            $account->setBank($data['bank']);
         }
-        
+
+        if (array_key_exists('account_type', $data)) {
+            $account->setAccountType($data['account_type']);
+        }
+
         if (array_key_exists('sort_code', $data)) {
            $account->setSortCode($data['sort_code']);
         }

@@ -1,53 +1,44 @@
-<div class="section" id="contacts-section">
-    <h2>
-        <span class="section-number">Section 3</span>
-        People you consulted
-    </h2>
-                    
-    {% if contacts | length == 0 %}
-        <fieldset class="contact-item no-contact" id="no-contact">
-            <div class="form-group right-label">
-                <div class="checkbox">X</div>
-                <label>Check this box if you did not consult anyone and use the box below to tell us why.</label>
+{% if contacts | length > 0 or report.reasonForNoContacts != "" %}
+    <div class="section" id="contacts-section">
+        <h2 class="section-heading">People you consulted</h2>
+                        
+        {% if contacts | length == 0 %}
+            <div class="box contact-item no-contact" id="no-contact">
+                <dl class="labelvalue">
+                    <dt class="label">Check this box if you did not consult anyone and use the box below to tell us why.</dt>
+                    <dd class="value checkbox">X</dd>
+                    <dd class="value textarea">{{ report.reasonForNoContacts }}</dd>
+                </dl>
             </div>
-            <div class="form-group form-group-vertical">
-                <div class="textarea address-value">{{ report.reasonForNoContacts }}</div>
-            </div>
-        </fieldset>
-    {% else %}
-        <ul class="contacts-list">
-            {% for contact in contacts %}
-                <li class="contact-item">
-                    <fieldset>
-                        <div class="half-width">
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Full name</div>
-                                <div class="value">{{ contact.contactName }}</div>
-                            </div>
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Address</div>
-                                <div class="textarea address-value">
+        {% else %}
+            <div class="box">
+                <ul class="box-list">
+                    {% for contact in contacts %}
+                        <li class="box-item">
+                            <dl class="labelvalue half-width first">
+                                <dt class="label">Full name</dt>
+                                <dd class="value">{{ contact.contactName }}</dd>
+             
+                                <dt class="label">Address</dt>
+                                <dd class="value textarea">
                                     {{ contact.address }}<br/>
                                     {{ contact.address2 }}<br/>
                                     {{ contact.county }}<br/>
                                     {{ contact.postcode }}<br/>
                                     {{ contact.country | country_name }}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="half-width">
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Relationship to client</div>
-                                <div class="value">{{ contact.relationship }}</div>
-                            </div>
-                            <div class="form-group form-group-vertical">
-                                <div class="label">Why did you consult them?</div>
-                                <div class="textarea">{{ contact.explanation }}</div>
-                            </div>
-                        </div>
-                    </fieldset>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</div>
+                                </dd>
+                            </dl>
+                            <dl class="labelvalue half-width">
+                                <dt class="label">Relationship to client</dt>
+                                <dd class="value">{{ contact.relationship }}</dd>
+        
+                                <dt class="label">Why did you consult them?</dt>
+                                <dd class="value textarea">{{ contact.explanation }}</dd>
+                            </dl>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

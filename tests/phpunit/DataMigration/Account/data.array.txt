@@ -1,0 +1,1219 @@
+PHPUnit 4.8.9 by Sebastian Bergmann and contributors.
+
+Array
+(
+    [1] => Array
+        (
+            [id] => 1
+            [client_id] => 1
+            [court_order_type_id] => 2
+            [title] => 
+            [start_date] => 2015-01-01
+            [end_date] => 2015-05-01
+            [submit_date] => 
+            [last_edit] => 
+            [further_information] => 
+            [no_asset_to_add] => 
+            [reason_for_no_contacts] => 
+            [reason_for_no_decisions] => 
+            [submitted] => 
+            [reviewed] => 
+            [report_seen] => 1
+            [all_agreed] => 
+            [reason_not_all_agreed] => 
+            [balance_mismatch_explanation] => 
+            [transactions_new] => Array
+                (
+                )
+
+            [transactions_new_sum] => 0
+            [accounts] => Array
+                (
+                    [1] => Array
+                        (
+                            [id] => 1
+                            [report_id] => 1
+                            [bank_name] => hsbc
+                            [sort_code] => 121212
+                            [account_number] => 1234
+                            [last_edit] => 2015-12-03 16:30:50
+                            [created_at] => 2015-12-03 16:28:44
+                            [opening_balance] => 123.00
+                            [opening_date_explanation] => 
+                            [closing_balance] => 123.00
+                            [closing_balance_explanation] => balances does not match
+                            [opening_date] => 2015-01-01
+                            [closing_date] => 2015-12-31
+                            [closing_date_explanation] => closing dates do not match 123
+                            [account_type] => 
+                            [transactions_old] => Array
+                                (
+                                    [disability_living_allowance_or_personal_independence_payment] => Array
+                                        (
+                                            [id] => 1
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => disability_living_allowance_or_personal_independence_payment
+                                            [amount] => 1.00
+                                            [more_details] => 
+                                        )
+
+                                    [attendance_allowance] => Array
+                                        (
+                                            [id] => 4
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => attendance_allowance
+                                            [amount] => 2.00
+                                            [more_details] => 
+                                        )
+
+                                    [employment_support_allowance_or_incapacity_benefit] => Array
+                                        (
+                                            [id] => 6
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => employment_support_allowance_or_incapacity_benefit
+                                            [amount] => 3.00
+                                            [more_details] => 
+                                        )
+
+                                    [severe_disablement_allowance] => Array
+                                        (
+                                            [id] => 7
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => severe_disablement_allowance
+                                            [amount] => 4.00
+                                            [more_details] => 
+                                        )
+
+                                    [income_support_or_pension_credit] => Array
+                                        (
+                                            [id] => 9
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => income_support_or_pension_credit
+                                            [amount] => 5.00
+                                            [more_details] => 
+                                        )
+
+                                    [housing_benefit] => Array
+                                        (
+                                            [id] => 12
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => housing_benefit
+                                            [amount] => 6.00
+                                            [more_details] => 
+                                        )
+
+                                    [state_pension] => Array
+                                        (
+                                            [id] => 13
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => state_pension
+                                            [amount] => 7.00
+                                            [more_details] => 
+                                        )
+
+                                    [universal_credit] => Array
+                                        (
+                                            [id] => 15
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => universal_credit
+                                            [amount] => 8.00
+                                            [more_details] => 
+                                        )
+
+                                    [other_benefits_eg_winter_fuel_or_cold_weather_payments] => Array
+                                        (
+                                            [id] => 18
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => other_benefits_eg_winter_fuel_or_cold_weather_payments
+                                            [amount] => 9.00
+                                            [more_details] => 
+                                        )
+
+                                    [occupational_pensions] => Array
+                                        (
+                                            [id] => 19
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => occupational_pensions
+                                            [amount] => 10.00
+                                            [more_details] => 
+                                        )
+
+                                    [account_interest] => Array
+                                        (
+                                            [id] => 21
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => account_interest
+                                            [amount] => 11.00
+                                            [more_details] => 
+                                        )
+
+                                    [income_from_investments_property_or_dividends] => Array
+                                        (
+                                            [id] => 23
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => income_from_investments_property_or_dividends
+                                            [amount] => 12.00
+                                            [more_details] => 
+                                        )
+
+                                    [salary_or_wages] => Array
+                                        (
+                                            [id] => 25
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => salary_or_wages
+                                            [amount] => 13.00
+                                            [more_details] => 
+                                        )
+
+                                    [refunds] => Array
+                                        (
+                                            [id] => 28
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => refunds
+                                            [amount] => 14.00
+                                            [more_details] => 
+                                        )
+
+                                    [bequests_eg_inheritance_gifts_received] => Array
+                                        (
+                                            [id] => 30
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => bequests_eg_inheritance_gifts_received
+                                            [amount] => 15.00
+                                            [more_details] => 
+                                        )
+
+                                    [sale_of_investments_property_or_assets] => Array
+                                        (
+                                            [id] => 31
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => sale_of_investments_property_or_assets
+                                            [amount] => 16.00
+                                            [more_details] => 16,desc
+                                        )
+
+                                    [compensation_or_damages_awards] => Array
+                                        (
+                                            [id] => 34
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => compensation_or_damages_awards
+                                            [amount] => 17.00
+                                            [more_details] => 17.desc
+                                        )
+
+                                    [transfers_in_from_client_s_other_accounts] => Array
+                                        (
+                                            [id] => 35
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => transfers_in_from_client_s_other_accounts
+                                            [amount] => 18.00
+                                            [more_details] => 18.desc
+                                        )
+
+                                    [any_other_money_paid_in_and_not_listed_above] => Array
+                                        (
+                                            [id] => 37
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => any_other_money_paid_in_and_not_listed_above
+                                            [amount] => 19.00
+                                            [more_details] => 19.desc
+                                        )
+
+                                    [care_fees_or_local_authority_charges_for_care] => Array
+                                        (
+                                            [id] => 2
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => care_fees_or_local_authority_charges_for_care
+                                            [amount] => 20.00
+                                            [more_details] => 
+                                        )
+
+                                    [accommodation_costs_eg_rent_mortgage_service_charges] => Array
+                                        (
+                                            [id] => 3
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => accommodation_costs_eg_rent_mortgage_service_charges
+                                            [amount] => 21.00
+                                            [more_details] => 
+                                        )
+
+                                    [household_bills_eg_water_gas_electricity_phone_council_tax] => Array
+                                        (
+                                            [id] => 5
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => household_bills_eg_water_gas_electricity_phone_council_tax
+                                            [amount] => 22.00
+                                            [more_details] => 
+                                        )
+
+                                    [day_to_day_living_costs_eg_food_toiletries_clothing_sundries] => Array
+                                        (
+                                            [id] => 8
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => day_to_day_living_costs_eg_food_toiletries_clothing_sundries
+                                            [amount] => 23.00
+                                            [more_details] => 
+                                        )
+
+                                    [debt_payments_eg_loans_cards_care_fee_arrears] => Array
+                                        (
+                                            [id] => 10
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => debt_payments_eg_loans_cards_care_fee_arrears
+                                            [amount] => 24.00
+                                            [more_details] => 
+                                        )
+
+                                    [travel_costs_for_client_eg_bus_train_taxi_fares] => Array
+                                        (
+                                            [id] => 11
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => travel_costs_for_client_eg_bus_train_taxi_fares
+                                            [amount] => 25.00
+                                            [more_details] => 
+                                        )
+
+                                    [holidays_or_day_trips] => Array
+                                        (
+                                            [id] => 14
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => holidays_or_day_trips
+                                            [amount] => 26.00
+                                            [more_details] => 
+                                        )
+
+                                    [tax_payable_to_hmrc] => Array
+                                        (
+                                            [id] => 16
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => tax_payable_to_hmrc
+                                            [amount] => 27.00
+                                            [more_details] => 
+                                        )
+
+                                    [insurance_eg_life_home_and_contents] => Array
+                                        (
+                                            [id] => 17
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => insurance_eg_life_home_and_contents
+                                            [amount] => 28.00
+                                            [more_details] => 
+                                        )
+
+                                    [office_of_the_public_guardian_fees] => Array
+                                        (
+                                            [id] => 20
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => office_of_the_public_guardian_fees
+                                            [amount] => 29.00
+                                            [more_details] => 
+                                        )
+
+                                    [deputy_s_security_bond] => Array
+                                        (
+                                            [id] => 22
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => deputy_s_security_bond
+                                            [amount] => 30.00
+                                            [more_details] => 
+                                        )
+
+                                    [client_s_personal_allowance_eg_spending_money] => Array
+                                        (
+                                            [id] => 24
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => client_s_personal_allowance_eg_spending_money
+                                            [amount] => 31.00
+                                            [more_details] => 31.desc
+                                        )
+
+                                    [cash_withdrawals] => Array
+                                        (
+                                            [id] => 26
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => cash_withdrawals
+                                            [amount] => 32.00
+                                            [more_details] => 32.desc
+                                        )
+
+                                    [professional_fees_eg_solicitor_or_accountant_fees] => Array
+                                        (
+                                            [id] => 27
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => professional_fees_eg_solicitor_or_accountant_fees
+                                            [amount] => 33.00
+                                            [more_details] => 33.desc
+                                        )
+
+                                    [deputy_s_expenses] => Array
+                                        (
+                                            [id] => 29
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => deputy_s_expenses
+                                            [amount] => 34.00
+                                            [more_details] => 34.desc
+                                        )
+
+                                    [gifts] => Array
+                                        (
+                                            [id] => 32
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => gifts
+                                            [amount] => 35.00
+                                            [more_details] => 35.desc
+                                        )
+
+                                    [major_purchases_eg_property_vehicles] => Array
+                                        (
+                                            [id] => 33
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => major_purchases_eg_property_vehicles
+                                            [amount] => 36.00
+                                            [more_details] => 36.desc
+                                        )
+
+                                    [property_maintenance_or_improvement] => Array
+                                        (
+                                            [id] => 36
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => property_maintenance_or_improvement
+                                            [amount] => 37.00
+                                            [more_details] => 37.desc
+                                        )
+
+                                    [investments_eg_shares_bonds_savings] => Array
+                                        (
+                                            [id] => 38
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => investments_eg_shares_bonds_savings
+                                            [amount] => 38.00
+                                            [more_details] => 38.desc
+                                        )
+
+                                    [transfers_out_to_other_client_s_accounts] => Array
+                                        (
+                                            [id] => 39
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => transfers_out_to_other_client_s_accounts
+                                            [amount] => 39.00
+                                            [more_details] => 39.desc
+                                        )
+
+                                    [any_other_money_paid_out_and_not_listed_above] => Array
+                                        (
+                                            [id] => 40
+                                            [account_id] => 1
+                                            [account_transaction_type_id] => any_other_money_paid_out_and_not_listed_above
+                                            [amount] => 40.00
+                                            [more_details] => 40.desc
+                                        )
+
+                                )
+
+                            [transactions_old_sum] => 820
+                        )
+
+                )
+
+        )
+
+    [2] => Array
+        (
+            [id] => 2
+            [client_id] => 2
+            [court_order_type_id] => 2
+            [title] => 
+            [start_date] => 2015-01-01
+            [end_date] => 2015-12-31
+            [submit_date] => 
+            [last_edit] => 
+            [further_information] => 
+            [no_asset_to_add] => 
+            [reason_for_no_contacts] => 
+            [reason_for_no_decisions] => 
+            [submitted] => 
+            [reviewed] => 
+            [report_seen] => 1
+            [all_agreed] => 
+            [reason_not_all_agreed] => 
+            [balance_mismatch_explanation] => 
+            [transactions_new] => Array
+                (
+                )
+
+            [transactions_new_sum] => 0
+            [accounts] => Array
+                (
+                    [2] => Array
+                        (
+                            [id] => 2
+                            [report_id] => 2
+                            [bank_name] => e1
+                            [sort_code] => 888888
+                            [account_number] => 1234
+                            [last_edit] => 2015-12-03 16:37:56
+                            [created_at] => 2015-12-03 16:37:42
+                            [opening_balance] => 8.00
+                            [opening_date_explanation] => 
+                            [closing_balance] => 
+                            [closing_balance_explanation] => 
+                            [opening_date] => 2015-01-01
+                            [closing_date] => 
+                            [closing_date_explanation] => 
+                            [account_type] => 
+                            [transactions_old] => Array
+                                (
+                                    [disability_living_allowance_or_personal_independence_payment] => Array
+                                        (
+                                            [id] => 41
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => disability_living_allowance_or_personal_independence_payment
+                                            [amount] => 101.00
+                                            [more_details] => 
+                                        )
+
+                                    [care_fees_or_local_authority_charges_for_care] => Array
+                                        (
+                                            [id] => 42
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => care_fees_or_local_authority_charges_for_care
+                                            [amount] => 102.00
+                                            [more_details] => 
+                                        )
+
+                                    [accommodation_costs_eg_rent_mortgage_service_charges] => Array
+                                        (
+                                            [id] => 43
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => accommodation_costs_eg_rent_mortgage_service_charges
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [attendance_allowance] => Array
+                                        (
+                                            [id] => 44
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => attendance_allowance
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [household_bills_eg_water_gas_electricity_phone_council_tax] => Array
+                                        (
+                                            [id] => 45
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => household_bills_eg_water_gas_electricity_phone_council_tax
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [employment_support_allowance_or_incapacity_benefit] => Array
+                                        (
+                                            [id] => 46
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => employment_support_allowance_or_incapacity_benefit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [severe_disablement_allowance] => Array
+                                        (
+                                            [id] => 47
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => severe_disablement_allowance
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [day_to_day_living_costs_eg_food_toiletries_clothing_sundries] => Array
+                                        (
+                                            [id] => 48
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => day_to_day_living_costs_eg_food_toiletries_clothing_sundries
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [income_support_or_pension_credit] => Array
+                                        (
+                                            [id] => 49
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => income_support_or_pension_credit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [debt_payments_eg_loans_cards_care_fee_arrears] => Array
+                                        (
+                                            [id] => 50
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => debt_payments_eg_loans_cards_care_fee_arrears
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [travel_costs_for_client_eg_bus_train_taxi_fares] => Array
+                                        (
+                                            [id] => 51
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => travel_costs_for_client_eg_bus_train_taxi_fares
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [housing_benefit] => Array
+                                        (
+                                            [id] => 52
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => housing_benefit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [state_pension] => Array
+                                        (
+                                            [id] => 53
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => state_pension
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [holidays_or_day_trips] => Array
+                                        (
+                                            [id] => 54
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => holidays_or_day_trips
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [universal_credit] => Array
+                                        (
+                                            [id] => 55
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => universal_credit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [tax_payable_to_hmrc] => Array
+                                        (
+                                            [id] => 56
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => tax_payable_to_hmrc
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [insurance_eg_life_home_and_contents] => Array
+                                        (
+                                            [id] => 57
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => insurance_eg_life_home_and_contents
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [other_benefits_eg_winter_fuel_or_cold_weather_payments] => Array
+                                        (
+                                            [id] => 58
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => other_benefits_eg_winter_fuel_or_cold_weather_payments
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [occupational_pensions] => Array
+                                        (
+                                            [id] => 59
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => occupational_pensions
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [office_of_the_public_guardian_fees] => Array
+                                        (
+                                            [id] => 60
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => office_of_the_public_guardian_fees
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [account_interest] => Array
+                                        (
+                                            [id] => 61
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => account_interest
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [deputy_s_security_bond] => Array
+                                        (
+                                            [id] => 62
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => deputy_s_security_bond
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [income_from_investments_property_or_dividends] => Array
+                                        (
+                                            [id] => 63
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => income_from_investments_property_or_dividends
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [client_s_personal_allowance_eg_spending_money] => Array
+                                        (
+                                            [id] => 64
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => client_s_personal_allowance_eg_spending_money
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [salary_or_wages] => Array
+                                        (
+                                            [id] => 65
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => salary_or_wages
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [cash_withdrawals] => Array
+                                        (
+                                            [id] => 66
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => cash_withdrawals
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [professional_fees_eg_solicitor_or_accountant_fees] => Array
+                                        (
+                                            [id] => 67
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => professional_fees_eg_solicitor_or_accountant_fees
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [refunds] => Array
+                                        (
+                                            [id] => 68
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => refunds
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [deputy_s_expenses] => Array
+                                        (
+                                            [id] => 69
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => deputy_s_expenses
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [bequests_eg_inheritance_gifts_received] => Array
+                                        (
+                                            [id] => 70
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => bequests_eg_inheritance_gifts_received
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [sale_of_investments_property_or_assets] => Array
+                                        (
+                                            [id] => 71
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => sale_of_investments_property_or_assets
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [gifts] => Array
+                                        (
+                                            [id] => 72
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => gifts
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [major_purchases_eg_property_vehicles] => Array
+                                        (
+                                            [id] => 73
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => major_purchases_eg_property_vehicles
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [compensation_or_damages_awards] => Array
+                                        (
+                                            [id] => 74
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => compensation_or_damages_awards
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [transfers_in_from_client_s_other_accounts] => Array
+                                        (
+                                            [id] => 75
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => transfers_in_from_client_s_other_accounts
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [property_maintenance_or_improvement] => Array
+                                        (
+                                            [id] => 76
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => property_maintenance_or_improvement
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [any_other_money_paid_in_and_not_listed_above] => Array
+                                        (
+                                            [id] => 77
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => any_other_money_paid_in_and_not_listed_above
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [investments_eg_shares_bonds_savings] => Array
+                                        (
+                                            [id] => 78
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => investments_eg_shares_bonds_savings
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [transfers_out_to_other_client_s_accounts] => Array
+                                        (
+                                            [id] => 79
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => transfers_out_to_other_client_s_accounts
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [any_other_money_paid_out_and_not_listed_above] => Array
+                                        (
+                                            [id] => 80
+                                            [account_id] => 2
+                                            [account_transaction_type_id] => any_other_money_paid_out_and_not_listed_above
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                )
+
+                            [transactions_old_sum] => 203
+                        )
+
+                    [3] => Array
+                        (
+                            [id] => 3
+                            [report_id] => 2
+                            [bank_name] => e2
+                            [sort_code] => 111111
+                            [account_number] => 1235
+                            [last_edit] => 2015-12-03 16:38:30
+                            [created_at] => 2015-12-03 16:38:19
+                            [opening_balance] => 9.00
+                            [opening_date_explanation] => 
+                            [closing_balance] => 
+                            [closing_balance_explanation] => 
+                            [opening_date] => 2015-01-01
+                            [closing_date] => 
+                            [closing_date_explanation] => 
+                            [account_type] => 
+                            [transactions_old] => Array
+                                (
+                                    [accommodation_costs_eg_rent_mortgage_service_charges] => Array
+                                        (
+                                            [id] => 83
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => accommodation_costs_eg_rent_mortgage_service_charges
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [attendance_allowance] => Array
+                                        (
+                                            [id] => 84
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => attendance_allowance
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [household_bills_eg_water_gas_electricity_phone_council_tax] => Array
+                                        (
+                                            [id] => 85
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => household_bills_eg_water_gas_electricity_phone_council_tax
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [employment_support_allowance_or_incapacity_benefit] => Array
+                                        (
+                                            [id] => 86
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => employment_support_allowance_or_incapacity_benefit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [severe_disablement_allowance] => Array
+                                        (
+                                            [id] => 87
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => severe_disablement_allowance
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [day_to_day_living_costs_eg_food_toiletries_clothing_sundries] => Array
+                                        (
+                                            [id] => 88
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => day_to_day_living_costs_eg_food_toiletries_clothing_sundries
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [income_support_or_pension_credit] => Array
+                                        (
+                                            [id] => 89
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => income_support_or_pension_credit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [debt_payments_eg_loans_cards_care_fee_arrears] => Array
+                                        (
+                                            [id] => 90
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => debt_payments_eg_loans_cards_care_fee_arrears
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [travel_costs_for_client_eg_bus_train_taxi_fares] => Array
+                                        (
+                                            [id] => 91
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => travel_costs_for_client_eg_bus_train_taxi_fares
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [housing_benefit] => Array
+                                        (
+                                            [id] => 92
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => housing_benefit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [state_pension] => Array
+                                        (
+                                            [id] => 93
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => state_pension
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [holidays_or_day_trips] => Array
+                                        (
+                                            [id] => 94
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => holidays_or_day_trips
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [universal_credit] => Array
+                                        (
+                                            [id] => 95
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => universal_credit
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [tax_payable_to_hmrc] => Array
+                                        (
+                                            [id] => 96
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => tax_payable_to_hmrc
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [insurance_eg_life_home_and_contents] => Array
+                                        (
+                                            [id] => 97
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => insurance_eg_life_home_and_contents
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [other_benefits_eg_winter_fuel_or_cold_weather_payments] => Array
+                                        (
+                                            [id] => 98
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => other_benefits_eg_winter_fuel_or_cold_weather_payments
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [occupational_pensions] => Array
+                                        (
+                                            [id] => 99
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => occupational_pensions
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [office_of_the_public_guardian_fees] => Array
+                                        (
+                                            [id] => 100
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => office_of_the_public_guardian_fees
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [account_interest] => Array
+                                        (
+                                            [id] => 101
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => account_interest
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [deputy_s_security_bond] => Array
+                                        (
+                                            [id] => 102
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => deputy_s_security_bond
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [income_from_investments_property_or_dividends] => Array
+                                        (
+                                            [id] => 103
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => income_from_investments_property_or_dividends
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [client_s_personal_allowance_eg_spending_money] => Array
+                                        (
+                                            [id] => 104
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => client_s_personal_allowance_eg_spending_money
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [salary_or_wages] => Array
+                                        (
+                                            [id] => 105
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => salary_or_wages
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [cash_withdrawals] => Array
+                                        (
+                                            [id] => 106
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => cash_withdrawals
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [professional_fees_eg_solicitor_or_accountant_fees] => Array
+                                        (
+                                            [id] => 107
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => professional_fees_eg_solicitor_or_accountant_fees
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [refunds] => Array
+                                        (
+                                            [id] => 108
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => refunds
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [deputy_s_expenses] => Array
+                                        (
+                                            [id] => 109
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => deputy_s_expenses
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [bequests_eg_inheritance_gifts_received] => Array
+                                        (
+                                            [id] => 110
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => bequests_eg_inheritance_gifts_received
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [sale_of_investments_property_or_assets] => Array
+                                        (
+                                            [id] => 111
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => sale_of_investments_property_or_assets
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [gifts] => Array
+                                        (
+                                            [id] => 112
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => gifts
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [major_purchases_eg_property_vehicles] => Array
+                                        (
+                                            [id] => 113
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => major_purchases_eg_property_vehicles
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [compensation_or_damages_awards] => Array
+                                        (
+                                            [id] => 114
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => compensation_or_damages_awards
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [transfers_in_from_client_s_other_accounts] => Array
+                                        (
+                                            [id] => 115
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => transfers_in_from_client_s_other_accounts
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [property_maintenance_or_improvement] => Array
+                                        (
+                                            [id] => 116
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => property_maintenance_or_improvement
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [any_other_money_paid_in_and_not_listed_above] => Array
+                                        (
+                                            [id] => 117
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => any_other_money_paid_in_and_not_listed_above
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [investments_eg_shares_bonds_savings] => Array
+                                        (
+                                            [id] => 118
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => investments_eg_shares_bonds_savings
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [transfers_out_to_other_client_s_accounts] => Array
+                                        (
+                                            [id] => 119
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => transfers_out_to_other_client_s_accounts
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [any_other_money_paid_out_and_not_listed_above] => Array
+                                        (
+                                            [id] => 120
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => any_other_money_paid_out_and_not_listed_above
+                                            [amount] => 
+                                            [more_details] => 
+                                        )
+
+                                    [disability_living_allowance_or_personal_independence_payment] => Array
+                                        (
+                                            [id] => 81
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => disability_living_allowance_or_personal_independence_payment
+                                            [amount] => 91.00
+                                            [more_details] => 
+                                        )
+
+                                    [care_fees_or_local_authority_charges_for_care] => Array
+                                        (
+                                            [id] => 82
+                                            [account_id] => 3
+                                            [account_transaction_type_id] => care_fees_or_local_authority_charges_for_care
+                                            [amount] => 92.00
+                                            [more_details] => 
+                                        )
+
+                                )
+
+                            [transactions_old_sum] => 183
+                        )
+
+                )
+
+        )
+
+)

@@ -177,7 +177,7 @@ class RestInputOuputFormatter
             'data' => ($e instanceof HasDataInterface) ? $e->getData() : '', 
             'message' => $message,
             'stacktrace' => ($this->debug) ? 
-                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 1000))
+                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 64000))
                     : 'enable debug mode to see it',
             'code' => $code
         );

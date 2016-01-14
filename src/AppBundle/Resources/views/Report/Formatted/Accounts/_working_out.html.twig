@@ -1,0 +1,19 @@
+<div id="working-out">
+    <h2 class="section-heading sub-title" id="working-out-title">Working out</h2>
+    
+    <h3>Money in</h3>
+    {% include 'AppBundle:Report:Formatted/Accounts/_categories.html.twig' with {
+    'type': 'in',
+    'moneyType': 'moneyIn',
+    'transactions': report.transactionsIn,
+    'total':  report.getMoneyInTotal
+    }%}
+    
+    <h3>Money out</h3>
+    {% include 'AppBundle:Report:Formatted/Accounts/_categories.html.twig' with {
+    'type': 'out',
+    'moneyType': 'moneyOut',
+    'transactions': report.transactionsOut,
+    'total':  report.getMoneyOutTotal
+    }%}
+</div>

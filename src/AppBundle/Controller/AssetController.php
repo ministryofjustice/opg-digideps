@@ -84,9 +84,9 @@ class AssetController extends RestController
         
         if ($request->getMethod() == 'POST') {
             $this->validateArray($assetData, [
-                'report' => 'mustExist'
+                'report_id' => 'mustExist'
             ]);
-            $report = $this->findEntityBy('Report', $assetData['report']);
+            $report = $this->findEntityBy('Report', $assetData['report_id']);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
             $asset = new EntityDir\Asset();
             $asset->setReport($report);

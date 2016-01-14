@@ -27,7 +27,8 @@
         "mockery/mockery": "0.9.*",
         "sendgrid/sendgrid": "2.2.1",
         "snc/redis-bundle": "1.1.*",
-        "predis/predis": "1.0.*"
+        "predis/predis": "1.0.*",
+        "alphagov/govuk_frontend_toolkit": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
@@ -55,5 +56,11 @@
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://govuk-frontend-toolkit.appspot.com"
+        }
+    ]
 }

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
@@ -20,22 +21,24 @@ class ReportController extends RestController
 
         $reportData = $this->deserializeBodyContent($request);
 
-        if (!empty($reportData['id'])) {
-            // get existing report
-            $report = $this->findEntityBy('Report', $reportData['id']);
-            $this->denyAccessIfReportDoesNotBelongToUser($report);
-        } else {
-            // new report
-            $client = $this->findEntityBy('Client', $reportData['client']);
-            $this->denyAccessIfClientDoesNotBelongToUser($client);
-
-            $report = new EntityDir\Report();
-            $report->setClient($client);
+        // new report
+        if (empty($reportData['client']['id'])) {
+            throw new \InvalidArgumentException("Missing client.id");
         }
+        $client = $this->findEntityBy('Client', $reportData['client']['id']);
+        $this->denyAccessIfClientDoesNotBelongToUser($client);
+
+        $report = new EntityDir\Report();
+        $report->setClient($client);
 
         // add court order type
         $courtOrderType = $this->findEntityBy('CourtOrderType', $reportData['court_order_type']);
         $report->setCourtOrderType($courtOrderType);
+
+        $this->validateArray($reportData, [
+            'start_date' => 'notEmpty',
+            'end_date' => 'notEmpty',
+        ]);
 
         // add other stuff
         $report->setStartDate(new \DateTime($reportData['start_date']));
@@ -57,9 +60,8 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array) $request->query->get('groups'));
-        }
+        $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
+        $this->setJmsSerialiserGroups($groups);
 
         $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -98,7 +100,7 @@ class ReportController extends RestController
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));
 
         // send report if submitted
-        $reportContent = $this->forward('AppBundle:Report:formatted', ['reportId' => $currentReport->getId()])->getContent();
+        $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $currentReport->getId()])->getContent();
 
         $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
         $this->getMailSender()->send($reportEmail, [ 'html'], 'secure-smtp');
@@ -116,14 +118,22 @@ class ReportController extends RestController
         return ['newReportId' => $nextYearReport->getId()];
     }
 
-    public function formattedAction($reportId)
+    /**
+     * @Route("/report/{reportId}/formatted/{addLayout}")
+     * @Method({"GET"})
+     */
+    public function formattedAction($reportId, $addLayout)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
         $report = $this->getRepository('Report')->find($reportId); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        return $this->render('AppBundle:Report:formatted.html.twig', [
+        $template = $addLayout
+                  ? 'AppBundle:Report:formatted.html.twig'
+                  : 'AppBundle:Report:formatted_body.html.twig';
+
+        return $this->render($template, [
                 'report' => $report,
                 'client' => $report->getClient(),
                 'assets' => $report->getAssets(),
@@ -133,6 +143,31 @@ class ReportController extends RestController
                 'isEmailAttachment' => true,
                 'deputy' => $report->getClient()->getUsers()->first(),
         ]);
+    }
+    
+    /**
+     * @Route("/report/{reportId}/pdf")
+     * @Method({"GET"})
+     */
+    public function pdfAction($reportId)
+    {
+        try {
+            $html = $this->forward('AppBundle:Report:formatted', array(
+                'reportId'  => $reportId,
+                'addLayout' => true
+            ))->getContent();
+            
+            $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
+            
+            $response = new Response($pdf);
+            $response->headers->set('Content-Type', 'application/pdf');
+
+            return $response;
+        
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        
     }
 
 
@@ -148,6 +183,21 @@ class ReportController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
+
+        foreach (['transactions_in', 'transactions_out'] as $tk) {
+            if (isset($data[$tk])) {
+                foreach ($data[$tk] as $transactionRow) {
+                    $t = $report->getTransactionByTypeId($transactionRow['id']); /* @var $t EntityDir\Transaction */
+                    $t->setAmount($transactionRow['amount'] ?: null);
+                    if (array_key_exists('more_details', $transactionRow)) {
+                        $t->setMoreDetails($transactionRow['more_details']);
+                    }
+                    $this->getEntityManager()->flush($t);
+                }
+                $this->setJmsSerialiserGroups(['transactions']);
+            }
+        }
+
 
         if (array_key_exists('cot_id', $data)) {
             $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
@@ -186,6 +236,9 @@ class ReportController extends RestController
             $report->setFurtherInformation($data['further_information']);
         }
 
+        if (array_key_exists('balance_mismatch_explanation', $data)) {
+            $report->setBalanceMismatchExplanation($data['balance_mismatch_explanation']);
+        }
 
         $this->getEntityManager()->flush($report);
 

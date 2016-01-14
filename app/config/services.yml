@@ -7,7 +7,11 @@ services:
             - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }      
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }      
     em:
-        alias: doctrine.orm.entity_manager  
+        alias: doctrine.orm.entity_manager
+    doctrine.listener:
+        class: AppBundle\EventListener\DoctrineListener
+        tags:
+            - { name: doctrine.event_listener, event: prePersist, method: prePersist }
     # default transport + swift mailer
     mailer.transport.smtp.default:
         class: Swift_SmtpTransport
@@ -48,7 +52,13 @@ services:
         arguments: [@doctrine.orm.entity_manager, @mailFactory, @mailSender]
 
     monolog.processor.add_request_id:
-          class: AppBundle\Service\RequestIdLoggerProcessor
-          arguments:  [ @service_container ]
-          tags:
+        class: AppBundle\Service\RequestIdLoggerProcessor
+        arguments:  [ @service_container ]
+        tags:
               - { name: monolog.processor, method: processRecord }
+    wkhtmltopdf:
+        class: AppBundle\Service\WkHtmlToPdfGenerator
+        arguments:  
+           url: "http://wkhtmltopdf:80"
+           timeoutSeconds: 30
+            

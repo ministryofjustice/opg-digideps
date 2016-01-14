@@ -49,7 +49,8 @@
 
 
     <target name="phpunit">
-        <exec passthru="true" command="php vendor/phpunit/phpunit/phpunit -c tests/phpunit/phpunit.xml" checkreturn="true"></exec>
+        <exec passthru="true" command="bin/phpunit -c tests/phpunit/src/" checkreturn="true"></exec>
+        <exec passthru="true" command="bin/phpunit -c tests/phpunit/DataMigration" checkreturn="true"></exec>
     </target>
 
     <target name="optimise">
