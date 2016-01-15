@@ -96,7 +96,7 @@ Feature: User Self Registration
         Then the following fields should have an error:
             | self_registration_email |
 
-    @deputy @wip
+    @deputy
     Scenario: A user can self register and activate
         Given I load the application status from "init"
         And I reset the email log

@@ -25,7 +25,7 @@ trait AuthenticationTrait
      */
     public function iAmLoggedInToAdminAsWithPassword($email, $password)
     {
-        $adminUrl = $this->getSymfonyParam('admin_host');
+        $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl.'/logout');
         $this->iAmAtAdminLogin();
         $this->fillField('login_email',$email);
@@ -64,7 +64,7 @@ trait AuthenticationTrait
      */
     public function iAmAtAdminLogin()
     {
-        $adminUrl = $this->getSymfonyParam('admin_host');
+        $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl.'/login');
     }
     

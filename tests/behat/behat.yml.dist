@@ -113,16 +113,7 @@ default:
         Behat\Symfony2Extension: ~
         Behat\MinkExtension\ServiceContainer\MinkExtension:
             goutte: ~
-            base_url: http://digideps-client.local/
             default_session: goutte
-
-            browser_stack:
-                username: XXX
-                access_key: XXX
-
-                capabilities:
-                    browserstack-tunnel: true
-                    browserstack-debug: true
 
 chrome:
     extensions:
@@ -220,3 +211,15 @@ ie11:
                     browserVersion: 11.0
                     os: Windows
                     os_version: 8.1
+firefoxlocal:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            default_session: selenium2
+            selenium2: ~
+            
+headless:
+    extensions:
+        Behat\MinkExtension\ServiceContainer\MinkExtension:
+            goutte: ~
+            base_url: http://digideps-client.local/
+

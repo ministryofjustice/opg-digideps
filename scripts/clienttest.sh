@@ -23,4 +23,4 @@ if [ -f tests/behat/behat.yml ]; then
 else
     behatConfigFile=tests/behat/behat.yml.dist
 fi
-/sbin/setuser app bin/behat --config=$behatConfigFile --suite=$suitename --stop-on-failure
+/sbin/setuser app bin/behat --config=$behatConfigFile --suite=$suitename --profile=headless --stop-on-failure

@@ -105,9 +105,9 @@ trait EmailTrait
         $linkToClick = $this->getFirstLinkInEmailMatching($regexpr);
         
         if ($area == 'admin') {
-            $linkToClick = str_replace($this->getSymfonyParam('non_admin_host'), $this->getSymfonyParam('admin_host'), $linkToClick);
+            $linkToClick = str_replace($this->getSiteUrl(), $this->getAdminUrl(), $linkToClick);
         } else if ($area == 'deputy') {
-            $linkToClick = str_replace($this->getSymfonyParam('admin_host'), $this->getSymfonyParam('non_admin_host'), $linkToClick);
+            $linkToClick = str_replace($this->getAdminUrl(),$this->getSiteUrl(), $linkToClick);
         } else {
             throw new \RuntimeException(__METHOD__ . ": $area not defined");
         }

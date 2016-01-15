@@ -129,7 +129,7 @@ Feature: deputy / report / submit
         And I change the report "1" submitted to "false"
 
 
-    @deputy @wip
+    @deputy
     Scenario: Must agree
         Given I reset the email log
         When I load the application status from "report-submit-pre"
@@ -148,7 +148,7 @@ Feature: deputy / report / submit
         Then I load the application status from "report-submit-post"
 
         
-    @deputy @wip
+    @deputy
     Scenario: Must all agree
         Given I reset the email log
         When I load the application status from "report-submit-pre"
@@ -163,7 +163,7 @@ Feature: deputy / report / submit
         When I load the application status from "report-submit-post"
 
         
-    @deputy @wip
+    @deputy
     Scenario: If not all agree, need reason
         Given I reset the email log
         When I load the application status from "report-submit-pre"
@@ -178,7 +178,7 @@ Feature: deputy / report / submit
         When I load the application status from "report-submit-post"
 
 
-    @deputy @wip
+    @deputy
     Scenario: Submit with reason we dont all agree
         Given I reset the email log
         When I load the application status from "report-submit-pre"

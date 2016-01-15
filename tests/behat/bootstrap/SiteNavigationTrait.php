@@ -30,7 +30,7 @@ trait SiteNavigationTrait
      */
     public function iAmOnAdminPage($path)
     {
-        $adminUrl = $this->getSymfonyParam('admin_host');
+        $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl.$path);
     }
     

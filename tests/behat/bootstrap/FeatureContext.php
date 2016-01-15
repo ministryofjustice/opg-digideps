@@ -57,6 +57,21 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         return $this->getContainer()->getParameter($name);
     }
 
+    /**
+     * @return string
+     */
+    public function getAdminUrl()
+    {
+        return getenv('FRONTEND_ADMIN_HOST');
+    }
+
+    /**
+     * @return string
+     */
+    public function getSiteUrl()
+    {
+        return getenv('FRONTEND_NONADMIN_HOST');
+    }
     
     /**
      * @BeforeSuite
