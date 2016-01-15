@@ -30,7 +30,7 @@ class Version047 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql("DELETE FROM role (name, role) WHERE role='ROLE_AD'");
+        $this->addSql("DELETE FROM role WHERE role='ROLE_AD'");
         
     }
 }
