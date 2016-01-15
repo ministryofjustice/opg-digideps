@@ -329,19 +329,18 @@ class RestClient
             $options['headers']['X-Request-ID'] = $request->headers->get('x-request-id');
         }
         
+        $start = microtime(true);
         try {
-            $start = microtime(true);
             $response = $this->client->$method($url, $options);
             
-            if ($this->saveHistory) {
-                $this->logRequest($url, $method, $start, $options, $response);
-                
-            }
+            $this->logRequest($url, $method, $start, $options, $response);
             
             return $response;
         } catch (RequestException $e) {
             // request exception contains a body, that gets decoded and passed to RestClientException
             $this->logger->warning('RestClient | Api not running ? | ' . $url . ' | ' . $e->getMessage());
+            
+            $this->logRequest($url, $method, $start, $options, $e->getResponse());
             
             $data = [];
             
@@ -452,15 +451,19 @@ class RestClient
      * @param string $start
      * @param type $response
      */
-    private function logRequest($url, $method, $start, $options, ResponseInterface $response)
+    private function logRequest($url, $method, $start, $options, ResponseInterface $response = null)
     {
+        if (!$this->saveHistory) {
+            return;
+        }
+        
         $this->history[] = [
             'url' => $url,
             'method' => $method,
             'time' => microtime(true) - $start,
             'options'=> print_r($options, true),
             'responseCode' => $response->getStatusCode(),
-            'responseBody' => print_r(json_decode((string)$response->getBody(), true), true)
+            'responseBody' => $response ? print_r(json_decode((string)$response->getBody(), true), true) : $response,
         ];
     }
     
