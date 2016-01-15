@@ -43,7 +43,19 @@ Feature: admin / admin
         And I press "set_password_save"
         Then I should not see an "#error-summary" element
         And I should be on "/user/details"
-
+    
+    Scenario: check pages
+        Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        When I go to admin page "/admin/upload"
+        And I save the page as "admin-upload"
+        Then the response status code should be 200
+        When I go to admin page "/admin/stats"
+        And I save the page as "admin-stats"
+        Then the response status code should be 200
+        When I go to admin page "/user"
+        And I save the page as "admin-user"
+        Then the response status code should be 200
+        
 
     Scenario: change user password on admin area
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
