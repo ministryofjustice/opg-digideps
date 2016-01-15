@@ -26,20 +26,18 @@ class StatsControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
 
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::fixtures()->flush();
-
 
         // report 1
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$report1 = self::fixtures()->createReport(self::$client1, ['setEndDate'=>new \DateTime('yesterday')]);
         self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank'=>'bank1']);
-
+        self::fixtures()->createTransaction(self::$report1, 'rent'.microtime(1), 1);
+        self::fixtures()->createTransaction(self::$report1, 'mortgage'.microtime(1), 2);
+        self::fixtures()->createTransaction(self::$report1, 'salary'.microtime(1), 3);
+        
         // report2
-        self::$report2 = self::fixtures()->createReport(self::$client1)->setSubmitted(true);
+        self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true);
 
         self::fixtures()->flush();
-
-        self::fixtures()->getConnection()->query('UPDATE account_transaction SET amount=1 WHERE id < 10')->execute();
-
         self::fixtures()->clear();
     }
     
@@ -50,7 +48,7 @@ class StatsControllerTest extends AbstractTestController
     {
         parent::tearDownAfterClass();
 
-        self::fixtures()->getConnection()->query('DELETE FROM account_transaction WHERE account_id = '.self::$account1->getId())->execute();
+        self::fixtures()->getConnection()->query('DELETE FROM transaction')->execute();
 
         self::fixtures()->clear();
     }
@@ -90,9 +88,10 @@ class StatsControllerTest extends AbstractTestController
         $this->assertArrayHasKey('email', $first);
         $this->assertArrayHasKey('total_reports', $first);
         $this->assertArrayHasKey('active_reports', $first);
-        $this->assertArrayHasKey('active_reports_due', $first);
-        $this->assertArrayHasKey('active_reports_added_bank_accounts', $first);
-        $this->assertArrayHasKey('active_reports_added_transactions', $first);
+        //assert using "GreaterThanOrEqual" in case something else was added from previous tests
+        $this->assertGreaterThanOrEqual(1, $first['active_reports_due']);
+        $this->assertGreaterThanOrEqual(1, $first['active_reports_added_bank_accounts']);
+        $this->assertGreaterThanOrEqual(3, $first['active_reports_added_transactions']);
     }
 
 }

@@ -69,6 +69,7 @@ class Transaction
     public function __construct(Report $report, TransactionType $transactionType, $amount)
     {
         $this->report = $report;
+        $report->addTransaction($this);
 
         $this->transactionType = $transactionType;
         $this->amount = $amount;

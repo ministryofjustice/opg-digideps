@@ -161,17 +161,38 @@ class Fixtures
      */
     public function createDecision(EntityDir\Report $report, array $settersMap = [])
     {
-        $recision = new EntityDir\Decision();
-        $recision->setReport($report);
-        $recision->setClientInvolvedBoolean(true);
-        $recision->setDescription('description'.time());
+        $decision = new EntityDir\Decision();
+        $decision->setReport($report);
+        $decision->setClientInvolvedBoolean(true);
+        $decision->setDescription('description'.time());
         
         foreach ($settersMap as $k=>$v) {
-            $recision->$k($v);
+            $decision->$k($v);
         }
-        $this->em->persist($recision);
+        $this->em->persist($decision);
         
-        return $recision;
+        return $decision;
+    }
+    
+     /**
+     * @return EntityDir\Transaction
+     */
+    public function createTransaction(EntityDir\Report $report, $type, $amount, array $settersMap = [])
+    {
+        $ttype = new EntityDir\TransactionTypeIn();
+        $ttype->setId($type);
+        $ttype->setHasMoreDetails(false);
+        $ttype->setCategory('cat');
+        
+        $transaction = new EntityDir\Transaction($report, $ttype, $amount);
+        
+        foreach ($settersMap as $k=>$v) {
+            $transaction->$k($v);
+        }
+        $this->em->persist($ttype);
+        $this->em->persist($transaction);
+        
+        return $transaction;
     }
     
     public function flush()

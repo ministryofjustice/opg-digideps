@@ -5,7 +5,6 @@ namespace AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
-use AppBundle\Exception as AppExceptions;
 use AppBundle\Entity as EntityDir;
 
 /**
@@ -26,12 +25,11 @@ class StatsController extends RestController
         // pre-join data to reduce number of queries
         // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
         $qb = $this->get('em')->createQuery(
-            "SELECT u, c, r, a, t, role FROM AppBundle\Entity\User u
+            "SELECT u, c, r, a, role FROM AppBundle\Entity\User u
                 LEFT JOIN u.role role
                 LEFT JOIN u.clients c
                 LEFT JOIN c.reports r
                 LEFT JOIN r.accounts a
-                LEFT JOIN a.transactions t
                 WHERE role.role = 'ROLE_LAY_DEPUTY'");
         $users = $qb->getResult();
 
@@ -64,10 +62,8 @@ class StatsController extends RestController
                     $row['active_reports']++;
                     if ($report->isDue()) {
                         $row['active_reports_due']++;
-                    }
-                    foreach($report->getAccounts() as $account) {
-                        $row['active_reports_added_bank_accounts']++;
-                        foreach($account->getTransactions() as $transaction) {
+                        $row['active_reports_added_bank_accounts']+=count($report->getAccounts());
+                        foreach($report->getTransactions() as $transaction) {
                             if ($transaction->getAmount() !== null) {
                                 $row['active_reports_added_transactions']++;
                             }
