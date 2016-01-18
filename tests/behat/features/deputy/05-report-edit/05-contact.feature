@@ -46,7 +46,7 @@ Feature: deputy / report / edit user contact
         And I should see "46 Noth Road" in the "list-contacts" region
         And I click on "contact-n1"
         And I click on "delete-button"
-        Then the response status code should be 200
+        #Then the response status code should be 200
         And the URL should match "/report/\d+/contacts"
         Then I should not see the "list-contacts" region
 

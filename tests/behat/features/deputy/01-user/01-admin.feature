@@ -5,7 +5,7 @@ Feature: deputy / user / add user
         Given I reset the email log
         Given I am on admin login page
         And I save the page as "admin-login"
-        Then the response status code should be 200
+        #Then the response status code should be 200
         # test wrong credentials
         When I fill in the following:
             | login_email     | admin@publicguardian.gsi.gov.uk |

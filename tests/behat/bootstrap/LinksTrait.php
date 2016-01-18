@@ -39,9 +39,9 @@ trait LinksTrait
       
        $this->visit("/behat/{$secret}/{$link}");
        // non-200 response -> debug content
-       if (200 != $this->getSession()->getStatusCode()) {
-          $this->printLastResponse();
-       }
+       //if (200 != $this->getSession()->getStatusCode()) {
+       //   $this->printLastResponse();
+       //}
     }
 
     /**

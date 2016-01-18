@@ -31,7 +31,7 @@ trait DebugTrait
         $data = $session->getPage()->getContent();
         $bytes = file_put_contents($filename, $data);
         echo "- Url: " . $session->getCurrentUrl() . "\n";
-        echo "- Status code: " . $session->getStatusCode() . "\n";
+        //echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
         echo "- Page content: [".$data . ']';
     }

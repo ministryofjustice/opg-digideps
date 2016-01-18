@@ -23,4 +23,7 @@ if [ -f tests/behat/behat.yml ]; then
 else
     behatConfigFile=tests/behat/behat.yml.dist
 fi
-/sbin/setuser app bin/behat --config=$behatConfigFile --suite=$suitename --profile=headless --stop-on-failure
+
+export BEHAT_PARAMS="{\"extensions\" : {\"Behat\\\\MinkExtension\\\\ServiceContainer\\\\MinkExtension\" : {\"base_url\" : \"${FRONTEND_NONADMIN_HOST}\",\"browser_stack\" : { \"username\": \"$BROWSERSTACK_USER\", \"access_key\": \"$BROWSERSTACK_KEY\"}}}}" 
+echo BEHAT_PARAMS
+/sbin/setuser app bin/behat --config=$behatConfigFile --suite=${suitename} --profile=${PROFILE} --stop-on-failure
