@@ -6,7 +6,10 @@ var opg = opg || {};
     var Ga = function(){};
 
     /**
-     * Send
+     * Allow to track downloaded in Google analytics:
+     * sends GA pageview with the "href" attribute of the given element and 
+     * after "timeoutMs" seconds, redirects to the page
+     * 
      * @param JQuery selector
      * @param integer timeoutMs milliseconds
      */
