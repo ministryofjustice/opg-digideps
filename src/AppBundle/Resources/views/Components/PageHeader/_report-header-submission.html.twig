@@ -17,9 +17,14 @@
         </dl>
     </div>
     
-    {% set pdfLink = path('report_pdf', {'reportId': report.id}) %}
     <a class="pdflink" 
-       onclick="var that=this; ga('send', 'pageview', '{{ pdfLink }}');setTimeout(function(){location.href=that.href;},200);return false;"
-       href="{{ pdfLink }}">Download as pdf</a>
+       href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
 
+    <script>
+         $(document).ready(function() {
+            var ga = new opg.Ga();
+            ga.trackDownloadableLink($('.pdflink'), 250);
+        });
+    </script>   
+       
 </header>
