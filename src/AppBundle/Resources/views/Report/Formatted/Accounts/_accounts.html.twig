@@ -1,7 +1,7 @@
 <div class="section" id="accounts-section">
     <h2 class="section-heading">Accounts</h2>
 
-    {% if report.totalsOffset == 0 %}
+    {% if report.totalsMatch %}
         {% include 'AppBundle:Report:Formatted/Accounts/_good.html.twig' %}    
     {% else %}
         {% include 'AppBundle:Report:Formatted/Accounts/_bad.html.twig' %}
