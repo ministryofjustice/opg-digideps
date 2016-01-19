@@ -19,4 +19,11 @@
     
     <a class="pdflink" href="{{ path('report_pdf', {'reportId': report.id}) }}">Download as pdf</a>
 
+    <script>
+         $(document).ready(function() {
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('.pdflink'));
+        });
+    </script>   
+       
 </header>
