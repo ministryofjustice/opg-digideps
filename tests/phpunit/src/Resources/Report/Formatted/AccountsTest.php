@@ -10,7 +10,7 @@ class AccountsTest extends AbstractReportTest
 {
 
     private $templateName = 'AppBundle:Report:Formatted/_accounts.html.twig';
-
+    
     public function setup()
     {
         $this->markTestSkipped();
