@@ -3,7 +3,10 @@ var opg = opg || {};
 
 (function ($, opg) {
 
-    var Ga = function(){};
+    var Ga = function (options) {
+        options = options || {};
+        this.timeout = options.hasOwnProperty('timeout') ? options.timeout : 250;
+    };
 
     /**
      * Allow to track downloaded in Google analytics:
@@ -13,8 +16,9 @@ var opg = opg || {};
      * @param JQuery selector
      * @param integer timeoutMs milliseconds
      */
-    Ga.prototype.trackDownloadableLink = function (element, timeoutMs) {
-       
+    Ga.prototype.trackDownloadableLink = function (element) {
+        var _this = this;
+        
         element.click(function(e) {
             e.preventDefault();
             var link = $(e.target).attr('href');
@@ -26,7 +30,7 @@ var opg = opg || {};
             // continue to load page
             setTimeout(function(){
                 location.href = link;
-            }, timeoutMs);
+            }, _this.timeout);
             
             return false;
         }); 

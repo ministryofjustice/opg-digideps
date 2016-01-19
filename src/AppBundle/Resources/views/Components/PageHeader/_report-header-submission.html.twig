@@ -21,8 +21,8 @@
 
     <script>
          $(document).ready(function() {
-            var ga = new opg.Ga();
-            ga.trackDownloadableLink($('.pdflink'), 250);
+            var ga = new opg.Ga({'timeout': 250});
+            ga.trackDownloadableLink($('.pdflink'));
         });
     </script>   
        
