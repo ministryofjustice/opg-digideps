@@ -1,35 +1,47 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
-{% block pageTitle %}Complete the deputy report{% endblock %}
-{% block contentClass %}external-report{% endblock %}
-{% set page = 'reportPeriod' %}
-
 {% set translationDomain = "report-display" %}
+{% trans_default_domain translationDomain %}
+
+{% block pageTitle %}Complete the deputy report{% endblock %}
+
+
+
+
 {% block pageContent %}
+    {% block pageHeader %}
+        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
+    {% endblock %}
+
+    <div id="page-section-title-container" class="page-section-title-container">
+        <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </div>
+    
+    
+    {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+    'previousLink': path("report_overview" , {'reportId': report.id }),
+    'previousLabel': 'Edit this report',
+    'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+    'nextLabel': 'Sign and submit',
+    'position': 'top'
+    } %}
+    <a name="pageBody"></a>
+
+    
 
 
-    {% if report.submitted == true %}
-        <div class="navigation-back report-back">
-          <a href="{{ path('client_home') }}" class="behat-link-back-to-client">< Back to your client</a>
+    <div id="page-body">
+        {{ body | raw }}
+        
+        <div id="body-footer-nav">
+            {% include 'AppBundle:Components:nextprevioussimple.html.twig' with {
+            'previousLink': path("report_overview" , {'reportId': report.id }),
+            'previousLabel': 'Edit this report',
+            'nextLink': path("report_add_further_info" , {'reportId': report.id }),
+            'nextLabel': 'Sign and submit',
+            'position': 'bottom'
+            } %}
         </div>
-    {% endif %}
+    </div>
 
-
-    <!-- set class to external-report -->
-    {% include 'AppBundle:Components/PageHeader:_report-header-submission.html.twig' %}
-
-    {%  if report.submitted == false %}
-        {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
-        transDomain: translationDomain
-        } %}
-    {% endif %}
-
-    {{ body | raw }}
-
-   
-{% endblock %}
-
-{% block popups %}
-  {% if not isEmailAttachment%}
-      {% include 'AppBundle:Components/Resources:_popups.html.twig' %}
-  {% endif %}
 {% endblock %}
