@@ -238,10 +238,10 @@ class ReportController extends AbstractController
     }
     
     /**
-     * @Route("/report/{reportId}/display", name="report_display")
+     * @Route("/report/{reportId}/review", name="report_review")
      * @Template()
      */
-    public function displayAction($reportId, $isEmailAttachment = false)
+    public function reviewAction($reportId)
     {
         $restClient = $this->get('restClient');
         
@@ -251,7 +251,6 @@ class ReportController extends AbstractController
 
         return [
             'report' => $report,
-            'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
             'body' => $body
         ];
