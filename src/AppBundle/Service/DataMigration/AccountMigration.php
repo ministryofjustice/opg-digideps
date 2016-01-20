@@ -157,7 +157,8 @@ class AccountMigration
         $reports = $this->getReports();
         foreach ($reports as $report) {
             $reportId = $report['id'];
-            $ret[$reportId] = 0;
+            $ret[$reportId]['added'] = 0;
+            $ret[$reportId]['before'] = $this->getTransactionNumber($reportId);
             foreach ($transactionTypes as $transactionTypeId => $row) {
                 $containsTransaction = isset($report['transactions_new'][$transactionTypeId]);
                 if (!$containsTransaction) {
@@ -168,12 +169,18 @@ class AccountMigration
                         ':md' => null,
                     ];
                     $stmt->execute($params);
-                    $ret[$reportId]++;
+                    $ret[$reportId]['added']++;
                 }
             }
+            $ret[$reportId]['after'] = $this->getTransactionNumber($reportId);
         }
 
         return $ret;
+    }
+    
+    private function getTransactionNumber($reportId)
+    {
+        return $this->pdo->query('SELECT COUNT(*) FROM transaction WHERE report_id = ' . $reportId)->fetch(\PDO::FETCH_COLUMN);
     }
     
     public function getReports()
