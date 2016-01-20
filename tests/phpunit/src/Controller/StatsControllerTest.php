@@ -40,18 +40,6 @@ class StatsControllerTest extends AbstractTestController
         self::fixtures()->flush();
         self::fixtures()->clear();
     }
-    
-    /**
-     * clear fixtures 
-     */
-    public static function tearDownAfterClass()
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->getConnection()->query('DELETE FROM transaction')->execute();
-
-        self::fixtures()->clear();
-    }
 
 
     public function setUp()
