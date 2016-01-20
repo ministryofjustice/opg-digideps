@@ -5,24 +5,32 @@
     
     #safeguarding-section table {
         width: auto;
+
         td,
         th {
-            border-bottom: none;
+            border-bottom: 0;
         }
+
         td.checkbox {
             border-bottom: 1px solid $black;
         }
+
     }
 
     .hero {
         margin: 0;
-        h2, .message, .total {
-            color: #000;
+        
+        h2, 
+        .message, 
+        .total {
+            color: $absBlack;
         }
+        
         .message {
             font-size: 22px;
             margin: 10px 0 10px 0;
         }
+    
     }
 
     #decisions-list {
@@ -36,11 +44,13 @@
     
 .page-report-header {
     @extend %contain-floats;
+    
     .item {
         width: 60%;
         float: left;
         margin-top: 0;
     }
+
 }
 
 .pdflink {

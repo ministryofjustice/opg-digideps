@@ -1,3 +1,4 @@
+// scss-lint:disable PlaceholderInExtend
 .button-grey {
     @extend .button;
     @include button ($grey-3);
