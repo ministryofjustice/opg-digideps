@@ -9,7 +9,7 @@
     {% if report.submitted == true %}
         <div id="global-breadcrumb">
             <ol>
-                <li class="bread-crumbs"><a href="{{ path('client_home') }}">Your client</a></li>
+                <li class="bread-crumbs"><a id="back-to-client" href="{{ path('client_home') }}">Your client</a></li>
                 <li class="bread-crumbs">{{ 'page.pageSectionTitle' | trans }}</li>
             </ol>
         </div>
