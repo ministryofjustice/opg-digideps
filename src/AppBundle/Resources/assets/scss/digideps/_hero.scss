@@ -6,7 +6,9 @@
     text-align: center;
     overflow: hidden;
     
-    h2, .message, .total {
+    h2, 
+    .message, 
+    .total {
         margin: 30px 0 37px 0;
         color: $white;
     }
@@ -56,9 +58,11 @@
         
         .hero-column {
             width: 50%;
+    
             &:first-child {
                 border-right: 1px solid $white;
             }
+    
         }
         
     }
@@ -82,9 +86,11 @@
     
     &.orange {
         background: $orange;
+        
         &.white-text {
             color: $white;
         }
+    
     }
     
     &.lightorange {
@@ -105,32 +111,39 @@
     
     &.two-columns {
         padding: 20px;
+        
         .left {
             float: left;
             width: 80%;
             text-align: left;
+        
             .title {
                 font-weight: 400;
                 font-size: 1.1em;
-                margin-bottom: 0px;
+                margin-bottom: 0;
                 
                 &.text-medium {
                     font-size: 1.2em;
                 }
             }
+        
             .description {
                 color: $grey-1;
-                margin-bottom: 0px;
+                margin-bottom: 0;
             }
+        
         }
+        
         .right {
             float: left;
             width: 20%;
             text-align: right;
+            
             &.text-big {
                 font-size: 1.3em;
                 font-weight: 700;
             }
+            
         }
     }
 }
