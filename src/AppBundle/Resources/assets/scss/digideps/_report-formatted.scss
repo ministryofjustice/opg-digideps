@@ -41,11 +41,12 @@
         float: left;
         margin-top: 0;
     }
-    .pdflink {
-        background: url("images/pdf.png") top left no-repeat;
-        padding-left: 40px;
-        float: right;
-        height: 32px;
-        padding-top: 5px;
-    }
+}
+
+.pdflink {
+    background: url("images/pdf.png") top left no-repeat;
+    padding-left: 40px;
+    float: right;
+    height: 32px;
+    padding-top: 5px;
 }
