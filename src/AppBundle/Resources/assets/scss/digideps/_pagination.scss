@@ -10,6 +10,12 @@
         padding: 1em 0 0 0;
     }
 
+    @include ie(6) {
+        .first {
+            text-align: left;
+        }
+    }
+    
     ul {
         margin: 0;
         padding: 0;
@@ -24,6 +30,18 @@
         padding: 0;
         width: 49%;
 
+        @include media-down(mobile) {
+            &.previous,
+            &.next {
+                float: none;
+                width: 100%;
+            }
+
+            &.next a {
+                text-align: right;
+            }
+        }
+        
         a {
             background-color: transparent;
             display: block;
@@ -41,7 +59,7 @@
 
             .pagination-label {
                 @include core-27($line-height: (33.75 / 27));
-                margin-bottom: 0.1em;
+                margin-bottom: .1em;
                 display: block;
             }
 
@@ -53,52 +71,45 @@
         &.next {
             float: right;
             text-align: right;
-        }
 
-        &.next a:before {
-            background: transparent file-url("arrow-sprite.png") no-repeat -102px -11px;
-            margin: -4px -32px 0 0;
-            display: block;
-            float: right;
-            width: 30px;
-            height: 38px;
-            content: " ";
-        }
+            a {
+                padding: .75em 3em .75em 0;
+                
+                &::before {
+                    background: transparent file-url("arrow-sprite.png") no-repeat -102px -11px;
+                    margin: -4px -32px 0 0;
+                    display: block;
+                    float: right;
+                    width: 30px;
+                    height: 38px;
+                    content: " ";
+                }
+                
+            }
 
-        &.previous a:before {
-            background: transparent file-url("arrow-sprite.png") no-repeat -20px -11px;
-            margin: -4px 0 0 -32px;
-            display: block;
-            float: left;
-            width: 30px;
-            height: 38px;
-            content: " ";
         }
-
+        
         &.previous {
             float: left;
             text-align: left;
-        }
-
-        &.previous a {
-            padding: 0.75em 0 0.75em 3em;
-        }
-
-        &.next a {
-            padding: 0.75em 3em 0.75em 0;
-        }
-
-        @include media-down(mobile) {
-            &.previous,
-            &.next {
-                float: none;
-                width: 100%;
+            
+            a {
+                padding: .75em 0 .75em 3em;
+                
+                &::before {
+                    background: transparent file-url("arrow-sprite.png") no-repeat -20px -11px;
+                    margin: -4px 0 0 -32px;
+                    display: block;
+                    float: left;
+                    width: 30px;
+                    height: 38px;
+                    content: " ";
+                }
+            
             }
 
-            &.next a {
-                text-align: right;
-            }
         }
+        
     }
 
     .first,
@@ -112,7 +123,7 @@
         span {
             display: block;
             min-height: 4.5em;
-            padding: 0.75em 5%;
+            padding: .75em 5%;
             width: 90%;
 
             @include ie-lte(7) {
@@ -122,13 +133,8 @@
 
         .pagination-label {
             display: block;
-            margin-bottom: 0.5em;
+            margin-bottom: .5em;
         }
     }
-
-    @include ie(6) {
-        .first {
-            text-align: left;
-        }
-    }
+    
 }
