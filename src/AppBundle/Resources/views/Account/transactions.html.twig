@@ -67,34 +67,60 @@
 </script>
 <script type="text/javascript">
     $( document ).ready(function() {
-        var transactionHasChanged = false;
-        var message = "{{ 'leaveWarning' | trans | raw }}";
         
-        $(".transaction-value").on("keyup input paste", function(){
-            transactionHasChanged = true;
-        });
-        $('form').on('submit', function(e) {
-            transactionHasChanged = false;
+        var form = $('form.expanding-transaction-table');
 
-            /*
+        function done(data) {
+            console.log('done')
+            console.log(data);
+        }
+
+        function fail(data) {
+            console.log(data);
+            if (data.errors.errorCode === 1001 && data.errors.hasOwnProperty('fields')) {
+                showFieldErrors(data.errors.fields);
+            } else {
+                showGeneralError(data.errors.description);
+            }
+            
+        }
+        
+        function showFieldErrors(errors) {
+            console.log(errors);
+            
+            // for each one use the id to get the input value
+            
+            // now get a reference to it's parent
+            
+            // get a reference to the label.form-label below it
+            
+            
+            
+        }
+        
+        function showGeneralError(description) {
+            console.log(description);    
+        }
+
+        function clearErrorDisplay() {
+            console.log('clear errors');
+        }
+        
+        function autosave(event) {
+            var data = $(this).serialize();
+            event.preventDefault();
             $.ajax({
-                url: "{{ path('accounts_money_save_json', {'reportId': report.id, 'type': jsonEndpoint}) }}",
-                type: "put",
-                data: $( this ).serialize() ,
-                success: function (response) {
-                   alert('Form saved');
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                   alert('Cannot save form');
-                }
+                type: 'PUT',
+                url: '{{ path('accounts_money_save_json', {'reportId': report.id, 'type': jsonEndpoint}) }}',
+                data: data,
+                done: done,
+                fail: fail
             });
+        }
 
-            return false;
-            */
-            return true;
-        });
-        $(window).bind("beforeunload",function() {
-            if (transactionHasChanged) return message;
-        });
+        //form.submit(autosave);
+        form.find(['input']).on('blur', autosave);
+        $(window).on("beforeunload", autosave);
+
     });
 </script>
