@@ -62,7 +62,7 @@ class MessageUtils
         }
         
         foreach ((array)$array['parts'] as $part) {
-            $message->addPart($part['body'], base64_decode($part['contentType']));
+            $message->addPart($part['body'], $part['contentType']);
         }
         
         return $message;

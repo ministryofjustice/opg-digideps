@@ -80,10 +80,10 @@ class AccountMigrationTest extends WebTestCase
 
     }
 
-    public function testMigrateAll()
+    public function testMigrate052and053()
     {
         // migrate until 52
-        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv', $out);
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 052', $out);
 
         // get updated data
         $reports = $this->am->getReports();
@@ -112,11 +112,14 @@ class AccountMigrationTest extends WebTestCase
         
 //        file_put_contents(__DIR__ . '/new.array', print_r($reports, true));
 //        file_put_contents(__DIR__ . '/old.array', print_r($this->initialReports, true));
-    }
-
-    public function tearDown()
-    {
-        // execute this test separately so that the "src" tests don't get affected
+        
+        
+        // run 053 to fix missing data
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 053', $out);
+        // get updated data
+        $reportsUpdated = $this->am->getReports();
+        $this->assertCount(73, $reportsUpdated[1]['transactions_new']);
+        $this->assertCount(73, $reportsUpdated[2]['transactions_new']);
     }
 
 }

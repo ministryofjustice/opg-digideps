@@ -25,7 +25,7 @@ class MessageUtilsTest extends \PHPUnit_Framework_TestCase
         $array = MessageUtils::messageToArray($message);
         
         $this->assertEquals('s', $array['subject']);
-        $this->assertEquals('b', $array['parts'][0]['body']);
+        $this->assertEquals(base64_encode('b'), $array['parts'][0]['body']);
         $this->assertEquals('ct', $array['parts'][0]['contentType']);
     }
     
