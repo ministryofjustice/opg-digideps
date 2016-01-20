@@ -1,4 +1,5 @@
-/* globals jQuery */
+/* globals jQuery, ga */
+/*jshint browser: true */
 var opg = opg || {};
 
 (function ($, opg) {
