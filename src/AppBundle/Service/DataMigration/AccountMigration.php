@@ -144,6 +144,45 @@ class AccountMigration
         }
     }
 
+    public function addMissingTransactions()
+    {
+        $transactionTypes = $this->fetchAll('SELECT * from transaction_type');
+
+        // add transactions
+        $stmt = $this->pdo->prepare(
+            "INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)"
+            . " VALUES(:id, :transaction_type_id, :amount, :md)");
+
+        $ret = [];
+        $reports = $this->getReports();
+        foreach ($reports as $report) {
+            $reportId = $report['id'];
+            $ret[$reportId]['added'] = 0;
+            $ret[$reportId]['before'] = $this->getTransactionNumber($reportId);
+            foreach ($transactionTypes as $transactionTypeId => $row) {
+                $containsTransaction = isset($report['transactions_new'][$transactionTypeId]);
+                if (!$containsTransaction) {
+                    $params = [
+                        ':id' => $report['id'],
+                        ':transaction_type_id' => $transactionTypeId,
+                        ':amount' => null,
+                        ':md' => null,
+                    ];
+                    $stmt->execute($params);
+                    $ret[$reportId]['added']++;
+                }
+            }
+            $ret[$reportId]['after'] = $this->getTransactionNumber($reportId);
+        }
+
+        return $ret;
+    }
+    
+    private function getTransactionNumber($reportId)
+    {
+        return $this->pdo->query('SELECT COUNT(*) FROM transaction WHERE report_id = ' . $reportId)->fetch(\PDO::FETCH_COLUMN);
+    }
+    
     public function getReports()
     {
         $reports = $this->fetchAll('SELECT * from report');

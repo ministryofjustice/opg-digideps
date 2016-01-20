@@ -5,6 +5,8 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
 
+use Fixtures;
+
 abstract class AbstractTestController extends WebTestCase
 {
     /**
@@ -24,13 +26,14 @@ abstract class AbstractTestController extends WebTestCase
     {
         parent::setUpBeforeClass();
         
+        Fixtures::restoreDb();
+        
         self::$frameworkBundleClient = static::createClient([ 'environment' => 'test',
                                                'debug' => true ]);
         $em = self::$frameworkBundleClient->getContainer()->get('em');
         
+        self::$fixtures = new Fixtures($em);
         $em->clear();
-        
-        self::$fixtures = new \Fixtures($em);
     }
     
     /**

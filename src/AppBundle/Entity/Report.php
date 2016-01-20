@@ -841,9 +841,18 @@ class Report
      */
     public function getTransactionsIn()
     {
-        return $this->transactions->filter(function($t) {
-            return $t->getTransactionType() instanceof TransactionTypeIn;
+        $ret = [];
+        
+        foreach ($this->transactions as $t) {
+            if ($t->getTransactionType() instanceof TransactionTypeIn) {
+                $ret[] = $t;
+            }
+        }
+        uasort($ret, function ($t1, $t2) {
+            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
         });
+        
+        return $ret;
     }
 
     /**
@@ -858,9 +867,18 @@ class Report
      */
     public function getTransactionsOut()
     {
-        return $this->transactions->filter(function($t) {
-            return $t->getTransactionType() instanceof TransactionTypeOut;
+        $ret = [];
+        
+        foreach ($this->transactions as $t) {
+            if ($t->getTransactionType() instanceof TransactionTypeOut) {
+                $ret[] = $t;
+            }
+        }
+        uasort($ret, function ($t1, $t2) {
+            return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
         });
+        
+        return $ret;
     }
 
 

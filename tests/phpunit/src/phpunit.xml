@@ -8,7 +8,10 @@
 >
     <testsuites>
         <testsuite name="src">
-            <directory>./</directory>
+            <directory>./Controller</directory>
+            <directory>./Entity</directory>
+            <!--<directory>./Resources</directory>-->
+            <directory>./Service</directory>
         </testsuite>
     </testsuites>
     <php>
