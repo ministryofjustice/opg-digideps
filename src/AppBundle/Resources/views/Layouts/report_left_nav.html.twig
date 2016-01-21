@@ -36,26 +36,8 @@
     </div>
     
     <script>
-        
         $(document).ready(function () {
-            
-            var wrapper = $('#page-section-title-wrapper');
-            var top = wrapper.offset().top;
-            
-            window.onscroll = function () {
-                
-                // if user scrolls to 60px from the top of the left div
-                if (window.pageYOffset >= top) {
-                    console.log('make sticky')
-                    wrapper.addClass('fixed');
-                } else {
-                    console.log('unstick');
-                    wrapper.removeClass('fixed');
-                }
-            }
-            
-            
+            new GOVUK.StickyHeader('#page-section-title-wrapper');
         });
-        
     </script>
 {% endblock %}
