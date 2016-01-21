@@ -16,6 +16,22 @@
         }
     }
     
+    
+    &.top {
+        margin: 2em 0 2em 0;
+        padding: 0;
+        border-top: 0;
+        border-bottom: 1px solid $border-colour;
+    
+        .previous a {
+            padding-left: 1.5em;
+        }
+        
+        .next a {
+            padding-right: 1.5em;
+        }
+    }
+    
     ul {
         margin: 0;
         padding: 0;
@@ -74,40 +90,39 @@
 
             a {
                 padding: .75em 3em .75em 0;
-                
-                &::before {
-                    background: transparent file-url("arrow-sprite.png") no-repeat -102px -11px;
-                    margin: -4px -32px 0 0;
-                    display: block;
-                    float: right;
-                    width: 30px;
-                    height: 38px;
-                    content: " ";
-                }
-                
             }
-
+            
+            
+            a::before {
+                background: transparent file-url("arrow-sprite.png") no-repeat -102px -11px;
+                margin: -4px -32px 0 0;
+                display: block;
+                float: right;
+                width: 30px;
+                height: 38px;
+                content: " ";
+            }
+        
         }
         
         &.previous {
             float: left;
             text-align: left;
-            
+
             a {
                 padding: .75em 0 .75em 3em;
-                
-                &::before {
-                    background: transparent file-url("arrow-sprite.png") no-repeat -20px -11px;
-                    margin: -4px 0 0 -32px;
-                    display: block;
-                    float: left;
-                    width: 30px;
-                    height: 38px;
-                    content: " ";
-                }
-            
             }
 
+            a::before {
+                background: transparent file-url("arrow-sprite.png") no-repeat -20px -11px;
+                margin: -4px 0 0 -32px;
+                display: block;
+                float: left;
+                width: 30px;
+                height: 38px;
+                content: " ";
+            }
+            
         }
         
     }

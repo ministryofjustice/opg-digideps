@@ -39,7 +39,7 @@ Feature: deputy / report / submit
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
-        When I go to "/report/1/display"
+        When I go to "/report/1/review"
         Then the response status code should be 200
         And I save the page as "report-submit-display"
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
