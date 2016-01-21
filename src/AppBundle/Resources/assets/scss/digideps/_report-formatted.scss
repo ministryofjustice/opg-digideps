@@ -1,33 +1,26 @@
-.external-report .formatted-report {
+.formatted-report {
 
     width: 800px;
     margin: 0 auto;
-
-    h1, 
-    #case-number,
-    #report-header,
-    #report-dates {
-        display: none;
-    }
     
     #safeguarding-section table {
         width: auto;
-        
+
         td,
         th {
             border-bottom: 0;
         }
-        
+
         td.checkbox {
             border-bottom: 1px solid $black;
         }
-        
+
     }
 
     .hero {
         margin: 0;
         
-        h2,
+        h2, 
         .message, 
         .total {
             color: $absBlack;
@@ -37,16 +30,14 @@
             font-size: 22px;
             margin: 10px 0 10px 0;
         }
-        
+    
     }
 
     #decisions-list {
-    
         .value.textarea {
             font-size: 19px;
             font-weight: bold;
         }
-    
     }
     
 }
@@ -59,13 +50,13 @@
         float: left;
         margin-top: 0;
     }
-    
-    .pdflink {
-        background: url("images/pdf.png") top left no-repeat;
-        padding-left: 40px;
-        float: right;
-        height: 32px;
-        padding-top: 5px;
-    }
-    
+
+}
+
+.pdflink {
+    background: url("images/pdf.png") top left no-repeat;
+    padding-left: 40px;
+    float: right;
+    height: 32px;
+    padding-top: 5px;
 }

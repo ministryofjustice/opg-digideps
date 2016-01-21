@@ -15,11 +15,11 @@ edit: "Edit"
 dueDate: "Due date"
 reportIsReady: "Report is ready to submit"
 yourFinalStep: "Your final step"
-signAndSubmit: "Sign and submit"
+signAndSubmit: "Check and submit"
 readyToSubmit: "Ready to submit"
 notFinished: "Not finished"
 sectionsRemaining: "sections remaining"
-
+overview: Report overview
 
 contacts:
     subSectionTitle: "Contacts"

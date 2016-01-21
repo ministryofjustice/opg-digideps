@@ -67,7 +67,7 @@ class HeaderTest extends WebTestCase
         $link = $submitLink->eq(0);
         $url = $link->attr('href');
         
-        $this->assertContains('/report/1/add_further_information', $url);
+        $this->assertContains('/report/1/review', $url);
         
     }
 
