@@ -11,9 +11,16 @@
         'report': report
     } %}
 
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{% block title %}{% endblock %}</h1>
-        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    <div id="page-section-title-wrapper" class="page-section-title-wrapper">
+        <div id="page-section-title-container" class="page-section-title-container">
+            <h1>{% block title %}{% endblock %}</h1>
+            <span class="info">
+                {% block info %}
+                    {% include 'AppBundle:Components:_helpline.html.twig' %}
+                {% endblock %}
+            </span>
+            
+        </div>
     </div>
     
     <div class="left-nav-container">
@@ -27,4 +34,10 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        $(document).ready(function () {
+            new GOVUK.StickyHeader('#page-section-title-wrapper');
+        });
+    </script>
 {% endblock %}

@@ -4,7 +4,7 @@
     {% trans_default_domain translationDomain %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.balanceAccounts' | trans({}, "report-accounts") }}{% endblock %}
 
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
