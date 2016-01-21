@@ -40,7 +40,7 @@ class StatsController extends RestController
         foreach ($users as $user) { /** @var $user EntityDir\User */
             $row = [
                 'id'=>$user->getId(),
-                'created_at' => $user->getRegistrationDate()->format('Y-m-d'),
+                'created_at' => $user->getRegistrationDate() ? $user->getRegistrationDate()->format('Y-m-d') : '-',
                 'email' => $user->getEmail(),
                 'name' => $user->getFirstname() . ' ' . $user->getLastname(),
                 'last_logged_in' => $user->getLastLoggedIn() ?  $user->getLastLoggedIn()->format('Y-m-d') : '-',
