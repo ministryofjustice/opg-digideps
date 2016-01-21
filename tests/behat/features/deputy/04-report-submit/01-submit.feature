@@ -39,8 +39,8 @@ Feature: deputy / report / submit
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
-        When I go to "/report/1/display"
-        #Then the response status code should be 200
+        When I go to "/report/1/review"
+        Then the response status code should be 200
         And I save the page as "report-submit-display"
         And the last email containing a link matching "/report/[0-9]+/overview" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         And the second_last email should have been sent to "behat-digideps@digital.justice.gov.uk"
@@ -129,7 +129,7 @@ Feature: deputy / report / submit
         And I change the report "1" submitted to "false"
 
 
-    @deputy
+    @deputy @wip
     Scenario: Must agree
         Given I reset the email log
         When I load the application status from "report-submit-pre"
@@ -148,7 +148,7 @@ Feature: deputy / report / submit
         Then I load the application status from "report-submit-post"
 
         
-    @deputy
+    @deputy @wip
     Scenario: Must all agree
         Given I reset the email log
         When I load the application status from "report-submit-pre"
@@ -163,7 +163,7 @@ Feature: deputy / report / submit
         When I load the application status from "report-submit-post"
 
         
-    @deputy
+    @deputy @wip
     Scenario: If not all agree, need reason
         Given I reset the email log
         When I load the application status from "report-submit-pre"
@@ -178,7 +178,7 @@ Feature: deputy / report / submit
         When I load the application status from "report-submit-post"
 
 
-    @deputy
+    @deputy @wip
     Scenario: Submit with reason we dont all agree
         Given I reset the email log
         When I load the application status from "report-submit-pre"

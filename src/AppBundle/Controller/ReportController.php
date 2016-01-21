@@ -178,7 +178,6 @@ class ReportController extends AbstractController
         ];
     }
     
-    
     /**
      * Page displaying the report has been submitted
      * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
@@ -238,22 +237,29 @@ class ReportController extends AbstractController
     }
     
     /**
-     * @Route("/report/{reportId}/display", name="report_display")
+     * @Route("/report/{reportId}/review", name="report_review")
      * @Template()
      */
-    public function displayAction($reportId, $isEmailAttachment = false)
+    public function reviewAction($reportId)
     {
         $restClient = $this->get('restClient');
-        
-        $report = $this->getReport($reportId, ['basic']);
+
+        /** @var \AppBundle\Entity\Report $report */
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+
+        /** @var TranslatorInterface $translator*/
+        $translator =  $this->get('translator');
+
+        // check status
+        $reportStatusService = new ReportStatusService($report, $translator);
 
         $body = $restClient->get('report/' . $reportId . '/formatted/0', 'raw');
 
         return [
             'report' => $report,
-            'isEmailAttachment' => $isEmailAttachment,
             'deputy' => $this->getUser(),
-            'body' => $body
+            'body' => $body,
+            'reportStatus' => $reportStatusService
         ];
     }
     
