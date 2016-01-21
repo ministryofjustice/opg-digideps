@@ -4,7 +4,9 @@
     {% trans_default_domain translationDomain %}
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
-    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}: Money in{% endblock %}
+    {% block info %}This is info{% endblock %}
     
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}

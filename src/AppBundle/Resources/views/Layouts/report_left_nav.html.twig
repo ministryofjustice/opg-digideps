@@ -11,9 +11,16 @@
         'report': report
     } %}
 
-    <div id="page-section-title-container" class="page-section-title-container">
-        <h1>{% block title %}{% endblock %}</h1>
-        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    <div id="page-section-title-wrapper" class="page-section-title-wrapper">
+        <div id="page-section-title-container" class="page-section-title-container">
+            <h1>{% block title %}{% endblock %}</h1>
+            <span class="info">
+                {% block info %}
+                    {% include 'AppBundle:Components:_helpline.html.twig' %}
+                {% endblock %}
+            </span>
+            
+        </div>
     </div>
     
     <div class="left-nav-container">
@@ -27,4 +34,28 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        
+        $(document).ready(function () {
+            
+            var wrapper = $('#page-section-title-wrapper');
+            var top = wrapper.offset().top;
+            
+            window.onscroll = function () {
+                
+                // if user scrolls to 60px from the top of the left div
+                if (window.pageYOffset >= top) {
+                    console.log('make sticky')
+                    wrapper.addClass('fixed');
+                } else {
+                    console.log('unstick');
+                    wrapper.removeClass('fixed');
+                }
+            }
+            
+            
+        });
+        
+    </script>
 {% endblock %}
