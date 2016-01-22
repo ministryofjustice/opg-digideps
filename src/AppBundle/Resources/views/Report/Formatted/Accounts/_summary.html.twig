@@ -19,9 +19,9 @@
                         <div class="account-name">{{ account.bank }} {{ account.accountType }}</div>
                         <div class="account-number">****{{ account.accountNumber }}, {{ account.sortCode | split('', 2) | join('-') }}</div>
                     </td>
-                    <td class="numeric grey">£{{ account.openingBalance }}</td>
+                    <td class="numeric grey">£{{ account.openingBalance | money_format }}</td>
                     <td class="numeric ">£ {{ (account.closingBalance - account.openingBalance) | money_format }}</td>
-                    <td class="numeric grey">£{{ account.closingBalance }}</td>
+                    <td class="numeric grey">£{{ account.closingBalance | money_format }}</td>
                 </tr>
             {% endfor %}
                 <tr class="totals">
