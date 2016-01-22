@@ -5,7 +5,7 @@
     <div class="transaction-label">{{ transaction.type | trans }}</div>
     <div class="transaction-value">
         <span class="currency">{{ 'currencySymbol' | trans }}</span>
-        <span class="amount">{{ transaction.amount | number_format(2, '.', ',') }}</span>
+        <span class="amount">{{ transaction.amount | money_format }}</span>
     </div>
     {% if transaction.moreDetails %}
         <div class="transaction-detail">{{ transaction.moreDetails }}</div>
