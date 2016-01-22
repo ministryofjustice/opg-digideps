@@ -40,6 +40,9 @@ class ComponentsExtension extends \Twig_Extension
             // used for formatted report
             'country_name' => new \Twig_SimpleFilter('country_name', function($value) {
                 return \Symfony\Component\Intl\Intl::getRegionBundle()->getCountryName($value);
+            }),
+            'money_format' => new \Twig_SimpleFilter('money_format', function($string) {
+                return number_format($string, 2, '.', ',');
             })
         ];
     }
