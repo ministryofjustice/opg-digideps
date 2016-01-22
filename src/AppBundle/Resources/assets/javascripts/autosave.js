@@ -1,8 +1,6 @@
 /*jshint browser: true */
 (function () {
     "use strict";
-
-    
     
     var root = this,
         $ = root.jQuery,
@@ -59,11 +57,12 @@
     AutoSave.prototype.getChangedHandler = function () {
         return function () {
             this.saved = false;
+            this.displayStatus(NONE);
         }.bind(this);  
     };
     
     AutoSave.prototype.save = function () {
-        
+        this.displayStatus(SAVING);
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
@@ -72,42 +71,41 @@
             type: 'PUT',
             url: this.url,
             data: data,
-            done: function(data) {
-                saveDone(data);
-            },
-            fail: function(data) {
-                saveFail(data);
-
-            }
+            done: saveDone,
+            fail: saveFail
         });
  
     };
     AutoSave.prototype.showFieldErrors = function (errors) {
-        console.log(errors);
-
-        // for each one use the id to get the input value
-
-        // now get a reference to it's parent
-
-        // get a reference to the label.form-label below it
+        var group, label;
+        
+        $.each(errors, function(key, value) {
+            group = $('#' + key).parent();
+            label = group.find('label').eq(0);
+            
+            group.addClass('error');
+            
+            $('<span/>')
+                .text(value)
+                .addClass('error-message')
+                .insertAfter(label);
+            
+        });
 
     };
-    AutoSave.prototype.handleSaveDone = function (data) {
+    AutoSave.prototype.handleSaveDone = function () {
         this.saved = true;
-        //console.log('done');
-        //console.log(data);
+        this.displayStatus(SAVED);
     };
     AutoSave.prototype.handleSaveError = function (data) {
-        console.log(data);
+        this.displayStatus(NOTSAVED);
         if (data.errors.errorCode === 1001 && data.errors.hasOwnProperty('fields')) {
-            //showFieldErrors(data.errors.fields);
-        } else {
-            //showGeneralError(data.errors.description);
+            this.showFieldErrors(data.errors.fields);
         }
     };
     AutoSave.prototype.displayStatus = function (state) {
-        this.info.text(state.label);
-        this.info.attr('status',state.state);
+        this.statusElement.text(state.label);
+        this.statusElement.attr('status',state.state);
     };
     
     root.GOVUK.AutoSave = AutoSave;

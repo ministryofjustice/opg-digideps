@@ -6,7 +6,6 @@
     <link href="../../node_modules/mocha/mocha.css" rel="stylesheet"/>
 </head>
 <body>
-<input id="testinput"/>
 
 <div id="mocha"></div>
 <div id="placeholder"></div>
@@ -14,7 +13,7 @@
     <div id="info"></div>
     <form method="post" action="" novalidate="novalidate" class="expanding-transaction-table form-horizontal">
         <div class="sections">
-            <div class="section">
+            <div class="section open">
                 <div class="summary">
                     <div class="title">Income and earnings</div>
                     <div class="sub-total">£<span class="value">0.00</span></div>
@@ -870,6 +869,7 @@
 
 <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
 <script src="../../node_modules/chai/chai.js"></script>
+<script src="chai-jquery.js"></script>
 <script src="../../node_modules/mocha/mocha.js"></script>
 <script src="sinon.js"></script>
 
