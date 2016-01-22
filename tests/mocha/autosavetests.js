@@ -30,7 +30,6 @@ describe('Sort Code Tests', function () {
         beforeEach(function () {
             saveStub = sinon.spy(autosave, 'save');
         });
-        
         afterEach(function () {
             saveStub.restore();
         });
@@ -68,7 +67,18 @@ describe('Sort Code Tests', function () {
     });
     
     describe('Tell the user we are saving', function () {
-        
+        it('should change the info indicator to say saving when starts saving', function () {
+                
+        });
+        it('should say saved after data has been saved', function () {
+            
+        });
+        it('should say not saved if it received any kind of error', function () {
+            
+        });
+        it('should remove the saved indicator when a user changes something', function () {
+
+        });
     });
     
     describe('Tell the user we saved on success', function () {

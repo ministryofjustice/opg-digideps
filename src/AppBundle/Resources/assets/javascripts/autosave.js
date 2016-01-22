@@ -21,6 +21,11 @@
         
     };
     
+    var NONE =  {label:'', state:''};
+    var SAVING =  {label:'Saving...', state:'saving'};
+    var SAVED =  {label:'Saved', state:'saved'};
+    var NOTSAVED =  {label:'Not saved', state:'notsaved'};
+    
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
@@ -77,7 +82,6 @@
         });
  
     };
-    
     AutoSave.prototype.showFieldErrors = function (errors) {
         console.log(errors);
 
@@ -88,13 +92,11 @@
         // get a reference to the label.form-label below it
 
     };
-    
     AutoSave.prototype.handleSaveDone = function (data) {
         this.saved = true;
         //console.log('done');
         //console.log(data);
     };
-    
     AutoSave.prototype.handleSaveError = function (data) {
         console.log(data);
         if (data.errors.errorCode === 1001 && data.errors.hasOwnProperty('fields')) {
@@ -102,6 +104,10 @@
         } else {
             //showGeneralError(data.errors.description);
         }
+    };
+    AutoSave.prototype.displayStatus = function (state) {
+        this.info.text(state.label);
+        this.info.attr('status',state.state);
     };
     
     root.GOVUK.AutoSave = AutoSave;
