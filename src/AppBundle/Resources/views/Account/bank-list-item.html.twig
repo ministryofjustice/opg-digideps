@@ -23,8 +23,7 @@
               </dd>
             {% else %}
               <dd class="value">
-                £
-                {{ account.closingBalance | money_format }}
+                £{{ account.closingBalance | money_format }}
               </dd>
             {% endif %}
             
