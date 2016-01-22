@@ -10,12 +10,13 @@ class AccountControllerTest extends WebTestCase
 {
 
     protected $restClient;
+    protected $form;
+    protected $formErrorsFormatter;
 
     /**
      * @var Client
      */
     protected $frameworkBundleClient;
-
 
     public function setUp()
     {
@@ -24,16 +25,26 @@ class AccountControllerTest extends WebTestCase
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient');
         $this->report = m::mock('AppBundle\Entity\Report');
         $this->t1 = m::mock('AppBundle\Entity\Transaction')
-            ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('getHasMoreDetails')->andReturn(false)
-            ->shouldReceive('getType')->andReturn('type1')
-            
-            ->getMock();
+                ->shouldReceive('getId')->andReturn(1)
+                ->shouldReceive('getHasMoreDetails')->andReturn(false)
+                ->shouldReceive('getType')->andReturn('type1')
+                ->getMock();
         
+        $this->form = m::mock('Symfony\Component\Form\FormInterface')
+                ->shouldReceive('handleRequest')
+                ->shouldReceive('getName')->andReturn('form')
+                ->getMock();
+        
+        $this->formFactory = m::mock('Symfony\Component\Form\FormFactory')
+                ->shouldReceive('create')->andReturn($this->form)
+                ->getMock();
+        
+        $this->formErrorsFormatter = m::mock('AppBundle\Service\FormErrorsFormatter');
         
         static::$kernel->getContainer()->set('restClient', $this->restClient);
+        static::$kernel->getContainer()->set('form.factory', $this->formFactory);
+        static::$kernel->getContainer()->set('formErrorsFormatter', $this->formErrorsFormatter);
     }
-
 
     public function testmoneySaveJsonWithReportNotFound()
     {
@@ -45,82 +56,86 @@ class AccountControllerTest extends WebTestCase
             'code' => 403,
         ]);
         $this->restClient
-            ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
-            ->andThrow($restClientException);
+                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
+                ->andThrow($restClientException);
 
-        $responseArray = $this->getArrayReponseFrom('/report/1/accounts/transactionsIn.json');
+        $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
         $this->assertEquals(false, $responseArray['success']);
         $this->assertEquals(1002, $responseArray['errors']['errorCode']);
         $this->assertContains('API', $responseArray['errors']['errorDescription']);
     }
-
 
     public function testmoneySaveJsonWithReportAlreadySubmitted()
     {
         $this->report->shouldReceive('getSubmitted')->andReturn(true);
 
         $this->restClient
-            ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
-            ->andReturn($this->report);
+                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
+                ->andReturn($this->report);
 
-        $responseArray = $this->getArrayReponseFrom('/report/1/accounts/transactionsIn.json');
+        $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
         $this->assertEquals(false, $responseArray['success']);
         $this->assertEquals(1000, $responseArray['errors']['errorCode']);
         $this->assertContains('Unable to change submitted report', $responseArray['errors']['errorDescription']);
     }
 
-
     public function testmoneySaveJsonWithFormNotValid()
     {
         $this->t1->shouldReceive('getAmount')->andReturn('abc');
-        
+
         $this->report
-            ->shouldReceive('getSubmitted')->andReturn(false)
-            ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
-
+                ->shouldReceive('getSubmitted')->andReturn(false)
+                ->shouldReceive('getId')->andReturn(1)
+                ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
+        
+        $this->form
+                ->shouldReceive('isValid')->andReturn(false)
+                ->shouldReceive('getErrors')->andReturn(['error1', 'error2']);
+        
+        $this->formErrorsFormatter
+                ->shouldReceive('toArray')->andReturn([]);
+        
         $this->restClient
-            ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
-            ->andReturn($this->report);
-
-        $responseArray = $this->getArrayReponseFrom('/report/1/accounts/transactionsIn.json');
+                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
+                ->andReturn($this->report);
+        
+        $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
         $this->assertEquals(false, $responseArray['success']);
-        $this->assertEquals(1002, $responseArray['errors']['errorCode']);
-        $this->assertContains('Expected a numeric', $responseArray['errors']['errorDescription']);
+        $this->assertEquals(1001, $responseArray['errors']['errorCode']);
     }
-
 
     public function testmoneySaveJsonExceptionOnApiPut()
     {
-        $this->t1->shouldReceive('getAmount')->andReturn(123,34);
-        
+        $this->t1->shouldReceive('getAmount')->andReturn(123, 34);
+
         $this->report
-            ->shouldReceive('getSubmitted')->andReturn(false)
-            ->shouldReceive('getId')->andReturn(1)
-            ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
-
+                ->shouldReceive('getSubmitted')->andReturn(false)
+                ->shouldReceive('getId')->andReturn(1)
+                ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
+        
+         $this->form
+                ->shouldReceive('isValid')->andReturn(true)
+                ->shouldReceive('getData')->andReturn([]);
+        
         $this->restClient
-            ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
-            ->andReturn($this->report);
-
-        $responseArray = $this->getArrayReponseFrom('/report/1/accounts/transactionsIn.json');
-        $this->fail("form return validation error but not clear how to pass data"); 
-
-
+                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])->andReturn($this->report)
+                ->shouldReceive('put')->withArgs(["report/1", m::any(), m::any()])->andThrow(new \AppBundle\Exception\RestClientException('put error', 1))
+               ;
+        
+        
+        $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
 
         $this->assertEquals(false, $responseArray['success']);
         $this->assertEquals(1002, $responseArray['errors']['errorCode']);
-        $this->assertContains('Expected a numeric', $responseArray['errors']['errorDescription']);
+        $this->assertEquals('put error', $responseArray['errors']['errorDescription']);
     }
-
 
     public function testmoneySaveJsonSuccess()
     {
         $this->markTestIncomplete();
     }
 
-
-    private function getArrayReponseFrom($url)
+    private function getArrayResponseFrom($url)
     {
         $this->frameworkBundleClient->request("PUT", $url);
         $response = $this->frameworkBundleClient->getResponse();
