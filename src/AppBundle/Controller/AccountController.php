@@ -12,17 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-define("PREVIOUSLY_SUBMITTED", 1000);
-define("FORM_FIELD_ERROR", 1001);
-define("EXCEPTION", 1002);
-define("ERROR_SAVING", 1003);
 
 class AccountController extends AbstractController
 {
- 
-
-
-    
     /**
      * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
      * @param integer $reportId
@@ -39,7 +31,7 @@ class AccountController extends AbstractController
         
         $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
-
+        
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
@@ -275,7 +267,7 @@ class AccountController extends AbstractController
                 return new JsonResponse([
                     'success' => false, 
                     'errors' => [
-                        'errorCode' => PREVIOUSLY_SUBMITTED,
+                        'errorCode' => 1000,
                         'errorDescription' => "Unable to change submitted report "
                     ]
                 ], 500);
@@ -284,13 +276,13 @@ class AccountController extends AbstractController
 
             $form = $this->createForm(new FormDir\TransactionsType($type), $report, ['method' => 'PUT']);
             $form->handleRequest($request);
-
+            
             if (!$form->isValid()) {
                 $errorsArray = $this->get('formErrorsFormatter')->toArray($form);
                 return new JsonResponse([
                     'success' => false, 
                     'errors' => [
-                        'errorCode' => FORM_FIELD_ERROR,
+                        'errorCode' => 1001,
                         'errorDescription' => "Form validation error",
                         'fields' => $errorsArray
                     ]
@@ -308,7 +300,7 @@ class AccountController extends AbstractController
             return new JsonResponse([
                 'success' => false,
                 'errors' => [
-                    'errorCode' => EXCEPTION,
+                    'errorCode' => 1002,
                     'errorDescription' => $e->getMessage()
                 ]
             ], 500);
