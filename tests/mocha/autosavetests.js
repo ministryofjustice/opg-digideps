@@ -43,30 +43,26 @@ describe('Sort Code Tests', function () {
             $('#placeholder input').eq(0).trigger('paste').trigger('blur');
             expect(saveStub.callCount).to.equal(1);
         });
-        it('should not call save then whe user moves off a field but not interact with it', function () {
-            $('#placeholder input').eq(0).trigger('blur');
-            expect(saveStub.callCount).to.equal(1);
-        });
+
         it('should call save when a user submits a form', function () {
+            $('#placeholder input').eq(0).trigger('keyup');
             $('#placeholder form').eq(0).trigger('submit');
             expect(saveStub.callCount).to.equal(1); 
         });
-        it('should call save when a user moves off the page', function () {
-            // When I leave a page through submit, how is this captured?
-            
-            // how about, when I submit a form, set a flag to say don't save (because already saved)
-            // or on paste and key up set status to changed, then after saving set status to saved
+        
+        it('should not call save then whe user moves off a field but did not interact with it', function () {
+            $('#placeholder input').eq(0).trigger('blur');
+            expect(saveStub.callCount).to.equal(0);
         });
-
+        it('should not call save on form submit if nothing changed', function () {
+            $('#placeholder form').eq(0).trigger('submit');
+            expect(saveStub.callCount).to.equal(0);
+        });
+        
         it('should not call save on form submit if already saved through blur', function () {
-
-        });
-
-        it('should not call save on page leave and form submitted', function () {
-            
-        });
-        it('should not call save on page leave if saved through blur', function () {
-            
+            $('#placeholder input').eq(0).trigger('keyup').trigger('blur');
+            $('#placeholder form').eq(0).trigger('submit');
+            expect(saveStub.callCount).to.equal(1);
         });
 
     });
@@ -99,5 +95,7 @@ describe('Sort Code Tests', function () {
         
     });
     
-    describe('When I pretend to submit a form, goto the defined location');
+    describe('When I pretend to submit a form, goto the defined location', function () {
+        
+    });
 });

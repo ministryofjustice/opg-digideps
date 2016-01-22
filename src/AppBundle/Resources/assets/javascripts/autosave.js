@@ -2,10 +2,12 @@
 (function () {
     "use strict";
 
+    
+    
     var root = this,
         $ = root.jQuery,
         body = $('body');
-
+    
     if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
 
     var AutoSave = function(options) {
@@ -13,6 +15,7 @@
         this.form = $(options.form);
         this.statusElement = $(options.statusElement);
         this.url = options.url;
+        this.saved = true;
 
         this.addEventHandlers();
         
@@ -21,55 +24,55 @@
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
-        this.leaveHandler = this.getLeaveHandler();
-        
+        this.changedHandler = this.getChangedHandler();
         this.form.on('submit', this.submitHandler);
-        this.form.find(['input']).on('blur', this.blurHandler);
-        //$(window).on("beforeunload", this.leaveHandler);
+        this.form.find('input,textarea')
+            .on('blur', this.blurHandler)
+            .on('keyup', this.changedHandler)
+            .on('paste', this.changedHandler);
     };
     
     AutoSave.prototype.getBlurHandler = function () {
         return function (e) {
             e.preventDefault();
-            this.save();
+            if (this.saved === false) {
+                this.save();
+            }
             return true;
         }.bind(this);
     };
     AutoSave.prototype.getSubmitHandler = function () {
         return function (e) {
             e.preventDefault();
-            this.save();
+            if (this.saved === false) {
+                this.save();
+            }
             // redirect to desired location
             return false;
         }.bind(this);
     };
-    AutoSave.prototype.getLeaveHandler = function () {
-        return function (e) {
-            e.preventDefault();
-            this.save();
-            return true;
-        }.bind(this);
+    AutoSave.prototype.getChangedHandler = function () {
+        return function () {
+            this.saved = false;
+        }.bind(this);  
     };
     
-    AutoSave.prototype.handleChange = function (target) {
-        // set status flag to say data has changed.
-    };
-    
-    AutoSave.prototype.save = function (done) {
+    AutoSave.prototype.save = function () {
         
         var data = this.form.serialize();
+        var saveDone = this.handleSaveDone.bind(this);
+        var saveFail = this.handleSaveError.bind(this);
         
         $.ajax({
             type: 'PUT',
             url: this.url,
             data: data,
             done: function(data) {
-                this.handleSaveDone(data);
-                done();
+                saveDone(data);
             },
             fail: function(data) {
-               this.handleSaveError(data);
-                done();
+                saveFail(data);
+
             }
         });
  
@@ -87,8 +90,9 @@
     };
     
     AutoSave.prototype.handleSaveDone = function (data) {
-        console.log('done');
-        console.log(data);
+        this.saved = true;
+        //console.log('done');
+        //console.log(data);
     };
     
     AutoSave.prototype.handleSaveError = function (data) {

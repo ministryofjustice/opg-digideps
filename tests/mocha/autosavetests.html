@@ -6,6 +6,8 @@
     <link href="../../node_modules/mocha/mocha.css" rel="stylesheet"/>
 </head>
 <body>
+<input id="testinput"/>
+
 <div id="mocha"></div>
 <div id="placeholder"></div>
 <div id="template" style="display:none;">
@@ -883,8 +885,8 @@
 <script src="autosavetests.js"></script>
 
 <script>
-    mocha.checkLeaks();
-    mocha.globals(['jQuery']);
+    //mocha.checkLeaks();
+    mocha.globals(['jQuery','$']);
     mocha.run();
 </script>
 </body>
