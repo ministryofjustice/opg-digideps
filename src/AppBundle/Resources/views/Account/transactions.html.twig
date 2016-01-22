@@ -8,7 +8,7 @@
         <div class="section">
             <div class="summary">
                 <div class="title">{{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | raw  }}</div>
-                <div class="sub-total">{{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | money_format}}</span></div>
+                <div class="sub-total">£<span class="value">{{ transactions.amountTotal | money_format}}</span></div>
             </div>
             <div class="detail transactions">
                 {% for id, transaction in transactions.entries %}
@@ -39,14 +39,14 @@
                     </div>
                 {% endfor %}
                 <div class="sub-total">
-                    Total {{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | lower | raw  }}: {{ 'currencySymbol' | trans }}<span class="value">{{ transactions.amountTotal | money_format }}</span>
+                    Total {{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | lower | raw  }}:£<span class="value">{{ transactions.amountTotal | money_format }}</span>
                 </div>
             </div>
         </div>
         {% endfor %}
         <div class="grand-total">
             {{ (subsection ~ '.grandtotal')| trans }}: 
-            <span class="currency">{{ 'currencySymbol' | trans }}</span>
+            <span class="currency">£</span>
             <span class="value behat-region-transaction-total">{{ transactionsTotal | money_format}}</span>
         </div>
     </div>

@@ -21,7 +21,7 @@
         <p class="description compact">{{ 'balance.bad.totalAfterMoneyInOut.subtitle' | trans }}</p>
     </div>
     <div class="right">
-       {{ 'currencySymbol' |trans }}{{ report.calculatedBalance | money_format }}
+       £{{ report.calculatedBalance | money_format }}
     </div>
 </div>
 
@@ -32,7 +32,7 @@
         <p class="description compact">{{ 'balance.bad.totalFromAccounts.subtitle' | trans({'%endDate%': report.endDate | date("j F Y")}) }}</p>
     </div>
     <div class="right">
-        {{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | money_format }}
+       £{{ report.accountsClosingBalanceTotal | money_format }}
     </div>
 </div>
     
@@ -43,7 +43,7 @@
         </div>
     </div>
     <div class="right text-big behat-region-unaccounted-for">
-         {{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | money_format }}
+        £{{ report.totalsOffset | abs | money_format }}
     </div>
 </div>
 
@@ -51,7 +51,7 @@
     <div class="hero-column">
         <div class="message">{{ 'balance.bad.totalAfterMoneyInOut' | trans }}:</div>
         <div class="total">
-            {{ 'currencySymbol' |trans }}{{ report.calculatedBalance | money_format }}
+            £{{ report.calculatedBalance | money_format }}
         </div>
     </div>
     <div class="hero-column">
@@ -59,7 +59,7 @@
             {{ 'balance.bad.totalFromAccounts' | trans }}:
         </div>
         <div class="total">
-            {{ 'currencySymbol' | trans }}{{ report.accountsClosingBalanceTotal | money_format }}
+           £{{ report.accountsClosingBalanceTotal | money_format }}
         </div>
     </div>
     <div class="hero-column">
@@ -67,7 +67,7 @@
             <b>{{ 'balance.bad.unaccounted' | trans }}:</b>
         </div>
         <div class="total behat-region-unaccounted-for">
-            {{ 'currencySymbol' | trans }}{{ report.totalsOffset | abs | money_format }}
+           £{{ report.totalsOffset | abs | money_format }}
         </div>
     </div>
 </div>#}

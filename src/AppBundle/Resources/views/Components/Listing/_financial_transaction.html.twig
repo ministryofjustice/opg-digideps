@@ -4,7 +4,7 @@
 <li class="transaction">
     <div class="transaction-label">{{ transaction.type | trans }}</div>
     <div class="transaction-value">
-        <span class="currency">{{ 'currencySymbol' | trans }}</span>
+        <span class="currency">£</span>
         <span class="amount">{{ transaction.amount | money_format }}</span>
     </div>
     {% if transaction.moreDetails %}

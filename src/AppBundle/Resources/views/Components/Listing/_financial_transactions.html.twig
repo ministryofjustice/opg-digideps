@@ -20,7 +20,7 @@
         </dt>
         <dd class="financial-transactions-total-value">
             {% if footerTotalPrefix is defined %}{{ footerTotalPrefix | trans }}{% endif %}
-            {{ 'currencySymbol' | trans }}
+           £
             {{ total | money_format }}
         </dd>
     </dl>
