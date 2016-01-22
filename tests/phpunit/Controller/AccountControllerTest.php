@@ -29,18 +29,18 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getHasMoreDetails')->andReturn(false)
                 ->shouldReceive('getType')->andReturn('type1')
                 ->getMock();
-        
+
         $this->form = m::mock('Symfony\Component\Form\FormInterface')
                 ->shouldReceive('handleRequest')
                 ->shouldReceive('getName')->andReturn('form')
                 ->getMock();
-        
+
         $this->formFactory = m::mock('Symfony\Component\Form\FormFactory')
                 ->shouldReceive('create')->andReturn($this->form)
                 ->getMock();
-        
+
         $this->formErrorsFormatter = m::mock('AppBundle\Service\FormErrorsFormatter');
-        
+
         static::$kernel->getContainer()->set('restClient', $this->restClient);
         static::$kernel->getContainer()->set('form.factory', $this->formFactory);
         static::$kernel->getContainer()->set('formErrorsFormatter', $this->formErrorsFormatter);
@@ -87,18 +87,18 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getSubmitted')->andReturn(false)
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
-        
+
         $this->form
                 ->shouldReceive('isValid')->andReturn(false)
                 ->shouldReceive('getErrors')->andReturn(['error1', 'error2']);
-        
+
         $this->formErrorsFormatter
                 ->shouldReceive('toArray')->andReturn([]);
-        
+
         $this->restClient
                 ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
                 ->andReturn($this->report);
-        
+
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
         $this->assertEquals(false, $responseArray['success']);
         $this->assertEquals(1001, $responseArray['errors']['errorCode']);
@@ -112,17 +112,17 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getSubmitted')->andReturn(false)
                 ->shouldReceive('getId')->andReturn(1)
                 ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
-        
-         $this->form
+
+        $this->form
                 ->shouldReceive('isValid')->andReturn(true)
                 ->shouldReceive('getData')->andReturn([]);
-        
+
         $this->restClient
                 ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])->andReturn($this->report)
                 ->shouldReceive('put')->withArgs(["report/1", m::any(), m::any()])->andThrow(new \AppBundle\Exception\RestClientException('put error', 1))
-               ;
-        
-        
+        ;
+
+
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
 
         $this->assertEquals(false, $responseArray['success']);
@@ -132,7 +132,24 @@ class AccountControllerTest extends WebTestCase
 
     public function testmoneySaveJsonSuccess()
     {
-        $this->markTestIncomplete();
+        $this->t1->shouldReceive('getAmount')->andReturn(123, 34);
+
+        $this->report
+                ->shouldReceive('getSubmitted')->andReturn(false)
+                ->shouldReceive('getId')->andReturn(1)
+                ->shouldReceive('getTransactionsIn')->andReturn([$this->t1]);
+
+        $this->form
+                ->shouldReceive('isValid')->andReturn(true)
+                ->shouldReceive('getData')->andReturn([]);
+
+        $this->restClient
+                ->shouldReceive('get')->with("report/1", "Report", m::any())->andReturn($this->report)
+                ->shouldReceive('put')->with("report/1", m::any(), m::any())->andReturn(null);
+
+        $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
+
+        $this->assertEquals(true, $responseArray['success']);
     }
 
     private function getArrayResponseFrom($url)
