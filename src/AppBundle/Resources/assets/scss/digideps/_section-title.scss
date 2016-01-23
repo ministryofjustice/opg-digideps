@@ -1,15 +1,17 @@
 .page-section-title-container {
-
+    
     @extend %contain-floats;
     min-height: 4.5em;
+    display: table;
+    width: 100%;
     
     h1 {
         @include bold-36();
-        float: left;
     }
 
     .info {
-        float: right;
+        display: table-cell;
+        vertical-align: baseline;
     }
     
 }

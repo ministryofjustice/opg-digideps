@@ -3,11 +3,15 @@ describe('Sort Code Tests', function () {
     var placeholder = $('#placeholder'),
         template = $('#template'),
         autosave,
-        ajaxSpy;
+        ajaxSpy,
+        form,
+        firstInput;
     
     beforeEach(function() {
         placeholder.empty('').append(template.html());
-
+        firstInput = $('#placeholder input#transactions_transactionsIn_0_amount').eq(0);
+        form = $('#placeholder form').eq(0);
+        
         autosave = new GOVUK.AutoSave({
             form: $('#placeholder form.expanding-transaction-table'),
             statusElement: $('#placeholder #info'),
@@ -15,7 +19,7 @@ describe('Sort Code Tests', function () {
         });
         
         ajaxSpy = sinon.stub(jQuery, 'ajax', function(options) {
-            options.done({'success': true});
+            options.success({'success': true});
         });
         
     });
@@ -36,39 +40,48 @@ describe('Sort Code Tests', function () {
         });
         
         it('should call save then whe user moves off a field after changing something manually', function () {
-            $('#placeholder input').eq(0).trigger('keyup').trigger('blur');
+            validKey(firstInput);
+            firstInput.trigger('blur');
             expect(saveStub.callCount).to.equal(1);
         });
-        it('should call save then whe user moves off a field after changing something through paste', function () {
-            $('#placeholder input').eq(0).trigger('paste').trigger('blur');
+        it('should call save then the user moves off a field after changing something through paste', function () {
+            firstInput.trigger('paste').trigger('blur');
             expect(saveStub.callCount).to.equal(1);
         });
         it('should call save when a user submits a form', function () {
-            $('#placeholder input').eq(0).trigger('keyup');
-            $('#placeholder form').eq(0).trigger('submit');
+            validKey(firstInput);
+            form.trigger('submit');
             expect(saveStub.callCount).to.equal(1); 
         });
         it('should not call save then whe user moves off a field but did not interact with it', function () {
-            $('#placeholder input').eq(0).trigger('blur');
+            firstInput.trigger('blur');
             expect(saveStub.callCount).to.equal(0);
         });
         it('should not call save on form submit if nothing changed', function () {
-            $('#placeholder form').eq(0).trigger('submit');
+            form.trigger('submit');
             expect(saveStub.callCount).to.equal(0);
         });
         it('should not call save on form submit if already saved through blur', function () {
-            $('#placeholder input').eq(0).trigger('keyup').trigger('blur');
-            $('#placeholder form').eq(0).trigger('submit');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            form.trigger('submit');
             expect(saveStub.callCount).to.equal(1);
         });
-        
+        it('should only call save once when you enter a number then press tab', function () {
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            tabKey(firstInput);
+            expect(saveStub.callCount).to.equal(1);
+        });
     });
-    describe('Tell the user we are saving', function () {
+    describe('Tell the user what is going on', function () {
         
-        var setInfoSpy;
+        var setInfoSpy,
+            info;
         
         beforeEach(function() {
             setInfoSpy = sinon.spy(autosave, 'displayStatus');
+            info = $('#placeholder #info');
         });
         afterEach(function () {
             setInfoSpy.restore();
@@ -101,15 +114,20 @@ describe('Sort Code Tests', function () {
         });
         it('should remove the saved indicator when a user changes something', function () {
             autosave.save();
-            expect($('#placeholder #info').text()).to.equal('Saved');
-            $('#placeholder input').eq(0).trigger('keyup');
-            expect($('#placeholder #info').text()).to.equal('');
+            expect(info.text()).to.equal('Saved');
+            validKey(firstInput);
+            expect(info.text()).to.equal('');
+        });
+        it('should not reset the state when the user enters a none numeric or . key', function () {
+            autosave.save();
+            expect(info.text()).to.equal('Saved');
+            tabKey(firstInput);
+            expect(info.text()).to.equal('Saved');
         });
     });
     describe('Tell the user about form validation errors', function () {
         
-        var firstField, 
-            formgroup;
+        var formgroup;
         
         beforeEach(function () {
             ajaxSpy.restore();
@@ -128,9 +146,7 @@ describe('Sort Code Tests', function () {
             });
 
             autosave.save();
-            
-            firstField = $('#placeholder #transactions_transactionsIn_0_amount');
-            formgroup = firstField.parent();
+            formgroup = firstInput.parent();
             
         });
         
@@ -148,7 +164,7 @@ describe('Sort Code Tests', function () {
             expect(ajaxSpy.firstCall.args[0].type).to.equal('PUT');
         });
         it('should send the contents of the form to the server', function () {
-            var data = $('#placeholder form').serialize();
+            var data = form.serialize();
             autosave.save();
             expect(ajaxSpy.firstCall.args[0].data).to.equal(data);
         });
@@ -157,4 +173,17 @@ describe('Sort Code Tests', function () {
             expect(ajaxSpy.firstCall.args[0].url).to.equal('test');
         });
     });
+    
+    
+    function validKey(element) {
+        var e = jQuery.Event("keypress");
+        e.which = 50; // # Some key code value
+        $(element).trigger(e);
+    }
+    
+    function tabKey(element) {
+        var e = jQuery.Event("keypress");
+        e.which = 9; // # Some key code value
+        $(element).trigger(e);
+    }
 });

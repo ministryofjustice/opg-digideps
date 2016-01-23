@@ -3,8 +3,7 @@
     "use strict";
     
     var root = this,
-        $ = root.jQuery,
-        body = $('body');
+        $ = root.jQuery;
     
     if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
 
@@ -27,12 +26,14 @@
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
-        this.changedHandler = this.getChangedHandler();
+        this.keypressHandler = this.getKeyPressHandler();
+        this.pasteHandler = this.getPasteHandler();
+        
         this.form.on('submit', this.submitHandler);
         this.form.find('input,textarea')
             .on('blur', this.blurHandler)
-            .on('keyup', this.changedHandler)
-            .on('paste', this.changedHandler);
+            .on('keypress', this.keypressHandler)
+            .on('paste', this.pasteHandler);
     };
     
     AutoSave.prototype.getBlurHandler = function () {
@@ -54,11 +55,29 @@
             return false;
         }.bind(this);
     };
-    AutoSave.prototype.getChangedHandler = function () {
-        return function () {
-            this.saved = false;
-            this.displayStatus(NONE);
+    AutoSave.prototype.getKeyPressHandler = function () {
+        return function (event) {
+            var char;
+            if (event.which === null) {
+                char = event.keyCode;    // old IE
+            } else if (event.which !== 0) {
+                char = event.which;	  // All others
+            } else {
+                return;
+            }
+            
+            if (char >= 48 && char <= 57 || char === 190 || char === 188) {
+                this.saved = false;
+                this.displayStatus(NONE);
+            }
+            
         }.bind(this);  
+    };
+    AutoSave.prototype.getPasteHandler = function () {
+        return function () {
+           this.saved = false;
+           this.displayStatus(NONE);
+        }.bind(this);
     };
     
     AutoSave.prototype.save = function () {
@@ -71,7 +90,7 @@
             type: 'PUT',
             url: this.url,
             data: data,
-            done: saveDone,
+            success: saveDone,
             fail: saveFail
         });
  
