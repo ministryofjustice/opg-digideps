@@ -100,11 +100,13 @@ describe('Sort Code Tests', function () {
             ajaxSpy.restore();
             
             ajaxSpy = sinon.stub(jQuery, 'ajax', function(options) {
-                options.fail({
-                    'success':false,
-                    'errors': {
-                        errorCode: 1002
-                    }    
+                options.error({
+                    responseJSON: {
+                        'success': false,
+                        'errors': {
+                            errorCode: 1002
+                        }
+                    }
                 });
             });
             
@@ -125,39 +127,65 @@ describe('Sort Code Tests', function () {
             expect(info.text()).to.equal('Saved');
         });
     });
-    describe('Tell the user about form validation errors', function () {
+    describe('errors' , function () {
         
-        var formgroup;
-        
-        beforeEach(function () {
-            ajaxSpy.restore();
+        it('should clear errors when you save', function () {
 
-            ajaxSpy = sinon.stub(jQuery, 'ajax', function(options) {
-                options.fail({
-                    'success':false,
-                    'errors': {
-                        'errorCode': 1001,
-                        'errorDescription': 'Form validation error',
-                        'fields': {
-                            'transactions_transactionsIn_0_amount':'ERROR MESSAGE'
-                        }
-                    }
-                });
-            });
+            group = firstInput.parent();
+            label = group.find('label').eq(0);
+
+            group.addClass('error');
+
+            $('<span/>')
+                .text('this is a fake error')
+                .addClass('error-message')
+                .insertAfter(label);
 
             autosave.save();
-            formgroup = firstInput.parent();
+            
+            expect($('#placeholder .error').length).to.equal(0);
+            expect($('#placeholder .error-message').length).to.equal(0);
+            
             
         });
         
-        it('should show an error message below a field label if there is a validation error', function () {
-            expect(formgroup.find('label').next()).to.have.class('error-message');
-        });
-        it('should indicate the form group has an error', function () {
-            expect(formgroup).to.have.class('error'); 
-        });
+        describe('Tell the user about form validation errors', function () {
 
+            var formgroup;
+
+            beforeEach(function () {
+                ajaxSpy.restore();
+
+                ajaxSpy = sinon.stub(jQuery, 'ajax', function(options) {
+                    options.error({
+                        responseJSON: {
+                            'success': false,
+                            'errors': {
+                                'errorCode': 1001,
+                                'errorDescription': 'Form validation error',
+                                'fields': {
+                                    'transactions_transactionsIn_0_amount': 'ERROR MESSAGE'
+                                }
+                            }
+                        }
+                    });
+                });
+
+                autosave.save();
+                formgroup = firstInput.parent();
+
+            });
+
+            it('should show an error message below a field label if there is a validation error', function () {
+                expect(formgroup.find('label').next()).to.have.class('error-message');
+            });
+            it('should indicate the form group has an error', function () {
+                expect(formgroup).to.have.class('error');
+            });
+
+        });
     });
+    
     describe('Send data to server', function () {
         it('should use a http PUT to send data to the server', function () {
             autosave.save();
@@ -176,8 +204,7 @@ describe('Sort Code Tests', function () {
     
     
     function validKey(element) {
-        var e = jQuery.Event("keypress");
-        e.which = 50; // # Some key code value
+        var e = jQuery.Event("change");
         $(element).trigger(e);
     }
     
@@ -187,7 +214,5 @@ describe('Sort Code Tests', function () {
         $(element).trigger(e);
     }
     
-    // update for changed event handler and different error handler and
-    // response
     // also test that we clear errors on a good save.
 });
