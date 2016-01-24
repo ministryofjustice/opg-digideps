@@ -186,4 +186,8 @@ describe('Sort Code Tests', function () {
         e.which = 9; // # Some key code value
         $(element).trigger(e);
     }
+    
+    // update for changed event handler and different error handler and
+    // response
+    // also test that we clear errors on a good save.
 });

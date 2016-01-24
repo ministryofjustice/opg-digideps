@@ -26,13 +26,13 @@
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
-        this.keypressHandler = this.getKeyPressHandler();
+        this.changeHandler = this.getChangeHandler();
         this.pasteHandler = this.getPasteHandler();
         
         this.form.on('submit', this.submitHandler);
         this.form.find('input,textarea')
             .on('blur', this.blurHandler)
-            .on('keypress', this.keypressHandler)
+            .on('change', this.changeHandler)
             .on('paste', this.pasteHandler);
     };
     
@@ -55,22 +55,10 @@
             return false;
         }.bind(this);
     };
-    AutoSave.prototype.getKeyPressHandler = function () {
-        return function (event) {
-            var char;
-            if (event.which === null) {
-                char = event.keyCode;    // old IE
-            } else if (event.which !== 0) {
-                char = event.which;	  // All others
-            } else {
-                return;
-            }
-            
-            if (char >= 48 && char <= 57 || char === 190 || char === 188) {
-                this.saved = false;
-                this.displayStatus(NONE);
-            }
-            
+    AutoSave.prototype.getChangeHandler = function () {
+        return function () {
+            this.saved = false;
+            this.displayStatus(NONE);
         }.bind(this);  
     };
     AutoSave.prototype.getPasteHandler = function () {
@@ -82,6 +70,7 @@
     
     AutoSave.prototype.save = function () {
         this.displayStatus(SAVING);
+        this.clearErrors();
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
@@ -91,9 +80,13 @@
             url: this.url,
             data: data,
             success: saveDone,
-            fail: saveFail
+            error: saveFail
         });
  
+    };
+    AutoSave.prototype.clearErrors = function () {
+        this.form.find('.error-message').remove();
+        this.form.find('.error').removeClass('error');
     };
     AutoSave.prototype.showFieldErrors = function (errors) {
         var group, label;
@@ -116,15 +109,17 @@
         this.saved = true;
         this.displayStatus(SAVED);
     };
-    AutoSave.prototype.handleSaveError = function (data) {
+    AutoSave.prototype.handleSaveError = function (resp) {
+        this.saved = true;
         this.displayStatus(NOTSAVED);
+        var data = resp.responseJSON;
         if (data.errors.errorCode === 1001 && data.errors.hasOwnProperty('fields')) {
             this.showFieldErrors(data.errors.fields);
         }
     };
     AutoSave.prototype.displayStatus = function (state) {
         this.statusElement.text(state.label);
-        this.statusElement.attr('status',state.state);
+        this.statusElement.attr('data-status',state.state);
     };
     
     root.GOVUK.AutoSave = AutoSave;
