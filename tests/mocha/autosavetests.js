@@ -127,29 +127,7 @@ describe('Sort Code Tests', function () {
             expect(info.text()).to.equal('Saved');
         });
     });
-    describe('errors' , function () {
-        
-        it('should clear errors when you save', function () {
-
-            group = firstInput.parent();
-            label = group.find('label').eq(0);
-
-            group.addClass('error');
-
-            $('<span/>')
-                .text('this is a fake error')
-                .addClass('error-message')
-                .insertAfter(label);
-
-            autosave.save();
-            
-            expect($('#placeholder .error').length).to.equal(0);
-            expect($('#placeholder .error-message').length).to.equal(0);
-            
-            
-        });
-        
-        describe('Tell the user about form validation errors', function () {
+    describe('Tell the user about form validation errors', function () {
 
             var formgroup;
 
@@ -184,7 +162,6 @@ describe('Sort Code Tests', function () {
             });
 
         });
-    });
     
     describe('Send data to server', function () {
         it('should use a http PUT to send data to the server', function () {

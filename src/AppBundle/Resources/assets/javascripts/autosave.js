@@ -56,9 +56,10 @@
         }.bind(this);
     };
     AutoSave.prototype.getChangeHandler = function () {
-        return function () {
+        return function (event) {
             this.saved = false;
             this.displayStatus(NONE);
+            this.clearErrorsOnField($(event.target));
         }.bind(this);  
     };
     AutoSave.prototype.getPasteHandler = function () {
@@ -70,7 +71,6 @@
     
     AutoSave.prototype.save = function () {
         this.displayStatus(SAVING);
-        this.clearErrors();
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
@@ -87,6 +87,11 @@
     AutoSave.prototype.clearErrors = function () {
         this.form.find('.error-message').remove();
         this.form.find('.error').removeClass('error');
+    };
+    AutoSave.prototype.clearErrorsOnField = function(fieldElement) {
+        var group = fieldElement.parent();
+        group.removeClass('error');
+        group.find('.error-message').remove();
     };
     AutoSave.prototype.showFieldErrors = function (errors) {
         var group, label;
@@ -108,10 +113,12 @@
     AutoSave.prototype.handleSaveDone = function () {
         this.saved = true;
         this.displayStatus(SAVED);
+        this.clearErrors();
     };
     AutoSave.prototype.handleSaveError = function (resp) {
         this.saved = true;
         this.displayStatus(NOTSAVED);
+        this.clearErrors();
         var data = resp.responseJSON;
         if (data.errors.errorCode === 1001 && data.errors.hasOwnProperty('fields')) {
             this.showFieldErrors(data.errors.fields);
