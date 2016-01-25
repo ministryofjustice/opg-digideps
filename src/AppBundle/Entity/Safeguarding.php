@@ -94,6 +94,15 @@ class Safeguarding
      *
      * @JMS\Type("string")
      * @JMS\Groups({"transactions","basic"})
+     * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
+     */
+    private $howOftenDoYouContactClient;
+    
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions","basic"})
      * @ORM\Column( name="does_client_receive_paid_care", type="text", nullable=true)
      */
     private $doesClientReceivePaidCare;
@@ -423,5 +432,16 @@ class Safeguarding
         return $this->howIsCareFunded;
     }
 
+    public function getHowOftenDoYouContactClient()
+    {
+        return $this->howOftenDoYouContactClient;
+    }
+
+
+    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
+    {
+        $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
+        return $this;
+    }
 
 }
