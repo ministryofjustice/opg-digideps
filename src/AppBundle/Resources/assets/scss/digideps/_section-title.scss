@@ -3,7 +3,11 @@
     min-height: 57px;
     display: table;
     width: 100%;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    
+    @include media(mobile) {
+        margin-bottom: 0;
+    }
     
     h1 {
         @include bold-36();
@@ -23,10 +27,20 @@ body.fixed {
     
     .page-section-title-wrapper {
         @include box-shadow(0 1px 6px $grey-1);
+        display: block;
         position: fixed;
         top: 0;
         left: 0;
-        display: block;
+        
+        box-sizing: border-box;
+        padding: 0 $gutter-half;
+        @include media(tablet){
+            padding: 0 $gutter;
+        }
+        @include media($min-width: ($site-width + $gutter * 2)){
+            padding: 0 auto;
+        }
+
         width: 100%;
         z-index: 999;
         background: $white;
@@ -35,14 +49,8 @@ body.fixed {
         .page-section-title-container {
             max-width: 960px;
             padding-top: 20px;
-            
-            margin: 0 $gutter-half;
-            @include media(tablet){
-                margin: 0 $gutter;
-            }
-            @include media($min-width: ($site-width + $gutter * 2)){
-                margin: 0 auto;
-            }
+            margin: 0 auto;
+            padding-bottom: 20px;
         }
 
     }
