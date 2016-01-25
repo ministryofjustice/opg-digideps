@@ -44,52 +44,13 @@ class Safeguarding
     private $doYouLiveWithClient;
 
     /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="how_often_do_you_visit", type="string", length=55, nullable=true)
-     */
-    private $howOftenDoYouVisit;
-
-    /**
-     *
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="how_often_do_you_phone_or_video_call", type="string", length=55, nullable=true)
-     */
-    private $howOftenDoYouPhoneOrVideoCall;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="how_often_do_you_write_email_or_letter", type="string", length=55, nullable=true)
-     */
-    private $howOftenDoYouWriteEmailOrLetter;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="how_often_does_client_see_other_people", type="string", length=55, nullable=true)
-     */
-    private $howOftenDoesClientSeeOtherPeople;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="anything_else_to_tell", type="text", nullable=true)
-     */
-    private $anythingElseToTell;
-
-    /**
+     * New textarea replacing deprecated values
+     * how_often_do_you_visit
+     * how_often_do_you_phone_or_video_call
+     * how_often_do_you_write_email_or_letter
+     * how_often_does_client_see_other_people
+     * anything_else_to_tell
+     * 
      * @var string
      *
      * @JMS\Type("string")
@@ -202,120 +163,6 @@ class Safeguarding
         return $this->doYouLiveWithClient;
     }
 
-    /**
-     * Set howOftenDoYouVisit
-     *
-     * @param string $howOftenDoYouVisit
-     * @return Report
-     */
-    public function setHowOftenDoYouVisit($howOftenDoYouVisit)
-    {
-        $this->howOftenDoYouVisit = $howOftenDoYouVisit;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoYouVisit
-     *
-     * @return string
-     */
-    public function getHowOftenDoYouVisit()
-    {
-        return $this->howOftenDoYouVisit;
-    }
-
-    /**
-     * Set howOftenDoYouPhoneOrVideoCall
-     *
-     * @param string $howOftenDoYouPhoneOrVideoCall
-     * @return Report
-     */
-    public function setHowOftenDoYouPhoneOrVideoCall($howOftenDoYouPhoneOrVideoCall)
-    {
-        $this->howOftenDoYouPhoneOrVideoCall = $howOftenDoYouPhoneOrVideoCall;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoYouPhoneOrVideoCall
-     *
-     * @return string
-     */
-    public function getHowOftenDoYouPhoneOrVideoCall()
-    {
-        return $this->howOftenDoYouPhoneOrVideoCall;
-    }
-
-    /**
-     * Set howOftenDoYouWriteEmailOrLetter
-     *
-     * @param string $howOftenDoYouWriteEmailOrLetter
-     * @return Report
-     */
-    public function setHowOftenDoYouWriteEmailOrLetter($howOftenDoYouWriteEmailOrLetter)
-    {
-        $this->howOftenDoYouWriteEmailOrLetter = $howOftenDoYouWriteEmailOrLetter;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoYouWriteEmailOrLetter
-     *
-     * @return string
-     */
-    public function getHowOftenDoYouWriteEmailOrLetter()
-    {
-        return $this->howOftenDoYouWriteEmailOrLetter;
-    }
-
-    /**
-     * Set howOftenDoesClientSeeOtherPeople
-     *
-     * @param string $howOftenDoesClientSeeOtherPeople
-     * @return Report
-     */
-    public function setHowOftenDoesClientSeeOtherPeople($howOftenDoesClientSeeOtherPeople)
-    {
-        $this->howOftenDoesClientSeeOtherPeople = $howOftenDoesClientSeeOtherPeople;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoesClientSeeOtherPeople
-     *
-     * @return string
-     */
-    public function getHowOftenDoesClientSeeOtherPeople()
-    {
-        return $this->howOftenDoesClientSeeOtherPeople;
-    }
-
-    /**
-     * Set anythingElseToTell
-     *
-     * @param string $anythingElseToTell
-     * @return Report
-     */
-    public function setAnythingElseToTell($anythingElseToTell)
-    {
-        $this->anythingElseToTell = $anythingElseToTell;
-
-        return $this;
-    }
-
-    /**
-     * Get anythingElseToTell
-     *
-     * @return string
-     */
-    public function getAnythingElseToTell()
-    {
-        return $this->anythingElseToTell;
-    }
 
     /**
      * Set doesClientReceivePaidCare

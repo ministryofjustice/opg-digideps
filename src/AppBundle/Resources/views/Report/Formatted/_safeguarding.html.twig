@@ -17,97 +17,10 @@
         </div>
 
 {% if safeguarding.doYouLiveWithClient == 'no' %}
-        <div class="question">If ‘No’, how often do you or other deputies contact the client?</div>
-        <table id="safeguarding-visits-subsection">
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Visits</th>
-                    <th>Phone and video calls</th>
-                    <th>Letters and emails</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th>Every Day</th>
-                    <td><div class="checkbox" data-checkbox="visits--every-day">{% if safeguarding.howOftenDoYouVisit == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--every-day">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="letters-and-emails--every-day">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "everyday" %}X{% else %}&nbsp;{% endif %}</div></td>
-                </tr>
-                <tr>
-                    <th>At least once a week</th>
-                    <td><div class="checkbox" data-checkbox="visits--at-least-once-a-week">{% if safeguarding.howOftenDoYouVisit == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--at-least-once-a-week">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="letters-and-emails--at-least-once-a-week">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "once_a_week" %}X{% else %}&nbsp;{% endif %}</div></td>
-                </tr>
-                <tr>
-                    <th>At least once a month</th>
-                    <td><div class="checkbox" data-checkbox="visits--at-least-once-a-month">{% if safeguarding.howOftenDoYouVisit == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--at-least-once-a-month">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="letters-and-emails--at-least-once-a-month">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "once_a_month" %}X{% else %}&nbsp;{% endif %}</div></td>
-                </tr>
-                <tr>
-                    <th>More than twice a year</th>
-                    <td><div class="checkbox" data-checkbox="visits--more-than-twice-a-year">{% if safeguarding.howOftenDoYouVisit == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--more-than-twice-a-year">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="letters-and-emails--more-than-twice-a-year">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "more_than_twice_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                </tr>
-                <tr>
-                    <th>Once a year</th>
-                    <td><div class="checkbox" data-checkbox="visits--once-a-year">{% if safeguarding.howOftenDoYouVisit == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--once-a-year">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="letters-and-emails--once-a-year">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                </tr>
-                <tr>
-                    <th>Less than once a year</th>
-                    <td><div class="checkbox" data-checkbox="visits--less-than-once-a-year">{% if safeguarding.howOftenDoYouVisit == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="phone-and-video-calls--less-than-once-a-year">{% if safeguarding.howOftenDoYouPhoneOrVideoCall == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                    <td><div class="checkbox" data-checkbox="letters-and-emails--less-than-once-a-year">{% if safeguarding.howOftenDoYouWriteEmailOrLetter == "less_than_once_a_year" %}X{% else %}&nbsp;{% endif %}</div></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div class="box" id="safeguarding-visitors-subsection">
-        <div class="checkboxes horizontal">
-            <div class="question">How often does the client see other people</div>
-            <table>
-                <tr>
-                    <td>
-                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--every-day">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'everyday' %}X{% else %}&nbsp;{% endif %}</div>
-                    </td>
-                    <td  class="label">Every day</td>
-                    <td>
-                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--at-least-once-a-week">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'once_a_week' %}X{% else %}&nbsp;{% endif %}</div>
-                    </td>
-                    <td  class="label">At least once a week</td>
-                    <td>
-                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--at-least-once-a-month">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'once_a_month' %}X{% else %}&nbsp;{% endif %}</div>
-                    </td>
-                    <td class="label">At least once a month</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--more-than-twice-a-year">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'more_than_twice_a_year' %}X{% else %}&nbsp;{% endif %}</div>
-                    </td>
-                    <td class="label">More than twice a year</td>
-                    <td>
-                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--once-a-year">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'once_a_year' %}X{% else %}&nbsp;{% endif %}</div>
-                    </td>
-                    <td class="label">Once a year</td>
-                    <td>
-                        <div class="checkbox" data-checkbox="how-often-does-the-client-see-other-people--less-than-once-a-year">{% if safeguarding.howOftenDoesClientSeeOtherPeople == 'less_than_once_a_year' %}X{% else %}&nbsp;{% endif %}</div>
-                    </td>
-                    <td class="label">Less than once a year</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
     <div class="box" id="safeguarding-furtherinfo-subsection">
         <dl class="labelvalue">
-            <div class="label">Is there anything else you want to tell us? (optional)</div>
-            <div class="value textarea">{{safeguarding.anythingElseToTell}}</div>
+            <div class="label">How often do you contact the client and how do you make sure others are looking after the client's needs if you can't ?</div>
+            <div class="value textarea">{{safeguarding.howOftenDoYouContactClient}}</div>
         </dl>
     </div>
 {% endif %}
