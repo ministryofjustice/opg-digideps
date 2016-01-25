@@ -226,14 +226,8 @@ sendEmail:
 safeguarding:
     doYouLiveWithClient:
         notBlank: Choose Yes or No
-    howOftenDoYouVisit:
-        notBlank: Select one option
-    howOftenDoYouPhoneOrVideoCall:
-        notBlank: Select one option
-    howOftenDoYouWriteEmailOrLetter:
-        notBlank: Select one option
-    howOftenDoesClientSeeOtherPeople:
-        notBlank: Select one option
+    howOftenDoYouContactClient:
+        notBlank: Give us more details about how often you contact the client and make sure others are looking after the client's needs
     doesClientReceivePaidCare:
         notBlank: Choose Yes or No
     howIsCareFunded:
