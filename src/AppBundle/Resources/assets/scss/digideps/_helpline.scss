@@ -1,8 +1,11 @@
 p#helpline {
     @include bold-19();
+    display: inline-block;
+    vertical-align: -webkit-baseline-middle;
     padding-left: 50px;
     margin: 4px 0 30px 0;
     background: url("images/icons/phone.png") top left no-repeat;
+    text-align: left;
 
     @include media(mobile) {
         display: none;
