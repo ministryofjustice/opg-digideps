@@ -129,8 +129,8 @@ class SafeguardingController extends RestController
             $safeguarding->setDoesClientReceivePaidCare($data['does_client_receive_paid_care']);
         }
         
-        if (array_key_exists('how_often_contact_client', $data)) {
-            $safeguarding->setHowOftenDoYouContactClient($data['how_often_contact_client']);
+        if (array_key_exists('how_often_do_you_contact_client', $data)) {
+            $safeguarding->setHowOftenDoYouContactClient($data['how_often_do_you_contact_client']);
         }
 
         if (array_key_exists('how_is_care_funded', $data)) {
