@@ -28,38 +28,10 @@ class Safeguarding
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="safeguarding.howOftenDoYouVisit.notBlank", groups={"safeguarding-no"} )
-     *      
+     * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
      */
-    private $howOftenDoYouVisit;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="safeguarding.howOftenDoYouPhoneOrVideoCall.notBlank", groups={"safeguarding-no"})
-     *      
-     */
-    private $howOftenDoYouPhoneOrVideoCall;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="safeguarding.howOftenDoYouWriteEmailOrLetter.notBlank", groups={"safeguarding-no"})
-     *     
-     */
-    private $howOftenDoYouWriteEmailOrLetter;
-
-    /**
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="safeguarding.howOftenDoesClientSeeOtherPeople.notBlank", groups={"safeguarding-no"})
-     *      
-     */
-    private $howOftenDoesClientSeeOtherPeople;
-
-    /**
-     * @JMS\Type("string")
-     *      
-     */
-    private $anythingElseToTell;
-
+    private $howOftenDoYouContactClient;
+    
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
@@ -142,120 +114,22 @@ class Safeguarding
     }
 
     /**
-     * Set howOftenDoYouVisit
-     *
-     * @param string $howOftenDoYouVisit
-     * @return Safeguarding
-     */
-    public function setHowOftenDoYouVisit($howOftenDoYouVisit)
-    {
-        $this->howOftenDoYouVisit = $howOftenDoYouVisit;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoYouVisit
-     *
      * @return string
      */
-    public function getHowOftenDoYouVisit()
+    public function getHowOftenDoYouContactClient()
     {
-        return $this->howOftenDoYouVisit;
+        return $this->howOftenDoYouContactClient;
     }
 
     /**
-     * Set howOftenDoYouPhoneOrVideoCall
-     *
-     * @param string $howOftenDoYouPhoneOrVideoCall
-     * @return Safeguarding
+     * @param string $howOftenDoYouContactClient
      */
-    public function setHowOftenDoYouPhoneOrVideoCall($howOftenDoYouPhoneOrVideoCall)
+    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
     {
-        $this->howOftenDoYouPhoneOrVideoCall = $howOftenDoYouPhoneOrVideoCall;
-
-        return $this;
+        $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
     }
 
-    /**
-     * Get howOftenDoYouPhoneOrVideoCall
-     *
-     * @return string
-     */
-    public function getHowOftenDoYouPhoneOrVideoCall()
-    {
-        return $this->howOftenDoYouPhoneOrVideoCall;
-    }
-
-    /**
-     * Set howOftenDoYouWriteEmailOrLetter
-     *
-     * @param string $howOftenDoYouWriteEmailOrLetter
-     * @return Safeguarding
-     */
-    public function setHowOftenDoYouWriteEmailOrLetter($howOftenDoYouWriteEmailOrLetter)
-    {
-        $this->howOftenDoYouWriteEmailOrLetter = $howOftenDoYouWriteEmailOrLetter;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoYouWriteEmailOrLetter
-     *
-     * @return string
-     */
-    public function getHowOftenDoYouWriteEmailOrLetter()
-    {
-        return $this->howOftenDoYouWriteEmailOrLetter;
-    }
-
-    /**
-     * Set howOftenDoesClientSeeOtherPeople
-     *
-     * @param string $howOftenDoesClientSeeOtherPeople
-     * @return Safeguarding
-     */
-    public function setHowOftenDoesClientSeeOtherPeople($howOftenDoesClientSeeOtherPeople)
-    {
-        $this->howOftenDoesClientSeeOtherPeople = $howOftenDoesClientSeeOtherPeople;
-
-        return $this;
-    }
-
-    /**
-     * Get howOftenDoesClientSeeOtherPeople
-     *
-     * @return string
-     */
-    public function getHowOftenDoesClientSeeOtherPeople()
-    {
-        return $this->howOftenDoesClientSeeOtherPeople;
-    }
-
-    /**
-     * Set anythingElseToTell
-     *
-     * @param string $anythingElseToTell
-     * @return Safeguarding
-     */
-    public function setAnythingElseToTell($anythingElseToTell)
-    {
-        $this->anythingElseToTell = $anythingElseToTell;
-
-        return $this;
-    }
-
-    /**
-     * Get anythingElseToTell
-     *
-     * @return string
-     */
-    public function getAnythingElseToTell()
-    {
-        return $this->anythingElseToTell;
-    }
-
+    
     /**
      * Set doesClientReceivePaidCare
      *
@@ -381,10 +255,7 @@ class Safeguarding
     public function keepOnlyRelevantSafeguardingData()
     {
         if($this->doYouLiveWithClient == "yes"){
-            $this->howOftenDoYouVisit = null;
-            $this->howOftenDoYouPhoneOrVideoCall = null;
-            $this->howOftenDoesClientSeeOtherPeople = null;
-            $this->howOftenDoYouWriteEmailOrLetter = null;
+            $this->howOftenDoYouContactClient = null;
         }
 
         if($this->doesClientReceivePaidCare == "no"){

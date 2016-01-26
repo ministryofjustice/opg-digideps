@@ -12,7 +12,6 @@
             
             .summary {
                 @extend %contain-floats;
-                cursor: pointer;
                 
                 .title {
                     @include core-19();
@@ -20,42 +19,41 @@
                     color: $link-colour;
                     padding-left: 30px;
                     background-image: url('images/icons/solid-arrow.png');
-                    background-position: 0 -80px;
+                    background-position: 0 0;
                     background-repeat: no-repeat;
-
                 }
                 
                 .sub-total {
                     @include bold-19();
                     float: right;
                     padding-right: 10px;
+                    display: none;
                 }
+                
             }
-
+            
             .detail {
-                display: none;
+                display: block;
+                border-top: 1px solid $grey-2;
+                margin-top: 30px;
             }
             
-            &.open {
-                
+            &.closed {
                 .summary {
-                    
+                    cursor: pointer;
+
                     .title {
-                        background-position: 0 0;
+                        background-position: 0 -80px;
                     }
-                    
+
                     .sub-total {
-                        display: none;
+                        display: block;
                     }
-                    
                 }
-                
+
                 .detail {
-                    display: block;
-                    border-top: 1px solid $grey-2;
-                    margin-top: 30px;
+                    display: none;
                 }
-            
             }
 
         }
