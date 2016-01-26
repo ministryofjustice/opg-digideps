@@ -16,36 +16,10 @@
     <div id="safeguarding-contact-intervals">
 
         {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%': report.client.firstname},
-        question: 'howOftenDoYouVisit',
-        answer: safeguarding.howOftenDoYouVisit
-        } %}
-
-        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%': report.client.firstname},
-        question: 'howOftenDoYouPhoneOrVideoCall',
-        answer: safeguarding.howOftenDoYouPhoneOrVideoCall
-        } %}
-
-        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
         options: {'%client%': report.client.firstname}, 
-        question: 'howOftenDoYouWriteEmailOrLetter',
-        answer: safeguarding.howOftenDoYouWriteEmailOrLetter
+        question: 'howOftenDoYouContactClient',
+        answer: safeguarding.howOftenDoYouContactClient
         } %}
-
-        {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-        options: {'%client%': report.client.firstname}, 
-        question: 'howOftenDoesClientSeeOtherPeople',
-        answer: safeguarding.howOftenDoesClientSeeOtherPeople
-        } %}
-
-        {% if safeguarding.anythingElseToTell %}
-            {%include 'AppBundle:Components/Page:_question-and-answer.html.twig' with {
-            options: {'%client%': report.client.firstname}, 
-            question: 'anythingElseToTell',
-            answer: safeguarding.anythingElseToTell
-            } %}
-        {% endif %}
     </div>
 {% endif %}
 

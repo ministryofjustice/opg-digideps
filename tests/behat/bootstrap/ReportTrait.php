@@ -281,7 +281,7 @@ trait ReportTrait
     }
     
     /**
-     * @When I set the following safeguarding information:
+     * @When I fill in the safeguarding form with the following:
      */
     public function iSetTheFollowingSafeguarding(TableNode $table)
     {

@@ -16,43 +16,7 @@ class SafeguardingType extends AbstractType
                     	'choices' => ['yes'=>'Yes', 'no'=>'No'],
                     	'expanded' => true
                  	 ))
-		        ->add('howOftenDoYouVisit', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'everyday',
-		        	                   'once_a_week' => 'once_a_week',
-		        	                   'once_a_month' => 'once_a_month',
-		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
-		        	                   'once_a_year' => 'once_a_year',
-		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
-		        	    'expanded' => true
-		        	))
-		        ->add('howOftenDoYouPhoneOrVideoCall', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'everyday',
-		        	                   'once_a_week' => 'once_a_week',
-		        	                   'once_a_month' => 'once_a_month',
-		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
-		        	                   'once_a_year' => 'once_a_year',
-		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
-		        	    'expanded' => true
-		        	))
-		        ->add('howOftenDoYouWriteEmailOrLetter', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'everyday',
-		        	                   'once_a_week' => 'once_a_week',
-		        	                   'once_a_month' => 'once_a_month',
-		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
-		        	                   'once_a_year' => 'once_a_year',
-		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
-		        	    'expanded' => true
-		        	))
-		        ->add('howOftenDoesClientSeeOtherPeople', 'choice', array(
-		        	    'choices' => [ 'everyday' => 'everyday',
-		        	                   'once_a_week' => 'once_a_week',
-		        	                   'once_a_month' => 'once_a_month',
-		        	                   'more_than_twice_a_year' => 'more_than_twice_a_year',
-		        	                   'once_a_year' => 'once_a_year',
-		        	                   'less_than_once_a_year' => 'less_than_once_a_year' ],
-		        	    'expanded' => true
-		        	))
-		        ->add('anythingElseToTell', 'textarea')
+		        ->add('howOftenDoYouContactClient', 'textarea')
 
 		        ->add('doesClientReceivePaidCare', 'choice', array(
                     	'choices' => [ 'yes'=>'Yes', 'no'=>'No'],
