@@ -15,6 +15,8 @@
         this.saved = true;
 
         this.addEventHandlers();
+
+        this.form.find('button[type="submit"]').hide();
         
     };
     

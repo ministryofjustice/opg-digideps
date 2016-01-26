@@ -162,7 +162,6 @@ describe('Sort Code Tests', function () {
             });
 
         });
-    
     describe('Send data to server', function () {
         it('should use a http PUT to send data to the server', function () {
             autosave.save();
@@ -178,7 +177,10 @@ describe('Sort Code Tests', function () {
             expect(ajaxSpy.firstCall.args[0].url).to.equal('test');
         });
     });
-    
+    it('should hide the submit button', function () {
+        var visible = $('button#transactions_save', placeholder).is(':visible');
+        expect(visible).to.be.false; 
+    });
     
     function validKey(element) {
         var e = jQuery.Event("change");
