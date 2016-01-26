@@ -84,7 +84,7 @@ class AccountMigrationTest extends WebTestCase
     {
         // migrate until 52
         exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 052', $out);
-        echo implode("\n", $out);
+//        echo implode("\n", $out);
         
         // get updated data
         $reports = $this->am->getReports();
@@ -117,7 +117,7 @@ class AccountMigrationTest extends WebTestCase
         
         // run 053 to fix missing data
         exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 053', $out);
-        echo implode("\n", $out);
+//        echo implode("\n", $out);
         
         // get updated data
         $reportsUpdated = $this->am->getReports();

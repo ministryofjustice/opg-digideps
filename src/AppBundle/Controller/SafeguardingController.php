@@ -125,28 +125,12 @@ class SafeguardingController extends RestController
             $safeguarding->setDoYouLiveWithClient($data['do_you_live_with_client']);
         }
 
-        if (array_key_exists('how_often_do_you_visit', $data)) {
-            $safeguarding->setHowOftenDoYouVisit($data['how_often_do_you_visit']);
-        }
-
-        if (array_key_exists('how_often_do_you_phone_or_video_call', $data)) {
-            $safeguarding->setHowOftenDoYouPhoneOrVideoCall($data['how_often_do_you_phone_or_video_call']);
-        }
-
-        if (array_key_exists('how_often_do_you_write_email_or_letter', $data)) {
-            $safeguarding->setHowOftenDoYouWriteEmailOrLetter($data['how_often_do_you_write_email_or_letter']);
-        }
-
-        if (array_key_exists('how_often_does_client_see_other_people', $data)) {
-            $safeguarding->setHowOftenDoesClientSeeOtherPeople($data['how_often_does_client_see_other_people']);
-        }
-
-        if (array_key_exists('anything_else_to_tell', $data)) {
-            $safeguarding->setAnythingElseToTell($data['anything_else_to_tell']);
-        }
-
         if (array_key_exists('does_client_receive_paid_care', $data)) {
             $safeguarding->setDoesClientReceivePaidCare($data['does_client_receive_paid_care']);
+        }
+        
+        if (array_key_exists('how_often_do_you_contact_client', $data)) {
+            $safeguarding->setHowOftenDoYouContactClient($data['how_often_do_you_contact_client']);
         }
 
         if (array_key_exists('how_is_care_funded', $data)) {

@@ -2,26 +2,28 @@
 
 namespace Application\Migrations;
 
-use AppBundle\Service\DataMigration\AccountMigration;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+
 /**
- * add transactions to reports already existing before branch accounts_mk2 is merged
- * KEEP THIS ONE LAST
+ * Auto-generated Migration: Please modify to your needs!
  */
-class Version052 extends AbstractMigration implements ContainerAwareInterface
+class Version055 extends AbstractMigration implements ContainerAwareInterface
 {
+
+    
     private $container;
+
 
     public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
-
+    
     /**
      * @param Schema $schema
      */
@@ -30,24 +32,24 @@ class Version052 extends AbstractMigration implements ContainerAwareInterface
         $memLimitInit = ini_get('memory_limit');
         ini_set('memory_limit', '2048M');
 
-        // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
         $em = $this->container->get('em');
-        $am = new AccountMigration($em->getConnection());
-        $am->migrateAll();
+        $am = new \AppBundle\Service\DataMigration\SafeGuardMigration($em->getConnection());
+        $ret = $am->migrateAll();
+
+        echo "Safe migration results = " . print_r($ret, true);
 
         ini_set('memory_limit', $memLimitInit);
         
         $this->addSql('SELECT MAX(version) from migrations');
     }
 
+
     /**
      * @param Schema $schema
      */
     public function down(Schema $schema)
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
+        
     }
+
 }

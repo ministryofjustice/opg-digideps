@@ -37,9 +37,9 @@ class Version053 extends AbstractMigration implements ContainerAwareInterface
         $am = new AccountMigration($em->getConnection());
         $ret = $am->addMissingTransactions();
 
-        echo "Transactions added: " . print_r($ret, true);
-        
         ini_set('memory_limit', $memLimitInit);
+        
+        $this->addSql('SELECT MAX(version) from migrations');
     }
 
     /**

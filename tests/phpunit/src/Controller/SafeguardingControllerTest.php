@@ -49,6 +49,7 @@ class SafeguardingControllerTest extends AbstractTestController
     private $dataUpdate = [
         'do_you_live_with_client' => 'y-m',
         'how_often_do_you_visit' => 'ho-m',
+        'how_often_do_you_contact_client' => 'hodycc'
     ];
 
 
@@ -185,6 +186,7 @@ class SafeguardingControllerTest extends AbstractTestController
 
         $safeguarding = self::fixtures()->getRepo('Safeguarding')->find($return['data']['id']); /* @var $safeguarding \AppBundle\Entity\Safeguarding */
         $this->assertEquals('y-m', $safeguarding->getDoYouLiveWithClient());
+        $this->assertEquals('hodycc', $safeguarding->getHowOftenDoYouContactClient());
         $this->assertEquals(self::$report1->getId(), $safeguarding->getReport()->getId());
         // TODO assert other fields
     }
