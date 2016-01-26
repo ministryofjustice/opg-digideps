@@ -18,8 +18,8 @@
         window.onscroll = this.windowScrollHandler;
     };
     StickyHeader.prototype.getWindowScrollEventHandler = function () {
-        return function (e) {
-            this.handleWindowScroll($(e.target));
+        return function () {
+            this.handleWindowScroll();
         }.bind(this);
     };
     StickyHeader.prototype.handleWindowScroll = function () {
