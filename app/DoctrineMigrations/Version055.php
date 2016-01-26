@@ -39,6 +39,8 @@ class Version055 extends AbstractMigration implements ContainerAwareInterface
         echo "Safe migration results = " . print_r($ret, true);
 
         ini_set('memory_limit', $memLimitInit);
+        
+        $this->addSql('SELECT MAX(version) from migrations');
     }
 
 
@@ -47,10 +49,7 @@ class Version055 extends AbstractMigration implements ContainerAwareInterface
      */
     public function down(Schema $schema)
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql('ALTER TABLE safeguarding DROP how_often_contact_client');
+        
     }
 
 }

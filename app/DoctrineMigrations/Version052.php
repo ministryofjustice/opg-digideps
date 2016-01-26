@@ -38,6 +38,8 @@ class Version052 extends AbstractMigration implements ContainerAwareInterface
         $am->migrateAll();
 
         ini_set('memory_limit', $memLimitInit);
+        
+        $this->addSql('SELECT MAX(version) from migrations');
     }
 
     /**
