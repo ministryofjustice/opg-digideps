@@ -19,8 +19,8 @@ class Migration5455Test extends WebTestCase
 //        exec("$export psql -U api -c 'DROP SCHEMA IF EXISTS public cascade'", $out1);
         exec("$export psql -U api < ".__DIR__."/v053.test.sql" , $out2);
         
-        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 054', $out);
-        echo implode("\n", $out);
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 054 &>/dev/null', $out);
+//        echo implode("\n", $out);
         
         // create client
         $client = self::createClient([ 'environment' => 'test',
@@ -60,8 +60,8 @@ class Migration5455Test extends WebTestCase
     {
 //        $this->object->migrateAll(); //only use to debug errors
         
-        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 055', $out);
-        echo implode("\n", $out);
+        exec('php app/console doctrine:migrations:migrate --no-interaction --env=test -vvv 055 &>/dev/null', $out);
+//        echo implode("\n", $out);
         
         // get updated data
         $reports = $this->object->getReports();
