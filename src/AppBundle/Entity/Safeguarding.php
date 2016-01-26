@@ -27,7 +27,6 @@ class Safeguarding
     private $doYouLiveWithClient;
 
     /**
-     * @deprecated
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
      */
@@ -114,12 +113,17 @@ class Safeguarding
         return $this->doYouLiveWithClient;
     }
 
+    /**
+     * @return string
+     */
     public function getHowOftenDoYouContactClient()
     {
         return $this->howOftenDoYouContactClient;
     }
 
-
+    /**
+     * @param string $howOftenDoYouContactClient
+     */
     public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
