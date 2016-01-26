@@ -43,6 +43,7 @@
             e.preventDefault();
             if (this.saved === false) {
                 this.save();
+                this.formatCurrency(e.target);
             }
             return true;
         }.bind(this);
@@ -130,7 +131,40 @@
         this.statusElement.text(state.label);
         this.statusElement.attr('data-status',state.state);
     };
-    
+    AutoSave.prototype.formatCurrency = function (element) {
+        element = $(element);
+        var number = element.val();
+        
+        var decimalplaces = 2;
+        var decimalcharacter = ".";
+        var thousandseparater = ",";
+        number = parseFloat(number);
+        
+        var formatted = String(number.toFixed(decimalplaces));
+        if( decimalcharacter.length && decimalcharacter != "." ) { formatted = formatted.replace(/\./,decimalcharacter); }
+        var integer = "";
+        var fraction = "";
+        var strnumber = String(formatted);
+        var dotpos = decimalcharacter.length ? strnumber.indexOf(decimalcharacter) : -1;
+        if( dotpos > -1 ) {
+            if( dotpos ) { integer = strnumber.substr(0,dotpos); }
+            fraction = strnumber.substr(dotpos+1);
+        }
+        else { integer = strnumber; }
+        if( integer ) { integer = String(Math.abs(integer)); }
+        while( fraction.length < decimalplaces ) { fraction += "0"; }
+        var temparray = [];
+        
+        while( integer.length > 3 ) {
+            temparray.unshift(integer.substr(-3));
+            integer = integer.substr(0,integer.length-3);
+        }
+        
+        temparray.unshift(integer);
+        integer = temparray.join(thousandseparater);
+        element.val( integer + decimalcharacter + fraction);
+        
+    };
     root.GOVUK.AutoSave = AutoSave;
     
 }).call(this);

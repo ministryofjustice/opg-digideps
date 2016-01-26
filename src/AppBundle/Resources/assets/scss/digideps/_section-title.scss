@@ -34,17 +34,18 @@ body.fixed {
         
         box-sizing: border-box;
         padding: 0 $gutter-half;
-        @include media(tablet){
-            padding: 0 $gutter;
-        }
-        @include media($min-width: ($site-width + $gutter * 2)){
-            padding: 0 auto;
-        }
-
         width: 100%;
         z-index: 999;
         background: $white;
         min-height: 4.5em;
+        
+        @include media(tablet) {
+            padding: 0 $gutter;
+        }
+        
+        @include media($min-width: ($site-width + $gutter * 2)) {
+            padding: 0 auto;
+        }
         
         .page-section-title-container {
             max-width: 960px;

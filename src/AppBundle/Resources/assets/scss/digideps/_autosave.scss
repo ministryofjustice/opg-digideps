@@ -5,11 +5,12 @@
     color: $turquoise;
     padding-right: 20px;
     padding-left: 40px;
-    text-align:left;
+    text-align: left;
     width: 130px;
 
     &[data-status="saved"] {
         background: top left url("images/icons/savetick.png") no-repeat;
+        
         @include device-pixel-ratio() {
             background: top left url("images/icons/savetick_2x.png") no-repeat;
             background-size: 35px 29px;
@@ -18,6 +19,7 @@
 
     &[data-status="saving"] {
         background: top left url("images/icons/savespin.png") no-repeat;
+        
         @include device-pixel-ratio() {
             background: top left url("images/icons/savespin_2x.png") no-repeat;
             background-size: 24px 26px;

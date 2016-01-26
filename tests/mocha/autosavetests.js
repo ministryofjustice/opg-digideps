@@ -181,6 +181,39 @@ describe('Sort Code Tests', function () {
         var visible = $('button#transactions_save', placeholder).is(':visible');
         expect(visible).to.be.false; 
     });
+
+    describe('formatting', function () {
+        it('should insert , in numbers greater than 999', function () {
+            firstInput.val('10000');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.contain('10,000');
+        });
+        it('should put in 00 if no decimals are entered', function () {
+            firstInput.val('100');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.equal('100.00');
+        });
+        it('should append a 0 if only a single place decimal is entered', function () {
+            firstInput.val('100.1');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.equal('100.10');
+        });
+        it('should round down to 2 decimal places', function () {
+            firstInput.val('100.223');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.equal('100.22');
+        });
+        it('should round up to 2 decimal places', function () {
+            firstInput.val('100.229');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.equal('100.23');
+        });
+    });
     
     function validKey(element) {
         var e = jQuery.Event("change");
@@ -193,5 +226,5 @@ describe('Sort Code Tests', function () {
         $(element).trigger(e);
     }
     
-    // also test that we clear errors on a good save.
+
 });
