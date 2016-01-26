@@ -54,8 +54,10 @@
         // if this one is open, close it
         if (section.hasClass('open')) {
             section.removeClass('open');
+            section.addClass('closed');
         } else {
             section.addClass('open');
+            section.removeClass('closed');
         }
 
     };
@@ -95,7 +97,7 @@
         this.grandTotal.text(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     };
     ExpandingTransactionTable.prototype.closeAll = function () {
-        $('.open', this.container).removeClass('open');
+        $('.section', this.container).removeClass('open').addClass('closed');
     };
     ExpandingTransactionTable.prototype.setInitialDescriptionVisibility = function () {
     
@@ -131,7 +133,7 @@
     };
     ExpandingTransactionTable.prototype.openSectionsWithErrors = function () {
         $('.error', this.container).each(function (index, element) {
-           $(element).closest('.section').addClass('open'); 
+           $(element).closest('.section').addClass('open').removeClass('closed'); 
         });
     };
     
