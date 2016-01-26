@@ -35,33 +35,11 @@
             ]
         }) }}
         <div id="visit-questions">
-            {{ form_checkbox_group(form.howOftenDoYouVisit, 'howOftenDoYouVisit', {
-                'legendClass' : 'form-label',
-                'legendText' : 'howOftenDoYouVisit.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'vertical': true
+            {{ form_input(form.howOftenDoYouContactClient, 'howOftenDoYouContactClient', { 
+                'labelClass': 'required', 
+                'labelParameters': { '%client%': report.client.firstname },
+                'inputClass': 'expanding' 
             }) }}
-
-            {{ form_checkbox_group(form.howOftenDoYouPhoneOrVideoCall, 'howOftenDoYouPhoneOrVideoCall', {
-                'legendClass' : 'form-label',
-                'legendText' : 'howOftenDoYouPhoneOrVideoCall.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'vertical': true
-            }) }}
-
-            {{ form_checkbox_group(form.howOftenDoYouWriteEmailOrLetter,
-                'howOftenDoYouWriteEmailOrLetter', {
-                'legendText' : 'howOftenDoYouWriteEmailOrLetter.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'legendClass' : 'form-label',
-                'vertical': true
-            }) }}
-
-            {{ form_checkbox_group(form.howOftenDoesClientSeeOtherPeople,
-                'howOftenDoesClientSeeOtherPeople', {
-                'legendClass' : 'form-label',
-                'legendText' : 'howOftenDoesClientSeeOtherPeople.label' | trans({'%client%': report.client.firstname}, translationDomain),
-                'vertical': true
-            }) }}
-
-            {{ form_input(form.anythingElseToTell,'anythingElseToTell', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
         </div>
     </div>
 

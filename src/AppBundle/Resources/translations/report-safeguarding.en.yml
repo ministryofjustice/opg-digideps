@@ -20,11 +20,7 @@ client_pays_for_all: They pay for all their own care
 
 
 doYouLiveWithClient.label: Do you live with %client%?
-howOftenDoYouVisit.label: How often do you or other deputies visit %client%?
-howOftenDoYouPhoneOrVideoCall.label: How often do you or other deputies phone or video call %client%?
-howOftenDoYouWriteEmailOrLetter.label: How often do you or other deputies write emails or letters to %client%?
-howOftenDoesClientSeeOtherPeople.label: How often does %client% see other people?
-anythingElseToTell.label: Is there anything else you want to tell us? (optional)
+howOftenDoYouContactClient.label: How often do you contact %client% and how do you make sure others are looking after %client%'s needs if you can't ?
 doesClientReceivePaidCare.label: Does %client% receive care which is paid for?
 doesClientReceivePaidCare.hint: This includes private residential care or home visits from a care worker - but not help from unpaid carers such as family and friends
 howIsCareFunded.label: How is the care funded?
