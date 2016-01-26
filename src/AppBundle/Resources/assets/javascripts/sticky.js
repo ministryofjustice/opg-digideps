@@ -20,8 +20,8 @@
         document.addEventListener("scroll", this.windowScrollHandler, false);
     };
     StickyHeader.prototype.getWindowScrollEventHandler = function () {
-        return function (e) {
-            this.handleWindowScroll($(e.target));
+        return function () {
+            this.handleWindowScroll();
         }.bind(this);
     };
     
