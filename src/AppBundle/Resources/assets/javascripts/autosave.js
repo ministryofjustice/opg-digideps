@@ -24,17 +24,21 @@
     var SAVING =  {label:'Saving...', state:'saving'};
     var SAVED =  {label:'Saved', state:'saved'};
     var NOTSAVED =  {label:'Not saved', state:'notsaved'};
+
+    var ignoreCodes = [93, 13, 9, 35, 36, 45,34, 33, 37, 38, 39, 40, 27, 44, 145,19, 125, 124,126];
     
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
         this.keyPressHandler = this.getKeyPressHandler();
+        this.keyDownHandler = this.getKeyDownHandler();
         this.pasteHandler = this.getPasteHandler();
         
         this.form.on('submit', this.submitHandler);
         this.form.find('input,textarea')
             .on('blur', this.blurHandler)
             .on('keypress', this.keyPressHandler)
+            .on('keydown', this.keyDownHandler)
             .on('paste', this.pasteHandler);
     };
     
@@ -57,6 +61,13 @@
             return false;
         }.bind(this);
     };
+    AutoSave.prototype.getKeyDownHandler = function () {
+      return function (event) {
+          if (event.keyCode === 8) {
+              this.keyPressHandler(event);
+          }
+      }.bind(this);
+    };
     AutoSave.prototype.getKeyPressHandler = function () {
         return function (event) {
             var char;
@@ -67,8 +78,10 @@
             } else {
                 return;
             }
-
-            if (char >= 48 && char <= 57 || char === 190 || char === 188) {
+            
+            // If the user entered a key that affects the field value then mark things as changed
+            // otherwise ignore it, for things like tab or arrow keys
+            if ($.inArray(char, ignoreCodes) === -1 || (event.target.tagName === 'TEXTAREA' && char === 13)) {
                 this.saved = false;
                 this.displayStatus(NONE);
                 this.clearErrorsOnField($(event.target));
