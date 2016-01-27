@@ -34,3 +34,9 @@
     {{ form_end(form) }}
 
 {{ form_end(form) }}
+
+<script>
+    $('input.form-control__number').on('blur', function (event) {
+        GOVUK.formatCurrency(event.target);
+    });
+</script>
