@@ -18,7 +18,7 @@
         }
         
         @include device-pixel-ratio() {
-            background: top left url("images/icons/savetick_2x.png") no-repeat;
+            background-image: url("images/icons/savetick_2x.png");
         }
     }
 
@@ -31,7 +31,7 @@
         }
         
         @include device-pixel-ratio() {
-            background: top left url("images/icons/savespin_2x.png") no-repeat;
+            background-image: url("images/icons/savespin_2x.png");
         }
     }
 
