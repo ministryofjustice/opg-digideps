@@ -28,13 +28,13 @@
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
-        this.changeHandler = this.getChangeHandler();
+        this.keyPressHandler = this.getKeyPressHandler();
         this.pasteHandler = this.getPasteHandler();
         
         this.form.on('submit', this.submitHandler);
         this.form.find('input,textarea')
             .on('blur', this.blurHandler)
-            .on('change', this.changeHandler)
+            .on('keypress', this.keyPressHandler)
             .on('paste', this.pasteHandler);
     };
     
@@ -57,12 +57,25 @@
             return false;
         }.bind(this);
     };
-    AutoSave.prototype.getChangeHandler = function () {
+    AutoSave.prototype.getKeyPressHandler = function () {
         return function (event) {
-            this.saved = false;
-            this.displayStatus(NONE);
-            this.clearErrorsOnField($(event.target));
-        }.bind(this);  
+            var char;
+            if (event.which === null) {
+                char = event.keyCode;    // old IE
+            } else if (event.which !== 0) {
+                char = event.which;	  // All others
+            } else {
+                return;
+            }
+
+            if (char >= 48 && char <= 57 || char === 190 || char === 188) {
+                this.saved = false;
+                this.displayStatus(NONE);
+                this.clearErrorsOnField($(event.target));
+                this.startSaveTimer();
+            }
+            
+        }.bind(this);
     };
     AutoSave.prototype.getPasteHandler = function () {
         return function () {
@@ -73,6 +86,7 @@
     
     AutoSave.prototype.save = function () {
         this.displayStatus(SAVING);
+        this.clearSaveTimer();
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
@@ -130,7 +144,21 @@
         this.statusElement.text(state.label);
         this.statusElement.attr('data-status',state.state);
     };
-    
+    AutoSave.prototype.startSaveTimer = function () {
+        var self = this;
+        this.clearSaveTimer();
+        this.timer = window.setTimeout(function () {
+            if (self.saved === false) {
+                self.save();
+            }
+        }, 5000);
+    };
+    AutoSave.prototype.clearSaveTimer = function () {
+        if (this.timer) {
+            window.clearTimeout(this.timer);
+            this.timer = null;
+        }
+    };
     root.GOVUK.AutoSave = AutoSave;
     
 }).call(this);
