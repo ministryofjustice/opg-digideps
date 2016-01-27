@@ -76,7 +76,7 @@ class AccountController extends AbstractController
         return [
             'report' => $report,
             'subsection' => "moneyout",
-            'jsonEndpoint' => 'transactionsIn',
+            'jsonEndpoint' => 'transactionsOut',
             'form' => $form->createView()
         ];
         
