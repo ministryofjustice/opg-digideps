@@ -147,4 +147,25 @@ class ComponentsExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $f($input));
     }
     
+    public static function money_formatProvider()
+    {
+        return [
+            ['0', '0.00'],
+            ['1000', '1,000.00'],
+            ['123456.1', '123,456.10'],
+        ];
+    }
+    
+    /**
+     * @test
+     * @dataProvider money_formatProvider
+     */
+    public function money_format($input, $expected)
+    {
+        $f = $this->object->getFilters()['money_format']->getCallable();
+        
+        $this->assertSame($expected, $f($input));
+    }
+    
+    
 }

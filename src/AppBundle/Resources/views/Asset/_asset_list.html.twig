@@ -14,7 +14,7 @@
                 <dl class="report-list__item-fields">
                     <div class="report-list__item-fields-row">
                         <dt class="report-list__item-fields-term">{{ 'value.label' | trans }}</dt>
-                        <dd class="report-list__item-fields-description">{{ 'currencySymbol' | trans }}{{ asset.value | number_format(2, '.', ',') }}</dd>
+                        <dd class="report-list__item-fields-description">£{{ asset.value | money_format }}</dd>
                     </div>
                     <div class="report-list__item-fields-row">
                         <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'description.label' | trans }}</dt>

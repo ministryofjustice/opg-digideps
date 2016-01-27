@@ -52,8 +52,8 @@
                     </dd>
                 {% else %}
                    <dd class="value">
-                     {{ 'currencySymbol' | trans({}, translationDomain) }}
-                     {{ report.accountsClosingBalanceTotal | number_format(2, '.', ',') }}
+                     £
+                     {{ report.accountsClosingBalanceTotal | money_format }}
                    </dd>
                 {% endif %}
 

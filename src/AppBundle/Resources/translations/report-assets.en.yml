@@ -18,7 +18,6 @@ title:
 value:
     label: "Value"
     hint: "Can be an estimated value"
-currencySymbol: "£"
 description:
     label: "Asset description"
     hint: ""
