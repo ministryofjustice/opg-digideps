@@ -3,7 +3,6 @@ page:
   pageSectionTitle: "Bank or building society accounts"
   totalBalance: Total balance
   pageSectionWarning: Add and edit totals for the reporting period for %client%'s account.
-  currencySymbol: "£"
   header:
     bankBuildingSociety:
       label: "Bank or building society name"
@@ -29,7 +28,6 @@ moneyIn:
   panelTitle: Money paid in
   panelFooter: Money in total
   totalPrefix: "+"
-  currencySymbol: "£"
   elements:
     disability_living_allowance_or_personal_independence_payment:
       label: Disability Living Allowance or Personal Independence Payment
@@ -77,7 +75,6 @@ moneyOut:
   panelTitle: Money paid out
   panelFooter: Money out total
   totalPrefix: "-"
-  currencySymbol: "£"
   elements:
     care_fees_or_local_authority_charges_for_care:
       label: Care fees or local authority charges for care

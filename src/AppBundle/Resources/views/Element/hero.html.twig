@@ -71,7 +71,7 @@
                     {{ 'balance.balanceAfterReported' | trans({},'report-accounts') }}:
                 </div>
                 <div class="total">
-                    {{ 'currencySymbol' |trans({},'report-accounts') }}{{ 100 | number_format(2, '.', ',') }}
+                    £{{ 100 | money_format }}
                 </div>
             </div>
             <div class="hero-column">
@@ -79,7 +79,7 @@
                     {{ 'balance.actualBalance' | trans({},'report-accounts') }}:
                 </div>
                 <div class="total">
-                    {{ 'currencySymbol' | trans({},'report-accounts') }}{{ 200 | number_format(2, '.', ',') }}
+                    £{{ 200 | money_format }}
                 </div>
             </div>
         </div>
@@ -102,7 +102,7 @@
             <div class="hero-column">
                 <div class="message">{{ 'balance.bad.totalAfterMoneyInOut' | trans({},'report-accounts') }}:</div>
                 <div class="total">
-                    {{ 'currencySymbol' |trans({},'report-accounts') }}{{ 100 | number_format(2, '.', ',') }}
+                    £{{ 100 | money_format }}
                 </div>
             </div>
             <div class="hero-column">
@@ -110,7 +110,7 @@
                     {{ 'balance.bad.totalFromAccounts' | trans({},'report-accounts') }}:
                 </div>
                 <div class="total">
-                    {{ 'currencySymbol' | trans({},'report-accounts') }}{{ 200 | number_format(2, '.', ',') }}
+                    £{{ 200 | money_format }}
                 </div>
             </div>
             <div class="hero-column">
@@ -118,7 +118,7 @@
                     <b>{{ 'balance.bad.unaccounted' | trans({},'report-accounts') }}:</b>
                 </div>
                 <div class="total">
-                    {{ 'currencySymbol' | trans({},'report-accounts') }}{{ 100 | abs | number_format(2, '.', ',') }}
+                    £{{ 100 | abs | money_format }}
                 </div>
             </div>
         </div>

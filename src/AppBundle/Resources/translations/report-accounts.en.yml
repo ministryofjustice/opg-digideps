@@ -12,8 +12,6 @@ save:
 cancel:
   label: Cancel
 
-currencySymbol: "£"
-
 moneyIn:
   pageSectionTitle: Money coming into %client%’s accounts
   pageSectionDescription: Tell us about money paid into %client%’s accounts between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If %client% has more than 1 bank account, <b>add up the totals from all the accounts for each income category</b>.
