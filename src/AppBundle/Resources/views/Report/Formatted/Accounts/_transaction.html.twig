@@ -3,7 +3,7 @@
 
 <li class="transaction {% if transaction.amount == 0 %}{{ transactions.amount }} disable{% endif %}">
     <div class="label">{{ ('form.entries.' ~ transaction.transactionTypeId ~ '.label') | trans }}</div>
-    <div class="value">{{ 'currencySymbol' | trans }}{{ transaction.amount | number_format(2, '.', ',') }}</div>
+    <div class="value">£{{ transaction.amount | money_format }}</div>
     {% if transaction.moreDetails %}
         <div class="description">
             {{ transaction.moreDetails | nl2br }}

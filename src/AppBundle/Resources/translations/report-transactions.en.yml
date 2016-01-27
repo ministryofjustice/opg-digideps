@@ -209,7 +209,6 @@ form:
     anything-else-paid-out: 
       label: Anything else paid out
       moreInformations: Give us more information
-currencySymbol: £
 moneyin:
     grandtotal: Total money in
 moneyout:

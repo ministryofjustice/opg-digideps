@@ -12,6 +12,6 @@
     
     <div class="transaction total">
         <div class="label">Money {{ type }} total</div>
-        <div class="value">&pound; {{ total | number_format(2, '.', ',') }}</div>
+        <div class="value">&pound; {{ total | money_format }}</div>
     </div>
 </div>
