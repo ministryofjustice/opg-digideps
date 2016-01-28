@@ -12,23 +12,19 @@
 
 
 {% block pageContent %}
-    {% block pageHeader %}
-        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
-    {% endblock %}
-
-    <a name="pageBody"></a>
     
+    <a name="pageBody"></a>
+
     {% block pageNavigation %}
         {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
             'report': report
         } %}
     {% endblock %}
-
-
+    
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>{% block title %}{% endblock %}</h1>
-        <span class="info">{% include 'AppBundle:Components:_helpline.html.twig' %}</span>
     </div>
+
     
     <div id="page-body">
         <div id="pagebody-left-content">

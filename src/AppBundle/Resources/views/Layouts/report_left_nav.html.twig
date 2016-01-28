@@ -1,11 +1,6 @@
 {% extends 'AppBundle:Layouts:application.html.twig' %}
 
 {% block pageContent %}
-
-    {% block pageHeader %}
-        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
-    {% endblock %}
-
     
     {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
         'report': report
@@ -14,12 +9,7 @@
     <div id="page-section-title-wrapper" class="page-section-title-wrapper">
         <div id="page-section-title-container" class="page-section-title-container">
             <h1>{% block title %}{% endblock %}</h1>
-            <span class="info">
-                {% block info %}
-                    {% include 'AppBundle:Components:_helpline.html.twig' %}
-                {% endblock %}
-            </span>
-            
+            <span class="info">{% block info %} {% endblock %}</span>
         </div>
     </div>
     

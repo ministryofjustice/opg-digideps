@@ -1,9 +1,6 @@
 .page-section-title-container {
-    @extend %contain-floats;
     min-height: 57px;
-    display: table;
     width: 100%;
-    margin-bottom: 20px;
     
     @include media(mobile) {
         margin-bottom: 0;
@@ -11,12 +8,14 @@
     
     h1 {
         @include bold-36();
+        @include inline-block();
+        margin: 30px 0 30px 0;
     }
 
     .info {
-        display: table-cell;
-        vertical-align: baseline;
-        text-align: right;
+        float: right;
+        margin-top: 30px;
+        line-height: 2.5;
     }
     
 }
@@ -49,9 +48,7 @@ body.fixed {
         
         .page-section-title-container {
             max-width: 960px;
-            padding-top: 20px;
             margin: 0 auto;
-            padding-bottom: 20px;
         }
 
     }
