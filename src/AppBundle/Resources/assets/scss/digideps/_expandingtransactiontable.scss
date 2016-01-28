@@ -146,9 +146,20 @@
 .form-horizontal {
 
     .form-label {
-        float: left;
         padding-top: 7px;
-        width: auto;
+        
+        @include media(mobile) {
+            float: none;
+        }
+        
+        @include media(tablet) {
+            float: none;
+        }
+        
+        @include media($min-width: 1024px) {
+            float: left;
+        }
+        
     }
     
     .form-control {
