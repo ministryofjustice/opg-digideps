@@ -23,21 +23,6 @@ form .form-group.button-bar {
     width: 100%;
 }
 
-
-#back-bar {
-
-    @include core-19();
-
-    margin: 30px 0;
-    padding: 10px;
-    background-color: $grey-3;
-    
-    @include media($max-width: 768px) {
-        margin: 20px 0;
-    }
-    
-}
-
 .button-secondary {
     @include button($grey-3);
 }
@@ -54,10 +39,6 @@ form .form-group.button-bar {
     position: relative;
 }
 
-nav#bottom-button-bar {
-    margin: 40px 0 40px 0;
-}
-
 .save-section {
     float: none;
     clear: both;
@@ -66,10 +47,6 @@ nav#bottom-button-bar {
 
 .next-section {
     padding-left: 15px;
-}
-
-#bottom-overview-button {
-    margin-top: 30px;
 }
 
 .right-link {

@@ -1,0 +1,77 @@
+{% extends 'AppBundle:Layouts:application.html.twig' %}
+
+
+
+{% block pageTitle %}Digideps Styleguide{% endblock %}
+
+{% block pageContent %}
+    <link href="/prism/prism.css" rel="stylesheet" type="text/css"/>
+
+    {% include 'AppBundle:Components/Navigation:_bread-crumb.html.twig' with {
+    breadCrumb: breadCrumb
+    } %}
+
+    <!-- Top Nav -->
+    <div class="grid-row">
+        <h2 class="heading-large">Nav</h2>
+        <i>AppBundle:Components/Navigation:_report-nav.html.twig</i>
+        <div class="column">
+            <div class="example">
+                {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+                'report': report
+                } %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Next Prev -->
+    <div class="grid-row" id="nextprev">
+        <h3 class="heading-large">Header Next/Previous Navigation</h3>
+        
+        <div class="example">
+            <nav class="pagination top" role="navigation" aria-label="Pagination">
+                <ul class="group">
+                    <li class="previous">
+                        <a title="Navigate to previous part" rel="prev" href="#">
+                            <span class="pagination-label">Edit this report</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a title="Navigate to next part" rel="next" href="#">
+                            <span class="pagination-label">Sign and submit</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+    
+    <!-- Footer Next Prev -->
+    <div class="grid-row" id="nextprev">
+        <h3 class="heading-large">Footer Next/Previous Navigation</h3>
+        
+        <div class="example">
+            <nav class="pagination" role="navigation" aria-label="Pagination">
+                <ul class="group">
+                    <li class="previous">
+                        <a title="Navigate to previous part" rel="prev" href="#">
+                            <span class="pagination-label">Previous</span>
+                            <span class="pagination-part-title">Contacts</span>
+                        </a>
+                    </li>
+                    <li class="next">
+                        <a title="Navigate to next part" rel="next" href="#">
+                            <span class="pagination-label">Next</span>
+                            <span class="pagination-part-title">Safeguarding</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+
+
+    <script src="/prism/prism.js"></script>
+{% endblock %}

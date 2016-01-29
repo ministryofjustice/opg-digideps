@@ -103,7 +103,7 @@ Feature:  provide feedback
     Scenario: On the feedback screen I can go back to my previous page
         Given I am on the login page
         And I goto the feedback page
-        Then the "Back to deputy report" link url should contain "/login"
+        Then the "Back to deputy report" link url should contain "/"
             
     @feedback @deputy
     Scenario: On the thank you screen I see a link back to the client home

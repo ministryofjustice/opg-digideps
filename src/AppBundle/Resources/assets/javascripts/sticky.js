@@ -11,7 +11,7 @@
 
     var StickyHeader = function(element) {
         this.wrapper = $(element);
-        this.top = $(element).offset().top - 30;
+        this.top = $(element).offset().top - 20;
         this.addEventHandlers();
         this.fieldFocused = false;
     };

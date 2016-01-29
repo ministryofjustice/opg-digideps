@@ -4,6 +4,7 @@ $darkblue: #175ea5;
     
     @extend %site-width-container;
     @extend %contain-floats;
+    clear: both;
     
     .left-nav {
         box-sizing: border-box;

@@ -4,9 +4,10 @@
 {% block pageTitle %}{{ 'htmlTitle' | trans }}{% endblock %}
 
 {% block pageNavigation %}
-    <div class="back-navigation">
-        <a href="{{ app.request.headers.get('referer') }}" class="behat-link-back">{{ 'back.label' | trans }}</a>
-    </div>
+    <nav id="back-bar">
+        <a id="overview-button" href="{{ path('homepage') }}">Back to deputy report</a>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </nav>
 {% endblock %}
 
 {% block title %}{{ 'pageTitle' | trans }}{% endblock %}

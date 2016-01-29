@@ -3,7 +3,7 @@ p#helpline {
     display: inline-block;
     vertical-align: -webkit-baseline-middle;
     padding-left: 50px;
-    margin: 4px 0 0 0;
+    margin: 7px 0 0 0;
     background: url("images/icons/phone.png") top left no-repeat;
     text-align: left;
 
@@ -25,4 +25,9 @@ p#helpline {
         background-position: 0 0;
     }
     
+}
+
+#back-bar p#helpline {
+    float: right;
+    padding-right: 20px;
 }
