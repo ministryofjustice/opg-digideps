@@ -1,5 +1,4 @@
 #!/bin/bash
-echo "This script is deprecated. Use migrate.sh instead"
 set -e
 #let's configure environment
 run-parts /etc/my_init.d
