@@ -5,30 +5,7 @@
 
 
 table#safeguarding-visits-subsection {
-
-    th, td {
-        box-sizing: border-box;
-        width: 22%;
-        padding: 0;
-
-        &:first-child {
-            width: 34%;
-        }
-    }
-
-    thead th {
-        text-align: center;
-        padding: 0 10px;
-    }
-
-    tbody th {
-        text-align: left;
-    }
-
-    tr {
-        padding: 10px 0;
-    }
-
+    
     td {
         text-align: center;
         .checkbox {
