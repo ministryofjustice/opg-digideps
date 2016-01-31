@@ -4,47 +4,6 @@ $item-right-margin: 263px;
     @include grid-column(1);
 }
 
-#global-header {
-
-    .header-proposition {
-
-        #proposition-name:hover {
-            border-bottom: 0;
-        }
-
-    }
-
-    &.with-proposition {
-
-        .header-wrapper {
-
-            .header-proposition {
-                width: 45%;
-                margin-right: 5px;
-                float: right;
-            }
-
-        }
-
-    }
-}
-
-#global-header-bar {
-
-    .header-bar {
-        height: 0;
-    }
-}
-
-#wrapper {
-    border-bottom: 0;
-}
-
-.back-navigation {
-    @include core-19();
-    margin-top: 35px;
-}
-
 #footer .footer-meta .footer-meta-inner ul li:last-child {
     float: left;
 }
