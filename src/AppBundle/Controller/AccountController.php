@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+
 class AccountController extends AbstractController
 {
-    
     /**
      * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
      * @param integer $reportId
@@ -31,7 +31,7 @@ class AccountController extends AbstractController
         
         $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
-
+        
         if ($form->isValid()) {
             $this->get('restClient')->put('report/' .  $report->getId(), $form->getData(), [
                 'deserialise_group' => 'transactionsIn',
@@ -76,7 +76,7 @@ class AccountController extends AbstractController
         return [
             'report' => $report,
             'subsection' => "moneyout",
-            'jsonEndpoint' => 'transactionsIn',
+            'jsonEndpoint' => 'transactionsOut',
             'form' => $form->createView()
         ];
         
@@ -250,37 +250,62 @@ class AccountController extends AbstractController
      * @param integer $reportId
      * @param string $type
      *
+     * 1000 - Already submitted
+     * 1001 - Form field error
+     * 1002 - Exception
+     * 1003 - Error saving
      * @return JsonResponse
      */
     public function moneySaveJson(Request $request, $reportId, $type)
     {
         try {
+            
             $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
+            
             if ($report->getSubmitted()) {
-                throw new \RuntimeException("Report already submitted and not editable.");
+                
+                return new JsonResponse([
+                    'success' => false, 
+                    'errors' => [
+                        'errorCode' => 1000,
+                        'errorDescription' => "Unable to change submitted report "
+                    ]
+                ], 500);
+                
             }
 
-            $form = $this->createForm(new FormDir\TransactionsType($type), $report, [
-                'method' => 'PUT'
-            ]);
+            $form = $this->createForm(new FormDir\TransactionsType($type), $report, ['method' => 'PUT']);
             $form->handleRequest($request);
-
+            
             if (!$form->isValid()) {
                 $errorsArray = $this->get('formErrorsFormatter')->toArray($form);
-
-                return new JsonResponse(['success' => false, 'errors' => $errorsArray], 500);
+                return new JsonResponse([
+                    'success' => false, 
+                    'errors' => [
+                        'errorCode' => 1001,
+                        'errorDescription' => "Form validation error",
+                        'fields' => $errorsArray
+                    ]
+                ], 500);
             }
+            
+            
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
                 'deserialise_group' => $type,
             ]);
+            
             return new JsonResponse(['success' => true]);
 
         } catch (\Exception $e) {
-            return new JsonResponse(['success' => false, 'message' => $e->getMessage()], 500);
+            return new JsonResponse([
+                'success' => false,
+                'errors' => [
+                    'errorCode' => 1002,
+                    'errorDescription' => $e->getMessage()
+                ]
+            ], 500);
+
         }
     }
-
-
-
-
+    
 }

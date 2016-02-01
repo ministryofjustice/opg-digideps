@@ -43,32 +43,20 @@ class ElementController extends AbstractController
     }
 
     /**
-     * @Route("/twigcomponents", name="elements_twig")
-     * @Template("AppBundle:Element/Twig:twig.html.twig")
+     * @Route("/colour", name="elements_colour")
+     * @Template("AppBundle:Element:colour.html.twig")
      */
-    public function twigComponentsAction()
+    public function colourAction()
     {
-        
-        $client = [
-            'fullname' => 'Zac Tolley'
-        ];
-        
-        $report = [
-            'id' => 1,
-            'period' => '2014 to 2015',
-            'client' => $client
-        ];
         
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Twig components']
+            ['label' => 'Colours']
 
         ];
 
         return [
-            'breadCrumb' => $breadCrumb,
-            'report' => $report,
-            'client' => $client
+            'breadCrumb' => $breadCrumb
         ];
 
     }
@@ -103,8 +91,7 @@ class ElementController extends AbstractController
         ];
 
     }
-
-
+    
     /**
      * @Route("/hero", name="elements_hero")
      * @Template("AppBundle:Element:hero.html.twig")
@@ -123,4 +110,53 @@ class ElementController extends AbstractController
         ];
 
     }
-}
+    
+    /**
+     * @Route("/headings", name="elements_headings")
+     * @Template("AppBundle:Element:headings.html.twig")
+     */
+    public function headingsAction()
+    {
+
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Headings']
+
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb
+        ];
+
+    }
+    
+    /**
+     * @Route("/navigation", name="elements_navigation")
+     * @Template("AppBundle:Element:navigation.html.twig")
+     */
+    public function navigationAction()
+    {
+
+        $client = [
+            'fullname' => 'Zac Tolley'
+        ];
+
+        $report = [
+            'id' => 1,
+            'period' => '2014 to 2015',
+            'client' => $client
+        ];
+
+        $breadCrumb = [
+            ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
+            ['label' => 'Navigation']
+
+        ];
+
+        return [
+            'breadCrumb' => $breadCrumb,
+            'report' => $report,
+            'client' => $client
+        ];
+
+    }}

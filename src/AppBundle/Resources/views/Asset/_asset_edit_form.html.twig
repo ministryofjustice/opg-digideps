@@ -9,7 +9,7 @@
     <h3 class="heading-medium">{{ subSectionTitleText | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 
     {{ form_input(editForm.value, 'form.newAsset.controls.value', {
-        'inputPrefix' : 'form.newAsset.controls.value.currencySymbol',
+        'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     } ) }}
 

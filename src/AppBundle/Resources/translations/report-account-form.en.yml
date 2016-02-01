@@ -26,7 +26,6 @@ delete:
   label: Delete
   message: Are you sure that you want to delete this account?
 
-currencySymbol: "£"
 banks:
   add:
     pageSectionTitle: Add account

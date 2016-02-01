@@ -89,7 +89,7 @@
             
             .input-group-prefix {
                 left: auto;
-                right: 121px;
+                right: 141px;
             }
 
             .form-group {
@@ -97,7 +97,7 @@
             }
             
             .form-control__number {
-                width: 150px;
+                width: 170px;
             }
             
             .form-group-combo-description {
@@ -146,9 +146,20 @@
 .form-horizontal {
 
     .form-label {
-        float: left;
         padding-top: 7px;
-        width: auto;
+        
+        @include media(mobile) {
+            float: none;
+        }
+        
+        @include media(tablet) {
+            float: none;
+        }
+        
+        @include media($min-width: 1024px) {
+            float: left;
+        }
+        
     }
     
     .form-control {

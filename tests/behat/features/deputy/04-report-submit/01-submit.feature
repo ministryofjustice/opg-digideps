@@ -111,13 +111,15 @@ Feature: deputy / report / submit
         When I go to "/report/1/submitted"
         When I click on "download-report"
         And the response should contain "12345ABC"
-        And the response should contain "Peter White"
+        And the response should contain "Peter"
+        And the response should contain "White"
         # download report from client page
         #When I go to the homepage
         When I click on "client-home"
         And I click on "download-2016-report"
         And the response should contain "12345ABC"
-        And the response should contain "Peter White"
+        And the response should contain "Peter"
+        And the response should contain "White"
         # test go back link
         When I click on "back-to-client"
         Then I should be on "/client/show"

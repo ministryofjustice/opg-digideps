@@ -103,7 +103,7 @@ Feature:  provide feedback
     Scenario: On the feedback screen I can go back to my previous page
         Given I am on the login page
         And I goto the feedback page
-        Then the "Back to deputy report" link url should contain "/login"
+        Then the "Back to deputy report" link url should contain "/"
             
     @feedback @deputy
     Scenario: On the thank you screen I see a link back to the client home
@@ -114,4 +114,4 @@ Feature:  provide feedback
         And I press "feedback_save"
         Then the form should be valid
         And I should see a "#feedback-thankyou" element
-        And the "Back to deputy report" link url should contain "/client"
+        And the "Return to deputy report" link url should contain "/"

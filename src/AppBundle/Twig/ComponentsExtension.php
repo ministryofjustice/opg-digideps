@@ -79,6 +79,9 @@ class ComponentsExtension extends \Twig_Extension
                 $string = strtolower ($string);                        // convert to lowercase
                
                return $string;
+            }),
+            'money_format' => new \Twig_SimpleFilter('money_format', function($string) {
+                return number_format($string, 2, '.', ',');
             })
         ];
     }

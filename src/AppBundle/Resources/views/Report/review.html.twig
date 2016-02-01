@@ -7,18 +7,12 @@
 {% block pageContent %}
 
     {% if report.submitted == true %}
-        <div id="global-breadcrumb">
-            <ol>
-                <li class="bread-crumbs"><a id="back-to-client" href="{{ path('client_home') }}">Your client</a></li>
-                <li class="bread-crumbs">{{ 'page.pageSectionTitle' | trans }}</li>
-            </ol>
-        </div>
+        <nav id="back-bar">
+            <a id="back-to-client" href="{{ path('client_home') }}">Your client</a>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </nav>
     {% endif %}
     
-    {% block pageHeader %}
-        {% include 'AppBundle:Components/PageHeader:_report-header.html.twig' %}
-    {% endblock %}
-
     <div id="page-section-title-container" class="page-section-title-container">
         <h1>{{ 'page.pageSectionTitle' | trans }}</h1>
     </div>

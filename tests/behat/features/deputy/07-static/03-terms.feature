@@ -14,5 +14,5 @@ Feature: Tems and Conditions
     Scenario: The terms and conditions page contains a back link
         Given I am on the login page
         And I goto the terms page
-        Then the "Back to deputy report" link url should contain "/login"
+        Then the "Return to deputy report" link url should contain "/"
     

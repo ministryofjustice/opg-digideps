@@ -9,9 +9,10 @@
 {% endblock %}
 
 {% block pageNavigation %}
-    <div class="back-navigation">
-        <a href="{{ path('client_home') }}" class="behat-link-back">{{ 'back.label' | trans }}</a>
-    </div>
+    <nav id="back-bar">
+        <a id="overview-button" href="/">Return to deputy report</a>
+        {% include 'AppBundle:Components:_helpline.html.twig' %}
+    </nav>
 {% endblock %}
 
 {% block validationSummary %}

@@ -5,7 +5,7 @@
 
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyIn' | trans({}, "report-accounts") }}{% endblock %}
-    
+    {% block info %}<span id="save-status"></span>{% endblock %}
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
@@ -41,5 +41,5 @@
         'nextLabel': 'Money out'
         } %}
     {% endblock %}
-
+    
 {% endembed %}
