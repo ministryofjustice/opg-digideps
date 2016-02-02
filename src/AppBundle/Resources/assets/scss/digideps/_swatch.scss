@@ -1,20 +1,25 @@
 .swatch {
+    @include border-radius(100%);
+    
     width: 60px;
     height: 60px;
-    @include border-radius(100%);
+
     @include media(mobile) {
         clear: both;
         float: left;
         margin-right: $gutter-half;
         margin-bottom: $gutter-half;
     }
+    
     @include media(tablet) {
         margin: 0 auto $gutter-half auto;
     }
+
 }
 
 // Colour swatch layout
 .swatch-wrapper {
+
     @include media(tablet) {
         float: left;
         width: 20%;
@@ -27,18 +32,23 @@
 
     ul {
         padding-bottom: $gutter-half;
+
         @include media(mobile) {
             min-height: 50px;
             padding-top: 10px;
         }
+
     }
+
     li {
         @include core-16;
     }
+
     b {
         font-weight: bold;
         text-transform: uppercase;
     }
+
 }
 
 // Sass list for colour palette
@@ -61,10 +71,13 @@ $palette: (
     @each $color in $palette {
         $color-name: nth($color, 1);
         $color-var: nth($color, 2);
+        
         .swatch-#{$color-name} {
             background-color: $color-var;
         }
+    
     }
+
 }
 
 // Generate swatch classes for each colour in palette list
