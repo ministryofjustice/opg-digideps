@@ -185,17 +185,17 @@ class ReportController extends RestController
         $data = $this->deserializeBodyContent($request);
 
         foreach (['transactions_in', 'transactions_out'] as $tk) {
-            if (isset($data[$tk])) {
-                foreach ($data[$tk] as $transactionRow) {
-                    $t = $report->getTransactionByTypeId($transactionRow['id']); /* @var $t EntityDir\Transaction */
-                    $t->setAmount($transactionRow['amount'] ?: null);
-                    if (array_key_exists('more_details', $transactionRow)) {
-                        $t->setMoreDetails($transactionRow['more_details']);
-                    }
-                    $this->getEntityManager()->flush($t);
+            if (!isset($data[$tk])) { continue; }
+            foreach ($data[$tk] as $transactionRow) {
+                $t = $report->getTransactionByTypeId($transactionRow['id']); /* @var $t EntityDir\Transaction */
+                if (!$t instanceof EntityDir\Transaction) { continue; }
+                $t->setAmount($transactionRow['amount'] ?: null);
+                if (array_key_exists('more_details', $transactionRow)) {
+                    $t->setMoreDetails($transactionRow['more_details']);
                 }
-                $this->setJmsSerialiserGroups(['transactions']);
+                $this->getEntityManager()->flush($t);
             }
+            $this->setJmsSerialiserGroups(['transactions']);
         }
 
 
