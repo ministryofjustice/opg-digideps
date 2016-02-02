@@ -158,7 +158,10 @@ class UserController extends RestController
      */
     public function getOneById(Request $request, $id)
     {
-        $user = $this->findEntityBy('User', $id, 'User not found');
+        $user = $this->getRepository('User')->find($id);
+        if (!$user) {
+            throw new \RuntimeException("User not found", 419);  // DD-1336
+        }
         $requestedUserIsLogged = $this->getUser()->getId() == $user->getId();
         
         $groups = $request->query->has('groups') ?
