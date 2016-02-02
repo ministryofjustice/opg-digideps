@@ -8,6 +8,7 @@ use Swift_Mailer;
 use Swift_Message;
 use Swift_Mime_Message;
 use Swift_Attachment;
+use Psr\Log\LoggerInterface;
 
 class MailSender
 {
@@ -32,14 +33,19 @@ class MailSender
      */
     private $mailers = [];
 
+     /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * @param Validator $validator
      */
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(ValidatorInterface $validator, LoggerInterface $logger)
     {
         $this->mailers = [];
         $this->validator = $validator;
+        $this->logger = $logger;
     }
 
 
@@ -86,10 +92,23 @@ class MailSender
         $swiftMessage = $mailerService->createMessage(); /* @var $swiftMessage Swift_Message */
         $this->fillSwiftMessageWithEmailData($swiftMessage, $email);
 
-        if ($this->isEmailToMock($swiftMessage)) {
+        $to = $this->getFirstTo($swiftMessage);
+        
+        if ($this->addressToMockRegexp && $this->mockPath && preg_match($this->addressToMockRegexp, $to)) {
             $result = $this->prependMessageIntoEmailMockPath($swiftMessage);
         } else {
-            $result = $mailerService->send($swiftMessage);
+            $failedRecipients = [];
+            $result = $mailerService->send($swiftMessage, $failedRecipients);
+            
+            // log email result
+            $this->logger->log($result ? 'info' : 'error', "Email sent: ", ['extra' => [
+                'page'=>'mail_sender', 
+                'transport'=>$transport,
+                'to' => '***'.  substr($to, 3),
+                'result' => $result,
+                'failedRecipients' => $failedRecipients ? implode(',', $failedRecipients) : ''
+             ]]);
+            
         }
 
         return ['result' => $result];
@@ -113,24 +132,17 @@ class MailSender
         }
     }
 
-
     /**
-     * @param Swift_Mime_Message $message
-     * 
-     * @return boolean true if 1st email adddress matches $this->addressToMockRegexp
+     * Get first address
+     * @param Swift_Message $message
+     * @return string email
      */
-    private function isEmailToMock(Swift_Message $message)
+    private function getFirstTo(Swift_Message $message)
     {
-        if (!$this->addressToMockRegexp || !$this->mockPath) {
-            return false;
-        }
-
-        // get "to"
         $to = $message->getTo();
         reset($to);
-        $emailAddress = key($to);
-
-        return preg_match($this->addressToMockRegexp, $emailAddress);
+        
+        return key($to);
     }
 
 

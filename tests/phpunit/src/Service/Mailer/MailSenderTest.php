@@ -17,9 +17,10 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
     public function setup()
     {
         $this->validator = m::mock('Symfony\Component\Validator\ValidatorInterface');
+        $this->logger = m::mock('Psr\Log\LoggerInterface');
         $this->email = m::mock('AppBundle\Model\Email');
         
-        $this->mailSender = new MailSender($this->validator);
+        $this->mailSender = new MailSender($this->validator, $this->logger);
     }
 
 
@@ -79,6 +80,7 @@ class MailSenderTest extends \Symfony\Bundle\FrameworkBundle\Test\WebTestCase
         ]);
         
         $this->validator->shouldReceive('validate')->andReturn([]);
+        $this->logger->shouldReceive('log')->with('info', m::any(), m::any());
         
         $ret = $this->mailSender->send($this->email, ['text'], 'default');
         $this->assertEquals(['result' => 'sent'], $ret);
