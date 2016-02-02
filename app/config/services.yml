@@ -33,7 +33,7 @@ services:
     # mail sender accepting those the above-created swift mailer
     mailSender:
         class: AppBundle\Service\Mailer\MailSender
-        arguments: [ @validator ]
+        arguments: [ @validator, @logger ]
         calls:
             - [ addSwiftMailer, [ "default", @mailer.swiftMailers.default] ]
             - [ addSwiftMailer, [ "secure-smtp" , @mailer.swiftMailers.secure] ]
