@@ -18,6 +18,8 @@ if (typeof GOVUK === 'undefined') {
 
         this.form.find('button[type="submit"]').hide();
         
+        this.preprocessor = options.preprocessor||null;
+        
     };
     
     var NONE =  {label:'', state:''};
@@ -101,6 +103,11 @@ if (typeof GOVUK === 'undefined') {
     AutoSave.prototype.save = function () {
         this.displayStatus(SAVING);
         this.clearSaveTimer();
+        
+        if (this.preprocessor) {
+            this.preprocessor(this.form);
+        }
+        
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
