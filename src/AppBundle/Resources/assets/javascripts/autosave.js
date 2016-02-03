@@ -1,4 +1,4 @@
-/*jshint browser: true */
+/* jshint browser: true */
 (function () {
     "use strict";
     
@@ -64,22 +64,17 @@
     // Have to use a combination of keydown AND keypress to capture backspace on all browsers
     AutoSave.prototype.getKeyDownHandler = function () {
       return function (event) {
-          console.log('keyDown: ' + event.keyCode);
-          if (event.keyCode === 8) {    // If the user presses backspace
-              console.log('trigger keypress');
+          if (event.keyCode === 8 || event.keyCode === 46) {    // If the user presses backspace
               this.keyPressHandler(event);
           }
       }.bind(this);
     };
     AutoSave.prototype.getKeyPressHandler = function () {
         return function (event) {
-            console.log('keypress');
             var char;
             if (event.which === null) {
-                console.log('keypress: old ie');
                 char = event.keyCode;    // old IE
             } else if (event.which !== 0) {
-                console.log('keypress: new');
                 char = event.which;	  // All others
             } else {
                 return;
@@ -87,9 +82,6 @@
             
             // If the user entered a key that affects the field value then mark things as changed
             // otherwise ignore it, for things like tab or arrow keys
-            
-            console.log('keypress: ' + char);
-            
             if ($.inArray(char, ignoreCodes) === -1 || (event.target.tagName === 'TEXTAREA' && char === 13)) {
                 this.saved = false;
                 this.displayStatus(NONE);
