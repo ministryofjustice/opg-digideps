@@ -24,6 +24,7 @@ WORKDIR /app
 USER app
 ENV  HOME /app
 RUN  composer install --prefer-source --no-interaction --no-scripts
+RUN  composer dump-autoload --optimize
 COPY package.json /app/
 RUN  npm install
 
