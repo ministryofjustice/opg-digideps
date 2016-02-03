@@ -25,6 +25,7 @@ RUN find . -not -user app -exec chown app:app {} \;
 USER app
 ENV  HOME /app
 RUN  composer run-script post-install-cmd --no-interaction
+RUN  composer dump-autoload --optimize
 RUN sass --load-path /app/vendor/alphagov/govuk_frontend_toolkit/stylesheets /app/src/AppBundle/Resources/assets/scss/formatted-report.scss /app/src/AppBundle/Resources/views/Css/formatted-report.html.twig
 
 # cleanup
