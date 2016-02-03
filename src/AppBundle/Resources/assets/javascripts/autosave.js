@@ -1,12 +1,12 @@
+/* globals jQuery: true, GOVUK: true */
 /* jshint browser: true */
-(function () {
+if (typeof GOVUK === 'undefined') { 
+    GOVUK = {}; 
+}
+
+(function ($, GOVUK) {
     "use strict";
     
-    var root = this,
-        $ = root.jQuery;
-    
-    if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
-
     var AutoSave = function(options) {
 
         this.form = $(options.form);
@@ -173,6 +173,7 @@
             this.timer = null;
         }
     };
-    root.GOVUK.AutoSave = AutoSave;
     
-}).call(this);
+    GOVUK.AutoSave = AutoSave;
+    
+})(jQuery, GOVUK);
