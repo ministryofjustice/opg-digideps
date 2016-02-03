@@ -15,9 +15,9 @@ if (typeof GOVUK === 'undefined') {
         $(form).find('textarea').each(function (index, textarea) {
 
             textarea = $(textarea);
-
+            
             // If the text area has a value but the money value doesn't.
-            if (textarea.val().trim().length > 0) {
+            if (textarea.val().replace(/^\s+|\s+$/g, '').length > 0) {
 
                 var transactionTotalElement = textarea.parent().parent().find('input.transaction-value').eq(0);
                 var cleanString = transactionTotalElement.val().replace(/[^\d\.\-\ ]/g, '');

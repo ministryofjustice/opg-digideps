@@ -12,7 +12,7 @@
         element = $(element);
         var number = element.val();
         
-        if (number.trim() === '' || isNaN(number)) {
+        if (number.replace(/^\s+|\s+$/g, '') === '' || isNaN(number)) {
             return;
         }
 
