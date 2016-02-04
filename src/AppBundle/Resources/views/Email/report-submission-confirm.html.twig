@@ -23,12 +23,13 @@ outputHeaderStyles: true
     
     <p>You can review and download this report. You'll need to sign in and go to Your client to download it as a PDF.</p>
     
-    <p>Sign into the deputy service: <a href="{{ link }}">{{ link }}</a>
+    <p>Sign into the deputy service:<br/> 
+        <a href="{{ link }}">{{ link }}</a>
     </p>
 
-    <p>If you'd like to you can start your report for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}. </p>
+    <p>If you're ready you can start your report for {{ newReport.startDate | date("d/m/Y") }} to {{ newReport.endDate | date("d/m/Y") }}. </p>
 
-    <p>Sign into the deputy service to start your next report<br/>
+    <p>Sign into the deputy service to start your next report:<br/>
       <a href="{{ link }}">{{ link }}</a>
     </p>
 
