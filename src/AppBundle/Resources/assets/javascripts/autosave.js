@@ -1,12 +1,12 @@
-/*jshint browser: true */
-(function () {
+/* globals jQuery: true, GOVUK: true */
+/* jshint browser: true */
+if (typeof GOVUK === 'undefined') { 
+    GOVUK = {}; 
+}
+
+(function ($, GOVUK) {
     "use strict";
     
-    var root = this,
-        $ = root.jQuery;
-    
-    if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
-
     var AutoSave = function(options) {
 
         this.form = $(options.form);
@@ -17,6 +17,8 @@
         this.addEventHandlers();
 
         this.form.find('button[type="submit"]').hide();
+        
+        this.preprocessor = options.preprocessor||null;
         
     };
     
@@ -61,9 +63,10 @@
             return false;
         }.bind(this);
     };
+    // Have to use a combination of keydown AND keypress to capture backspace on all browsers
     AutoSave.prototype.getKeyDownHandler = function () {
       return function (event) {
-          if (event.keyCode === 8) {
+          if (event.keyCode === 8 || event.keyCode === 46) {    // If the user presses backspace
               this.keyPressHandler(event);
           }
       }.bind(this);
@@ -100,6 +103,11 @@
     AutoSave.prototype.save = function () {
         this.displayStatus(SAVING);
         this.clearSaveTimer();
+        
+        if (this.preprocessor) {
+            this.preprocessor(this.form);
+        }
+        
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
@@ -172,6 +180,7 @@
             this.timer = null;
         }
     };
-    root.GOVUK.AutoSave = AutoSave;
     
-}).call(this);
+    GOVUK.AutoSave = AutoSave;
+    
+})(jQuery, GOVUK);

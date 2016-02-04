@@ -1,6 +1,11 @@
 // Forms - Application specific version
 // ==========================================================================
 
+// Fix for annoying clear x in windows
+input[type=text]::-ms-clear { 
+    display: none; 
+}
+
 form {
     padding: 0 3px 0 3px;
     overflow: hidden;
