@@ -8,11 +8,4 @@
         <h2 class="heading">{{ 'reportIsReady' | trans() }}</h2>
         <div class="message"><a class="button-grey submit-link" href="{{ path('report_review', {'reportId': report.id}) }}">{{ 'signAndSubmit' | trans() }}</a></div>
     </div>
-{% else %}
-    <p class="flash flash-news">
-
-        We've made some changes to the way you record money coming in and going out of {{ report.client.firstname }}'s bank accounts.
-        If you've entered any information, it will still be there. You just won't be able to see it in the same way. If you take a look now, you'll see we've merged each type of spending and income across all bank accounts.
-    </p>
-    
 {% endif %}
