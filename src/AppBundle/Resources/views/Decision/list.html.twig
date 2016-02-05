@@ -10,10 +10,11 @@
     {% block pageBody %}
 
         <p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
-
-
+        
         {% if report.decisions %}
             <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans }}</p>
+        {% else %}
+            {% include 'AppBundle:Decision:_decisions_help.html.twig' %}
         {% endif %}
         
         {% include 'AppBundle:Components/ButtonBar:_add_button_bar.html.twig' with {
