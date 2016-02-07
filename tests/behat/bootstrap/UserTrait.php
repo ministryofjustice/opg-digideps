@@ -87,33 +87,48 @@ trait UserTrait
      */
     public function iSetTheClientDetailsTo(TableNode $table)
     {
+        
         $this->visit("/client/add");
         $rows = $table->getRowsHash();
         
-        $this->fillField('client_firstname', $rows['name'][0]);
-        $this->fillField('client_lastname', $rows['name'][1]);
-        $this->fillField('client_caseNumber', $rows['caseNumber']);
-        $this->fillField('client_courtDate_day', $rows['courtDate'][0]);
-        $this->fillField('client_courtDate_month', $rows['courtDate'][1]);
-        $this->fillField('client_courtDate_year', $rows['courtDate'][2]);
+        
+        $this->enterIntoField('client_firstname', $rows['name'][0]);
+        $this->enterIntoField('client_lastname', $rows['name'][1]);
+        $this->enterIntoField('client_address', $rows['address'][0]);
+        $this->enterIntoField('client_address2', $rows['address'][1]);
+        $this->enterIntoField('client_county', $rows['address'][2]);
+        $this->enterIntoField('client_postcode', $rows['address'][3]);
+        
+        $this->enterIntoField('client_caseNumber', $rows['caseNumber']);
+        $this->enterIntoField('client_courtDate_day', $rows['courtDate'][0]);
+        $this->enterIntoField('client_courtDate_month', $rows['courtDate'][1]);
+        $this->enterIntoField('client_courtDate_year', $rows['courtDate'][2]);
+        
         if (isset($rows['allowedCourtOrderTypes_0'])) {
-            $this->fillField('client_allowedCourtOrderTypes_0', $rows['allowedCourtOrderTypes_0']);
+            $this->enterIntoField('client_allowedCourtOrderTypes_0', $rows['allowedCourtOrderTypes_0']);
         }
         if (isset($rows['allowedCourtOrderTypes_1'])) {
-            $this->fillField('client_allowedCourtOrderTypes_1', $rows['allowedCourtOrderTypes_1']);
+            $this->enterIntoField('client_allowedCourtOrderTypes_1', $rows['allowedCourtOrderTypes_1']);
         }
-        $this->fillField('client_address', $rows['address'][0]);
-        $this->fillField('client_address2', $rows['address'][1]);
-        $this->fillField('client_county', $rows['address'][2]);
-        $this->fillField('client_postcode', $rows['address'][3]);
-        $this->fillField('client_country', $rows['address'][4]);
-        $this->fillField('client_phone', $rows['phone']);
+        
+        $this->enterIntoField('client_country', $rows['address'][4]);
+        $this->enterIntoField('client_phone', $rows['phone']);
         
         $this->pressButton('client_save');
         $this->theFormShouldBeValid();
         //$this->assertResponseStatus(200);
     }
 
+    public function enterIntoField($field, $value) {
+        $driver = $this->getSession()->getDriver();
+
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+            $this->getSession()->executeScript('document.getElementById("' . $field .'").scrollIntoView(true);');
+            $this->getSession()->executeScript('window.scrollBy(0, 100);');
+        }
+        $this->fillField($field, $value);
+    }
+    
     /**
      * @Then There should be a lay deputy account with id :userid awaiting activation
      */

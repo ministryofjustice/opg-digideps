@@ -20,6 +20,13 @@ trait EmailTrait
         $this->visitBehatLink('email-get-last');
 
         $emailsJson = $this->getSession()->getPage()->getContent();
+
+        if (strpos($emailsJson, '<body>') !== false) {
+            $start = strpos($emailsJson, '<body>') + 6;
+            $end = strpos($emailsJson, '</body>');
+            $emailsJson = substr($emailsJson, $start, ($end - $start));
+        }
+        
         $emailsArray = json_decode($emailsJson , true);
 
         if ($throwExceptionIfNotFound && empty($emailsArray[0]['to'])) {
