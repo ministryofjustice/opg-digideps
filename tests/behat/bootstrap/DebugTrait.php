@@ -49,6 +49,15 @@ trait DebugTrait
         if (!file_put_contents($filename, $data)) {
             echo "Cannot write screenshot into $filename \n";
         }
+
+        $driver = $this->getSession()->getDriver();
+        $filename = '/tmp/behat/behat-screenshot-' . $name . '.png';
+        if ($driver instanceof Selenium2Driver) {
+            $image_data = $this->getSession()->getDriver()->getScreenshot();
+            file_put_contents($filename, $image_data);
+        }
+    
+    
     }
     
     /**

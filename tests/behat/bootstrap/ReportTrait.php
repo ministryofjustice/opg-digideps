@@ -3,6 +3,7 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Driver\Selenium2Driver;
 
 trait ReportTrait
 {
@@ -285,7 +286,7 @@ trait ReportTrait
     
     public function scrollTo($element) {
         $driver = $this->getSession()->getDriver();
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+        if ($driver instanceof Selenium2Driver) {
             $this->getSession()->executeScript('$("' . $element . '")[0].scrollIntoView(true);');
             $this->getSession()->executeScript('window.scrollBy(0, 40);');
         }

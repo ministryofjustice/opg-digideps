@@ -4,6 +4,7 @@ namespace DigidepsBehat;
 
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Driver\Selenium2Driver;
 
 
 trait FormTrait
@@ -100,7 +101,7 @@ trait FormTrait
     public function enterIntoField($field, $value) {
         $driver = $this->getSession()->getDriver();
 
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+        if ($driver instanceof Selenium2Driver) {
             $this->getSession()->executeScript('document.getElementById("' . $field .'").scrollIntoView(true);');
             $this->getSession()->executeScript('window.scrollBy(0, 40);');
         }

@@ -1,6 +1,6 @@
 Feature: Browser - Safeguarding
 
-    @safeguarding @entry @deputy
+    @browser
     Scenario: Safeguarding all expanded
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then I fill in the safeguarding form with the following:
