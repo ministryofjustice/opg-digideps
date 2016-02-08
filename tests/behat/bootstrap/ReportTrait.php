@@ -302,9 +302,10 @@ trait ReportTrait
         $rows = $table->getRowsHash();
 
         foreach ($rows as $key => $value) {
-            $this->fillField($key, $value);
+            $this->enterIntoField($key, $value);
         }
 
+        
         $this->pressButton("safeguarding_save");
     }
 
