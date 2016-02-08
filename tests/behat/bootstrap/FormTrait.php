@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 
@@ -87,6 +88,34 @@ trait FormTrait
         }    
     }
 
+    /**
+     * @Then /^I click on the first decision$/
+     * @Then /^I click on the first contact$/
+     */
+    public function iClickOnTheFirstDecision()
+    {
+        $this->getSession()->getPage()->clickLink("edit-1-link");
+    }
 
-    
+    public function enterIntoField($field, $value) {
+        $driver = $this->getSession()->getDriver();
+
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+            $this->getSession()->executeScript('document.getElementById("' . $field .'").scrollIntoView(true);');
+            $this->getSession()->executeScript('window.scrollBy(0, 40);');
+        }
+        $this->fillField($field, $value);
+    }
+
+    /**
+     * Fills in form fields with provided table.
+     *
+     * @When /^(?:|I )fill in the following:$/
+     */
+    public function fillFields(TableNode $fields)
+    {
+        foreach ($fields->getRowsHash() as $field => $value) {
+            $this->enterIntoField($field, $value);
+        }
+    }
 }

@@ -4,110 +4,102 @@ default:
     autoload:
         '': %paths.base%/bootstrap
     suites:
-      deputy:
-        description: End to end journey for Lay deputy user
-        paths:    [ %paths.base%/features/deputy ]
-        filters:
-            tags: "@deputy&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
+        deputy:
+            description: End to end journey for Lay deputy user
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@deputy&&~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
 
-      admin:
-        description: End to end journey for Admin user
-        paths:    [ %paths.base%/features/admin ]
-        filters:
-            tags: "~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        admin:
+            description: End to end journey for Admin user
+            paths:    [ %paths.base%/features/admin ]
+            filters:
+                tags: "~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      ad:
-        description: End to end journey for Assisted Digital user
-        paths:    [ %paths.base%/features/ad ]
-        filters:
-           tags: "~@javascript"
-        contexts:
-           - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        ad:
+            description: End to end journey for Assisted Digital user
+            paths:    [ %paths.base%/features/ad ]
+            filters:
+                tags: "~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      feedback:
-        description: Tests related to user feedback
-        paths:    [ %paths.base%/features/deputy ]
-        filters:
-            tags: "@feedback&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        feedback:
+            description: Tests related to user feedback
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@feedback&&~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      cookies:
-        description: Tests related to cookies
-        paths:    [ %paths.base%/features/deputy ]
-        filters:
-            tags: "@cookie&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        cookies:
+            description: Tests related to cookies
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@cookie&&~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      terms:
-        description: Tests related to terms
-        paths:    [ %paths.base%/features/deputy ]
-        filters:
-            tags: "@terms&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        terms:
+            description: Tests related to terms
+            paths:    [ %paths.base%/features/deputy ]
+            filters:
+                tags: "@terms&&~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      textarea:
-        description: Tests related to textareas
-        paths:    [ %paths.base%/features/components ]
-        mink_session: default
-        filters:
-            tags: "@textarea"
-        contexts: [ DigidepsBehat\FeatureContext ]
+        textarea:
+            description: Tests related to textareas
+            paths:    [ %paths.base%/features/components ]
+            mink_session: default
+            filters:
+                tags: "@textarea"
+            contexts: [ DigidepsBehat\FeatureContext ]
 
-      safeguardingentry:
-        description: Tests related to the safeguarding section
-        paths:    [ %paths.base%/features ]
-        filters:
-            tags: "@safeguarding&&@entry&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        safeguardingentry:
+            description: Tests related to the safeguarding section
+            paths:    [ %paths.base%/features ]
+            filters:
+                tags: "@safeguarding&&@entry&&~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      safeguardingopgreport:
-        description: Tests related to the safeguarding section
-        paths:    [ %paths.base%/features ]
-        filters:
-          tags: "@safeguarding&&@formatted-report&&~@javascript"
-        contexts:
-          - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        wip:
+            description: Tests related to the safeguarding section
+            paths:    [ %paths.base%/features ]
+            filters:
+                tags: "@wip"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      safeguardinguserreport:
-        description: Tests related to the safeguarding section
-        paths:    [ %paths.base%/features ]
-        filters:
-          tags: "@safeguarding&&@user-report&&~@javascript"
-        contexts:
-          - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        another:
+            description: Tests related to context sensitive add buttons
+            paths:    [ %paths.base%/features ]
+            filters:
+                tags: "@another&&~@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
-      wip:
-          description: Tests related to the safeguarding section
-          paths:    [ %paths.base%/features ]
-          filters:
-              tags: "@wip"
-          contexts:
-              - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-      another:
-        description: Tests related to context sensitive add buttons
-        paths:    [ %paths.base%/features ]
-        filters:
-            tags: "@another&&~@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-      javascript:
-        description: Tests related to user feedback
-        paths:    [ %paths.base%/features ]
-        mink_session: default
-        filters:
-            tags: "@javascript"
-        contexts:
-            - DigidepsBehat\FeatureContext: [{ dbName: api }]
+        javascript:
+            description: Tests related to user feedback
+            paths:    [ %paths.base%/features ]
+            mink_session: default
+            filters:
+                tags: "@javascript"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api }]
+                
+        browser:
+            description: End to end journey for web browser tests
+            paths:    [ %paths.base%/features/browser ]
+            filters:
+                tags: "@browser"
+            contexts:
+                - DigidepsBehat\FeatureContext: [{ dbName: api, sessionName: 'digideps', autoDbSnapshot: true }]
 
     extensions:
         Behat\Symfony2Extension: ~

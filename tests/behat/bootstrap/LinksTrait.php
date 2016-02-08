@@ -54,8 +54,10 @@ trait LinksTrait
         // find link inside the region
         $linkSelector = self::behatElementToCssSelector($link, 'link');
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
+        $count = count($linksElementsFound);
+        
         if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Found more than a $linkSelector element in the page. Interrupted");
+            throw new \RuntimeException("Found more than one $linkSelector element in the page ($count). Interrupted");
         }
         if (count($linksElementsFound) === 0) {
             $this->clickOnHashLink($link);
@@ -63,6 +65,7 @@ trait LinksTrait
         }
         
         // click on the found link
+        $this->scrollTo($linkSelector);
         $linksElementsFound[0]->click();
     }
 
@@ -77,6 +80,7 @@ trait LinksTrait
         }
 
         // click on the found link
+        $this->scrollTo( '#' . $link);
         $linksElementsFound[0]->click();    
     }
     

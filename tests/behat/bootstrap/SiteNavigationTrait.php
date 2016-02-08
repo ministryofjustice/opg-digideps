@@ -81,5 +81,39 @@ trait SiteNavigationTrait
     {
         $this->visit('/terms');
     }
-    
+
+    /**
+     * Presses button with specified id|name|title|alt|value.
+     *
+     * @When /^(?:|I )press "(?P<button>(?:[^"]|\\")*)"$/
+     */
+    public function pressButton($button)
+    {
+        $driver = $this->getSession()->getDriver();
+
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+            $this->getSession()->executeScript('document.getElementById("' . $button . '").scrollIntoView(true);');
+            $this->getSession()->executeScript('window.scrollBy(0, 100);');
+        }
+        
+        $this->getSession()->getPage()->pressButton($button);
+    }
+
+    /**
+     * Clicks link with specified id|title|alt|text.
+     *
+     * @When /^(?:|I )follow "(?P<link>(?:[^"]|\\")*)"$/
+     */
+    public function clickLink($link)
+    {
+        $driver = $this->getSession()->getDriver();
+
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+            $this->getSession()->executeScript('document.getElementById("' . $link . '").scrollIntoView(true);');
+            $this->getSession()->executeScript('window.scrollBy(0, 100);');
+        }
+        
+        $link = $this->fixStepArgument($link);
+        $this->getSession()->getPage()->clickLink($link);
+    }
 }

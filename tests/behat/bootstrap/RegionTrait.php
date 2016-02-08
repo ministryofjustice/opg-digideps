@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ExpectationException;
 
@@ -72,7 +73,7 @@ trait RegionTrait
         //$this->assertResponseStatus(200);
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
-
+    
     /**
      * @Then I should see :text in :section section
      */
@@ -187,6 +188,23 @@ trait RegionTrait
     public function iShouldSeeInThePageHeader($text)
     {
         $this->assertSession()->elementTextContains('css', '.page-header', $text);
+    }
+
+    /**
+     * @Then /^I should see a confirmation$/
+     */
+    public function iShouldSeeAConfirmation()
+    {
+        $elementsFound = $this->getSession()->getPage()->findAll('css', ".confirm-bar");
+        $count = count($elementsFound);
+        if ($count < 1) {
+            throw new \RuntimeException("No confirmation dialog found");
+        }
+        
+        if ($elementsFound[0]->isVisible() == false) {
+            throw new \RuntimeException("Confirmation dialog not visible");
+        }
+    
     }
 
 

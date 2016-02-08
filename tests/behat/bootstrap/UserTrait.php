@@ -16,11 +16,11 @@ trait UserTrait
      */
     public function iCreateTheUserWithEmail($role, $firstname, $lastname, $email)
     {
-        $this->fillField('admin_email', $email);
-        $this->fillField('admin_firstname', $firstname);
-        $this->fillField('admin_lastname', $lastname);
+        $this->enterIntoField('admin_email', $email);
+        $this->enterIntoField('admin_firstname', $firstname);
+        $this->enterIntoField('admin_lastname', $lastname);
         $roleId = self::$roleNameToRoleId[strtolower($role)];
-        $this->fillField('admin_roleId', $roleId);
+        $this->enterIntoField('admin_roleId', $roleId);
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();
         //$this->assertResponseStatus(200);
@@ -45,8 +45,8 @@ trait UserTrait
         $this->iOpenTheSpecificLinkOnTheEmail("/user/activate/");
         //$this->assertResponseStatus(200);
         
-        $this->fillField('set_password_password_first', $password);
-        $this->fillField('set_password_password_second', $password);
+        $this->enterIntoField('set_password_password_first', $password);
+        $this->enterIntoField('set_password_password_second', $password);
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         //$this->assertResponseStatus(200);
@@ -61,20 +61,20 @@ trait UserTrait
         $this->visit("/user/details");
         $rows = $table->getRowsHash();
         
-        $this->fillField('user_details_firstname', $rows['name'][0]);
-        $this->fillField('user_details_lastname', $rows['name'][1]);
+        $this->enterIntoField('user_details_firstname', $rows['name'][0]);
+        $this->enterIntoField('user_details_lastname', $rows['name'][1]);
         
         if (isset($rows['address'])) {
-            $this->fillField('user_details_address1', $rows['address'][0]);
-            $this->fillField('user_details_address2', $rows['address'][1]);
-            $this->fillField('user_details_address3', $rows['address'][2]);
-            $this->fillField('user_details_addressPostcode', $rows['address'][3]);
-            $this->fillField('user_details_addressCountry', $rows['address'][4]);
+            $this->enterIntoField('user_details_address1', $rows['address'][0]);
+            $this->enterIntoField('user_details_address2', $rows['address'][1]);
+            $this->enterIntoField('user_details_address3', $rows['address'][2]);
+            $this->enterIntoField('user_details_addressPostcode', $rows['address'][3]);
+            $this->enterIntoField('user_details_addressCountry', $rows['address'][4]);
         }
         
         if (isset($rows['phone'])) {
-            $this->fillField('user_details_phoneMain', $rows['phone'][0]);
-            $this->fillField('user_details_phoneAlternative', $rows['phone'][1]);
+            $this->enterIntoField('user_details_phoneMain', $rows['phone'][0]);
+            $this->enterIntoField('user_details_phoneAlternative', $rows['phone'][1]);
         }
         
         $this->pressButton('user_details_save');
@@ -117,16 +117,6 @@ trait UserTrait
         $this->pressButton('client_save');
         $this->theFormShouldBeValid();
         //$this->assertResponseStatus(200);
-    }
-
-    public function enterIntoField($field, $value) {
-        $driver = $this->getSession()->getDriver();
-
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $this->getSession()->executeScript('document.getElementById("' . $field .'").scrollIntoView(true);');
-            $this->getSession()->executeScript('window.scrollBy(0, 100);');
-        }
-        $this->fillField($field, $value);
     }
     
     /**
@@ -181,5 +171,14 @@ trait UserTrait
         $value = preg_replace('/([^a-z0-9])/i', '', $value);
         
         return $value;
+    }
+
+    /**
+     * @Given /^I pause$/
+     */
+    public function iPause()
+    {
+        $time = 5000; // time should be in milliseconds
+        $this->getSession()->wait($time);
     }
 }

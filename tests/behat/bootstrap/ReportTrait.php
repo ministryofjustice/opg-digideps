@@ -224,24 +224,24 @@ trait ReportTrait
                 $this->clickLink("add-decisions-button");
             }
             
-            $this->fillField('decision_description', $row['description']);
+            $this->enterIntoField('decision_description', $row['description']);
             switch ($row['clientInvolved']) {
                 case 'yes':
-                    $this->fillField('decision_clientInvolvedBoolean_0', 1);
+                    $this->enterIntoField('decision_clientInvolvedBoolean_0', 1);
                     break;
 
                 case 'no':
-                    $this->fillField('decision_clientInvolvedBoolean_1', 0);
+                    $this->enterInfoField('decision_clientInvolvedBoolean_1', 0);
                     break;
                 default:
                     throw new \RuntimeException("Invalid value for clientInvolved");
             }
 
-            $this->fillField('decision_clientInvolvedDetails', $row['clientInvolvedDetails']);
+            $this->enterIntoField('decision_clientInvolvedDetails', $row['clientInvolvedDetails']);
 
+            
             $this->pressButton("decision_save");
             $this->theFormShouldBeValid();
-            //$this->assertResponseStatus(200);
         }
     }
 
@@ -252,14 +252,17 @@ trait ReportTrait
     {
         foreach ($table->getHash() as $row) {
             $this->gotoOverview();
+            $this->scrollTo("#edit-assets");
             $this->clickLink("edit-assets");
 
             // click on "Add" if form not present
             if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title_title'))) {
+                $this->scrollTo("#edit-assets");
                 $this->clickLink('add-assets-button');
             }
 
             $this->fillField('asset_title_title', $row['title']);
+            $this->scrollTo("#asset_title_next");
             $this->pressButton("asset_title_next");
             $this->theFormShouldBeValid();
             //$this->assertResponseStatus(200);
@@ -277,6 +280,14 @@ trait ReportTrait
             $this->pressButton("asset_save");
             $this->theFormShouldBeValid();
            // $this->assertResponseStatus(200);
+        }
+    }
+    
+    public function scrollTo($element) {
+        $driver = $this->getSession()->getDriver();
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+            $this->getSession()->executeScript('$("' . $element . '")[0].scrollIntoView(true);');
+            $this->getSession()->executeScript('window.scrollBy(0, 40);');
         }
     }
     
