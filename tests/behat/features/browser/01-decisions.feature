@@ -11,6 +11,7 @@ Feature: Browser - manage decisions
         When I click on "edit-reason-no-decisions"
         And I pause
         And I click on "delete-button"
+        And I save the page as "01-01-delete-decision-reason-confirm"
         Then I should see a confirmation
         When I click on "delete-confirm"
         Then the URL should match "/report/\d+/decisions"
@@ -31,6 +32,7 @@ Feature: Browser - manage decisions
         Then I click on the first decision
         And I pause
         And I click on "delete-button"
+        And I save the page as "01-02-delete-decision-confirm"
         Then I should see a confirmation
         When I click on "delete-confirm"
         Then the URL should match "/report/\d+/decisions"

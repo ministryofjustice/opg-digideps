@@ -12,8 +12,7 @@ Feature: Browser - Safeguarding
             | safeguarding_doesClientHaveACarePlan_0 | yes |
             | safeguarding_whenWasCarePlanLastReviewed_month | 1 |
             | safeguarding_whenWasCarePlanLastReviewed_year | 2016 |
-        Then the form should be valid
+        And I save the page as "03-safeguarding"
         When I follow "overview-button"
         And I follow "edit-safeguarding"
         And the "safeguarding_howOftenDoYouContactClient" field should contain "every week"
-        And I save the page as "safeguarding-dataentry"

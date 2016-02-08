@@ -3,7 +3,6 @@
 namespace DigidepsBehat;
 
 use Behat\Gherkin\Node\TableNode;
-use Behat\Mink\Driver\Selenium2Driver;
 
 trait ReportTrait
 {
@@ -286,7 +285,7 @@ trait ReportTrait
     
     public function scrollTo($element) {
         $driver = $this->getSession()->getDriver();
-        if ($driver instanceof Selenium2Driver) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $this->getSession()->executeScript('$("' . $element . '")[0].scrollIntoView(true);');
             $this->getSession()->executeScript('window.scrollBy(0, 40);');
         }
@@ -318,32 +317,22 @@ trait ReportTrait
         $this->gotoOverview();
         $this->clickLink("edit-accounts");
 
-        // expand form if collapsed
-        //if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
-            $this->clickOnBehatLink('add-account');
-        //}
+        $this->clickOnBehatLink('add-account');
 
         $rows = $table->getRowsHash();
 
-        $this->fillField('account_bank', $rows['bank']);
-        $this->fillField('account_accountNumber', $rows['accountNumber']);
-        $this->fillField('account_accountType', $rows['accountType']);
-        $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
-        $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
-        $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
+        $this->enterIntoField('account_bank', $rows['bank']);
+        $this->enterIntoField('account_accountNumber', $rows['accountNumber']);
+        $this->enterIntoField('account_accountType', $rows['accountType']);
+        $this->enterIntoField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
+        $this->enterIntoField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
+        $this->enterIntoField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
 
-        $this->fillField('account_openingBalance', $rows['openingBalance']);
-        $this->fillField('account_closingBalance', $rows['closingBalance']);
+        $this->enterIntoField('account_openingBalance', $rows['openingBalance']);
+        $this->enterIntoField('account_closingBalance', $rows['closingBalance']);
 
         $this->pressButton("account_save");
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
-        
-//        $this->clickLink('account-moneyin');
-//        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
-//        
-//        $this->clickLink('account-moneyout');
-//        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 
     }
 

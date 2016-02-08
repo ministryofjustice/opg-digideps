@@ -7,7 +7,6 @@ Feature: Browser - manage contacts
         And I fill in the following:
             | reason_for_no_contact_reasonForNoContacts | nothing relevant contact added |
         And I press "reason_for_no_contact_save"
-        And I save the page as "report-no-contact-edit"
         And I should see "nothing relevant contact added" in the "reason-no-contacts" region
         When I click on "edit-reason-no-contacts"
         And I click on "delete-button"

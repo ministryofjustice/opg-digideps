@@ -2,9 +2,6 @@
 
 namespace DigidepsBehat;
 
-use Behat\Mink\Driver\Selenium2Driver;
-
-
 trait SiteNavigationTrait
 {
     
@@ -94,7 +91,7 @@ trait SiteNavigationTrait
     {
         $driver = $this->getSession()->getDriver();
 
-        if ($driver instanceof Selenium2Driver) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $this->getSession()->executeScript('document.getElementById("' . $button . '").scrollIntoView(true);');
             $this->getSession()->executeScript('window.scrollBy(0, 100);');
         }
@@ -111,7 +108,7 @@ trait SiteNavigationTrait
     {
         $driver = $this->getSession()->getDriver();
 
-        if ($driver instanceof Selenium2Driver) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $this->getSession()->executeScript('document.getElementById("' . $link . '").scrollIntoView(true);');
             $this->getSession()->executeScript('window.scrollBy(0, 100);');
         }

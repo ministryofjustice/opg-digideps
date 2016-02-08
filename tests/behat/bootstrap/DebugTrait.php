@@ -52,9 +52,12 @@ trait DebugTrait
 
         $driver = $this->getSession()->getDriver();
         $filename = '/tmp/behat/behat-screenshot-' . $name . '.png';
-        if ($driver instanceof Selenium2Driver) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $image_data = $this->getSession()->getDriver()->getScreenshot();
-            file_put_contents($filename, $image_data);
+            if (!file_put_contents($filename, $image_data)) {
+                echo "Cannot write screenshot into $filename \n";
+            }
+            
         }
     
     
