@@ -69,5 +69,5 @@ parameters:
         123abc-both:
             permissions: [ROLE_ADMIN, ROLE_LAY_DEPUTY]
          
-    log_level: info
+    log_level: warning
     log_path: /var/log/app/application.log
