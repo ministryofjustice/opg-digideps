@@ -34,7 +34,7 @@ class Transaction
      *
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      * @JMS\Exclude
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TransactionType", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TransactionType")
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
     private $transactionType;
