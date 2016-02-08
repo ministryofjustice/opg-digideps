@@ -63,6 +63,9 @@ class ReportController extends RestController
         $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
         $this->setJmsSerialiserGroups($groups);
 
+        // preload transaction type. Doctrine otherwise fetching every single one
+        $this->getEntityManager()->createQuery('SELECT tt FROM  AppBundle\Entity\TransactionType tt')->execute();
+        
         $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
