@@ -30,5 +30,5 @@ parameters:
     ga: null
     opg_docker_tag: 0.0.0
     behat_controller_enabled: true
-    log_level: info
+    log_level: warning
     log_path: /var/log/app/application.log
