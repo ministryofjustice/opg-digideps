@@ -58,7 +58,7 @@ class AuthService
             'email'=> $email
         ]);
         if (!$user instanceof User) {
-            $this->logger->info(__METHOD__." user not found ");
+            $this->logger->info("Login: user by email not found ");
             return false;
         }
         
@@ -70,7 +70,7 @@ class AuthService
             return $user;
         } 
         
-        $this->logger->info(__METHOD__." password mismatch ");
+        $this->logger->info("Login: password mismatch");
         
         
         return null;
