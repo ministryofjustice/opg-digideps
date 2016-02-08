@@ -75,5 +75,5 @@ form:
       confirmNewPassword:
         label: "Confirm new password"
   changeYourEmail:
-    subSectionTitle: "Change your email"
-    subSectionDescription: "To change your email address, send your updated email information to the Office of the Public Guardian (OPG) at <a href='mailto:deputyshipservice@publicguardian.gsi.gov.uk'>deputyshipservice@publicguardian.gsi.gov.uk</a>"
+    subSectionTitle: "Want to change your email address?"
+    subSectionDescription: "Let us know at <a href='mailto:deputyshipservice@publicguardian.gsi.gov.uk'>deputyshipservice@publicguardian.gsi.gov.uk</a> and we'll update your details for you."
