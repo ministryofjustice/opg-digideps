@@ -202,13 +202,18 @@ class Redirector
     {
         $securityContext = $this->security;
 
-        // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-        if ($this->env === 'admin' && $securityContext->isGranted('ROLE_ADMIN')) {
-            return $this->router->generate('admin_homepage');
+        if ($this->env === 'admin') {
+           // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
+            if ($securityContext->isGranted('ROLE_ADMIN')) {
+                return $this->router->generate('admin_homepage');
+            }
+            if ($securityContext->isGranted('ROLE_AD')) {
+                return $this->router->generate('ad_homepage');
+            } 
+            
+            return $this->router->generate('login');
         }
-        if ($this->env === 'admin' && $securityContext->isGranted('ROLE_AD')) {
-            return $this->router->generate('ad_homepage');
-        }
+        
         // deputy: if logged, redirect to overview pages
         if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->getLayDeputyHomepage($this->getLoggedUser(), false);
