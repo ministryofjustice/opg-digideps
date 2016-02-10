@@ -57,6 +57,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
         
         $this->object = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'prod');
+        
     }
 
 
@@ -254,6 +255,50 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         
         $this->assertEquals('url', $this->object->getHomepageRedirect());
     }
+    
+    public function testGetHomepageRedirectAdminLogged()
+    {
+        $this->security
+            ->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(true);
+        
+        $this->router
+            ->shouldReceive('generate')->with('admin_homepage')->andReturn('url');
+        
+        $redirectorAdmin = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'admin');
+        
+        $this->assertEquals('url', $redirectorAdmin->getHomepageRedirect());
+    }
+    
+    public function testGetHomepageRedirectAdLogged()
+    {
+        $this->security
+            ->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(false)
+            ->shouldReceive('isGranted')->with('ROLE_AD')->andReturn(true);
+        
+        $this->router
+            ->shouldReceive('generate')->with('ad_homepage')->andReturn('url');
+        
+        $redirectorAdmin = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'admin');
+        
+        $this->assertEquals('url', $redirectorAdmin->getHomepageRedirect());
+    }
+    
+    public function testGetHomepageRedirectAdminNotLogged()
+    {
+        $this->security
+            ->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(false)
+            ->shouldReceive('isGranted')->with('ROLE_AD')->andReturn(false);
+        
+        $this->router
+            ->shouldReceive('generate')->with('login')->andReturn('url');
+        
+        $redirectorAdmin = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'admin');
+        
+        $this->assertEquals('url', $redirectorAdmin->getHomepageRedirect());
+    }
+    
+    
+    
     
     public function tearDown()
     {
