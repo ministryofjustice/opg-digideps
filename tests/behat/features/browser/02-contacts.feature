@@ -1,6 +1,6 @@
 Feature: Browser - manage contacts
 
-    @browser
+    @browserx
     Scenario: Add and delete reason for no contacts
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "edit-contacts"

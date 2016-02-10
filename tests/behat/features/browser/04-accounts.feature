@@ -1,8 +1,9 @@
 Feature: browser - accounts
-
+    
     @browser
     Scenario: add account
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        #Add a bank account
         And I add the following bank account:
             | bank    | HSBC - main account  |
             | accountNumber | 9999 |
@@ -10,29 +11,37 @@ Feature: browser - accounts
             | sortCode | 11 | 22 | 33 |
             | openingBalance  | 100 |
             | closingBalance  | 100 |
-        And I press "account_save"
         Then I should see "HSBC - main account" in the "list-accounts" region
-        
-    @browser
-    Scenario: Add some money in transactions
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-accounts"
+        # Test money in autosave and formatting
         Then I follow "account-moneyin"
-        And I click on the "Income and earning" section summary
-        Then I enter "100" into the "y" field
+        And I click on "income-and-earnings"
+        Then I fill in "transactions_transactionsIn_0_amount" with "100"
+        And I tab to the next field
         And I pause
-        Then I should see "Saved" in section title info panel
-        And the "field" value should be "100.00"
-
-    @browser
-    Scenario: Add some money out transactions
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-accounts"
-        Then I follow "account-moneyin"
-        And I click on the "Accommodation" section summary
-        Then I enter "100" into the "y" field
+        Then I should see "Saved" in the section title info panel
+        And the "transactions_transactionsIn_0_amount" field should contain "100.00"
+        And I follow "account-moneyin"
+        And the "transactions_transactionsIn_0_amount" field should contain "100.00"
+        # Test money out autosave and formatting
+        Then I follow "account-moneyout"
+        And I click on "accommodation"
+        Then I fill in "transactions_transactionsOut_13_amount" with "101"
+        And I tab to the next field
         And I pause
-        Then I should see "Saved" in section title info panel
-        And the "field" value should be "100.00"
-
-        
+        Then I should see "Saved" in the section title info panel
+        And the "transactions_transactionsOut_13_amount" field should contain "101.00"
+        Then I follow "account-moneyout"
+        And the "transactions_transactionsOut_13_amount" field should contain "101.00"
+        # Test bad balance screen
+        Then I follow "account-balance"
+        And I pause
+        And I save the page as "bad-balance"
+        And I pause
+        # Test good balance screen
+        Then I follow "account-moneyout"
+        And I click on "accommodation"
+        Then I fill in "transactions_transactionsOut_13_amount" with "101"
+        And I tab to the next field
+        And I pause
+        Then I follow "account-balance"
+        And I save the page as "good-balance"

@@ -92,7 +92,7 @@ trait LinksTrait
      */
     public function clickOnLinkWithText($text)
     {
-        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//a[text()="' . $text . '"]');
+        $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//*[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (count($linksElementsFound) === 0) {

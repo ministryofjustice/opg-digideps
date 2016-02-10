@@ -10,39 +10,24 @@ Feature: Browser - add and activate user
         Then I click on "login"
         And I am on admin page "/admin"
         Then I create a new "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
-
+        
     @browser
     Scenario: Set user password
         Given I am on "/logout"
         And I open the "/user/activate/" link from the email
         And I activate the user with password "Abcd1234"
-
-    @browser
-    Scenario: add deputy details
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "/user/details"
-        When I set the user details to:
+        Then I set the user details to:
             | name | John | Doe |
             | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
             | phone | 020 3334 3555  | 020 1234 5678  |
-        And I save the page as "00-01-add-deputy"
-    
-    @browser
-    Scenario: add client
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I should be on "client/add"
-        When I set the client details to:
+        And I set the client details to:
             | name | Peter | White |
             | caseNumber | 12345ABC |
             | courtDate | 1 | 1 | 2014 |
             | allowedCourtOrderTypes_0 | 1 |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
-        And I save the page as "00-02-add-client"
-
-    @browser
-    Scenario: create report
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I pause
         Then I fill in the following:
             | report_startDate_day | 01 |
             | report_startDate_month | 01 |
@@ -50,6 +35,5 @@ Feature: Browser - add and activate user
             | report_endDate_day | 01 |
             | report_endDate_month | 01 |
             | report_endDate_year | 2015 |
-        And I save the page as "00-03-create-report"
         And I press "report_save"
         Then the URL should match "report/\d+/overview"

@@ -9,7 +9,6 @@ Feature: Browser - manage decisions
         And I press "reason_for_no_decision_save"
         Then I should see "small budget" in the "reason-no-decisions" region
         When I click on "edit-reason-no-decisions"
-        And I pause
         And I click on "delete-button"
         And I save the page as "01-01-delete-decision-reason-confirm"
         Then I should see a confirmation
@@ -30,7 +29,6 @@ Feature: Browser - manage decisions
         Then I should see "2 beds" in the "list-decisions" region
         And I should see "3 beds" in the "list-decisions" region
         Then I click on the first decision
-        And I pause
         And I click on "delete-button"
         And I save the page as "01-02-delete-decision-confirm"
         Then I should see a confirmation

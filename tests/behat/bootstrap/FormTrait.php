@@ -96,26 +96,61 @@ trait FormTrait
     {
         $this->getSession()->getPage()->clickLink("edit-1-link");
     }
-
-    public function enterIntoField($field, $value) {
-        $driver = $this->getSession()->getDriver();
-
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $this->getSession()->executeScript('document.getElementById("' . $field .'").scrollIntoView(true);');
-            $this->getSession()->executeScript('window.scrollBy(0, 40);');
-        }
-        $this->fillField($field, $value);
-    }
-
+    
     /**
-     * Fills in form fields with provided table.
+     * Fills in form field with specified id|name|label|value.
      *
-     * @When /^(?:|I )fill in the following:$/
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with:$/
+     * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)"$/
      */
-    public function fillFields(TableNode $fields)
+    public function fillField($field, $value)
     {
-        foreach ($fields->getRowsHash() as $field => $value) {
-            $this->enterIntoField($field, $value);
+        $field = $this->fixStepArgument($field);
+        $value = $this->fixStepArgument($value);
+
+        if (substr($field,0,1) != '.' && substr($field,0,1) != '#') {
+            $field = '#' . $field;
         }
+        
+        $this->scrollTo($field);
+
+        $javascript =  <<<EOT
+            var field = $('$field');
+            var value = '$value';
+            
+            $(':focus').trigger('blur').trigger('change');
+      
+            if (field.prop('type') === 'checkbox' || 
+                field.prop('type') === 'radio')
+            {
+                field.prop('checked', true);
+            } else {
+                var pos = 0,
+                    length = value.length,
+                    character, charCode;
+                    
+                for (;pos < length; pos += 1) {
+                    
+                    character = value[pos];
+                    charCode = character.charCodeAt(0);
+                    
+                    var keyPressEvent = $.Event('keypress', {which: charCode}),
+                        keyDownEvent = $.Event('keydown', {which: charCode}),
+                        keyUpEvent = $.Event('keyup', {which: charCode});
+                    
+                    field
+                        .focus()
+                        .trigger(keyDownEvent)
+                        .trigger(keyPressEvent)
+                        .val(value.substr(0,pos+1))
+                        .trigger(keyUpEvent);
+    
+                }
+            }
+EOT;
+        
+        $this->getSession()->executeScript($javascript);
+        
     }
 }

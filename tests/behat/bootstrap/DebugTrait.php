@@ -33,7 +33,7 @@ trait DebugTrait
         echo "- Url: " . $session->getCurrentUrl() . "\n";
         //echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
-        echo "- Page content: [".$data . ']';
+        //echo "- Page content: [".$data . ']';
     }
     
     
@@ -64,7 +64,7 @@ trait DebugTrait
     }
     
     /**
-     * Call debug() when an exception is thrown after as tep
+     * Call debug() when an exception is thrown after as step
      * @AfterStep
      */
     public function debugOnException(\Behat\Behat\Hook\Scope\AfterStepScope $scope)

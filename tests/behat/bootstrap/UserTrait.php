@@ -16,11 +16,11 @@ trait UserTrait
      */
     public function iCreateTheUserWithEmail($role, $firstname, $lastname, $email)
     {
-        $this->enterIntoField('admin_email', $email);
-        $this->enterIntoField('admin_firstname', $firstname);
-        $this->enterIntoField('admin_lastname', $lastname);
+        $this->fillField('admin_email', $email);
+        $this->fillField('admin_firstname', $firstname);
+        $this->fillField('admin_lastname', $lastname);
         $roleId = self::$roleNameToRoleId[strtolower($role)];
-        $this->enterIntoField('admin_roleId', $roleId);
+        $this->fillField('admin_roleId', $roleId);
         $this->clickOnBehatLink('save');
         $this->theFormShouldBeValid();
         //$this->assertResponseStatus(200);
@@ -45,8 +45,8 @@ trait UserTrait
         $this->iOpenTheSpecificLinkOnTheEmail("/user/activate/");
         //$this->assertResponseStatus(200);
         
-        $this->enterIntoField('set_password_password_first', $password);
-        $this->enterIntoField('set_password_password_second', $password);
+        $this->fillField('set_password_password_first', $password);
+        $this->fillField('set_password_password_second', $password);
         $this->pressButton('set_password_save');
         $this->theFormShouldBeValid();
         //$this->assertResponseStatus(200);
@@ -61,20 +61,20 @@ trait UserTrait
         $this->visit("/user/details");
         $rows = $table->getRowsHash();
         
-        $this->enterIntoField('user_details_firstname', $rows['name'][0]);
-        $this->enterIntoField('user_details_lastname', $rows['name'][1]);
+        $this->fillField('user_details_firstname', $rows['name'][0]);
+        $this->fillField('user_details_lastname', $rows['name'][1]);
         
         if (isset($rows['address'])) {
-            $this->enterIntoField('user_details_address1', $rows['address'][0]);
-            $this->enterIntoField('user_details_address2', $rows['address'][1]);
-            $this->enterIntoField('user_details_address3', $rows['address'][2]);
-            $this->enterIntoField('user_details_addressPostcode', $rows['address'][3]);
-            $this->enterIntoField('user_details_addressCountry', $rows['address'][4]);
+            $this->fillField('user_details_address1', $rows['address'][0]);
+            $this->fillField('user_details_address2', $rows['address'][1]);
+            $this->fillField('user_details_address3', $rows['address'][2]);
+            $this->fillField('user_details_addressPostcode', $rows['address'][3]);
+            $this->fillField('user_details_addressCountry', $rows['address'][4]);
         }
         
         if (isset($rows['phone'])) {
-            $this->enterIntoField('user_details_phoneMain', $rows['phone'][0]);
-            $this->enterIntoField('user_details_phoneAlternative', $rows['phone'][1]);
+            $this->fillField('user_details_phoneMain', $rows['phone'][0]);
+            $this->fillField('user_details_phoneAlternative', $rows['phone'][1]);
         }
         
         $this->pressButton('user_details_save');
@@ -91,28 +91,27 @@ trait UserTrait
         $this->visit("/client/add");
         $rows = $table->getRowsHash();
         
+        $this->fillField('client_firstname', $rows['name'][0]);
+        $this->fillField('client_lastname', $rows['name'][1]);
+        $this->fillField('client_address', $rows['address'][0]);
+        $this->fillField('client_address2', $rows['address'][1]);
+        $this->fillField('client_county', $rows['address'][2]);
+        $this->fillField('client_postcode', $rows['address'][3]);
         
-        $this->enterIntoField('client_firstname', $rows['name'][0]);
-        $this->enterIntoField('client_lastname', $rows['name'][1]);
-        $this->enterIntoField('client_address', $rows['address'][0]);
-        $this->enterIntoField('client_address2', $rows['address'][1]);
-        $this->enterIntoField('client_county', $rows['address'][2]);
-        $this->enterIntoField('client_postcode', $rows['address'][3]);
-        
-        $this->enterIntoField('client_caseNumber', $rows['caseNumber']);
-        $this->enterIntoField('client_courtDate_day', $rows['courtDate'][0]);
-        $this->enterIntoField('client_courtDate_month', $rows['courtDate'][1]);
-        $this->enterIntoField('client_courtDate_year', $rows['courtDate'][2]);
+        $this->fillField('client_caseNumber', $rows['caseNumber']);
+        $this->fillField('client_courtDate_day', $rows['courtDate'][0]);
+        $this->fillField('client_courtDate_month', $rows['courtDate'][1]);
+        $this->fillField('client_courtDate_year', $rows['courtDate'][2]);
         
         if (isset($rows['allowedCourtOrderTypes_0'])) {
-            $this->enterIntoField('client_allowedCourtOrderTypes_0', $rows['allowedCourtOrderTypes_0']);
+            $this->fillField('client_allowedCourtOrderTypes_0', $rows['allowedCourtOrderTypes_0']);
         }
         if (isset($rows['allowedCourtOrderTypes_1'])) {
-            $this->enterIntoField('client_allowedCourtOrderTypes_1', $rows['allowedCourtOrderTypes_1']);
+            $this->fillField('client_allowedCourtOrderTypes_1', $rows['allowedCourtOrderTypes_1']);
         }
         
-        $this->enterIntoField('client_country', $rows['address'][4]);
-        $this->enterIntoField('client_phone', $rows['phone']);
+        $this->fillField('client_country', $rows['address'][4]);
+        $this->fillField('client_phone', $rows['phone']);
         
         $this->pressButton('client_save');
         $this->theFormShouldBeValid();
@@ -178,7 +177,9 @@ trait UserTrait
      */
     public function iPause()
     {
-        $time = 5000; // time should be in milliseconds
+        $time = 1000; // time should be in milliseconds
         $this->getSession()->wait($time);
     }
+    
+    
 }

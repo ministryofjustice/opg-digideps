@@ -207,5 +207,13 @@ trait RegionTrait
     
     }
 
+    /**
+     * @Then /^I should see "([^"]*)" in the section title info panel$/
+     */
+    public function iShouldSeeInSectionTitleInfoPanel($text)
+    {
+        $css = "#page-section-title-container .info";
+        $this->assertSession()->elementTextContains('css', $css, $text);
+    }
 
 }

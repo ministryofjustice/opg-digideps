@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 trait ReportTrait
@@ -224,20 +225,20 @@ trait ReportTrait
                 $this->clickLink("add-decisions-button");
             }
             
-            $this->enterIntoField('decision_description', $row['description']);
+            $this->fillField('decision_description', $row['description']);
             switch ($row['clientInvolved']) {
                 case 'yes':
-                    $this->enterIntoField('decision_clientInvolvedBoolean_0', 1);
+                    $this->fillField('decision_clientInvolvedBoolean_0', 1);
                     break;
 
                 case 'no':
-                    $this->enterInfoField('decision_clientInvolvedBoolean_1', 0);
+                    $this->fillField('decision_clientInvolvedBoolean_1', 0);
                     break;
                 default:
                     throw new \RuntimeException("Invalid value for clientInvolved");
             }
 
-            $this->enterIntoField('decision_clientInvolvedDetails', $row['clientInvolvedDetails']);
+            $this->fillField('decision_clientInvolvedDetails', $row['clientInvolvedDetails']);
 
             
             $this->pressButton("decision_save");
@@ -283,14 +284,6 @@ trait ReportTrait
         }
     }
     
-    public function scrollTo($element) {
-        $driver = $this->getSession()->getDriver();
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $this->getSession()->executeScript('$("' . $element . '")[0].scrollIntoView(true);');
-            $this->getSession()->executeScript('window.scrollBy(0, 40);');
-        }
-    }
-    
     /**
      * @When I fill in the safeguarding form with the following:
      */
@@ -302,7 +295,7 @@ trait ReportTrait
         $rows = $table->getRowsHash();
 
         foreach ($rows as $key => $value) {
-            $this->enterIntoField($key, $value);
+            $this->fillField($key, $value);
         }
 
         
@@ -314,68 +307,27 @@ trait ReportTrait
      */
     public function iAddTheFollowingBankAccount(TableNode $table)
     {
+        $time = 10000; // time should be in milliseconds
         $this->gotoOverview();
-        $this->clickLink("edit-accounts");
+        $this->clickLink('edit-accounts');
 
-        $this->clickOnBehatLink('add-account');
-
+        $this->clickLink('add-account');
         $rows = $table->getRowsHash();
-
-        $this->enterIntoField('account_bank', $rows['bank']);
-        $this->enterIntoField('account_accountNumber', $rows['accountNumber']);
-        $this->enterIntoField('account_accountType', $rows['accountType']);
-        $this->enterIntoField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
-        $this->enterIntoField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
-        $this->enterIntoField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
-
-        $this->enterIntoField('account_openingBalance', $rows['openingBalance']);
-        $this->enterIntoField('account_closingBalance', $rows['closingBalance']);
-
+        $this->fillField('account_bank', $rows['bank']);
+        $this->fillField('account_accountNumber', $rows['accountNumber']);
+        $this->fillField('account_accountType', $rows['accountType']);
+        $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
+        $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
+        $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
+        $this->fillField('account_openingBalance', $rows['openingBalance']);
+        $this->fillField('account_closingBalance', $rows['closingBalance']);
         $this->pressButton("account_save");
+        
         $this->theFormShouldBeValid();
 
     }
 
-//    private function addTransactions(array $rows, $prefix, $buttonId)
-//    {
-//        $records = $this->getRowsMatching($rows, $prefix);
-//        if (!$records) {
-//            return;
-//        }
-//
-//        foreach ($records as $key => $value) {
-//            if (is_array($value)) { 
-//                $this->fillField("transactions_{$key}_amount", $value[0]);
-//                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
-//            } else {
-//                $this->fillField("transactions_{$key}_amount", $value);
-//            }
-//        }
-//
-//        // save and return to page
-//        $this->pressButton($buttonId);
-//        $this->theFormShouldBeValid();
-//        $this->assertResponseStatus(200);
-//    }
-
-    /**
-     * @param array $rows
-     * @param string $needle
-     *
-     * @return array
-     */
-//    private function getRowsMatching(array $rows, $needle)
-//    {
-//        $ret = $rows;
-//        foreach ($ret as $k => $value) {
-//            if (strpos($k, $needle) === false) {
-//                unset($ret[$k]);
-//            }
-//        }
-//
-//        return $ret;
-//    }
-
+    
      /**
      * @When I submit the report with further info :moreInfo
      */
@@ -581,7 +533,6 @@ trait ReportTrait
         $this->fillField('reason_for_no_decision_reason', $text);
         $this->pressButton("reason_for_no_decision_saveReason");
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
     }
 
 
@@ -608,7 +559,6 @@ trait ReportTrait
         $this->checkOption("report_noAssetToAdd");
         $this->pressButton("report_saveNoAsset");
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
     }
     
     
@@ -627,5 +577,5 @@ trait ReportTrait
     {
         $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
     }
-
+    
 }
