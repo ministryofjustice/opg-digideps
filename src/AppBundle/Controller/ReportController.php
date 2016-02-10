@@ -63,8 +63,7 @@ class ReportController extends RestController
         $groups = $request->query->has('groups') ? (array) $request->query->get('groups') : ['basic'];
         $this->setJmsSerialiserGroups($groups);
 
-        // preload transaction type. Doctrine otherwise fetching every single one
-        $this->getEntityManager()->createQuery('SELECT tt FROM  AppBundle\Entity\TransactionType tt')->execute();
+        $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
         
         $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -182,7 +181,7 @@ class ReportController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        $this->getEntityManager()->createQuery('SELECT tt FROM  AppBundle\Entity\TransactionType tt')->execute();
+        $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
         
         $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
