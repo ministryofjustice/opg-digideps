@@ -56,18 +56,18 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         
         $this->security->shouldReceive('getToken->getUser')->andReturn($this->user);
         
-        $this->object = new Redirector($this->security, $this->router, $this->session, $this->restClient);
+        $this->object = new Redirector($this->security, $this->router, $this->session, $this->restClient, 'prod');
     }
 
 
-    public function testGetUserFirstPageAdmin()
+    public function testgetFirstPageAfterLoginAdmin()
     {
         $this->security->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(true);
 
         $this->router
             ->shouldReceive('generate')->with('admin_homepage')->andReturn('url');
 
-        $this->assertEquals('url', $this->object->getUserFirstPage());
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin());
     }
 
     public function testFirstPageLayNoDetails()
@@ -87,7 +87,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->shouldReceive('hasDetails')->andReturn(false);
         
-        $this->assertEquals('url', $this->object->getUserFirstPage());
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin());
     }
 
     public function testFirstPageClientNoDetails()
@@ -107,7 +107,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('generate')->with('client_add')->andReturn('url');
         
 
-        $this->assertEquals('url', $this->object->getUserFirstPage());
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin());
     }
     
     
@@ -124,7 +124,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('hasDetails')->andReturn(true)
             ->shouldReceive('hasClients')->andReturn(false);
         
-        $this->assertEquals('url', $this->object->getUserFirstPage());
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin());
     }
     
     public function testFirstPageLayDetailsClientNoReports()
@@ -144,7 +144,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->shouldReceive('hasDetails')->andReturn(true);
         
-        $this->assertEquals('url', $this->object->getUserFirstPage());
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin());
     }
     
     public function testFirstPageLayDetailsClientReportsLur()
@@ -164,7 +164,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->shouldReceive('hasDetails')->andReturn(true);
         
-        $this->assertEquals('http://example.org/path', $this->object->getUserFirstPage());
+        $this->assertEquals('http://example.org/path', $this->object->getFirstPageAfterLogin());
     }
     
     public function testFirstPageLayDetailsClientReports()
@@ -190,7 +190,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->shouldReceive('hasDetails')->andReturn(true);
         
-        $this->assertEquals('url', $this->object->getUserFirstPage(false));
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin(false));
     }
     
     public function testFirstPageLayDetailsClientReportsFallBackHome()
@@ -216,7 +216,43 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->shouldReceive('hasDetails')->andReturn(true);
         
-        $this->assertEquals('url', $this->object->getUserFirstPage(false));
+        $this->assertEquals('url', $this->object->getFirstPageAfterLogin(false));
+    }
+    
+    
+    public function testGetHomepageRedirectDeputyRedirectNotLogged()
+    {
+        $this->security
+            ->shouldReceive('isGranted')->with('IS_AUTHENTICATED_FULLY')->andReturn(false);
+        
+        $this->assertEquals(false, $this->object->getHomepageRedirect());
+    }
+    
+    public function testGetHomepageRedirectDeputyOverviewPage()
+    {
+        $this->security
+            ->shouldReceive('isGranted')->with('IS_AUTHENTICATED_FULLY')->andReturn(true)
+            ->shouldReceive('isGranted')->with('ROLE_ADMIN')->andReturn(false)
+            ->shouldReceive('isGranted')->with('ROLE_LAY_DEPUTY')->andReturn(true);
+        
+        $this->router
+            ->shouldReceive('generate')->with('report_overview', ['reportId'=>3])->andReturn('url');
+        
+        $this->report
+            ->shouldReceive('getSubmitted')->andReturn(false);
+            
+        $this->restClient
+            ->shouldReceive('get')->with('report/3', 'Report', m::any())->andReturn($this->report);
+        
+        $this->user
+            ->shouldReceive('hasDetails')->andReturn(true)
+            ->shouldReceive('hasClients')->andReturn(true)
+            ->shouldReceive('hasReports')->andReturn(true);
+
+        $this->client
+            ->shouldReceive('hasDetails')->andReturn(true);
+        
+        $this->assertEquals('url', $this->object->getHomepageRedirect());
     }
     
     public function tearDown()

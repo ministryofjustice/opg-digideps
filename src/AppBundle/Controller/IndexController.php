@@ -22,18 +22,10 @@ class IndexController extends AbstractController
      */
     public function indexAction()
     {
-        // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-        if ($this->container->getParameter('env') === 'admin') {
-            if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-                return $this->redirect($this->generateUrl('admin_homepage'));
-            } else if ($this->get('security.context')->isGranted('ROLE_AD')) {
-                return $this->redirect($this->generateUrl('ad_homepage'));
-            } else {
-                return $this->redirect($this->generateUrl('login'));
-            }
-            
+        if ($url = $this->get('redirectorService')->getHomepageRedirect()) {
+            return $this->redirect($url);
         }
-        
+
         // deputy homepage with links to register and login
         return $this->render('AppBundle:Index:index.html.twig');
     }
