@@ -96,4 +96,12 @@ class ReportRepository extends EntityRepository
         
         return $ret;
     }
+    
+    /**
+     *  preload transaction type. Doctrine otherwise fetching every single one
+     */
+    public function warmUpArrayCacheTransactionTypes()
+    {
+        $this->_em->createQuery('SELECT tt FROM  AppBundle\Entity\TransactionType tt')->execute();
+    }
 }

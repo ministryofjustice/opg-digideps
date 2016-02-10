@@ -181,7 +181,9 @@ class ReportController extends RestController
     public function update(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-
+        
+        $this->getEntityManager()->createQuery('SELECT tt FROM  AppBundle\Entity\TransactionType tt')->execute();
+        
         $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
