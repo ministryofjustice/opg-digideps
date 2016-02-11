@@ -60,6 +60,16 @@ class ReportStatusService
             return $this->trans('nodecisions');
         }
     }
+    
+    /** @return string */
+    public function getConcernsStatus()
+    {
+        if ('TODO') {
+            return $this->trans('notstarted');
+        } else {
+            return $this->trans('nodecisions');
+        }
+    }
 
     /** @return string */
     public function getContactsStatus()
@@ -127,6 +137,16 @@ class ReportStatusService
     public function getDecisionsState()
     {
         if ($this->missingDecisions()) {
+            return self::NOTSTARTED;
+        } else {
+            return self::DONE;
+        }
+    }
+    
+     /** @return string */
+    public function getConcernsState()
+    {
+        if ('TODO') {
             return self::NOTSTARTED;
         } else {
             return self::DONE;

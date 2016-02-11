@@ -1,0 +1,91 @@
+{% embed 'AppBundle:Components/Page:page-report.html.twig'%}
+
+{% set translationDomain = "report-concern" %}
+{% trans_default_domain translationDomain %}
+
+{% block bodyClasses %}concern-page{% endblock %}
+{% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+{% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+
+
+{% block pageBody %}
+
+    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+    
+    {% block validationSummary %}
+        {{ form_errors_list(form) }}
+    {% endblock %}
+
+    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
+          transDomain: translationDomain
+    } %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+
+    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain)  }}</h3>
+
+    <div class="form-section">
+        {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
+            'fieldSetClass' : 'inline do-you-expect-radio',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
+            'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+            'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+    </div>
+
+    <div class="form-section">
+        {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
+            'fieldSetClass' : 'inline do-you-have-concerns-radio',
+            'legendClass' : 'form-label',
+            'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
+            'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
+            'items': [
+                {'labelClass': 'block-label', 'elementClass': '' },
+                {'labelClass': 'block-label', 'elementClass': '' }
+            ]
+        }) }}
+    </div>
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+    {{ form_submit(form.save,'form.save') }}
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {{ form_end(form) }}
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+            new opg.RadioHide({
+                radio:'.do-you-live-radio input[type=radio]',
+                content: '#visit-questions',
+                hideOnYes: true
+            });
+            new opg.RadioHide({
+                radio:'.does-client-receive-care input[type=radio]',
+                content: '#care-questions',
+                hideOnYes: false
+            });
+            new opg.RadioHide({
+                radio:'.care-plan input[type=radio]',
+                content: '#care-plan-questions',
+                hideOnYes: false
+            });
+        });
+    </script>
+
+{% endblock %}
+
+{% block pageBodyFooterNav %}
+    {% include 'AppBundle:Components:nextprevious.html.twig' with {
+    'previousLink': path("contacts" , {'reportId': report.id }),
+    'previousLabel': 'Contacts',
+    'nextLink': path("accounts" , {'reportId': report.id }),
+    'nextLabel': 'Accounts'
+    } %}
+{% endblock %}
+
+{% endembed %}

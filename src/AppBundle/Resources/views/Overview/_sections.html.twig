@@ -16,6 +16,15 @@
         } %}
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
+            subSection: 'concerns',
+            report: report,
+            description: true,
+            state: reportStatus.concernsState,
+            status: reportStatus.concernsStatus,
+            list: true
+        } %}
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
             subSection: 'contacts',
             report: report,
             description: true,

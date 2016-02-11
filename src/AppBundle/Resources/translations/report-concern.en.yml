@@ -1,0 +1,26 @@
+page:
+    htmlTitle: "Deputy report - Concerns | GOV.UK"
+#    safeguardInfoSaved: Your changes were saved
+    pageSectionTitle: Next reporting period
+    pageSectionDescription: ""
+form:
+    contact:
+        subSectionTitle: Contact with %client%
+    save:
+        label: Save
+    doYouExpectFinancialDecisions:
+        label: |
+            Do you expect to make any significant financial decisions on 
+            behalf of %client% in the next 12 months?
+        hint: |
+            For example,%client% moving to other accommodation, 
+            buying or selling property or making adaptations to their home, 
+            changing their investments, taking funds out of the Courts Funds Office, 
+            seeking NHS continuing care funding, making large gifts 
+            (such as a 21st birthday present for their child).
+    doYouHaveConcerns:
+        label: Do you have any concerns about your deputyship?
+        hint: |
+            For example, paying care home fees if %client%’s money runs low, 
+            managing %client% ’s property, making gifts, other family members’ involvement 
+            with %client% ’s funds, what expenses you can claim.

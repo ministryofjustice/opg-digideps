@@ -99,6 +99,12 @@ class Report
     private $safeguarding;
     
     /**
+     * @JMS\Type("AppBundle\Entity\Concern")
+     * @var \AppBundle\Entity\Concern
+     */
+    private $concern;
+    
+    /**
      * @JMS\Type("string")
      * @var string $reasonForNoContacts
      */
@@ -599,6 +605,17 @@ class Report
         $this->safeguarding = $safeguarding;
     }
     
+    public function getConcern()
+    {
+        return $this->concern;
+    }
+
+    public function setConcern(Concern $concern)
+    {
+        $this->concern = $concern;
+        return $this;
+    }
+        
     /**
      * @return boolean $noAssetToAdd
      */
