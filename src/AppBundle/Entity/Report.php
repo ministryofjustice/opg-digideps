@@ -81,7 +81,13 @@ class Report
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
     private $safeguarding;
-
+    
+    /**
+     * @JMS\Groups({"basic"})
+     * @JMS\Type("AppBundle\Entity\Concern")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Concern",  mappedBy="report", cascade={"persist"})
+     **/
+    private $concern;
 
     /**
      * @JMS\Groups({ "basic"})
@@ -662,6 +668,27 @@ class Report
         return $this;
     }
 
+    /**
+     * @return Concern
+     */
+    public function getConcern()
+    {
+        return $this->concern;
+    }
+
+    /**
+     * 
+     * @param \AppBundle\Entity\Concern $concern
+     * @return \AppBundle\Entity\Report
+     */
+    public function setConcern(Concern $concern)
+    {
+        $this->concern = $concern;
+        
+        return $this;
+    }
+
+        
     /**
      * Set reasonForNoContact
      *
