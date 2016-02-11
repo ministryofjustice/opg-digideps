@@ -120,11 +120,18 @@ trait FormTrait
             var value = '$value';
             
             $(':focus').trigger('blur').trigger('change');
+            var tag = field.prop('tagName');
       
             if (field.prop('type') === 'checkbox' || 
                 field.prop('type') === 'radio')
             {
+            
                 field.prop('checked', true);
+            
+            } else if (tag === 'SELECT') {
+                
+                field.focus().val(value).trigger('change');
+            
             } else {
                 var pos = 0,
                     length = value.length,
@@ -148,6 +155,7 @@ trait FormTrait
     
                 }
             }
+
 EOT;
         
         $this->getSession()->executeScript($javascript);

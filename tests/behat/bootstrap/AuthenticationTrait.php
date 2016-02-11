@@ -12,12 +12,6 @@ trait AuthenticationTrait
      */
     public function iAmLoggedInAsWithPassword($email, $password)
     {
-        $driver = $this->getSession()->getDriver();
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $driver->resizeWindow(1024,900);
-        }
-        
-        
         $this->visitPath('/logout');
         $this->visitPath('/login');
         $this->fillField('login_email',$email);

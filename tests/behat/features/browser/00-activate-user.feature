@@ -10,6 +10,13 @@ Feature: Browser - add and activate user
         Then I click on "login"
         And I am on admin page "/admin"
         Then I create a new "Lay Deputy" user "John" "Doe" with email "behat-user@publicguardian.gsi.gov.uk"
+
+    @browser
+    Scenario: view the homepage and login page
+        Given I am on "/"
+        Then I save the page as "home"
+        Then I am on "/login"
+        And I save the page as "login"
         
     @browser
     Scenario: Set user password
@@ -28,6 +35,7 @@ Feature: Browser - add and activate user
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
             | phone | 0123456789  |
         And I pause
+        And I save the page as "report-period"
         Then I fill in the following:
             | report_startDate_day | 01 |
             | report_startDate_month | 01 |

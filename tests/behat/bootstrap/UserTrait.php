@@ -59,8 +59,10 @@ trait UserTrait
     public function iSetTheUserDetailsTo(TableNode $table)
     {
         $this->visit("/user/details");
-        $rows = $table->getRowsHash();
+
+        $this->iSaveThePageAs("user-details");
         
+        $rows = $table->getRowsHash();
         $this->fillField('user_details_firstname', $rows['name'][0]);
         $this->fillField('user_details_lastname', $rows['name'][1]);
         
@@ -79,7 +81,6 @@ trait UserTrait
         
         $this->pressButton('user_details_save');
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
     }
     
     /**
@@ -89,8 +90,10 @@ trait UserTrait
     {
         
         $this->visit("/client/add");
-        $rows = $table->getRowsHash();
+
+        $this->iSaveThePageAs("client-details");
         
+        $rows = $table->getRowsHash();
         $this->fillField('client_firstname', $rows['name'][0]);
         $this->fillField('client_lastname', $rows['name'][1]);
         $this->fillField('client_address', $rows['address'][0]);
@@ -112,10 +115,13 @@ trait UserTrait
         
         $this->fillField('client_country', $rows['address'][4]);
         $this->fillField('client_phone', $rows['phone']);
+
+        $this->iSaveThePageAs('1-client-details');
         
         $this->pressButton('client_save');
+        $this->iSaveThePageAs('2-client-details');
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
+
     }
     
     /**

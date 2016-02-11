@@ -51,7 +51,7 @@ trait DebugTrait
         }
 
         $driver = $this->getSession()->getDriver();
-        $filename = '/tmp/behat/behat-screenshot-' . $name . '.png';
+        $filename = '/tmp/behat/' . $name . '.png';
         if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $image_data = $this->getSession()->getDriver()->getScreenshot();
             if (!file_put_contents($filename, $image_data)) {
