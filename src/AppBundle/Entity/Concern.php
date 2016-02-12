@@ -21,15 +21,27 @@ class Concern
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="concern.doYouExpectFinancialDecisions.notBlank", groups={"concern"})
-     * 
      */
     private $doYouExpectFinancialDecisions;
+    
+     /**
+     * @JMS\Type("string")
+      * @Assert\NotBlank(message="concern.doYouExpectFinancialDecisionsDetails.notBlank", groups={"expect-decisions-yes"})
+     */
+    private $doYouExpectFinancialDecisionsDetails;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="concern.doYouHaveConcerns.notBlank", groups={"concern"})
      */
     private $doYouHaveConcerns;
+    
+    
+    /**
+     * @JMS\Type("string")
+     * @Assert\NotBlank(message="concern.doYouHaveConcernsDetails.notBlank", groups={"have-concerns-yes"})
+     */
+    private $doYouHaveConcernsDetails;
     
     public function getId()
     {
@@ -64,6 +76,39 @@ class Concern
         return $this;
     }
 
+    public function getDoYouExpectFinancialDecisionsDetails()
+    {
+        return $this->doYouExpectFinancialDecisionsDetails;
+    }
+
+
+    public function getDoYouHaveConcernsDetails()
+    {
+        return $this->doYouHaveConcernsDetails;
+    }
+
+
+    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
+    {
+        $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
+    }
+
+
+    public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
+    {
+        $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
+    }
+    
+    public function isComplete()
+    {
+        $financialComplete = $this->getDoYouExpectFinancialDecisions() =='no' 
+            || ($this->getDoYouExpectFinancialDecisions() =='yes' && $this->getDoYouExpectFinancialDecisionsDetails());
+        
+        $concernComplete = $this->getDoYouHaveConcerns() =='no' 
+            || ($this->getDoYouHaveConcerns() =='yes' && $this->getDoYouHaveConcernsDetails());
+        
+        return $financialComplete && $concernComplete;
+    }
 
     
 }
