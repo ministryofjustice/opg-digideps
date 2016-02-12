@@ -242,8 +242,12 @@ safeguarding:
 concern:
     doYouExpectFinancialDecisions:
         notBlank: Choose Yes or No
+    doYouExpectFinancialDecisionsDetails:
+        notBlank: Value is required and can’t be empty
     doYouHaveConcerns:
         notBlank: Choose Yes or No
+    doYouHaveConcernsDetails:
+        notBlank: Value is required and can’t be empty
         
 feedbackAfterReport:
     satisfactionLevel:

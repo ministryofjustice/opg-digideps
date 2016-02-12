@@ -18,9 +18,13 @@ form:
             changing their investments, taking funds out of the Courts Funds Office, 
             seeking NHS continuing care funding, making large gifts 
             (such as a 21st birthday present for their child).
+    doYouExpectFinancialDecisionsDetails:
+        label: Give details below
     doYouHaveConcerns:
         label: Do you have any concerns about your deputyship?
         hint: |
             For example, paying care home fees if %client%’s money runs low, 
             managing %client% ’s property, making gifts, other family members’ involvement 
             with %client% ’s funds, what expenses you can claim.
+    doYouHaveConcernsDetails:
+        label: Give details below

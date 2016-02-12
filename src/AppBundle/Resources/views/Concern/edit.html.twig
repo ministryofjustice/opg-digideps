@@ -26,7 +26,7 @@
 
     <div class="form-section">
         {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
-            'fieldSetClass' : 'inline do-you-expect-radio',
+            'fieldSetClass' : 'inline expect-financial-dec-radio',
             'legendClass' : 'form-label',
             'legendText' : 'form.doYouExpectFinancialDecisions.label' | trans({'%client%': report.client.firstname}, translationDomain),
             'hintText' : 'form.doYouExpectFinancialDecisions.hint' | trans({'%client%': report.client.firstname}, translationDomain),
@@ -35,6 +35,13 @@
                 {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
+         <div id="financial-decisions-textarea">
+            {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', { 
+                'labelClass': 'required', 
+                'labelParameters': { '%client%': report.client.firstname },
+                'inputClass': 'expanding' 
+            }) }}
+        </div>
     </div>
 
     <div class="form-section">
@@ -48,6 +55,13 @@
                 {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
+        <div id="concerns-details-textarea">
+            {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', { 
+                'labelClass': 'required', 
+                'labelParameters': { '%client%': report.client.firstname },
+                'inputClass': 'expanding' 
+            }) }}
+        </div>
     </div>
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
@@ -60,18 +74,13 @@
         $(document).ready(function() {
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
             new opg.RadioHide({
-                radio:'.do-you-live-radio input[type=radio]',
-                content: '#visit-questions',
-                hideOnYes: true
-            });
-            new opg.RadioHide({
-                radio:'.does-client-receive-care input[type=radio]',
-                content: '#care-questions',
+                radio:'.expect-financial-dec-radio input[type=radio]',
+                content: '#financial-decisions-textarea',
                 hideOnYes: false
             });
             new opg.RadioHide({
-                radio:'.care-plan input[type=radio]',
-                content: '#care-plan-questions',
+                radio:'.do-you-have-concerns-radio input[type=radio]',
+                content: '#concerns-details-textarea',
                 hideOnYes: false
             });
         });
