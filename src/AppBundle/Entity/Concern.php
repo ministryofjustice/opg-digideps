@@ -16,7 +16,6 @@ class Concern
     /**
      * @var integer
      *
-     * @JMS\Groups({"basic"})
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -26,7 +25,6 @@ class Concern
     private $id;
 
     /**
-     *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="concern")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
@@ -36,20 +34,46 @@ class Concern
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column(name="do_you_expect_decisions", type="text",nullable=true)
+     * @JMS\Groups({"concern"})
+     * @ORM\Column(name="do_you_expect_decisions", type="string", length=4, nullable=true)
      */
     private $doYouExpectFinancialDecisions;
+    
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"concern"})
+     * @ORM\Column(name="do_you_expect_decisions_details", type="text", nullable=true)
+     */
+    private $doYouExpectFinancialDecisionsDetails;
 
     
     /**
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions","basic"})
-     * @ORM\Column( name="do_you_have_concerns", type="text", nullable=true)
+     * @JMS\Groups({"concern"})
+     * @ORM\Column( name="do_you_have_concerns", type="string", length=4, nullable=true)
      */
     private $doYouHaveConcerns;
+    
+    /**
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"concern"})
+     * @ORM\Column( name="do_you_have_concerns_details", type="text", nullable=true)
+     */
+    private $doYouHaveConcernsDetails;
+
+    /**
+     * @param Report $report
+     */
+    public function __construct(Report $report)
+    {
+        $this->report = $report;
+    }
 
     /**
      * Get id
@@ -107,6 +131,32 @@ class Concern
         $this->doYouHaveConcerns = $doYouHaveConcerns;
         return $this;
     }
+
+    public function getDoYouExpectFinancialDecisionsDetails()
+    {
+        return $this->doYouExpectFinancialDecisionsDetails;
+    }
+
+
+    public function getDoYouHaveConcernsDetails()
+    {
+        return $this->doYouHaveConcernsDetails;
+    }
+
+
+    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
+    {
+        $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
+        return $this;
+    }
+
+
+    public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
+    {
+        $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
+        return $this;
+    }
+
 
 
 

@@ -83,7 +83,7 @@ class Report
     private $safeguarding;
     
     /**
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic", "concern"})
      * @JMS\Type("AppBundle\Entity\Concern")
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Concern",  mappedBy="report", cascade={"persist"})
      **/
