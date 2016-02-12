@@ -15,6 +15,7 @@ RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN  npm install --global gulp
+RUN  npm install --global browserify
 RUN  gem install sass scss_lint
 
 # build app dependencies

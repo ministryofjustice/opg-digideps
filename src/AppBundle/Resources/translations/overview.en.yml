@@ -36,6 +36,11 @@ accounts:
     subSectionDescription: "Add details of all income and spending in the reporting period"
     edit: "Edit accounts"
     start: "Start accounts"
+transfers:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: "Tell us about money between %clients%'s accounts"
+    edit: "Edit transfers"
+    start: "Start money transfers"
 safeguarding:
     subSectionTitle: "Safeguarding"
     subSectionDescription: "We need to know about your involvement with %client%'s care"

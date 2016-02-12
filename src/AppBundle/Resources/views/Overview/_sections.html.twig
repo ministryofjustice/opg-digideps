@@ -53,6 +53,15 @@
             } %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
+                subSection: 'transfers',
+                report: report,
+                state: reportStatus.accountsState,
+                status: reportStatus.accountsStatus,
+                warning: true,
+                description: true
+            } %}
+            {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                transDomain: translationDomain,
                 subSection: 'assets',
                 report: report,
                 state: reportStatus.assetsState,

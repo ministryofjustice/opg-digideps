@@ -12,6 +12,12 @@ var gulp = require('gulp'),
     scsslint = require('gulp-scss-lint'),
     jshint = require('gulp-jshint');
 
+var gutil = require('gulp-util');
+var source = require('vinyl-source-stream');
+var browserify = require('browserify');
+var watchify = require('watchify');
+var reactify = require('reactify');
+
 
 var config = {
     sass: {
@@ -144,8 +150,62 @@ gulp.task('watch', ['default'], function() {
     gulp.watch(config.jsSrc + '/**/*', ['js']);
 });
 
+gulp.task('react-watch', function (callback) {
+    var bundler = watchify(browserify({
+        entries: ['./src/AppBundle/Resources/assets/javascripts/transfers/transfers.jsx'],
+        transform: [reactify],
+        extensions: ['.jsx'],
+        debug: true,
+        cache: {},
+        packageCache: {},
+        fullPaths: true
+    }));
+
+    function build(file) {
+        if (file) gutil.log('Recompiling ' + file);
+        return bundler
+            .bundle()
+            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+            .pipe(source('transfers.js'))
+            .pipe(gulp.dest('./web/javascripts/'));
+    };
+    build();
+    bundler.on('update', build);
+});
+
+gulp.task('react', function (callback) {
+    var bundler = browserify({
+        entries: ['./src/AppBundle/Resources/assets/javascripts/transfers/transfers.jsx'],
+        transform: [reactify],
+        extensions: ['.jsx'],
+        debug: false,
+        cache: {},
+        packageCache: {},
+        fullPaths: true
+    });
+
+    function build(file) {
+        if (file) gutil.log('Recompiling ' + file);
+        return bundler
+            .bundle()
+            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+            .pipe(source('transfers.js'))
+            .pipe(gulp.dest('./web/javascripts/'));
+        
+    };
+    function minify() {
+        return gulp.src('./web/javascripts/transfers.js')
+            .pipe(rename('transfers.min.js'))
+            .pipe(uglify())
+            .pipe(gulp.dest('./web/javascripts'));
+    }
+    
+    build();
+    minify();
+});
+
 gulp.task('default', function(callback) {
-    runSequence( 'sass.application','gettag', 'clean', ['sass','images','js'], callback);
+    runSequence( 'sass.application','gettag', 'clean', ['sass','images','js'], 'react', callback);
 });
 gulp.task('dev', function (callback) {
     runSequence('gettag', 'clean', ['sass','images','js'], 'watch', callback);
@@ -153,4 +213,3 @@ gulp.task('dev', function (callback) {
 gulp.task('watchsass', function(callback) {
     gulp.watch(config.sassSrc + '/**/*', ['lint.sass','sass.application','sass.images','sass.fonts']);
 });
-
