@@ -17,7 +17,7 @@ class ConcernController extends AbstractController{
      */
     public function editAction($reportId)
     {
-        $report = $this->getReport($reportId, [ "basic"]); // check the report is owned by this user.
+        $report = $this->getReport($reportId, [ "basic", "concern"]); // check the report is owned by this user.
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
@@ -38,11 +38,7 @@ class ConcernController extends AbstractController{
             $data = $form->getData();
             $data->setReport($report);
 
-            if ($concern->getId() == null) {
-                $this->get('restClient')->post('report/concern' , $data, ['deserialise_group' => 'Default']);
-            } else {
-                $this->get('restClient')->put('report/concern/'. $concern->getId() ,$data, ['deserialise_group' => 'Default']);
-            }
+            $this->get('restClient')->put('report/'.$reportId.'/concern' , $data);
 
             return $this->redirect($this->generateUrl('concerns', ['reportId'=>$reportId]) . "#pageBody");
         }
