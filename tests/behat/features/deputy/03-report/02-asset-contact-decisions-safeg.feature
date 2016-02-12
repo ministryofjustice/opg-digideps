@@ -116,3 +116,15 @@ Feature: deputy / report / add contact, decision, assets
             | safeguarding_whoIsDoingTheCaring | Fred Jones |
         And I press "safeguarding_save"
         And the form should be valid
+    
+    @deputy
+    Scenario: provide next year report info
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I follow "edit-concerns"
+        Then I fill in the following:
+            | concern_doYouExpectFinancialDecisions_1 | no |
+            #| concern_doYouExpectFinancialDecisionsDetails | no |
+            | concern_doYouHaveConcerns_0 | no |
+            #| concern_doYouHaveConcernsDetails | no |
+        And I press "concern_save"
+        And the form should be valid
