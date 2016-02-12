@@ -61,15 +61,6 @@ class ReportStatusService
         }
     }
     
-    /** @return string */
-    public function getConcernsStatus()
-    {
-        if ('TODO') {
-            return $this->trans('notstarted');
-        } else {
-            return $this->trans('nodecisions');
-        }
-    }
 
     /** @return string */
     public function getContactsStatus()
@@ -143,14 +134,21 @@ class ReportStatusService
         }
     }
     
+    
+    /** @return string */
+    public function getConcernsStatus()
+    {
+        if ($this->missingConcerns()) {
+            return $this->trans('notstarted');
+        } else {
+            return $this->trans('finished');
+        }
+    }
+    
      /** @return string */
     public function getConcernsState()
     {
-        if ('TODO') {
-            return self::NOTSTARTED;
-        } else {
-            return self::DONE;
-        }
+        return $this->missingConcerns() ? self::NOTSTARTED : self::DONE;
     }
 
 
@@ -234,7 +232,8 @@ class ReportStatusService
                 && !$this->missingContacts() 
                 && !$this->missingAssets() 
                 && !$this->missingDecisions() 
-                && !$this->missingSafeguarding();
+                && !$this->missingSafeguarding()
+                && !$this->missingConcerns();
         } else {
             return !$this->missingContacts() 
                 && !$this->missingDecisions() 
@@ -256,6 +255,12 @@ class ReportStatusService
         $safeguarding = $this->report->getSafeguarding();
 
         return (!$safeguarding || $safeguarding->missingSafeguardingInfo() == true);
+    }
+    
+    /** @return boolean */
+    public function missingConcerns()
+    {
+        return !$this->report->getConcern() || !$this->report->getConcern()->isComplete();
     }
 
 
@@ -319,7 +324,7 @@ class ReportStatusService
     {
 
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
-            $count = 5;
+            $count = 6;
 
             if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingBalance()) {
                 $count--;
@@ -338,6 +343,10 @@ class ReportStatusService
             }
 
             if (!$this->missingSafeguarding()) {
+                $count--;
+            }
+            
+            if (!$this->missingConcerns()) {
                 $count--;
             }
         } else {
