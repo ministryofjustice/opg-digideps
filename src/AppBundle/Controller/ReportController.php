@@ -72,8 +72,13 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        // get all the groups (needed to calculate status of each)
-        $report = $this->getReport($reportId, [ 'transactions', 'transactionsIn', 'transactionsOut', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        // get all the groups (needed by ReportStatusService
+        $report = $this->getReport($reportId, [ 
+            'transactions', 'transactionsIn', 'transactionsOut', 
+            'basic', 'accounts', 'client', 
+            'asset', 'contacts', 'decisions', 'concern'
+        ]);
+        
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
