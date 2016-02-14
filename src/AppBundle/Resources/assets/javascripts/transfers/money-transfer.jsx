@@ -6,7 +6,8 @@ module.exports = React.createClass({
         return {
             accountFrom: this.props.accountFrom,
             accountTo: this.props.accountTo,
-            amount: this.props.amount
+            amount: this.props.amount,
+            id: this.props.key
         }
     },
     setAccountFrom: function (account) {
@@ -15,10 +16,20 @@ module.exports = React.createClass({
     setAccountTo: function (account) {
         this.setState({accountTo: account});
     },
-    componentWillUpdate: function(nextProps, nextState) {
-        console.log('transfer:willUpdate');
-        console.log(nextState);
+    setAmount: function (amount) {
+        this.setState({amount: amount});
     },
+    componentWillUpdate: function(nextProps, nextState) {
+        if (this.props.updateAccount) {
+            this.props.updateAccount(this.state.id, {
+                amount: this.state.amount,
+                accountFrom: this.state.accountFrom,
+                accountTo: this.state.accountTo
+            });
+        }
+    },
+    
+    
     render: function () {
         return (
             <li className="transfer grid-row">

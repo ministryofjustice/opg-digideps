@@ -2,12 +2,12 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var MoneyTransfers = require('./money-transfers');
 
-var transfers = [
-    {
+var transfers = {
+    "0": {
         "amount": 0,
         "accountFrom": null,
         "accountTo": null
-    }
+    };
 ];
 var accounts = [
     {
@@ -40,6 +40,6 @@ var accounts = [
 ];
 
 ReactDOM.render(
-    <MoneyTransfers transfers={transfers} accounts={accounts} />,
+    <MoneyTransfers transfers={transfers} />,
     document.getElementById('transfers')
 );
