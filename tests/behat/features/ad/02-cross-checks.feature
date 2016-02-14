@@ -1,7 +1,7 @@
-Feature: admin / acl
+Feature: assisted digital / acl
 
 
-    Scenario: An AD user cannot login into deputy area
+    Scenario: An Assisted Digital user cannot login into deputy area
         # check AD can login into admin site
         Given I am logged in to admin as "behat-ad-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Then the response status code should be 200
