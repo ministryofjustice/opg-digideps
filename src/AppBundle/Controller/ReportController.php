@@ -101,7 +101,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'concern']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -150,7 +150,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'concern']);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -250,7 +250,7 @@ class ReportController extends AbstractController
         $restClient = $this->get('restClient');
 
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'concern']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
