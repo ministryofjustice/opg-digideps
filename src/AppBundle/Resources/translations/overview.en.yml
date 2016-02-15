@@ -32,10 +32,10 @@ decisions:
     edit: "Edit decisions"
     start: "Start decisions"
 concerns:
-    subSectionTitle: "Decisions for next year"
-    subSectionDescription: "Give us the decision for the next year for %client%"
-    edit: "Edit"
-    start: "Start"
+    subSectionTitle: "Actions you plan to take"
+    subSectionDescription: "Tell us about any major changes in the next reporting period"
+    edit: "Edit actions"
+    start: "Start actions"
 accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add details of all income and spending in the reporting period"
