@@ -38,7 +38,6 @@ module.exports = React.createClass({
         }
     },
     selectAccount: function (account) {
-        console.log('accountList:selectAccount:' + account.name);
         if (this.props.selectAccount) {
             this.props.selectAccount(account);
         }

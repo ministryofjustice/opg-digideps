@@ -144,14 +144,15 @@ gulp.task('lint.js', function (callback) {
 });
 
 // Rerun the task when a file changes
-gulp.task('watch', ['default'], function() {
-    gulp.watch(config.sassSrc + '/**/*', ['sass']);
-    gulp.watch(config.imgSrc + '/**/*', ['images']);
-    gulp.watch(config.jsSrc + '/**/*', ['js']);
+gulp.task('watch', function() {
+    gulp.watch(config.sassSrc + '/**/*',{ interval: 1000 }, ['sass']);
+    gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
+    gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['js']);
+    gulp.watch(config.jsSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
 });
 
-gulp.task('react-watch', function (callback) {
-    var bundler = watchify(browserify({
+gulp.task('react-debug', function (callback) {
+    var bundler = browserify({
         entries: ['./src/AppBundle/Resources/assets/javascripts/transfers/transfers.jsx'],
         transform: [reactify],
         extensions: ['.jsx'],
@@ -159,7 +160,7 @@ gulp.task('react-watch', function (callback) {
         cache: {},
         packageCache: {},
         fullPaths: true
-    }));
+    });
 
     function build(file) {
         if (file) gutil.log('Recompiling ' + file);
@@ -168,9 +169,9 @@ gulp.task('react-watch', function (callback) {
             .on('error', gutil.log.bind(gutil, 'Browserify Error'))
             .pipe(source('transfers.js'))
             .pipe(gulp.dest('./web/javascripts/'));
-    };
+    }
     build();
-    bundler.on('update', build);
+
 });
 
 gulp.task('react', function (callback) {
@@ -192,7 +193,7 @@ gulp.task('react', function (callback) {
             .pipe(source('transfers.js'))
             .pipe(gulp.dest('./web/javascripts/'));
         
-    };
+    }
     function minify() {
         return gulp.src('./web/javascripts/transfers.js')
             .pipe(rename('transfers.min.js'))

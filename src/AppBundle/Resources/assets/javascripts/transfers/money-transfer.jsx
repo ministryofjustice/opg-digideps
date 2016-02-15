@@ -2,34 +2,28 @@ var React = require('react');
 var TransferAccount = require('./transfer-account');
 
 module.exports = React.createClass({
-    getInitialState: function () {
-        return {
-            accountFrom: this.props.accountFrom,
-            accountTo: this.props.accountTo,
-            amount: this.props.amount,
-            id: this.props.key
-        }
-    },
+
     setAccountFrom: function (account) {
-        this.setState({accountFrom: account});
+        this.update('accountFrom', account);
     },
     setAccountTo: function (account) {
-        this.setState({accountTo: account});
+        this.update('accountTo', account);
     },
-    setAmount: function (amount) {
-        this.setState({amount: amount});
+    setAmount: function (event) {
+        this.update("amount", event.target.value);
     },
-    componentWillUpdate: function(nextProps, nextState) {
-        if (this.props.updateAccount) {
-            this.props.updateAccount(this.state.id, {
-                amount: this.state.amount,
-                accountFrom: this.state.accountFrom,
-                accountTo: this.state.accountTo
-            });
-        }
-    },
+    update: function(key,value) {
+        var transfer = {
+            id: this.props.id,
+            accountFrom: this.props.accountFrom,
+            accountTo: this.props.accountTo,
+            amount: this.props.amount
+        };
+        
+        transfer[key] = value;
+        $(document).trigger("updateTransfer", [transfer]);
     
-    
+    },
     render: function () {
         return (
             <li className="transfer grid-row">
@@ -41,16 +35,17 @@ module.exports = React.createClass({
                                id="balance" 
                                name="account[balance]" 
                                className="form-control form-control__number" 
-                               defaultValue={this.state.amount}/>
+                               value={this.props.amount}
+                               onChange={this.setAmount}/>
                     </div>
                 </div>
                 <div className="column-one-third">
                     <div className="form-label">Transferred from:</div>
-                    <TransferAccount account={this.state.accountFrom} selectAccount={this.setAccountFrom} />
+                    <TransferAccount account={this.props.accountFrom} selectAccount={this.setAccountFrom} />
                 </div>
                 <div className="column-one-third">
                     <div className="form-label">Transferred to:</div>
-                    <TransferAccount account={this.state.accountTo} selectAccount={this.setAccountTo}/>
+                    <TransferAccount account={this.props.accountTo} selectAccount={this.setAccountTo}/>
                 </div>
             </li>
         );
