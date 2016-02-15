@@ -63,7 +63,7 @@ and run the jar so it sets up a local selenium server on your machine. Then:
         -e FRONTEND_ADMIN_HOST=https://admin-digideps-client.local:8080 \
         -e WD_HOST=172.16.22.243:4444/wd/hub \
         -e PROFILE=firefoxlocal \
-        test sh scripts/clienttest.sh
+        test sh scripts/clienttest.sh browser
         
 Substitute the *WD_HOST* value with the ip and port of your local machine. When this is 
 executed it will run the scripts in a Docker container, but will talk to the WD_HOST 
@@ -83,7 +83,7 @@ running instance via a public address, as is done for feature builds.
         -e BROWSERSTACK_USER=fredsmithsmibble \
         -e BROWSERSTACK_KEY=2j34hk2jhkadjhkufh \
         -e PROFILE=chrome \
-        test sh scripts/clienttest.sh
+        test sh scripts/clienttest.sh browser
 
 This will start the tests running, using the browserstack user and access key and will tell 
 the browser to access your server via the named addresses. Like local browser testing, the 

@@ -115,9 +115,9 @@ chrome:
             browser_stack:
                 capabilities:
                     browser: Chrome
-                    browserVersion: 43.0
+                    browserVersion: 48
                     os: Windows
-                    os_version: 7
+                    os_version: 10
 
 
 safari:
