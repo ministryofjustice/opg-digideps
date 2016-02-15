@@ -73,6 +73,7 @@ class Concern
     public function __construct(Report $report)
     {
         $this->report = $report;
+        $report->setConcern($this);
     }
 
     /**
