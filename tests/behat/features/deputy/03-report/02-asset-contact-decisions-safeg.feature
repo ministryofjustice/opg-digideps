@@ -121,10 +121,28 @@ Feature: deputy / report / add contact, decision, assets
     Scenario: provide next year report info
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I follow "edit-concerns"
+        # submit empty form
+        And I press "concern_save"
+        Then the following fields should have an error:
+            | concern_doYouExpectFinancialDecisions_0 |
+            | concern_doYouExpectFinancialDecisions_1 |
+            | concern_doYouHaveConcerns_0 |
+            | concern_doYouHaveConcerns_1 |
+        # no details
+        When I fill in the following:
+            | concern_doYouExpectFinancialDecisions_0 | yes |
+            | concern_doYouExpectFinancialDecisionsDetails |  |
+            | concern_doYouHaveConcerns_0 | yes |
+            | concern_doYouHaveConcernsDetails |  |
+        And I press "concern_save"
+        Then the following fields should have an error:
+            | concern_doYouExpectFinancialDecisionsDetails |
+            | concern_doYouHaveConcernsDetails |
+        # form corrects
         Then I fill in the following:
             | concern_doYouExpectFinancialDecisions_1 | no |
-            #| concern_doYouExpectFinancialDecisionsDetails | no |
-            | concern_doYouHaveConcerns_0 | no |
-            #| concern_doYouHaveConcernsDetails | no |
+            | concern_doYouExpectFinancialDecisionsDetails | no |
+            | concern_doYouHaveConcerns_1 | no |
+            | concern_doYouHaveConcernsDetails | no |
         And I press "concern_save"
         And the form should be valid
