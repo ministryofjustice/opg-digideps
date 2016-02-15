@@ -239,7 +239,7 @@ safeguarding:
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
     doesClientHaveACarePlan:
         notBlank: Choose Yes or No
-concern:
+action:
     doYouExpectFinancialDecisions:
         notBlank: Choose Yes or No
     doYouExpectFinancialDecisionsDetails:

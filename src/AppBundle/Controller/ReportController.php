@@ -76,7 +76,7 @@ class ReportController extends AbstractController
         $report = $this->getReport($reportId, [ 
             'transactions', 'transactionsIn', 'transactionsOut', 
             'basic', 'accounts', 'client', 
-            'asset', 'contacts', 'decisions', 'concern'
+            'asset', 'contacts', 'decisions', 'action'
         ]);
         
         if ($report->getSubmitted()) {
@@ -101,7 +101,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'concern']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -150,7 +150,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'concern']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -250,7 +250,7 @@ class ReportController extends AbstractController
         $restClient = $this->get('restClient');
 
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'concern']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');

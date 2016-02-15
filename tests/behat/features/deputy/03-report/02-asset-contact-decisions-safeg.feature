@@ -120,29 +120,29 @@ Feature: deputy / report / add contact, decision, assets
     @deputy
     Scenario: provide next year report info
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I follow "edit-concerns"
+        And I follow "edit-actions"
         # submit empty form
-        And I press "concern_save"
+        And I press "action_save"
         Then the following fields should have an error:
-            | concern_doYouExpectFinancialDecisions_0 |
-            | concern_doYouExpectFinancialDecisions_1 |
-            | concern_doYouHaveConcerns_0 |
-            | concern_doYouHaveConcerns_1 |
+            | action_doYouExpectFinancialDecisions_0 |
+            | action_doYouExpectFinancialDecisions_1 |
+            | action_doYouHaveConcerns_0 |
+            | action_doYouHaveConcerns_1 |
         # no details
         When I fill in the following:
-            | concern_doYouExpectFinancialDecisions_0 | yes |
-            | concern_doYouExpectFinancialDecisionsDetails |  |
-            | concern_doYouHaveConcerns_0 | yes |
-            | concern_doYouHaveConcernsDetails |  |
-        And I press "concern_save"
+            | action_doYouExpectFinancialDecisions_0 | yes |
+            | action_doYouExpectFinancialDecisionsDetails |  |
+            | action_doYouHaveConcerns_0 | yes |
+            | action_doYouHaveConcernsDetails |  |
+        And I press "action_save"
         Then the following fields should have an error:
-            | concern_doYouExpectFinancialDecisionsDetails |
-            | concern_doYouHaveConcernsDetails |
+            | action_doYouExpectFinancialDecisionsDetails |
+            | action_doYouHaveConcernsDetails |
         # form corrects
         Then I fill in the following:
-            | concern_doYouExpectFinancialDecisions_1 | no |
-            | concern_doYouExpectFinancialDecisionsDetails | no |
-            | concern_doYouHaveConcerns_1 | no |
-            | concern_doYouHaveConcernsDetails | no |
-        And I press "concern_save"
+            | action_doYouExpectFinancialDecisions_1 | no |
+            | action_doYouExpectFinancialDecisionsDetails | no |
+            | action_doYouHaveConcerns_1 | no |
+            | action_doYouHaveConcernsDetails | no |
+        And I press "action_save"
         And the form should be valid

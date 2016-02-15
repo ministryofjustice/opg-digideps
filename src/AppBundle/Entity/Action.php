@@ -8,7 +8,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 /**
  * @JMS\ExclusionPolicy("none")
  */
-class Concern
+class Action
 {
     use Traits\HasReportTrait;
     
@@ -20,26 +20,26 @@ class Concern
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="concern.doYouExpectFinancialDecisions.notBlank", groups={"concern"})
+     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action"})
      */
     private $doYouExpectFinancialDecisions;
     
      /**
      * @JMS\Type("string")
-      * @Assert\NotBlank(message="concern.doYouExpectFinancialDecisionsDetails.notBlank", groups={"expect-decisions-yes"})
+      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"expect-decisions-yes"})
      */
     private $doYouExpectFinancialDecisionsDetails;
 
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="concern.doYouHaveConcerns.notBlank", groups={"concern"})
+     * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action"})
      */
     private $doYouHaveConcerns;
     
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="concern.doYouHaveConcernsDetails.notBlank", groups={"have-concerns-yes"})
+     * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"have-actions-yes"})
      */
     private $doYouHaveConcernsDetails;
     
@@ -104,10 +104,10 @@ class Concern
         $financialComplete = $this->getDoYouExpectFinancialDecisions() =='no' 
             || ($this->getDoYouExpectFinancialDecisions() =='yes' && $this->getDoYouExpectFinancialDecisionsDetails());
         
-        $concernComplete = $this->getDoYouHaveConcerns() =='no' 
+        $actionComplete = $this->getDoYouHaveConcerns() =='no' 
             || ($this->getDoYouHaveConcerns() =='yes' && $this->getDoYouHaveConcernsDetails());
         
-        return $financialComplete && $concernComplete;
+        return $financialComplete && $actionComplete;
     }
 
     

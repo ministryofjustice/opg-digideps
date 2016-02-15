@@ -136,9 +136,9 @@ class ReportStatusService
     
     
     /** @return string */
-    public function getConcernsStatus()
+    public function getActionsStatus()
     {
-        if ($this->missingConcerns()) {
+        if ($this->missingActions()) {
             return $this->trans('notstarted');
         } else {
             return $this->trans('finished');
@@ -146,9 +146,9 @@ class ReportStatusService
     }
     
      /** @return string */
-    public function getConcernsState()
+    public function getActionsState()
     {
-        return $this->missingConcerns() ? self::NOTSTARTED : self::DONE;
+        return $this->missingActions() ? self::NOTSTARTED : self::DONE;
     }
 
 
@@ -233,7 +233,7 @@ class ReportStatusService
                 && !$this->missingAssets() 
                 && !$this->missingDecisions() 
                 && !$this->missingSafeguarding()
-                && !$this->missingConcerns();
+                && !$this->missingActions();
         } else {
             return !$this->missingContacts() 
                 && !$this->missingDecisions() 
@@ -258,9 +258,9 @@ class ReportStatusService
     }
     
     /** @return boolean */
-    public function missingConcerns()
+    public function missingActions()
     {
-        return !$this->report->getConcern() || !$this->report->getConcern()->isComplete();
+        return !$this->report->getAction() || !$this->report->getAction()->isComplete();
     }
 
 
@@ -346,7 +346,7 @@ class ReportStatusService
                 $count--;
             }
             
-            if (!$this->missingConcerns()) {
+            if (!$this->missingActions()) {
                 $count--;
             }
         } else {

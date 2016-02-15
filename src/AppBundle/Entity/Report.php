@@ -99,10 +99,10 @@ class Report
     private $safeguarding;
     
     /**
-     * @JMS\Type("AppBundle\Entity\Concern")
-     * @var \AppBundle\Entity\Concern
+     * @JMS\Type("AppBundle\Entity\Action")
+     * @var \AppBundle\Entity\Action
      */
-    private $concern;
+    private $action;
     
     /**
      * @JMS\Type("string")
@@ -605,14 +605,14 @@ class Report
         $this->safeguarding = $safeguarding;
     }
     
-    public function getConcern()
+    public function getAction()
     {
-        return $this->concern;
+        return $this->action;
     }
 
-    public function setConcern(Concern $concern)
+    public function setAction(Action $action)
     {
-        $this->concern = $concern;
+        $this->action = $action;
         return $this;
     }
         

@@ -1,9 +1,9 @@
 {% embed 'AppBundle:Components/Page:page-report.html.twig'%}
 
-{% set translationDomain = "report-concern" %}
+{% set translationDomain = "report-action" %}
 {% trans_default_domain translationDomain %}
 
-{% block bodyClasses %}concern-page{% endblock %}
+{% block bodyClasses %}action-page{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
 {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
@@ -46,7 +46,7 @@
 
     <div class="form-section">
         {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
-            'fieldSetClass' : 'inline do-you-have-concerns-radio',
+            'fieldSetClass' : 'inline do-you-have-actions-radio',
             'legendClass' : 'form-label',
             'legendText' : 'form.doYouHaveConcerns.label' | trans({'%client%': report.client.firstname}, translationDomain),
             'hintText' : 'form.doYouHaveConcerns.hint' | trans({'%client%': report.client.firstname}, translationDomain),
@@ -55,7 +55,7 @@
                 {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
-        <div id="concerns-details-textarea">
+        <div id="actions-details-textarea">
             {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', { 
                 'labelClass': 'required', 
                 'labelParameters': { '%client%': report.client.firstname },
@@ -79,8 +79,8 @@
                 hideOnYes: false
             });
             new opg.RadioHide({
-                radio:'.do-you-have-concerns-radio input[type=radio]',
-                content: '#concerns-details-textarea',
+                radio:'.do-you-have-actions-radio input[type=radio]',
+                content: '#actions-details-textarea',
                 hideOnYes: false
             });
         });

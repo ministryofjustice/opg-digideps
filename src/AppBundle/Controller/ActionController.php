@@ -9,28 +9,28 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use AppBundle\Service\ReportStatusService;
 
 
-class ConcernController extends AbstractController{
+class ActionController extends AbstractController{
 
     /**
-     * @Route("/report/{reportId}/concerns", name="concerns")
+     * @Route("/report/{reportId}/actions", name="actions")
      * @Template()
      */
     public function editAction($reportId)
     {
-        $report = $this->getReport($reportId, [ "basic", "concern"]); // check the report is owned by this user.
+        $report = $this->getReport($reportId, [ "basic", "action"]); // check the report is owned by this user.
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
         
-        if ($report->getConcern() == null) {
-            $concern = new EntityDir\Concern();
+        if ($report->getAction() == null) {
+            $action = new EntityDir\Action();
         } else {
-            $concern = $report->getConcern();
+            $action = $report->getAction();
         }
 
         $request = $this->getRequest();
-        $form = $this->createForm(new FormDir\ConcernType(), $concern);
+        $form = $this->createForm(new FormDir\ActionType(), $action);
 
         $form->handleRequest($request);
 
@@ -38,9 +38,9 @@ class ConcernController extends AbstractController{
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->get('restClient')->put('report/'.$reportId.'/concern' , $data);
+            $this->get('restClient')->put('report/'.$reportId.'/action' , $data);
 
-            return $this->redirect($this->generateUrl('concerns', ['reportId'=>$reportId]) . "#pageBody");
+            return $this->redirect($this->generateUrl('actions', ['reportId'=>$reportId]) . "#pageBody");
         }
 
         $reportStatusService = new ReportStatusService($report, $this->get('translator'));

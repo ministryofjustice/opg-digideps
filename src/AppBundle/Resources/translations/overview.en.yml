@@ -31,7 +31,7 @@ decisions:
     subSectionDescription: "Add the significant decisions you've made for %client%"
     edit: "Edit decisions"
     start: "Start decisions"
-concerns:
+actions:
     subSectionTitle: "Actions you plan to take"
     subSectionDescription: "Tell us about any major changes in the next reporting period"
     edit: "Edit actions"

@@ -112,7 +112,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -146,7 +146,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -180,7 +180,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -214,7 +214,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -243,7 +243,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -278,7 +278,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -288,7 +288,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
     }
     
     /** @test */
-    public function isReadyToSubmitIsFalseMissingConcerns() {
+    public function isReadyToSubmitIsFalseMissingActions() {
         
         $contact = m::mock('AppBundle\Entity\Contact');
         $decision = m::mock('AppBundle\Entity\Decision');
@@ -312,7 +312,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(null)
+            ->shouldReceive('getAction')->andReturn(null)
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -346,7 +346,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -380,7 +380,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -413,7 +413,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -448,7 +448,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->getMock();
 
         $reportStatusService = new ReportStatusService($report, $this->translator);
@@ -1027,7 +1027,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->shouldReceive('isDue')->andReturn(false)
             ->getMock();
 
@@ -1096,7 +1096,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->shouldReceive('isDue')->andReturn(true)
             ->getMock();
 
@@ -1131,7 +1131,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->shouldReceive('isDue')->andReturn(true)
             ->getMock();
 
@@ -1168,7 +1168,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('getAccounts')->andReturn([$account])
             ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
             ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
-            ->shouldReceive('getConcern')->andReturn(m::mock('AppBundle\Entity\Concern', ['isComplete'=>true]))
+            ->shouldReceive('getAction')->andReturn(m::mock('AppBundle\Entity\Action', ['isComplete'=>true]))
             ->shouldReceive('isDue')->andReturn(true)
             ->getMock();
 

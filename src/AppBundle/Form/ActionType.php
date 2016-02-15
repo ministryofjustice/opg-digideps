@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
 
-class ConcernType extends AbstractType
+class ActionType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -31,18 +31,18 @@ class ConcernType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
-            'translation_domain' => 'report-concern',
+            'translation_domain' => 'report-action',
             'validation_groups' => function(FormInterface $form){
 
-            	$data = $form->getData(); /* @var $data \AppBundle\Entity\Concern */
-            	$validationGroups = ['concern'];
+            	$data = $form->getData(); /* @var $data \AppBundle\Entity\Action */
+            	$validationGroups = ['action'];
 
             	if($data->getDoYouExpectFinancialDecisions() == "yes"){
             		$validationGroups[] = "expect-decisions-yes";
             	}
                 
                 if($data->getDoYouHaveConcerns() == "yes"){
-            		$validationGroups[] = "have-concerns-yes";
+            		$validationGroups[] = "have-actions-yes";
             	}
                 
             	return $validationGroups;
@@ -52,7 +52,7 @@ class ConcernType extends AbstractType
 
     public function getName()
     {
-        return 'concern';
+        return 'action';
     }
 
 }
