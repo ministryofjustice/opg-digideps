@@ -44,35 +44,35 @@ class FormattedTest extends WebTestCase
         m::close();
     }
 
-    public function testConcernNo()
+    public function testActionNo()
     {
-        $concern = new \AppBundle\Entity\Concern($this->report);
-        $concern->setDoYouExpectFinancialDecisions('no');
-        $concern->setDoYouExpectFinancialDecisionsDetails('user-financial-details');
-        $concern->setDoYouHaveConcerns('no');
-        $concern->setDoYouHaveConcernsDetails('user-concerns-details');
+        $action = new \AppBundle\Entity\Action($this->report);
+        $action->setDoYouExpectFinancialDecisions('no');
+        $action->setDoYouExpectFinancialDecisionsDetails('user-financial-details');
+        $action->setDoYouHaveConcerns('no');
+        $action->setDoYouHaveConcernsDetails('user-actions-details');
 
         $html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
             'report' => $this->report
         ]);
         $crawler = new Crawler($html);
-
+        
         // decisions
-        $this->assertEquals('X', $this->html($crawler, '#concern-section-decisions [data-checkbox="do-you-live-with-the-client--no"]'));
-        $this->assertCount(0, $crawler->filter('#concern-section-decisions [class="value textarea"]'));
+        $this->assertEquals('X', $this->html($crawler, '#action-section-decisions [data-checkbox="do-you-live-with-the-client--no"]'));
+        $this->assertCount(0, $crawler->filter('#action-section-decisions [class="value textarea"]'));
 
-        // concerns
-        $this->assertEquals('X', $this->html($crawler, '#concern-section-concerns [data-checkbox="do-you-live-with-the-client--no"]'));
-        $this->assertCount(0, $crawler->filter('#concern-section-concerns [class="value textarea"]'));
+        // actions
+        $this->assertEquals('X', $this->html($crawler, '#action-section-concerns [data-checkbox="do-you-live-with-the-client--no"]'));
+        $this->assertCount(0, $crawler->filter('#action-section-concerns [class="value textarea"]'));
     }
 
-    public function testConcernYes()
+    public function testActionYes()
     {
-        $concern = new \AppBundle\Entity\Concern($this->report);
-        $concern->setDoYouExpectFinancialDecisions('yes');
-        $concern->setDoYouExpectFinancialDecisionsDetails('user-financial-details');
-        $concern->setDoYouHaveConcerns('yes');
-        $concern->setDoYouHaveConcernsDetails('user-concerns-details');
+        $action = new \AppBundle\Entity\Action($this->report);
+        $action->setDoYouExpectFinancialDecisions('yes');
+        $action->setDoYouExpectFinancialDecisionsDetails('user-financial-details');
+        $action->setDoYouHaveConcerns('yes');
+        $action->setDoYouHaveConcernsDetails('user-actions-details');
 
         $html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
             'report' => $this->report
@@ -80,12 +80,12 @@ class FormattedTest extends WebTestCase
         $crawler = new Crawler($html);
 
         // decisions
-        $this->assertEquals('X', $this->html($crawler, '#concern-section-decisions [data-checkbox="do-you-live-with-the-client--yes"]'));
-        $this->assertContains('user-financial-details', $this->html($crawler, '#concern-section-decisions [class="value textarea"]'));
+        $this->assertEquals('X', $this->html($crawler, '#action-section-decisions [data-checkbox="do-you-live-with-the-client--yes"]'));
+        $this->assertContains('user-financial-details', $this->html($crawler, '#action-section-decisions [class="value textarea"]'));
 
-        // concerns
-        $this->assertEquals('X', $this->html($crawler, '#concern-section-concerns [data-checkbox="do-you-live-with-the-client--yes"]'));
-        $this->assertContains('user-concerns-details', $this->html($crawler, '#concern-section-concerns [class="value textarea"]'));
+        // actions
+        $this->assertEquals('X', $this->html($crawler, '#action-section-concerns [data-checkbox="do-you-live-with-the-client--yes"]'));
+        $this->assertContains('user-actions-details', $this->html($crawler, '#action-section-concerns [class="value textarea"]'));
     }
 
 }

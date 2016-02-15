@@ -8,10 +8,10 @@ use Doctrine\ORM\QueryBuilder;
 
 /**
  * @JMS\ExclusionPolicy("NONE")
- * @ORM\Table(name="concern")
+ * @ORM\Table(name="action")
  * @ORM\Entity
  */
-class Concern 
+class Action 
 {
     /**
      * @var integer
@@ -20,12 +20,12 @@ class Concern
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\SequenceGenerator(sequenceName="concern_id_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="action_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="concern")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="action")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
@@ -34,7 +34,7 @@ class Concern
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"concern"})
+     * @JMS\Groups({"action"})
      * @ORM\Column(name="do_you_expect_decisions", type="string", length=4, nullable=true)
      */
     private $doYouExpectFinancialDecisions;
@@ -43,7 +43,7 @@ class Concern
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"concern"})
+     * @JMS\Groups({"action"})
      * @ORM\Column(name="do_you_expect_decisions_details", type="text", nullable=true)
      */
     private $doYouExpectFinancialDecisionsDetails;
@@ -53,7 +53,7 @@ class Concern
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"concern"})
+     * @JMS\Groups({"action"})
      * @ORM\Column( name="do_you_have_concerns", type="string", length=4, nullable=true)
      */
     private $doYouHaveConcerns;
@@ -62,7 +62,7 @@ class Concern
      * @var string
      *
      * @JMS\Type("string")
-     * @JMS\Groups({"concern"})
+     * @JMS\Groups({"action"})
      * @ORM\Column( name="do_you_have_concerns_details", type="text", nullable=true)
      */
     private $doYouHaveConcernsDetails;
@@ -73,7 +73,7 @@ class Concern
     public function __construct(Report $report)
     {
         $this->report = $report;
-        $report->setConcern($this);
+        $report->setAction($this);
     }
 
     /**

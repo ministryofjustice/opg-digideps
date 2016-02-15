@@ -83,11 +83,11 @@ class Report
     private $safeguarding;
     
     /**
-     * @JMS\Groups({"basic", "concern"})
-     * @JMS\Type("AppBundle\Entity\Concern")
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Concern",  mappedBy="report", cascade={"persist"})
+     * @JMS\Groups({"basic", "action"})
+     * @JMS\Type("AppBundle\Entity\Action")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Action",  mappedBy="report", cascade={"persist"})
      **/
-    private $concern;
+    private $action;
 
     /**
      * @JMS\Groups({ "basic"})
@@ -669,21 +669,21 @@ class Report
     }
 
     /**
-     * @return Concern
+     * @return Action
      */
-    public function getConcern()
+    public function getAction()
     {
-        return $this->concern;
+        return $this->action;
     }
 
     /**
      * 
-     * @param \AppBundle\Entity\Concern $concern
+     * @param \AppBundle\Entity\Action $action
      * @return \AppBundle\Entity\Report
      */
-    public function setConcern(Concern $concern)
+    public function setAction(Action $action)
     {
-        $this->concern = $concern;
+        $this->action = $action;
         
         return $this;
     }

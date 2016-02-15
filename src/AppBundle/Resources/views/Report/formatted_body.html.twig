@@ -15,9 +15,9 @@
                 'safeguarding': report.safeguarding
             } %}
         {% endif %}
-        {% if report.concern is not null %}
-            {% include 'AppBundle:Report:Formatted/_concern.html.twig' with {
-                'concern': report.concern
+        {% if report.action is not null %}
+            {% include 'AppBundle:Report:Formatted/_action.html.twig' with {
+                'action': report.action
             } %}
         {% endif %}
         

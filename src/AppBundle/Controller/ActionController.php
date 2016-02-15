@@ -7,11 +7,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 
-class ConcernController extends RestController
+class ActionController extends RestController
 {
 
     /**
-     * @Route("/report/{reportId}/concern")
+     * @Route("/report/{reportId}/action")
      * @Method({"PUT"})
      */
     public function updateAction(Request $request, $reportId)
@@ -20,23 +20,23 @@ class ConcernController extends RestController
         $report = $this->findEntityBy('Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
             
-        $concern = $report->getConcern();
-        if (!$concern) {
-            $concern =  new EntityDir\Concern($report);
-            $this->getEntityManager()->persist($concern);
+        $action = $report->getAction();
+        if (!$action) {
+            $action =  new EntityDir\Action($report);
+            $this->getEntityManager()->persist($action);
         } 
 
         $data = $this->deserializeBodyContent($request);
-        $this->updateConcern($data, $concern);
+        $this->updateEntity($data, $action);
 
-        $this->getEntityManager()->flush($concern);
+        $this->getEntityManager()->flush($action);
 
-        return ['id' => $concern->getId()];
+        return ['id' => $action->getId()];
     }
 
 
     /**
-     * @Route("/report/{reportId}/concern")
+     * @Route("/report/{reportId}/action")
      * @Method({"GET"})
      * 
      * @param integer $id
@@ -45,37 +45,37 @@ class ConcernController extends RestController
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $concern = $this->findEntityBy('Concern', $id, "Concern with id:" . $id . " not found");
-        $this->denyAccessIfReportDoesNotBelongToUser($concern->getReport());
+        $action = $this->findEntityBy('Action', $id, "Action with id:" . $id . " not found");
+        $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
-        return $concern;
+        return $action;
     }
 
     /**
      * @param array $data
-     * @param EntityDir\Concern $concern
+     * @param EntityDir\Action $action
      * 
      * @return \AppBundle\Entity\Report $report
      */
-    private function updateConcern(array $data, EntityDir\Concern $concern)
+    private function updateEntity(array $data, EntityDir\Action $action)
     {
         if (array_key_exists('do_you_expect_financial_decisions', $data)) {
-            $concern->setDoYouExpectFinancialDecisions($data['do_you_expect_financial_decisions']);
+            $action->setDoYouExpectFinancialDecisions($data['do_you_expect_financial_decisions']);
         }
         
         if (array_key_exists('do_you_expect_financial_decisions_details', $data)) {
-            $concern->setDoYouExpectFinancialDecisionsDetails($data['do_you_expect_financial_decisions_details']);
+            $action->setDoYouExpectFinancialDecisionsDetails($data['do_you_expect_financial_decisions_details']);
         }
 
         if (array_key_exists('do_you_have_concerns', $data)) {
-            $concern->setDoYouHaveConcerns($data['do_you_have_concerns']);
+            $action->setDoYouHaveConcerns($data['do_you_have_concerns']);
         }
         
         if (array_key_exists('do_you_have_concerns_details', $data)) {
-            $concern->setDoYouHaveConcernsDetails($data['do_you_have_concerns_details']);
+            $action->setDoYouHaveConcernsDetails($data['do_you_have_concerns_details']);
         }
 
-        return $concern;
+        return $action;
     }
 
 }
