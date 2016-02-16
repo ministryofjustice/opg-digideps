@@ -46,12 +46,12 @@
         temparray.unshift(integer);
         integer = temparray.join(thousandseparater);
     
-        var formatted = integer + decimalcharacter + fraction;
+        var formattedStr = integer + decimalcharacter + fraction;
         if (negative) {
-            formatted = '-' + formatted;
+            formattedStr = '-' + formattedStr;
         }
 
-        element.val(formatted);
+        element.val(formattedStr);
 
     };
     
