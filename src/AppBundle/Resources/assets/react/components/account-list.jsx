@@ -1,5 +1,6 @@
-var React = require('react');
-var AccountCard = require('./account-card');
+import React, { Component } from 'react';
+import AccountCard from './account-card';
+
 
 var accounts = [
     {
@@ -31,30 +32,35 @@ var accounts = [
     }
 ];
 
-module.exports = React.createClass({
-    getDefaultProps: function () {
-        return {
-            accounts: accounts
-        }
-    },
-    selectAccount: function (account) {
+class AccountList extends Component {
+
+    constructor (props) {
+        super(props);
+        this.selectAccount = this.selectAccount.bind(this);
+    }
+    
+    selectAccount (account) {
         if (this.props.selectAccount) {
             this.props.selectAccount(account);
         }
-    },
-    render: function () {
+    }
+    
+    render () {
 
         var self = this;
         
-        var accountNodes = this.props.accounts.map(function(account, i) {
+        var accountNodes = accounts.map(function(account, i) {
             return (
                 <AccountCard account={account} key={i} selectAccount={self.selectAccount} />
             );
         });
+        
         return (
             <ul className="card-list">
                 {accountNodes}
             </ul>
         );
     }
-});
+}
+
+export default AccountList;

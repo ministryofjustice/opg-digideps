@@ -1,12 +1,19 @@
-var React = require('react');
+import React, { Component } from 'react';
 
-module.exports = React.createClass({
-    clickCard: function () {
+class AccountCard extends Component {
+
+    constructor (props) {
+        super(props);
+        this.clickCard = this.clickCard.bind(this);
+    }
+    
+    clickCard () {
         if (this.props.selectAccount) {
             this.props.selectAccount(this.props.account);
         }
-    },
-    render: function () {
+    }
+    
+    render () {
         
         var account = this.props.account;
         
@@ -24,4 +31,6 @@ module.exports = React.createClass({
             </div>
         );
     }
-});
+}
+
+export default AccountCard;

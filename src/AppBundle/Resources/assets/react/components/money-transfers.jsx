@@ -1,37 +1,43 @@
-var React = require('react');
-var MoneyTransfer = require('./money-transfer');
+import React, { Component } from 'react';
+import MoneyTransfer from './money-transfer';
 
+class MoneyTransfers extends Component {
 
-module.exports = React.createClass({
-
-    getInitialState: function () {
-        return {
+    constructor (props) {
+        
+        super(props);
+        
+        this.state = {
             transfers: this.props.transfers
-        }
-    },
-    componentDidMount: function () {
-        updateTransfer = this.updateTransfer;
-        $(document).on("updateTransfer", function (event, transfer) {
-            updateTransfer(transfer);
-        });  
-    },
-    updateTransfer: function (transfer) {
+        };
+    
+    }
+
+    updateTransfer (transfer) {
         var transfers = this.state.transfers,
             pos = transfers.length;
-        
+
         for (; pos > 0; pos -= 1) {
             if (transfers[pos -1].id === transfer.id) {
                 transfers[pos -1] = transfer;
             }
         }
-        
+
         this.setState({transfers:transfers});
-    
+
         // Check to see if we need to add a new one?
         this.checkToAddNew();
+
+    }
+   
+    componentDidMount () {
+        const updateTransfer = this.updateTransfer;
+        $(document).on("updateTransfer", function (event, transfer) {
+            updateTransfer(transfer);
+        });  
+    }
     
-    },
-    checkToAddNew: function () {
+        checkToAddNew() {
       
         var complete = true;
         var transfers = this.state.transfers;
@@ -53,22 +59,23 @@ module.exports = React.createClass({
                 id: transfers.length,
                 accountFrom: null,
                 accountTo: null,
-                amount: "0"
+                amount: null
             });
             
             this.setState({transfers: transfers});
             
         }
         
-    },
-    render: function () {
+    }
+    
+    render() {
 
         var transfers = this.state.transfers;
         
         var transferNodes = Object.keys(transfers).map(function(key) {
             var transfer = transfers[key];
             return (
-                <MoneyTransfer {...transfer} key={transfer.id} />
+                <MoneyTransfer transfer={transfer} key={transfer.id} />
             );
         });
         return (
@@ -77,4 +84,6 @@ module.exports = React.createClass({
             </ul>
         );
     }
-});
+}
+
+export default MoneyTransfers;

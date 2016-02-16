@@ -12,11 +12,9 @@ var gulp = require('gulp'),
     scsslint = require('gulp-scss-lint'),
     jshint = require('gulp-jshint');
 
-var gutil = require('gulp-util');
-var source = require('vinyl-source-stream');
 var browserify = require('browserify');
-var watchify = require('watchify');
-var reactify = require('reactify');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
 
 
 var config = {
@@ -29,6 +27,7 @@ var config = {
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
     imgSrc: 'src/AppBundle/Resources/assets/images',
     sassSrc: 'src/AppBundle/Resources/assets/scss',
+    reactSrc: 'src/AppBundle/Resources/assets/react',
     webAssets: 'web/assets'
 };
 
@@ -152,48 +151,34 @@ gulp.task('watch', function() {
 });
 
 gulp.task('react-debug', function (callback) {
-    var bundler = browserify({
-        entries: ['./src/AppBundle/Resources/assets/javascripts/transfers/transfers.jsx'],
-        transform: [reactify],
+
+    browserify({
+        entries: config.reactSrc + '/transfers.jsx',
         extensions: ['.jsx'],
-        debug: true,
-        cache: {},
-        packageCache: {},
-        fullPaths: true
-    });
-
-    function build(file) {
-        if (file) gutil.log('Recompiling ' + file);
-        return bundler
-            .bundle()
-            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-            .pipe(source('transfers.js'))
-            .pipe(gulp.dest('./web/javascripts/'));
-    }
-    build();
-
+        debug: true
+    })
+    .transform(babelify)
+    .bundle()
+    .pipe(source('transfers.js'))
+    .pipe(gulp.dest('./web/javascripts/'));
+    
 });
 
 gulp.task('react', function (callback) {
-    var bundler = browserify({
-        entries: ['./src/AppBundle/Resources/assets/javascripts/transfers/transfers.jsx'],
-        transform: [reactify],
-        extensions: ['.jsx'],
-        debug: false,
-        cache: {},
-        packageCache: {},
-        fullPaths: true
-    });
-
-    function build(file) {
-        if (file) gutil.log('Recompiling ' + file);
-        return bundler
-            .bundle()
-            .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-            .pipe(source('transfers.js'))
-            .pipe(gulp.dest('./web/javascripts/'));
+    
+    function build() {
+        browserify({
+            entries: config.reactSrc + '/transfers.jsx',
+            extensions: ['.jsx'],
+            debug: true
+        })
+        .transform(babelify)
+        .bundle()
+        .pipe(source('transfers.js'))
+        .pipe(gulp.dest('./web/javascripts/'));
         
     }
+    
     function minify() {
         return gulp.src('./web/javascripts/transfers.js')
             .pipe(rename('transfers.min.js'))

@@ -1,30 +1,47 @@
-var React = require('react');
-var TransferAccount = require('./transfer-account');
+import React, { Component } from 'react';
+import $ from 'jquery';
 
-module.exports = React.createClass({
+import TransferAccount from './transfer-account';
 
-    setAccountFrom: function (account) {
-        this.update('accountFrom', account);
-    },
-    setAccountTo: function (account) {
-        this.update('accountTo', account);
-    },
-    setAmount: function (event) {
-        this.update("amount", event.target.value);
-    },
-    update: function(key,value) {
+class MoneyTransfer extends Component {
+
+    constructor (props) {
+        super(props);
+        this.update = this.update.bind(this);
+        this.setAccountFrom = this.setAccountFrom.bind(this);
+        this.setAccountTo = this.setAccountTo.bind(this);
+        this.setAmount = this.setAmount.bind(this);
+    }
+
+    update (key,value) {
         var transfer = {
             id: this.props.id,
             accountFrom: this.props.accountFrom,
             accountTo: this.props.accountTo,
             amount: this.props.amount
         };
-        
+
         transfer[key] = value;
         $(document).trigger("updateTransfer", [transfer]);
+
+    }
     
-    },
-    render: function () {
+    setAccountFrom (account) {
+        this.update('accountFrom', account);
+    }
+    
+    setAccountTo (account) {
+        this.update('accountTo', account);
+    }
+    
+    setAmount (event) {
+        this.update("amount", event.target.value);
+    }
+    
+    render () {
+        
+        var transfer = this.props.transfer;
+        
         return (
             <li className="transfer grid-row">
                 <div className="column-one-third">
@@ -35,19 +52,22 @@ module.exports = React.createClass({
                                id="balance" 
                                name="account[balance]" 
                                className="form-control form-control__number" 
-                               value={this.props.amount}
+                               value={transfer.amount}
                                onChange={this.setAmount}/>
                     </div>
                 </div>
                 <div className="column-one-third">
                     <div className="form-label">Transferred from:</div>
-                    <TransferAccount account={this.props.accountFrom} selectAccount={this.setAccountFrom} />
+                    <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
                 </div>
                 <div className="column-one-third">
                     <div className="form-label">Transferred to:</div>
-                    <TransferAccount account={this.props.accountTo} selectAccount={this.setAccountTo}/>
+                    <TransferAccount account={transfer.accountTo} selectAccount={this.setAccountTo}/>
                 </div>
             </li>
         );
     }
-});
+
+}
+
+export default MoneyTransfer;

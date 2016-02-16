@@ -1,19 +1,26 @@
-var React = require('react');
-var AccountCard = require('./account-card');
-var AccountList = require('./account-list');
+import React, { Component } from 'react';
 
+import AccountCard from './account-card';
+import AccountList from './account-list';
 
-module.exports = React.createClass({
-    getInitialState: function () {
-        return {
+class TransferAccount extends Component {
+    
+    constructor (props) {
+        super(props);
+        this.state = {
             open: false,
             account: null
         }
-    },
-    clickEdit: function () {
+
+        this.clickEdit = this.clickEdit.bind(this);
+        this.selectAccount = this.selectAccount.bind(this);
+    }
+    
+    clickEdit (event) {
         this.setState({open:true});
-    },
-    selectAccount: function (account) {
+    }
+    
+    selectAccount(account) {
         this.setState({
             open: false,
             account: account
@@ -22,8 +29,9 @@ module.exports = React.createClass({
         if (this.props.selectAccount) {
             this.props.selectAccount(account);
         }
-    },
-    render: function () {
+    }
+    
+    render () {
         return (
             <div>
                 {this.state.open == true && (
@@ -40,4 +48,6 @@ module.exports = React.createClass({
             </div>
         );
     }
-});
+}
+
+export default TransferAccount;
