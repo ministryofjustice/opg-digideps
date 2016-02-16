@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import MoneyTransfer from './money-transfer';
+import $ from 'jquery';
 
 class MoneyTransfers extends Component {
 
@@ -10,10 +11,53 @@ class MoneyTransfers extends Component {
         this.state = {
             transfers: this.props.transfers
         };
-    
+
+        const updateTransfer = this.updateTransfer.bind(this);
+        console.log('bind event');
+        $(document).on("updateTransfer", function (event, transfer) {
+            console.log('got event');
+            updateTransfer(transfer);
+        });
+
     }
 
+    checkToAddNew() {
+
+        console.log('check to add new');
+
+        var complete = true;
+        var transfers = this.state.transfers;
+        var pos = transfers.length;
+        var transfer;
+
+        // Scan through all the things.
+        for (; pos != 0; pos -= 1) {
+            transfer = transfers[pos - 1];
+
+            if (transfer.amount == null || transfer.amount == "" || transfer.amount == "0" || !transfer.accountFrom || !transfer.accountTo) {
+                complete = false;
+            }
+
+        }
+
+        if (complete === true) {
+            transfers.push({
+                id: transfers.length,
+                accountFrom: null,
+                accountTo: null,
+                amount: null
+            });
+
+            this.setState({transfers: transfers});
+
+        }
+
+    }
+    
     updateTransfer (transfer) {
+        
+        console.log('updateTransfer');
+        
         var transfers = this.state.transfers,
             pos = transfers.length;
 
@@ -28,44 +72,6 @@ class MoneyTransfers extends Component {
         // Check to see if we need to add a new one?
         this.checkToAddNew();
 
-    }
-   
-    componentDidMount () {
-        const updateTransfer = this.updateTransfer;
-        $(document).on("updateTransfer", function (event, transfer) {
-            updateTransfer(transfer);
-        });  
-    }
-    
-        checkToAddNew() {
-      
-        var complete = true;
-        var transfers = this.state.transfers;
-        var pos = transfers.length;
-        var transfer;
-        
-        // Scan through all the things.
-        for (; pos != 0; pos -= 1) {
-            transfer = transfers[pos - 1];
-            
-            if (transfer.amount == "0" || !transfer.accountFrom || !transfer.accountTo) {
-                complete = false;
-            }
-        
-        }
-        
-        if (complete === true) {
-            transfers.push({
-                id: transfers.length,
-                accountFrom: null,
-                accountTo: null,
-                amount: null
-            });
-            
-            this.setState({transfers: transfers});
-            
-        }
-        
     }
     
     render() {

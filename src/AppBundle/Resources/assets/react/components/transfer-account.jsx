@@ -16,7 +16,7 @@ class TransferAccount extends Component {
         this.selectAccount = this.selectAccount.bind(this);
     }
     
-    clickEdit (event) {
+    clickEdit () {
         this.setState({open:true});
     }
     

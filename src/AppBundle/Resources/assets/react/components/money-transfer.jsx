@@ -15,13 +15,14 @@ class MoneyTransfer extends Component {
 
     update (key,value) {
         var transfer = {
-            id: this.props.id,
-            accountFrom: this.props.accountFrom,
-            accountTo: this.props.accountTo,
-            amount: this.props.amount
+            id: this.props.transfer.id,
+            accountFrom: this.props.transfer.accountFrom,
+            accountTo: this.props.transfer.accountTo,
+            amount: this.props.transfer.amount
         };
 
         transfer[key] = value;
+        console.log('trigger update');
         $(document).trigger("updateTransfer", [transfer]);
 
     }
