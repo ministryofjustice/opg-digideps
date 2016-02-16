@@ -13,18 +13,13 @@ class MoneyTransfers extends Component {
         };
 
         const updateTransfer = this.updateTransfer.bind(this);
-        console.log('bind event');
         $(document).on("updateTransfer", function (event, transfer) {
-            console.log('got event');
             updateTransfer(transfer);
         });
 
     }
 
     checkToAddNew() {
-
-        console.log('check to add new');
-
         var complete = true;
         var transfers = this.state.transfers;
         var pos = transfers.length;
@@ -55,8 +50,6 @@ class MoneyTransfers extends Component {
     }
     
     updateTransfer (transfer) {
-        
-        console.log('updateTransfer');
         
         var transfers = this.state.transfers,
             pos = transfers.length;

@@ -22,7 +22,6 @@ class MoneyTransfer extends Component {
         };
 
         transfer[key] = value;
-        console.log('trigger update');
         $(document).trigger("updateTransfer", [transfer]);
 
     }

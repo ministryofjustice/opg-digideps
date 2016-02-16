@@ -48,6 +48,12 @@ describe('Autosave Tests', function () {
             firstInput.trigger('blur');
             expect(firstInput.val()).to.equal('100.23');
         });
+        it('should handle negative numbers', function () {
+            firstInput.val('-100.23');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.equal('-100.23');     
+        });
     });
     
     function validKey(element) {
