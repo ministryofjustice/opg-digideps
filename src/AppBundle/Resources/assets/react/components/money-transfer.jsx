@@ -74,7 +74,7 @@ class MoneyTransfer extends Component {
                                value={transfer.amount}
                                onChange={this.setAmount}/><br/>
                         {completed && (
-                            <a class="button" onClick={this.deleteTransfer}>Delete</a>
+                            <a className="button button-warning delete-button" onClick={this.deleteTransfer}>Delete</a>
                         )}
                     </div>
                 </div>

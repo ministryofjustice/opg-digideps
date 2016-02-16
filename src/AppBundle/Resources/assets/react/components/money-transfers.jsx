@@ -88,7 +88,7 @@ class MoneyTransfers extends Component {
 
         for (; pos > 0; pos -= 1) {
             if (transfers[pos -1].id === transfer.id) {
-                transfers.splice(pos -1]);
+                transfers.splice(pos -1, 1);
             }
         }
 
@@ -100,14 +100,10 @@ class MoneyTransfers extends Component {
     
     render() {
 
-        var transfers = this.state.transfers;
-        
-        var transferNodes = Object.keys(transfers).map(function(key) {
-            var transfer = transfers[key];
-            return (
-                <MoneyTransfer transfer={transfer} key={transfer.id} />
-            );
+        const transferNodes =  this.state.transfers.map((transfer) => {
+            return <MoneyTransfer transfer={transfer} key={transfer.id} />
         });
+        
         return (
             <ul id="transfers" className="card-list">
                 {transferNodes}
