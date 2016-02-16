@@ -13,8 +13,13 @@ class MoneyTransfers extends Component {
         };
 
         const updateTransfer = this.updateTransfer.bind(this);
+        const deleteTransfer = this.deleteTransfer.bind(this);
+        
         $(document).on("updateTransfer", function (event, transfer) {
             updateTransfer(transfer);
+        });
+        $(document).on("deleteTransfer", function (event, transfer) {
+            deleteTransfer(transfer);
         });
 
     }
@@ -75,6 +80,22 @@ class MoneyTransfers extends Component {
         // Check to see if we need to add a new one?
         this.checkToAddNew();
 
+    }
+    
+    deleteTransfer (transfer) {
+        var transfers = this.state.transfers,
+            pos = transfers.length;
+
+        for (; pos > 0; pos -= 1) {
+            if (transfers[pos -1].id === transfer.id) {
+                transfers.splice(pos -1]);
+            }
+        }
+
+        this.setState({transfers:transfers});
+
+        // Check to see if we need to add a new one?
+        this.checkToAddNew();
     }
     
     render() {

@@ -10,7 +10,7 @@ class TransferAccount extends Component {
         this.state = {
             open: false,
             account: null
-        }
+        };
 
         this.clickEdit = this.clickEdit.bind(this);
         this.selectAccount = this.selectAccount.bind(this);

@@ -11,6 +11,7 @@ class MoneyTransfer extends Component {
         this.setAccountFrom = this.setAccountFrom.bind(this);
         this.setAccountTo = this.setAccountTo.bind(this);
         this.setAmount = this.setAmount.bind(this);
+        this.deleteTransfer = this.deleteTransfer.bind(this);
     }
 
     update (key,value) {
@@ -26,6 +27,19 @@ class MoneyTransfer extends Component {
 
     }
     
+    deleteTransfer () {
+
+        var transfer = {
+            id: this.props.transfer.id,
+            accountFrom: this.props.transfer.accountFrom,
+            accountTo: this.props.transfer.accountTo,
+            amount: this.props.transfer.amount
+        };
+
+        $(document).trigger("deleteTransfer", [transfer]);
+        
+    }
+    
     setAccountFrom (account) {
         this.update('accountFrom', account);
     }
@@ -39,8 +53,13 @@ class MoneyTransfer extends Component {
     }
     
     render () {
-        
+
         var transfer = this.props.transfer;
+        var completed = true;
+
+        if (transfer.amount == null || transfer.amount == "" || transfer.amount == "0" || !transfer.accountFrom || !transfer.accountTo) {
+            completed = false;
+        }
         
         return (
             <li className="transfer grid-row">
@@ -53,7 +72,10 @@ class MoneyTransfer extends Component {
                                name="account[balance]" 
                                className="form-control form-control__number" 
                                value={transfer.amount}
-                               onChange={this.setAmount}/>
+                               onChange={this.setAmount}/><br/>
+                        {completed && (
+                            <a class="button" onClick={this.deleteTransfer}>Delete</a>
+                        )}
                     </div>
                 </div>
                 <div className="column-one-third">
