@@ -5,7 +5,7 @@
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'expanding-transaction-table form-horizontal' }}) }}
     <div class="sections">
         {% for category, transactions in transactionsGrouped %}
-        <div class="section">
+        <div id="section-{{ category }}" class="section">
             <div class="summary">
                 <div class="title">{{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | raw  }}</div>
                 <div class="sub-total">£<span class="value">{{ transactions.amountTotal | money_format}}</span></div>
