@@ -86,14 +86,17 @@
             padding: 0;
             border-bottom: 0;
             position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid $grey-1;
+            margin-bottom: 30px;
             
             .input-group-prefix {
                 left: auto;
                 right: 141px;
             }
-
+            
             .form-group {
-                border-bottom: 1px solid $grey-1;
+                margin-bottom: 0;
             }
             
             .form-control__number {
@@ -132,6 +135,14 @@
                     }
                 }
             }
+
+            .remove-button {
+                display: none;
+            }
+            
+            .add-transaction {
+                display: none;
+            }
         }
         
         .sub-total {
@@ -141,6 +152,58 @@
         
     }
 
+}
+
+.expanding-transaction-table .transactions.detail-view .transaction {
+
+    .input-group-prefix {
+        left: auto;
+        right: 181px;
+    }
+    
+    .form-control__number {
+        margin-right: 40px;
+    }
+    
+    .remove-button {
+        right: 5px;
+        position: absolute;
+        height: 30px;
+        width: 30px;
+        color: transparent;
+        background: url("images/icons/remove.png") top left no-repeat;
+        background-position: 5px 5px;
+        background-size: 25px 25px;
+        cursor: pointer;
+
+        @include device-pixel-ratio() {
+            background-image: url("images/icons/remove_2x.png");
+        }
+        
+    }
+    
+    .add-transaction {
+        display: block;
+        margin-bottom: 20px;
+        
+        a {
+            @include core-16();
+            display: inline-block;
+            float: right;
+            width: 170px;
+            margin: 0 15px 15px 0;
+            padding-left: 20px;
+            background: url("images/icons/smallplus.png") 0 1px no-repeat;
+            color: $link-colour;
+        }
+    
+    }
+    
+    .form-group {
+        margin-bottom: 10px;
+    }
+    
+    
 }
 
 .form-horizontal {

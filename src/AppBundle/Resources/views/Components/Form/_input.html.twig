@@ -24,7 +24,7 @@
     {{ form_errors(element) }}
 
     {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
-
+    
     {% if (preInputText is defined) and (preInputText is not empty) %}
         <span class="pre-input-text">{{ preInputText }}</span>
     {% endif %}
@@ -39,4 +39,8 @@
         {{ form_widget(element, { 'attr': {'class': class, 'aria-invalid':'true' } }) }}
     {% endif %}
 
+    {% if (removeLink is defined )%}
+        <span class="remove-button">Remove</span>
+    {% endif %}
+    
 </div>

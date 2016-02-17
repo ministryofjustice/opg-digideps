@@ -26,8 +26,10 @@
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
                             'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
-                            'formGroupClass': formGroupClass
+                            'formGroupClass': formGroupClass,
+                            'removeLink': true
                         }) }}
+
     
                         {% if formTransactions[id].moreDetails is defined %}
                             {{ form_input(formTransactions[id].moreDetails, '', {
@@ -36,6 +38,10 @@
                                 'inputClass': 'expanding transaction-more-details'
                             }) }}
                         {% endif %}
+                        
+                        <div class="add-transaction">
+                            <a href="#">add Another</a>
+                        </div>
                     </div>
                 {% endfor %}
                 <div class="sub-total">
@@ -74,6 +80,49 @@
         $('input.transaction-value').on('blur', function (event) {
             GOVUK.formatCurrency(event.target);
         });
+        
+        $('#detail-switch').on('click', function (event) {
+            event.preventDefault();
+           $('.expanding-transaction-table .transactions').toggleClass("detail-view"); 
+        });
+
+        function remove(event) {
+            var target = $(event.target);
+            var transaction = target.closest('.transaction');
+            
+            target.parent().remove();
+
+
+            var groups = transaction.find('.form-group');
+            if (groups.length > 1) {
+                transaction.find('.remove-button').show();
+            } else {
+                transaction.find('.remove-button').hide();
+            }
+        }
+        
+        $('.add-transaction a').on('click',function (event) {
+            event.preventDefault();
+            
+            var target = $(event.target);
+            var existing = target.parent().prev();
+            var nextLine = existing.clone();
+            existing.after(nextLine);
+            nextLine.find('input.transaction-value').val("");
+            nextLine.find('label').text('');
+
+            var transaction = target.closest('.transaction');
+            var groups = transaction.find('.form-group');
+            if (groups.length > 1) {
+                transaction.find('.remove-button').show().on('click', remove);
+            } else {
+                transaction.find('.remove-button').hide();
+            }
+            
+        });
+        
+        
+        $('.remove-button').on('click', remove);
     
     });
 </script>

@@ -353,6 +353,8 @@ class FormFieldsExtension extends \Twig_Extension
         //Text to insert to the left of an input, e.g. * * * * for account
         $preInputTextTrans =  $this->translator->trans($translationKey.'.preInput', [],$domain);
         $preInputText =  ($preInputTextTrans != $translationKey.'.preInput')? $preInputTextTrans: null;
+        $removeLink = isset($vars['removeLink']) ? $vars['removeLink']: false;
+        
         
         return [ 
             'labelText' => $labelText,
@@ -364,7 +366,8 @@ class FormFieldsExtension extends \Twig_Extension
             'inputPrefix' => $inputPrefix,
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
-            'preInputText' => $preInputText
+            'preInputText' => $preInputText,
+            'removeLink' => $removeLink
         ];
     }
     
