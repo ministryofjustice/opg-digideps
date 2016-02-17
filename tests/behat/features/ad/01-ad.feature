@@ -1,6 +1,6 @@
-Feature: admin / admin
+Feature: assisted digital / admin
 
-    Scenario: login and add admin user, check audit log
+    Scenario: login and add Assisted Digital user, check audit log
         Given I reset the email log
         And I am logged in to admin as "admin@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I create a new "Ad" user "Assisted" "Digital" with email "behat-ad-user@publicguardian.gsi.gov.uk"
@@ -11,7 +11,7 @@ Feature: admin / admin
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-ad-user@publicguardian.gsi.gov.uk"
 
 
-    Scenario: login (assisted digital) and add details
+    Scenario: login Assisted Digital and add details
         Given I am not logged into admin
         # assert email link doesn't work on admin area
         When I open the "/user/activate/" link from the email on the "deputy" area

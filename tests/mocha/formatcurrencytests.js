@@ -3,7 +3,7 @@ describe('Autosave Tests', function () {
     var placeholder = $('#placeholder'),
         template = $('#template'),
         firstInput;
-    
+
     beforeEach(function() {
         placeholder.empty('').append(template.html());
         firstInput = $('#test-input');
@@ -11,12 +11,12 @@ describe('Autosave Tests', function () {
         firstInput.on('blur', function (event) {
             GOVUK.formatCurrency(event.target);
         });
-    
+
     });
     afterEach(function() {
         placeholder.text('');
     });
-    
+
     describe('formatting', function () {
         it('should insert , in numbers greater than 999', function () {
             firstInput.val('10000');
@@ -48,12 +48,18 @@ describe('Autosave Tests', function () {
             firstInput.trigger('blur');
             expect(firstInput.val()).to.equal('100.23');
         });
+        it('should handle negative numbers', function () {
+            firstInput.val('-100.23');
+            validKey(firstInput);
+            firstInput.trigger('blur');
+            expect(firstInput.val()).to.equal('-100.23');
+        });
     });
-    
+
     function validKey(element) {
         var e = jQuery.Event("keypress");
         e.which = 49;  // number 1
         $(element).trigger(e);
     }
-    
+
 });

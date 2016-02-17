@@ -4,14 +4,14 @@
 
     var root = this,
         $ = root.jQuery;
-    
+
     if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
-    
-    
+
+
     root.GOVUK.formatCurrency = function(element) {
         element = $(element);
         var number = element.val();
-        
+
         if (number.replace(/^\s+|\s+$/g, '') === '' || isNaN(number)) {
             return;
         }
@@ -20,7 +20,9 @@
         var decimalcharacter = ".";
         var thousandseparater = ",";
         number = parseFloat(number);
-        
+
+        var negative = number < 0;
+
         var formatted = String(number.toFixed(decimalplaces));
         if( decimalcharacter.length && decimalcharacter != "." ) { formatted = formatted.replace(/\./,decimalcharacter); }
         var integer = "";
@@ -43,8 +45,14 @@
 
         temparray.unshift(integer);
         integer = temparray.join(thousandseparater);
-        element.val( integer + decimalcharacter + fraction);
+
+        var formattedStr = integer + decimalcharacter + fraction;
+        if (negative) {
+            formattedStr = '-' + formattedStr;
+        }
+
+        element.val(formattedStr);
 
     };
-    
+
 }).call(this);

@@ -26,6 +26,11 @@ class Redirector
      * @var Session 
      */
     protected $session;
+    
+     /**
+     * @var string 
+     */
+    protected $env;
 
     /**
      * Routes the user can be redirected to, if accessed before timeout
@@ -52,12 +57,18 @@ class Redirector
      * @param \AppBundle\Service\SecurityContext $security
      * @param type $router
      */
-    public function __construct(SecurityContextInterface $security, RouterInterface $router, Session $session, Client\RestClient $restClient)
-    {
+    public function __construct(
+        SecurityContextInterface $security, 
+        RouterInterface $router, 
+        Session $session, 
+        Client\RestClient $restClient,
+        $env
+    ) {
         $this->security = $security;
         $this->router = $router;
         $this->session = $session;
         $this->restClient = $restClient;
+        $this->env = $env;
     }
 
 
@@ -73,7 +84,7 @@ class Redirector
     /**
      * @return string
      */
-    public function getUserFirstPage($enabledLastAccessedUrl = true)
+    public function getFirstPageAfterLogin($enabledLastAccessedUrl = true)
     {
         $user = $this->getLoggedUser();
 
@@ -182,6 +193,33 @@ class Redirector
     public function removeLastAccessedUrl()
     {
         $this->session->remove('_security.secured_area.target_path');
+    }
+    
+    /**
+     * @return string
+     */
+    public function getHomepageRedirect()
+    {
+        $securityContext = $this->security;
+
+        if ($this->env === 'admin') {
+           // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
+            if ($securityContext->isGranted('ROLE_ADMIN')) {
+                return $this->router->generate('admin_homepage');
+            }
+            if ($securityContext->isGranted('ROLE_AD')) {
+                return $this->router->generate('ad_homepage');
+            } 
+            
+            return $this->router->generate('login');
+        }
+        
+        // deputy: if logged, redirect to overview pages
+        if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->getLayDeputyHomepage($this->getLoggedUser(), false);
+        }
+
+        return false;
     }
 
 }
