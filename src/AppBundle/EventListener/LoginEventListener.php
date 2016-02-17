@@ -2,11 +2,12 @@
 namespace AppBundle\EventListener;
 
 
-use Symfony\Component\EventDispatcher\EventDispatcher;
+//use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use AppBundle\Service\Redirector;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Login listener
@@ -16,7 +17,7 @@ class LoginEventListener
    
     
     /**
-     * @var EventDispatcher 
+     * @var EventDispatcherInterface 
      */
     protected $dispatcher;
     /**
@@ -28,7 +29,7 @@ class LoginEventListener
      * @param EventDispatcher $dispatcher
      * @param Redirector $Redirector
      */
-    public function __construct(EventDispatcher $dispatcher, Redirector $Redirector) 
+    public function __construct(EventDispatcherInterface $dispatcher, Redirector $Redirector) 
     {
         $this->dispatcher = $dispatcher;
         $this->redirector = $Redirector;
