@@ -79,11 +79,11 @@ class MoneyTransfer extends Component {
                     </div>
                 </div>
                 <div className="column-one-third">
-                    <div className="form-label">Transferred from:</div>
+                    <div className="form-label">From:</div>
                     <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
                 </div>
                 <div className="column-one-third">
-                    <div className="form-label">Transferred to:</div>
+                    <div className="form-label">To:</div>
                     <TransferAccount account={transfer.accountTo} selectAccount={this.setAccountTo}/>
                 </div>
             </li>
