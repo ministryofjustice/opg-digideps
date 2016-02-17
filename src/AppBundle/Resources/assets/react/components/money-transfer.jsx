@@ -63,28 +63,30 @@ class MoneyTransfer extends Component {
         
         return (
             <li className="transfer grid-row">
-                <div className="column-one-third">
-                    <div className="form-group">
-                        <label className="form-label" htmlFor="balance">Amount:</label>
-                        <span className="input-group-prefix">£</span>
-                        <input type="text" 
-                               id="balance" 
-                               name="account[balance]" 
-                               className="form-control form-control__number" 
-                               value={transfer.amount}
-                               onChange={this.setAmount}/><br/>
-                        {completed && (
-                            <a className="button button-warning delete-button" onClick={this.deleteTransfer}>Delete</a>
-                        )}
-                    </div>
-                </div>
+                
                 <div className="column-one-third">
                     <div className="form-label">From:</div>
                     <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
+                    {completed && (
+                        <a className="button button-warning delete-button" onClick={this.deleteTransfer}>Delete</a>
+                    )}
                 </div>
                 <div className="column-one-third">
                     <div className="form-label">To:</div>
                     <TransferAccount account={transfer.accountTo} selectAccount={this.setAccountTo}/>
+                </div>
+                <div className="column-one-third">
+                    <div className="form-group">
+                        <label className="form-label" htmlFor="balance">Amount:</label>
+                        <span className="input-group-prefix">£</span>
+                        <input type="text"
+                               id="balance"
+                               name="account[balance]"
+                               className="form-control form-control__number"
+                               value={transfer.amount}
+                               onChange={this.setAmount}/><br/>
+                        
+                    </div>
                 </div>
             </li>
         );

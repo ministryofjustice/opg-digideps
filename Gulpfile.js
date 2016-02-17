@@ -170,7 +170,7 @@ gulp.task('react', function (callback) {
         browserify({
             entries: config.reactSrc + '/transfers.jsx',
             extensions: ['.jsx'],
-            debug: true
+            debug: false
         })
         .transform(babelify)
         .bundle()

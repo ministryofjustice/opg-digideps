@@ -1,5 +1,5 @@
 page:
     htmlTitle: "Deputy report - transfers | GOV.UK"
     pageSectionTitle: Money transfers
-    pageSectionDescription: Tell us about money transferred between [FNAME]'s accounts. If you've made more than one transfer from one account to another, you can give us a total for the reporting period.
+    pageSectionDescription: Tell us about money transferred between %client%'s accounts. If you've made more than one transfer from one account to another, you can give us a total for the reporting period.
     

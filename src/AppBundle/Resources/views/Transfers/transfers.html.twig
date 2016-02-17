@@ -8,11 +8,10 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-
-        {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
-        transDomain: translationDomain,
-        pageSectionDescription: 'page.pageSectionDescription'
-        } %}
+        
+        <p class="page-section-description}}">
+            {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
+        </p>
 
         {% if report.contacts %}
             {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {

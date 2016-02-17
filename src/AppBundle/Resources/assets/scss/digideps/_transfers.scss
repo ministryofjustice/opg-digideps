@@ -1,6 +1,11 @@
 #transfers {
     .transfer {
         margin-bottom: 40px;
+        border-bottom: 1px solid $border-colour;
+        
+        &:last-child {
+            border-bottom: 0;
+        }
         
         .delete-button {
             margin: 20px 10px 20px 0;
