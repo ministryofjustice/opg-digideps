@@ -38,7 +38,12 @@ accounts:
     start: "Start accounts"
 transfers:
     subSectionTitle: "Money transfers"
-    subSectionDescription: "Tell us about money between %clients%'s accounts"
+    subSectionDescription: "Tell us about money between %client%'s accounts"
+    edit: "Edit transfers"
+    start: "Start money transfers"
+transfersInactive:
+    subSectionTitle: "Money transfers"
+    subSectionDescription: "This will become available if you have more than one account"
     edit: "Edit transfers"
     start: "Start money transfers"
 safeguarding:

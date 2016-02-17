@@ -51,15 +51,33 @@
                 warning: true,
                 description: true
             } %}
-            {% include 'AppBundle:Overview:_subsection.html.twig' with {
-                transDomain: translationDomain,
-                subSection: 'transfers',
-                report: report,
-                state: reportStatus.accountsState,
-                status: reportStatus.accountsStatus,
-                warning: true,
-                description: true
-            } %}
+            {% if (report.accounts is defined and (report.accounts | length > 1)) %}
+                <li id="report-submit-section" class="overview-section">
+                    {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'transfers',
+                    report: report,
+                    state: reportStatus.accountsState,
+                    status: reportStatus.accountsStatus,
+                    warning: true,
+                    description: true
+                    } %}
+                </li>
+            {%  else %}
+                <li id="report-submit-section" class="overview-section inactive">
+                    {% include 'AppBundle:Overview:_subsection.html.twig' with {
+                    transDomain: translationDomain,
+                    subSection: 'transfersInactive',
+                    report: report,
+                    state: reportStatus.accountsState,
+                    status: reportStatus.accountsStatus,
+                    warning: true,
+                    description: true,
+                    disableedit: true
+                    } %}
+                </li>
+            {%  endif %}
+        
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',
