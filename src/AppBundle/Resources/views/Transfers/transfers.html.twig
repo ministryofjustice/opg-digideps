@@ -21,13 +21,17 @@
             } %}
         {% endif %}
 
-        <div id="transfers"/></div>
-        <script src="/javascripts/transfers.js"></script>
+        <div id="transfers"/>Loading...</div>
         <script>
             $(document).ready(function () {
                 new GOVUK.StickyHeader('#page-section-title-wrapper');
             });
+
+            var opg = opg || {};
+            opg.accounts = {{ report.accounts | serialize | raw }};
+            
         </script>
+        <script src="/javascripts/transfers.js"></script>
 
     {% endblock %}
 
