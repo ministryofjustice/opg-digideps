@@ -24,11 +24,11 @@ class TransfersController extends AbstractController
      */
     public function transfersAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'client', 'balance', 'accounts']);
+        $report = $this->getReport($reportId, ['basic', 'client', 'accounts']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-
+            
         return [
             'report' => $report
         ];
