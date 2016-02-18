@@ -1,7 +1,6 @@
 #!/bin/bash
 #$1=bucket name
-#$2=pipeline
-#$3=archive name
+#$2=snapshot name
 
 usage ()
 {
