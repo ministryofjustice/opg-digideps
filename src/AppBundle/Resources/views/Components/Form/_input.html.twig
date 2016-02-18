@@ -39,7 +39,7 @@
         {{ form_widget(element, { 'attr': {'class': class, 'aria-invalid':'true' } }) }}
     {% endif %}
 
-    {% if (removeLink is defined )%}
+    {% if (removeLink is defined and removeLink == true)%}
         <span class="remove-button">Remove</span>
     {% endif %}
     

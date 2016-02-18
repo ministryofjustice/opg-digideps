@@ -40,7 +40,7 @@
                         {% endif %}
                         
                         <div class="add-transaction">
-                            <a href="#">add Another</a>
+                            <a href="#">add another</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -69,7 +69,6 @@
 <script>
     $( document ).ready(function() {
         new GOVUK.ExpandingTransactionTable('.expanding-transaction-table');
-        
         new GOVUK.AutoSave({
             form: $('form.expanding-transaction-table'),
             statusElement: $('#save-status'),
@@ -81,9 +80,13 @@
             GOVUK.formatCurrency(event.target);
         });
         
-        $('#detail-switch').on('click', function (event) {
+        $('.section').eq(0).removeClass('closed').addClass('open');
+        
+        $('#total-mode-switch, #detail-mode-switch').on('click', function (event) {
             event.preventDefault();
-           $('.expanding-transaction-table .transactions').toggleClass("detail-view"); 
+            $('.expanding-transaction-table .transactions').toggleClass("detail-view");
+            $('#total-mode-switch').toggleClass('hidden');
+            $('#detail-mode-switch').toggleClass('hidden');
         });
 
         function remove(event) {

@@ -16,13 +16,12 @@
         <h3 class="heading-medium-large">{{ 'moneyOut.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({'%client%': report.client.firstname, '%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
 
-        {% if not report.hasMoneyOut %}
-            <div>
-                <span class="icon icon__notification_yellow_small"></span>
-                <span class="page-section-description left-margin">
-                    {{ 'moneyOut.noEntriesWarning' | trans({'%client%': report.client.firstname}, translationDomain)}}
-                </span>  
-            </div>
+        {% if (report.accounts is defined and (report.accounts | length > 1)) %}
+            <p class="page-section-description" id="total-mode-switch">You can enter <b>totals from all {{ client.firstname }}'s accounts for each type of expense</b>, or you can enter <a id="detail-button" href="#">individual amounts</a> and we’ll add them up for you.</p>
+            <p class="page-section-description hidden" id="detail-mode-switch">You can enter <a id="total-button" href="#">totals from all {{ client.firstname }}'s accounts for each type of expense</a>, or you can enter <b>individual amounts</b> and we’ll add them up for you.</p>
+        {% else %}
+            <p class="page-section-description" id="total-mode-switch">You can enter a <b>total for each type of expense</b>, or you can enter <a id="detail-button" href="#">individual amounts</a> and we’ll add them up for you.</p>
+            <p class="page-section-description hidden" id="detail-mode-switch">You can enter a <a id="total-button" href="#">total for each type of expense</a>, or you can enter <b>individual amounts</b> and we’ll add them up for you.</p>
         {% endif %}
         
         {% include 'AppBundle:Account:transactions.html.twig' with {
