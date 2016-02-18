@@ -31,4 +31,5 @@ then
         echo "Restore from specified snapshot SUCCESSFUL!"
 else
         echo "DB restore from specified snapshot FAILED!"
+	usage
 fi

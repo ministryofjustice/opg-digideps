@@ -22,4 +22,5 @@ then
         echo "DB snapshot created copied to S3 bucket SUCCESSFULLY"
 else
         echo "DB snapshot creation or upload to S3 backup bucket FAILED"
+	usage
 fi
