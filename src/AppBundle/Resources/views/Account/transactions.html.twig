@@ -92,7 +92,6 @@
             return total;
 
         }
-
         function createAdvancedFieds() {
             $('.transaction').each(function (index, element) {
 
@@ -120,11 +119,14 @@
             });
         }
         function remove(event) {
-            var target = $(event.target);
-            target.val("");
-            advanceFieldChange(target);
 
-            var transaction = target.closest('.transaction');
+            var target = $(event.target);
+            var field = target.prev();
+
+            field.val("");
+            advanceFieldChange(field);
+
+            var transaction = target.parent().parent();
             target.parent().remove();
 
             var groups = transaction.find('.form-group.advanced');
@@ -133,11 +135,20 @@
             } else {
                 transaction.find('.remove-button').hide();
             }
+
+            groups.each(function (element, index) {
+                if (index === 0) {
+                    $(element).find('label').show();
+                } else {
+                    $(element).find('label').hide();
+                }
+            });
+
         }
         function basicFieldChange(event) {
 
             var target = $(event.target);
-            var transaction = target.closest('.transaction');
+            var transaction = target.parent().parent();
             var advancedFields = transaction.find('.advanced .transaction-value');
 
             advancedFields.each(function(index, element) {
@@ -153,7 +164,7 @@
         function advanceFieldChange(target) {
             // Total up all the fields in this area and update the basic hidden field.
             var target = $(target);
-            var transaction = target.closest('.transaction');
+            var transaction = target.parent().parent();
             var advancedFields = transaction.find('.advanced .transaction-value');
 
             var total = getTotal(advancedFields)
@@ -181,7 +192,7 @@
 
             var target = $(event.target);
             var existing = target.parent().prev();
-            var nextLine = existing.clone();
+            var nextLine = $(existing[0].outerHTML);
             existing.after(nextLine);
             nextLine.find('input.transaction-value').val("")
                 .on('keyup', function (event) {
@@ -193,10 +204,12 @@
 
             nextLine.find('label').text('');
 
-            var transaction = target.closest('.transaction');
+            var transaction = target.parent().parent();
             var groups = transaction.find('.form-group.advanced');
+            var length = groups.length;
+
             if (groups.length > 1) {
-                transaction.find('.remove-button').show().on('click', remove);
+                transaction.find('.remove-button').show().off('click').on('click', remove);
             } else {
                 transaction.find('.remove-button').hide();
             }
