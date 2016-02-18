@@ -114,6 +114,7 @@
                     })
                     .on('blur', function (event) {
                         GOVUK.formatCurrency(event.target);
+                        fakeSave();
                     });
 
             });
@@ -145,6 +146,34 @@
             });
 
         }
+        function addField(event) {
+            event.preventDefault();
+
+            var target = $(event.target);
+            var existing = target.parent().prev();
+            var nextLine = $(existing[0].outerHTML);
+            existing.after(nextLine);
+            nextLine.find('input.transaction-value').val("")
+                .on('keyup', function (event) {
+                    advanceFieldChange(event.target);
+                })
+                .on('blur', function (event) {
+                    GOVUK.formatCurrency(event.target);
+                    fakeSave();
+                });
+
+            nextLine.find('label').text('');
+
+            var transaction = target.parent().parent();
+            var groups = transaction.find('.form-group.advanced');
+            var length = groups.length;
+
+            if (groups.length > 1) {
+                transaction.find('.remove-button').show().off('click').on('click', remove);
+            } else {
+                transaction.find('.remove-button').hide();
+            }
+        }
         function basicFieldChange(event) {
 
             var target = $(event.target);
@@ -174,6 +203,17 @@
             GOVUK.formatCurrency(basicField);
         }
 
+        function fakeSave () {
+            var statusElement = $('#page-section-title-container').find('.info');
+            statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
+            window.setTimeout(function () {
+                statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
+            }, 1000);
+            window.setTimeout(function () {
+                statusElement.html('');
+            }, 2000);
+        }
+
         $('.section').eq(0).removeClass('closed').addClass('open');
 
         $('input.transaction-value').on('blur', function (event) {
@@ -187,34 +227,7 @@
             $('#detail-mode-switch').toggleClass('hidden');
         });
 
-        $('.add-transaction a').on('click',function (event) {
-            event.preventDefault();
-
-            var target = $(event.target);
-            var existing = target.parent().prev();
-            var nextLine = $(existing[0].outerHTML);
-            existing.after(nextLine);
-            nextLine.find('input.transaction-value').val("")
-                .on('keyup', function (event) {
-                    advanceFieldChange(event.target);
-                })
-                .on('blur', function (event) {
-                    GOVUK.formatCurrency(event.target);
-                });
-
-            nextLine.find('label').text('');
-
-            var transaction = target.parent().parent();
-            var groups = transaction.find('.form-group.advanced');
-            var length = groups.length;
-
-            if (groups.length > 1) {
-                transaction.find('.remove-button').show().off('click').on('click', remove);
-            } else {
-                transaction.find('.remove-button').hide();
-            }
-
-        });
+        $('.add-transaction a').on('click',addField);
 
         $('.remove-button').on('click', remove);
 
