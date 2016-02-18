@@ -110,7 +110,9 @@
                 advancedField.addClass('advanced').insertAfter(currentField);
 
                 advancedInput.addClass('exclude-total')
-                    .on('keyup', advanceFieldChange)
+                    .on('keyup', function (event) {
+                        advanceFieldChange(event.target);
+                    })
                     .on('blur', function (event) {
                         GOVUK.formatCurrency(event.target);
                     });
@@ -119,12 +121,13 @@
         }
         function remove(event) {
             var target = $(event.target);
-            var transaction = target.closest('.transaction');
+            target.val("");
+            advanceFieldChange(target);
 
+            var transaction = target.closest('.transaction');
             target.parent().remove();
 
-
-            var groups = transaction.find('.form-group');
+            var groups = transaction.find('.form-group.advanced');
             if (groups.length > 1) {
                 transaction.find('.remove-button').show();
             } else {
@@ -147,9 +150,9 @@
             });
 
         }
-        function advanceFieldChange(event) {
+        function advanceFieldChange(target) {
             // Total up all the fields in this area and update the basic hidden field.
-            var target = $(event.target);
+            var target = $(target);
             var transaction = target.closest('.transaction');
             var advancedFields = transaction.find('.advanced .transaction-value');
 
@@ -181,15 +184,17 @@
             var nextLine = existing.clone();
             existing.after(nextLine);
             nextLine.find('input.transaction-value').val("")
-                .on('keyup', advanceFieldChange)
-                    .on('blur', function (event) {
-                        GOVUK.formatCurrency(event.target);
-                    });
+                .on('keyup', function (event) {
+                    advanceFieldChange(event.target);
+                })
+                .on('blur', function (event) {
+                    GOVUK.formatCurrency(event.target);
+                });
 
             nextLine.find('label').text('');
 
             var transaction = target.closest('.transaction');
-            var groups = transaction.find('.form-group');
+            var groups = transaction.find('.form-group.advanced');
             if (groups.length > 1) {
                 transaction.find('.remove-button').show().on('click', remove);
             } else {
