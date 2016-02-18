@@ -5,7 +5,7 @@
 
 usage ()
 {
-  echo "Usage : $0  <S3 bucket name> <pipeline>"
+  echo "Usage : $0  <S3 bucket name> <snapshot name>"
   exit
 }
 
@@ -14,12 +14,10 @@ then
   usage
 fi
 
-db_archive=dd-$API_DATABASE_NAME-$(date +%Y%m%d).pg.gz
-
-if (PGPASSWORD="$API_DATABASE_PASSWORD" pg_dump -C -h $API_DATABASE_HOSTNAME -U $API_DATABASE_USERNAME $API_DATABASE_NAME | gzip | aws s3 cp --region eu-west-1 --sse aws:kms - s3://$1/backups/$2/$db_archive)
+if (PGPASSWORD="$API_DATABASE_PASSWORD" pg_dump -C -h $API_DATABASE_HOSTNAME -U $API_DATABASE_USERNAME $API_DATABASE_NAME | gzip | aws s3 cp --region eu-west-1 --sse aws:kms - s3://$1/$2)
 then
-        echo "DB snapshot created copied to S3 bucket SUCCESSFULLY"
+        echo "DB snapshot created copied to S3 bucket location s3://$1/$2 SUCCESSFULLY"
 else
-        echo "DB snapshot creation or upload to S3 backup bucket FAILED"
+        echo "DB snapshot s3://$1/$2 creation or upload to S3 backup bucket FAILED"
 	usage
 fi
