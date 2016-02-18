@@ -27,7 +27,7 @@
                             'inputClass' : 'form-control__number transaction-value',
                             'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
                             'formGroupClass': formGroupClass,
-                            'removeLink': false
+                            'removeLink': true
                         }) }}
 
                         {% if formTransactions[id].moreDetails is defined %}
