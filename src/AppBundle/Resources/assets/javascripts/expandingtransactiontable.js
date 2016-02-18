@@ -3,29 +3,28 @@
 
     var root = this,
         $ = root.jQuery;
-    
+
     if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
-    
+
     var ExpandingTransactionTable = function(element) {
 
         this.container = $(element);
-        this.inputs = this.container.find('.transaction-value');
+        this.inputs = this.container.find('.transaction-value').not(".exclude-total");
         this.subTotals = this.container.find('.summary .sub-total .value');
         this.grandTotal = this.container.find('.grand-total .value');
-        
         this.addElementLevelEvents();
         this.closeAll();
         this.setInitialDescriptionVisibility();
         this.openSectionsWithErrors();
     };
-    
+
     ExpandingTransactionTable.prototype.addElementLevelEvents = function () {
         this.clickHandler = this.getSummaryClickHandler();
         this.totalChangeHandler = this.getTotalChangeHandler();
         this.formSubmitHandler = this.getFormSubmitHandler();
-        
+
         $('.summary', this.element).on('click', this.clickHandler);
-        this.inputs.on('keyup input paste', this.totalChangeHandler);
+        this.inputs.on('keyup input paste recalc', this.totalChangeHandler);
         this.container.on('submit', this.formSubmitHandler);
     };
     ExpandingTransactionTable.prototype.getSummaryClickHandler = function () {
@@ -36,7 +35,7 @@
     ExpandingTransactionTable.prototype.getTotalChangeHandler = function () {
         return function (e) {
             var $target = $(e.target);
-            
+
             this.handleTotalChange($target);
             this.shouldDisplayDescription($target.closest('.transaction'));
         }.bind(this);
@@ -66,13 +65,13 @@
         var section = target.closest('.section');
         var total = 0.00;
 
-        $('.transaction-value', section).each(function (index, element) {
+        $('.transaction-value', section).not('.exclude-total').each(function (index, element) {
             var value = parseFloat(element.value.replace(/,/g , ""));
             if (!isNaN(value)) {
                 total += value;
             }
         });
-        
+
         $('.sub-total .value', section).text(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
 
         this.updateGrandTotal();
@@ -82,7 +81,7 @@
         var clearDescription = this.clearDescription;
         $('.transaction', this.container).each(function (index, element) {
             clearDescription(element);
-        });           
+        });
     };
     ExpandingTransactionTable.prototype.updateGrandTotal = function () {
         var total = 0;
@@ -93,30 +92,30 @@
                 total += value;
             }
         });
-        
+
         this.grandTotal.text(total.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,'));
     };
     ExpandingTransactionTable.prototype.closeAll = function () {
         $('.section', this.container).removeClass('open').addClass('closed');
     };
     ExpandingTransactionTable.prototype.setInitialDescriptionVisibility = function () {
-    
+
         var shouldDisplayDescription = this.shouldDisplayDescription;
-        
+
         $('.transaction-more-details', this.container).each(function (index, element) {
-            
+
             var transaction = $(element).closest('.transaction');
             shouldDisplayDescription(transaction);
-            
+
         });
-        
-        
+
+
     };
     ExpandingTransactionTable.prototype.shouldDisplayDescription = function (transaction) {
         var valueElement = $('.transaction-value', transaction);
         var value = parseFloat(valueElement.val().replace(/,/g , ""));
         var hasError = $('.error', transaction).length > 0;
-        
+
         if (isNaN(value) && !hasError || value === 0 && !hasError) {
             transaction.addClass('hide-description');
         } else {
@@ -133,10 +132,10 @@
     };
     ExpandingTransactionTable.prototype.openSectionsWithErrors = function () {
         $('.error', this.container).each(function (index, element) {
-           $(element).closest('.section').addClass('open').removeClass('closed'); 
+           $(element).closest('.section').addClass('open').removeClass('closed');
         });
     };
-    
+
     root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 
 }).call(this);

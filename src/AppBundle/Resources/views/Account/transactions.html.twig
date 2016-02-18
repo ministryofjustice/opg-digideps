@@ -21,16 +21,15 @@
                         {#access the element via ID, set from the model therefore matching#}
                         {{ form_row(formTransactions[id].id) }}
                         {{ form_row(formTransactions[id].type) }}
-    
+
                         {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
                             'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
                             'formGroupClass': formGroupClass,
-                            'removeLink': true
+                            'removeLink': false
                         }) }}
 
-    
                         {% if formTransactions[id].moreDetails is defined %}
                             {{ form_input(formTransactions[id].moreDetails, '', {
                                 'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans({'%client%': report.client.firstname}, 'report-transactions'),
@@ -38,7 +37,7 @@
                                 'inputClass': 'expanding transaction-more-details'
                             }) }}
                         {% endif %}
-                        
+
                         <div class="add-transaction">
                             <a href="#">add another</a>
                         </div>
@@ -51,7 +50,7 @@
         </div>
         {% endfor %}
         <div class="grand-total">
-            {{ (subsection ~ '.grandtotal')| trans }}: 
+            {{ (subsection ~ '.grandtotal')| trans }}:
             <span class="currency">£</span>
             <span class="value behat-region-transaction-total">{{ transactionsTotal | money_format}}</span>
         </div>
@@ -75,24 +74,53 @@
             url: '{{ path('accounts_money_save_json', {'reportId': report.id, 'type': jsonEndpoint}) }}',
             preprocessor: GOVUK.moneyInOuPreprocessor
         });
-        
-        $('input.transaction-value').on('blur', function (event) {
-            GOVUK.formatCurrency(event.target);
-        });
-        
-        $('.section').eq(0).removeClass('closed').addClass('open');
-        
-        $('#total-mode-switch, #detail-mode-switch').on('click', function (event) {
-            event.preventDefault();
-            $('.expanding-transaction-table .transactions').toggleClass("detail-view");
-            $('#total-mode-switch').toggleClass('hidden');
-            $('#detail-mode-switch').toggleClass('hidden');
-        });
 
+        function getTotal(elements) {
+
+            var value,
+                cleanString,
+                total = 0.00;
+
+            elements.each(function(index,item) {
+                cleanString = item.value.replace(/[^\d\.\-\ ]/g, '');
+                value = parseFloat(cleanString);
+                if (!isNaN(value)) {
+                    total += value;
+                }
+            });
+
+            return total;
+
+        }
+
+        function createAdvancedFieds() {
+            $('.transaction').each(function (index, element) {
+
+                var transactionElement = $(element);
+
+                var currentField = transactionElement.find('.form-group');
+                var currentInput = currentField.find('.transaction-value').eq(0);
+
+                var advancedField = currentField.clone();
+                var advancedInput = advancedField.find('.transaction-value').eq(0);
+
+                currentField.addClass('basic');
+                currentInput.on('keyup', basicFieldChange);
+
+                advancedField.addClass('advanced').insertAfter(currentField);
+
+                advancedInput.addClass('exclude-total')
+                    .on('keyup', advanceFieldChange)
+                    .on('blur', function (event) {
+                        GOVUK.formatCurrency(event.target);
+                    });
+
+            });
+        }
         function remove(event) {
             var target = $(event.target);
             var transaction = target.closest('.transaction');
-            
+
             target.parent().remove();
 
 
@@ -103,15 +131,61 @@
                 transaction.find('.remove-button').hide();
             }
         }
-        
+        function basicFieldChange(event) {
+
+            var target = $(event.target);
+            var transaction = target.closest('.transaction');
+            var advancedFields = transaction.find('.advanced .transaction-value');
+
+            advancedFields.each(function(index, element) {
+                if (index === 0) {
+                    element.value = target.val();
+                } else {
+                    element.value = "";
+                }
+                GOVUK.formatCurrency(element);
+            });
+
+        }
+        function advanceFieldChange(event) {
+            // Total up all the fields in this area and update the basic hidden field.
+            var target = $(event.target);
+            var transaction = target.closest('.transaction');
+            var advancedFields = transaction.find('.advanced .transaction-value');
+
+            var total = getTotal(advancedFields)
+
+            var basicField = transaction.find('.basic .transaction-value').eq(0);
+            basicField.val(total).trigger('recalc');
+            GOVUK.formatCurrency(basicField);
+        }
+
+        $('.section').eq(0).removeClass('closed').addClass('open');
+
+        $('input.transaction-value').on('blur', function (event) {
+            GOVUK.formatCurrency(event.target);
+        });
+
+        $('#total-mode-switch, #detail-mode-switch').on('click', function (event) {
+            event.preventDefault();
+            $('.expanding-transaction-table .transactions').toggleClass("detail-view");
+            $('#total-mode-switch').toggleClass('hidden');
+            $('#detail-mode-switch').toggleClass('hidden');
+        });
+
         $('.add-transaction a').on('click',function (event) {
             event.preventDefault();
-            
+
             var target = $(event.target);
             var existing = target.parent().prev();
             var nextLine = existing.clone();
             existing.after(nextLine);
-            nextLine.find('input.transaction-value').val("");
+            nextLine.find('input.transaction-value').val("")
+                .on('keyup', advanceFieldChange)
+                    .on('blur', function (event) {
+                        GOVUK.formatCurrency(event.target);
+                    });
+
             nextLine.find('label').text('');
 
             var transaction = target.closest('.transaction');
@@ -121,11 +195,11 @@
             } else {
                 transaction.find('.remove-button').hide();
             }
-            
+
         });
-        
-        
+
         $('.remove-button').on('click', remove);
-    
+
+        createAdvancedFieds();
     });
 </script>
