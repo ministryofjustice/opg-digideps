@@ -12,7 +12,13 @@
 >
     <testsuites>
         <testsuite name="Client unit tests">
-            <directory>.</directory>
+            <directory>Controller</directory>
+            <directory>Entity</directory>
+            <directory>EventListener</directory>
+            <directory>Form</directory>
+            <directory>Resources</directory>
+            <directory>Service</directory>
+            <directory>Twig</directory>
         </testsuite>
     </testsuites>
     

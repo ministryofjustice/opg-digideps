@@ -37,9 +37,9 @@ Feature: deputy / user / add details
         And I save the page as "deputy-step2-error"
         # right values
         When I set the user details to:
-          | name | John | Doe |
+          | name | John | Doe | | | |
           | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
-          | phone | 020 3334 3555  | 020 1234 5678  |
+          | phone | 020 3334 3555  | 020 1234 5678  | | | |
         Then the form should be valid
         When I go to "/user/details"
         Then the following fields should have the corresponding values:
