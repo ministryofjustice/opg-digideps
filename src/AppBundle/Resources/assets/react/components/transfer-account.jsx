@@ -33,7 +33,7 @@ class TransferAccount extends Component {
     render () {
 
         if (this.state.open) {
-            return (<AccountList selectAccount={(account) => this.selectAccount(account)} />);
+            return (<AccountList selectAccount={(account) => this.selectAccount(account)} selectedAccount={this.state.account}/>);
         } else if (!this.state.open && this.state.account) {
             return (<AccountCard account={this.state.account} selectAccount={() => this.clickEdit()} />);
         } else {
