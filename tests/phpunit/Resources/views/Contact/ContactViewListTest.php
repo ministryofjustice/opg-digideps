@@ -26,9 +26,15 @@ class ContactViewListTest extends WebTestCase
         $request->create('/report/1/contacts');
         $this->container->enterScope('request');
         $this->container->set('request', $request, 'request');
-
+        $this->container->get('request_stack')->push(Request::createFromGlobals());
     }
-
+    
+    protected function tearDown()
+    {
+        m::close();
+        $this->container->leaveScope('request');
+    }
+    
     // Continue Button
 
     /** @test */
