@@ -243,11 +243,11 @@ action:
     doYouExpectFinancialDecisions:
         notBlank: Choose Yes or No
     doYouExpectFinancialDecisionsDetails:
-        notBlank: Value is required and can’t be empty
+        notBlank: Tell us about any decisions or actions you plan to take
     doYouHaveConcerns:
         notBlank: Choose Yes or No
     doYouHaveConcernsDetails:
-        notBlank: Value is required and can’t be empty
+        notBlank: Tell us about any concerns you have
         
 feedbackAfterReport:
     satisfactionLevel:
