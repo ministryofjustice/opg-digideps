@@ -146,7 +146,7 @@
                 transaction.find('.remove-button').hide();
             }
 
-            groups.each(function (element, index) {
+            groups.each(function (index, element) {
                 if (index === 0) {
                     $(element).find('label').show();
                 } else {
@@ -171,8 +171,7 @@
                     GOVUK.formatCurrency(event.target);
                     fakeSave();
                 });
-
-            nextLine.find('label').text('');
+            nextLine.find('label').hide();
 
             var transaction = target.parent().parent();
             var groups = transaction.find('.form-group-value.advanced');
