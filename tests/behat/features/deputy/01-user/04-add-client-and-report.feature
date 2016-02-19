@@ -65,12 +65,12 @@ Feature: deputy / user / add client and report
         And I save the page as "deputy-step3-errors"
         # right values
        When I set the client details to:
-            | name | Peter | White | 
-            | caseNumber | 12345ABC |
-            | courtDate | 1 | 1 | 2016 |
-            | allowedCourtOrderTypes_1 | 1 |
+            | name | Peter | White |  | | |
+            | caseNumber | 12345ABC | | | | |
+            | courtDate | 1 | 1 | 2016 | | |
+            | allowedCourtOrderTypes_1 | 1 | | | | |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
-            | phone | 0123456789  |
+            | phone | 0123456789  | | | | |
         Then the URL should match "report/create/\d+"
         When I go to "client/add"
         Then the following fields should have the corresponding values:

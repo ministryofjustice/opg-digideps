@@ -312,15 +312,15 @@ trait ReportTrait
 
         $rows = $table->getRowsHash();
 
-        $this->fillField('account_bank', $rows['bank']);
-        $this->fillField('account_accountNumber', $rows['accountNumber']);
-        $this->fillField('account_accountType', $rows['accountType']);
+        $this->fillField('account_bank', $rows['bank'][0]);
+        $this->fillField('account_accountNumber', $rows['accountNumber'][0]);
+        $this->fillField('account_accountType', $rows['accountType'][0]);
         $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
         $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
         $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
 
-        $this->fillField('account_openingBalance', $rows['openingBalance']);
-        $this->fillField('account_closingBalance', $rows['closingBalance']);
+        $this->fillField('account_openingBalance', $rows['openingBalance'][0]);
+        $this->fillField('account_closingBalance', $rows['closingBalance'][0]);
 
         $this->pressButton("account_save");
         $this->theFormShouldBeValid();

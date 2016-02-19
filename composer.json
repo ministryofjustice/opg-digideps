@@ -9,11 +9,11 @@
     },
     "require": {
         "php": ">=5.3.3",
-        "symfony/symfony": "2.3.*",
+        "symfony/symfony": "2.8.*",
         "twig/extensions": "1.0.*",
         "symfony/assetic-bundle": "2.3.*",
         "symfony/swiftmailer-bundle": "2.3.*",
-        "symfony/monolog-bundle": "2.3.*",
+        "symfony/monolog-bundle": "2.8.*",
         "sensio/distribution-bundle": "2.3.*",
         "sensio/framework-extra-bundle": "2.3.*",
         "sensio/generator-bundle": "2.3.*",
@@ -29,10 +29,10 @@
         "behat/mink-selenium2-driver": "*",
         "behat/symfony2-extension": "2.0",
         "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "4.5.*",
+        "phpunit/phpunit": "4.*",
         "commerceguys/guzzle-oauth2-plugin": "~2.0",
-        "snc/redis-bundle": "^1.1",
-        "predis/predis": "0.8.*"
+        "snc/redis-bundle": "1.1.*",
+        "predis/predis": "1.0.*"
     },
     "scripts": {
         "post-install-cmd": [
