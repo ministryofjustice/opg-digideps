@@ -1,17 +1,26 @@
 #transfers {
+
+    .card-list .card-item {
+        margin: 20px 0 20px 0;
+
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+
     .transfer {
         margin-bottom: 40px;
         border-bottom: 1px solid $border-colour;
-        
+
         &:last-child {
             border-bottom: 0;
         }
-        
+
         .delete-button {
             margin: 20px 10px 20px 0;
         }
-        
-        
+
+
     }
 }
 

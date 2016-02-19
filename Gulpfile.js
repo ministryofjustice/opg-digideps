@@ -21,7 +21,7 @@ var config = {
     sass: {
         includePaths: [
             'node_modules/govuk_frontend_toolkit/stylesheets',
-            'node_modules/govuk-elements/public/sass'
+            'node_modules/govuk-elements-sass/public/sass'
         ]
     },
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
@@ -91,8 +91,7 @@ gulp.task('sass.images', function(callback) {
     gulp.src(config.sassSrc + '/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
 
-    gulp.src('./node_modules/govuk-elements/public/images/**/*')
-        .pipe(gulp.dest('./web/images'));
+
 
     callback();
 });
@@ -161,11 +160,11 @@ gulp.task('react-debug', function (callback) {
     .bundle()
     .pipe(source('transfers.js'))
     .pipe(gulp.dest('./web/javascripts/'));
-    
+
 });
 
 gulp.task('react', function (callback) {
-    
+
     function build() {
         browserify({
             entries: config.reactSrc + '/transfers.jsx',
@@ -176,16 +175,16 @@ gulp.task('react', function (callback) {
         .bundle()
         .pipe(source('transfers.js'))
         .pipe(gulp.dest('./web/javascripts/'));
-        
+
     }
-    
+
     function minify() {
         return gulp.src('./web/javascripts/transfers.js')
             .pipe(rename('transfers.min.js'))
             .pipe(uglify())
             .pipe(gulp.dest('./web/javascripts'));
     }
-    
+
     build();
     minify();
 });
