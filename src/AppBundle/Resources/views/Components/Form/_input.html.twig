@@ -5,17 +5,17 @@
         {{ labelText | raw }}
       </label>
     {% else %}
-      {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}  
+      {{ form_label(element, labelText, {'label_attr': {'class': 'form-label ' ~ labelClass | default('') }}) }}
     {% endif %}
-    
+
     {% if (hintText is defined) and (hintText is not empty) %}
         <p class="form-hint">
           {{ hintText }}
         </p>
         {% if hintListArray is defined %}
             <ul class="form-hint list-bullet">
-                {% for hintList in hintListArray %} 
-                    <li>{{ hintList }}</li>   
+                {% for hintList in hintListArray %}
+                    <li>{{ hintList }}</li>
                 {% endfor %}
             </ul>
         {% endif %}
@@ -24,23 +24,19 @@
     {{ form_errors(element) }}
 
     {% set class = element.vars.attr.class | default('') ~ ' form-control ' ~ inputClass | default('') %}
-    
+
     {% if (preInputText is defined) and (preInputText is not empty) %}
         <span class="pre-input-text">{{ preInputText }}</span>
     {% endif %}
-    
+
     {% if inputPrefix is defined and inputPrefix is not empty %}
         <span class="input-group-prefix">{{ inputPrefix }}</span>
     {% endif %}
-    
+
     {% if element.vars.valid %}
         {{ form_widget(element, { 'attr': {'class': class } }) }}
     {% else %}
         {{ form_widget(element, { 'attr': {'class': class, 'aria-invalid':'true' } }) }}
     {% endif %}
 
-    {% if (removeLink is defined and removeLink == true)%}
-        <span class="remove-button">Remove</span>
-    {% endif %}
-    
 </div>
