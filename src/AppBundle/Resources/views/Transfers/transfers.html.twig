@@ -8,7 +8,7 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-        
+
         <p class="page-section-description}}">
             {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
         </p>
@@ -28,7 +28,7 @@
 
             var opg = opg || {};
             opg.accounts = {{ report.accounts | serialize | raw }};
-            
+
         </script>
         <script src="/javascripts/transfers.js"></script>
 
@@ -36,8 +36,8 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts" , {'reportId': report.id }),
-        'previousLabel': 'Accounts',
+        'previousLink': path("accounts_balance" , {'reportId': report.id }),
+        'previousLabel': 'Balance accounts',
         'nextLink': path("assets" , {'reportId': report.id }),
         'nextLabel': 'Assets'
         } %}

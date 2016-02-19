@@ -1,4 +1,7 @@
-import React, { Component } from 'react';
+/*jshint esversion: 6 */
+/*jshint browser: true */
+
+import React from 'react';
 import ReactDOM from 'react-dom';
 import MoneyTransfers from './components/money-transfers';
 

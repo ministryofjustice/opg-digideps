@@ -1,38 +1,24 @@
-import React, { Component } from 'react';
+/*jshint esversion: 6 */
+/*global opg: true */
+
+import React from 'react';
 import AccountCard from './account-card';
 
+const AccountList = ({selectAccount}) => {
 
-var accounts = opg.accounts;
-
-class AccountList extends Component {
-
-    constructor (props) {
-        super(props);
-        this.selectAccount = this.selectAccount.bind(this);
-    }
-    
-    selectAccount (account) {
-        if (this.props.selectAccount) {
-            this.props.selectAccount(account);
-        }
-    }
-    
-    render () {
-
-        var self = this;
-        
-        var accountNodes = accounts.map(function(account, i) {
-            return (
-                <AccountCard account={account} key={i} selectAccount={self.selectAccount} />
-            );
-        });
-        
+    var accountNodes = opg.accounts.map(function(account, i) {
         return (
-            <ul className="card-list">
-                {accountNodes}
-            </ul>
+            <li className="card-item" key={i}>
+                <AccountCard account={account} selectAccount={() => selectAccount(account)} />
+            </li>
         );
-    }
+    });
+
+    return (
+        <ul className="card-list">
+            {accountNodes}
+        </ul>
+    )
 }
 
 export default AccountList;

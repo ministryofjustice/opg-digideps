@@ -21,12 +21,20 @@
     {% endblock %}
 
     {% block pageBodyFooterNav %}
-        {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts_moneyout" , {'reportId': report.id }),
-        'previousLabel': 'Money out',
-        'nextLink': path("assets" , {'reportId': report.id }),
-        'nextLabel': 'Assets'
-        } %}
+        {% if (report.accounts | length) > 1 %}
+            {% include 'AppBundle:Components:nextprevious.html.twig' with {
+            'previousLink': path("accounts_moneyout" , {'reportId': report.id }),
+            'previousLabel': 'Money out',
+            'nextLink': path("transfers" , {'reportId': report.id }),
+            'nextLabel': 'Transfers'
+            } %}
+        {% else %}
+            {% include 'AppBundle:Components:nextprevious.html.twig' with {
+            'previousLink': path("accounts_moneyout" , {'reportId': report.id }),
+            'previousLabel': 'Money out',
+            'nextLink': path("assets" , {'reportId': report.id }),
+            'nextLabel': 'Assets'
+            } %}
+        {% endif %}
     {% endblock %}
-
 {% endembed %}

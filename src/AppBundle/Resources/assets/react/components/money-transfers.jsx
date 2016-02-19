@@ -1,24 +1,27 @@
+/*jshint esversion: 6 */
+/*jshint browser: true */
 import React, { Component } from 'react';
 import MoneyTransfer from './money-transfer';
 import $ from 'jquery';
 
+
 class MoneyTransfers extends Component {
 
     constructor (props) {
-        
+
         super(props);
-        
+
         this.state = {
             transfers: this.props.transfers
         };
 
         const updateTransfer = this.updateTransfer.bind(this);
         const deleteTransfer = this.deleteTransfer.bind(this);
-        
-        $(document).on("updateTransfer", function (event, transfer) {
+
+        $(document).on('updateTransfer', function (event, transfer) {
             updateTransfer(transfer);
         });
-        $(document).on("deleteTransfer", function (event, transfer) {
+        $(document).on('deleteTransfer', function (event, transfer) {
             deleteTransfer(transfer);
         });
 
@@ -31,10 +34,10 @@ class MoneyTransfers extends Component {
         var transfer;
 
         // Scan through all the things.
-        for (; pos != 0; pos -= 1) {
+        for (; pos !== 0; pos -= 1) {
             transfer = transfers[pos - 1];
 
-            if (transfer.amount == null || transfer.amount == "" || transfer.amount == "0" || !transfer.accountFrom || !transfer.accountTo) {
+            if (transfer.amount === null || transfer.amount === '' || transfer.amount === '0' || !transfer.accountFrom || !transfer.accountTo) {
                 complete = false;
             }
 
@@ -55,7 +58,7 @@ class MoneyTransfers extends Component {
         }
 
     }
-    
+
     fakeSave () {
         var statusElement = $('#page-section-title-container').find('.info');
         statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
@@ -63,9 +66,9 @@ class MoneyTransfers extends Component {
             statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
         }, 1000);
     }
-    
+
     updateTransfer (transfer) {
-        
+
         var transfers = this.state.transfers,
             pos = transfers.length;
 
@@ -81,7 +84,7 @@ class MoneyTransfers extends Component {
         this.checkToAddNew();
 
     }
-    
+
     deleteTransfer (transfer) {
         var transfers = this.state.transfers,
             pos = transfers.length;
@@ -97,13 +100,13 @@ class MoneyTransfers extends Component {
         // Check to see if we need to add a new one?
         this.checkToAddNew();
     }
-    
+
     render() {
 
         const transferNodes =  this.state.transfers.map((transfer) => {
-            return <MoneyTransfer transfer={transfer} key={transfer.id} />
+            return (<MoneyTransfer transfer={transfer} key={transfer.id} />);
         });
-        
+
         return (
             <ul id="transfers" className="card-list">
                 {transferNodes}

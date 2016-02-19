@@ -3,7 +3,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    
+
     .card-item {
         @extend %contain-floats;
         margin: 30px 0 50px 0;
@@ -18,35 +18,35 @@
 
         .labelvalue {
             @extend %contain-floats;
-            
+
             .label {
                 @include core-19(1.5);
                 float: left;
                 clear: both;
             }
-            
+
             .value {
                 @include bold-19(1.5);
                 padding-left: 10px;
                 float: left;
             }
-        
+
         }
-        
+
         .warning {
             // moves to the bottom
             margin-top: 30px;
         }
 
     }
-    
+
     .edit-link {
         display: block;
         margin-top: 5px;
     }
-    
 
-    
+
+
 }
 .card {
     @include border-radius(10px);
@@ -128,15 +128,5 @@
 #bank-account-list {
     .card {
         width: 45%;
-    }
-}
-
-#transfers {
-    .card-list .card-item {
-        margin: 20px 0 20px 0;
-        
-        &:first-child {
-            margin-top: 0;
-        }
     }
 }
