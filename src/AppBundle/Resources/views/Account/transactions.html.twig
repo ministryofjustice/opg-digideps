@@ -26,8 +26,12 @@
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
                             'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
-                            'formGroupClass': formGroupClass
+                            'formGroupClass': formGroupClass ~ ' form-group-value'
                         }) }}
+
+                        <div class="add-transaction">
+                            <a href="#">add another</a>
+                        </div>
 
                         {% if formTransactions[id].moreDetails is defined %}
                             {{ form_input(formTransactions[id].moreDetails, '', {
@@ -37,9 +41,7 @@
                             }) }}
                         {% endif %}
 
-                        <div class="add-transaction">
-                            <a href="#">add another</a>
-                        </div>
+
                     </div>
                 {% endfor %}
                 <div class="sub-total">
@@ -101,7 +103,7 @@
 
                 var transactionElement = $(element);
 
-                var currentField = transactionElement.find('.form-group');
+                var currentField = transactionElement.find('.form-group-value');
                 var currentInput = currentField.find('.transaction-value').eq(0);
 
                 var advancedField = currentField.clone();
@@ -124,7 +126,6 @@
                         GOVUK.formatCurrency(event.target);
                         fakeSave();
                     });
-
             });
         }
         function remove(event) {
@@ -138,7 +139,7 @@
             var transaction = target.parent().parent();
             target.parent().remove();
 
-            var groups = transaction.find('.form-group.advanced');
+            var groups = transaction.find('.form-group-value.advanced');
             if (groups.length > 1) {
                 transaction.find('.remove-button').show();
             } else {
@@ -174,7 +175,7 @@
             nextLine.find('label').text('');
 
             var transaction = target.parent().parent();
-            var groups = transaction.find('.form-group.advanced');
+            var groups = transaction.find('.form-group-value.advanced');
             var length = groups.length;
 
             if (groups.length > 1) {
@@ -224,8 +225,6 @@
         }
 
         $('.section').eq(0).removeClass('closed').addClass('open');
-
-
 
         $('#total-mode-switch, #detail-mode-switch').on('click', function (event) {
             event.preventDefault();
