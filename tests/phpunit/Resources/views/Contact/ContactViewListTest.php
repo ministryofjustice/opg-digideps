@@ -59,8 +59,8 @@ class ContactViewListTest extends WebTestCase
         $crawler = new Crawler($html);
 
         $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
-        $this->assertEquals("/report/1/decisions", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
-        $this->assertEquals("Decisions", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
+        $this->assertEquals("/report/1/actions", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
+        $this->assertEquals("Actions", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
 
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
@@ -90,8 +90,8 @@ class ContactViewListTest extends WebTestCase
         $crawler = new Crawler($html);
         
         $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
-        $this->assertEquals("/report/1/decisions", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
-        $this->assertEquals("Decisions", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
+        $this->assertEquals("/report/1/actions", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
+        $this->assertEquals("Actions", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
 
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
