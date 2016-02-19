@@ -229,7 +229,7 @@ class MailFactory
         $viewParams = [
             'submittedReport'=> $submittedReport,
             'newReport' => $newReport,
-            'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'report_overview', [ 'reportId' => $newReport->getId()]),
+            'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'client_home'),
             'homepageUrl' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'homepage')
         ];
         
