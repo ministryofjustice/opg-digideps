@@ -2,7 +2,6 @@
 
 namespace DigidepsBehat;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 trait ReportTrait
@@ -153,7 +152,7 @@ trait ReportTrait
 
         $this->pressButton('report_save');
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
+        $this->assertResponseStatus(200);
     }
 
     /**
@@ -205,7 +204,7 @@ trait ReportTrait
 
             $this->pressButton("contact_save");
             $this->theFormShouldBeValid();
-            //$this->assertResponseStatus(200);
+            $this->assertResponseStatus(200);
         }
     }
 
@@ -240,9 +239,9 @@ trait ReportTrait
 
             $this->fillField('decision_clientInvolvedDetails', $row['clientInvolvedDetails']);
 
-            
             $this->pressButton("decision_save");
             $this->theFormShouldBeValid();
+            $this->assertResponseStatus(200);
         }
     }
 
@@ -253,20 +252,17 @@ trait ReportTrait
     {
         foreach ($table->getHash() as $row) {
             $this->gotoOverview();
-            $this->scrollTo("#edit-assets");
             $this->clickLink("edit-assets");
 
             // click on "Add" if form not present
             if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title_title'))) {
-                $this->scrollTo("#edit-assets");
                 $this->clickLink('add-assets-button');
             }
 
             $this->fillField('asset_title_title', $row['title']);
-            $this->scrollTo("#asset_title_next");
             $this->pressButton("asset_title_next");
             $this->theFormShouldBeValid();
-            //$this->assertResponseStatus(200);
+            $this->assertResponseStatus(200);
             
             $this->fillField('asset_value', $row['value']);
             $this->fillField('asset_description', $row['description']);
@@ -280,7 +276,7 @@ trait ReportTrait
 
             $this->pressButton("asset_save");
             $this->theFormShouldBeValid();
-           // $this->assertResponseStatus(200);
+            $this->assertResponseStatus(200);
         }
     }
     
@@ -298,7 +294,6 @@ trait ReportTrait
             $this->fillField($key, $value);
         }
 
-        
         $this->pressButton("safeguarding_save");
     }
 
@@ -307,27 +302,78 @@ trait ReportTrait
      */
     public function iAddTheFollowingBankAccount(TableNode $table)
     {
-        $time = 10000; // time should be in milliseconds
         $this->gotoOverview();
-        $this->clickLink('edit-accounts');
+        $this->clickLink("edit-accounts");
 
-        $this->clickLink('add-account');
+        // expand form if collapsed
+        //if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
+            $this->clickOnBehatLink('add-account');
+        //}
+
         $rows = $table->getRowsHash();
-        $this->fillField('account_bank', $rows['bank']);
-        $this->fillField('account_accountNumber', $rows['accountNumber']);
-        $this->fillField('account_accountType', $rows['accountType']);
+
+        $this->fillField('account_bank', $rows['bank'][0]);
+        $this->fillField('account_accountNumber', $rows['accountNumber'][0]);
+        $this->fillField('account_accountType', $rows['accountType'][0]);
         $this->fillField('account_sortCode_sort_code_part_1', $rows['sortCode'][0]);
         $this->fillField('account_sortCode_sort_code_part_2', $rows['sortCode'][1]);
         $this->fillField('account_sortCode_sort_code_part_3', $rows['sortCode'][2]);
-        $this->fillField('account_openingBalance', $rows['openingBalance']);
-        $this->fillField('account_closingBalance', $rows['closingBalance']);
+
+        $this->fillField('account_openingBalance', $rows['openingBalance'][0]);
+        $this->fillField('account_closingBalance', $rows['closingBalance'][0]);
+
         $this->pressButton("account_save");
-        
         $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
+        
+//        $this->clickLink('account-moneyin');
+//        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
+//        
+//        $this->clickLink('account-moneyout');
+//        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 
     }
 
-    
+//    private function addTransactions(array $rows, $prefix, $buttonId)
+//    {
+//        $records = $this->getRowsMatching($rows, $prefix);
+//        if (!$records) {
+//            return;
+//        }
+//
+//        foreach ($records as $key => $value) {
+//            if (is_array($value)) { 
+//                $this->fillField("transactions_{$key}_amount", $value[0]);
+//                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
+//            } else {
+//                $this->fillField("transactions_{$key}_amount", $value);
+//            }
+//        }
+//
+//        // save and return to page
+//        $this->pressButton($buttonId);
+//        $this->theFormShouldBeValid();
+//        $this->assertResponseStatus(200);
+//    }
+
+    /**
+     * @param array $rows
+     * @param string $needle
+     *
+     * @return array
+     */
+//    private function getRowsMatching(array $rows, $needle)
+//    {
+//        $ret = $rows;
+//        foreach ($ret as $k => $value) {
+//            if (strpos($k, $needle) === false) {
+//                unset($ret[$k]);
+//            }
+//        }
+//
+//        return $ret;
+//    }
+
      /**
      * @When I submit the report with further info :moreInfo
      */
@@ -352,7 +398,7 @@ trait ReportTrait
         $this->pressButton("report_declaration_save");
 
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
+        $this->assertResponseStatus(200);
     }
 
     private function replace_dashes($string) {
@@ -533,6 +579,7 @@ trait ReportTrait
         $this->fillField('reason_for_no_decision_reason', $text);
         $this->pressButton("reason_for_no_decision_saveReason");
         $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
     }
 
 
@@ -546,7 +593,7 @@ trait ReportTrait
         $this->fillField('reason_for_no_contact_reason', $text);
         $this->pressButton("reason_for_no_contact_saveReason");
         $this->theFormShouldBeValid();
-        //$this->assertResponseStatus(200);
+        $this->assertResponseStatus(200);
     }
     
     /**
@@ -559,6 +606,7 @@ trait ReportTrait
         $this->checkOption("report_noAssetToAdd");
         $this->pressButton("report_saveNoAsset");
         $this->theFormShouldBeValid();
+        $this->assertResponseStatus(200);
     }
     
     
@@ -577,5 +625,5 @@ trait ReportTrait
     {
         $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
     }
-    
+
 }

@@ -4,7 +4,7 @@
 <ul id="overview-sections" class="overview-sections">
 
     <li id="planning-section" class="overview-section">
-        <h2 class="heading">{{ 'planningTitle' | trans() }}</h2>
+        <h2 class="heading">{{ 'heading.planningTitle' | trans() }}</h2>
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'decisions',
@@ -27,7 +27,7 @@
     </li>
 
     <li id="welfare-section" class="overview-section">
-        <h2 class="heading">{{ 'careAndWelfare' | trans() }}</h2>
+        <h2 class="heading">{{ 'heading.careAndWelfare' | trans() }}</h2>
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'safeguarding',
@@ -41,7 +41,7 @@
 
     {% if report.courtOrderType == constant('AppBundle\\Entity\\Report::PROPERTY_AND_AFFAIRS') %}
         <li id="finances-section" class="overview-section">
-            <h2 class="heading">{{ 'finances' | trans() }}</h2>
+            <h2 class="heading">{{ 'heading.finances' | trans() }}</h2>
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'accounts',
@@ -65,7 +65,7 @@
     
     {% if reportStatus.isReadyToSubmit and report.isDue %}
         <li id="report-submit-section" class="overview-section">
-            <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+            <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
@@ -77,7 +77,7 @@
         </li>
     {%  else %}
         <li id="report-submit-section" class="overview-section inactive">
-            <h2 class="heading">{{ 'finishYourReport' | trans() }}</h2>
+            <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',

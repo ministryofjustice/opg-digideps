@@ -104,12 +104,12 @@ Feature: deputy / report / account
     Scenario: add another account (9999) and delete it
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I add the following bank account:
-            | bank    | temp  |
-            | accountNumber | 9999 |
-            | accountType | cash |
+            | bank    | temp  | | |
+            | accountNumber | 9999 | | |
+            | accountType | cash | | |
             | sortCode | 11 | 22 | 33 |
-            | openingBalance  | 100 |
-            | closingBalance  | 22 |
+            | openingBalance  | 100 | | |
+            | closingBalance  | 22 | | |
         When I click on "account-9999"
         # delete and cancel
         And I click on "delete-button"

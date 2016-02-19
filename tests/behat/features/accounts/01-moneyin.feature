@@ -6,16 +6,16 @@ Feature: New accounts money in
         Given I am logged in as "laydeputy@publicguardian.gsi.gov.uk" with password "PDEtnLay1234"
         Then I should be on "/user/details"
         When I set the user details to:
-            | name | John | Doe |
+            | name | John | Doe | | | |
             | address | 102 Petty France | MOJ | London | SW1H 9AJ | GB |
-            | phone | 020 3334 3555  | 020 1234 5678  |
+            | phone | 020 3334 3555  | 020 1234 5678  | | | |
         Then I set the client details to:
-            | name | Peter | White |
-            | caseNumber | 123456ABC |
-            | courtDate | 1 | 1 | 2016 |
-            | allowedCourtOrderTypes_1 | 1 |
+            | name | Peter | White | | | |
+            | caseNumber | 123456ABC | | | | |
+            | courtDate | 1 | 1 | 2016 | | |
+            | allowedCourtOrderTypes_1 | 1 | | | | |
             | address |  1 South Parade | First Floor  | Nottingham  | NG1 2HT  | GB |
-            | phone | 0123456789  |
+            | phone | 0123456789  | | | | |
         Then I fill in the following:
             | report_endDate_day | 31 |
             | report_endDate_month | 12 |
