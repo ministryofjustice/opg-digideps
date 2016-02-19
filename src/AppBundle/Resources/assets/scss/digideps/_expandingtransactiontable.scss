@@ -206,6 +206,11 @@
             padding-left: 20px;
             background: url("images/icons/smallplus.png") 0 1px no-repeat;
             color: $link-colour;
+
+            &:focus {
+                outline: none;
+            }
+
         }
 
     }
