@@ -33,7 +33,7 @@ class MoneyTransfer extends Component {
     }
 
     setAmount (amount) {
-        this.update("amount", event.target.value);
+        this.update("amount", amount);
     }
 
     render () {
