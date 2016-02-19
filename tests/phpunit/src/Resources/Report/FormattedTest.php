@@ -28,9 +28,10 @@ class FormattedTest extends WebTestCase
         $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
-        $this->frameworkBundleClient->getContainer()->set('request', $request, 'request');
+        $this->container = $this->frameworkBundleClient->getContainer();
+        $this->container->set('request', $request, 'request');
         $this->twig = $this->frameworkBundleClient->getContainer()->get('templating');
-
+        $this->container->get('request_stack')->push(Request::createFromGlobals());
         $this->report = new Report;
     }
 
@@ -42,6 +43,7 @@ class FormattedTest extends WebTestCase
     public function tearDown()
     {
         m::close();
+        $this->container->leaveScope('request');
     }
 
     public function testActionNo()
