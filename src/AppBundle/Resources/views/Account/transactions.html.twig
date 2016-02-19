@@ -26,8 +26,7 @@
                             'inputPrefix' : '£',
                             'inputClass' : 'form-control__number transaction-value',
                             'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
-                            'formGroupClass': formGroupClass,
-                            'removeLink': true
+                            'formGroupClass': formGroupClass
                         }) }}
 
                         {% if formTransactions[id].moreDetails is defined %}
@@ -75,6 +74,11 @@
             preprocessor: GOVUK.moneyInOuPreprocessor
         });
 
+        $('input.transaction-value').on('blur', function (event) {
+            GOVUK.formatCurrency(event.target);
+        });
+
+
         function getTotal(elements) {
 
             var value,
@@ -102,6 +106,10 @@
 
                 var advancedField = currentField.clone();
                 var advancedInput = advancedField.find('.transaction-value').eq(0);
+
+                var removeButton = $('<span class="remove-button">Remove</span>');
+                removeButton.on('click', remove);
+                removeButton.insertAfter(advancedInput);
 
                 currentField.addClass('basic');
                 currentInput.on('keyup', basicFieldChange);
@@ -153,6 +161,7 @@
             var existing = target.parent().prev();
             var nextLine = $(existing[0].outerHTML);
             existing.after(nextLine);
+
             nextLine.find('input.transaction-value').val("")
                 .on('keyup', function (event) {
                     advanceFieldChange(event.target);
@@ -216,9 +225,7 @@
 
         $('.section').eq(0).removeClass('closed').addClass('open');
 
-        $('input.transaction-value').on('blur', function (event) {
-            GOVUK.formatCurrency(event.target);
-        });
+
 
         $('#total-mode-switch, #detail-mode-switch').on('click', function (event) {
             event.preventDefault();
@@ -228,8 +235,6 @@
         });
 
         $('.add-transaction a').on('click',addField);
-
-        $('.remove-button').on('click', remove);
 
         createAdvancedFieds();
     });
