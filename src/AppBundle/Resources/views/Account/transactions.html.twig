@@ -170,7 +170,9 @@
                 .on('blur', function (event) {
                     GOVUK.formatCurrency(event.target);
                     fakeSave();
-                });
+                })
+                .focus();
+
             nextLine.find('label').hide();
 
             var transaction = target.parent().parent();
@@ -182,6 +184,7 @@
             } else {
                 transaction.find('.remove-button').hide();
             }
+
         }
         function basicFieldChange(event) {
 
