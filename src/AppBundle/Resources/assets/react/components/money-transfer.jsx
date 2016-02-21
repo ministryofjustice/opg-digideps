@@ -24,11 +24,11 @@ class MoneyTransfer extends Component {
         $(document).trigger("deleteTransfer", [transfer]);
     }
 
-    setAccountFrom (account) {
+    setAccountFrom  = (account) => {
         this.update('accountFrom', account);
     }
 
-    setAccountTo (account) {
+    setAccountTo = (account) => {
         this.update('accountTo', account);
     }
 
@@ -50,14 +50,14 @@ class MoneyTransfer extends Component {
 
                 <div className="column-one-third">
                     <div className="form-label">From:</div>
-                    <TransferAccount account={transfer.accountFrom} selectAccount={account => this.setAccountFrom(account)} />
+                    <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
                     {completed && (
                         <a className="button button-warning delete-button" onClick={() => this.deleteTransfer(transfer)}>Delete</a>
                     )}
                 </div>
                 <div className="column-one-third">
                     <div className="form-label">To:</div>
-                    <TransferAccount account={transfer.accountTo} selectAccount={account => this.setAccountTo(account)} />
+                    <TransferAccount account={transfer.accountTo} selectAccount={this.setAccountTo} />
                 </div>
                 <div className="column-one-third">
                     <div className="form-group">

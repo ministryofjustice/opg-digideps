@@ -15,11 +15,11 @@ class TransferAccount extends Component {
         };
     }
 
-    clickEdit () {
+    clickEdit = () => {
         this.setState({open:true});
     }
 
-    selectAccount(account) {
+    selectAccount = (account) => {
         this.setState({
             open: false,
             account: account
@@ -33,11 +33,11 @@ class TransferAccount extends Component {
     render () {
 
         if (this.state.open) {
-            return (<AccountList selectAccount={(account) => this.selectAccount(account)} selectedAccount={this.state.account}/>);
+            return (<AccountList selectAccount={this.selectAccount} selectedAccount={this.state.account}/>);
         } else if (!this.state.open && this.state.account) {
-            return (<AccountCard account={this.state.account} selectAccount={() => this.clickEdit()} />);
+            return (<AccountCard account={this.state.account} selectAccount={this.clickEdit} />);
         } else {
-            return (<a className="card add" onClick={() => this.clickEdit()}>Select account</a>);
+            return (<a className="card add" onClick={this.clickEdit}>Select account</a>);
         }
 
     }
