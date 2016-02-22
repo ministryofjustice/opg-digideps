@@ -61,7 +61,7 @@ class MoneyTransfers extends Component {
   fakeSave() {
     const statusElement = $('#page-section-title-container').find('.info');
     statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
-    window.setTimeout(function () {
+    window.setTimeout(() => {
       statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
     }, 1000);
   }
