@@ -1,5 +1,5 @@
-/*jshint esversion: 6 */
-/*jshint browser: true */
+/* jshint esversion: 6 */
+/* jshint browser: true */
 import React, { Component } from 'react';
 import MoneyTransfer from './money-transfer';
 import $ from 'jquery';
@@ -7,112 +7,113 @@ import $ from 'jquery';
 
 class MoneyTransfers extends Component {
 
-    constructor (props) {
+  constructor(props) {
+    super(props);
 
-        super(props);
+    this.state = {
+      transfers: this.props.transfers,
+    };
 
-        this.state = {
-            transfers: this.props.transfers
-        };
+    const updateTransfer = this.updateTransfer.bind(this);
+    const deleteTransfer = this.deleteTransfer.bind(this);
 
-        const updateTransfer = this.updateTransfer.bind(this);
-        const deleteTransfer = this.deleteTransfer.bind(this);
+    $(document).on('updateTransfer', function (event, transfer) {
+      updateTransfer(transfer);
+    });
+    $(document).on('deleteTransfer', function (event, transfer) {
+      deleteTransfer(transfer);
+    });
+  }
 
-        $(document).on('updateTransfer', function (event, transfer) {
-            updateTransfer(transfer);
-        });
-        $(document).on('deleteTransfer', function (event, transfer) {
-            deleteTransfer(transfer);
-        });
+  checkToAddNew() {
+    let complete = true;
+    const transfers = this.state.transfers;
+    let pos = transfers.length;
 
+    // Scan through all the things.
+    for (; pos !== 0; pos -= 1) {
+      const transfer = transfers[pos - 1];
+
+      if (transfer.amount === null ||
+        transfer.amount === '' ||
+        transfer.amount === '0' ||
+        !transfer.accountFrom ||
+        !transfer.accountTo) {
+        complete = false;
+      }
     }
 
-    checkToAddNew() {
-        var complete = true;
-        var transfers = this.state.transfers;
-        var pos = transfers.length;
-        var transfer;
+    if (complete === true) {
+      transfers.push({
+        id: transfers.length,
+        accountFrom: null,
+        accountTo: null,
+        amount: null,
+      });
 
-        // Scan through all the things.
-        for (; pos !== 0; pos -= 1) {
-            transfer = transfers[pos - 1];
+      this.setState({ transfers });
+      this.fakeSave();
+    } else {
+      $('#page-section-title-container').find('.info').text('');
+    }
+  }
 
-            if (transfer.amount === null || transfer.amount === '' || transfer.amount === '0' || !transfer.accountFrom || !transfer.accountTo) {
-                complete = false;
-            }
+  fakeSave() {
+    const statusElement = $('#page-section-title-container').find('.info');
+    statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
+    window.setTimeout(function () {
+      statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
+    }, 1000);
+  }
 
-        }
+  updateTransfer(transfer) {
+    const transfers = this.state.transfers;
+    let pos = transfers.length;
 
-        if (complete === true) {
-            transfers.push({
-                id: transfers.length,
-                accountFrom: null,
-                accountTo: null,
-                amount: null
-            });
-
-            this.setState({transfers: transfers});
-            this.fakeSave();
-        } else {
-            $('#page-section-title-container').find('.info').text('');
-        }
-
+    for (; pos > 0; pos -= 1) {
+      if (transfers[pos - 1].id === transfer.id) {
+        transfers[pos - 1] = transfer;
+      }
     }
 
-    fakeSave () {
-        var statusElement = $('#page-section-title-container').find('.info');
-        statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
-        window.setTimeout(function () {
-            statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
-        }, 1000);
+    this.setState({ transfers });
+
+    // Check to see if we need to add a new one?
+    this.checkToAddNew();
+  }
+
+  deleteTransfer(transfer) {
+    const transfers = this.state.transfers;
+    let pos = transfers.length;
+
+    for (; pos > 0; pos -= 1) {
+      if (transfers[pos - 1].id === transfer.id) {
+        transfers.splice(pos - 1, 1);
+      }
     }
 
-    updateTransfer (transfer) {
+    this.setState({ transfers });
 
-        var transfers = this.state.transfers,
-            pos = transfers.length;
+    // Check to see if we need to add a new one?
+    this.checkToAddNew();
+  }
 
-        for (; pos > 0; pos -= 1) {
-            if (transfers[pos -1].id === transfer.id) {
-                transfers[pos -1] = transfer;
-            }
-        }
+  render() {
+    const transferNodes = this.state.transfers.map(transfer => {
+      return (<MoneyTransfer transfer={transfer} key={transfer.id} />);
+    });
 
-        this.setState({transfers:transfers});
-
-        // Check to see if we need to add a new one?
-        this.checkToAddNew();
-
-    }
-
-    deleteTransfer (transfer) {
-        var transfers = this.state.transfers,
-            pos = transfers.length;
-
-        for (; pos > 0; pos -= 1) {
-            if (transfers[pos -1].id === transfer.id) {
-                transfers.splice(pos -1, 1);
-            }
-        }
-
-        this.setState({transfers:transfers});
-
-        // Check to see if we need to add a new one?
-        this.checkToAddNew();
-    }
-
-    render() {
-
-        const transferNodes =  this.state.transfers.map((transfer) => {
-            return (<MoneyTransfer transfer={transfer} key={transfer.id} />);
-        });
-
-        return (
-            <ul id="transfers" className="card-list">
-                {transferNodes}
-            </ul>
-        );
-    }
+    return (
+        <ul id="transfers" className="card-list">
+            {transferNodes}
+        </ul>
+    );
+  }
 }
+
+MoneyTransfers.propTypes = {
+  transfers: React.PropTypes.array,
+};
+
 
 export default MoneyTransfers;

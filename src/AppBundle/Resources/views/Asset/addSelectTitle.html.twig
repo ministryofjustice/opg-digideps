@@ -72,7 +72,7 @@
         {% if (report.accounts | length) > 1 %}
             {% include 'AppBundle:Components:nextprevious.html.twig' with {
             'previousLink': path("transfers" , {'reportId': report.id }),
-            'previousLabel': 'Transfers',
+            'previousLabel': 'Money transfers',
             'nextLink': path("report_overview" , {'reportId': report.id }),
             'nextLabel': 'Report overview'
             } %}
