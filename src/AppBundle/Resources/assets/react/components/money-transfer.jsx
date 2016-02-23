@@ -1,12 +1,9 @@
-/* jshint esversion: 6 */
-/* jshint browser: true */
 import React, { Component } from 'react';
-import $ from 'jquery';
 
+import { updateTransfer, deleteTransfer } from '../actions';
 import TransferAccount from './transfer-account';
 
-class MoneyTransfer extends Component {
-
+export default class MoneyTransfer extends Component {
   setAccountFrom = (account) => {
     this.update('accountFrom', account);
   }
@@ -15,12 +12,12 @@ class MoneyTransfer extends Component {
     this.update('accountTo', account);
   }
 
-  setAmount(amount) {
-    this.update('amount', amount);
+  amountChange = (event) => {
+    this.update('amount', event.target.value);
   }
 
-  deleteTransfer(transfer) {
-    $(document).trigger('deleteTransfer', [transfer]);
+  clickDelete = () => {
+    deleteTransfer(this.props.transfer);
   }
 
   update(key, value) {
@@ -32,7 +29,8 @@ class MoneyTransfer extends Component {
     };
 
     transfer[key] = value;
-    $(document).trigger('updateTransfer', [transfer]);
+
+    updateTransfer(transfer);
   }
 
   render() {
@@ -50,11 +48,9 @@ class MoneyTransfer extends Component {
       <li className="transfer grid-row">
         <div className="column-one-third">
           <div className="form-label">From:</div>
-          <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
+          <TransferAccount account={transfer.accountFrom} selectAccout={this.setAccountFrom} />
           {completed && (
-            <a className="button button-warning delete-button"
-              onClick={() => this.deleteTransfer(transfer)}
-            >
+            <a className="button button-warning delete-button" onClick={this.clickDelete}>
               Delete
             </a>
           )}
@@ -72,7 +68,7 @@ class MoneyTransfer extends Component {
               name="account[balance]"
               className="form-control form-control__number"
               value={transfer.amount}
-              onChange={(event) => this.setAmount(event.target.value)}
+              onChange={this.amountChange}
             />
             <br />
           </div>
@@ -83,9 +79,6 @@ class MoneyTransfer extends Component {
 }
 
 MoneyTransfer.propTypes = {
-  selectAccount: React.PropTypes.function,
   account: React.PropTypes.object,
   transfer: React.PropTypes.object,
 };
-
-export default MoneyTransfer;

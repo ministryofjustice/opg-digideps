@@ -7,6 +7,7 @@
     "lint": "eslint src/AppBundle/Resources/assets/react/**/*.jsx"
   },
   "devDependencies": {
+    "axios": "^0.8.1",
     "babel-eslint": "^5.0.0",
     "babel-plugin-react-transform": "^2.0.0",
     "babel-plugin-transform-runtime": "^6.5.2",
@@ -40,6 +41,9 @@
     "mocha": "*",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
+    "react-redux": "^4.0.0",
+    "redux": "^3.0.4",
+    "redux-promise": "^0.5.0",
     "run-sequence": "^1.1.4",
     "sinon": "*",
     "vinyl-source-stream": "^1.1.0"

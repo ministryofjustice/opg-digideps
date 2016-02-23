@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
+
 import AccountCard from './account-card';
-import AccountList from './account-list';
+import AccountList from '../containers/account-list';
 
 class TransferAccount extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      open: false,
-      account: props.account,
+      open: false
     };
   }
 
   clickEdit = () => {
-    this.setState({ open: true });
+    this.setState({
+      open: true,
+      selectedAccount: this.state.selectedAccount,
+    });
   }
 
   selectAccount = (account) => {
@@ -22,19 +25,20 @@ class TransferAccount extends Component {
       account,
     });
 
-    if (this.props.selectAccount) {
-      this.props.selectAccount(account);
-    }
+    this.props.selectAccount(account);
   }
 
   render() {
     if (this.state.open) {
       return (
-        <AccountList selectAccount={this.selectAccount} selectedAccount={this.state.account} />
+        <AccountList
+          selectedAccount={this.state.account}
+          selectAccount={this.selectAccount}
+        />
       );
     } else if (!this.state.open && this.state.account) {
       return (
-        <AccountCard account={this.state.account} selectAccount={this.clickEdit} />
+        <AccountCard account={this.state.account} />
       );
     }
 
@@ -45,8 +49,8 @@ class TransferAccount extends Component {
 }
 
 TransferAccount.propTypes = {
-  selectAccount: React.PropTypes.function,
   account: React.PropTypes.object,
+  selectAccount: React.PropTypes.func,
 };
 
 export default TransferAccount;

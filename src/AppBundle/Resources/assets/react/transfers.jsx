@@ -1,17 +1,16 @@
-/* jshint esversion: 6 */
-/* jshint browser: true */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MoneyTransfers from './components/money-transfers';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import ReduxPromise from 'redux-promise';
 
-const transfers = [
-  {
-    id: 0,
-    amount: null,
-    accountFrom: null,
-    accountTo: null,
-  },
-];
+import MoneyTransfers from './containers/money-transfers';
+import reducers from './reducers';
 
-ReactDOM.render(<MoneyTransfers transfers={transfers} />, document.querySelector('#transfers'));
+const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore);
+
+ReactDOM.render(
+  <Provider store={createStoreWithMiddleware(reducers)}>
+    <MoneyTransfers />
+  </Provider>,
+  document.querySelector('#transfers'));
