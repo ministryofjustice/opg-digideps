@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 
-import { updateTransfer, deleteTransfer } from '../actions';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { updateTransfer, deleteTransfer } from '../actions/index';
+
 import TransferAccount from './transfer-account';
 
-export default class MoneyTransfer extends Component {
+
+class MoneyTransfer extends Component {
   setAccountFrom = (account) => {
     this.update('accountFrom', account);
   }
@@ -17,7 +22,7 @@ export default class MoneyTransfer extends Component {
   }
 
   clickDelete = () => {
-    deleteTransfer(this.props.transfer);
+    this.props.deleteTransfer(this.props.transfer);
   }
 
   update(key, value) {
@@ -30,7 +35,7 @@ export default class MoneyTransfer extends Component {
 
     transfer[key] = value;
 
-    updateTransfer(transfer);
+    this.props.updateTransfer(transfer);
   }
 
   render() {
@@ -48,7 +53,7 @@ export default class MoneyTransfer extends Component {
       <li className="transfer grid-row">
         <div className="column-one-third">
           <div className="form-label">From:</div>
-          <TransferAccount account={transfer.accountFrom} selectAccout={this.setAccountFrom} />
+          <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
           {completed && (
             <a className="button button-warning delete-button" onClick={this.clickDelete}>
               Delete
@@ -78,7 +83,15 @@ export default class MoneyTransfer extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ updateTransfer, deleteTransfer }, dispatch);
+}
+
 MoneyTransfer.propTypes = {
   account: React.PropTypes.object,
   transfer: React.PropTypes.object,
+  updateTransfer: React.PropTypes.func,
+  deleteTransfer: React.PropType.func,
 };
+
+export default connect(null, mapDispatchToProps)(MoneyTransfer);

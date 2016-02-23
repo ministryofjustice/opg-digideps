@@ -38,7 +38,10 @@ class TransferAccount extends Component {
       );
     } else if (!this.state.open && this.state.account) {
       return (
-        <AccountCard account={this.state.account} />
+        <AccountCard
+          account={this.state.account}
+          selectAccount={this.clickEdit}
+        />
       );
     }
 
