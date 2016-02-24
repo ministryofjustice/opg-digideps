@@ -10,21 +10,15 @@
 
 {% block pageBody %}
 
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
-    
+
     {% block validationSummary %}
         {{ form_errors_list(form) }}
     {% endblock %}
 
-    {% include 'AppBundle:Components/Page:_page-section-action.html.twig' with {
-          transDomain: translationDomain
-    } %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <h3 class="heading-medium">{{ 'form.contact.subSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain)  }}</h3>
-
-    <div class="form-section">
+      <fiedset>
+        <legend class="hidden">Future financial decisions</legend>
         {{ form_checkbox_group(form.doYouExpectFinancialDecisions, 'form.doYouExpectFinancialDecisions', {
             'fieldSetClass' : 'inline expect-financial-dec-radio',
             'legendClass' : 'form-label',
@@ -35,16 +29,17 @@
                 {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
-         <div id="financial-decisions-textarea">
-            {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', { 
-                'labelClass': 'required', 
-                'labelParameters': { '%client%': report.client.firstname },
-                'inputClass': 'expanding' 
-            }) }}
+        <div id="financial-decisions-textarea" cass="hidden-detail">
+          {{ form_input(form.doYouExpectFinancialDecisionsDetails, 'form.doYouExpectFinancialDecisionsDetails', {
+              'labelClass': 'required',
+              'labelParameters': { '%client%': report.client.firstname },
+              'inputClass': 'expanding'
+          }) }}
         </div>
-    </div>
+    </fieldset>
 
-    <div class="form-section">
+    <fieldset>
+        <legend class="hidden">Concerns for future</legend>
         {{ form_checkbox_group(form.doYouHaveConcerns, 'form.doYouHaveConcerns', {
             'fieldSetClass' : 'inline do-you-have-actions-radio',
             'legendClass' : 'form-label',
@@ -56,20 +51,20 @@
             ]
         }) }}
         <div id="actions-details-textarea">
-            {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', { 
-                'labelClass': 'required', 
+            {{ form_input(form.doYouHaveConcernsDetails, 'form.doYouHaveConcernsDetails', {
+                'labelClass': 'required',
                 'labelParameters': { '%client%': report.client.firstname },
-                'inputClass': 'expanding' 
+                'inputClass': 'expanding'
             }) }}
         </div>
-    </div>
+    </fieldset>
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
     {{ form_submit(form.save,'form.save') }}
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
-    
+
     <script type="text/javascript">
         $(document).ready(function() {
             new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');

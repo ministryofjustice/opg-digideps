@@ -14,7 +14,7 @@ var opg = opg || {};
     var RadioHide = function(options) {
         this.radio = $(options.radio);
         this.content = $(options.content);
-    
+
         this.hideOnYes = options.hideOnYes || false;
         this.hideByDefault = options.hideByDefault || true;
 
@@ -32,13 +32,13 @@ var opg = opg || {};
     RadioHide.prototype.showContent = function () {
         this.content.removeClass(HIDECLASS);
     };
-    
+
     RadioHide.prototype.updateView = function () {
-    
+
         var value;
         for (var iPos = 0; iPos < this.radio.length; iPos += 1) {
             if (this.radio[iPos].checked === true) {
-                value = this.radio[iPos].value;
+                value = this.radio[iPos].value.toLowerCase();
             }
         }
 
@@ -60,8 +60,8 @@ var opg = opg || {};
             } else {
                 this.hideContent();
             }
-        } 
-    
+        }
+
     };
 
     RadioHide.prototype.getUpdateHandler = function () {
