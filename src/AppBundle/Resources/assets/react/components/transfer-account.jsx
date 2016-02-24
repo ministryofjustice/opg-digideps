@@ -8,7 +8,7 @@ class TransferAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
     };
   }
 
@@ -22,7 +22,6 @@ class TransferAccount extends Component {
   selectAccount = (account) => {
     this.setState({
       open: false,
-      account,
     });
 
     this.props.selectAccount(account);
@@ -32,14 +31,14 @@ class TransferAccount extends Component {
     if (this.state.open) {
       return (
         <AccountList
-          selectedAccount={this.state.account}
+          selectedAccount={this.props.account}
           selectAccount={this.selectAccount}
         />
       );
-    } else if (!this.state.open && this.state.account) {
+    } else if (!this.state.open && this.props.account) {
       return (
         <AccountCard
-          account={this.state.account}
+          account={this.props.account}
           selectAccount={this.clickEdit}
         />
       );

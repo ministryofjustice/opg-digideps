@@ -26,15 +26,9 @@ class MoneyTransfer extends Component {
   }
 
   update(key, value) {
-    const transfer = {
-      id: this.props.transfer.id,
-      accountFrom: this.props.transfer.accountFrom,
-      accountTo: this.props.transfer.accountTo,
-      amount: this.props.transfer.amount,
-    };
-
+    const transfer = Object.assign(this.props.transfer);
     transfer[key] = value;
-
+    console.log(transfer);
     this.props.updateTransfer(transfer);
   }
 
@@ -91,7 +85,7 @@ MoneyTransfer.propTypes = {
   account: React.PropTypes.object,
   transfer: React.PropTypes.object,
   updateTransfer: React.PropTypes.func,
-  deleteTransfer: React.PropType.func,
+  deleteTransfer: React.PropTypes.func,
 };
 
 export default connect(null, mapDispatchToProps)(MoneyTransfer);

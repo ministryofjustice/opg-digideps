@@ -5,27 +5,18 @@ import AccountCard from '../components/account-card';
 
 class AccountList extends Component {
 
-  accountListItem = (account, i) => {
-    return (
-      <li className="card-item" key={i}>
-        <AccountCard account={account} selectAccount={this.props.selectAccount} />
+  accountListItem = (account, i) => (
+    <li className="card-item" key={i}>
+      <AccountCard account={account} selectAccount={this.props.selectAccount} />
       </li>
-    );
-  }
+  );
 
   orderedAccounts(accounts, selectedAccount) {
-    let displayAccounts = [];
+    let displayAccounts;
 
     if (selectedAccount) {
-      displayAccounts.push(selectedAccount);
-      const length = accounts.length;
-
-      for (let pos = 0; pos < length; pos += 1) {
-        const account = accounts[pos];
-        if (account.id !== selectedAccount.id) {
-          displayAccounts.push(account);
-        }
-      }
+      const strippedList = accounts.filter(item => item.id === selectedAccount.id);
+      displayAccounts = [selectedAccount, ...strippedList];
     } else {
       displayAccounts = accounts;
     }
