@@ -296,6 +296,11 @@ label.extra-top {
 
   .hidden-section {
     margin-top: 20px;
+    
+    form .form-group & {
+      margin-bottom: 40px;
+    }
+  
   }
 
 }
