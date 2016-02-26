@@ -482,7 +482,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
 
-        $this->assertContains("Start safeguarding", $linkElement->eq(0)->text());
+        $this->assertContains("Start visits", $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -504,7 +504,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
 
-        $this->assertContains("Edit safeguarding", $linkElement->eq(0)->text());
+        $this->assertContains("Edit visits", $linkElement->eq(0)->text());
     }
 
     /** @test */

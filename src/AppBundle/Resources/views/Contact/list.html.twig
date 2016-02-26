@@ -8,7 +8,7 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-        
+
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
@@ -41,7 +41,7 @@
                 <div id="no-contact-reason-form-embed">{{ render(controller('AppBundle:Contact:_noneReasonForm', { 'reportId': report.id, 'request': app.request })) }}</div>
             {% endif %}
         {% endif %}
-        
+
     {% endblock %}
 
     {% block pageBodyFooterNav %}
@@ -49,7 +49,7 @@
         'previousLink': path("decisions" , {'reportId': report.id }),
         'previousLabel': 'Decisions',
         'nextLink': path("safeguarding" , {'reportId': report.id }),
-        'nextLabel': 'Safeguarding'
+        'nextLabel': 'Visits and care'
         } %}
     {% endblock %}
 {% endembed %}
