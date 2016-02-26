@@ -9,12 +9,12 @@
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
-    
+
     {% block maincontent %}
 
         <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
-        
+
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
 
@@ -30,7 +30,7 @@
                         <span class="icon icon__notification_yellow_small"></span>
                         <span class="page-section-description left-margin">
                             {{ 'banks.accountMissingWarning' | trans({}, translationDomain)}}
-                        </span>  
+                        </span>
                     </div>
                 {% endif %}
                 <li class="card-item">
@@ -38,11 +38,11 @@
                     <div class="meta-data"></div>
                 </li>
             {% endblock %}
-            
+
         {% endembed %}
-        
+
         {% if report.accounts is not empty %}
-        
+
             <dl class="labelvalue right-inline transaction big-value">
                 <dt class="label">{{ 'banks.totalBalance' | trans }}:</dt>
 
@@ -60,26 +60,26 @@
                 </dd>
             </dl>
 
-            {% if report.accountsClosingBalanceTotal == null %} 
+            {% if report.accountsClosingBalanceTotal == null %}
              <dl>
                 <div class="balance-warning page-section-warning">
                     <span class="icon icon__notification_yellow_small"></span>
                     <span class="page-section-description left-margin big">{{ 'banks.balanceMissingWarningBottom' | trans({
                         '%date%': report.endDate | date("j M Y"),
                         '%client%': report.client.firstname
-                    }, translationDomain) }}</span>  
+                    }, translationDomain) }}</span>
                 </div>
              </dl>
             {% endif %}
 
           {% endif %}
-    
+
     {% endblock %}
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
         'previousLink': path("safeguarding" , {'reportId': report.id }),
-        'previousLabel': 'Safeguarding',
+        'previousLabel': 'Visits and care',
         'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
         'nextLabel': 'Money in'
         } %}

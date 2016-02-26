@@ -72,8 +72,13 @@ class ReportController extends AbstractController
      */
     public function overviewAction($reportId)
     {
-        // get all the groups (needed to calculate status of each)
-        $report = $this->getReport($reportId, [ 'transactions', 'transactionsIn', 'transactionsOut', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        // get all the groups (needed by ReportStatusService
+        $report = $this->getReport($reportId, [ 
+            'transactions', 'transactionsIn', 'transactionsOut', 
+            'basic', 'accounts', 'client', 
+            'asset', 'contacts', 'decisions', 'action'
+        ]);
+        
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -96,7 +101,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -145,7 +150,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -246,7 +251,7 @@ class ReportController extends AbstractController
         $restClient = $this->get('restClient');
 
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions']);
+        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');

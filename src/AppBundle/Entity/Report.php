@@ -99,6 +99,12 @@ class Report
     private $safeguarding;
     
     /**
+     * @JMS\Type("AppBundle\Entity\Action")
+     * @var \AppBundle\Entity\Action
+     */
+    private $action;
+    
+    /**
      * @JMS\Type("string")
      * @var string $reasonForNoContacts
      */
@@ -599,6 +605,17 @@ class Report
         $this->safeguarding = $safeguarding;
     }
     
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    public function setAction(Action $action)
+    {
+        $this->action = $action;
+        return $this;
+    }
+        
     /**
      * @return boolean $noAssetToAdd
      */

@@ -1,17 +1,17 @@
 {# when loaded with AJAX, only return the "pageBody" block content #}
-{% embed app.request.xmlHttpRequest  ?
+{% embed app.request.xmlHttpRequest  ? 
   'AppBundle:Layouts:ajaxPageBody.html.twig' :
   'AppBundle:Components/Page:page-report.html.twig' %}
 
     {% set translationDomain = "report-assets" %}
     {% trans_default_domain translationDomain %}
-
+    
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}{% endblock %}
-
+    
     {% block pageBody %}
-
+        
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
         <h3 class="heading-medium">{{ 'page.subSectionTitleAdd' | trans({}, translationDomain) }}</h3>
@@ -31,27 +31,16 @@
             section: 'asset',
             showDelete: false
         } %}
-
+        
         {{ form_end(form) }}
-
+        
     {% endblock %}
-
     {% block pageBodyFooterNav %}
-        {% if (report.accounts | length) > 1 %}
-            {% include 'AppBundle:Components:nextprevious.html.twig' with {
-            'previousLink': path("transfers" , {'reportId': report.id }),
-            'previousLabel': 'Money transfers',
-            'nextLink': path("report_overview" , {'reportId': report.id }),
-            'nextLabel': 'Report overview'
-            } %}
-        {% else %}
-            {% include 'AppBundle:Components:nextprevious.html.twig' with {
-            'previousLink': path("accounts_balance" , {'reportId': report.id }),
-            'previousLabel': 'Balance accounts',
-            'nextLink': path("report_overview" , {'reportId': report.id }),
-            'nextLabel': 'Report overview'
-            } %}
-        {% endif %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("accounts_balance" , {'reportId': report.id }),
+        'previousLabel': 'Balance accounts',
+        'nextLink': path("actions" , {'reportId': report.id }),
+        'nextLabel': 'Actions'
+        } %}
     {% endblock %}
-
 {% endembed %}

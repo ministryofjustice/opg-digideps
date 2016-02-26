@@ -16,6 +16,20 @@
         }
 
     }
+    
+    #action-section table {
+        width: auto;
+
+        td,
+        th {
+            border-bottom: 0;
+        }
+
+        td.checkbox {
+            border-bottom: 1px solid $black;
+        }
+
+    }
 
     .hero {
         margin: 0;
