@@ -17,7 +17,7 @@
             </h1>
 
             <p class="lede">
-                Enhanced form controls created for specific kids of data. 
+                Enhanced form controls created for specific kids of data.
             </p>
         </header>
     </div>
@@ -52,7 +52,7 @@
             </ul>
         </div>
     </div>
-    
+
     <!-- prefix field -->
     <div class="grid-row">
         <div id="prefix" class="column-two-thirds">
@@ -96,7 +96,7 @@
     &lt;input type="text" id="accno" name="account[accno]" class="form-control account-number" maxlength="4"/>
 &lt;/div></code></pre>
     </div>
-    
+
     <!-- short date field -->
     <div class="grid-row">
         <div id="short-date-field" class="column-two-thirds">
@@ -199,6 +199,50 @@
 &lt;/div></code></pre>
     </div>
 
+    <!-- radio with hidden -->
+    <div class="grid-row">
+        <div id="sort-code" class="column-two-thirds">
+            <h3 class="heading-large">Radio with hidden</h3>
+            <p>Provide a yes no radio button with a hidden detail section, all in a fieldset
+              to keep it accessable.
+            </p>
+        </div>
+    </div>
+    <div class="example" id="radio-example">
+      <fieldset class="radio-with-hidden form-group">
+        <legend class="form-label">Do you expect to make any significant decisions on behalf of the client in the next 12 months?</legend>
+        <p class="form-hint">For example, the client moving to other accommodation, buying or selling property or making adaptations
+          to their home, changing their investments, taking funds out of the Courts Funds Office, seeking NHS continuing care funding,
+          making large gifts (such as a 21st birthday present for their child).
+        </p>
+        <div class="inline radio-buttons">
+          <label class="block-label" for="radio-inline-1">
+            <input id="radio-inline-1" type="radio" name="radio-inline-group" value="Yes" />
+            Yes
+          </label>
+          <label class="block-label" for="radio-inline-2">
+            <input id="radio-inline-2" type="radio" name="radio-inline-group" value="No">
+            No
+          </label>
+        </div>
+        <div class="hidden-section">
+          <label class="label" for="textarea">
+            Tell us more
+            <textarea id="textarea" class="form-control expandable"></textarea>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        new GOVUK.SelectionButtons('.radio-buttons :radio');
+        new opg.RadioHide({
+            radio: '#radio-example input[type=radio]',
+            content: '#radio-example .hidden-section',
+            hideOnYes: false
+        });
+      });
+      </script>
 
 
     <!-- Button Save Bar -->
@@ -209,11 +253,11 @@
             <div class="example">
                 <div class="save-bar button-bar">
                     <button type="submit" id="decision_save" name="decision[save]" class="button">Save</button>
-                    <a href=lists" class="button-link">Cancel</a>
+                    <a href="lists" class="button-link">Cancel</a>
                     <a href="delete" id="delete-button" class="delete-button button-warning">Delete</a>
                 </div>
             </div>
-            
+
             <pre><code class="language-markup">&lt;div class="save-bar button-bar">
                     &lt;button type="submit" id="decision_save" name="decision[save]" class="button">Save&lt;/button>
                     &lt;a href="list" class="button-link">Cancel&lt;/a>
@@ -225,4 +269,6 @@
     </div>
 
     <script src="/prism/prism.js"></script>
+
+
 {% endblock %}
