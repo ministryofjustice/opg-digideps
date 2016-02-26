@@ -1,12 +1,12 @@
 <div class="section" id="safeguarding-section">
-    <h2 class="section-heading">Safeguarding</h2>
+    <h2 class="section-heading">Visits and care</h2>
 
     <div class="dont-break">
         <h3 class="fieldset-outer-title">Contact with client</h3>
         <div class="box" id="safeguarding-contact">
             <div id="do-you-live-with-the-client" class="checkboxes horizontal">
                 <div class="question">Do you live with the client?</div>
-    
+
                 <table class="yesno">
                     <tr>
                         <td class="checkbox" data-checkbox="do-you-live-with-the-client--yes">{% if safeguarding.doYouLiveWithClient == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -15,7 +15,7 @@
                         <td class="label">No</td>
                     </tr>
                 </table>
-    
+
             </div>
             {% if safeguarding.doYouLiveWithClient == 'no' %}
                 <div class="form-group form-group-vertical">
@@ -28,10 +28,10 @@
     <div class="dont-break">
         <h3 class="fieldset-outer-title">Care arrangements</h3>
         <div class="box" id="care-arrangements-subsection">
-    
+
             <div class="checkboxes horizontal" id="safeguarding-paid-for-care">
                 <div class="question">Does the client receive care which is paid for?</div>
-    
+
                 <table class="yesno">
                     <tr>
                         <td class="checkbox" data-checkbox="does-the-client-receive-care-which-is-paid-for--yes">{% if safeguarding.doesClientReceivePaidCare == 'yes' %}X{% else %}&nbsp;{% endif %}</td>
@@ -41,7 +41,7 @@
                     </tr>
                 </table>
             </div>
-    
+
             <div class="checkboxes horizontal" id="safeguarding-care-funding">
                 <div class="label intro">If yes, how is the care funded?</div>
                 <div class="form-group right-label">
@@ -67,12 +67,12 @@
                     </table>
                 </div>
             </div>
-    
+
             <div class="form-group form-group-vertical">
                 <div class="question">Who is doing the caring?</div>
                 <div class="value textarea">{{ safeguarding.whoIsDoingTheCaring }}</div>
             </div>
-    
+
         </div>
     </div>
 
