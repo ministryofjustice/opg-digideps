@@ -8,16 +8,15 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = false
 indent_style = space
-indent_size = 4
+indent_size = 2
 charset = utf-8
 
-[*.{scss}]
+[*.{twig}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 charset = utf-8
 
 [*.{yml}]
 indent_style = space
 indent_size = 2
 charset = utf-8
-

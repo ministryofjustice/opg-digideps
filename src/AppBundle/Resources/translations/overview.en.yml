@@ -32,16 +32,21 @@ decisions:
     subSectionDescription: "Add the significant decisions you've made for %client%"
     edit: "Edit decisions"
     start: "Start decisions"
+actions:
+    subSectionTitle: "Actions you plan to take"
+    subSectionDescription: "Tell us about any major changes in the next reporting period"
+    edit: "Edit actions"
+    start: "Start actions"
 accounts:
     subSectionTitle: "Accounts"
     subSectionDescription: "Add details of all income and spending in the reporting period"
     edit: "Edit accounts"
     start: "Start accounts"
 safeguarding:
-    subSectionTitle: "Safeguarding"
+    subSectionTitle: "Visits and care"
     subSectionDescription: "We need to know about your involvement with %client%'s care"
-    edit: "Edit safeguarding"
-    start: "Start safeguarding"
+    edit: "Edit visits"
+    start: "Start visits"
 assets:
     subSectionTitle: "Assets"
     subSectionDescription: "Add %client%'s property, investments and other valuables"
@@ -51,7 +56,7 @@ report_add_further_info:
     subSectionTitle: "Sign and submit"
     edit: "Start sign and submit"
     start: "Start sign and submit"
-  
+
 
 additionalInformation:
   subSectionTitle: More information

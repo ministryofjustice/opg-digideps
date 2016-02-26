@@ -1,7 +1,7 @@
 Feature: deputy / report / account transactions
 
     @deputy
-    Scenario: money in 
+    Scenario: balance
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         # assert report not submittable
         When I am on the "2016" report overview page

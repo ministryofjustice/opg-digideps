@@ -2,8 +2,8 @@
 // ==========================================================================
 
 // Fix for annoying clear x in windows
-input[type=text]::-ms-clear { 
-    display: none; 
+input[type=text]::-ms-clear {
+    display: none;
 }
 
 form {
@@ -13,7 +13,7 @@ form {
     &.single-texta-area {
         padding-top: 3px;
     }
-    
+
     &.report-form {
         border-left: 3px solid $grey-2;
         padding-left: 10px;
@@ -26,7 +26,7 @@ form {
         h3.heading-medium:first-child {
             margin-top: 0;
         }
-        
+
         .form-date {
             .form-group {
                 input {
@@ -34,7 +34,7 @@ form {
                 }
             }
         }
-        
+
         .form-group {
 
             textarea.form-control {
@@ -48,7 +48,7 @@ form {
             .form-control__postcode {
                 width: 22%;
             }
-            
+
             fieldset.stacked {
                 label.block-label {
                     width: 85%;
@@ -64,7 +64,7 @@ form {
         .report-list__item & {
 
             margin-bottom: 20px;
-            
+
             .form-date {
                 .form-group {
                     input {
@@ -83,7 +83,7 @@ form {
                     width: 100%;
                 }
 
-                .form-control__postcode, 
+                .form-control__postcode,
                 .form-control__number {
                     width: 25%;
                 }
@@ -95,7 +95,7 @@ form {
         + .in-page-form {
             margin-top: 40px;
         }
-        
+
     }
 
 }
@@ -117,7 +117,7 @@ form {
         float: left;
     }
 
-    .form-control, 
+    .form-control,
     .expanding-wrapper {
         width: 90%;
         max-width: 540px;
@@ -127,7 +127,7 @@ form {
     select.form-control {
         width: 100%;
     }
-    
+
     &.form-inline {
         .form-label {
             float: left;
@@ -138,7 +138,7 @@ form {
         height: 7em;
         width: 65%;
     }
-    
+
     .pre-input-text {
         @include core-36(1.5);
         float: left;
@@ -168,7 +168,7 @@ form {
                 margin-top: 30px;
             }
         }
-        
+
         p + p {
             margin-top: 30px;
         }
@@ -210,7 +210,7 @@ form {
 
 .form-label {
     margin-bottom: 5px;
-    
+
     @include media(mobile) {
         width: auto;
     }
@@ -263,7 +263,7 @@ ul.form-hint {
         padding-left: 2em;
         margin: 0;
     }
-    
+
     .error & {
         margin: 4px 0 0 4px;
     }
@@ -277,14 +277,31 @@ ul.form-hint {
 .errors {
     width: auto;
     margin-bottom: 5px;
-    
+
     .error-message {
         color: $error-colour;
         width: auto;
     }
-    
+
 }
 
 label.extra-top {
     margin-top: 3px;
+}
+
+.radio-with-hidden {
+
+  .radio-buttons {
+    @extend %contain-floats;
+  }
+
+  .hidden-section {
+    margin-top: 20px;
+    
+    form .form-group & {
+      margin-bottom: 40px;
+    }
+  
+  }
+
 }

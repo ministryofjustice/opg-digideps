@@ -154,7 +154,7 @@ class SectionsTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $submitReportLinkElement = $crawler->filter('#report-submit-section a');
+        $submitReportLinkElement = $crawler->filter('#edit-report_add_further_info');
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
 
@@ -178,7 +178,7 @@ class SectionsTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $submitReportLinkElement = $crawler->filter('#report-submit-section a');
+        $submitReportLinkElement = $crawler->filter('#edit-report_add_further_info');
         $this->assertEquals(0, $submitReportLinkElement->count());
     }
 
@@ -207,30 +207,6 @@ class SectionsTest extends WebTestCase
     }
 
     /** @test */
-    public function whenAReportIsDueAndAllSectionsAreNotCompletedIndicateInactive()
-    {
-        $this->report = m::mock('AppBundle\Entity\Report')
-                ->shouldIgnoreMissing(true)
-                ->shouldReceive('isDue')->andReturn(true)
-                ->getMock();
-
-        $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
-                ->shouldIgnoreMissing(true)
-                ->shouldReceive('isReadyToSubmit')->andReturn(false)
-                ->getMock();
-
-        $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
-            'report' => $this->report,
-            'reportStatus' => $this->reportStatus
-        ]);
-
-        $crawler = new Crawler($html);
-
-        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
-        $this->assertEquals(1, $submitReportLinkElement->count());
-    }
-
-    /** @test */
     public function whenAReportIsNotDueAndAllSectionsCompletedIndicateInactive()
     {
         $this->report = m::mock('AppBundle\Entity\Report')
@@ -250,7 +226,7 @@ class SectionsTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
+        $submitReportLinkElement = $crawler->filter('#report-submit-section .disabled');
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
 
@@ -274,7 +250,7 @@ class SectionsTest extends WebTestCase
 
         $crawler = new Crawler($html);
 
-        $submitReportLinkElement = $crawler->filter('#report-submit-section.inactive');
+        $submitReportLinkElement = $crawler->filter('#report-submit-section .disabled');
         $this->assertEquals(1, $submitReportLinkElement->count());
     }
 
@@ -506,7 +482,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
 
-        $this->assertContains("Start safeguarding", $linkElement->eq(0)->text());
+        $this->assertContains("Start visits", $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -528,7 +504,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
 
-        $this->assertContains("Edit safeguarding", $linkElement->eq(0)->text());
+        $this->assertContains("Edit visits", $linkElement->eq(0)->text());
     }
 
     /** @test */
