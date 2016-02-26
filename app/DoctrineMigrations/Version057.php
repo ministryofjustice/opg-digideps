@@ -18,9 +18,7 @@ class Version056 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE action (id SERIAL NOT NULL, report_id INT DEFAULT NULL, do_you_expect_decisions VARCHAR(4) DEFAULT NULL, do_you_expect_decisions_details TEXT DEFAULT NULL, do_you_have_concerns VARCHAR(4) DEFAULT NULL, do_you_have_concerns_details TEXT DEFAULT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE UNIQUE INDEX UNIQ_281EFBA84BD2A4C0 ON action (report_id)');
-        $this->addSql('ALTER TABLE action ADD CONSTRAINT FK_281EFBA84BD2A4C0 FOREIGN KEY (report_id) REFERENCES report (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('DROP TABLE account_transaction_type, account_transaction');
     }
 
     /**
@@ -31,6 +29,9 @@ class Version056 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('DROP TABLE action');
+        $this->addSql('CREATE TABLE account_transaction (id SERIAL NOT NULL, account_id INT DEFAULT NULL, account_transaction_type_id VARCHAR(255) DEFAULT NULL, amount NUMERIC(14, 2) DEFAULT NULL, more_details TEXT DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE account_transaction_type (id VARCHAR(255) NOT NULL, has_more_details BOOLEAN NOT NULL, display_order INT DEFAULT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+
+
     }
 }
