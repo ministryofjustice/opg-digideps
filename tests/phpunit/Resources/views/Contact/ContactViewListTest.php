@@ -28,13 +28,13 @@ class ContactViewListTest extends WebTestCase
         $this->container->set('request', $request, 'request');
         $this->container->get('request_stack')->push(Request::createFromGlobals());
     }
-    
+
     protected function tearDown()
     {
         m::close();
         $this->container->leaveScope('request');
     }
-    
+
     // Continue Button
 
     /** @test */
@@ -65,7 +65,7 @@ class ContactViewListTest extends WebTestCase
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
         $this->assertEquals("/report/1/safeguarding", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
-        $this->assertEquals("Safeguarding", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
+        $this->assertEquals("Visits and care", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
 
     }
 
@@ -88,7 +88,7 @@ class ContactViewListTest extends WebTestCase
         ]);
 
         $crawler = new Crawler($html);
-        
+
         $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
         $this->assertEquals("/report/1/decisions", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
         $this->assertEquals("Decisions", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
@@ -96,7 +96,7 @@ class ContactViewListTest extends WebTestCase
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
         $this->assertEquals("/report/1/safeguarding", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
-        $this->assertEquals("Safeguarding", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
+        $this->assertEquals("Visits and care", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
 
     }
 
@@ -269,8 +269,8 @@ class ContactViewListTest extends WebTestCase
             ->shouldReceive('getCountry')->andReturn("abcd")
             ->shouldReceive('getExplanation')->andReturn("abcd")
             ->getMock();
-        
+
         return $contact;
     }
-    
+
 }
