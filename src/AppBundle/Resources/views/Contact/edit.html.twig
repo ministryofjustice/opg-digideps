@@ -8,7 +8,7 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
     {% block pageBody %}
-        
+
         {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
         transDomain: translationDomain,
         pageSectionDescription: 'page.pageSectionDescription'
@@ -19,7 +19,7 @@
             'showAddForm': true,
             'form': form
         } %}
-        
+
     {% endblock %}
 
     {% block pageBodyFooterNav %}
@@ -27,7 +27,7 @@
         'previousLink': path("decisions" , {'reportId': report.id }),
         'previousLabel': 'Decisions',
         'nextLink': path("safeguarding" , {'reportId': report.id }),
-        'nextLabel': 'Safeguarding'
+        'nextLabel': 'Visits and care'
         } %}
     {% endblock %}
 {% endembed %}
