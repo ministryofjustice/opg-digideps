@@ -4,6 +4,9 @@ set -e
 run-parts /etc/my_init.d
 chown app:app /tmp/behat
 
+# create log dir locally failing sometimes)
+mkdir -p /var/log/app
+
 cd /app
 /sbin/setuser app mkdir -p /tmp/behat
 export PGHOST=postgres

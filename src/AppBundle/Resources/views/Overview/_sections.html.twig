@@ -63,9 +63,20 @@
         </li>
     {% endif %}
     
-    {% if reportStatus.isReadyToSubmit and report.isDue %}
-        <li id="report-submit-section" class="overview-section">
-            <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
+
+    <li id="report-submit-section" class="overview-section">
+        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>  
+        {% include 'AppBundle:Overview:_subsection.html.twig' with {
+            transDomain: translationDomain,
+            subSection: 'actions',
+            report: report,
+            description: true,
+            state: reportStatus.actionsState,
+            status: reportStatus.actionsStatus,
+            list: true
+        } %}
+  
+        {% if reportStatus.isReadyToSubmit and report.isDue %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
@@ -74,10 +85,7 @@
                 state: "not-started",
                 status: "Not started"
             } %}
-        </li>
-    {%  else %}
-        <li id="report-submit-section" class="overview-section inactive">
-            <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
+        {%  else %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'report_add_further_info',
@@ -87,8 +95,8 @@
                 status: "Not started",
                 disableedit: true 
             } %}
-        </li>
-    {%  endif %}
+        {%  endif %}
+    </li>
 </ul>
 
 {% if report.isDue == true and reportStatus.isReadyToSubmit == false %}

@@ -60,6 +60,7 @@ class ReportStatusService
             return $this->trans('nodecisions');
         }
     }
+    
 
     /** @return string */
     public function getContactsStatus()
@@ -131,6 +132,23 @@ class ReportStatusService
         } else {
             return self::DONE;
         }
+    }
+    
+    
+    /** @return string */
+    public function getActionsStatus()
+    {
+        if ($this->missingActions()) {
+            return $this->trans('notstarted');
+        } else {
+            return $this->trans('finished');
+        }
+    }
+    
+     /** @return string */
+    public function getActionsState()
+    {
+        return $this->missingActions() ? self::NOTSTARTED : self::DONE;
     }
 
 
@@ -214,7 +232,8 @@ class ReportStatusService
                 && !$this->missingContacts() 
                 && !$this->missingAssets() 
                 && !$this->missingDecisions() 
-                && !$this->missingSafeguarding();
+                && !$this->missingSafeguarding()
+                && !$this->missingActions();
         } else {
             return !$this->missingContacts() 
                 && !$this->missingDecisions() 
@@ -236,6 +255,12 @@ class ReportStatusService
         $safeguarding = $this->report->getSafeguarding();
 
         return (!$safeguarding || $safeguarding->missingSafeguardingInfo() == true);
+    }
+    
+    /** @return boolean */
+    public function missingActions()
+    {
+        return !$this->report->getAction() || !$this->report->getAction()->isComplete();
     }
 
 
@@ -299,7 +324,7 @@ class ReportStatusService
     {
 
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
-            $count = 5;
+            $count = 6;
 
             if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingBalance()) {
                 $count--;
@@ -318,6 +343,10 @@ class ReportStatusService
             }
 
             if (!$this->missingSafeguarding()) {
+                $count--;
+            }
+            
+            if (!$this->missingActions()) {
                 $count--;
             }
         } else {
