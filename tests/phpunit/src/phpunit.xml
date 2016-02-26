@@ -10,7 +10,7 @@
         <testsuite name="src">
             <directory>./Controller</directory>
             <directory>./Entity</directory>
-            <!--<directory>./Resources</directory>-->
+            <directory>./Resources/Report</directory>
             <directory>./Service</directory>
         </testsuite>
     </testsuites>
