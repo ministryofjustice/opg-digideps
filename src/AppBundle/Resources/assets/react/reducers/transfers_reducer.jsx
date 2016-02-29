@@ -1,45 +1,19 @@
 import { UPDATE_TRANSFER, DELETE_TRANSFER } from '../actions';
+import $ from 'jquery';
+
 
 const defaultState = [
   {
-    id: 0,
+    id: Math.floor((Math.random() * 100) + 1),
     amount: null,
     accountFrom: null,
     accountTo: null,
   },
 ];
 
-function updateTransfer(state, transfer) {
-  return state.map(item => {
-    if (item.id === transfer.id) {
-      return transfer;
-    }
-
-    return item;
-  });
-}
-
-function deleteTransfer(state, transfer) {
-  return state.filter(item => item.id === transfer.id);
-}
-
-export default function (state = defaultState, action) {
-  switch (action.type) {
-    case UPDATE_TRANSFER:
-      return updateTransfer(state, action.payload);
-    case DELETE_TRANSFER:
-      return deleteTransfer(state, action.payload);
-    default:
-      // Nothing
-  }
-  return state;
-}
-
-
-/*
-checkToAddNew() {
+function checkToAddNew(transfers) {
   let complete = true;
-  const transfers = this.state.transfers;
+
   let pos = transfers.length;
 
   // Scan through all the things.
@@ -57,24 +31,49 @@ checkToAddNew() {
 
   if (complete === true) {
     transfers.push({
-      id: transfers.length,
+      id: Math.floor((Math.random() * 100) + 1),
       accountFrom: null,
       accountTo: null,
       amount: null,
     });
-
-    this.setState({ transfers });
-    this.fakeSave();
   } else {
     $('#page-section-title-container').find('.info').text('');
   }
 }
 
-  fakeSave() {
-    const statusElement = $('#page-section-title-container').find('.info');
-    statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
-    window.setTimeout(() => {
-      statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
-    }, 1000);
+function fakeSave() {
+  const statusElement = $('#page-section-title-container').find('.info');
+  statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
+  window.setTimeout(() => {
+    statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
+  }, 1000);
+}
+
+function updateTransfer(state, transfer) {
+  fakeSave();
+  const newState = state.map(item => {
+    if (item.id === transfer.id) {
+      return transfer;
+    }
+
+    return item;
+  });
+  checkToAddNew(newState);
+  return newState;
+}
+
+function deleteTransfer(state, transfer) {
+  return state.filter(item => item.id !== transfer.id);
+}
+
+export default function (state = defaultState, action) {
+  switch (action.type) {
+    case UPDATE_TRANSFER:
+      return updateTransfer(state, action.payload);
+    case DELETE_TRANSFER:
+      return deleteTransfer(state, action.payload);
+    default:
+      // Nothing
   }
-*/
+  return state;
+}

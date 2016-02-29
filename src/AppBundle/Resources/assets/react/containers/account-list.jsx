@@ -15,7 +15,7 @@ class AccountList extends Component {
     let displayAccounts;
 
     if (selectedAccount) {
-      const strippedList = accounts.filter(item => item.id === selectedAccount.id);
+      const strippedList = accounts.filter(item => item.id !== selectedAccount.id);
       displayAccounts = [selectedAccount, ...strippedList];
     } else {
       displayAccounts = accounts;
@@ -26,7 +26,6 @@ class AccountList extends Component {
 
   render() {
     const displayAccounts = this.orderedAccounts(this.props.accounts, this.props.selectedAccount);
-
     return (
       <ul className="card-list">
         {displayAccounts.map(this.accountListItem)}
