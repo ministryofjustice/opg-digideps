@@ -56,6 +56,14 @@ class Report
     private $accounts;
 
     /**
+     * @JMS\Groups({"moneyTransfers"})
+     * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
+     */
+    private $moneyTransfers;
+    
+    
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -238,6 +246,7 @@ class Report
     {
         $this->contacts = new ArrayCollection();
         $this->accounts = new ArrayCollection();
+        $this->moneyTransfers = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
@@ -527,6 +536,26 @@ class Report
     {
         return $this->accounts;
     }
+    
+    /**
+     * @return MoneyTransfer[]
+     */
+    public function getMoneyTransfers()
+    {
+        return $this->moneyTransfers;
+    }
+
+    /**
+     * @param MoneyTransfer $moneyTransfer
+     * @return \Report
+     */
+    public function addMoneyTransfers(MoneyTransfer $moneyTransfer)
+    {
+        $this->moneyTransfers->add($moneyTransfer);
+        
+        return $this;
+    }
+
     
     /**
      * Add decisions
