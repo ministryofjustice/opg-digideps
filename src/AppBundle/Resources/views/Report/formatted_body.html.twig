@@ -16,8 +16,8 @@
             } %}
         {% endif %}
 
-        {% include 'AppBundle:Report:Formatted/Accounts/_accounts.html.twig' %}
         {% include 'AppBundle:Report:Formatted/_assets.html.twig' %}
+        {% include 'AppBundle:Report:Formatted/Accounts/_accounts.html.twig' %}
 
         {% if report.action is not null %}
             {% include 'AppBundle:Report:Formatted/_action.html.twig' with {
