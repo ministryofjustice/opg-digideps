@@ -56,9 +56,9 @@ class Report
     private $accounts;
 
     /**
-     * @JMS\Groups({"moneyTransfers"})
+     * @JMS\Groups({"transfers"})
      * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Account", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
     
