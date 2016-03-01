@@ -17,7 +17,7 @@ class TransfersController extends AbstractController
 {
 
     /**
-     * @Route("/report/{reportId}/transfers", name="transfers")
+     * @Route("/report/{reportId}/transfers/edit", name="transfers")
      * @param integer $reportId
      * @Template()
      * @return array
@@ -36,14 +36,53 @@ class TransfersController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/transfers.json", name="transfers_save_json")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/transfers", name="transfers_get_json")
+     * @Method({"GET"})
+     * @param Request $request
+     * @param integer $reportId
+     * return JsonResponse
+     */
+    public function transfersGetJson(Request $request, $reportId)
+    {
+        return new JsonResponse([]);
+    }
+
+    /**
+     * @Route("/report/{reportId}/transfers", name="transfers_add_json")
+     * @Method({"POST"})
      * @param Request $request
      * @param integer $reportId
      * return JsonResponse
      */
     public function transfersSaveJson(Request $request, $reportId)
     {
-        return new JsonResponse(['success' => true]);
+        return new JsonResponse([]);
+    }
+
+
+    /**
+     * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_update_json")
+     * @Method({"PUT"})
+     * @param Request $request
+     * @param integer $reportId
+     * @param integer $transferId
+     * return JsonResponse
+     */
+    public function transfersUpdateJson(Request $request, $reportId, $transferId)
+    {
+        return new JsonResponse([]);
+    }
+
+    /**
+     * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_delete_json")
+     * @Method({"DELETE"})
+     * @param Request $request
+     * @param integer $reportId
+     * @param integer $transferId
+     * return JsonResponse
+     */
+    public function transfersDeleteJson(Request $request, $reportId, $transferId)
+    {
+        return new JsonResponse([]);
     }
 }

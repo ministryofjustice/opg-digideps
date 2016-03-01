@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { updateTransfer, deleteTransfer } from '../actions/index';
+import { createTransfer, updateTransfer, deleteTransfer, getTransfers } from '../actions/transfers_actions';
 import { bindActionCreators } from 'redux';
 import MoneyTransfer from '../components/money-transfer';
 
 class MoneyTransfers extends Component {
 
+    componentWillMount() {
+        this.props.getTransfers(1);
+    }
+
     renderTransfers = (transfer) => {
         return (<MoneyTransfer
           transfer={transfer}
           key={transfer.id}
+          createTransfer={this.props.createTransfer}
           updateTransfer={this.props.updateTransfer}
           deleteTransfer={this.props.deleteTransfer}
         />);
@@ -26,6 +31,8 @@ class MoneyTransfers extends Component {
 
 MoneyTransfers.propTypes = {
     transfers: React.PropTypes.array,
+    getTransfers: React.PropTypes.func,
+    createTransfer: React.PropTypes.func,
     updateTransfer: React.PropTypes.func,
     deleteTransfer: React.PropTypes.func,
 };
@@ -35,7 +42,7 @@ function mapStateToProps({ transfers }) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ updateTransfer, deleteTransfer }, dispatch);
+    return bindActionCreators({ getTransfers, createTransfer, updateTransfer, deleteTransfer }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MoneyTransfers);
