@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * MoneyTransfer
@@ -15,7 +16,7 @@ class MoneyTransfer
 
     /**
      * @var integer
-     * @JMS\Groups({"moneyTransfer"})
+     * @JMS\Groups({"transfers", "basic"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,14 +25,14 @@ class MoneyTransfer
 
     /**
      * @var string
-     * @JMS\Groups({"moneyTransfer"})
-     * @ORM\Column(name="amount", type="decimal")
+     * @JMS\Groups({"transfers", "basic"})
+     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amount;
 
     /**
      * @var Account
-     * @JMS\Groups({"moneyTransfer"})
+     * @JMS\Groups({"transfers", "basic"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account")
      * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
@@ -39,7 +40,7 @@ class MoneyTransfer
 
     /**
      * @var Account
-     * @JMS\Groups({"moneyTransfer"})
+     * @JMS\Groups({"transfers", "basic"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account")
      * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
@@ -48,7 +49,6 @@ class MoneyTransfer
 
     /**
      * @var Report
-     * @JMS\Groups({"moneyTransfer"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="moneyTransfers")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
