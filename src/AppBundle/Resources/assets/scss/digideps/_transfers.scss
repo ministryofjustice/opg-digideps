@@ -1,13 +1,5 @@
 #transfers {
 
-    .card-list .card-item {
-        margin: 20px 0 20px 0;
-
-        &:first-child {
-            margin-top: 0;
-        }
-    }
-
     .transfer {
         margin-bottom: 40px;
         border-bottom: 1px solid $border-colour;
@@ -20,14 +12,54 @@
             margin: 20px 10px 20px 0;
         }
 
-        .card {
-
-            &:hover {
-                background-color: $focus-colour;
-                color: #000;
-            }
+        .column-one-half {
+            position: relative;
         }
+
+
     }
+
+    .card-list {
+        @include inline-block();
+        position: absolute;
+        background: $white;
+        z-index: 999;
+        width: 90%;
+
+        .card-item {
+           margin: 20px 0 0 0;
+
+           &:first-child {
+               margin-top: 0;
+           }
+
+       }
+
+    }
+
+    .card {
+        &:hover {
+            background-color: $focus-colour;
+            color: #000;
+        }
+
+        &.blank {
+            background: $grey-3;
+            padding: 110px 0 30px 0;
+            text-align: center;
+            color: $black;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+                background: $grey-3;
+                outline: none;
+            }
+
+        }
+
+    }
+
 }
 
 #section-moving-money {

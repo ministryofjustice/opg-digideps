@@ -13,4 +13,4 @@ ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
     <MoneyTransfers />
   </Provider>,
-  document.querySelector('#transfers'));
+  document.querySelector('#transfers-container'));

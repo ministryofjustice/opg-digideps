@@ -51,33 +51,6 @@
                 warning: true,
                 description: true
             } %}
-            {% if (report.accounts is defined and (report.accounts | length > 1)) %}
-                <li id="report-submit-section" class="overview-section">
-                    {% include 'AppBundle:Overview:_subsection.html.twig' with {
-                    transDomain: translationDomain,
-                    subSection: 'transfers',
-                    report: report,
-                    state: "not-started",
-                    status: "Not started",
-                    warning: true,
-                    description: true
-                    } %}
-                </li>
-            {%  else %}
-                <li id="report-submit-section" class="overview-section inactive">
-                    {% include 'AppBundle:Overview:_subsection.html.twig' with {
-                    transDomain: translationDomain,
-                    subSection: 'transfersInactive',
-                    report: report,
-                    state: "not-started",
-                    status: "Not started",
-                    warning: true,
-                    description: true,
-                    disableedit: true
-                    } %}
-                </li>
-            {%  endif %}
-        
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
                 subSection: 'assets',
@@ -89,10 +62,10 @@
             } %}
         </li>
     {% endif %}
-    
+
 
     <li id="report-submit-section" class="overview-section">
-        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>  
+        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'actions',
@@ -102,7 +75,7 @@
             status: reportStatus.actionsStatus,
             list: true
         } %}
-  
+
         {% if reportStatus.isReadyToSubmit and report.isDue %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -120,7 +93,7 @@
                 description: false,
                 state: "not-started",
                 status: "Not started",
-                disableedit: true 
+                disableedit: true
             } %}
         {%  endif %}
     </li>

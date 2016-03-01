@@ -28,10 +28,22 @@ class TransfersController extends AbstractController
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-            
+
         return [
-            'report' => $report
+            'report' => $report,
+            'subsection' => 'moneyin'
         ];
     }
-    
+
+    /**
+     * @Route("/report/{reportId}/transfers.json", name="transfers_save_json")
+     * @Method({"PUT"})
+     * @param Request $request
+     * @param integer $reportId
+     * return JsonResponse
+     */
+    public function transfersSaveJson(Request $request, $reportId)
+    {
+        return new JsonResponse(['success' => true]);
+    }
 }

@@ -104,15 +104,24 @@
         color: $black;
         text-decoration: none;
 
-        &:hover,
-        &:focus {
-            background-color: $yellow;
-            outline: none;
-        }
-
         @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
             background-image: url('images/roundplus_2x.png');
         }
+    }
+
+    &.blank {
+        background: $grey-3;
+        padding: 110px 0 30px 0;
+        text-align: center;
+        color: $black;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            background: $grey-3;
+            outline: none;
+        }
+
     }
 
 }

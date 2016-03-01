@@ -1,4 +1,4 @@
-{% embed 'AppBundle:Components/Page:page-report-full.html.twig' %}
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
 
     {% set translationDomain = "report-transfers" %}
     {% trans_default_domain translationDomain %}
@@ -7,7 +7,11 @@
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
 
-    {% block pageBody %}
+    {% block leftcontent %}
+        {% include 'AppBundle:Account:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% block maincontent %}
 
         <p class="page-section-description}}">
             {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
@@ -20,7 +24,7 @@
             } %}
         {% endif %}
 
-        <div id="transfers"/>Loading...</div>
+        <div id="transfers-container"/>Loading...</div>
         <script>
             $(document).ready(function () {
                 new GOVUK.StickyHeader('#page-section-title-wrapper');
