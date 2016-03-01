@@ -93,4 +93,37 @@ class MoneyTransferControllerTest extends AbstractTestController
     }
    
     
+    public function testAddTransfer()
+    {
+        $url = '/report/' . self::$report1->getId() . '/money-transfers';
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers';
+        
+        $this->assertEndpointNeedsAuth('POST', $url); 
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
+        
+        $return = $this->assertJsonRequest('POST', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+            'data'=> [
+                'from_account_id' => self::$account1->getId(),
+                'to_account_id' => self::$account2->getId(),
+                'amount' => 123,
+            ]
+        ]);
+        $this->assertTrue($return['data']['id'] > 0);
+        
+        self::fixtures()->clear();
+        
+        // assert account created with transactions
+        $report = self::fixtures()->getRepo('Report')->find(self::$report1->getId()); /* @var $report \AppBundle\Entity\Report */
+      
+        // test last transaction
+        $t = $report->getMoneyTransfers()->get(2);
+        $this->assertEquals(123, $t->getAmount());
+        $this->assertEquals(self::$account1->getId(), $t->getFrom()->getId());
+        $this->assertEquals(self::$account2->getId(), $t->getTo()->getId());
+        
+    }
+    
 }

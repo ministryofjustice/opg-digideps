@@ -9,31 +9,35 @@ use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
-class ReportController extends RestController
+class MoneyTransferController extends RestController
 {
+    
     /**
-     * @Route("/report/{id}/money-transfers")
-     * @Method({"GET"})
+     * @Route("/report/{reportId}/money-transfers")
+     * @Method({"POST"})
      */
-    public function getAccountsAction(Request $request, $id)
+    public function addMoneyTransferAction(Request $request, $reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         
-        if ($request->query->has('groups')) {
-            $this->setJmsSerialiserGroups((array)$request->query->get('groups'));
-        }
-        
-        $report = $this->findEntityBy('Report', $id);
+        $report = $this->findEntityBy('Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
-        $accounts = $this->getRepository('Account')->findByReport($report, [
-            'id' => 'DESC'
+        $data = $this->deserializeBodyContent($request, [
+           'from_account_id' => 'notEmpty',
+           'to_account_id' => 'notEmpty',
+           'amount' => 'mustExist'
         ]);
         
-        if(count($accounts) === 0){
-            return [];
-        }
-        return $accounts;
+        $transfer = new EntityDir\MoneyTransfer();
+        $transfer->setReport($report)
+            ->setFrom($this->findEntityBy('Account', $data['from_account_id']))
+            ->setTo($this->findEntityBy('Account', $data['to_account_id']))
+            ->setAmount($data['amount']);
+        
+        $this->persistAndFlush($transfer);
+        
+        return [ 'id' => $transfer->getId() ];
     }
 
 }
