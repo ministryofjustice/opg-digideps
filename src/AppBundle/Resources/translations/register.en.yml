@@ -4,7 +4,10 @@ htmlTitle: "Deputy report | GOV.UK"
 intro: "You need to give your name, your email address, your postcode and your client's case number. This is so you can create your secure deputy account."
 signin: "sign in"
 ifyoualready: "If you already have an account please"
-
+moreThanOne: "More than one deputy?"
+moreThanOneDescription: |
+  The deputy who pays the OPG fee should do the report. This applies if you make decisions together (called ‘jointly’) or separately and together (called ‘jointly and severally’).<br/><br/>
+  All the information you enter is saved so you can show your report to the other deputies before you send it to OPG.
 firstname:
     label: "Your first name"
 lastname:
@@ -28,7 +31,7 @@ thankyou:
     body: |
         <p class="page-section-description">We've sent you a link to <b>{{ email }}</b> that you need to click to activate your deputy service account.</p>
         <p class="page-section-description">You'll need to use this link within 48 hours, or enter your details again.</p>
-        <p class="page-section-description">If you haven't received the email within a few minutes, please check your spam, bulk or 
+        <p class="page-section-description">If you haven't received the email within a few minutes, please check your spam, bulk or
             junk email folder - it may have been mistakenly blocked by your email system.</p>
         <p class="page-section-description">If you've already activated your account, you can {{ sign_in }}<p>
 
