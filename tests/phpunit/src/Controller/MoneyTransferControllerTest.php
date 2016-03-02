@@ -13,6 +13,7 @@ class MoneyTransferControllerTest extends AbstractTestController
     private static $report2;
     private static $account2;
     private static $account3;
+    private static $transfer1;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
     
@@ -30,12 +31,12 @@ class MoneyTransferControllerTest extends AbstractTestController
         self::$account2 = self::fixtures()->createAccount(self::$report1, ['setBank'=>'bank2']);
         
         // add two transfer to report 1 between accounts
-        $transfer1 = new MoneyTransfer;
-        $transfer1->setReport(self::$report1)
+        self::$transfer1 = new MoneyTransfer;
+        self::$transfer1->setReport(self::$report1)
             ->setAmount(1001)
             ->setFrom(self::$account2)
             ->setTo(self::$account1);
-        self::fixtures()->persist($transfer1);
+        self::fixtures()->persist(self::$transfer1);
         
         $transfer2 = new MoneyTransfer;
         $transfer2->setReport(self::$report1)
@@ -123,6 +124,36 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertEquals(123, $t->getAmount());
         $this->assertEquals(self::$account1->getId(), $t->getFrom()->getId());
         $this->assertEquals(self::$account2->getId(), $t->getTo()->getId());
+        
+    }
+    
+    public function testEditTransfer()
+    {
+        $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers/' . self::$transfer1->getId();
+        
+        $this->assertEndpointNeedsAuth('POST', $url); 
+        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
+        
+        $return = $this->assertJsonRequest('POST', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+            'data'=> [
+                'from_account_id' => self::$account2->getId(),
+                'to_account_id' => self::$account1->getId(),
+                'amount' => 124,
+            ]
+        ]);
+        $this->assertTrue($return['data']['id'] > 0);
+        
+        self::fixtures()->clear();
+        
+        $t = self::fixtures()->getRepo('MoneyTransfer')->find(self::$transfer1->getId());
+        $this->assertEquals(124, $t->getAmount());
+        $this->assertEquals(self::$account2->getId(), $t->getFrom()->getId());
+        $this->assertEquals(self::$account1->getId(), $t->getTo()->getId());
+        $this->assertEquals(self::$report1->getId(), $t->getReport()->getId());
         
     }
     

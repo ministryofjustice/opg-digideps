@@ -30,14 +30,45 @@ class MoneyTransferController extends RestController
         ]);
         
         $transfer = new EntityDir\MoneyTransfer();
-        $transfer->setReport($report)
-            ->setFrom($this->findEntityBy('Account', $data['from_account_id']))
-            ->setTo($this->findEntityBy('Account', $data['to_account_id']))
-            ->setAmount($data['amount']);
+        $transfer->setReport($report);
+        $this->fillEntity($transfer, $data);
+
+        $this->persistAndFlush($transfer);
+        
+        return [ 'id' => $transfer->getId() ];
+    }
+    
+    /**
+     * @Route("/report/{reportId}/money-transfers/{transferId}")
+     * @Method({"POST"})
+     */
+    public function editMoneyTransferAction(Request $request, $reportId, $transferId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $data = $this->deserializeBodyContent($request, [
+           'from_account_id' => 'notEmpty',
+           'to_account_id' => 'notEmpty',
+           'amount' => 'mustExist'
+        ]);
+        
+        $transfer = $this->findEntityBy('MoneyTransfer', $transferId);
+        $this->fillEntity($transfer, $data);
         
         $this->persistAndFlush($transfer);
         
         return [ 'id' => $transfer->getId() ];
+    }
+    
+    private function fillEntity(EntityDir\MoneyTransfer $transfer, array $data)
+    {
+        $transfer    
+            ->setFrom($this->findEntityBy('Account', $data['from_account_id']))
+            ->setTo($this->findEntityBy('Account', $data['to_account_id']))
+            ->setAmount($data['amount']);
     }
 
 }
