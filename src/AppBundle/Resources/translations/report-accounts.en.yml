@@ -6,7 +6,7 @@ nav:
   moneyOut: Money out
   bankAccounts: Bank accounts
   balanceAccounts: Balance
-    
+
 save:
   label: Save
 cancel:
@@ -21,7 +21,7 @@ moneyin:
 moneyOut:
   pageSectionTitle: Money you have spent on behalf of %client%
   pageSectionDescription: Tell us about money you have spent on %client%’s day-to-day living and welfare costs between <span class="no-wrap">%startDate%</span> and <span class="no-wrap">%endDate%</span>. If %client% has more than 1 bank account, <b>add up the totals from all the accounts for each type of payment</b>.
-  noEntriesWarning: Add money spent on behalf of %client% 
+  noEntriesWarning: Add money spent on behalf of %client%
 moneyout:
   nextSection: Balance accounts
 
@@ -37,10 +37,10 @@ balance:
       pageSectionDescription: There’s a difference of £%totalOffset% between what you’ve told us the total money in and money out was, and the final balance of %client%’s accounts. This means we haven’t been able to balance the accounts.
       accountsBalanced: Accounts not balanced
       accountsBalancedMessage: Money in and money out don’t match the balance
-      totalAfterMoneyInOut: 
+      totalAfterMoneyInOut:
         title: "Total balance after money in and money out:"
         subtitle: This is what you entered for the opening balance, income and spending
-      totalFromAccounts: 
+      totalFromAccounts:
         title: "Total balance of all bank accounts:"
         subtitle: This is what you entered for the closing balance on %endDate%
       missingAmount: "Missing amount:"
@@ -50,8 +50,8 @@ balance:
       totalOfAllAccounts: Total balance of all bank accounts
       checkYourAccounts: Check your accounts
       goBack: |
-         Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a> 
-         matches your records of money coming in and out of %client%’s accounts. 
+         Check <a href="%moneyInLink%">money in</a> and <a href="%moneyOutLink%">money out</a>
+         matches your records of money coming in and out of %client%’s accounts.
          You should also check the balances you gave in <a href="%accountsLink%">bank accounts</a> are correct.
       cantFind: Can’t find the problem?
       formtitle:
@@ -83,11 +83,19 @@ balance:
         accounts:
             missing: Tell us how much money was in the account on %closingDate%
             editLink: Edit this account
-    
+
 banks:
     nextSection: Money in
     pageSectionTitle: %client%'s bank accounts
-    pageSectionDescription: Add all %client%'s bank and building society accounts, including savings accounts and ISAs
+    pageSectionDescription: |
+      Tell us about all %client%’s bank and building society accounts. Include any savings accounts and ISAs.
+      Then enter all the money %client% receives under <a href="%moneyInLink%">money in</a> and all the spending you’ve done for %client% under
+      <a href="%moneyOutLink%">money out</a>. Once you’ve entered this information, we can <a href="%balanceLink%">balance the accounts</a> for you.
+    before: Have you filled in an annual report for OPG before?
+    beforeDescription: |
+      You may notice the questions are different. This is because we
+      need to find out more about how deputies make financial decisions. We’ve made these changes to the paper
+      forms as well.
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number
@@ -96,6 +104,5 @@ banks:
     accountMissingWarning: You must add at least 1 bank account
     balanceMissingWarning: Balance on %date% is missing
     balanceMissingWarningBottom: |
-        You will be able to see this total when you have added the balance 
+        You will be able to see this total when you have added the balance
         on the %date% for all %client%'s accounts
-    
