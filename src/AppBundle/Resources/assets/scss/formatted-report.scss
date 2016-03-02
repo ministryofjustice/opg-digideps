@@ -46,11 +46,11 @@ $small: 12;
         width: 200px;
         border-left: 3px solid #000000;
     }
-    
+
     h2, h3 {
         margin: 0 0 20px 0;
     }
-    
+
     h1 {
         @include bold-48();
         width: 60%;
@@ -59,7 +59,7 @@ $small: 12;
         clear: both;
         @include bold-24();
     }
-    
+
     h2.section-heading {
         clear: both;
         @include core-24();
@@ -68,22 +68,22 @@ $small: 12;
 
         .section-number {
             @include bold-24();
-        }      
+        }
     }
-    
+
     h2.sub-title {
         @include bold-24();
     }
-    
+
     h3 {
         @include bold-19();
     }
-    
+
     ul {
         list-style: none;
         padding-left: 0;
     }
-    
+
     .intro {
         margin-bottom: 10px;
     }
@@ -93,17 +93,17 @@ $small: 12;
         margin-bottom: 40px;
         page-break-after: always;
     }
-    
+
     .box-list {
         @extend %contain-floats;
         list-style: none;
         padding-left: 0;
-        
+
         .box-list-item {
             @extend %contain-floats;
         }
     }
-    
+
     .balancing {
         @extend %contain-floats;
         margin-top: 40px;
@@ -154,7 +154,7 @@ $small: 12;
             color: #454572;
         }
     }
-    
+
     .fieldset-outer-title {
         margin-top: 30px;
     }
@@ -167,16 +167,18 @@ $small: 12;
     #account-summary, #moneyIn-transactions {
         page-break-after: always;
     }
-    
+
     #declaration {
         page-break-after: auto;
     }
-    
+
     .dont-break {
         page-break-inside: avoid;
     }
 
-
+    .cleared {
+        clear: both;
+    }
 }
 
 @media print {
