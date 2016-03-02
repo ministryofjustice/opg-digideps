@@ -74,6 +74,12 @@ class Report
      */
     private $accounts;
     
+     /**
+     * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
+     * @var MoneyTransfer[]
+     */
+    private $moneyTransfers;
+    
     /**
      * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @var Contact[]
@@ -423,13 +429,28 @@ class Report
     }
     
     /**
-     * @return array $accounts
+     * @return Account[]
      */
     public function getAccounts()
     {
         return $this->accounts;
     }
     
+    /**
+     * 
+     * @return MoneyTransfer[]
+     */
+    public function getMoneyTransfers()
+    {
+        return $this->moneyTransfers;
+    }
+
+    public function setMoneyTransfers(array $transfers)
+    {
+        $this->moneyTransfers = $transfers;
+        return $this;
+    }
+
     /**
      * @param array $accounts
      * @return \AppBundle\Entity\Report
