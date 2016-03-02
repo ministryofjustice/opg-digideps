@@ -3,10 +3,10 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    
+
     .card-item {
         @extend %contain-floats;
-        margin: 30px 0 50px 0;
+        margin: 50px 0 50px 0;
     }
 
     .meta-data {
@@ -18,28 +18,28 @@
 
         .labelvalue {
             @extend %contain-floats;
-            
+
             .label {
                 @include core-19(1.5);
                 float: left;
                 clear: both;
             }
-            
+
             .value {
                 @include bold-19(1.5);
                 padding-left: 10px;
                 float: left;
             }
-        
+
         }
-        
+
         .warning {
             // moves to the bottom
             margin-top: 30px;
         }
 
     }
-    
+
     .card {
         @include border-radius(10px);
         box-sizing: border-box;
@@ -65,7 +65,7 @@
                 float: left;
                 clear: both;
             }
-            
+
             .value {
                 @include core-16();
                 box-sizing: border-box;
@@ -73,7 +73,7 @@
                 padding: 0;
                 float: left;
             }
-            
+
         }
 
         .add-link {
@@ -95,8 +95,8 @@
             text-align: center;
             color: $black;
             text-decoration: none;
-            
-            &:hover, 
+
+            &:hover,
             &:focus {
                 background-color: $yellow;
                 outline: none;
@@ -104,16 +104,16 @@
 
             @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 20 / 10), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
                 background-image: url('images/roundplus_2x.png');
-            }            
+            }
         }
-        
+
     }
- 
+
     .edit-link {
         display: block;
         margin-top: 5px;
     }
-    
+
 }
 
 // appplies to uknown closing balance for each account, and for the accounts total
