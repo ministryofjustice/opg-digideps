@@ -6,14 +6,17 @@ export default function(state = [], action) {
     case CREATE_TRANSFER:
     case UPDATE_TRANSFER:
     case DELETE_TRANSFER:
-        return [{
-            reportId: 1,
-            id: 999999,
-            accountFrom: null,
-            accountTo: null,
-            amount: null
-        }, ...action.payload.data];
-
+        if (action.payload.status === 200) {
+            return [{
+                reportId: 1,
+                id: 999999,
+                accountFrom: null,
+                accountTo: null,
+                amount: null
+            }, ...action.payload.data];
+        } else {
+            return state;
+        }
     default:
       // Nothing
     }
