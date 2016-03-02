@@ -44,7 +44,9 @@ class TransfersController extends AbstractController
      */
     public function transfersGetJson(Request $request, $reportId)
     {
-        return new JsonResponse([]);
+        $data = $this->getRestClient()->get("report/{$reportId}", 'array', [ 'query' => [ 'groups' => 'transfers']]);
+        
+        return new JsonResponse($data['money_transfers']);
     }
 
     /**
