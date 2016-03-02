@@ -84,12 +84,12 @@ class MoneyTransferControllerTest extends AbstractTestController
         ])['data']['money_transfers'];
         
         $this->assertEquals(1001, $data[0]['amount']);
-        $this->assertEquals('bank2', $data[0]['from']['bank']);
-        $this->assertEquals('bank1', $data[0]['to']['bank']);
+        $this->assertEquals('bank2', $data[0]['accountFrom']['bank']);
+        $this->assertEquals('bank1', $data[0]['accountTo']['bank']);
         
         $this->assertEquals(52, $data[1]['amount']);
-        $this->assertEquals('bank1', $data[1]['from']['bank']);
-        $this->assertEquals('bank2', $data[1]['to']['bank']);
+        $this->assertEquals('bank1', $data[1]['accountFrom']['bank']);
+        $this->assertEquals('bank2', $data[1]['accountTo']['bank']);
     }
    
     

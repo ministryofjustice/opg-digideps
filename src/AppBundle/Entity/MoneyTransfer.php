@@ -33,6 +33,7 @@ class MoneyTransfer
     /**
      * @var Account
      * @JMS\Groups({"transfers", "basic"})
+     * @JMS\SerializedName("accountFrom")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account")
      * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
@@ -41,6 +42,7 @@ class MoneyTransfer
     /**
      * @var Account
      * @JMS\Groups({"transfers", "basic"})
+     * @JMS\SerializedName("accountTo")
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Account")
      * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
