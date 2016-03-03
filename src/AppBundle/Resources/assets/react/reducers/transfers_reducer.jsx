@@ -5,28 +5,32 @@ import {
     GET_TRANSFERS_ERROR,
     UPDATE_TRANSFERS_ERROR
   } from '../actions/transfers_actions';
+import { containsIncompleteTransfer, appendNewTransfer } from '../utils/transfer_utils';
 
 function update(state, transfer) {
     // If this is an update to a new transfer that is not yet saved
-    const clonedState = state.slice(0);
-    const newState = clonedState.map(item => {
-        if (item.id === transfer.id ){
-            return transfer;
+    let clonedState = state.slice(0);
+    for (let pos = 0; pos < clonedState.length; pos += 1) {
+        if (clonedState[pos].id === transfer.id) {
+            clonedState[pos] = transfer;
+            break;
         }
-        return item;
-    });
+    }
 
-    return newState;
+    if (!containsIncompleteTransfer(clonedState) || clonedState.length === 0) {
+        clonedState = appendNewTransfer(clonedState);
+    }
+
+    return clonedState;
 }
 function updates(state, transfers) {
-    return [{
-        reportId: 1,
-        id: null,
-        accountFrom: null,
-        accountTo: null,
-        amount: null
-    }, ...transfers];
+    if (!containsIncompleteTransfer(transfers) || transfers.length === 0) {
+        return appendNewTransfer(transfers);
+    }
+
+    return transfers;
 }
+
 function deleteItem(state, id) {
     state.filter(function(item) {
         if (item.id === id) {

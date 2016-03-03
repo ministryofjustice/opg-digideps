@@ -10,10 +10,10 @@ class MoneyTransfers extends Component {
         this.props.getTransfers(1);
     }
 
-    renderTransfers = (transfer) => {
+    renderTransfers = (transfer, index) => {
         return (<MoneyTransfer
           transfer={transfer}
-          key={transfer.id}
+          key={index}
           createTransfer={this.props.createTransfer}
           updateTransfer={this.props.updateTransfer}
           deleteTransfer={this.props.deleteTransfer}

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { completeTransfer } from '../utils/transfer_utils';
 
 /*
  * GET  	/report/{reportId}/transfers/edit			html
@@ -14,21 +15,6 @@ export const DELETE_TRANSFER = 'DELETE_TRANSFER';
 export const SAVE_TRANSFER = 'SAVE_TRANSFER';
 export const GET_TRANSFERS_ERROR = 'GET_TRANSFERS_ERROR';
 export const SAVE_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
-
-
-function completeTransfer(transfer) {
-    if (transfer.accountFrom !== null &&
-        transfer.accountTo !== null &&
-        transfer.amount !== 0 &&
-        transfer.amount !== null) {
-
-        return true;
-
-    }
-
-    return false;
-}
-
 
 export function getTransfers(reportId) {
     const url = `/report/${reportId}/transfers`;
