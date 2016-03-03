@@ -46,8 +46,7 @@ class TransfersController extends AbstractController
     {
         $data = $this->getRestClient()->get("report/{$reportId}", 'array', [ 'query' => [ 'groups' => 'transfers']]);
 
-        //return new JsonResponse($data['money_transfers']);
-        return new JsonResponse(array('transfers'=>[]));
+        return new JsonResponse($data['money_transfers']);
     }
 
     /**
