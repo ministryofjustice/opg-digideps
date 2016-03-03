@@ -21,13 +21,13 @@ class Version059 extends AbstractMigration implements ContainerAwareInterface
         $this->container = $container;
     }
 
-    private function addNewTransaction($name, $displayOrder, $copValuesFrom)
+    private function addNewTransaction($name, $displayOrder, $hasMoreDetails, $copValuesFrom)
     {
         $pdo = $this->container->get('em')->getConnection();
 
         // add new "total" other-incomes in the right position
         $pdo->query("INSERT INTO transaction_type(id, has_more_details, display_order, category, type) "
-                . "VALUES('$name', false, $displayOrder, 'income-and-earnings', 'in')");
+                . "VALUES('$name', " . ($hasMoreDetails ? 'true' : 'false') . ", $displayOrder, 'income-and-earnings', 'in')");
 
         // ADD new transaction to all the report. copy amount from $copValuesFrom transaction (will be deleted)
         $reports = $pdo->query("SELECT r.id as report_id, t.amount as income_from_inv_amount from report r LEFT JOIN transaction t ON t.report_id=r.id WHERE t.transaction_type_id='$copValuesFrom'")->fetchAll();
@@ -58,7 +58,7 @@ class Version059 extends AbstractMigration implements ContainerAwareInterface
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addNewTransaction('other-incomes', 65, 'income-from-investments');
+        $this->addNewTransaction('other-incomes', 65, true, 'income-from-investments');
 
         $this->addSql('SELECT MAX(version) from migrations');
     }
@@ -70,8 +70,8 @@ class Version059 extends AbstractMigration implements ContainerAwareInterface
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        
-        $this->addNewTransaction('income-from-investments', 40, 'other-incomes');
+
+        $this->addNewTransaction('income-from-investments', 40, false, 'other-incomes');
 
         $this->addSql('SELECT MAX(version) from migrations');
     }
