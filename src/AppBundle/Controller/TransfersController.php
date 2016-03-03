@@ -45,8 +45,8 @@ class TransfersController extends AbstractController
     public function transfersGetJson(Request $request, $reportId)
     {
         $data = $this->getRestClient()->get("report/{$reportId}", 'array', [ 'query' => [ 'groups' => 'transfers']]);
-        
-        return new JsonResponse($data['money_transfers']);
+
+        return new JsonResponse($data);
     }
 
     /**
@@ -60,13 +60,13 @@ class TransfersController extends AbstractController
     {
         echo $request->getContent();die;
         // {"reportId":1,"id":999999,"accountFrom":{"id":2,"bank":"barc","account_type":"cash","sort_code":"111111","account_number":"1234","opening_date":"2016-03-02T00:00:00+0000","opening_balance":"120.00","closing_balance":"2.00","created_at":"2016-03-02T10:41:16+0000"},"accountTo":null,"amount":null}
-        
+
         $this->get('restClient')->post('report/' . $reportId . '/money-transfers', [
             'from_account_id' => 1,
             'to_account_id' => 2,
             'amount' => 3
         ]);
-        
+
         return new JsonResponse([]);
     }
 
@@ -82,13 +82,13 @@ class TransfersController extends AbstractController
     public function transfersUpdateJson(Request $request, $reportId, $transferId)
     {
         echo $request->getContent();die;
-        
+
         $this->get('restClient')->put('report/' . $reportId . '/money-transfers/' . $transferId, [
             'from_account_id' => 1,
             'to_account_id' => 2,
             'amount' => 3
         ]);
-        
+
         //
         return new JsonResponse([]);
     }

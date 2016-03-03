@@ -1,5 +1,5 @@
 /* global opg: true */
 
-export default function (state = opg.accounts) {
-  return state;
+export default function(state = opg.accounts) {
+    return state;
 }
