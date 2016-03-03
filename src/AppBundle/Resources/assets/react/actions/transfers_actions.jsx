@@ -43,7 +43,7 @@ export function getTransfers(reportId) {
 // if we also need to save them to the server.
 export function updateTransfer(transfer) {
 
-    // if (!completeTransfer(transfer)) {
+    if (!completeTransfer(transfer)) {
         return {
             type: UPDATE_TRANSFER,
             payload: {
@@ -52,21 +52,24 @@ export function updateTransfer(transfer) {
                 }
             },
         };
-    // }
+    }
 
-    const url = `/report/${transfer.reportId}/transfers`;
     let request;
 
     if (transfer.id !== null) {
-        request = axios.post(url, transfer);
+        request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, {transfer});
     } else {
-        request = axios.put(url, transfer);
+        request = axios.post(`/report/${transfer.reportId}/transfers`, {transfer});
     }
 
     return {
         types: [UPDATE_TRANSFER, SAVE_TRANSFER, SAVE_TRANSFER_ERROR],
-        payload: request,
-        transfer
+        promise: request,
+        payload: {
+            data: {
+                transfers: [transfer]
+            }
+        },
     };
 }
 
