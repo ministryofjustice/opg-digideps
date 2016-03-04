@@ -9,12 +9,19 @@ import { completeTransfer } from '../utils/transfer_utils';
  * DELETE	/report/{reportId}/transfers/{transferId}
 */
 
+// Network actions
 export const GET_TRANSFERS = 'GET_TRANSFERS';
-export const UPDATE_TRANSFER = 'UPDATE_TRANSFER';
-export const DELETE_TRANSFER = 'DELETE_TRANSFER';
 export const SAVE_TRANSFER = 'SAVE_TRANSFER';
+export const ADD_TRANSFER = 'ADD_TRANSFER';
+export const SAVE_DELETE_TRANSFER = 'SAVE_DELETE_TRANSFER';
+
 export const GET_TRANSFERS_ERROR = 'GET_TRANSFERS_ERROR';
 export const SAVE_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
+export const ADD_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
+
+export const UPDATE_TRANSFER = 'UPDATE_TRANSFER';
+export const DELETE_TRANSFER = 'DELETE_TRANSFER';
+
 
 export function getTransfers(reportId) {
     const url = `/report/${reportId}/transfers`;
@@ -25,37 +32,47 @@ export function getTransfers(reportId) {
     };
 }
 
-// Pass all changes straight through vi an update, and then decide
-// if we also need to save them to the server.
-export function updateTransfer(transfer) {
-
-    if (!completeTransfer(transfer)) {
-        return {
-            type: UPDATE_TRANSFER,
-            payload: {
-                data: {
-                    transfers: [transfer]
-                }
-            },
-        };
-    }
-
-    let request;
-
-    if (transfer.id !== null) {
-        request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, {transfer});
-    } else {
-        request = axios.post(`/report/${transfer.reportId}/transfers`, {transfer});
-    }
-
+function save(transfer, request) {
     return {
-        types: [UPDATE_TRANSFER, SAVE_TRANSFER, SAVE_TRANSFER_ERROR],
+        types: [SAVE_TRANSFER, SAVE_TRANSFER_ERROR],
         promise: request,
         payload: {
             data: {
                 transfers: [transfer]
             }
         },
+    };
+}
+
+function update(transfer) {
+    return {
+        type: UPDATE_TRANSFER,
+        payload: {
+            data: {
+                transfers: [transfer]
+            }
+        }
+    };
+}
+// Pass all changes straight through vi an update, and then decide
+// if we also need to save them to the server.
+export function updateTransfer(transfer) {
+    // go back to using thunk so I can dispatch multiple actions
+    return (dispatch) => {
+
+        if (!completeTransfer(transfer)) {
+            dispatch(update(transfer));
+
+        } else {
+
+            if (transfer.id === null) {
+                transfer.waitingForId = true;
+            }
+
+            const request = axios.post(`/report/${transfer.reportId}/transfers`, {transfer});
+            dispatch(save(transfer, request));
+        }
+
     };
 }
 
