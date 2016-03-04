@@ -135,9 +135,9 @@ class MoneyTransferControllerTest extends AbstractTestController
         $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
         $url2 = '/report/' . self::$report2->getId() . '/money-transfers/' . self::$transfer1->getId();
         
-        $this->assertEndpointNeedsAuth('POST', $url); 
-        $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
-        $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
+        $this->assertEndpointNeedsAuth('PUT', $url); 
+        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy); 
         
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed'=>true,
