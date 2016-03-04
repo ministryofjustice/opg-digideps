@@ -137,7 +137,17 @@ class MoneyTransfer
     {
         return $this->report;
     }
-
+    
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transfers"})
+     * @JMS\Type("integer")
+     * @JMS\SerializedName("reportId")
+     */
+    public function getReportId()
+    {
+        return $this->getReport()->getId();
+    }
 
     public function setReport(Report $report)
     {
