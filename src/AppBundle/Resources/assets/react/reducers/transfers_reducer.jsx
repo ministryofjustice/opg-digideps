@@ -4,7 +4,7 @@ import {
     DELETE_TRANSFER,
     GET_TRANSFERS_ERROR,
     UPDATE_TRANSFERS_ERROR,
-    SAVE_TRANSFER
+    ADD_TRANSFER
   } from '../actions/transfers_actions';
 import { containsIncompleteTransfer, appendNewTransfer } from '../utils/transfer_utils';
 
@@ -91,10 +91,10 @@ function deleteItem(state, id) {
 
 export default function(state = [], action) {
     switch (action.type) {
-    case SAVE_TRANSFER:
+    case ADD_TRANSFER:
         if (action.payload.hasOwnProperty('data')
          && action.payload.data.hasOwnProperty('transfers')) {
-            return updateNewWithRealId(state, action.payload.data.transfers);
+            return updateNewWithRealId(state, action.payload.data.transfers[0]);
         }
         break;
     case GET_TRANSFERS:
