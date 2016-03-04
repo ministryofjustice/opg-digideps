@@ -24,10 +24,10 @@ PGPASSWORD=$API_DATABASE_PASSWORD createdb -U $API_DATABASE_USERNAME -h $API_DAT
 # Load snapshot into new DB instance.
 echo "Restoring database tables and data...."
 
-if (aws s3 cp --sse aws:kms --region eu-west-1 s3://$1/backups/$2/$3 - | gunzip  | PGPASSWORD=$API_DATABASE_PASSWORD psql -P pager=off -U $API_DATABASE_USERNAME -h $API_DATABASE_HOSTNAME -p $API_DATABASE_PORT $API_DATABASE_NAME)
+if (aws s3 cp --sse aws:kms --region eu-west-1 s3://$1/$2 - | gunzip  | PGPASSWORD=$API_DATABASE_PASSWORD psql -P pager=off -U $API_DATABASE_USERNAME -h $API_DATABASE_HOSTNAME -p $API_DATABASE_PORT $API_DATABASE_NAME)
 then
-        echo "Restore from specified snapshot s3://$1$2 SUCCESSFUL!"
+        echo "Restore from specified snapshot s3://$1/$2 SUCCESSFUL!"
 else
-        echo "DB restore from specified snapshot  s3://$1$2 FAILED!"
+        echo "DB restore from specified snapshot  s3://$1/$2 FAILED!"
 	usage
 fi
