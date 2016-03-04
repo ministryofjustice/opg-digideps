@@ -42,7 +42,7 @@ class MoneyTransferController extends RestController
     
     /**
      * @Route("/report/{reportId}/money-transfers/{transferId}")
-     * @Method({"POST"})
+     * @Method({"PUT"})
      */
     public function editMoneyTransferAction(Request $request, $reportId, $transferId)
     {

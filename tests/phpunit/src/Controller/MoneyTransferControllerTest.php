@@ -139,7 +139,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
         
-        $return = $this->assertJsonRequest('POST', $url, [
+        $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data'=> [
