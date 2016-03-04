@@ -64,6 +64,26 @@ class MoneyTransferController extends RestController
         
         return $transfer;
     }
+  
+    /**
+     * @Route("/report/{reportId}/money-transfers/{transferId}")
+     * @Method({"DELETE"})
+     */
+    public function deleteMoneyTransferAction(Request $request, $reportId, $transferId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+        
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        
+        $transfer = $this->findEntityBy('MoneyTransfer', $transferId);
+        $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
+        
+        $this->getEntityManager()->remove($transfer);
+        $this->getEntityManager()->flush($transfer);
+
+        return [];
+    }
     
     private function fillEntity(EntityDir\MoneyTransfer $transfer, array $data)
     {

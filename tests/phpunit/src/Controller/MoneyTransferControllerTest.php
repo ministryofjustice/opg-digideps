@@ -163,4 +163,29 @@ class MoneyTransferControllerTest extends AbstractTestController
         
     }
     
+    /**
+     * @depends testGetTransfers
+     * @depends testEditTransfer
+     */
+    public function testdeleteTransfer()
+    {
+        $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
+        $url2 = '/report/' . self::$report2->getId() . '/money-transfers/99';
+        
+        $this->assertEndpointNeedsAuth('DELETE', $url); 
+        $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin); 
+        $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy); 
+        
+        $this->assertJsonRequest('DELETE', $url, [
+            'mustSucceed'=>true,
+            'AuthToken' => self::$tokenDeputy,
+        ]);
+        
+        self::fixtures()->clear();
+        
+        $t = self::fixtures()->getRepo('MoneyTransfer')->find(self::$transfer1->getId());
+        $this->assertTrue(null === $t);
+        
+    }
+    
 }
