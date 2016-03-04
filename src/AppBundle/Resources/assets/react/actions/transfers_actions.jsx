@@ -35,12 +35,7 @@ function save(transfer) {
     const request = axios.put(url, { transfer });
     return {
         types: [SAVE_TRANSFER, SAVE_TRANSFER_ERROR],
-        promise: request,
-        payload: {
-            data: {
-                transfers: [transfer]
-            }
-        },
+        promise: request
     };
 }
 
@@ -49,23 +44,14 @@ function add(transfer) {
     const request = axios.post(url, { transfer });
     return {
         types: [ADD_TRANSFER, SAVE_TRANSFER_ERROR],
-        promise: request,
-        payload: {
-            data: {
-                transfers: [transfer]
-            }
-        },
+        promise: request
     };
 }
 
 function update(transfer) {
     return {
         type: UPDATE_TRANSFER,
-        payload: {
-            data: {
-                transfers: [transfer]
-            }
-        }
+        payload: transfer,
     };
 }
 

@@ -43,8 +43,10 @@ function regularUpdate(state, transfer) {
 }
 function updateNewWithRealId(state, transfer) {
     let clonedState = state.slice(0);
+    console.log(clonedState);
     for (let pos = 0; pos < clonedState.length; pos += 1) {
-        if (clonedState.waitingForId) {
+        if (clonedState[pos].waitingForId) {
+            console.log('replace index:', pos);
             clonedState[pos].id = transfer.id;
             clonedState[pos].waitingForId = false;
             break;
@@ -93,8 +95,8 @@ export default function(state = [], action) {
     switch (action.type) {
     case ADD_TRANSFER:
         if (action.payload.hasOwnProperty('data')
-         && action.payload.data.hasOwnProperty('transfers')) {
-            return updateNewWithRealId(state, action.payload.data.transfers[0]);
+         && action.payload.data.hasOwnProperty('transfer')) {
+            return updateNewWithRealId(state, action.payload.data.transfer);
         }
         break;
     case GET_TRANSFERS:
@@ -104,7 +106,7 @@ export default function(state = [], action) {
         }
         break;
     case UPDATE_TRANSFER: {
-        return update(state, action.payload.data.transfers[0]);
+        return update(state, action.payload);
     }
     case DELETE_TRANSFER:
         if (action.payload.hasOwnProperty('data')
