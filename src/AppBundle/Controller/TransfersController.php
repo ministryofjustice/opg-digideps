@@ -31,7 +31,7 @@ class TransfersController extends AbstractController
 
         return [
             'report' => $report,
-            'subsection' => 'moneyin'
+            'subsection' => 'transfers'
         ];
     }
 
