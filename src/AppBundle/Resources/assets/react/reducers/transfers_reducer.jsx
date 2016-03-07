@@ -3,7 +3,7 @@ import {
     UPDATE_TRANSFER,
     DELETE_TRANSFER,
     GET_TRANSFERS_ERROR,
-    UPDATE_TRANSFERS_ERROR,
+    SAVE_TRANSFER_ERROR,
     ADD_TRANSFER
   } from '../actions/transfers_actions';
 import { containsIncompleteTransfer, appendNewTransfer } from '../utils/transfer_utils';
@@ -43,7 +43,6 @@ function regularUpdate(state, transfer) {
 }
 function updateNewWithRealId(state, transfer) {
     let clonedState = state.slice(0);
-    console.log(clonedState);
     for (let pos = 0; pos < clonedState.length; pos += 1) {
         if (clonedState[pos].waitingForId) {
             console.log('replace index:', pos);
@@ -83,12 +82,8 @@ function updateAll(state, transfers) {
 }
 
 function deleteItem(state, id) {
-    state.filter(function(item) {
-        if (item.id === id) {
-            return false;
-        }
-        return true;
-    });
+    let clonedState = state.filter(item => item.id !== id);
+    return clonedState;
 }
 
 export default function(state = [], action) {
@@ -105,17 +100,12 @@ export default function(state = [], action) {
             return updateAll(state, action.payload.data.transfers);
         }
         break;
-    case UPDATE_TRANSFER: {
+    case UPDATE_TRANSFER:
         return update(state, action.payload);
-    }
     case DELETE_TRANSFER:
-        if (action.payload.hasOwnProperty('data')
-         && action.payload.data.hasOwnProperty('transfer')) {
-            return deleteItem(state, action.payload.data.transfer.id);
-        }
-        break;
+        return deleteItem(state, action.payload.id);
     case GET_TRANSFERS_ERROR:
-    case UPDATE_TRANSFERS_ERROR:
+    case SAVE_TRANSFER_ERROR:
         console.log('Error updating');
         return state;
     default:

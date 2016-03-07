@@ -88,14 +88,22 @@ export function updateTransfer(transfer) {
     };
 }
 
+// Mark locally that the transfer is deleted and save that to the server.
+// Todo - what happens if a save fails? Should we put it back or just report
+// an error?
 export function deleteTransfer(transfer) {
+    return (dispatch) => {
+        const url = `/report/${transfer.reportId}/transfers/${transfer.id}`;
+        const request = axios.delete(url);
 
-    const url = `/report/{transfer.reportId}/transfers/${transfer.id}`;
-    const request = axios.delete(url);
+        dispatch({
+            types: [SAVE_DELETE_TRANSFER, SAVE_TRANSFER_ERROR],
+            promise: request
+        });
 
-    return {
-        type: DELETE_TRANSFER,
-        payload: request,
+        dispatch({
+            type: DELETE_TRANSFER,
+            payload: transfer,
+        });
     };
-
 }
