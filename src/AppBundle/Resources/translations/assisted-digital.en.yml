@@ -4,5 +4,5 @@ email:
 password:
     label: Password
 login:
-    label: Login as user
+    label: Log in as user
     invalidMessage: You've entered an invalid email or password. Please try again.

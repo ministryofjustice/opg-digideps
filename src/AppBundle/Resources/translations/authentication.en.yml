@@ -6,7 +6,7 @@ email:
 password:
     label: Password
 login:
-    label: Login
+    label: Log in
     invalidMessage: Invalid email or password
 forgotPassword: Forgotten your password?
 sessionTimeoutOutWarning: Sorry, your session has timed out either due to inactivity or because you have signed in on another browser. Please log in again.

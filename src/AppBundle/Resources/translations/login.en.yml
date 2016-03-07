@@ -8,7 +8,7 @@ email:
 password:
     label: Password
 login:
-    label: Login
+    label: Log in
     invalidMessage: You've entered an invalid email or password. Please try again.
 forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: Sorry, your session has timed due to inactivity. Please log in again.
@@ -19,7 +19,7 @@ manualLogout:
   pageSectionDescription: Log in to get started again.
 
 admin:
-    pageTitle: OPG user login
+    pageTitle: OPG user log in
 #_security:
 #    403_error:
 #    last_error: sec last error
