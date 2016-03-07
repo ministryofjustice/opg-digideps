@@ -303,7 +303,7 @@ class ReportControllerTest extends AbstractTestController
                 'end_date' => '2015-12-29',
                 'transactions_in' => [
                     ['id' => 'dividends', 'amount' => 1200, 'more_details' => ''],
-                    ['id' => 'income-from-investments', 'amount' => 760],
+                    ['id' => 'salary-or-wages', 'amount' => 760],
                 ],
                 'transactions_out' => [
                     ['id' => 'cash-withdrawn', 'amount' => 24, 'more_details' => 'to pay bills'],
@@ -324,7 +324,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(1200, $tDividend->getAmount());
         $this->assertEquals('', $tDividend->getMoreDetails());
 
-        $tIfd = $report->getTransactionByTypeId('income-from-investments');
+        $tIfd = $report->getTransactionByTypeId('salary-or-wages');
         $this->assertInstanceOf('AppBundle\Entity\TransactionTypeIn', $tIfd->getTransactionType());
         $this->assertEquals(760, $tIfd->getAmount());
         $this->assertEquals('', $tIfd->getMoreDetails());
