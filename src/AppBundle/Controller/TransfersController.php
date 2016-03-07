@@ -20,6 +20,7 @@ class TransfersController extends AbstractController
      * @Route("/report/{reportId}/transfers/edit", name="transfers")
      * @param integer $reportId
      * @Template()
+     * 
      * @return array
      */
     public function transfersAction($reportId)
@@ -40,13 +41,18 @@ class TransfersController extends AbstractController
      * @Method({"GET"})
      * @param Request $request
      * @param integer $reportId
-     * return JsonResponse
+     * 
+     * @return JsonResponse
      */
     public function transfersGetJson(Request $request, $reportId)
     {
-        $data = $this->getRestClient()->get("report/{$reportId}", 'array', [ 'query' => [ 'groups' => 'transfers']]);
-
-        return new JsonResponse(array('transfers' => $data['money_transfers']));
+        try {
+            $data = $this->getRestClient()->get("report/{$reportId}", 'array', [ 'query' => [ 'groups' => 'transfers']]);
+        } catch (\Exception $e) {
+           return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
+        }
+        
+        return new JsonResponse(['success' => true, 'transfers' => $data['money_transfers']]);
     }
 
     /**
@@ -54,7 +60,8 @@ class TransfersController extends AbstractController
      * @Method({"POST"})
      * @param Request $request
      * @param integer $reportId
-     * return JsonResponse
+     * 
+     * @return JsonResponse
      */
     public function transfersSaveJson(Request $request, $reportId)
     {
@@ -62,7 +69,7 @@ class TransfersController extends AbstractController
 
         $transferUpdated = $this->get('restClient')->post('report/' . $reportId . '/money-transfers', $data);
 
-        return new JsonResponse(array('transfer' => $transferUpdated));
+        return new JsonResponse(['transfer' => $transferUpdated]);
     }
 
 
@@ -80,7 +87,7 @@ class TransfersController extends AbstractController
 
         $transferUpdated = $this->get('restClient')->put('report/' . $reportId . '/money-transfers/' . $transferId, $data);
 
-        return new JsonResponse(array('transfer' => $transferUpdated));
+        return new JsonResponse(['transfer' => $transferUpdated]);
     }
 
     /**
