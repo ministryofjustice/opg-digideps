@@ -107,7 +107,11 @@ class TransfersController extends AbstractController
      */
     public function transfersDeleteJson(Request $request, $reportId, $transferId)
     {
-        $ret = $this->get('restClient')->delete('report/' . $reportId . '/money-transfers/' . $transferId);
+         try {
+            $ret = $this->get('restClient')->delete('report/' . $reportId . '/money-transfers/' . $transferId);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
+        }
         
         return new JsonResponse($ret);
     }
