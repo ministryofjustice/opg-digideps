@@ -87,12 +87,15 @@ class TransfersController extends AbstractController
      */
     public function transfersUpdateJson(Request $request, $reportId, $transferId)
     {
-       $data = json_decode($request->getContent(), true)['transfer'];
-
-        $transferUpdated = $this->get('restClient')->put('report/' . $reportId . '/money-transfers/' . $transferId, $data);
-
+        try {
+            $data = json_decode($request->getContent(), true)['transfer'];
+            $transferUpdated = $this->get('restClient')->put('report/' . $reportId . '/money-transfers/' . $transferId, $data);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
+        }
         return new JsonResponse(['transfer' => $transferUpdated]);
     }
+
 
     /**
      * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_delete_json")
