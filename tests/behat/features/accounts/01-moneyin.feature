@@ -30,7 +30,7 @@ Feature: New accounts money in
         And I go to "/accounts/1/moneyin"
         Then I should see a subsection called "fred"
         And I should see "Money coming into the client's accounts"
-        And I should see "Income and earnings"
+        And I should see "Income from investments"
         And I should see "Account interest"
         And I should see "Dividends"
 
