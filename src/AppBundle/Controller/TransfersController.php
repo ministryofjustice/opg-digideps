@@ -65,9 +65,13 @@ class TransfersController extends AbstractController
      */
     public function transfersSaveJson(Request $request, $reportId)
     {
-        $data = json_decode($request->getContent(), true)['transfer'];
-
-        $transferUpdated = $this->get('restClient')->post('report/' . $reportId . '/money-transfers', $data);
+        try {
+            $data = json_decode($request->getContent(), true)['transfer'];
+            $transferUpdated = $this->get('restClient')->post('report/' . $reportId . '/money-transfers', $data);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
+        }
+        
 
         return new JsonResponse(['transfer' => $transferUpdated]);
     }
