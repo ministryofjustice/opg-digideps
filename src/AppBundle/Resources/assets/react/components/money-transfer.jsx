@@ -37,15 +37,25 @@ export default class MoneyTransfer extends Component {
         }
 
         return (
-            <li className="transfer">
-                <div className="grid-row">
+            <li className="transfer {this.props.active ? 'active': null }">
+                <div className="grid-row card-select-row">
                     <div className="column-one-half">
                         <div className="form-label">From:</div>
-                        <TransferAccount account={transfer.accountFrom} selectAccount={this.setAccountFrom} />
+                        <TransferAccount
+                            account={transfer.accountFrom}
+                            selectAccount={this.setAccountFrom}
+                            setActiveTransfer={this.props.setActiveTransfer}
+                            clearActiveTransfer={this.props.clearActiveTransfer}
+                        />
                     </div>
                     <div className="column-one-half">
                         <div className="form-label">To:</div>
-                        <TransferAccount account={transfer.accountTo} selectAccount={this.setAccountTo} />
+                        <TransferAccount
+                            account={transfer.accountTo}
+                            selectAccount={this.setAccountTo}
+                            setActiveTransfer={this.props.setActiveTransfer}
+                            clearActiveTransfer={this.props.clearActiveTransfer}
+                         />
                     </div>
                 </div>
                 <div className="grid-row">
@@ -80,4 +90,6 @@ MoneyTransfer.propTypes = {
     transfer: React.PropTypes.object,
     updateTransfer: React.PropTypes.func,
     deleteTransfer: React.PropTypes.func,
+    setActiveTransfer: React.PropTypes.func,
+    clearActiveTransfer: React.PropTypes.func,
 };

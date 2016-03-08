@@ -13,7 +13,12 @@
         }
 
         .column-one-half {
+            @extend %contain-floats;
             position: relative;
+        }
+
+        .card-select-row {
+            height: 225px;
         }
 
 
@@ -25,6 +30,7 @@
         background: $white;
         z-index: 999;
         width: 90%;
+        margin-bottom: 50px;
 
         .card-item {
            margin: 20px 0 0 0;
@@ -38,6 +44,8 @@
     }
 
     .card {
+        width: 95%;
+
         &:hover {
             background-color: $focus-colour;
             color: #000;

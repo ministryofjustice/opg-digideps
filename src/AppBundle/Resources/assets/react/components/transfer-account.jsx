@@ -37,10 +37,14 @@ class TransferAccount extends Component {
             );
         } else if (!this.state.open && this.props.account) {
             return (
-                <AccountCard
-                    account={this.props.account}
-                    selectAccount={this.clickEdit}
-                />
+                <ul className="card-list">
+                    <li className="card-item">
+                        <AccountCard
+                            account={this.props.account}
+                            selectAccount={this.clickEdit}
+                        />
+                    </li>
+                </ul>
             );
         }
 
