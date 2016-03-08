@@ -34,7 +34,7 @@ class ReportRepository extends EntityRepository
         $assets = $report->getAssets();
         
         foreach($assets as $asset){
-            $newAsset = new EntityDir\Asset();
+            $newAsset = EntityDir\Asset::factory($asset->getType());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setValuationDate($asset->getValuationDate());
