@@ -12,7 +12,12 @@
 
     <p class="page-section-description">{{ 'intro' | trans }}</p>
     <p class="page-section-description">{{ 'ifyoualready' | trans }} <a href="{{ path('login') }}">{{ 'signin' | trans }}</a>.</p>
-    
+
+    <section class="help-item">
+      <h3 class="summary heading-medium">{{ 'moreThanOne' | trans }}</h3>
+      <p class="content page-section-description">{{ 'moreThanOneDescription' | trans | raw }}</p>
+    </section>
+
     {% set formClass = 'registration-form' %}
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
@@ -22,11 +27,21 @@
         {{ form_input(form.postcode,'postcode', { 'labelClass': 'required' }) }}
         {{ form_input(form.clientLastname,'clientLastname', { 'labelClass': 'required' }) }}
         {{ form_input(form.caseNumber,'caseNumber', { 'labelClass': 'required' }) }}
-    
+
         {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
         {{ form_submit(form.save,'save') }}
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.help-item').each(function(index,item) {
+                opg.accordian({
+                    target:item,
+                    open: false
+                });
+            });
+        });
+    </script>
 {% endblock %}
