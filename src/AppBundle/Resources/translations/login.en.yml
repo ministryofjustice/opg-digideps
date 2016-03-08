@@ -14,7 +14,7 @@ forgottenPassword: Forgotten your password?
 sessionTimeoutOutWarning: Sorry, your session has timed due to inactivity. Please log in again.
 bruteForceLocked: You’ve tried to log in with the wrong password too many times. Please check your password, wait for %minutes% minutes, and try again.
 manualLogout:
-  pageTitle: You are now signed out
+  pageTitle: You are now logged out
   pageSectionTitle: Thank you for using the Complete the deputy report service.
   pageSectionDescription: Log in to get started again.
 
