@@ -10,9 +10,15 @@ use JMS\Serializer\Annotation as JMS;
  * Asset
  *
  * @ORM\Table(name="asset")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetRepository")
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="type", type="string")
+ * @ORM\DiscriminatorMap({
+ *      "property"  = "AppBundle\Entity\AssetProperty", 
+ *      "other"     = "AppBundle\Entity\AssetOther"
+ * })
  */
-class Asset 
+abstract class Asset 
 {
     /**
      * @var integer
@@ -33,7 +39,7 @@ class Asset
      * 
      * @ORM\Column(name="description", type="text", nullable=true)
      */
-    private $description;
+//    private $description;
 
     /**
      * @var decimal
@@ -48,36 +54,40 @@ class Asset
     /**
      * @var \DateTime
      * @JMS\Groups({"asset"})
-     *
+     * @JMS\Type("DateTime")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastedit;
 
     /**
-     * @var string
-     * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="title", type="string", length=100, nullable=true)
-     */
-    private $title;
-
-    /**
-     * @var \Date
-     * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="valuation_date", type="date", nullable=true)
-     */
-    private $valuationDate;
-
-    /**
      * @var integer
-     *
+     * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="assets")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
 
+    /**
+     * @var string 
+     * @JMS\Exclude
+     */
+    private $type;
 
+    /**
+     * @param string $type
+     * @return Asset instance
+     */
+    public static function factory($type)
+    {
+        switch ($type)
+        {
+            case 'property':
+                return new AssetProperty();
+            default:
+                return new AssetOther();
+        }
+    }
+    
     /**
      * Get id
      *
@@ -86,29 +96,6 @@ class Asset
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Asset
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string 
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 
     /**
@@ -158,52 +145,6 @@ class Asset
     }
 
     /**
-     * Set title
-     *
-     * @param string $title
-     * @return Asset
-     */
-    public function setTitle($title)
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    /**
-     * Get title
-     *
-     * @return string 
-     */
-    public function getTitle()
-    {
-        return $this->title;
-    }
-
-    /**
-     * Set valuationDate
-     *
-     * @param \DateTime $valuationDate
-     * @return Asset
-     */
-    public function setValuationDate($valuationDate)
-    {
-        $this->valuationDate = $valuationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get valuationDate
-     *
-     * @return \DateTime 
-     */
-    public function getValuationDate()
-    {
-        return $this->valuationDate;
-    }
-
-    /**
      * Set report and set to false the report.noAssetToAdd status
      *
      * @param Report $report
@@ -228,4 +169,17 @@ class Asset
     {
         return $this->report;
     }
+    
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+
 }
