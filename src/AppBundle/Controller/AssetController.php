@@ -88,7 +88,7 @@ class AssetController extends RestController
             ]);
             $report = $this->findEntityBy('Report', $assetData['report_id']);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
-            $asset = new EntityDir\Asset();
+            $asset = EntityDir\Asset::factory($assetData['type']);
             $asset->setReport($report);
         } else {
             $this->validateArray($assetData, [
@@ -104,10 +104,47 @@ class AssetController extends RestController
             'title' => 'mustExist', 
         ]);
         
-        $asset->setDescription($assetData['description']);
-        $asset->setValue($assetData['value']);
-        $asset->setTitle($assetData['title']);
+        if ($asset instanceof EntityDir\AssetOther) {
+            $this->hydrateEntityWithArrayData($asset, $assetData, [
+                'description' => 'setDescription',
+                'value' => 'setValue',
+                'title' => 'setTitle',
+            ]);
+
+            if (!empty($assetData['valuation_date'])) {
+                $valuationDate = new \DateTime($assetData['valuation_date']);
+            } else {
+                $valuationDate = null;
+            }
+            $asset->setValuationDate($valuationDate);
+        }
         
+        if ($asset instanceof EntityDir\AssetProperty) {
+
+            $this->hydrateEntityWithArrayData($asset, $assetData, [
+                'occupants' => 'setOccupants',
+                'occupantsInfo' => 'setOccupantsInfo',
+                'owned' => 'setOwned',
+                'owned_percentage' => 'setOwnedPercentage',
+                'is_subject_to_equity_release' => 'setIsSubjectToEquityRelease',
+                'has_mortgage' => 'setHasMortgage',
+                'mortgage_outstanding_amount' => 'setMortgageOutstandingAmount',
+                'has_charges' => 'setHasCharges',
+                'is_rented_out' => 'setIsRentedOut',
+                'rent_income_month' => 'setRentIncomeMonth',
+                'address' => 'setAddress',
+                'address2' => 'setAddress2',
+                'county' => 'setCounty',
+                'postcode' => 'setPostCode',
+                'value' => 'setValue',
+            ]);
+
+            if (isset($assetData['rent_agreement_end_date'])) {
+                $asset->setRentAgreementEndDate(new \DateTime($assetData['rentAgreementEndDate']['date']));
+            }
+        }
+
+
         if(!empty($assetData['valuation_date'])){
             $valuationDate = new \DateTime($assetData['valuation_date']);
         }else{
