@@ -2,6 +2,6 @@ welcomeMessage: Hello %name%, welcome to the site
 adminArea: Admin area
 assistedDigitalArea: OPG assisted digital
 userDetails: Your details
-logout: Logout
+logout: Log out
 Invalid credentials.: Enter a valid username and password
 clientHome: Your client
