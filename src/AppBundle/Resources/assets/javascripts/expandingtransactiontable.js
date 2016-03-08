@@ -1,3 +1,4 @@
+/*jshint browser: true */
 (function () {
     "use strict";
 
@@ -12,42 +13,31 @@
         this.inputs = this.container.find('.transaction-value').not(".exclude-total");
         this.subTotals = this.container.find('.summary .sub-total .value');
         this.grandTotal = this.container.find('.grand-total .value');
-        this.addElementLevelEvents();
+
+        this.handleSummaryClick = this.handleSummaryClick.bind(this);
+        this.totalChangeHandler = this.totalChangeHandler.bind(this);
+        this.handleFormSubmit = this.handleFormSubmit.bind(this);
+
+        $('.summary', this.element).on('click', this.handleSummaryClick);
+        this.inputs.on('keyup input paste recalc', this.handleInputChange);
+        $(window).on('TRANSACTION_TOTAL_CHANGE', this.totalChangeHandler);
+        this.container.on('submit', this.formSubmitHandler);
+
         this.closeAll();
         this.setInitialDescriptionVisibility();
         this.openSectionsWithErrors();
     };
 
-    ExpandingTransactionTable.prototype.addElementLevelEvents = function () {
-        this.clickHandler = this.getSummaryClickHandler();
-        this.totalChangeHandler = this.getTotalChangeHandler();
-        this.formSubmitHandler = this.getFormSubmitHandler();
-
-        $('.summary', this.element).on('click', this.clickHandler);
-        this.inputs.on('keyup input paste recalc', this.totalChangeHandler);
-        this.container.on('submit', this.formSubmitHandler);
+    ExpandingTransactionTable.prototype.handleInputChange = function (event) {
+        $(window).trigger({type:'TRANSACTION_TOTAL_CHANGE', input: event.target});
     };
-    ExpandingTransactionTable.prototype.getSummaryClickHandler = function () {
-        return function (e) {
-            this.handleSummaryClick($(e.target));
-        }.bind(this);
+    ExpandingTransactionTable.prototype.totalChangeHandler = function (event) {
+        var $target = $(event.input);
+        this.handleTotalChange($target);
+        this.shouldDisplayDescription($target.closest('.transaction'));
     };
-    ExpandingTransactionTable.prototype.getTotalChangeHandler = function () {
-        return function (e) {
-            var $target = $(e.target);
-
-            this.handleTotalChange($target);
-            this.shouldDisplayDescription($target.closest('.transaction'));
-        }.bind(this);
-    };
-    ExpandingTransactionTable.prototype.getFormSubmitHandler = function () {
-        return function (e) {
-            var $target = $(e.target);
-            this.handleFormSubmit($target);
-        }.bind(this);
-    };
-    ExpandingTransactionTable.prototype.handleSummaryClick = function (target) {
-
+    ExpandingTransactionTable.prototype.handleSummaryClick = function (event) {
+        var target = $(event.target);
         var section = target.closest('.section');
 
         // if this one is open, close it
@@ -77,7 +67,8 @@
         this.updateGrandTotal();
 
     };
-    ExpandingTransactionTable.prototype.handleFormSubmit = function () {
+    ExpandingTransactionTable.prototype.handleFormSubmit = function (event) {
+        event.preventDefault();
         var clearDescription = this.clearDescription;
         $('.transaction', this.container).each(function (index, element) {
             clearDescription(element);
