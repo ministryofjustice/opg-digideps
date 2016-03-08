@@ -234,4 +234,110 @@ class AssetControllerTest extends AbstractTestController
         $this->assertTrue(null === self::fixtures()->getRepo('Asset')->find(self::$asset1->getId()));
     }
     
+    
+    public function testAddAssetOther()
+    {
+        $data = $this->assertPostRequest('/report/upsert-asset', [
+            'report' => self::$report->getId(),
+            'type' => 'other',
+            'description' => 'my asset description',
+            'value' => 123.45,
+            'title' => 'my asset title',
+        ]);
+
+        // assert db contains record
+        $asset = $this->fixtures->getRepo('Asset')->find($data['id']); /* @var $asset AssetOther */
+        $this->assertEquals('my asset description', $asset->getDescription());
+        $this->assertEquals(123.45, $asset->getValue());
+
+        return $asset->getId();
+    }
+
+
+    /**
+     * @depends testAddAssetOther
+     */
+    public function testGetAssetOther($assetId)
+    {
+        $data = $this->assertGetRequest('/report/get-asset/' . $assetId);
+        $this->assertTrue($data['id'] > 0);
+        $this->assertEquals(123.45, $data['value']);
+        $this->assertEquals('my asset title', $data['title']);
+        $this->assertEquals('my asset description', $data['description']);
+        $this->assertEquals('other', $data['type']);
+    }
+
+
+    public function testAddAssetProperty()
+    {
+        $data = $this->assertPostRequest('/report/upsert-asset', [
+            'report' => self::$report->getId(),
+            'type' => 'property',
+            'occupants' => 'only me',
+            'occupantsInfo' => 'myself',
+            'owned' => 'partly',
+            'ownedPercentage' => '51',
+            'isSubjectToEquityRelease' => true,
+            'hasMortgage' => true,
+            'mortgageOutstandingAmount' => 187500,
+            'hasCharges' => true,
+            'isRentedOut' => true,
+            'rentAgreementEndDate' => new \DateTime('2015-12-31'),
+            'rentIncomeMonth' => 1200,
+            'address' => 'london road',
+            'address2' => 'gold house',
+            'county' => 'London',
+            'postcode' => 'SW1 H11',
+            'value'=> 250000.50
+        ]);
+
+        // assert db contains record
+        $asset = $this->fixtures->getRepo('Asset')->find($data['id']); /* @var $asset AssetProperty */
+        $this->assertInstanceOf('AppBundle\Entity\AssetProperty', $asset);
+        $this->assertEquals('only me', $asset->getOccupants());
+
+        return $asset->getId();
+    }
+
+
+    /**
+     * @depends testAddAssetProperty
+     */
+    public function testGetAssetProperty($assetId)
+    {
+        $data = $this->assertGetRequest('/report/get-asset/' . $assetId);
+        $this->assertTrue($data['id'] > 0);
+
+        $this->assertKeysArePresentWithTheFollowingValues([
+            'occupants' => 'only me',
+            'occupants_info' => 'myself',
+            'owned' => 'partly',
+            'owned_percentage' => 51,
+            'is_subject_to_equity_release' => true,
+            'has_mortgage' => true,
+            'mortgage_outstanding_amount' => 187500,
+            'has_charges' => true,
+            'is_rented_out' => true,
+            'rent_agreement_end_date' => '2015-12-31T00:00:00+0000',
+            'rent_income_month' => 1200,
+            'type' => 'property',
+            'type' => 'property',
+            'address' => 'london road',
+            'address2' => 'gold house',
+            'county' => 'London',
+            'postcode' => 'SW1 H11',
+            'value'=> 250000.50
+        ], $data, true);
+    }
+
+    /**
+     * @depends testGetAssetProperty
+     * @depends testGetAssetOther
+     */
+    public function testGetReportWithASsets()
+    {
+        $data = $this->assertGetRequest('/report/get-assets/' . self::$report->getId());
+        $this->assertCount(2, $data);
+    }
+    
 }
