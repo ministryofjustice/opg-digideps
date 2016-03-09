@@ -11,6 +11,8 @@ form:
     addButton:
       label: "Add an asset"
       moreLabel: "Add another asset"
+    next:
+      label: Continue
 
 title:
     label: Select an asset category, such as ‘Property’.
