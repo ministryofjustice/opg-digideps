@@ -33,6 +33,10 @@ class Version061 extends AbstractMigration
         $this->addSql('ALTER TABLE asset ADD address2 VARCHAR(200) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD county VARCHAR(75) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD postcode VARCHAR(10) DEFAULT NULL');
+        
+        // property migration
+        //TODO revise
+        $this->addSql("UPDATE asset SET type='property', occupants=description WHERE title='Property'");
     }
 
     /**

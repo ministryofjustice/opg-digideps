@@ -1,8 +1,8 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Doctrine\ORM\QueryBuilder;
 use JMS\Serializer\Annotation as JMS;
 
@@ -10,16 +10,18 @@ use JMS\Serializer\Annotation as JMS;
  * Asset
  *
  * @ORM\Table(name="asset")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\AssetRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\AssetRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
  *      "property"  = "AppBundle\Entity\AssetProperty", 
  *      "other"     = "AppBundle\Entity\AssetOther"
  * })
+ * @ORM\HasLifecycleCallbacks
  */
-abstract class Asset 
+abstract class Asset
 {
+
     /**
      * @var integer
      * @JMS\Type("integer")
@@ -31,15 +33,6 @@ abstract class Asset
      * @ORM\SequenceGenerator(sequenceName="asset_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-
-    /**
-     * @var string
-     * @JMS\Type("string")
-     * @JMS\Groups({"asset"})
-     * 
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-//    private $description;
 
     /**
      * @var decimal
@@ -79,15 +72,15 @@ abstract class Asset
      */
     public static function factory($type)
     {
-        switch ($type)
-        {
+        switch ($type) {
             case 'property':
                 return new AssetProperty();
             default:
                 return new AssetOther();
         }
     }
-    
+
+
     /**
      * Get id
      *
@@ -97,6 +90,7 @@ abstract class Asset
     {
         return $this->id;
     }
+
 
     /**
      * Set value
@@ -111,6 +105,7 @@ abstract class Asset
         return $this;
     }
 
+
     /**
      * Get value
      *
@@ -120,6 +115,7 @@ abstract class Asset
     {
         return $this->value;
     }
+
 
     /**
      * Set lastedit
@@ -134,6 +130,7 @@ abstract class Asset
         return $this;
     }
 
+
     /**
      * Get lastedit
      *
@@ -144,6 +141,7 @@ abstract class Asset
         return $this->lastedit;
     }
 
+
     /**
      * Set report and set to false the report.noAssetToAdd status
      *
@@ -153,12 +151,13 @@ abstract class Asset
     public function setReport(Report $report = null)
     {
         $this->report = $report;
-        
+
         // reset choice
         $report->setNoAssetToAdd(null);
-        
+
         return $this;
     }
+
 
     /**
      * Get report
@@ -169,17 +168,30 @@ abstract class Asset
     {
         return $this->report;
     }
-    
+
+
     public function getType()
     {
         return $this->type;
     }
+
 
     public function setType($type)
     {
         $this->type = $type;
         return $this;
     }
+
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateLastEdit()
+    {
+        $this->setLastedit(new \DateTime());
+    }
+
 
 
 }

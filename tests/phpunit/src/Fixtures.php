@@ -142,9 +142,9 @@ class Fixtures
      /**
      * @return EntityDir\Asset
      */
-    public function createAsset(EntityDir\Report $report, array $settersMap = [])
+    public function createAsset($type, EntityDir\Report $report, array $settersMap = [])
     {
-        $asset = new EntityDir\Asset();
+        $asset = EntityDir\Asset::factory($type);
         $asset->setReport($report);
         $asset->setTitle('title'.time());
         
