@@ -37,7 +37,7 @@ USER app
 ENV  HOME /app
 #do we still need the post-install-cmd
 RUN  composer run-script post-install-cmd --no-interaction
-RUN  npm run build
+RUN  NODE_ENV=production gulp
 
 # cleanup
 RUN  rm /app/app/config/parameters.yml
