@@ -19,6 +19,10 @@ export default class MoneyTransfer extends Component {
         this.props.deleteTransfer(this.props.transfer);
     }
 
+    setActiveTransfer = () => {
+        this.props.setActiveTransfer(this.props.transfer);
+    }
+
     update(key, value) {
         const transfer = Object.assign(this.props.transfer);
         transfer[key] = value;
@@ -36,15 +40,25 @@ export default class MoneyTransfer extends Component {
             completed = false;
         }
 
+        let className = 'transfer';
+
+        if (this.props.activeTransfer !== null) {
+            if (this.props.activeTransfer.id !== this.props.transfer.id) {
+                className += ' inactive';
+            } else {
+                className += ' active';
+            }
+        }
+
         return (
-            <li className="transfer {this.props.active ? 'active': null }">
+            <li className={className}>
                 <div className="grid-row card-select-row">
                     <div className="column-one-half">
                         <div className="form-label">From:</div>
                         <TransferAccount
                             account={transfer.accountFrom}
                             selectAccount={this.setAccountFrom}
-                            setActiveTransfer={this.props.setActiveTransfer}
+                            setActiveTransfer={this.setActiveTransfer}
                             clearActiveTransfer={this.props.clearActiveTransfer}
                         />
                     </div>
@@ -53,7 +67,7 @@ export default class MoneyTransfer extends Component {
                         <TransferAccount
                             account={transfer.accountTo}
                             selectAccount={this.setAccountTo}
-                            setActiveTransfer={this.props.setActiveTransfer}
+                            setActiveTransfer={this.setActiveTransfer}
                             clearActiveTransfer={this.props.clearActiveTransfer}
                          />
                     </div>
@@ -92,4 +106,5 @@ MoneyTransfer.propTypes = {
     deleteTransfer: React.PropTypes.func,
     setActiveTransfer: React.PropTypes.func,
     clearActiveTransfer: React.PropTypes.func,
+    activeTransfer: React.PropTypes.object,
 };

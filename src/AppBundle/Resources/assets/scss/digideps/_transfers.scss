@@ -1,11 +1,18 @@
 #transfers {
 
     .transfer {
-        margin-bottom: 40px;
         border-bottom: 1px solid $border-colour;
+        margin-bottom: 40px;
+        transition: opacity .25s ease-in-out;
+        -moz-transition: opacity .25s ease-in-out;
+        -webkit-transition: opacity .25s ease-in-out;
 
         &:last-child {
             border-bottom: 0;
+        }
+
+        &.inactive {
+            opacity: .2;
         }
 
         .delete-button {
@@ -28,18 +35,17 @@
         @include inline-block();
         position: absolute;
         background: $white;
-        z-index: 999;
+        z-index: 100;
         width: 90%;
         margin-bottom: 50px;
 
         .card-item {
-           margin: 20px 0 0 0;
+            margin: 20px 0 0;
 
-           &:first-child {
-               margin-top: 0;
-           }
-
-       }
+            &:first-child {
+                margin-top: 0;
+            }
+        }
 
     }
 
@@ -48,7 +54,7 @@
 
         &:hover {
             background-color: $focus-colour;
-            color: #000;
+            color: $absBlack;
         }
 
         &.blank {

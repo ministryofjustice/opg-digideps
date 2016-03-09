@@ -12,8 +12,6 @@ class MoneyTransfers extends Component {
     }
 
     renderTransfers = (transfer, index) => {
-        const active = (transfer === this.props.activeTransfer);
-
         return (<MoneyTransfer
           transfer={transfer}
           key={index}
@@ -22,7 +20,7 @@ class MoneyTransfers extends Component {
           deleteTransfer={this.props.deleteTransfer}
           setActiveTransfer={this.props.setActiveTransfer}
           clearActiveTransfer={this.props.clearActiveTransfer}
-          active={active}
+          activeTransfer={this.props.activeTransfer}
         />);
     }
 
@@ -41,7 +39,7 @@ MoneyTransfers.propTypes = {
     createTransfer: React.PropTypes.func,
     updateTransfer: React.PropTypes.func,
     deleteTransfer: React.PropTypes.func,
-    activeTransfer: React.PropTypes.bool,
+    activeTransfer: React.PropTypes.object,
     setActiveTransfer: React.PropTypes.func,
     clearActiveTransfer: React.PropTypes.func,
 };

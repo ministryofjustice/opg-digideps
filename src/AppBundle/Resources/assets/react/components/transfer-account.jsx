@@ -17,6 +17,7 @@ class TransferAccount extends Component {
             open: true,
             selectedAccount: this.state.selectedAccount,
         });
+        this.props.setActiveTransfer();
     }
 
     selectAccount = (account) => {
@@ -25,6 +26,7 @@ class TransferAccount extends Component {
         });
 
         this.props.selectAccount(account);
+        this.props.clearActiveTransfer();
     }
 
     render() {
