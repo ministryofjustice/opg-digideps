@@ -19,8 +19,6 @@ class TransfersController extends AbstractController
     /**
      * @Route("/report/{reportId}/transfers/edit", name="transfers")
      * @param integer $reportId
-     * @Template()
-     * 
      * @return array
      */
     public function transfersAction($reportId)
@@ -30,10 +28,17 @@ class TransfersController extends AbstractController
             throw new \RuntimeException("Report already submitted and not editable.");
         }
 
-        return [
+        if (count($report->getAccounts()) < 2) {
+            return $this->render('AppBundle:Transfers:transfers_unhappy.html.twig',[
+                'report' => $report,
+                'subsection' => 'transfers'
+            ]);
+        }
+        
+        return $this->render('AppBundle:Transfers:transfers.html.twig',[
             'report' => $report,
             'subsection' => 'transfers'
-        ];
+        ]);
     }
 
     /**

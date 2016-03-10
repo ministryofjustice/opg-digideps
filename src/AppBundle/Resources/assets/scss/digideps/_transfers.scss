@@ -79,3 +79,22 @@
 #section-moving-money {
     display: none;
 }
+
+.grey-nav-block {
+    @extend %contain-floats;
+    background: $grey-3;
+    
+    > div {
+        width: 50%;
+        float: left;
+    }
+    
+    .heading-medium {
+        margin: 20px 0 20px 0;
+    }
+    
+    .button {
+        margin: 13px 0 0 0;
+    }
+    
+}

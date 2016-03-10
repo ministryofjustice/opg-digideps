@@ -13,21 +13,22 @@
 
     {% block maincontent %}
 
+        <h2 class="heading heading-medium">You don't need to complete this section</h2>
+
         <p class="page-section-description}}">
-            {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
+            As {{ report.client.firstname }} has only one account, you don't have to complete this section. Does 
+            {{ report.client.firstname }} has other current accounts? If so, go back to Bank accounts and add
+            these accounts there
         </p>
-
-        <div id="transfers-container"/>Loading...</div>
-        <script>
-            $(document).ready(function () {
-                new GOVUK.StickyHeader('#page-section-title-wrapper');
-            });
-
-            var opg = opg || {};
-            opg.accounts = {{ report.accounts | serialize | raw }};
-
-        </script>
-        <script src="{{ 'javascripts/transfers.js' | assetUrl }}"></script>
+        
+        <div class="grey-nav-block">
+            <div>
+                <h3 class="heading heading-medium">More than one account?</h3>
+            </div>
+            <div>
+                <a href="#" class="button btn-big">Add another account</a>
+            </div>
+        </div>
 
     {% endblock %}
 
