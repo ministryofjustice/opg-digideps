@@ -78,7 +78,8 @@ class AssetController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         // [.. change form and template (or forward) depending on the asset title ]
-        $asset = EntityDir\Asset::factory($title);
+        //$asset = EntityDir\Asset::factory($title);
+        $asset = EntityDir\Asset::factory('other);
         $asset->setTitle($title);
         $form = $this->createForm(new FormDir\AssetTypeOther(), $asset, [
             'action' => $this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title' => $title])
