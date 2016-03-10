@@ -2,21 +2,24 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- */
 class AssetOther extends Asset
 {
-
-    /**
-     * @var string
+     /**
+     * @Assert\NotBlank(message="asset.title.notBlank", groups={"title_only"})
+     * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage", groups={"title_only"})
+     * @JMS\Type("string")
      */
     private $title;
 
     /**
-     * @var string
+     * 
+     * @Assert\NotBlank(message="asset.description.notBlank")
+     * @Assert\Length(min=3, minMessage="asset.description.length")
+     * 
+     * @JMS\Type("string")
      */
     private $description;
 
@@ -25,6 +28,12 @@ class AssetOther extends Asset
      */
     private $valuationDate;
 
+    /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $type = 'other';
+    
     /**
      * Set description
      *
@@ -93,5 +102,9 @@ class AssetOther extends Asset
     {
         return $this->title;
     }
-
+    
+    public function getType()
+    {
+        return $this->type;
+    }
 }

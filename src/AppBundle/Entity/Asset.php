@@ -4,24 +4,31 @@ namespace AppBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
-class Asset
+abstract class Asset
 {
     use Traits\HasReportTrait;
+    
+    abstract public function getType();
+    
+     /**
+     * @param string $type
+     * @return Asset instance
+     */
+    public static function factory($type)
+    {
+        switch (strtolower($type)) {
+            case 'property':
+                return new AssetProperty();
+            default:
+                return new AssetOther();
+        }
+    }
     
     /**
      *
      * @JMS\Type("integer")
      */
     private $id;
-    
-    /**
-     * 
-     * @Assert\NotBlank(message="asset.description.notBlank")
-     * @Assert\Length(min=3, minMessage="asset.description.length")
-     * 
-     * @JMS\Type("string")
-     */
-    private $description;
     
     /**
      *
@@ -31,14 +38,6 @@ class Asset
      * @JMS\Type("string")
      */
     private $value;
-    
-    /**
-     *
-     * @Assert\NotBlank(message="asset.title.notBlank", groups={"title_only"})
-     * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage", groups={"title_only"})
-     * @JMS\Type("string")
-     */
-    private $title;
     
     /**
      * @Assert\Date(message="asset.date.date")
@@ -57,17 +56,6 @@ class Asset
         return $this;
     }
     
-    public function getDescription()
-    {
-        return $this->description;
-    }
-    
-    public function setDescription($description)
-    {
-        $this->description = $description;
-        return $this;
-    }
-    
     public function setValue($value)
     {
         $this->value = $value;
@@ -76,17 +64,6 @@ class Asset
     public function getValue()
     {
         return $this->value;
-    }
-    
-    public function getTitle()
-    {
-        return $this->title;
-    }
-    
-    public function setTitle($title)
-    {
-        $this->title = $title;
-        return $this;
     }
     
     public function setValuationDate($valuationDate)

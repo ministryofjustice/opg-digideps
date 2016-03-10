@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
  * 
  * note: title is hidden (filled from the controller based on AssetTypeTitle form)
  */
-class AssetType extends AbstractType
+class AssetTypeOther extends AbstractType
 {
     
     public function buildForm(FormBuilderInterface $builder, array $options) 

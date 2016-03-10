@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class AssetProperty extends Asset
 {
@@ -14,6 +14,12 @@ class AssetProperty extends Asset
 
     use Traits\AddressTrait;
 
+     /**
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $type = 'property';
+    
     /**
      * @var string
      * 
@@ -232,5 +238,18 @@ class AssetProperty extends Asset
         $this->rentIncomeMonth = $rentIncomeMonth;
         return $this;
     }
+    
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
+    }
+
+
 
 }
