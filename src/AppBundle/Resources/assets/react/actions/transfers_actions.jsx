@@ -19,6 +19,7 @@ export const SAVE_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
 export const ADD_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
 export const UPDATE_TRANSFER = 'UPDATE_TRANSFER';
 export const DELETE_TRANSFER = 'DELETE_TRANSFER';
+export const NO_TRANSFERS = 'NO_TRANSFERS';
 
 
 export function getTransfers(reportId) {
@@ -105,5 +106,16 @@ export function deleteTransfer(transfer) {
             type: DELETE_TRANSFER,
             payload: transfer,
         });
+    };
+}
+
+export function hasNoTransfers(reportId, noTransfers) {
+    const url = `/report/${reportId}/notransfers`;
+
+    axios.put(url, { noTransfers });
+
+    return {
+        type: NO_TRANSFERS,
+        payload: noTransfers,
     };
 }

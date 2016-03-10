@@ -1,4 +1,3 @@
-
 'use strict';
 
 var gulp = require('gulp'),
@@ -15,7 +14,6 @@ var browserify = require('browserify');
 var babelify = require('babelify');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
-var envify = require('envify/custom');
 
 var now = new Date().getTime();
 
@@ -33,13 +31,20 @@ var config = {
     webAssets: 'web/assets/' + now
 };
 
-gulp.task('clean', function () {
+gulp.task('clean', () => {
     del(['web/assets']);
 });
 
-gulp.task('sass', ['lint.sass', 'sass.application', 'sass.application-ie7', 'sass.application-ie8', 'sass.application-print','sass.images','sass.fonts']);
+gulp.task('sass', [
+    'lint.sass',
+    'sass.application',
+    'sass.application-ie7',
+    'sass.application-ie8',
+    'sass.application-print',
+    'sass.images',
+    'sass.fonts']);
 
-gulp.task('sass.application', function () {
+gulp.task('sass.application', () => {
 
     return gulp.src(config.sassSrc + '/application.scss')
         .pipe(sass(config.sass))
@@ -48,7 +53,7 @@ gulp.task('sass.application', function () {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
-gulp.task('sass.application-ie7', function () {
+gulp.task('sass.application-ie7', () => {
 
     return gulp.src(config.sassSrc + '/application-ie7.scss')
         .pipe(sass(config.sass))
@@ -57,7 +62,7 @@ gulp.task('sass.application-ie7', function () {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
-gulp.task('sass.application-ie8', function () {
+gulp.task('sass.application-ie8', () => {
 
     return gulp.src(config.sassSrc + '/application-ie8.scss')
         .pipe(sass(config.sass))
@@ -65,7 +70,7 @@ gulp.task('sass.application-ie8', function () {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
-gulp.task('sass.application-print', function () {
+gulp.task('sass.application-print', () => {
 
     return gulp.src(config.sassSrc + '/application-print.scss')
         .pipe(sass(config.sass))
@@ -74,7 +79,7 @@ gulp.task('sass.application-print', function () {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
-gulp.task('sass.images', function() {
+gulp.task('sass.images', () => {
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
 
@@ -84,18 +89,20 @@ gulp.task('sass.images', function() {
     gulp.src(config.sassSrc + '/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
 });
-gulp.task('sass.fonts', function() {
-    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*').pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
-    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css').pipe(gulp.dest(config.webAssets + '/stylesheets'));
+gulp.task('sass.fonts', () => {
+    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts/*')
+        .pipe(gulp.dest(config.webAssets + '/stylesheets/fonts'));
 
+    gulp.src('node_modules/govuk_template_mustache/assets/stylesheets/fonts-ie8.css')
+        .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
-gulp.task('images', function () {
+gulp.task('images', () => {
     gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
     gulp.src('./src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
 });
 
-gulp.task('js.prod', ['lint.js'], function () {
+gulp.task('js.prod', ['lint.js'], () => {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
             './node_modules/govuk_frontend_toolkit/javascripts/govuk/selection-buttons.js',
@@ -132,14 +139,14 @@ gulp.task('lint.js', function () {
 });
 
 // Rerun the task when a file changes
-gulp.task('watch', ['clean','lint.js','sass','images','js','js.ie','vendor','react-debug'], function() {
-    gulp.watch(config.sassSrc + '/**/*',{ interval: 1000 }, ['sass']);
+gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor', 'react-debug'], () => {
+    gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
-    gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js','js.debug']);
-    gulp.watch(config.jsSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
+    gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
+    gulp.watch(config.reactSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
 });
 
-gulp.task('react-debug', function () {
+gulp.task('react-debug', () => {
     browserify({
         entries: config.reactSrc + '/transfers.jsx',
         extensions: ['.jsx'],
@@ -151,7 +158,7 @@ gulp.task('react-debug', function () {
     .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-gulp.task('react', function () {
+gulp.task('react', () => {
     browserify({
         entries: config.reactSrc + '/transfers.jsx',
         extensions: ['.jsx'],
@@ -159,11 +166,11 @@ gulp.task('react', function () {
     })
     .transform(babelify)
     .bundle()
-    .pipe(source('transfers.js')) 
+    .pipe(source('transfers.js'))
     .pipe(buffer())
     .pipe(uglify())
     .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-gulp.task('default', ['clean', 'lint.js', 'sass','images','js.prod','js.ie','vendor','react']);
-gulp.task('dev',  ['watch']);
+gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor', 'react']);
+gulp.task('dev', ['watch']);

@@ -104,3 +104,15 @@
     }
 
 }
+
+#no-transfers {
+    border-top: 1px solid $border-colour;
+
+    .heading-small {
+        margin-top: 38px;
+    }
+
+    input:focus {
+        outline: none;
+    }
+}

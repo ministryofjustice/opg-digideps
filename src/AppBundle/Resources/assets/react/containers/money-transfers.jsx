@@ -4,6 +4,7 @@ import { createTransfer, updateTransfer, deleteTransfer, getTransfers } from '..
 import { setActiveTransfer, clearActiveTransfer } from '../actions/active_transfer_actions';
 import { bindActionCreators } from 'redux';
 import MoneyTransfer from '../components/money-transfer';
+import NoTransfers from '../components/no-transfers';
 
 class MoneyTransfers extends Component {
 
@@ -26,9 +27,13 @@ class MoneyTransfers extends Component {
 
     render() {
         return (
-            <ul id="transfers" className="card-list" data-count={this.props.transfers.length}>
-              {this.props.transfers.map(this.renderTransfers)}
-            </ul>
+            <div>
+                <ul id="transfers" className="card-list" data-count={this.props.transfers.length}>
+                    {this.props.transfers.map(this.renderTransfers)}
+                </ul>
+
+                { (this.props.transfers.length) === 1 ? <NoTransfers /> : null }
+            </div>
         );
     }
 }

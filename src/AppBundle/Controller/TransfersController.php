@@ -34,7 +34,7 @@ class TransfersController extends AbstractController
                 'subsection' => 'transfers'
             ]);
         }
-        
+
         return $this->render('AppBundle:Transfers:transfers.html.twig',[
             'report' => $report,
             'subsection' => 'transfers'
@@ -46,7 +46,7 @@ class TransfersController extends AbstractController
      * @Method({"GET"})
      * @param Request $request
      * @param integer $reportId
-     * 
+     *
      * @return JsonResponse
      */
     public function transfersGetJson(Request $request, $reportId)
@@ -56,7 +56,7 @@ class TransfersController extends AbstractController
         } catch (\Exception $e) {
            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
-        
+
         return new JsonResponse(['success' => true, 'transfers' => $data['money_transfers']]);
     }
 
@@ -65,7 +65,7 @@ class TransfersController extends AbstractController
      * @Method({"POST"})
      * @param Request $request
      * @param integer $reportId
-     * 
+     *
      * @return JsonResponse
      */
     public function transfersSaveJson(Request $request, $reportId)
@@ -76,11 +76,10 @@ class TransfersController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
-        
+
 
         return new JsonResponse(['transfer' => $transferUpdated]);
     }
-
 
     /**
      * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_update_json")
@@ -117,7 +116,20 @@ class TransfersController extends AbstractController
         } catch (\Exception $e) {
             return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
-        
+
         return new JsonResponse($ret);
     }
+
+    /**
+     * @Route("/report/{reportId}/notransfers", name="transfers_update_none")
+     * @Method({"PUT"})
+     * @param Request $request
+     * @param integer $reportId
+     * return JsonResponse
+     */
+     public function transfersUpdateNone(Request $request, $reportId)
+     {
+         $data = json_decode($request->getContent(), true)['noTransfers'];
+         return new JsonResponse(['noTransfers' => $data]);
+     }
 }
