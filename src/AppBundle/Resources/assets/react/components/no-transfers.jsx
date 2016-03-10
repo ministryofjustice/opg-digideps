@@ -4,17 +4,18 @@ import { bindActionCreators } from 'redux';
 import { hasNoTransfers } from '../actions/transfers_actions';
 
 
-class NoTranfers extends Component {
+class NoTransfers extends Component {
 
     onChange = () => {
-        this.props.hasNoTransfers(1, !this.props.noTransfers);
+        this.props.hasNoTransfers(this.props.report.id, !this.props.report.noTransfers);
     }
 
     render() {
         let labelClass = 'block-label';
-        if (this.props.noTransfers) {
+        if (this.props.report.noTransfers) {
             labelClass += ' selected';
         }
+        const report = this.props.report;
 
         return (
             <div id="no-transfers">
@@ -27,11 +28,11 @@ class NoTranfers extends Component {
                             type="checkbox"
                             id="report_noTransfersToAdd"
                             name="report[noTransfersToAdd]"
-                            checked={this.props.noTransfers}
+                            checked={report.noTransfers}
                             onChange={this.onChange}
                         />
-                        Tick this box if you didn't move any money between [FNAME]’s accounts
-                        between 1 October 2014 and 1 October 2015
+                        Tick this box if you didn't move any money between { report.client.firstname }’s accounts
+                        between { report.startDate } and { report.endDate }
                     </label>
 
                 </div>
@@ -40,17 +41,17 @@ class NoTranfers extends Component {
     }
 }
 
-NoTranfers.propTypes = {
-    noTransfers: React.PropTypes.bool,
+NoTransfers.propTypes = {
+    report: React.PropTypes.object,
     hasNoTransfers: React.PropTypes.func,
 };
 
-function mapStateToProps({ noTransfers }) {
-    return { noTransfers };
+function mapStateToProps({ report }) {
+    return { report };
 }
 
 function mapDispatchToProps(dispatch) {
     return bindActionCreators({ hasNoTransfers }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NoTranfers);
+export default connect(mapStateToProps, mapDispatchToProps)(NoTransfers);

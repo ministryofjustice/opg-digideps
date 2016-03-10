@@ -9,7 +9,7 @@ import NoTransfers from '../components/no-transfers';
 class MoneyTransfers extends Component {
 
     componentWillMount() {
-        this.props.getTransfers(1);
+        this.props.getTransfers(this.props.report.id);
     }
 
     renderTransfers = (transfer, index) => {
@@ -32,7 +32,10 @@ class MoneyTransfers extends Component {
                     {this.props.transfers.map(this.renderTransfers)}
                 </ul>
 
-                { (this.props.transfers.length) === 1 ? <NoTransfers /> : null }
+                { (this.props.transfers.length) === 1 ?
+                    <NoTransfers />
+                    :
+                    null }
             </div>
         );
     }
@@ -47,10 +50,11 @@ MoneyTransfers.propTypes = {
     activeTransfer: React.PropTypes.object,
     setActiveTransfer: React.PropTypes.func,
     clearActiveTransfer: React.PropTypes.func,
+    report: React.PropTypes.object,
 };
 
-function mapStateToProps({ transfers, activeTransfer }) {
-    return { transfers, activeTransfer };
+function mapStateToProps({ transfers, activeTransfer, report }) {
+    return { transfers, activeTransfer, report };
 }
 
 function mapDispatchToProps(dispatch) {

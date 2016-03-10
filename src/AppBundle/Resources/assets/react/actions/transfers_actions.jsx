@@ -32,7 +32,7 @@ export function getTransfers(reportId) {
 }
 
 function save(transfer) {
-    const url = `/report/1/transfers/${transfer.id}`;
+    const url = `/report/${transfer.reportId}/transfers/${transfer.id}`;
     const request = axios.put(url, { transfer });
     return {
         types: [SAVE_TRANSFER, SAVE_TRANSFER_ERROR],
@@ -41,7 +41,7 @@ function save(transfer) {
 }
 
 function add(transfer) {
-    const url = '/report/1/transfers';
+    const url = `/report/${transfer.reportId}/transfers`;
     const request = axios.post(url, { transfer });
     return {
         types: [ADD_TRANSFER, SAVE_TRANSFER_ERROR],

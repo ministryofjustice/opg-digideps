@@ -45,7 +45,6 @@ function updateNewWithRealId(state, transfer) {
     let clonedState = state.slice(0);
     for (let pos = 0; pos < clonedState.length; pos += 1) {
         if (clonedState[pos].waitingForId) {
-            console.log('replace index:', pos);
             clonedState[pos].id = transfer.id;
             clonedState[pos].waitingForId = false;
             break;
