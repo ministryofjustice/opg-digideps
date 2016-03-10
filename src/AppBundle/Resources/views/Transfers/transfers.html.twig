@@ -27,7 +27,7 @@
             opg.accounts = {{ report.accounts | serialize | raw }};
             opg.report = {
                 id: {{report.id}},
-                noTransfers: true,
+                noTransfers: false,
                 startDate: '{{ report.startDate | date("j M Y") }}',
                 endDate: '{{ report.endDate | date("j M Y") }}',
                 client: {{report.client | serialize | raw }}

@@ -19,7 +19,7 @@
     "browserify": "*",
     "chai": "*",
     "del": "^2.0.2",
-    "eslint": "^2.2.0",
+    "eslint": "~2.2.0",
     "eslint-plugin-react": "^4.0.0",
     "govuk-elements-sass": "^1.1.2",
     "govuk_template_mustache": "^0.16.1",
@@ -36,6 +36,7 @@
     "jquery": "^1.11.*",
     "mocha": "*",
     "react": "^0.14.7",
+    "react-addons-update": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-redux": "^4.0.0",
     "redux": "^3.0.4",
@@ -43,8 +44,5 @@
     "sinon": "*",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
-  },
-  "dependencies": {
-    "envify": "^3.4.0"
   }
 }

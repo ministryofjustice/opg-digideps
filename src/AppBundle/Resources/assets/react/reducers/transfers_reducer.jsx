@@ -105,7 +105,6 @@ export default function(state = [], action) {
         return deleteItem(state, action.payload.id);
     case GET_TRANSFERS_ERROR:
     case SAVE_TRANSFER_ERROR:
-        console.log('Error updating');
         return state;
     default:
       // Nothing

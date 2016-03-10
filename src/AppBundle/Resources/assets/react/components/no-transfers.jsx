@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { hasNoTransfers } from '../actions/transfers_actions';
+import { hasNoTransfers } from '../actions/report_actions';
 
 
 class NoTransfers extends Component {
