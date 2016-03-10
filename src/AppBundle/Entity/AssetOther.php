@@ -24,6 +24,7 @@ class AssetOther extends Asset
     private $description;
 
     /**
+     * @JMS\Type("DateTime")
      * @var \Date
      */
     private $valuationDate;

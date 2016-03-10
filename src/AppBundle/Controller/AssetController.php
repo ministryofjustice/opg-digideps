@@ -116,7 +116,7 @@ class AssetController extends AbstractController
         if (!$report->hasAssetWithId($assetId)) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
+        $asset = $this->get('restClient')->get("report/{$reportId}/asset/{$assetId}", 'AssetOther');
         $form = $this->createForm(new FormDir\AssetTypeOther(), $asset);
 
         $form->handleRequest($request);
@@ -124,7 +124,7 @@ class AssetController extends AbstractController
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('restClient')->put('report/asset', $asset);
+            $this->get('restClient')->put("report/{$reportId}/asset/{$assetId}", $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -148,7 +148,7 @@ class AssetController extends AbstractController
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
         if ($report->hasAssetWithId($id)) {
-            $restClient->delete("/report/asset/{$id}");
+            $restClient->delete("/report/{$reportId}/asset/{$id}");
         }
         
         return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
