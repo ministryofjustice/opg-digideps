@@ -83,18 +83,24 @@
 .grey-nav-block {
     @extend %contain-floats;
     background: $grey-3;
-    
+    margin-top: 60px;
+
     > div {
+        box-sizing: border-box;
         width: 50%;
         float: left;
+        padding: 0 20px 0 20px;
     }
-    
+
+
+
     .heading-medium {
         margin: 20px 0 20px 0;
     }
-    
+
     .button {
         margin: 13px 0 0 0;
+        float: right;
     }
-    
+
 }
