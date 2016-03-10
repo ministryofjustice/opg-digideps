@@ -1,8 +1,6 @@
-/* global opg: true */
-
-export function appendNewTransfer(transfers) {
+export function appendNewTransfer(transfers, reportId) {
     return [...transfers, {
-        reportId: opg.report.id,
+        reportId: reportId,
         id: null,
         accountFrom: null,
         accountTo: null,

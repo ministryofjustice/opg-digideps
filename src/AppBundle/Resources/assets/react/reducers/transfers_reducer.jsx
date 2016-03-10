@@ -67,14 +67,14 @@ function update(state, transfer) {
     }
 
     if (!containsIncompleteTransfer(newState) || newState.length === 0) {
-        return appendNewTransfer(newState);
+        return appendNewTransfer(newState, transfer.reportId);
     }
 
     return newState;
 }
-function updateAll(state, transfers) {
+function updateAll(state, transfers, reportId) {
     if (!containsIncompleteTransfer(transfers) || transfers.length === 0) {
-        return appendNewTransfer(transfers);
+        return appendNewTransfer(transfers, reportId);
     }
 
     return transfers;
@@ -96,7 +96,7 @@ export default function(state = [], action) {
     case GET_TRANSFERS:
         if (action.payload.hasOwnProperty('data')
          && action.payload.data.hasOwnProperty('transfers')) {
-            return updateAll(state, action.payload.data.transfers);
+            return updateAll(state, action.payload.data.transfers, action.reportId);
         }
         break;
     case UPDATE_TRANSFER:
