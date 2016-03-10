@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import AccountCard from './account-card';
-import AccountList from '../containers/account-list';
+import AccountList from '../components/account-list';
 
 class TransferAccount extends Component {
 

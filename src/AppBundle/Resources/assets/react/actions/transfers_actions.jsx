@@ -20,6 +20,7 @@ export const ADD_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
 export const UPDATE_TRANSFER = 'UPDATE_TRANSFER';
 export const DELETE_TRANSFER = 'DELETE_TRANSFER';
 export const NO_TRANSFERS = 'NO_TRANSFERS';
+export const SAVED_TRANSFER = 'SAVED_TRANSFER';
 
 
 export function getTransfers(reportId) {
@@ -35,7 +36,7 @@ function save(transfer) {
     const url = `/report/${transfer.reportId}/transfers/${transfer.id}`;
     const request = axios.put(url, { transfer });
     return {
-        types: [SAVE_TRANSFER, SAVE_TRANSFER_ERROR],
+        types: [SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
         promise: request
     };
 }
@@ -44,7 +45,7 @@ function add(transfer) {
     const url = `/report/${transfer.reportId}/transfers`;
     const request = axios.post(url, { transfer });
     return {
-        types: [ADD_TRANSFER, SAVE_TRANSFER_ERROR],
+        types: [ADD_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
         promise: request
     };
 }
