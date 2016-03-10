@@ -133,6 +133,7 @@ class AssetController extends RestController
 
         if ($asset instanceof EntityDir\AssetOther) {
             $this->hydrateEntityWithArrayData($asset, $data, [
+                'title' => 'setTitle',
                 'description' => 'setDescription',
             ]);
 

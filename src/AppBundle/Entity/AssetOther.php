@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * @ORM\Entity
@@ -12,28 +13,29 @@ class AssetOther extends Asset
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"asset"})
      * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
     private $title;
 
     /**
      * @var string
-     *
+     * @JMS\Groups({"asset"})
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description;
 
     /**
      * @var \Date
-     *
+     * @JMS\Type("DateTime")
+     * @JMS\Groups({"asset"})
      * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
     private $valuationDate;
 
     /**
      * Set description
-     *
+     * 
      * @param string $description
      * @return Asset
      */

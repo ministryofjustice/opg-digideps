@@ -19,7 +19,7 @@ class AssetProperty extends Asset
     
     /**
      * @var string
-     * 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="occupants", type="string", length=150)
      */
@@ -27,7 +27,7 @@ class AssetProperty extends Asset
     
     /**
      * @var string
-     * 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="occupants_info", type="text", nullable=true)
      */
@@ -35,7 +35,7 @@ class AssetProperty extends Asset
     
     /**
      * @var string fully/partly
-     * 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("string")
      * @ORM\Column(name="owned", type="string", length=15)
      */
@@ -43,14 +43,14 @@ class AssetProperty extends Asset
     
     /**
      * @var float 0-100
-     * 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("float")
      * @ORM\Column(name="owned_percentage", type="decimal", precision=14, scale=2)
      */
     private $ownedPercentage;
     
     /**
-     * @var 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="is_subject_equity_rel", type="boolean")
      */
@@ -58,6 +58,7 @@ class AssetProperty extends Asset
     
     /**
      * @var boolean
+     * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="has_mortgage", type="boolean")
      */
@@ -66,6 +67,7 @@ class AssetProperty extends Asset
     
     /**
      * @var boolean
+     * @JMS\Groups({"asset"})
      * @JMS\Type("integer")
      * @ORM\Column(name="mortgage_outstanding", type="integer")
      */
@@ -73,7 +75,7 @@ class AssetProperty extends Asset
     
      /**
      * @var boolean
-      * 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="has_charges", type="boolean")
      */
@@ -81,7 +83,7 @@ class AssetProperty extends Asset
     
     /**
      * @var boolean
-     * 
+     * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="is_rented_out", type="boolean")
      */
@@ -89,6 +91,7 @@ class AssetProperty extends Asset
     
     /**
      * @var \DateTime
+     * @JMS\Groups({"asset"})
      * @JMS\Type("DateTime")
      * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
      */
@@ -96,6 +99,7 @@ class AssetProperty extends Asset
     
     /**
      * @var float
+     * @JMS\Groups({"asset"})
      * @JMS\Type("float")
      * @ORM\Column(name="rent_income_month", type="decimal", precision=14, scale=2, nullable=true)
      */
