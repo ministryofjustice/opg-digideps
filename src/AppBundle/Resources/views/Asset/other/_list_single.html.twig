@@ -1,0 +1,17 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+<div class="report-list__item-fields-row">
+    <dt class="report-list__item-fields-term">{{ 'value.label' | trans }}</dt>
+    <dd class="report-list__item-fields-description">£{{ asset.value | money_format }}</dd>
+</div>
+<div class="report-list__item-fields-row">
+    <dt class="report-list__item-fields-term report-list__item-fields-term--block">{{ 'description.label' | trans }}</dt>
+    <dd class="report-list__item-fields-description report-list__item-fields-description--block">{{ asset.description }}</dd>
+</div>
+{% if asset.valuationDate is not null %}
+    <div class="report-list__item-fields-row">
+        <dt class="report-list__item-fields-term">{{ 'valuationDate.label' | trans }}</dt>
+        <dd class="report-list__item-fields-description">{{ asset.valuationDate | date("d F Y") }}</dd>
+    </div>
+{% endif %}

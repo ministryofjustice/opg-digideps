@@ -21,14 +21,9 @@
         
             {{ form_errors_list(form) }}
         
-            {{ form_input(form.value, 'value', {
-                'inputPrefix' : '£',
-                'inputClass' : 'form-control__number'
-            } ) }}
-    
-            {{ form_input(form.description, 'description') }}
-    
-            {{ form_known_date(form.valuationDate, 'valuationDate') }}
+            {% include 'AppBundle:Asset/' ~ 'other' ~ ':_edit_fields.html.twig' with {
+                'form': form,
+             } %}
     
             {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
                 transDomain: translationDomain,

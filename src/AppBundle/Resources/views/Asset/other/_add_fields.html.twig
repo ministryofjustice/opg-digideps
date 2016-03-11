@@ -1,0 +1,15 @@
+{% set translationDomain = "report-assets" %}
+{% trans_default_domain translationDomain %}
+
+{{ form_input(form.value, 'value', {
+          'inputPrefix' : '£',
+          'inputClass' : 'form-control__number'
+          } ) }}
+{{ form_input(form.description, 'description', {inputClass: 'expanding'}) }}
+{{ form_known_date(form.valuationDate, 'valuationDate') }}
+
+{% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+            transDomain: translationDomain,
+            section: 'asset',
+            showDelete: false
+        } %}
