@@ -18,9 +18,17 @@
 
         {{ form_errors_list(form) }}
 
-        {% include 'AppBundle:Asset/' ~ 'other' ~ ':_add_fields.html.twig' with {
+        {% include 'AppBundle:Asset/' ~ asset.type ~ ':_add_fields.html.twig' with {
            'form': form,
         } %}
+        
+        
+        {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+            transDomain: translationDomain,
+            section: 'asset',
+            showDelete: false
+        } %}
+
         
         {{ form_end(form) }}
         

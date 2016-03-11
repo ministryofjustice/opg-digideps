@@ -81,7 +81,7 @@ class Report
     private $contacts;
     
     /**
-     * @JMS\Type("array<AppBundle\Entity\AssetOther>")
+     * @JMS\Type("array<AppBundle\Entity\Asset>")
      * @var Asset[]
      */
     private $assets;

@@ -7,9 +7,3 @@
           } ) }}
 {{ form_input(form.description, 'description', {inputClass: 'expanding'}) }}
 {{ form_known_date(form.valuationDate, 'valuationDate') }}
-
-{% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
-            transDomain: translationDomain,
-            section: 'asset',
-            showDelete: false
-        } %}

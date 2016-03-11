@@ -1,10 +1,10 @@
 {% set translationDomain = "report-assets" %}
 {% trans_default_domain translationDomain %}
-    
-    {{ form_input(form.value, 'value', {
-                'inputPrefix' : '£',
-                'inputClass' : 'form-control__number'
-            } ) }}
+
+{{ form_input(form.value, 'value', {
+            'inputPrefix' : '£',
+            'inputClass' : 'form-control__number'
+        } ) }}
 
 {{ form_input(form.description, 'description') }}
 

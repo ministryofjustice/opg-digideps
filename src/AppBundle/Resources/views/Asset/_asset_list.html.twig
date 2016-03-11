@@ -5,19 +5,9 @@
     <ul class="behat-region-list-assets report-list report-list--assets">
         {% for asset in assets %}
             <li id="asset-edit-{{ asset.id }}" class="report-list__item">
-                    
-                <div class="report-list__item-header">
-                    <h3>{{ asset.title }}</h3>
-                      <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}"
-                         class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-{{ asset.description | behat_namify }}">{{ 'editLink'| trans }}</a>
-                </div>
-                <dl class="report-list__item-fields">
-                    {% include 'AppBundle:Asset/' ~ 'other' ~ ':_list_single.html.twig' with {
+                {% include 'AppBundle:Asset/' ~ asset.type ~ ':_list_single.html.twig' with {
                         'asset': asset,
                      } %}
-                    
-                </dl>
-                
             </li>
         {% endfor %}
     </ul>

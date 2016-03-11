@@ -7,18 +7,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class AssetProperty extends Asset
 {
-
     const OCCUPANTS_OTHER = 'other';
     const OWNED_FULLY = 'fully';
     const OWNED_PARTLY = 'partly';
 
-    //use Traits\AddressTrait;
-
-     /**
-     * @JMS\Type("string")
-     * @var string
-     */
-    private $type = 'property';
+    use Traits\AddressTrait;
     
     /**
      * @var string
@@ -26,13 +19,6 @@ class AssetProperty extends Asset
      * @JMS\Type("string")
      */
     private $occupants;
-
-    /**
-     * @var string
-     * 
-     * @JMS\Type("string")
-     */
-    private $occupantsInfo;
 
     /**
      * @var string fully/partly
@@ -98,13 +84,6 @@ class AssetProperty extends Asset
         return $this->occupants;
     }
 
-
-    public function getOccupantsInfo()
-    {
-        return $this->occupantsInfo;
-    }
-
-
     public function getOwned()
     {
         return $this->owned;
@@ -165,14 +144,6 @@ class AssetProperty extends Asset
         return $this;
     }
 
-
-    public function setOccupantsInfo($occupantsInfo)
-    {
-        $this->occupantsInfo = $occupantsInfo;
-        return $this;
-    }
-
-
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
@@ -226,7 +197,7 @@ class AssetProperty extends Asset
     }
 
 
-    public function setRentAgreementEndDate(\DateTime $rentAgreementEndDate)
+    public function setRentAgreementEndDate($rentAgreementEndDate)
     {
         $this->rentAgreementEndDate = $rentAgreementEndDate;
         return $this;
@@ -238,18 +209,10 @@ class AssetProperty extends Asset
         $this->rentIncomeMonth = $rentIncomeMonth;
         return $this;
     }
-    
+
     public function getType()
     {
-        return $this->type;
+        return 'property';
     }
-
-    public function setType($type)
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-
 
 }

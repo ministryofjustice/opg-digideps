@@ -32,7 +32,8 @@ abstract class AbstractAssetType extends AbstractType
     {
         $this->addFields($builder, $options);
 
-        $builder->add('title', 'hidden')
+        $builder
+                ->add('title', 'hidden')
                 ->add('id', 'hidden')
                 ->add('save', 'submit');
     }

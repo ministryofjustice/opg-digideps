@@ -4,11 +4,20 @@ namespace AppBundle\Entity;
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
+/**
+ * @JMS\Discriminator(field = "type", map = {
+ *    "other": "AppBundle\Entity\AssetOther",
+ *    "property": "AppBundle\Entity\AssetProperty"
+ * })
+ */
 abstract class Asset
 {
-    use Traits\HasReportTrait;
+    /**
+     * @JMS\Exclude
+     */
+    protected $type;
     
-    abstract public function getType();
+    use Traits\HasReportTrait;
     
      /**
      * @param string $type
@@ -31,6 +40,13 @@ abstract class Asset
      * @JMS\Type("integer")
      */
     private $id;
+    
+     /**
+     * @Assert\NotBlank(message="asset.title.notBlank", groups={"title_only"})
+     * @Assert\Length(max=100, maxMessage= "asset.title.maxMessage", groups={"title_only"})
+     * @JMS\Type("string")
+     */
+    private $title;
     
     /**
      *
@@ -56,6 +72,31 @@ abstract class Asset
     {
         $this->id = $id;
         return $this;
+    }
+    
+   
+        
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Asset
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
     
     public function setValue($value)
