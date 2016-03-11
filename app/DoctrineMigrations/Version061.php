@@ -17,8 +17,7 @@ class Version061 extends AbstractMigration
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE asset ADD occupants VARCHAR(150) DEFAULT NULL');
-        $this->addSql('ALTER TABLE asset ADD occupants_info TEXT DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD occupants VARCHAR(650) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD owned VARCHAR(15) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD owned_percentage NUMERIC(14, 2) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD is_subject_equity_rel BOOLEAN DEFAULT NULL');
@@ -46,7 +45,6 @@ class Version061 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE asset DROP occupants');
-        $this->addSql('ALTER TABLE asset DROP occupants_info');
         $this->addSql('ALTER TABLE asset DROP owned');
         $this->addSql('ALTER TABLE asset DROP owned_percentage');
         $this->addSql('ALTER TABLE asset DROP is_subject_equity_rel');

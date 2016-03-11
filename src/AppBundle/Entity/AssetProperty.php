@@ -21,17 +21,9 @@ class AssetProperty extends Asset
      * @var string
      * @JMS\Groups({"asset"})
      * @JMS\Type("string")
-     * @ORM\Column(name="occupants", type="string", length=150)
+     * @ORM\Column(name="occupants", type="string", length=550)
      */
     private $occupants;
-    
-    /**
-     * @var string
-     * @JMS\Groups({"asset"})
-     * @JMS\Type("string")
-     * @ORM\Column(name="occupants_info", type="text", nullable=true)
-     */
-    private $occupantsInfo;
     
     /**
      * @var string fully/partly
@@ -110,11 +102,6 @@ class AssetProperty extends Asset
         return $this->occupants;
     }
 
-    public function getOccupantsInfo()
-    {
-        return $this->occupantsInfo;
-    }
-
     public function getOwned()
     {
         return $this->owned;
@@ -163,12 +150,6 @@ class AssetProperty extends Asset
     public function setOccupants($occupants)
     {
         $this->occupants = $occupants;
-        return $this;
-    }
-
-    public function setOccupantsInfo($occupantsInfo)
-    {
-        $this->occupantsInfo = $occupantsInfo;
         return $this;
     }
 
@@ -248,10 +229,6 @@ class AssetProperty extends Asset
         
         if ($this->getOwned() === self::OWNED_FULLY) {
             $this->setOwnedPercentage(null);
-        }
-        
-        if ($this->getOccupants() !== self::OCCUPANTS_OTHER) {
-            $this->setOccupantsInfo(null);
         }
     }
 
