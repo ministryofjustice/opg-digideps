@@ -1,18 +1,37 @@
 import React, { Component } from 'react';
 import TransferAccount from './transfer-account';
-
+import { completeTransfer } from '../utils/transfer_utils';
 
 export default class MoneyTransfer extends Component {
+
     setAccountFrom = (account) => {
-        this.update('accountFrom', account);
+        const newTransferState = this.mutate('accountFrom', account);
+        this.props.updateTransfer(newTransferState);
+
+        if (completeTransfer(newTransferState)) {
+            this.props.saveTransfer(newTransferState);
+        }
     }
 
     setAccountTo = (account) => {
-        this.update('accountTo', account);
+        const newTransferState = this.mutate('accountTo', account);
+        this.props.updateTransfer(newTransferState);
+
+        if (completeTransfer(newTransferState)) {
+            this.props.saveTransfer(newTransferState);
+        }
     }
 
     amountChange = (event) => {
-        this.update('amount', event.target.value);
+        const newTransferState = this.mutate('amount', event.target.value);
+        this.props.updateTransfer(newTransferState);
+    }
+
+    amountBlur = (event) => {
+        const newTransferState = this.mutate('amount', event.target.value);
+        if (completeTransfer(newTransferState)) {
+            this.props.saveTransfer(newTransferState);
+        }
     }
 
     clickDelete = () => {
@@ -23,10 +42,10 @@ export default class MoneyTransfer extends Component {
         this.props.setActiveTransfer(this.props.transfer);
     }
 
-    update(key, value) {
-        const transfer = Object.assign(this.props.transfer);
-        transfer[key] = value;
-        this.props.updateTransfer(transfer);
+    mutate(key, value) {
+        const newTransferState = Object.assign(this.props.transfer);
+        newTransferState[key] = value;
+        return newTransferState;
     }
 
     render() {
@@ -83,6 +102,7 @@ export default class MoneyTransfer extends Component {
                               className="form-control form-control__number"
                               value={transfer.amount}
                               onChange={this.amountChange}
+                              onBlur={this.amountBlur}
                             />
                         </div>
                     </div>
@@ -104,6 +124,7 @@ MoneyTransfer.propTypes = {
     transfer: React.PropTypes.object,
     updateTransfer: React.PropTypes.func,
     deleteTransfer: React.PropTypes.func,
+    saveTransfer: React.PropTypes.func,
     setActiveTransfer: React.PropTypes.func,
     clearActiveTransfer: React.PropTypes.func,
     activeTransfer: React.PropTypes.object,

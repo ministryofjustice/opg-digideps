@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { completeTransfer } from '../utils/transfer_utils';
-import _ from 'lodash';
 
 /*
  * GET  	/report/{reportId}/transfers/edit			html
@@ -23,7 +22,6 @@ export const SAVE_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
 export const UPDATE_TRANSFER = 'UPDATE_TRANSFER';
 export const DELETE_TRANSFER = 'DELETE_TRANSFER';
 
-
 export function getTransfers(reportId) {
     const url = `/report/${reportId}/transfers`;
     return {
@@ -32,70 +30,12 @@ export function getTransfers(reportId) {
         reportId
     };
 }
-
-const save = _.debounce((dispatch, transfer) => {
-    console.log('--- Debounce ---');
-    console.log(dispatch);
-    console.log(transfer);
-    const request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, { transfer });
-    dispatch({
-        types: [SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
-        promise: request
-    });
-}, 1000);
-
-function add(transfer) {
-    console.log('actions:transfers:add');
-    const url = `/report/${transfer.reportId}/transfers`;
-    const request = axios.post(url, { transfer });
-    return {
-        types: [SAVE_TRANSFER, ADDED_TRANSFER, SAVE_TRANSFER_ERROR],
-        promise: request
-    };
-}
-
-function update(transfer) {
+export function updateTransfer(transfer) {
     return {
         type: UPDATE_TRANSFER,
         payload: transfer,
     };
 }
-
-// Pass all changes straight through vi an update, and then decide
-// if we also need to save them to the server.
-// no id incomplete				    update
-// no id complete waiting			update
-// id incomplete					update
-// no id complete not waiting		mark waiting, update, post
-// id complete						update put
-export function updateTransfer(transfer) {
-    // go back to using thunk so I can dispatch multiple actions
-    return (dispatch) => {
-
-        if (!completeTransfer(transfer) ||
-            completeTransfer(transfer) && transfer.id === null && transfer.waitingForId)
-        {
-            dispatch(update(transfer));
-            return;
-        }
-
-        if (transfer.id === null && !transfer.waitingForId) {
-            transfer.waitingForId = true;
-            dispatch(update(transfer));
-            dispatch(add(transfer));
-        }
-
-        if (transfer.id !== null && completeTransfer(transfer)) {
-            dispatch(update(transfer));
-            save(dispatch, transfer);
-        }
-
-    };
-}
-
-// Mark locally that the transfer is deleted and save that to the server.
-// Todo - what happens if a save fails? Should we put it back or just report
-// an error?
 export function deleteTransfer(transfer) {
     return (dispatch) => {
         const url = `/report/${transfer.reportId}/transfers/${transfer.id}`;
@@ -111,4 +51,22 @@ export function deleteTransfer(transfer) {
             payload: transfer,
         });
     };
+}
+
+export function saveTransfer(transfer) {
+    if (completeTransfer(transfer)) {
+        if (transfer.id === null) {
+            const request = axios.post(`/report/${transfer.reportId}/transfers`, { transfer });
+            return {
+                types: [SAVE_TRANSFER, ADDED_TRANSFER, SAVE_TRANSFER_ERROR],
+                promise: request
+            };
+        }
+
+        const request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, { transfer });
+        return {
+            types: [SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
+            promise: request
+        };
+    }
 }

@@ -88,7 +88,6 @@ function deleteItem(state, id) {
 export default function(state = [], action) {
     switch (action.type) {
     case ADDED_TRANSFER:
-        console.log('-------- Added Transfer -------');
         if (action.payload.hasOwnProperty('data')
          && action.payload.data.hasOwnProperty('transfer')) {
             return updateNewWithRealId(state, action.payload.data.transfer);
