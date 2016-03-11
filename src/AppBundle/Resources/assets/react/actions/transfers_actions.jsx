@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { completeTransfer } from '../utils/transfer_utils';
+import _ from 'lodash';
 
 /*
  * GET  	/report/{reportId}/transfers/edit			html
@@ -12,15 +13,15 @@ import { completeTransfer } from '../utils/transfer_utils';
 // Network actions
 export const GET_TRANSFERS = 'GET_TRANSFERS';
 export const SAVE_TRANSFER = 'SAVE_TRANSFER';
-export const ADD_TRANSFER = 'ADD_TRANSFER';
+export const ADDED_TRANSFER = 'ADDED_TRANSFER';
 export const SAVE_DELETE_TRANSFER = 'SAVE_DELETE_TRANSFER';
+export const SAVED_TRANSFER = 'SAVED_TRANSFER';
+
 export const GET_TRANSFERS_ERROR = 'GET_TRANSFERS_ERROR';
 export const SAVE_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
-export const ADD_TRANSFER_ERROR = 'SAVE_TRANSFER_ERROR';
+
 export const UPDATE_TRANSFER = 'UPDATE_TRANSFER';
 export const DELETE_TRANSFER = 'DELETE_TRANSFER';
-
-export const SAVED_TRANSFER = 'SAVED_TRANSFER';
 
 
 export function getTransfers(reportId) {
@@ -32,20 +33,23 @@ export function getTransfers(reportId) {
     };
 }
 
-function save(transfer) {
-    const url = `/report/${transfer.reportId}/transfers/${transfer.id}`;
-    const request = axios.put(url, { transfer });
-    return {
+const save = _.debounce((dispatch, transfer) => {
+    console.log('--- Debounce ---');
+    console.log(dispatch);
+    console.log(transfer);
+    const request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, { transfer });
+    dispatch({
         types: [SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
         promise: request
-    };
-}
+    });
+}, 1000);
 
 function add(transfer) {
+    console.log('actions:transfers:add');
     const url = `/report/${transfer.reportId}/transfers`;
     const request = axios.post(url, { transfer });
     return {
-        types: [ADD_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
+        types: [SAVE_TRANSFER, ADDED_TRANSFER, SAVE_TRANSFER_ERROR],
         promise: request
     };
 }
@@ -56,7 +60,6 @@ function update(transfer) {
         payload: transfer,
     };
 }
-
 
 // Pass all changes straight through vi an update, and then decide
 // if we also need to save them to the server.
@@ -84,7 +87,7 @@ export function updateTransfer(transfer) {
 
         if (transfer.id !== null && completeTransfer(transfer)) {
             dispatch(update(transfer));
-            dispatch(save(transfer));
+            save(dispatch, transfer);
         }
 
     };

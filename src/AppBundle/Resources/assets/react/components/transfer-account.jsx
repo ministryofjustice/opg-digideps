@@ -59,6 +59,8 @@ class TransferAccount extends Component {
 TransferAccount.propTypes = {
     account: React.PropTypes.object,
     selectAccount: React.PropTypes.func,
+    clearActiveTransfer: React.PropTypes.func,
+    setActiveTransfer: React.PropTypes.func,
 };
 
 export default TransferAccount;

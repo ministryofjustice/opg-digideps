@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { hasNoTransfers } from '../actions/report_actions';
 
 
@@ -50,8 +49,4 @@ function mapStateToProps({ report }) {
     return { report };
 }
 
-function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ hasNoTransfers }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NoTransfers);
+export default connect(mapStateToProps, { hasNoTransfers })(NoTransfers);
