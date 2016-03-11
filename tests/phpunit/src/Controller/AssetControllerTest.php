@@ -195,7 +195,7 @@ class AssetControllerTest extends AbstractTestController
                 'mortgage_outstanding_amount' => 187500,
                 'has_charges' => true,
                 'is_rented_out' => true,
-                'rent_agreement_end_date' => new \DateTime('2015-12-31'),
+                'rent_agreement_end_date' => '2015-12-31',
                 'rent_income_month' => 1200,
                 'address' => 'london road',
                 'address2' => 'gold house',
