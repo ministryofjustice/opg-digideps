@@ -1,9 +1,9 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-
 
 /**
  * @ORM\Entity
@@ -11,12 +11,47 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AssetProperty extends Asset
 {
+
     const OCCUPANTS_OTHER = 'other';
     const OWNED_FULLY = 'fully';
     const OWNED_PARTLY = 'partly';
 
-    use Traits\AddressTrait;
-    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"asset"})
+     * @var string
+     *
+     * @ORM\Column(name="address", type="string", length=200, nullable=true)
+     */
+    private $address;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"asset"})
+     * @var string
+     *
+     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
+     */
+    private $address2;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"asset"})
+     * @var string
+     *
+     * @ORM\Column(name="county", type="string", length=75, nullable=true)
+     */
+    private $county;
+
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"asset"})
+     * @var string
+     *
+     * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
+     */
+    private $postcode;
+
     /**
      * @var string
      * @JMS\Groups({"asset"})
@@ -24,7 +59,7 @@ class AssetProperty extends Asset
      * @ORM\Column(name="occupants", type="string", length=550)
      */
     private $occupants;
-    
+
     /**
      * @var string fully/partly
      * @JMS\Groups({"asset"})
@@ -32,7 +67,7 @@ class AssetProperty extends Asset
      * @ORM\Column(name="owned", type="string", length=15)
      */
     private $owned;
-    
+
     /**
      * @var float 0-100
      * @JMS\Groups({"asset"})
@@ -40,14 +75,14 @@ class AssetProperty extends Asset
      * @ORM\Column(name="owned_percentage", type="decimal", precision=14, scale=2)
      */
     private $ownedPercentage;
-    
+
     /**
      * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="is_subject_equity_rel", type="boolean")
      */
     private $isSubjectToEquityRelease;
-    
+
     /**
      * @var boolean
      * @JMS\Groups({"asset"})
@@ -55,8 +90,7 @@ class AssetProperty extends Asset
      * @ORM\Column(name="has_mortgage", type="boolean")
      */
     private $hasMortgage;
-    
-    
+
     /**
      * @var boolean
      * @JMS\Groups({"asset"})
@@ -64,15 +98,15 @@ class AssetProperty extends Asset
      * @ORM\Column(name="mortgage_outstanding", type="integer")
      */
     private $mortgageOutstandingAmount;
-    
-     /**
+
+    /**
      * @var boolean
      * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="has_charges", type="boolean")
      */
     private $hasCharges;
-    
+
     /**
      * @var boolean
      * @JMS\Groups({"asset"})
@@ -80,7 +114,7 @@ class AssetProperty extends Asset
      * @ORM\Column(name="is_rented_out", type="boolean")
      */
     private $isRentedOut;
-    
+
     /**
      * @var \DateTime
      * @JMS\Groups({"asset"})
@@ -88,7 +122,7 @@ class AssetProperty extends Asset
      * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
      */
     private $rentAgreementEndDate;
-    
+
     /**
      * @var float
      * @JMS\Groups({"asset"})
@@ -96,7 +130,91 @@ class AssetProperty extends Asset
      * @ORM\Column(name="rent_income_month", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $rentIncomeMonth;
-    
+
+    /**
+     * Set address
+     *
+     * @param string $address
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * Get address
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * Set postcode
+     *
+     * @param string $postcode
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+    /**
+     * Get address2
+     *
+     * @return string 
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+    /**
+     * Set county
+     *
+     * @param string $county
+     */
+    public function setCounty($county)
+    {
+        $this->county = $county;
+
+        return $this;
+    }
+
+    /**
+     * Get county
+     *
+     * @return string 
+     */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+    /**
+     * Get postcode
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+    /**
+     * Set address2
+     *
+     * @param string $address2
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+
+        return $this;
+    }
+
     public function getOccupants()
     {
         return $this->occupants;
@@ -189,17 +307,17 @@ class AssetProperty extends Asset
 
     public function setHasCharges($hasCharges)
     {
-        $this->hasCharges = (boolean)$hasCharges;
+        $this->hasCharges = (boolean) $hasCharges;
         return $this;
     }
 
     public function setIsRentedOut($isRentedOut)
     {
-        $this->isRentedOut = (boolean)$isRentedOut;
+        $this->isRentedOut = (boolean) $isRentedOut;
         return $this;
     }
 
-    public function setRentAgreementEndDate(\DateTime $rentAgreementEndDate)
+    public function setRentAgreementEndDate($rentAgreementEndDate)
     {
         $this->rentAgreementEndDate = $rentAgreementEndDate;
         return $this;
@@ -211,8 +329,7 @@ class AssetProperty extends Asset
         return $this;
     }
 
-    
-    /** 
+    /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
@@ -222,15 +339,24 @@ class AssetProperty extends Asset
             $this->setRentAgreementEndDate(null);
             $this->setRentIncomeMonth(null);
         }
-        
+
         if ($this->getHasMortgage() === false) {
             $this->setMortgageOutstandingAmount(null);
         }
-        
+
         if ($this->getOwned() === self::OWNED_FULLY) {
             $this->setOwnedPercentage(null);
         }
     }
 
-    
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("type")
+     * @JMS\Groups({"asset"})
+     */
+    public function getAssetType()
+    {
+        return 'property';
+    }
+
 }

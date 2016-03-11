@@ -101,5 +101,16 @@ class AssetOther extends Asset
     {
         return $this->title;
     }
+    
+    
+    /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("type")
+     * @JMS\Groups({"asset"})
+     */
+    public function getAssetType()
+    {
+        return 'other';
+    }
 
 }

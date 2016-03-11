@@ -169,7 +169,6 @@ abstract class Asset
         return $this->report;
     }
 
-
     public function getType()
     {
         return $this->type;
