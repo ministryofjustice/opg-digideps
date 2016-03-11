@@ -14,13 +14,13 @@
 {{ form_input(form.occupants, 'form.property.occupants') }}
 
 {{ form_checkbox_group(form.owned, 'form.property.owned', {
-    'fieldSetClass' : 'inline',
+    'fieldSetClass' : 'inline owned_radio',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
         {'labelClass': 'block-label', 'elementClass': '' }
     ]
 }) }}
-<div id="owned_percentage-textarea" class="hidden-detail">
+<div id="owned_percentage_textarea" class="hidden-detail">
     {{ form_input(form.owned_percentage, 'form.property.owned_percentage', {
          'inputPrefix' : '%',
     }) }}
@@ -33,24 +33,25 @@
         {'labelClass': 'block-label', 'elementClass': '' }
     ]
 }) }}
-
+    
 {{ form_input(form.value, 'form.property.value', {
-          'inputPrefix' : '£',
-          'inputClass' : 'form-control__number'
-} ) }}
-          
+             'inputPrefix' : '£',
+             'inputClass' : 'form-control__number'
+   } ) }}
+
 {{ form_checkbox_group(form.has_mortgage, 'form.property.has_mortgage', {
-    'fieldSetClass' : 'inline',
+    'fieldSetClass' : 'inline has_mortgage_radio',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
         {'labelClass': 'block-label', 'elementClass': '' }
     ]
 }) }}
-
-{{ form_input(form.mortgage_outstanding_amount, 'form.property.mortgage_outstanding_amount', {
-    'inputPrefix' : '£',
-    'inputClass' : 'form-control__number'
-}) }}
+<div id="mortgage_outstanding_amount_textarea" class="hidden-detail">
+    {{ form_input(form.mortgage_outstanding_amount, 'form.property.mortgage_outstanding_amount', {
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    }) }}
+</div>
 
 {{ form_checkbox_group(form.has_charges, 'form.property.has_charges', {
     'fieldSetClass' : 'inline',
@@ -61,20 +62,43 @@
 }) }}
 
 {{ form_checkbox_group(form.is_rented_out, 'form.property.is_rented_out', {
-    'fieldSetClass' : 'inline',
+    'fieldSetClass' : 'inline is_rented_out_radio',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
         {'labelClass': 'block-label', 'elementClass': '' }
     ]
 }) }}
 
-{{ form_known_date(form.rent_agreement_end_date, 'form.property.rental_agreement_end_date', {
-    'showDay': 'false'
-}) }}
+<div id="rent_info" class="hidden-detail">
+    {{ form_known_date(form.rent_agreement_end_date, 'form.property.rental_agreement_end_date', {
+        'showDay': 'false'
+    }) }}
 
-{{ form_input(form.rent_income_month, 'form.property.rent_income_month', {
-    'inputPrefix' : '£',
-    'inputClass' : 'form-control__number'
-}) }}
+    {{ form_input(form.rent_income_month, 'form.property.rent_income_month', {
+        'inputPrefix' : '£',
+        'inputClass' : 'form-control__number'
+    }) }}
+</div>
+
+ <script type="text/javascript">
+    $(document).ready(function() {
+        new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+        
+        new opg.RadioHide({
+            radio:'.owned_radio input[type=radio]',
+            content: '#owned_percentage_textarea'
+        });
+        
+        new opg.RadioHide({
+            radio:'.has_mortgage_radio input[type=radio]',
+            content: '#mortgage_outstanding_amount_textarea'
+        });
+        
+        new opg.RadioHide({
+            radio:'.is_rented_out_radio input[type=radio]',
+            content: '#rent_info'
+        });
+    });
+</script>
 
 
