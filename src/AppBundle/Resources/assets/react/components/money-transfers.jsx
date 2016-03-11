@@ -58,4 +58,4 @@ function mapStateToProps({ transfers, activeTransfer, report }) {
     return { transfers, activeTransfer, report };
 }
 
-export default connect(mapStateToProps, { getTransfers, updateTransfer, deleteTransfer, saveTransfer })(MoneyTransfers);
+export default connect(mapStateToProps, { getTransfers, updateTransfer, deleteTransfer, saveTransfer, setActiveTransfer, clearActiveTransfer })(MoneyTransfers);
