@@ -12,7 +12,7 @@ class AssetProperty extends Asset
     const OWNED_FULLY = 'fully';
     const OWNED_PARTLY = 'partly';
 
-    use Traits\AddressTrait;
+    //use Traits\AddressTrait;
 
      /**
      * @JMS\Type("string")

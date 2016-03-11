@@ -20,7 +20,9 @@ abstract class Asset
             case 'property':
                 return new AssetProperty();
             default:
-                return new AssetOther();
+                $other = new AssetOther();
+                $other->setTitle($type);
+                return $other;
         }
     }
     

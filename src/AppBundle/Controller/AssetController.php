@@ -78,10 +78,9 @@ class AssetController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         // [.. change form and template (or forward) depending on the asset title ]
-        //$asset = EntityDir\Asset::factory($title);
-        $asset = EntityDir\Asset::factory('other);
-        $asset->setTitle($title);
-        $form = $this->createForm(new FormDir\AssetTypeOther(), $asset, [
+        $asset = EntityDir\Asset::factory($title);
+        
+        $form = $this->createForm( FormDir\Asset\AbstractAssetType::factory($title), $asset, [
             'action' => $this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title' => $title])
         ]);
 
@@ -118,7 +117,7 @@ class AssetController extends AbstractController
             throw new \RuntimeException("Asset not found.");
         }
         $asset = $this->get('restClient')->get("report/{$reportId}/asset/{$assetId}", 'AssetOther');
-        $form = $this->createForm(new FormDir\AssetTypeOther(), $asset);
+        $form = $this->createForm(new FormDir\Asset\AssetTypeOther(), $asset);
 
         $form->handleRequest($request);
 
