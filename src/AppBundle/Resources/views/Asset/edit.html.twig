@@ -21,7 +21,7 @@
         
             {{ form_errors_list(form) }}
         
-            {% include 'AppBundle:Asset/' ~ assetToEdit.type ~ ':_edit_fields.html.twig' with {
+            {% include 'AppBundle:Asset/' ~ assetToEdit.type ~ ':_form_fields.html.twig' with {
                 'form': form,
              } %}
     

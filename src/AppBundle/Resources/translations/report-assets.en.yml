@@ -4,8 +4,12 @@ page:
   pageSectionDescription: "Add details of any property, savings or investments owned by %client%."
   pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
-  subSectionTitleAdd: Add an asset
-  subSectionTitleEdit: "Edit this asset"
+  subSectionTitleAdd: 
+    other: Add an asset
+    property: Add a property
+  subSectionTitleEdit: 
+    other: "Edit this asset"
+    property: Edit this property
 form:
   controls:
     addButton:
@@ -13,7 +17,40 @@ form:
       moreLabel: "Add another asset"
     next:
       label: Continue
-
+  property:
+    address:
+      label: Address
+    address2:
+      label: ""
+    county:
+      label: ""
+    postcode:
+      label: "Postcode"
+    occupants:
+      label: "Who lives at this property?"
+    owned:
+      label: Is the property fully or part-owned by the client?
+    owned_percentage:
+      label: What is the client’s share of the property?
+    is_subject_to_equity_release:
+      label: Is this property subject to an equity release scheme?
+    value:
+      label: Estimated total / full value of property 
+    has_mortgage:
+      label: Is there an outstanding mortgage?
+    mortgage_outstanding_amount:
+      label: How much is there to pay?
+    has_charges:
+      label: Is there a charge on the property? For example, Local Authority to recover care fees.
+    is_rented_out:
+      label: Is the property partly or fully rented out?
+    rental_agreement_end_date:
+      label: When does the rental agreement end?
+      hint: (MM/YYYY)
+    rent_income_month:
+      label: Rental income per month?
+           
+           
 title:
     label: Select an asset category, such as ‘Property’.
     hint: ""

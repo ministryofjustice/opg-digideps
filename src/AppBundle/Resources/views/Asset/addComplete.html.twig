@@ -14,11 +14,13 @@
         
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
 
-        <h3 class="heading-medium">{{ 'page.subSectionTitleAdd' | trans({}, translationDomain) }}</h3>
+        <h3 class="heading-medium">
+            {{ ('page.subSectionTitleAdd.' ~ asset.type) | trans({}, translationDomain) }}
+        </h3>
 
         {{ form_errors_list(form) }}
 
-        {% include 'AppBundle:Asset/' ~ asset.type ~ ':_add_fields.html.twig' with {
+        {% include 'AppBundle:Asset/' ~ asset.type ~ ':_form_fields.html.twig' with {
            'form': form,
         } %}
         

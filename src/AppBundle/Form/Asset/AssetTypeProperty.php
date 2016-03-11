@@ -17,9 +17,8 @@ class AssetTypeProperty extends AbstractAssetType
                 ->add('postcode', 'text')
                 ->add('county', 'text')
                 ->add('occupants', 'textarea')
-                //->add('occupants_info', 'text')
                 ->add('owned', 'choice', array(
-                    'choices' => ['fully' => 'fully', 'partly' => 'partly'],
+                    'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
                     'expanded' => true
                 ))
                 ->add('owned_percentage', 'text')
