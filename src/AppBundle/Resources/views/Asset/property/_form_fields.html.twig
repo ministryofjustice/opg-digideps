@@ -23,6 +23,7 @@
 <div id="owned_percentage_textarea" class="hidden-detail">
     {{ form_input(form.owned_percentage, 'form.property.owned_percentage', {
          'inputPrefix' : '%',
+         'inputClass' : 'form-control__number'
     }) }}
 </div>
     
@@ -86,17 +87,21 @@
         
         new opg.RadioHide({
             radio:'.owned_radio input[type=radio]',
-            content: '#owned_percentage_textarea'
+            content: '#owned_percentage_textarea',
+            hideByDefault: true,
+            showWithValue: 'partly'
         });
         
         new opg.RadioHide({
             radio:'.has_mortgage_radio input[type=radio]',
-            content: '#mortgage_outstanding_amount_textarea'
+            content: '#mortgage_outstanding_amount_textarea',
+            hideByDefault: true,
         });
         
         new opg.RadioHide({
             radio:'.is_rented_out_radio input[type=radio]',
-            content: '#rent_info'
+            content: '#rent_info',
+            hideByDefault: true,
         });
     });
 </script>
