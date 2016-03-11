@@ -146,7 +146,6 @@ class Fixtures
     {
         $asset = EntityDir\Asset::factory($type);
         $asset->setReport($report);
-        $asset->setTitle('title'.time());
         
         foreach ($settersMap as $k=>$v) {
             $asset->$k($v);

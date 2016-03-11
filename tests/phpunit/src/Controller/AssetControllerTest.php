@@ -9,6 +9,7 @@ class AssetControllerTest extends AbstractTestController
     private static $client1;
     private static $report1;
     private static $asset1;
+    private static $assetp1;
     private static $deputy2;
     private static $client2;
     private static $report2;
@@ -25,13 +26,14 @@ class AssetControllerTest extends AbstractTestController
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$asset1 = self::fixtures()->createAsset('other', self::$report1, ['setTitle' => 'title1']);
+        self::$asset1 = self::fixtures()->createAsset('other', self::$report1, ['setTitle' => 'asset1']);
+        self::$assetp1 = self::fixtures()->createAsset('property', self::$report1, ['setAddress' => 'ha1']);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
-        self::$asset2 = self::fixtures()->createAsset('other', self::$report2);
+        self::$asset2 = self::fixtures()->createAsset('other', self::$report2, ['setTitle' => 'asset2']);
 
         self::fixtures()->flush()->clear();
     }
@@ -83,10 +85,21 @@ class AssetControllerTest extends AbstractTestController
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-
-        $this->assertCount(1, $data);
+        
+        // order by id ASC (insert order)
+        usort($data, function($a, $b){
+            return $a['id'] > $b['id'];
+        });
+        
+        $this->assertCount(2, $data);
+        
         $this->assertEquals(self::$asset1->getId(), $data[0]['id']);
-        $this->assertEquals(self::$asset1->getTitle(), $data[0]['title']);
+        $this->assertEquals('asset1', $data[0]['title']);
+        $this->assertEquals('other', $data[0]['type']);
+        
+        $this->assertEquals(self::$assetp1->getId(), $data[1]['id']);
+        $this->assertEquals('ha1', $data[1]['address']);
+        $this->assertEquals('property', $data[1]['type']);
     }
 
 
@@ -174,8 +187,7 @@ class AssetControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'type' => 'property',
-                'occupants' => 'other',
-                'occupants_info' => 'myself',
+                'occupants' => 'me',
                 'owned' => 'partly',
                 'owned_percentage' => '51',
                 'is_subject_to_equity_release' => true,
@@ -199,8 +211,7 @@ class AssetControllerTest extends AbstractTestController
         $asset = self::fixtures()->getRepo('Asset')->find($return['data']['id']); /* @var $asset \AppBundle\Entity\AssetProperty */
 
         $this->assertInstanceOf('AppBundle\Entity\AssetProperty', $asset);
-        $this->assertEquals('other', $asset->getOccupants());
-        $this->assertEquals('myself', $asset->getOccupantsInfo());
+        $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51', $asset->getOwnedPercentage());
         $this->assertEquals(true, $asset->getIsSubjectToEquityRelease());

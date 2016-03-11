@@ -144,8 +144,11 @@ class AssetController extends RestController
 
         if ($asset instanceof EntityDir\AssetProperty) {
             $this->hydrateEntityWithArrayData($asset, $data, [
+                'address' => 'setAddress',
+                'address2' => 'setAddress2',
+                'county' => 'setCounty',
+                'postcode' => 'setPostCode',
                 'occupants' => 'setOccupants',
-                'occupants_info' => 'setOccupantsInfo',
                 'owned' => 'setOwned',
                 'owned_percentage' => 'setOwnedPercentage',
                 'is_subject_to_equity_release' => 'setIsSubjectToEquityRelease',
@@ -154,12 +157,8 @@ class AssetController extends RestController
                 'has_charges' => 'setHasCharges',
                 'is_rented_out' => 'setIsRentedOut',
                 'rent_income_month' => 'setRentIncomeMonth',
-                'address' => 'setAddress',
-                'address2' => 'setAddress2',
-                'county' => 'setCounty',
-                'postcode' => 'setPostCode',
             ]);
-
+            
             if (isset($data['rent_agreement_end_date'])) {
                 $asset->setRentAgreementEndDate(new \DateTime($data['rent_agreement_end_date']['date']));
             }
