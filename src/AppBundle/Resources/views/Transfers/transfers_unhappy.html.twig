@@ -35,10 +35,10 @@
 
     {% block pageBodyFooterNav %}
         {% include 'AppBundle:Components:nextprevious.html.twig' with {
-        'previousLink': path("accounts_balance" , {'reportId': report.id }),
-        'previousLabel': 'Balance accounts',
-        'nextLink': path("assets" , {'reportId': report.id }),
-        'nextLabel': 'Assets'
+        'previousLink': path("accounts" , {'reportId': report.id }),
+        'previousLabel': 'Bank accounts',
+        'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
+        'nextLabel': 'Money in'
         } %}
     {% endblock %}
 {% endembed %}

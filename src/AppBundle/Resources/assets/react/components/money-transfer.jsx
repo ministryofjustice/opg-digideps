@@ -4,6 +4,13 @@ import { completeTransfer, formatCurrency } from '../utils/transfer_utils';
 
 export default class MoneyTransfer extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            error: false,
+        };
+    }
+
     setAccountFrom = (account) => {
         const newTransferState = this.mutate('accountFrom', account);
         this.props.updateTransfer(newTransferState);
@@ -23,6 +30,7 @@ export default class MoneyTransfer extends Component {
     }
 
     amountChange = (event) => {
+        this.setState({error: false});
         const newTransferState = this.mutate('amount', event.target.value);
         this.props.updateTransfer(newTransferState);
     }
@@ -30,8 +38,18 @@ export default class MoneyTransfer extends Component {
     amountBlur = (event) => {
         let value = formatCurrency(event.target.value);
         const newTransferState = this.mutate('amount', value);
+
+        let valueCopy = value.replace(/^\s+|\s+$/g, '');
+        valueCopy = valueCopy.replace(',', '');
+
+        if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
+            this.setState({error: true});
+        } else {
+            this.setState({error: false});
+        }
+
         this.props.updateTransfer(newTransferState);
-        if (completeTransfer(newTransferState)) {
+        if (completeTransfer(newTransferState) && this.state.error === false) {
             this.props.saveTransfer(newTransferState);
         }
     }
@@ -69,6 +87,10 @@ export default class MoneyTransfer extends Component {
             } else {
                 className += ' active';
             }
+        }
+
+        if (this.state.error) {
+            className += ' error';
         }
 
         return (
