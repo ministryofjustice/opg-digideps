@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import TransferAccount from './transfer-account';
-import { completeTransfer } from '../utils/transfer_utils';
+import { completeTransfer, formatCurrency } from '../utils/transfer_utils';
 
 export default class MoneyTransfer extends Component {
 
@@ -28,7 +28,9 @@ export default class MoneyTransfer extends Component {
     }
 
     amountBlur = (event) => {
-        const newTransferState = this.mutate('amount', event.target.value);
+        let formatted = formatCurrency(event.target.value);
+
+        const newTransferState = this.mutate('amount',formatted);
         if (completeTransfer(newTransferState)) {
             this.props.saveTransfer(newTransferState);
         }

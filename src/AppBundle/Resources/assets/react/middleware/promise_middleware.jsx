@@ -13,14 +13,16 @@ export default function promiseMiddleware() {
                 );
             case 2:
                 return promise.then(
-                    (result) => next({ ...rest, payload: result, type: types[0] }),
+                    (result) => next({ ...rest, payload: result, type: types[0] })
+                ).catch(
                     (error) => next({ ...rest, error, type: types[1] })
                 );
             default: {
                 const [REQUEST, SUCCESS, FAILURE] = types;
                 next({ ...rest, type: REQUEST });
                 return promise.then(
-                    (result) => next({ ...rest, payload: result, type: SUCCESS }),
+                    (result) => next({ ...rest, payload: result, type: SUCCESS })
+                ).catch(
                     (error) => next({ ...rest, error, type: FAILURE })
                 );
             }}

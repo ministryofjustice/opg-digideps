@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+/* global $: true */
 
+import React, { Component } from 'react';
 import AccountCard from './account-card';
 import AccountList from '../components/account-list';
 
@@ -12,12 +13,17 @@ class TransferAccount extends Component {
         };
     }
 
+    componentWillUnmount() {
+        $('body').off('click', this.handlePageClick);
+    }
+
     clickEdit = () => {
         this.setState({
             open: true,
             selectedAccount: this.state.selectedAccount,
         });
         this.props.setActiveTransfer();
+        $(document).on('click', this.handlePageClick);
     }
 
     selectAccount = (account) => {
@@ -27,15 +33,22 @@ class TransferAccount extends Component {
 
         this.props.selectAccount(account);
         this.props.clearActiveTransfer();
+        $(document).off('click', this.handlePageClick);
+    }
+
+    handlePageClick = () => {
+        this.setState({
+            open: false,
+            selectedAccount: this.state.selectedAccount,
+        });
+        this.props.clearActiveTransfer();
+        $(document).off('click', this.handlePageClick);
     }
 
     render() {
         if (this.state.open) {
             return (
-                <AccountList
-                    selectedAccount={this.props.account}
-                    selectAccount={this.selectAccount}
-                />
+                <AccountList selectedAccount={this.props.account} selectAccount={this.selectAccount} />
             );
         } else if (!this.state.open && this.props.account) {
             return (

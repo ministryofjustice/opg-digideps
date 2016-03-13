@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 
 class AccountCard extends Component {
 
-    selectAccount = () => {
+    selectAccount = (event) => {
+        event.stopPropagation();
+        event.nativeEvent.stopImmediatePropagation();       // You have to do this to intercept jQuery events
         this.props.selectAccount(this.props.account);
     }
 
     render() {
         const account = this.props.account;
-
         return (
             <div className="card" onClick={this.selectAccount}>
                 <div className="account card-title">{account.bank} {account.account_type}</div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { SAVE_TRANSFER, SAVED_TRANSFER, SAVE_ERROR } from '../actions/transfers_actions';
+import { SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR } from '../actions/transfers_actions';
 
 const status = {
     'NOTHING': {
@@ -15,7 +15,7 @@ const status = {
         label: 'Saved',
         state: 'saved'
     },
-    SAVE_ERROR: {
+    SAVE_TRANSFER_ERROR: {
         label: 'Not saved',
         state: 'notsaved'
     }

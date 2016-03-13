@@ -1,3 +1,7 @@
+const decimalplaces = 2,
+    decimalcharacter = '.',
+    thousandseparater = ',';
+
 export function appendNewTransfer(transfers, reportId) {
     return [...transfers, {
         reportId: reportId,
@@ -7,7 +11,6 @@ export function appendNewTransfer(transfers, reportId) {
         amount: null
     }];
 }
-
 
 export function completeTransfer(transfer) {
     if (transfer.accountFrom !== null &&
@@ -34,4 +37,55 @@ export function containsIncompleteTransfer(transfers) {
     }
 
     return incomplete;
+}
+
+export function formatCurrency(number) {
+    if (number.replace(/^\s+|\s+$/g, '') === '' || isNaN(number)) {
+        return number;
+    }
+
+    number = parseFloat(number);
+
+    var formatted = String(number.toFixed(decimalplaces));
+    if (decimalcharacter.length && decimalcharacter != '.' ) {
+        formatted = formatted.replace(/\./, decimalcharacter);
+    }
+
+    let integer = '',
+        fraction = '',
+        strnumber = String(formatted),
+        dotpos = decimalcharacter.length ? strnumber.indexOf(decimalcharacter) : -1,
+        temparray = [];
+
+    if (dotpos > -1) {
+        if (dotpos) {
+            integer = strnumber.substr(0, dotpos);
+        }
+        fraction = strnumber.substr(dotpos + 1);
+    } else {
+        integer = strnumber;
+    }
+
+    if (integer) {
+        integer = String(Math.abs(integer));
+    }
+
+    while (fraction.length < decimalplaces) {
+        fraction += '0';
+    }
+
+    while (integer.length > 3) {
+        temparray.unshift(integer.substr(-3));
+        integer = integer.substr(0, integer.length - 3);
+    }
+
+    temparray.unshift(integer);
+    integer = temparray.join(thousandseparater);
+
+    let formattedStr = integer + decimalcharacter + fraction;
+    if (number < 0) {
+        formattedStr = '-' + formattedStr;
+    }
+
+    return formattedStr;
 }
