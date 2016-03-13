@@ -28,9 +28,9 @@ export default class MoneyTransfer extends Component {
     }
 
     amountBlur = (event) => {
-        let formatted = formatCurrency(event.target.value);
-
-        const newTransferState = this.mutate('amount',formatted);
+        let value = formatCurrency(event.target.value);
+        const newTransferState = this.mutate('amount', value);
+        this.props.updateTransfer(newTransferState);
         if (completeTransfer(newTransferState)) {
             this.props.saveTransfer(newTransferState);
         }

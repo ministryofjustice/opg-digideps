@@ -54,16 +54,20 @@ export function deleteTransfer(transfer) {
 }
 
 export function saveTransfer(transfer) {
+    // Strip , out of currency
+    let transferClone = Object.assign({}, transfer);
+    transferClone.amount = parseFloat(transferClone.amount.replace(',', ''));
+
     if (completeTransfer(transfer)) {
         if (transfer.id === null) {
-            const request = axios.post(`/report/${transfer.reportId}/transfers`, { transfer });
+            const request = axios.post(`/report/${transfer.reportId}/transfers`, { transfer: transferClone });
             return {
                 types: [SAVE_TRANSFER, ADDED_TRANSFER, SAVE_TRANSFER_ERROR],
                 promise: request
             };
         }
 
-        const request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, { transfer });
+        const request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, { transfer: transferClone });
         return {
             types: [SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
             promise: request

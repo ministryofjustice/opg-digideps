@@ -14,7 +14,6 @@ export default function(state = 'NOTHING', action) {
 
     case SAVE_NO_TRANSFERS_ERROR:
     case SAVE_TRANSFER_ERROR:
-        console.log('Save Reducer: Save Error');
         return SAVE_TRANSFER_ERROR;
     default:
       // Nothing

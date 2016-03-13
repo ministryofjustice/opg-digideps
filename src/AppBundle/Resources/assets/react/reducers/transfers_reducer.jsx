@@ -6,7 +6,7 @@ import {
     SAVE_TRANSFER_ERROR,
     ADDED_TRANSFER
   } from '../actions/transfers_actions';
-import { containsIncompleteTransfer, appendNewTransfer } from '../utils/transfer_utils';
+import { containsIncompleteTransfer, appendNewTransfer, formatCurrency } from '../utils/transfer_utils';
 
 function updateNewIncomplete(state, transfer) {
     let clonedState = state.slice(0);
@@ -73,6 +73,10 @@ function update(state, transfer) {
     return newState;
 }
 function updateAll(state, transfers, reportId) {
+    for (let pos = 0; pos < transfers.length; pos += 1) {
+        transfers[pos].amount = formatCurrency(`${transfers[pos].amount}`);
+    }
+
     if (!containsIncompleteTransfer(transfers) || transfers.length === 0) {
         return appendNewTransfer(transfers, reportId);
     }
