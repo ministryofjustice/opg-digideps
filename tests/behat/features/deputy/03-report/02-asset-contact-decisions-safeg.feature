@@ -118,7 +118,7 @@ Feature: deputy / report / add contact, decision, assets
         And I save the page as "report-assets-property-title-added"
         # rest of the form
         When I press "asset_save"
-          Then the following fields should have an error:
+        Then the following fields should have an error:
             | asset_address |
             | asset_address2 |
             | asset_county |
@@ -135,23 +135,29 @@ Feature: deputy / report / add contact, decision, assets
             | asset_hasCharges_1 |
             | asset_isRentedOut_0 |
             | asset_isRentedOut_1 |
-            | asset_rentAgreementEndDate_day |
-            | asset_rentAgreementEndDate_month |
-            | asset_rentAgreementEndDate_year |
+        # secondary fields validation    
         When I fill in the following:
             | asset_address | 12 gold house  |
             | asset_address2 | mortimer road  |
             | asset_county |  westminster |
             | asset_postcode |  sw115tf  |
             | asset_occupants | only the deputy only  |
-            | asset_owned_0 | fully |
+            | asset_owned_1 | partly |
             | asset_isSubjectToEquityRelease_0 | yes  |
             | asset_value | 560000  |
-            | asset_hasMortgage_1 | no  |
+            | asset_hasMortgage_0 | yes  |
             | asset_hasCharges_1 |  no |
-            | asset_isRentedOut_1 | no  |
-            | asset_rentAgreementEndDate_month |  12 |
-            | asset_rentAgreementEndDate_year | 2016  |
+            | asset_isRentedOut_0 | yes  |
+        And I press "asset_save"
+        Then the following fields should have an error:
+            | asset_ownedPercentage |
+            | asset_mortgageOutstandingAmount |
+            | asset_rentIncomeMonth |
+        # no errors
+        When I fill in the following:
+            | asset_ownedPercentage | 45 |
+            | asset_mortgageOutstandingAmount | 187500 |
+            | asset_rentIncomeMonth | 1400.50 |
         And I press "asset_save"
         Then the form should be valid
         And the response status code should be 200

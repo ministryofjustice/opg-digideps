@@ -39,8 +39,6 @@ form:
     hasMortgage:
       label: Is there an outstanding mortgage?
     mortgageOutstandingAmount:
-      label: Is there an outstanding mortgage?
-    mortgageOutstandinAmount:
       label: How much is there to pay?
     hasCharges:
       label: Is there a charge on the property? For example, Local Authority to recover care fees.

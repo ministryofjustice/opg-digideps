@@ -49,7 +49,13 @@ abstract class AbstractAssetType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
+            'validation_groups' => $this->getValidationGroups()
         ]);
+    }
+    
+    protected function getValidationGroups()
+    {
+        return [];
     }
 
 }
