@@ -20,11 +20,11 @@ class Version061 extends AbstractMigration
         $this->addSql('ALTER TABLE asset ADD occupants VARCHAR(650) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD owned VARCHAR(15) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD owned_percentage NUMERIC(14, 2) DEFAULT NULL');
-        $this->addSql('ALTER TABLE asset ADD is_subject_equity_rel BOOLEAN DEFAULT NULL');
-        $this->addSql('ALTER TABLE asset ADD has_mortgage BOOLEAN DEFAULT NULL');
-        $this->addSql('ALTER TABLE asset ADD mortgage_outstanding INT DEFAULT NULL');
-        $this->addSql('ALTER TABLE asset ADD has_charges BOOLEAN DEFAULT NULL');
-        $this->addSql('ALTER TABLE asset ADD is_rented_out BOOLEAN DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD is_subject_equity_rel VARCHAR(4) DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD has_mortgage VARCHAR(4) DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD mortgage_outstanding NUMERIC(14, 2) DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD has_charges VARCHAR(4) DEFAULT NULL');
+        $this->addSql('ALTER TABLE asset ADD is_rented_out VARCHAR(4) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD rent_agreement_end_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD rent_income_month NUMERIC(14, 2) DEFAULT NULL');
         

@@ -78,24 +78,24 @@ class AssetProperty extends Asset
 
     /**
      * @JMS\Groups({"asset"})
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="is_subject_equity_rel", type="boolean")
+     * @JMS\Type("string")
+     * @ORM\Column(name="is_subject_equity_rel", type="string", length=4)
      */
     private $isSubjectToEquityRelease;
 
     /**
-     * @var boolean
+     * @var string
      * @JMS\Groups({"asset"})
-     * @JMS\Type("boolean")
-     * @ORM\Column(name="has_mortgage", type="boolean")
+     * @JMS\Type("string")
+     * @ORM\Column(name="has_mortgage",  type="string", length=4)
      */
     private $hasMortgage;
 
     /**
-     * @var boolean
+     * @var decimal
      * @JMS\Groups({"asset"})
      * @JMS\Type("integer")
-     * @ORM\Column(name="mortgage_outstanding", type="integer")
+     * @ORM\Column(name="mortgage_outstanding", type="decimal", precision=14, scale=2)
      */
     private $mortgageOutstandingAmount;
 
@@ -103,7 +103,7 @@ class AssetProperty extends Asset
      * @var boolean
      * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
-     * @ORM\Column(name="has_charges", type="boolean")
+     * @ORM\Column(name="has_charges",  type="string", length=4)
      */
     private $hasCharges;
 
@@ -111,7 +111,7 @@ class AssetProperty extends Asset
      * @var boolean
      * @JMS\Groups({"asset"})
      * @JMS\Type("boolean")
-     * @ORM\Column(name="is_rented_out", type="boolean")
+     * @ORM\Column(name="is_rented_out",  type="string", length=4)
      */
     private $isRentedOut;
 
@@ -307,13 +307,13 @@ class AssetProperty extends Asset
 
     public function setHasCharges($hasCharges)
     {
-        $this->hasCharges = (boolean) $hasCharges;
+        $this->hasCharges = $hasCharges;
         return $this;
     }
 
     public function setIsRentedOut($isRentedOut)
     {
-        $this->isRentedOut = (boolean) $isRentedOut;
+        $this->isRentedOut = $isRentedOut;
         return $this;
     }
 
