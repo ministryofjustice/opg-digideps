@@ -33,7 +33,7 @@ trait DebugTrait
         echo "- Url: " . $session->getCurrentUrl() . "\n";
         echo "- Status code: " . $session->getStatusCode() . "\n";
         echo "- Response: saved into $filename ($bytes bytes).\n";
-        echo "- Page content: [".$data . ']';
+        #echo "- Page content: [".$data . ']';
     }
     
     

@@ -38,6 +38,8 @@ form:
       label: Estimated total / full value of property 
     hasMortgage:
       label: Is there an outstanding mortgage?
+    mortgageOutstandingAmount:
+      label: Is there an outstanding mortgage?
     mortgageOutstandinAmount:
       label: How much is there to pay?
     hasCharges:

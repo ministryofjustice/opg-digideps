@@ -44,10 +44,12 @@ class AssetTypeProperty extends AbstractAssetType
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
                 ])
-                ->add('rentAgreementEndDate', 'date', [ 'widget' => 'text',
+                ->add('rentAgreementEndDate', 'date', [ 
+                    'widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date'
+                    'invalid_message' => 'Enter a valid date',
+                    'required' => false
                 ])
                 ->add('rentIncomeMonth', 'text')
                
