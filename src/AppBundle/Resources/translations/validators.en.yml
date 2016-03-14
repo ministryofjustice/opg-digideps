@@ -199,6 +199,29 @@ asset:
         date: Enter a valid date
     no_assets:
         notBlank: Tell us if the client has no assets to add
+    property:
+        address:
+            notBlank: Enter your address
+        address2:
+            notBlank: " "
+        county:
+            notBlank:   " "
+        postcode:
+            notBlank:   " "
+        occupants:
+            notBlank: Tell who lives at the property
+        owned:
+            notBlank: Please choose one
+        isSubjectToEquityRelease:
+            notBlank: Please choose one
+        hasMortgage:
+            notBlank: Please choose one
+        hasCharges:
+            notBlank: Please choose one
+        isRentedOut:
+            notBlank: Please choose one
+            
+            
 # validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:

@@ -7,13 +7,43 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class AssetProperty extends Asset
 {
+
     const OCCUPANTS_OTHER = 'other';
     const OWNED_FULLY = 'fully';
     const OWNED_PARTLY = 'partly';
 
-    use Traits\AddressTrait;
-    
+
     /**
+     * @Assert\NotBlank(message="asset.property.address.notBlank")
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $address;
+
+    /**
+     * @Assert\NotBlank(message="asset.property.address2.notBlank")
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $address2;
+
+    /**
+     * @Assert\NotBlank(message="asset.property.county.notBlank")
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $county;
+
+    /**
+     * @Assert\NotBlank(message="asset.property.postcode.notBlank")
+     * @JMS\Type("string")
+     * @var string
+     */
+    private $postcode;
+
+    /**
+     * @Assert\NotBlank(message="asset.property.occupants.notBlank")
+     * 
      * @var string
      * 
      * @JMS\Type("string")
@@ -22,6 +52,7 @@ class AssetProperty extends Asset
 
     /**
      * @var string fully/partly
+     * @Assert\NotBlank(message="asset.property.owned.notBlank")
      * 
      * @JMS\Type("string")
      */
@@ -35,12 +66,13 @@ class AssetProperty extends Asset
     private $ownedPercentage;
 
     /**
-     * @var 
+     * @Assert\NotBlank(message="asset.property.isSubjectToEquityRelease.notBlank")
      * @JMS\Type("boolean")
      */
     private $isSubjectToEquityRelease;
 
     /**
+     * @Assert\NotBlank(message="asset.property.hasMortgage.notBlank")
      * @var boolean
      * @JMS\Type("boolean")
      */
@@ -53,6 +85,7 @@ class AssetProperty extends Asset
     private $mortgageOutstandingAmount;
 
     /**
+     * @Assert\NotBlank(message="asset.property.hasCharges.notBlank")
      * @var boolean
      * 
      * @JMS\Type("boolean")
@@ -60,6 +93,7 @@ class AssetProperty extends Asset
     private $hasCharges;
 
     /**
+     * @Assert\NotBlank(message="asset.property.isRentedOut.notBlank")
      * @var boolean
      * 
      * @JMS\Type("boolean")
@@ -79,10 +113,116 @@ class AssetProperty extends Asset
     private $rentIncomeMonth;
 
 
+    /**
+     * Set address
+     *
+     * @param string $address
+     */
+    public function setAddress($address)
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+
+    /**
+     * Get address
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+
+    /**
+     * Set postcode
+     *
+     * @param string $postcode
+     */
+    public function setPostcode($postcode)
+    {
+        $this->postcode = $postcode;
+
+        return $this;
+    }
+
+
+    /**
+     * Get address2
+     *
+     * @return string 
+     */
+    public function getAddress2()
+    {
+        return $this->address2;
+    }
+
+
+    /**
+     * Set county
+     *
+     * @param string $county
+     */
+    public function setCounty($county)
+    {
+        $this->county = $county;
+
+        return $this;
+    }
+
+
+    /**
+     * Get county
+     *
+     * @return string 
+     */
+    public function getCounty()
+    {
+        return $this->county;
+    }
+
+
+    /**
+     * Get postcode
+     */
+    public function getPostcode()
+    {
+        return $this->postcode;
+    }
+
+
+    /**
+     * Set address2
+     *
+     * @param string $address2
+     */
+    public function setAddress2($address2)
+    {
+        $this->address2 = $address2;
+
+        return $this;
+    }
+
+
+    public function getCountry()
+    {
+        return $this->country;
+    }
+
+
+    public function setCountry($country)
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+
     public function getOccupants()
     {
         return $this->occupants;
     }
+
 
     public function getOwned()
     {
@@ -143,6 +283,7 @@ class AssetProperty extends Asset
         $this->occupants = $occupants;
         return $this;
     }
+
 
     public function setOwned($owned)
     {
@@ -209,6 +350,7 @@ class AssetProperty extends Asset
         $this->rentIncomeMonth = $rentIncomeMonth;
         return $this;
     }
+
 
     public function getType()
     {

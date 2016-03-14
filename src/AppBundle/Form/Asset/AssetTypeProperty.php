@@ -21,8 +21,8 @@ class AssetTypeProperty extends AbstractAssetType
                     'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
                     'expanded' => true
                 ))
-                ->add('owned_percentage', 'text')
-                ->add('is_subject_to_equity_release', 'choice', [
+                ->add('ownedPercentage', 'text')
+                ->add('isSubjectToEquityRelease', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
                 ])
@@ -31,25 +31,25 @@ class AssetTypeProperty extends AbstractAssetType
                     'precision' => 2,
                     'invalid_message' => 'asset.value.type'
                 ])
-                ->add('has_mortgage', 'choice', [
+                ->add('hasMortgage', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
                 ])
-                ->add('mortgage_outstanding_amount', 'text')
-                ->add('has_charges', 'choice', [
+                ->add('mortgageOutstandingAmount', 'text')
+                ->add('hasCharges', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
                 ])
-                ->add('is_rented_out', 'choice', [
+                ->add('isRentedOut', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
                 ])
-                ->add('rent_agreement_end_date', 'date', [ 'widget' => 'text',
+                ->add('rentAgreementEndDate', 'date', [ 'widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date'
                 ])
-                ->add('rent_income_month', 'text')
+                ->add('rentIncomeMonth', 'text')
                
                 
         ;

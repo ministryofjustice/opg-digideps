@@ -21,13 +21,13 @@
     ]
 }) }}
 <div id="owned_percentage_textarea" class="hidden-detail">
-    {{ form_input(form.owned_percentage, 'form.property.owned_percentage', {
+    {{ form_input(form.ownedPercentage, 'form.property.ownedPercentage', {
          'inputPrefix' : '%',
          'inputClass' : 'form-control__number'
     }) }}
 </div>
     
-{{ form_checkbox_group(form.is_subject_to_equity_release, 'form.property.is_subject_to_equity_release', {
+{{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
     'fieldSetClass' : 'inline',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
@@ -40,7 +40,7 @@
              'inputClass' : 'form-control__number'
    } ) }}
 
-{{ form_checkbox_group(form.has_mortgage, 'form.property.has_mortgage', {
+{{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
     'fieldSetClass' : 'inline has_mortgage_radio',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
@@ -48,13 +48,13 @@
     ]
 }) }}
 <div id="mortgage_outstanding_amount_textarea" class="hidden-detail">
-    {{ form_input(form.mortgage_outstanding_amount, 'form.property.mortgage_outstanding_amount', {
+    {{ form_input(form.mortgageOutstandingAmount, 'form.property.mortgageOutstandingAmount', {
         'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     }) }}
 </div>
 
-{{ form_checkbox_group(form.has_charges, 'form.property.has_charges', {
+{{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
     'fieldSetClass' : 'inline',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
@@ -62,7 +62,7 @@
     ]
 }) }}
 
-{{ form_checkbox_group(form.is_rented_out, 'form.property.is_rented_out', {
+{{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
     'fieldSetClass' : 'inline is_rented_out_radio',
     'items': [
         {'labelClass': 'block-label', 'elementClass': '' },
@@ -71,11 +71,11 @@
 }) }}
 
 <div id="rent_info" class="hidden-detail">
-    {{ form_known_date(form.rent_agreement_end_date, 'form.property.rental_agreement_end_date', {
+    {{ form_known_date(form.rentAgreementEndDate, 'form.property.rentAgreementEndDate', {
         'showDay': 'false'
     }) }}
 
-    {{ form_input(form.rent_income_month, 'form.property.rent_income_month', {
+    {{ form_input(form.rentIncomeMonth, 'form.property.rentIncomeMonth', {
         'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     }) }}
