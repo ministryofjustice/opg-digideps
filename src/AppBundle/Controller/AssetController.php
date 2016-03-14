@@ -160,7 +160,9 @@ class AssetController extends RestController
             ]);
             
             if (isset($data['rent_agreement_end_date'])) {
-               // $asset->setRentAgreementEndDate(new \DateTime($data['rent_agreement_end_date']['date']));
+                $value = isset($data['rent_agreement_end_date']['date']) 
+                    ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
+                $asset->setRentAgreementEndDate(new \DateTime($value));
             }
         }
     }
