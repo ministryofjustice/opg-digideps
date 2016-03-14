@@ -4,7 +4,7 @@
 <div class="report-list__item-header">
     <h3>Property</h3>
     <a href="{{ url('asset_edit', { 'reportId': report.id, 'assetId': asset.id }) ~ '#asset-edit-' ~ asset.id }}"
-       class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-{{ asset.address }}">{{ 'editLink'| trans }}</a>
+       class="js-report-list__item-edit-link report-list__item-edit-link behat-link-asset-{{ asset.address }}">{{  ('editLink.' ~ asset.type) | trans }}</a>
 </div>
 <dl class="report-list__item-fields">
     <div class="report-list__item-fields-row">

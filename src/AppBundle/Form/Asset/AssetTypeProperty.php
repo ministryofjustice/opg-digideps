@@ -21,7 +21,7 @@ class AssetTypeProperty extends AbstractAssetType
                     'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
                     'expanded' => true
                 ))
-                ->add('ownedPercentage', 'text')
+                ->add('ownedPercentage', 'text') //only if owned=partly
                 ->add('isSubjectToEquityRelease', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
@@ -35,7 +35,7 @@ class AssetTypeProperty extends AbstractAssetType
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true
                 ])
-                ->add('mortgageOutstandingAmount', 'text')
+                ->add('mortgageOutstandingAmount', 'text') //only if hasMortgage=yes
                 ->add('hasCharges', 'choice', [
                     'choices' => ['yes' => 'Yes', 'no' => 'No'],
                     'expanded' => true

@@ -1,5 +1,5 @@
 {% if form.vars.value.id %}
-    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+    {% set subSectionTitleText = ('page.subSectionTitleEdit' ~ assetToEdit.type) %}
 {% else %}
     {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
 {% endif %}

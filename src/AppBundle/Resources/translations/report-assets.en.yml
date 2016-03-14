@@ -68,7 +68,9 @@ valuationDate:
     label: Valuation date
 next:
     label: Next
-editLink: "Edit this asset"
+editLink: 
+    other: "Edit this asset"
+    property: "Edit this property"
 
 no_assets:
     label: %client% has no assets
