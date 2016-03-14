@@ -100,17 +100,17 @@ class AssetProperty extends Asset
     private $mortgageOutstandingAmount;
 
     /**
-     * @var boolean
+     * @var string
      * @JMS\Groups({"asset"})
-     * @JMS\Type("boolean")
+     * @JMS\Type("string")
      * @ORM\Column(name="has_charges",  type="string", length=4)
      */
     private $hasCharges;
 
     /**
-     * @var boolean
+     * @var string
      * @JMS\Groups({"asset"})
-     * @JMS\Type("boolean")
+     * @JMS\Type("string")
      * @ORM\Column(name="is_rented_out",  type="string", length=4)
      */
     private $isRentedOut;
