@@ -605,13 +605,14 @@ class Report
         $ret = array();
         
         foreach ($this->getAssets() as $asset) {
-        
-            $type = $asset->getTitle();
-        
-            if (isset($ret[$type])) {
-                $ret[$type][] = $asset;
-            } else {
-                $ret[$type] = array($asset);
+            if ($asset instanceof AssetOther) {
+                $type = $asset->getTitle();
+
+                if (isset($ret[$type])) {
+                    $ret[$type][] = $asset;
+                } else {
+                    $ret[$type] = array($asset);
+                }
             }
         }
     
