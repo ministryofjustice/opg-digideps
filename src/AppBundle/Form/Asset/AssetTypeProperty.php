@@ -72,11 +72,12 @@ class AssetTypeProperty extends AbstractAssetType
                 $validationGroups[] = "owned-partly";
             }
 
-            if ($data->getHasMortgage()) {
+            
+            if ($data->getHasMortgage() == 'yes') {
                 $validationGroups[] = "mortgage-yes";
             }
             
-            if ($data->getIsRentedOut()) {
+            if ($data->getIsRentedOut() == 'yes') {
                 $validationGroups[] = "rented-out-yes";
             }
 
