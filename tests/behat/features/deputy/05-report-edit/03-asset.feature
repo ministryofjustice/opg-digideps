@@ -42,7 +42,7 @@ Feature: deputy / report / edit asset
       And I click on "report-2016"
       # delete current asset
       And I follow "edit-assets"
-      And I click on "asset-2-beds-flat-in-ha2"
+      And I click on "asset-asset-12-gold-house-sw115tf"
       And I click on "delete-button"
       Then the checkbox "report_noAssetToAdd" should be unchecked
       And I save the page as "report-no-asset-empty"
