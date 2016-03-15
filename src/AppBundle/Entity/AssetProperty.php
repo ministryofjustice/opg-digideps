@@ -335,12 +335,12 @@ class AssetProperty extends Asset
      */
     public function deleteUnusedData()
     {
-        if ($this->getIsRentedOut() === false) {
+        if ($this->getIsRentedOut() === 'yes') {
             $this->setRentAgreementEndDate(null);
             $this->setRentIncomeMonth(null);
         }
 
-        if ($this->getHasMortgage() === false) {
+        if ($this->getHasMortgage() ===  'yes') {
             $this->setMortgageOutstandingAmount(null);
         }
 
@@ -355,6 +355,11 @@ class AssetProperty extends Asset
      * @JMS\Groups({"asset"})
      */
     public function getAssetType()
+    {
+        return 'property';
+    }
+    
+    public function getType()
     {
         return 'property';
     }

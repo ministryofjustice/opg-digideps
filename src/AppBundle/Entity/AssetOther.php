@@ -112,5 +112,10 @@ class AssetOther extends Asset
     {
         return 'other';
     }
+    
+    public function getType()
+    {
+        return 'other';
+    }
 
 }
