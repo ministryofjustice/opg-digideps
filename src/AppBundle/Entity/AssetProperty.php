@@ -118,7 +118,7 @@ class AssetProperty extends Asset
     /**
      * @var \DateTime
      * @JMS\Groups({"asset"})
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="rent_agreement_end_date", type="datetime", nullable=true)
      */
     private $rentAgreementEndDate;
@@ -335,12 +335,12 @@ class AssetProperty extends Asset
      */
     public function deleteUnusedData()
     {
-        if ($this->getIsRentedOut() === 'yes') {
+        if ($this->getIsRentedOut() === 'no') {
             $this->setRentAgreementEndDate(null);
             $this->setRentIncomeMonth(null);
         }
 
-        if ($this->getHasMortgage() ===  'yes') {
+        if ($this->getHasMortgage() ===  'no') {
             $this->setMortgageOutstandingAmount(null);
         }
 
