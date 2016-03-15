@@ -44,7 +44,7 @@ form:
       label: Is there a charge on the property? For example, Local Authority to recover care fees.
     isRentedOut:
       label: Is the property partly or fully rented out?
-    rentalAgreementEndDate:
+    rentAgreementEndDate:
       label: When does the rental agreement end?
       hint: (MM/YYYY)
     rentIncomeMonth:

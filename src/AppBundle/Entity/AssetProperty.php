@@ -15,6 +15,7 @@ class AssetProperty extends Asset
 
     /**
      * @Assert\NotBlank(message="asset.property.address.notBlank", groups={"property"})
+     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property"})
      * @JMS\Type("string")
      * @var string
      */
@@ -22,6 +23,7 @@ class AssetProperty extends Asset
 
     /**
      * @Assert\NotBlank(message="asset.property.address2.notBlank", groups={"property"})
+     * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property"})
      * @JMS\Type("string")
      * @var string
      */
@@ -29,6 +31,7 @@ class AssetProperty extends Asset
 
     /**
      * @Assert\NotBlank(message="asset.property.county.notBlank", groups={"property"})
+     * @Assert\Length( max=75, maxMessage="asset.property.county.maxMessage", groups={"property"})
      * @JMS\Type("string")
      * @var string
      */
@@ -44,7 +47,7 @@ class AssetProperty extends Asset
 
     /**
      * @Assert\NotBlank(message="asset.property.occupants.notBlank", groups={"property"})
-     * 
+     * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property"})
      * @var string
      * 
      * @JMS\Type("string")
@@ -63,6 +66,7 @@ class AssetProperty extends Asset
      * @var float 0-100
      * 
      * @Assert\NotBlank(message="asset.property.ownedPercentage.notBlank", groups={"owned-partly"})
+     * @Assert\Range(min=0, max=100, minMessage = "asset.property.ownedPercentage.type", maxMessage = "asset.property.ownedPercentage.type", groups={"owned-partly"})
      * 
      * @JMS\Type("float")
      */
@@ -108,9 +112,9 @@ class AssetProperty extends Asset
     private $isRentedOut;
 
     /**
-     * @Assert\NotBlank(message="asset.property.rentAgreementEndDate.notBlank", groups={"rented-out-yesFIXME"})
+     * @Assert\NotBlank(message="asset.property.rentAgreementEndDate.notBlank", groups={"rented-out-yes"})
      * @var \DateTime
-     * @JMS\Type("DateTime")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      */
     private $rentAgreementEndDate;
 

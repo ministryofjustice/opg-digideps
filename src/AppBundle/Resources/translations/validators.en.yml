@@ -202,19 +202,24 @@ asset:
     property:
         address:
             notBlank: Enter your address
+            maxMessage: max 200 chars for your address
         address2:
             notBlank: " "
+            maxMessage: max 200 chars for your address
         county:
             notBlank:   " "
+            maxMessage: max 75 chars for your address
         postcode:
             notBlank:   " "
             maxMessage: The postcode can't be longer than {{ limit }} characters
         occupants:
             notBlank: Tell who lives at the property
+            maxMessage: Maximum 550 chars are allowed here
         owned:
             notBlank: Please choose if the property is fully or part-owned by the client
         ownedPercentage:
             notBlank: Please tell us the the share of the property
+            type: Please enter a valid value (1-100) for the property share
         isSubjectToEquityRelease:
             notBlank: Please choose if the property subject to an equity release scheme
         hasMortgage:
@@ -231,6 +236,8 @@ asset:
             notBlank: Enter the value of the rental incme
             type: Enter a valid amount 
             outOfRange: The value must be less than £1,000,000,000
+        rentAgreementEndDate:
+            notBlank: Enter a valid date for the rental agreement end
         value:
             notBlank: Enter the value of this property
             type: Enter a valid amount for this property
