@@ -12,34 +12,15 @@
             {% else %}
             {% set assetsTotalValue = 0 %}
             <ul class="list" id="assets">
-                {% for title, assets in groupAssets %}
-                    <li class="asset-group" data-group="{{ title }}">
-                        <h3>{{ title }}</h3>
-                        <div class="box">
-                            <ul class="asset-group-items">
-                                {% for asset in assets %}
-                                    {% set assetsTotalValue = assetsTotalValue + asset.value %}
-                                    <li class="asset-item">
-                                        <dl class="labelvalue asset-description">
-                                            <dt class="label">Description</dt>
-                                            <dd class="textarea value">{{ asset.description }}</dd>
-                                        </dl>
-                                        <dl class="labelvalue asset-valuationDate">
-                                            <div class="label">Valuation date</div>
-                                            <div
-                                                class="value">{% if asset.valuationDate %}{{ asset.valuationDate | date("d / m / Y") }}{% endif %}</div>
-                                        </dl>
-                                        <dl class="labelvalue asset-value">
-                                            <dt class="label">Value</dt>
-                                            <dd class="value">£{{ asset.value | money_format }}</dd>
-                                        </dl>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
+                {% for type, assets in groupAssets %}
+                        <li class="asset-group" data-group="{{ type }}">
+                        {% if type == 'other' %}
+                            {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
+                        {% elseif type == 'property' %}
+                             {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
+                        {% endif%}
                     </li>
                 {% endfor %}
-        
         
                 {# total value #}
                 <li class="box total">
