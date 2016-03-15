@@ -79,7 +79,11 @@ abstract class Asset
                 return new AssetOther();
         }
     }
-
+    
+    public function __clone()
+    {
+        $this->id = null;
+    }
 
     /**
      * Get id
