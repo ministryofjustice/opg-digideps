@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class AssetTypeProperty extends AbstractAssetType
 {
@@ -46,17 +48,23 @@ class AssetTypeProperty extends AbstractAssetType
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true
             ])
-//                ->add('rentAgreementEndDate', 'date', [ 
-//                    'widget' => 'text',
-//                    'input' => 'datetime',
-//                    'format' => 'dd-MM-yyyy',
-//                    'invalid_message' => 'Enter a valid date',
-//                    'required' => false
-//                ])
+            ->add('rentAgreementEndDate', 'date', [ 
+                    'widget' => 'text',
+                    'input' => 'datetime',
+                    'format' => 'dd-MM-yyyy',
+                    'invalid_message' => 'Enter a valid date',
+            ])
             ->add('rentIncomeMonth', 'text')
-
-
-        ;
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+                
+                // rentAgreementEndDate; set day=01 if month and year are set
+                if (!empty($data['rentAgreementEndDate']['month']) && !empty($data['rentAgreementEndDate']['year'])) {
+                    $data['rentAgreementEndDate']['day'] = '01';
+                    $event->setData($data);
+                }
+            });
+        
     }
 
 
@@ -71,7 +79,6 @@ class AssetTypeProperty extends AbstractAssetType
             if ($data->getOwned() == "partly") {
                 $validationGroups[] = "owned-partly";
             }
-
             
             if ($data->getHasMortgage() == 'yes') {
                 $validationGroups[] = "mortgage-yes";
