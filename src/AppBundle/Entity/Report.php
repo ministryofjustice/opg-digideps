@@ -596,23 +596,21 @@ class Report
     
     
     /**
-     * Get array of assets grouped by title
+     * Get array of assets grouped by type
      *
      * @return array of Asset[]
      */
-    public function getAssetsGroupedByTitle()
+    public function getAssetsGroupedByType()
     {
         $ret = array();
         
         foreach ($this->getAssets() as $asset) {
-            if ($asset instanceof AssetOther) {
-                $type = $asset->getTitle();
+            $type = $asset->getType();
 
-                if (isset($ret[$type])) {
-                    $ret[$type][] = $asset;
-                } else {
-                    $ret[$type] = array($asset);
-                }
+            if (isset($ret[$type])) {
+                $ret[$type][] = $asset;
+            } else {
+                $ret[$type] = array($asset);
             }
         }
     

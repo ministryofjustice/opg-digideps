@@ -139,7 +139,7 @@ class ReportController extends RestController
                 'report' => $report,
                 'client' => $report->getClient(),
                 'assets' => $report->getAssets(),
-                'groupAssets' => $report->getAssetsGroupedByTitle(),
+                'groupAssets' => $report->getAssetsGroupedByType(),
                 'contacts' => $report->getContacts(),
                 'decisions' => $report->getDecisions(),
                 'isEmailAttachment' => true,
