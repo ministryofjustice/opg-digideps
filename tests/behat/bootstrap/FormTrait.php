@@ -26,8 +26,27 @@ trait FormTrait
     {
         $this->assertResponseStatus(200);
         if ($this->getSession()->getPage()->has('css','.form-group.error')) {
-            throw new \RuntimeException("Errors found");    
+            throw new \RuntimeException("Errors found in elements: "
+                . implode(',', $this->getElementsIdsWithValidationErrors()));    
         }
+    }
+    
+    /**
+     * @return array of IDs of input/select/textarea elements inside a  .form-group.error CSS class
+     */
+    private function getElementsIdsWithValidationErrors()
+    {
+        $ret = [];
+        
+        $errorRegions = $this->getSession()->getPage()->findAll('css', ".form-group.error");
+        foreach ($errorRegions as $errorRegion) {
+            $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
+            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
+                $ret[] = $elementWithError->getAttribute('id');
+            }
+        }
+        
+        return $ret;
     }
     
     /**
@@ -38,16 +57,9 @@ trait FormTrait
      */
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
     {
+        $foundIdsWithErrors = $this->getElementsIdsWithValidationErrors();
+        
         $fields = array_keys($table->getRowsHash());
-
-        $errorRegions = $this->getSession()->getPage()->findAll('css', ".form-group.error");
-        $foundIdsWithErrors = [];
-        foreach ($errorRegions as $errorRegion) {
-            $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
-            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
-                $foundIdsWithErrors[] = $elementWithError->getAttribute('id');
-            }
-        }
         $untriggeredField = array_diff($fields, $foundIdsWithErrors);
         $unexpectedFields = array_diff($foundIdsWithErrors, $fields);
         
