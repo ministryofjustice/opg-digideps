@@ -1,0 +1,7 @@
+<div id="money-transfers">
+    <h2 class="section-heading sub-title" id="working-out-title">Money transfers</h2>
+    
+    {% for transfer in transfers %}
+        {{ transfer.id }} - {{ transfer.from.bank }} = {{ transfer.to.bank }} - {{ tranfer.amount }}
+    {% endfor %}
+</div>

@@ -144,6 +144,7 @@ class ReportController extends RestController
                 'decisions' => $report->getDecisions(),
                 'isEmailAttachment' => true,
                 'deputy' => $report->getClient()->getUsers()->first(),
+                'transfers' => $report->getMoneyTransfers()
         ]);
     }
     
