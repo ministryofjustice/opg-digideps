@@ -160,9 +160,9 @@ Feature: deputy / report / add contact, decision, assets
         When I fill in the following:
             | asset_ownedPercentage | 45 |
             | asset_mortgageOutstandingAmount | 187500 |
-            | asset_rentIncomeMonth | 1400.50 |
             | asset_rentAgreementEndDate_month | 12 |
             | asset_rentAgreementEndDate_year | 2017 |
+            | asset_rentIncomeMonth | 1400.50 |
         And I press "asset_save"
         Then the form should be valid
         And the response status code should be 200
