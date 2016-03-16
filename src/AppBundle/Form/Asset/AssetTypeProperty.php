@@ -25,7 +25,13 @@ class AssetTypeProperty extends AbstractAssetType
                 'choices' => ['fully' => 'Fully owned', 'partly' => 'Part-owned'],
                 'expanded' => true
             ))
-            ->add('ownedPercentage', 'text') //only if owned=partly
+            ->add('ownedPercentage', 'number', [
+                'grouping' => false,
+                'precision' => 0,
+                'max_length' => 2,
+                'pattern' => '[0-9]',
+                'invalid_message' => 'asset.property.ownedPercentage.type'
+            ])
             ->add('isSubjectToEquityRelease', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true
@@ -33,13 +39,17 @@ class AssetTypeProperty extends AbstractAssetType
             ->add('value', 'number', [
                 'grouping' => true,
                 'precision' => 2,
-                'invalid_message' => 'asset.value.type'
+                'invalid_message' => 'asset.property.value.type'
             ])
             ->add('hasMortgage', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true
             ])
-            ->add('mortgageOutstandingAmount', 'text') //only if hasMortgage=yes
+            ->add('mortgageOutstandingAmount', 'number', [
+                'grouping' => true,
+                'precision' => 2,
+                'invalid_message' => 'asset.property.mortgageOutstandingAmount.type'
+            ])
             ->add('hasCharges', 'choice', [
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true
