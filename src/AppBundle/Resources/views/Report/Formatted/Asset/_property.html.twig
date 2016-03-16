@@ -27,7 +27,7 @@
             
             <dl class="labelvalue">
                 <dt class="label">Is the property fully or part-owned by the client?</dt>
-                <table class="yesno">
+                <table class="yesno small">
                     <tbody><tr>
                         <td class="checkbox" >{% if asset.owned =='fully' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Fully owed</td>
@@ -45,7 +45,7 @@
             
             <dl class="labelvalue">
                 <dt class="label">Is the property subject to an equity release scheme?</dt>
-                <table class="yesno">
+                <table class="yesno small">
                     <tbody><tr>
                         <td class="checkbox" >{% if asset.isSubjectToEquityRelease =='yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Yes</td>
@@ -65,7 +65,7 @@
             
             <dl class="labelvalue">
                 <dt class="label">Is there and outstanding mortgage?</dt>
-                <table class="yesno">
+                <table class="yesno small">
                     <tbody><tr>
                         <td class="checkbox" >{% if asset.hasMortgage =='yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Yes</td>
@@ -84,7 +84,7 @@
              <dl class="labelvalue">
                 <dt class="label">Is there a charge on the property?</br>
                 For example, Local Authority to recover care fees</dt>
-                <table class="yesno">
+                <table class="yesno small">
                     <tbody><tr>
                         <td class="checkbox" >{% if asset.hasCharges =='yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Yes</td>
@@ -96,7 +96,7 @@
                     
             <dl class="labelvalue">
                 <dt class="label">Is the property rented out?</dt>
-                <table class="yesno">
+                <table class="yesno small">
                     <tbody><tr>
                         <td class="checkbox" >{% if asset.isRentedOut =='yes' %}X{% else %}&nbsp;{% endif %}</td>
                         <td class="label">Yes</td>

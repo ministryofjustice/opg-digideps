@@ -21,8 +21,11 @@ table.yesno, #safegaurding-care-funding table {
     .label {
         width: 5em;
     }
-    .address {
+    &.small {
         width: auto;
+        .label {
+            width: auto;
+        }
     }
 }
 
