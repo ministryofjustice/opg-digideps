@@ -621,6 +621,21 @@ class Report
     }
     
     /**
+     * Get assets total value
+     *
+     * @return float
+     */
+    public function getAssetsTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getAssets() as $asset) {
+            $ret += $asset->getValue();
+        }
+        
+        return $ret;
+    }
+    
+    /**
      * Set noAssetToAdd
      *
      * @param boolean $noAssetToAdd
