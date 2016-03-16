@@ -44,6 +44,8 @@ Feature: deputy / report / edit asset
       And I follow "edit-assets"
       And I click on "asset-12-gold-house-sw115tf"
       And I click on "delete-button"
+      And I click on "asset-impressionist-painting"
+      And I click on "delete-button"
       Then the checkbox "report_noAssetToAdd" should be unchecked
       And I save the page as "report-no-asset-empty"
       # submit without ticking the box
