@@ -233,8 +233,8 @@ asset:
         isRentedOut:
             notBlank: Please choose if the property is partly or fully rented out
         rentIncomeMonth:
-            notBlank: Enter the value of the rental incme
-            type: Enter a valid amount 
+            notBlank: Enter the value of the rental income
+            type: Enter a valid amount for the rental income
             outOfRange: The value must be less than £1,000,000,000
         rentAgreementEndDate:
             notBlank: Enter a valid date for the rental agreement end

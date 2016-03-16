@@ -64,7 +64,11 @@ class AssetTypeProperty extends AbstractAssetType
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
             ])
-            ->add('rentIncomeMonth', 'text')
+            ->add('rentIncomeMonth', 'number', [
+                'grouping' => true,
+                'precision' => 2,
+                'invalid_message' => 'asset.property.rentIncomeMonth.type'
+            ])
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
                 $data = $event->getData();
                 

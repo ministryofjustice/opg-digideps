@@ -49,7 +49,7 @@ Feature: deputy / report / edit asset
             | asset_postcode |  sw115tf  |
             | asset_occupants | only the deputy only  |
             | asset_owned_1 | partly |
-            | asset_ownedPercentage | 45.00 |
+            | asset_ownedPercentage | 45 |
             | asset_isSubjectToEquityRelease_0 | yes  |
             | asset_value | 560,000.00  |
             | asset_hasMortgage_0 | yes  |
