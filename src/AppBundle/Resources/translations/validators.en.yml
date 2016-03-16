@@ -217,7 +217,7 @@ asset:
         county:
             maxMessage: max 75 chars for your address
         postcode:
-            notBlank: Enter your postcode 
+            notBlank: Enter the postcode 
 >>>>>>> origin/dd-1399-property
             maxMessage: The postcode can't be longer than {{ limit }} characters
         occupants:
@@ -226,12 +226,12 @@ asset:
         owned:
             notBlank: Please choose either fully or part-owned
         ownedPercentage:
-            notBlank: Tell us what the client's share of the property is
+            notBlank: Tell us what their share of the property is
             type: Enter a valid number (1-100) for the property share
         isSubjectToEquityRelease:
             notBlank: Is there an equity release scheme? Choose Yes or No
         hasMortgage:
-            notBlank: Is an outstanding mortgage? Choose Yes or No
+            notBlank: Is there an outstanding mortgage? Choose Yes or No
         mortgageOutstandingAmount:
             notBlank: Tell us how much is left to pay on the mortgage
             type: Enter a valid number 
@@ -245,7 +245,7 @@ asset:
             notBlank: Enter the monthly rental income
             type: Enter a valid amount 
 =======
-            notBlank: Enter the value of the rental income
+            notBlank: Enter monthly income from renting this property
             type: Enter a valid amount for the rental income
 >>>>>>> origin/dd-1399-property
             outOfRange: The value must be less than £1,000,000,000

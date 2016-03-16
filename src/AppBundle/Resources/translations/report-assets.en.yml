@@ -41,7 +41,7 @@ form:
     mortgageOutstandingAmount:
       label: How much is left to pay?
     hasCharges:
-      label: Is there a charge on the property? For example, from the local authority to recover care fees.
+      label: Is there a charge on the property? For example, from the local authority to pay for care.
     isRentedOut:
       label: Is the property rented out? (partly or fully)
     rentAgreementEndDate:
