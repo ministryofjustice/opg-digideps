@@ -39,7 +39,7 @@ table.money {
         padding: em(6, 18) 20px em(9, 18) 0;
         border-bottom: 0;
     }
-    
+
     .grey {
         background: $grey-3;
     }
@@ -47,9 +47,22 @@ table.money {
         background: #000;
         color: $white;
     }
-    
+
     .account-number {
         color: $grey-1;
     }
 }
 
+table#money-transfers-table {
+    width: 100%;
+
+    thead {
+        th {
+            text-align: left;
+        }
+    }
+    tr td,
+    tr th {
+        border-bottom: 1px solid $border-colour;
+    }
+}
