@@ -208,7 +208,6 @@ asset:
             maxMessage: max 75 chars for your address
         postcode:
 <<<<<<< HEAD
-=======
             notBlank: Enter your postcode 
 >>>>>>> origin/dd-1399-property
             maxMessage: The postcode can't be longer than {{ limit }} characters
@@ -237,9 +236,7 @@ asset:
 <<<<<<< HEAD
             notBlank: Enter the monthly rental income
             type: Enter a valid amount 
-=======
             notBlank: Enter monthly income from renting this property
-=======
             notBlank: Enter the value of the rental income
 >>>>>>> origin/dd-1399-property
             type: Enter a valid amount for the rental income
