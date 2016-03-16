@@ -201,43 +201,43 @@ asset:
         notBlank: Tell us if the client has no assets to add
     property:
         address:
-            notBlank: Enter your address
-            maxMessage: max 200 chars for your address
+            notBlank: Enter the address
+            maxMessage: The address can't be longer than 200 letters
         address2:
             notBlank: " "
-            maxMessage: max 200 chars for your address
+            maxMessage: The address can't be longer than 200 letters
         county:
             notBlank:   " "
-            maxMessage: max 75 chars for your address
+            maxMessage: The county can't be longer than 75 letters
         postcode:
-            notBlank:   " "
+            notBlank:   Enter the postcode
             maxMessage: The postcode can't be longer than {{ limit }} characters
         occupants:
-            notBlank: Tell who lives at the property
-            maxMessage: Maximum 550 chars are allowed here
+            notBlank: Tell us who lives at the property
+            maxMessage: Your answer can't be longer than 500 letters
         owned:
-            notBlank: Please choose if the property is fully or part-owned by the client
+            notBlank: Please choose either fully or part-owned
         ownedPercentage:
-            notBlank: Please tell us the the share of the property
-            type: Please enter a valid value (1-100) for the property share
+            notBlank: Tell us what the client's share of the property is
+            type: Enter a valid number (1-100) for the property share
         isSubjectToEquityRelease:
-            notBlank: Please choose if the property subject to an equity release scheme
+            notBlank: Is there an equity release scheme? Choose Yes or No
         hasMortgage:
-            notBlank: Please choose if there is an outstanding mortgage
+            notBlank: Is an outstanding mortgage? Choose Yes or No
         mortgageOutstandingAmount:
-            notBlank: Please tell us the mortgage outstanding amount
-            type: Enter a valid amount 
+            notBlank: Tell us how much is left to pay on the mortgage
+            type: Enter a valid number 
             outOfRange: The amount must be less than £10,000,000,000
         hasCharges:
-            notBlank: Please choose if there is a charge on the property
+            notBlank: Is a charge on the property? Choose Yes or No
         isRentedOut:
-            notBlank: Please choose if the property is partly or fully rented out
+            notBlank: Is the property rented out? Choose Yes or No
         rentIncomeMonth:
-            notBlank: Enter the value of the rental incme
+            notBlank: Enter the monthly rental income
             type: Enter a valid amount 
             outOfRange: The value must be less than £1,000,000,000
         rentAgreementEndDate:
-            notBlank: Enter a valid date for the rental agreement end
+            notBlank: Enter a date for the end of the rental agreement
         value:
             notBlank: Enter the value of this property
             type: Enter a valid amount for this property

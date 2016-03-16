@@ -29,26 +29,26 @@ form:
     occupants:
       label: "Who lives at this property?"
     owned:
-      label: Is the property fully or part-owned by the client?
+      label: Is the property fully or part-owned by %client%?
     ownedPercentage:
-      label: What is the client’s share of the property?
+      label: What is %client%’s share of the property?
     isSubjectToEquityRelease:
       label: Is this property subject to an equity release scheme?
     value:
-      label: Estimated total / full value of property 
+      label: What is the value of property? This can be an estimate.
     hasMortgage:
-      label: Is there an outstanding mortgage?
+      label: Is there mortgage on the property?
     mortgageOutstandingAmount:
-      label: How much is there to pay?
+      label: How much is left to pay?
     hasCharges:
-      label: Is there a charge on the property? For example, Local Authority to recover care fees.
+      label: Is there a charge on the property? For example, from the local authority to recover care fees.
     isRentedOut:
-      label: Is the property partly or fully rented out?
+      label: Is the property rented out? (partly or fully)
     rentAgreementEndDate:
       label: When does the rental agreement end?
       hint: (MM/YYYY)
     rentIncomeMonth:
-      label: Rental income per month?
+      label: What is the rental income each month?
            
            
 title:
