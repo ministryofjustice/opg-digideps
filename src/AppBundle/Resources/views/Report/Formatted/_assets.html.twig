@@ -14,10 +14,10 @@
             <ul class="list" id="assets">
                 {% for type, assets in groupAssets %}
                         <li class="asset-group" data-group="{{ type }}">
-                        {% if type == 'other' %}
-                            {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
-                        {% elseif type == 'property' %}
-                             {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
+                        {% if type == 'property' %}
+                            {% include 'AppBundle:Report/Formatted/Asset:_property.html.twig' %}
+                        {% else %}
+                             {% include 'AppBundle:Report/Formatted/Asset:_other.html.twig' %}
                         {% endif%}
                     </li>
                 {% endfor %}
