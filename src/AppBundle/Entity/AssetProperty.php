@@ -22,7 +22,6 @@ class AssetProperty extends Asset
     private $address;
 
     /**
-     * @Assert\NotBlank(message="asset.property.address2.notBlank", groups={"property"})
      * @Assert\Length( max=200, maxMessage="asset.property.address.maxMessage", groups={"property"})
      * @JMS\Type("string")
      * @var string
@@ -30,7 +29,6 @@ class AssetProperty extends Asset
     private $address2;
 
     /**
-     * @Assert\NotBlank(message="asset.property.county.notBlank", groups={"property"})
      * @Assert\Length( max=75, maxMessage="asset.property.county.maxMessage", groups={"property"})
      * @JMS\Type("string")
      * @var string

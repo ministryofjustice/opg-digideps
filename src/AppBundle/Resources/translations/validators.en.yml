@@ -204,6 +204,7 @@ asset:
             notBlank: Enter the address
             maxMessage: The address can't be longer than 200 letters
         address2:
+<<<<<<< HEAD
             notBlank: " "
             maxMessage: The address can't be longer than 200 letters
         county:
@@ -211,6 +212,13 @@ asset:
             maxMessage: The county can't be longer than 75 letters
         postcode:
             notBlank:   Enter the postcode
+=======
+            maxMessage: max 200 chars for your address
+        county:
+            maxMessage: max 75 chars for your address
+        postcode:
+            notBlank: Enter your postcode 
+>>>>>>> origin/dd-1399-property
             maxMessage: The postcode can't be longer than {{ limit }} characters
         occupants:
             notBlank: Tell us who lives at the property
@@ -233,8 +241,13 @@ asset:
         isRentedOut:
             notBlank: Is the property rented out? Choose Yes or No
         rentIncomeMonth:
+<<<<<<< HEAD
             notBlank: Enter the monthly rental income
             type: Enter a valid amount 
+=======
+            notBlank: Enter the value of the rental income
+            type: Enter a valid amount for the rental income
+>>>>>>> origin/dd-1399-property
             outOfRange: The value must be less than £1,000,000,000
         rentAgreementEndDate:
             notBlank: Enter a date for the end of the rental agreement
