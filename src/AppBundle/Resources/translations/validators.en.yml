@@ -204,13 +204,10 @@ asset:
             notBlank: Enter your address
             maxMessage: max 200 chars for your address
         address2:
-            notBlank: " "
             maxMessage: max 200 chars for your address
         county:
-            notBlank:   " "
             maxMessage: max 75 chars for your address
         postcode:
-            notBlank:   " "
             maxMessage: The postcode can't be longer than {{ limit }} characters
         occupants:
             notBlank: Tell who lives at the property

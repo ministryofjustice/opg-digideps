@@ -120,8 +120,6 @@ Feature: deputy / report / add contact, decision, assets
         When I press "asset_save"
         Then the following fields should have an error:
             | asset_address |
-            | asset_address2 |
-            | asset_county |
             | asset_postcode |
             | asset_occupants |
             | asset_owned_0 |
