@@ -7,6 +7,13 @@
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}{% endblock %}
     
+    {#{% block pageNavigation %}
+        <nav id="back-bar">
+            <a id="overview-button" href="{{ path('assets', {'reportId': report.id}) }}">Return to report assets</a>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </nav>
+    {% endblock %#}}
+    
     {% block pageBody %}
 
         <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
