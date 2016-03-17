@@ -52,7 +52,7 @@ abstract class Asset
      *
      * @Assert\NotBlank(message="asset.value.notBlank")
      * @Assert\Type( type="numeric", message="asset.value.type")
-     * @Assert\Range(max=10000000000, maxMessage = "asset.value.outOfRange")
+     * @Assert\Range(max=100000000000, maxMessage = "asset.value.outOfRange")
      * 
      * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property"})
      * @Assert\Type( type="numeric", message="asset.property.value.type", groups={"property"})
