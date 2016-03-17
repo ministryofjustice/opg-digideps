@@ -19,7 +19,7 @@
     
     {% block pageBody %}
         
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
         <h3 class="heading-medium">
             {{ ('page.subSectionTitleAdd.' ~ asset.type) | trans({}, translationDomain) }}
