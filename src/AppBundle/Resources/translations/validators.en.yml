@@ -207,7 +207,7 @@ asset:
         county:
             maxMessage: max 75 chars for your address
         postcode:
-            notBlank: Enter your postcode 
+            notBlank: Enter the postcode 
             maxMessage: The postcode can't be longer than {{ limit }} characters
         occupants:
             notBlank: Tell us who lives at the property
