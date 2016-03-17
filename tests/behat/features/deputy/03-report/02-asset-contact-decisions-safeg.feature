@@ -81,7 +81,7 @@ Feature: deputy / report / add contact, decision, assets
             | asset_value |
             | asset_description |
         When I fill in the following:
-            | asset_value       | 10000000001 |
+            | asset_value       | 1000000000001 |
             | asset_description | Alfa Romeo 156 JTD |
             | asset_valuationDate_day | 99 |
             | asset_valuationDate_month |  |
