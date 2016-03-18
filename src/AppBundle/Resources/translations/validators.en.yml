@@ -226,7 +226,7 @@ asset:
             type: Enter a valid number 
             outOfRange: The amount must be less than £100,000,000,000
         hasCharges:
-            notBlank: Is a charge on the property? Choose Yes or No
+            notBlank: Is there a charge on the property? Choose Yes or No
         isRentedOut:
             notBlank: Is the property rented out? Choose Yes or No
         rentIncomeMonth:
