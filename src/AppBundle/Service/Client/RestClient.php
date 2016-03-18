@@ -244,7 +244,7 @@ class RestClient
     public function post($endpoint, $mixed, array $options = [])
     {
         $body = $this->toJson($mixed, $options);
-
+        
         $response = $this->rawSafeCall('post', $endpoint, [
             'body' => $body,
             'addAuthToken' => true,
@@ -462,7 +462,7 @@ class RestClient
             'method' => $method,
             'time' => microtime(true) - $start,
             'options'=> print_r($options, true),
-            'responseCode' => $response->getStatusCode(),
+            'responseCode' => $response ? $response->getStatusCode() : null,
             'responseBody' => $response ? print_r(json_decode((string)$response->getBody(), true), true) : $response,
         ];
     }

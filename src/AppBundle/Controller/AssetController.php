@@ -26,7 +26,7 @@ class AssetController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'asset']);
         $assets = $report->getAssets();
-
+       
         // if there are no assets and the report is not due, show new asset form
         if (empty($assets) && !$report->isDue()) {
             return $this->redirect($this->generateUrl('asset_add_select_title', [ 'reportId' => $reportId]));
@@ -51,7 +51,7 @@ class AssetController extends AbstractController
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
-        $form = $this->createForm('asset_title', new EntityDir\Asset, [
+        $form = $this->createForm('asset_title', new EntityDir\AssetOther(), [
             'action' => $this->generateUrl('asset_add_select_title', [ 'reportId' => $reportId])
         ]);
 
@@ -78,9 +78,9 @@ class AssetController extends AbstractController
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client']);
 
         // [.. change form and template (or forward) depending on the asset title ]
-        $asset = new EntityDir\Asset();
-        $asset->setTitle($title);
-        $form = $this->createForm(new FormDir\AssetType(), $asset, [
+        $asset = EntityDir\Asset::factory($title);
+        
+        $form = $this->createForm( FormDir\Asset\AbstractAssetType::factory($title), $asset, [
             'action' => $this->generateUrl('asset_add_complete', [ 'reportId' => $reportId, 'title' => $title])
         ]);
 
@@ -90,8 +90,7 @@ class AssetController extends AbstractController
         if ($form->isValid()) {
             $asset = $form->getData();
             $asset->setReport($report);
-            $this->get('restClient')->post('report/asset', $asset);
-
+            $this->get('restClient')->post("report/{$reportId}/asset", $asset);
             $report->setNoAssetToAdd(false);
             $this->getRestClient()->put('report/' . $reportId, $report);
             
@@ -101,6 +100,7 @@ class AssetController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
+            'asset' => $asset
         ];
     }
     
@@ -117,15 +117,15 @@ class AssetController extends AbstractController
         if (!$report->hasAssetWithId($assetId)) {
             throw new \RuntimeException("Asset not found.");
         }
-        $asset = $this->get('restClient')->get('report/asset/' . $assetId, 'Asset');
-        $form = $this->createForm(new FormDir\AssetType(), $asset);
+        $asset = $this->get('restClient')->get("report/{$reportId}/asset/{$assetId}", 'Asset');
+        $form = $this->createForm(FormDir\Asset\AbstractAssetType::factory($asset->getType()), $asset);
 
         $form->handleRequest($request);
 
         // handle submit report
         if ($form->isValid()) {
             $asset = $form->getData();
-            $this->get('restClient')->put('report/asset', $asset);
+            $this->get('restClient')->put("report/{$reportId}/asset/{$assetId}", $asset);
 
             return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));
         }
@@ -149,7 +149,7 @@ class AssetController extends AbstractController
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         
         if ($report->hasAssetWithId($id)) {
-            $restClient->delete("/report/asset/{$id}");
+            $restClient->delete("/report/{$reportId}/asset/{$id}");
         }
         
         return $this->redirect($this->generateUrl('assets', [ 'reportId' => $reportId]));

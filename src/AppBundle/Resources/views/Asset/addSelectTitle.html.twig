@@ -7,6 +7,13 @@
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}{% endblock %}
     
+    {#{% block pageNavigation %}
+        <nav id="back-bar">
+            <a id="overview-button" href="{{ path('assets', {'reportId': report.id}) }}">Return to report assets</a>
+            {% include 'AppBundle:Components:_helpline.html.twig' %}
+        </nav>
+    {% endblock %}#}
+    
     {% block pageBody %}
 
         <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
@@ -14,13 +21,13 @@
 
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form', id: 'asset-form-add-select-title' } }) }}
         
-          <h3 class="heading-medium">{{ 'page.subSectionTitleAdd' | trans({}, translationDomain) }}</h3>
+          <h3 class="heading-medium">{{ 'page.subSectionTitleAdd.other' | trans({}, translationDomain) }}</h3>
 
           {{ form_select(form.title, 'title') }}
 
         
           {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
-            {{ form_submit(form.next,'form.newAsset.controls.next', { 'buttonClass': '' }) }}
+            {{ form_submit(form.next,'form.controls.next', { 'buttonClass': '' }) }}
             
             {% if showCancelLink %}
               {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
