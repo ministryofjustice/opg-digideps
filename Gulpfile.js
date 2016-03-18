@@ -17,7 +17,7 @@ var config = {
     sass: {
         includePaths: [
             'node_modules/govuk_frontend_toolkit/stylesheets',
-            'node_modules/govuk-elements/public/sass'
+            'node_modules/govuk-elements-sass/public/sass'
         ]
     },
     jsSrc: 'src/AppBundle/Resources/assets/javascripts',
@@ -153,4 +153,3 @@ gulp.task('dev', function (callback) {
 gulp.task('watchsass', function(callback) {
     gulp.watch(config.sassSrc + '/**/*', ['lint.sass','sass.application','sass.images','sass.fonts']);
 });
-
