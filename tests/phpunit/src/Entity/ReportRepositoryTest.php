@@ -33,7 +33,7 @@ class ReportRepositoryTest extends WebTestCase
             'setEndDate' => new \DateTime('31 December 2014')
         ]);
 
-        $asset = new EntityDir\Asset();
+        $asset = new EntityDir\AssetOther();
         $asset->setReport($report);
         $asset->setTitle('test');
         $asset->setDescription('test');

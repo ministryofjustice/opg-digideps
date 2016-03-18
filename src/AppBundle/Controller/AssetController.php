@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -7,20 +8,19 @@ use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
 use AppBundle\Exception as AppExceptions;
 
-/**
- * @Route("/report")
- */
 class AssetController extends RestController
 {
+
+
     /**
-     * @Route("/{id}/assets")
+     * @Route("/report/{reportId}/assets", requirements={"reportId":"\d+"})
      * @Method({"GET"})
      */
-    public function getAssets($id)
+    public function getAll($reportId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $report = $this->findEntityBy('Report', $id);
+        $report = $this->findEntityBy('Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $assets = $this->getRepository('Asset')->findByReport($report);
@@ -28,97 +28,143 @@ class AssetController extends RestController
         if (count($assets) == 0) {
             return [];
         }
+
         return $assets;
     }
-    
-    
-    
+
+
     /**
-     * @Route("/asset/{id}")
-     * @Method({"DELETE"})
-     * 
-     * @param integer $id
-     */
-    public function deleteAsset($id)
-    { 
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        
-        $asset = $this->findEntityBy('Asset', $id, 'Asset not found');
-        $report = $asset->getReport();
-        $this->denyAccessIfReportDoesNotBelongToUser($report);
-        // reset asset choice
-        $report->setNoAssetToAdd(null);
-        
-        $this->getEntityManager()->remove($asset);
-        $this->getEntityManager()->flush();
-        
-        return [ ];
-    }
-    
-    
-     /**
-     * @Route("/asset/{id}")
+     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
-     * 
-     * @param integer $id
      */
-    public function getOneById($id)
-    { 
-        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        
-        $asset = $this->findEntityBy('Asset', $id);
-        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
-        
-        return $asset;
-    }
-    
-    /**
-     * @Route("/asset")
-     * @Method({"POST", "PUT"})
-     */
-    public function upsertAsset(Request $request)
+    public function getOneById($reportId, $assetId)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        
-        $assetData = $this->deserializeBodyContent($request);
-        
-        if ($request->getMethod() == 'POST') {
-            $this->validateArray($assetData, [
-                'report_id' => 'mustExist'
-            ]);
-            $report = $this->findEntityBy('Report', $assetData['report_id']);
-            $this->denyAccessIfReportDoesNotBelongToUser($report);
-            $asset = new EntityDir\Asset();
-            $asset->setReport($report);
-        } else {
-            $this->validateArray($assetData, [
-                'id' => 'mustExist'
-            ]);
-            $asset = $this->findEntityBy('Asset', $assetData['id']);
-            $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
-        }
-        
-        $this->validateArray($assetData, [
-            'description' => 'mustExist', 
-            'value' => 'mustExist', 
-            'title' => 'mustExist', 
-        ]);
-        
-        $asset->setDescription($assetData['description']);
-        $asset->setValue($assetData['value']);
-        $asset->setTitle($assetData['title']);
-        
-        if(!empty($assetData['valuation_date'])){
-            $valuationDate = new \DateTime($assetData['valuation_date']);
-        }else{
-            $valuationDate = null;
-        }
-        
-        $asset->setValuationDate($valuationDate);
-        $asset->setLastedit(new \DateTime());
-        
-        $this->persistAndFlush($asset);
-        
-        return [ 'id' => $asset->getId() ];
+
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $asset = $this->findEntityBy('Asset', $assetId);
+        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
+
+        return $asset;
     }
+
+
+    /**
+     * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"})
+     * @Method({"POST"})
+     */
+    public function add(Request $request, $reportId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $data = $this->deserializeBodyContent($request);
+
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+        $this->validateArray($data, [
+            'type' => 'mustExist',
+        ]);
+        $asset = EntityDir\Asset::factory($data['type']);
+        $asset->setReport($report);
+
+        $this->updateEntityWithData($asset, $data);
+
+        $this->persistAndFlush($asset);
+
+        return [ 'id' => $asset->getId()];
+    }
+
+
+    /**
+     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
+     * @Method({"PUT"})
+     */
+    public function edit(Request $request, $reportId, $assetId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $data = $this->deserializeBodyContent($request);
+
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $asset = $this->findEntityBy('Asset', $assetId);
+        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
+
+        $this->updateEntityWithData($asset, $data);
+
+        $this->getEntityManager()->flush($asset);
+
+        return [ 'id' => $asset->getId()];
+    }
+
+
+    /**
+     * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
+     * @Method({"DELETE"})
+     */
+    public function delete($reportId, $assetId)
+    {
+        $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
+
+        $report = $this->findEntityBy('Report', $reportId);
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
+
+        $asset = $this->findEntityBy('Asset', $assetId);
+        $this->denyAccessIfReportDoesNotBelongToUser($asset->getReport());
+
+        $report->setNoAssetToAdd(null); // reset asset choice
+
+        $this->getEntityManager()->remove($asset);
+        $this->getEntityManager()->flush();
+
+        return [];
+    }
+
+
+    private function updateEntityWithData(EntityDir\Asset $asset, array $data)
+    {
+        // common propertie
+        $this->hydrateEntityWithArrayData($asset, $data, [
+            'value' => 'setValue',
+        ]);
+
+        if ($asset instanceof EntityDir\AssetOther) {
+            $this->hydrateEntityWithArrayData($asset, $data, [
+                'title' => 'setTitle',
+                'description' => 'setDescription',
+            ]);
+
+            if (isset($data['valuation_date'])) {
+                $asset->setValuationDate(new \DateTime($data['valuation_date']));
+            }
+        }
+
+        if ($asset instanceof EntityDir\AssetProperty) {
+            $this->hydrateEntityWithArrayData($asset, $data, [
+                'address' => 'setAddress',
+                'address2' => 'setAddress2',
+                'county' => 'setCounty',
+                'postcode' => 'setPostCode',
+                'occupants' => 'setOccupants',
+                'owned' => 'setOwned',
+                'owned_percentage' => 'setOwnedPercentage',
+                'is_subject_to_equity_release' => 'setIsSubjectToEquityRelease',
+                'has_mortgage' => 'setHasMortgage',
+                'mortgage_outstanding_amount' => 'setMortgageOutstandingAmount',
+                'has_charges' => 'setHasCharges',
+                'is_rented_out' => 'setIsRentedOut',
+                'rent_income_month' => 'setRentIncomeMonth',
+            ]);
+            
+            if (isset($data['rent_agreement_end_date'])) {
+                $value = isset($data['rent_agreement_end_date']['date']) 
+                    ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
+                $asset->setRentAgreementEndDate(new \DateTime($value));
+            }
+        }
+    }
+
 }

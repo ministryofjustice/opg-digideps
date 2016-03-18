@@ -596,18 +596,19 @@ class Report
     
     
     /**
-     * Get array of assets grouped by title
+     * Get array of assets grouped by type
      *
      * @return array of Asset[]
      */
-    public function getAssetsGroupedByTitle()
+    public function getAssetsGroupedByType()
     {
         $ret = array();
         
         foreach ($this->getAssets() as $asset) {
-        
-            $type = $asset->getTitle();
-        
+            $type = $asset->getType();
+            if ($type == 'other') {
+                $type = $asset->getTitle();
+            }
             if (isset($ret[$type])) {
                 $ret[$type][] = $asset;
             } else {
@@ -618,6 +619,21 @@ class Report
         // sort the assets by their type now.
         ksort($ret);
     
+        return $ret;
+    }
+    
+    /**
+     * Get assets total value
+     *
+     * @return float
+     */
+    public function getAssetsTotalValue()
+    {
+        $ret = 0;
+        foreach ($this->getAssets() as $asset) {
+            $ret += $asset->getValue();
+        }
+        
         return $ret;
     }
     
