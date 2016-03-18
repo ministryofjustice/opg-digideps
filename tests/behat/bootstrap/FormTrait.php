@@ -106,16 +106,19 @@ trait FormTrait
      */
     public function fillField($field, $value)
     {
-        $field = $this->fixStepArgument($field);
-        $value = $this->fixStepArgument($value);
+      $driver = $this->getSession()->getDriver();
+      $field = $this->fixStepArgument($field);
+      $value = $this->fixStepArgument($value);
 
-        if (substr($field,0,1) != '.' && substr($field,0,1) != '#') {
-            $field = '#' . $field;
-        }
+      if (substr($field, 0, 1) != '.' && substr($field, 0, 1) != '#') {
+        $field = '#' . $field;
+      }
+      
+      if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
         
         $this->scrollTo($field);
 
-        $javascript =  <<<EOT
+        $javascript = <<<EOT
             var field = $('$field');
             var value = '$value';
             
@@ -157,8 +160,16 @@ trait FormTrait
             }
 
 EOT;
-        
+
         $this->getSession()->executeScript($javascript);
-        
+      } else {
+        $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
+
+        if (null === $elementsFound) {
+          throw $this->elementNotFound('form field', 'id|name|label|value', $field);
+        }
+
+        $elementsFound[0]->setValue($value);
+      }
     }
 }
