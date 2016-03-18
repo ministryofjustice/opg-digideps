@@ -88,7 +88,15 @@ balance:
 banks:
     nextSection: Money in
     pageSectionTitle: %client%'s bank accounts
-    pageSectionDescription: Add all %client%'s bank and building society accounts, including savings accounts and ISAs
+    pageSectionDescription: |
+      Tell us about all %client%’s bank and building society accounts. Include any savings accounts and ISAs.
+      Then enter all the money %client% receives under <a href="%moneyInLink%">money in</a> and all the spending you’ve done for %client% under
+      <a href="%moneyOutLink%">money out</a>. Once you’ve entered this information, we can <a href="%balanceLink%">balance the accounts</a> for you.
+    before: Have you filled in an annual report for OPG before?
+    beforeDescription: |
+      You may notice the questions are different. This is because we
+      need to find out more about how deputies make financial decisions. We’ve made these changes to the paper
+      forms as well.
     balanceOn: Balance on
     sortCode: Sort code
     accountNumber: Account number

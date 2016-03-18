@@ -13,7 +13,18 @@
     {% block maincontent %}
 
         <h3 class="heading-medium-large">{{ 'banks.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
-        <p class="page-section-description">{{ 'banks.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+        <p class="page-section-description">
+          {{ 'banks.pageSectionDescription' | trans({
+            '%client%': report.client.firstname,
+            '%moneyInLink%': path('accounts_moneyin' , {'reportId': report.id}) ,
+            '%moneyOutLink%': path('accounts_moneyout' , {'reportId': report.id}),
+            '%balanceLink%': path('accounts_balance' , {'reportId': report.id}),
+          }, translationDomain) | raw }}</p>
+
+        <section class="help-item">
+          <h3 class="summary heading-medium">{{ 'banks.before' | trans }}</h3>
+          <p class="content page-section-description">{{ 'banks.beforeDescription' | trans }}</p>
+        </section>
 
         {% embed 'AppBundle:Components/Listing:_card_list.html.twig' %}
             {% block list %}
@@ -73,6 +84,19 @@
             {% endif %}
 
           {% endif %}
+
+
+          <script type="text/javascript">
+              $(document).ready(function() {
+                  $('.help-item').each(function(index,item) {
+                      opg.accordian({
+                          target:item,
+                          open: false
+                      });
+                  });
+              });
+          </script>
+
 
     {% endblock %}
 

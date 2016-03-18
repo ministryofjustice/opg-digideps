@@ -26,7 +26,7 @@
 
 {% block cookieMessage %}
     <p>
-        GOV.UK uses cookies to make the site simpler. 
+        GOV.UK uses cookies to make the site simpler.
         <a href="https://www.gov.uk/help/cookies">Find out more about cookies</a>
     </p>
 {% endblock %}
@@ -45,13 +45,13 @@
         <a href="{{ homePageHeaderLink is defined ? homePageHeaderLink : '/' }}" id="proposition-name">{% block proposition_title %}Complete the deputy report{% endblock %}</a>
         {% if app.user %}
             <ul id="proposition-links">
-            
+
                 {% if is_granted('ROLE_ADMIN') %}
                     <li><a href="{{ path('admin_homepage') }}">{% trans %}adminArea{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_upload') }}">{% trans %}Upload{% endtrans %}</a></li>
                     <li><a href="{{ path('admin_stats') }}">{% trans %}Stats{% endtrans %}</a></li>
                 {% endif %}
-                
+
                 {% if is_granted('ROLE_AD') %}
                     <li><a href="{{ path('ad_homepage') }}">{{ 'assistedDigitalArea' | trans }}</a></li>
                 {% endif %}
@@ -63,11 +63,11 @@
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('user_view')}}" class="behat-link-my-details your-home-link" >{% trans %}userDetails{% endtrans %} </a></li>
                 {% endif %}
-                
+
                 {% if app.session.get('ad') %}
-                    <li> 
+                    <li>
                         <a href="{{path('ad_logout')}}">Terminate deputy session</a>
-                    </li>  
+                    </li>
                 {% elseif is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('logout')}}" class="behat-link-logout">{% trans %}logout{% endtrans %}</a></li>
                 {% endif %}
@@ -92,10 +92,10 @@
 {% block beforeContent %}{% endblock %}
 
 {% block content %}
-    <div class="phase-banner">
+    <div class="phase-banner-beta">
         <p>
-            <strong class="phase-tag">ALPHA</strong>
-            <span>This is a new service – your <a href="{{url('feedback')}}">feedback</a> will help us to improve it.</span>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="/feedback">feedback</a> will help us to improve it.</span>
         </p>
     </div>
     <div class="container {% block contentClass %}{% endblock %}">
