@@ -14,11 +14,11 @@ Feature: deputy / report / account transactions
         # wrong values (wrong amount types, amount without explanation, explanation without amount)
         When I fill in the following:
             | transactions_transactionsIn_0_amount        | in |
-            | transactions_transactionsIn_4_amount        | 10000000001 |
+            | transactions_transactionsIn_5_amount        | 10000000001 |
         And I press "transactions_save"
         Then the following fields should have an error:
             | transactions_transactionsIn_0_amount  |
-            | transactions_transactionsIn_4_amount  |
+            | transactions_transactionsIn_5_amount  |
         And I save the page as "report-account-transactions-errors"
         # right values
         When I fill in the following:
@@ -26,7 +26,7 @@ Feature: deputy / report / account transactions
             | transactions_transactionsIn_1_amount       |  |
             | transactions_transactionsIn_2_amount       |  |
             | transactions_transactionsIn_3_amount       |  |
-            | transactions_transactionsIn_4_amount       |  |
+            | transactions_transactionsIn_5_amount       |  |
             | transactions_transactionsIn_26_amount      | 2000.0 |
             | transactions_transactionsIn_26_moreDetails | more-details-in-15  |
         And I press "transactions_save"
