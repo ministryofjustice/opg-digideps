@@ -128,8 +128,19 @@ class TransfersController extends AbstractController
      * return JsonResponse
      */
      public function transfersUpdateNone(Request $request, $reportId)
-     {
-         $data = json_decode($request->getContent(), true)['noTransfers'];
-         return new JsonResponse(['noTransfers' => $data]);
-     }
+    {
+        $noTransfersToAdd = json_decode($request->getContent(), true)['noTransfers'];
+
+        try {
+            $this->getRestClient()->put('report/' . $reportId, [
+                'no_transfers_to_add' => $noTransfersToAdd,
+            ]);
+            return new JsonResponse(['success'=>true]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
+        }
+
+       
+    }
+
 }

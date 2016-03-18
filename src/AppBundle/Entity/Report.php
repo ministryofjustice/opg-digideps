@@ -128,6 +128,12 @@ class Report
      */
     private $noAssetToAdd;
     
+     /**
+     * @JMS\Type("boolean")
+     * @var boolean
+     */
+    private $noTransfersToAdd;
+    
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"submit"})
@@ -656,6 +662,24 @@ class Report
         return $this;
     }
     
+    /**
+     * @return boolean
+     */
+    public function getNoTransfersToAdd()
+    {
+        return $this->noTransfersToAdd;
+    }
+
+    /**
+     * @param boolean
+     */
+    public function setNoTransfersToAdd($noTransfersToAdd)
+    {
+        $this->noTransfersToAdd = $noTransfersToAdd;
+        return $this;
+    }
+
+        
     /**
      * @return boolean $submitted
      */
