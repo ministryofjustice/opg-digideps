@@ -171,6 +171,14 @@ class Report
     private $noAssetToAdd;
     
     /**
+     * @var boolean
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic"})
+     * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
+     */
+    private $noTransfersToAdd;
+    
+    /**
      * @var string
      *
      * @JMS\Type("string")
@@ -251,6 +259,7 @@ class Report
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
+        $this->noTransfersToAdd = null;
         $this->reportSeen = true;
     }
     
@@ -672,7 +681,25 @@ class Report
     {
         return $this->noAssetToAdd;
     }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function getNoTransfersToAdd()
+    {
+        return $this->noTransfersToAdd;
+    }
 
+    /**
+     * @param boolean $noTransfersToAdd
+     */
+    public function setNoTransfersToAdd($noTransfersToAdd)
+    {
+        $this->noTransfersToAdd = $noTransfersToAdd;
+        return $this;
+    }
+    
 
     /**
      * Get Safeguarding
