@@ -53,9 +53,14 @@ class SafeguardingType extends AbstractType
 					if (isset($data['doesClientHaveACarePlan']) && $data['doesClientHaveACarePlan'] == 'no') {
 						$data['whenWasCarePlanLastReviewed'] = null;
 					}
-    
+                    
+                    // whenWasCarePlanLastReviewed: set day=01 if month and year are set
+                    if (!empty($data['whenWasCarePlanLastReviewed']['month']) && !empty($data['whenWasCarePlanLastReviewed']['year'])) {
+                        $data['whenWasCarePlanLastReviewed']['day'] = '01';
+                        $event->setData($data);
+                    }
+                    
                     $event->setData($data);
-	            
 				});
 	}
 
