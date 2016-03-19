@@ -12,13 +12,13 @@ use Behat\Symfony2Extension\Context\KernelDictionary;
 
 /**
  * Behat context class.
- * 
+ *
  * when the alpha models are refactored and simplified, this class can be refactored and splitter around.
  * until then, better to keep things in the sample place for simplicity
  */
 class FeatureContext extends MinkContext implements SnippetAcceptingContext
 {
-    use RegionTrait, 
+    use RegionTrait,
         DebugTrait,
         StatusSnapshotTrait,
         LinksTrait,
@@ -30,11 +30,11 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         KernelDictionary,
         ExpressionTrait,
         UserTrait;
-    
+
     private static $dbName;
-    
+
     private static $autoDbSnapshot;
-    
+
     public function __construct($options = [])
     {
         //$options['session']; // not used
@@ -45,13 +45,13 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         self::$dbName = empty($options['dbName']) ? 'api' : $options['dbName'];
         self::$autoDbSnapshot = isset($options['autoDbSnapshot']) ? $options['autoDbSnapshot'] : false;
     }
-        
-    
+
+
     public function setKernel(\AppKernel $kernel)
     {
         $this->kernel = $kernel;
     }
-    
+
     protected function getSymfonyParam($name)
     {
         return $this->getContainer()->getParameter($name);
@@ -72,7 +72,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         return getenv('FRONTEND_NONADMIN_HOST');
     }
-    
+
     /**
      * @BeforeSuite
      */
@@ -94,8 +94,8 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $this->iShouldSeeInTheRegion($text, 'page-title');
     }
-   
-    
+
+
     /**
      * @Then the response should have the :arg1 header containing :arg2
      */
@@ -108,21 +108,21 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         if (strpos($headers[$header][0], $value) === false) {
             throw new \Exception("Header '{$header}' has value '{$headers[$header][0]}' that does not contains '{$value}'");
         }
-        
+
     }
-    
+
     /**
      * @Given The response header :header should contain :value
      */
     public function theResponseHeaderShouldContain($header, $value)
     {
         $responseHeaders = $this->getSession()->getDriver()->getResponseHeaders();
-        
+
         if (!isset($responseHeaders[$header])) {
              throw new \Exception("Header $header not found in response. Headers found: " . implode(', ', array_keys($responseHeaders)));
         }
-        
-        // search in 
+
+        // search in
         $found = false;
         foreach ((array)$responseHeaders[$header] as $currentValue) {
             if (strpos($currentValue, $value) !== false) {
@@ -133,20 +133,20 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             throw new \Exception("Header $header not found in response. Values: " . implode(', ', $responseHeaders[$header]));
         }
     }
-    
+
     /**
      * @Then the last audit log entry should contain:
      */
     public function theLastAuditLogEntryShouldContain(TableNode $fields)
     {
         $this->visitBehatLink('view-audit-log');
-        
+
         foreach ($fields->getRowsHash() as $field => $value) {
             $this->iShouldSeeInTheRegion($value, 'entry-1');
         }
-        
+
     }
-    
+
     /**
      * @Given the application config is valid
      */
@@ -155,7 +155,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         $this->visitBehatLink("check-app-params");
         //$this->assertResponseStatus(200);
     }
-    
+
     /**
      * @Given I confirm the report is ready to be submitted
      */
@@ -166,5 +166,5 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
             throw new \RuntimeException("a#edit-report_add_further_info not found. Report does not seem ready to be submitted");
         }
     }
-   
+
 }
