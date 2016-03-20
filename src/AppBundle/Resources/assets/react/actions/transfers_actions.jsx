@@ -40,7 +40,7 @@ export function deleteTransfer(transfer) {
     return (dispatch) => {
         const url = `/report/${transfer.reportId}/transfers/${transfer.id}`;
         const request = axios.delete(url);
-
+        // todo - combine to a single Delete,save,saved.. and get rid of thunk
         dispatch({
             types: [SAVE_DELETE_TRANSFER, SAVE_TRANSFER_ERROR],
             promise: request
