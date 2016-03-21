@@ -11,4 +11,4 @@ export PGPASSWORD=api
 export PGDATABASE=api
 export PGUSER=api
 rm -rf app/cache/*
-/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=ad --stop-on-failure
+/sbin/setuser app bin/behat --config=tests/behat/behat.yml.dist --suite=ad --profile=${PROFILE} --stop-on-failure

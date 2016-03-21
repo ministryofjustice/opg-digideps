@@ -171,8 +171,7 @@ account:
         notBlank: You must enter a closing balance
         type: Enter a valid closing balance
         outOfRange: Enter a valid closing balance
-        #mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
-        mismatch: The final balance from your statement is different from the balance in the accounts section.
+        mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
     closingBalanceExplanation:
         notBlankOnDateMismatch: You must explain why the final balance from your statement and the balance in the accounts section are different
     moneyInOut:
@@ -199,6 +198,52 @@ asset:
         date: Enter a valid date
     no_assets:
         notBlank: Tell us if the client has no assets to add
+    property:
+        address:
+            notBlank: Enter the address
+            maxMessage: The address can't be longer than 200 letters
+        address2:
+            maxMessage: max 200 chars for your address
+        county:
+            maxMessage: max 75 chars for your address
+        postcode:
+            notBlank: Enter the postcode 
+            maxMessage: The postcode can't be longer than {{ limit }} characters
+        occupants:
+            notBlank: Tell us who lives at the property
+            maxMessage: Your answer can't be longer than 500 letters
+        owned:
+            notBlank: Please choose either fully or part-owned
+        ownedPercentage:
+            notBlank: Tell us what their share of the property is
+            type: Enter a valid number (1-100) for the property share
+        isSubjectToEquityRelease:
+            notBlank: Is there an equity release scheme? Choose Yes or No
+        hasMortgage:
+            notBlank: Is there an outstanding mortgage? Choose Yes or No
+        mortgageOutstandingAmount:
+            notBlank: Tell us how much is left to pay on the mortgage
+            type: Enter a valid number 
+            outOfRange: The amount must be less than £100,000,000,000
+        hasCharges:
+            notBlank: Is there a charge on the property? Choose Yes or No
+        isRentedOut:
+            notBlank: Is the property rented out? Choose Yes or No
+        rentIncomeMonth:
+            notBlank: Enter the monthly rental income
+            type: Enter a valid amount 
+            notBlank: Enter monthly income from renting this property
+            notBlank: Enter the value of the rental income
+            type: Enter a valid amount for the rental income
+            outOfRange: The value must be less than £10,000,000,000
+        rentAgreementEndDate:
+            notBlank: Enter a date for the end of the rental agreement
+        value:
+            notBlank: Enter the value of this property
+            type: Enter a valid amount for this property
+            outOfRange: The value of the property must be less than £100,000,000,000
+            
+            
 # validation messages for common elements (e.g. phone fields)
 common:
   genericPhone:

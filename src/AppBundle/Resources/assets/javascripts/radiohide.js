@@ -16,6 +16,7 @@ var opg = opg || {};
         this.content = $(options.content);
 
         this.hideOnYes = options.hideOnYes || false;
+        this.showWithValue = options.showWithValue || false;
         this.hideByDefault = options.hideByDefault || true;
 
         this.changeHandler = this.getUpdateHandler();
@@ -41,12 +42,18 @@ var opg = opg || {};
                 value = this.radio[iPos].value.toLowerCase();
             }
         }
-
+        
         if (value === undefined) {
             if (this.hideByDefault === true) {
                 this.hideContent();
             } else {
                 this.showContent();
+            }
+        } else if (this.showWithValue !== false) {
+            if (value === this.showWithValue) {
+                this.showContent();
+            } else {
+                this.hideContent();
             }
         } else if (value === 'yes' || value === '1') {
             if (this.hideOnYes) {

@@ -1,10 +1,10 @@
 {% if form.vars.value.id %}
-    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
+    {% set subSectionTitleText = ('page.subSectionTitleEdit' ~ assetToEdit.type) %}
 {% else %}
     {% set subSectionTitleText = 'page.subSectionTitleAdd' %}
 {% endif %}
 
-{{ form_start(editForm, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+{{ form_start(editForm, {attr: {novalidate: 'novalidate' } }) }}
 
     <h3 class="heading-medium">{{ subSectionTitleText | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
 

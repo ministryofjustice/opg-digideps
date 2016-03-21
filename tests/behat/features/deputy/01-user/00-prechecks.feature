@@ -6,4 +6,3 @@ Feature: deputy / user / pre checks
         And I reset the behat SQL snapshots
         And I save the application status into "init"
         When I go to "/manage/availability"
-        And the response status code should be 200

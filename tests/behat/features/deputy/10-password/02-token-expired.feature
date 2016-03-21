@@ -15,7 +15,7 @@ Feature: deputy / Activation link resending
         And the last email containing a link matching "/user/activate/" should have been sent to "behat-user@publicguardian.gsi.gov.uk"
         When I open the "/user/activate/" link from the email
         And I save the page as "user-activate-token-expired-click-from-email"
-        Then the response status code should be 200
+        #Then the response status code should be 200
         And the URL should match "/user/activate/[a-z0-9]+"
 
     @deputy

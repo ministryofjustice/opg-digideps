@@ -48,7 +48,7 @@ Feature: deputy / report / account
             | account_closingBalance  | 1,155.00 |
         And I press "account_save"
         And I save the page as "report-account-list"
-        Then the response status code should be 200
+        #Then the response status code should be 200
         And the form should be valid
         And the URL should match "/report/\d+/accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
