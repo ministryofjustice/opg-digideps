@@ -21,6 +21,12 @@ table.yesno, #safegaurding-care-funding table {
     .label {
         width: 5em;
     }
+    &.small {
+        width: auto;
+        .label {
+            width: auto;
+        }
+    }
 }
 
 #safeguarding-contact, #care-arrangements-subsection {

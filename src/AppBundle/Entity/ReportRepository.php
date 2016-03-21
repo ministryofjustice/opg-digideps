@@ -30,24 +30,18 @@ class ReportRepository extends EntityRepository
         $newReport->setReportSeen(false);
         $newReport->setNoAssetToAdd($report->getNoAssetToAdd());
 
-        //lets clone the assets
-        $assets = $report->getAssets();
-        
-        foreach($assets as $asset){
-            $newAsset = new EntityDir\Asset();
-            $newAsset->setDescription($asset->getDescription());
-            $newAsset->setTitle($asset->getTitle());
-            $newAsset->setValuationDate($asset->getValuationDate());
-            $newAsset->setValue($asset->getValue());
+        // clone assets
+        foreach($report->getAssets() as $asset){
+            $newAsset = clone $asset;
             $newAsset->setReport($newReport);
-            
+            $this->_em->detach($newAsset);
             $this->_em->persist($newAsset);
         }
         
-        //lets clone accounts
-        $accounts = $report->getAccounts();
-        
-        foreach($accounts as $account){
+        // clone accounts
+        //  opening balance = closing balance 
+        //  opening date = closing date 
+        foreach($report->getAccounts() as $account){
             $newAccount = new EntityDir\Account();
             $newAccount->setBank($account->getBank());
             $newAccount->setAccountType($account->getAccountType());
@@ -57,8 +51,6 @@ class ReportRepository extends EntityRepository
             $newAccount->setOpeningDate($account->getClosingDate());
             $newAccount->setCreatedAt(new \DateTime());
             $newAccount->setReport($newReport);
-
-
 
             $this->_em->persist($newAccount);
         }

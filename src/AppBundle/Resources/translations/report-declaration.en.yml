@@ -25,6 +25,6 @@ save:
 status: Status
 declarationTime: Declaration time
 deputyName: Deputy name
-deputyAgreed: Signed on behalf of all deptuties
+deputyAgreed: Signed on behalf of all deputies
 partlyAgreed: Not signed on behalf of all deputies
 partAgreedReason: Reason
