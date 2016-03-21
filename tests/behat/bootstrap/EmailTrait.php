@@ -20,6 +20,13 @@ trait EmailTrait
         $this->visitBehatLink('email-get-last');
 
         $emailsJson = $this->getSession()->getPage()->getContent();
+
+        if (strpos($emailsJson, '<body>') !== false) {
+            $start = strpos($emailsJson, '<body>') + 6;
+            $end = strpos($emailsJson, '</body>');
+            $emailsJson = substr($emailsJson, $start, ($end - $start));
+        }
+        
         $emailsArray = json_decode($emailsJson , true);
 
         if ($throwExceptionIfNotFound && empty($emailsArray[0]['to'])) {
@@ -42,7 +49,7 @@ trait EmailTrait
     public function iResetTheEmailLog()
     {
         $this->visitBehatLink('email-reset');
-        $this->assertResponseStatus(200);
+    //    $this->assertResponseStatus(200);
 
         $this->assertNoEmailShouldHaveBeenSent();
     }
@@ -105,9 +112,9 @@ trait EmailTrait
         $linkToClick = $this->getFirstLinkInEmailMatching($regexpr);
         
         if ($area == 'admin') {
-            $linkToClick = str_replace($this->getSymfonyParam('non_admin_host'), $this->getSymfonyParam('admin_host'), $linkToClick);
+            $linkToClick = str_replace($this->getSiteUrl(), $this->getAdminUrl(), $linkToClick);
         } else if ($area == 'deputy') {
-            $linkToClick = str_replace($this->getSymfonyParam('admin_host'), $this->getSymfonyParam('non_admin_host'), $linkToClick);
+            $linkToClick = str_replace($this->getAdminUrl(),$this->getSiteUrl(), $linkToClick);
         } else {
             throw new \RuntimeException(__METHOD__ . ": $area not defined");
         }

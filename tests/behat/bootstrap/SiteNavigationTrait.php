@@ -2,6 +2,8 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
+
 trait SiteNavigationTrait
 {
     
@@ -12,7 +14,7 @@ trait SiteNavigationTrait
     {
         $this->clickOnBehatLink($clientHome);
         $this->clickOnBehatLink($link);
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
     }
     
     /**
@@ -21,7 +23,7 @@ trait SiteNavigationTrait
     public function iAmOnClientHome($client_home)
     {
         $this->clickOnBehatLink($client_home);
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
     }
     
     /**
@@ -30,7 +32,7 @@ trait SiteNavigationTrait
      */
     public function iAmOnAdminPage($path)
     {
-        $adminUrl = $this->getSymfonyParam('admin_host');
+        $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl.$path);
     }
     
@@ -81,5 +83,81 @@ trait SiteNavigationTrait
     {
         $this->visit('/terms');
     }
-    
+
+    /**
+     * Presses button with specified id|name|title|alt|value.
+     *
+     * @When /^(?:|I )press "(?P<button>(?:[^"]|\\")*)"$/
+     */
+    public function pressButton($button)
+    {
+        $this->scrollTo($button);
+        $this->getSession()->getPage()->pressButton($button);
+    }
+
+    /**
+     * Clicks link with specified id|title|alt|text.
+     *
+     * @When /^(?:|I )follow "(?P<link>(?:[^"]|\\")*)"$/
+     */
+    public function clickLink($link)
+    {
+        $link = $this->fixStepArgument($link);
+        $this->scrollTo($link);
+        $this->getSession()->getPage()->clickLink($link);
+    }
+
+    /**
+     * @Given /^I tab to the next field$/
+     */
+    public function iTabToTheNextField()
+    {
+        $driver = $this->getSession()->getDriver();
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+
+            $javascript =
+                "var currentField = $(':focus');"
+                . "var fields = currentField.closest('form').find('input:visible');"
+                . "fields.each(function (index,item) {"
+                . "  if (item.id === currentField.attr('id')) {"
+                . "    $(fields[index+1]).focus();"
+                . "    currentField.trigger('blur');"
+                . "  }"
+                . "});";
+
+            $this->getSession()->executeScript($javascript);
+        
+        }
+        
+    }
+
+    /**
+     * @Given /^I scroll to "add\-account"$/
+     */
+    public function scrollTo($element) {
+
+        if (substr($element,0,1) != '.' && substr($element,0,1) != '#') {
+            $element = '#' . $element;
+        }
+        
+        $driver = $this->getSession()->getDriver();
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+            $javascript =
+                "var el = $('$element');"
+                . "var elOffset = el.offset().top;"
+                . "var elHeight = el.height();"
+                . "var windowHeight = $(window).height();"
+                . "var offset;"
+                . "if (elHeight < windowHeight) {"
+                . "  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));"
+                . "} else {"
+                . "  offset = elOffset;"
+                . "}"
+                . "window.scrollTo(0, offset);";
+            
+            $this->getSession()->executeScript($javascript);
+
+        }
+    }
+
 }

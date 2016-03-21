@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 
@@ -13,7 +14,7 @@ trait FormTrait
      */
     public function theFormShouldBeInvalid()
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         if (!$this->getSession()->getPage()->has('css','.form-group.error')) {
             throw new \RuntimeException("No errors found");    
         }    
@@ -24,7 +25,7 @@ trait FormTrait
      */
     public function theFormShouldBeValid()
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         if ($this->getSession()->getPage()->has('css','.form-group.error')) {
             throw new \RuntimeException("Errors found in elements: "
                 . implode(',', $this->getElementsIdsWithValidationErrors()));    
@@ -99,6 +100,88 @@ trait FormTrait
         }    
     }
 
-
+    /**
+     * @Then /^I click on the first decision$/
+     * @Then /^I click on the first contact$/
+     */
+    public function iClickOnTheFirstDecision()
+    {
+        $this->getSession()->getPage()->clickLink("edit-1-link");
+    }
     
+    /**
+     * Fills in form field with specified id|name|label|value.
+     *
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with:$/
+     * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)"$/
+     */
+    public function fillField($field, $value)
+    {
+      $driver = $this->getSession()->getDriver();
+      $field = $this->fixStepArgument($field);
+      $value = $this->fixStepArgument($value);
+
+      if (substr($field, 0, 1) != '.' && substr($field, 0, 1) != '#') {
+        $field = '#' . $field;
+      }
+      
+      if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+        
+        $this->scrollTo($field);
+
+        $javascript = <<<EOT
+            var field = $('$field');
+            var value = '$value';
+            
+            $(':focus').trigger('blur').trigger('change');
+            var tag = field.prop('tagName');
+      
+            if (field.prop('type') === 'checkbox' || 
+                field.prop('type') === 'radio')
+            {
+            
+                field.prop('checked', true);
+            
+            } else if (tag === 'SELECT') {
+                
+                field.focus().val(value).trigger('change');
+            
+            } else {
+                var pos = 0,
+                    length = value.length,
+                    character, charCode;
+                    
+                for (;pos < length; pos += 1) {
+                    
+                    character = value[pos];
+                    charCode = character.charCodeAt(0);
+                    
+                    var keyPressEvent = $.Event('keypress', {which: charCode}),
+                        keyDownEvent = $.Event('keydown', {which: charCode}),
+                        keyUpEvent = $.Event('keyup', {which: charCode});
+                    
+                    field
+                        .focus()
+                        .trigger(keyDownEvent)
+                        .trigger(keyPressEvent)
+                        .val(value.substr(0,pos+1))
+                        .trigger(keyUpEvent);
+    
+                }
+            }
+
+EOT;
+
+        $this->getSession()->executeScript($javascript);
+      } else {
+        $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
+
+        if (null === $elementsFound) {
+          throw $this->elementNotFound('form field', 'id|name|label|value', $field);
+        }
+
+        $elementsFound[0]->setValue($value);
+      }
+    }
 }

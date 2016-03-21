@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Exception\ExpectationException;
 
@@ -19,7 +20,7 @@ trait RegionTrait
      */
     public function iShouldNotSeeTheBehatElement($element, $type)
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         $count = count($linksElementsFound);
@@ -43,7 +44,7 @@ trait RegionTrait
      */
     public function iShouldSeeTheBehatElement($element, $type)
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         if (count($linksElementsFound) === 0) {
@@ -69,10 +70,10 @@ trait RegionTrait
      */
     public function iShouldSeeInTheRegion($text, $region)
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
-
+    
     /**
      * @Then I should see :text in :section section
      */
@@ -86,7 +87,7 @@ trait RegionTrait
      */
     public function iShouldNotSeeInTheSection($text, $section)
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         $this->assertSession()->elementTextNotContains('css', '#' . $section . '-section', $text);
     }
 
@@ -114,7 +115,7 @@ trait RegionTrait
      */
     public function iShouldNotSeeInTheRegion($text, $region)
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         $this->assertSession()->elementTextNotContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 
@@ -189,5 +190,30 @@ trait RegionTrait
         $this->assertSession()->elementTextContains('css', '.page-header', $text);
     }
 
+    /**
+     * @Then /^I should see a confirmation$/
+     */
+    public function iShouldSeeAConfirmation()
+    {
+        $elementsFound = $this->getSession()->getPage()->findAll('css', ".confirm-bar");
+        $count = count($elementsFound);
+        if ($count < 1) {
+            throw new \RuntimeException("No confirmation dialog found");
+        }
+        
+        if ($elementsFound[0]->isVisible() == false) {
+            throw new \RuntimeException("Confirmation dialog not visible");
+        }
+    
+    }
+
+    /**
+     * @Then /^I should see "([^"]*)" in the section title info panel$/
+     */
+    public function iShouldSeeInSectionTitleInfoPanel($text)
+    {
+        $css = "#page-section-title-container .info";
+        $this->assertSession()->elementTextContains('css', $css, $text);
+    }
 
 }
