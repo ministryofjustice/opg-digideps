@@ -20,7 +20,7 @@
 
         
           {% include 'AppBundle:Components/ButtonBar:_start.html.twig' with {'divId': 'asset-add-title-next-group'} %}
-            {{ form_submit(form.next,'form.newAsset.controls.next', { 'buttonClass': '' }) }}
+            {{ form_submit(form.next,'next', { 'buttonClass': '' }) }}
             
             {% if showCancelLink %}
               {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
