@@ -13,13 +13,13 @@ Feature: Cookie Policy
         And I press "Cookies" in the footer
         Then I should be on "https://www.gov.uk/help/cookies"
     
-    @cookie @deputy @javascript
+    @cookie @deputy
     Scenario: When I visit the site for the first time I see a cookie banner
         And I am on the login page
         Then I should see the cookie warning banner
         And the "Find out more about cookies" link url should contain "https://www.gov.uk/help/cookies"
         
-    @cookie @deputy @javascript
+    @cookie @deputy
     Scenario: When I have visited the site previous, I don't see the cookie banner
         And I am on the login page
         And I am on the login page

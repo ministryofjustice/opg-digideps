@@ -3,8 +3,6 @@
     {% set translationDomain = "report-assets" %}
     {% trans_default_domain translationDomain %}
 
-    {% set subSectionTitleText = 'page.subSectionTitleEdit' %}
-    
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-assets-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}{% endblock %}
@@ -15,20 +13,15 @@
         <p class="page-section-description">{{ 'page.pageSectionEditInfo' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
 
         
-        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form' } }) }}
+        {{ form_start(form, {attr: {novalidate: 'novalidate' } }) }}
 
-            <h3 class="heading-medium">{{ subSectionTitleText | trans({}, translationDomain) }}</h3>
+            <h3 class="heading-medium">{{ ('page.subSectionTitleEdit.' ~ assetToEdit.type) | trans({}, translationDomain) }}</h3>
         
             {{ form_errors_list(form) }}
         
-            {{ form_input(form.value, 'value', {
-                'inputPrefix' : '£',
-                'inputClass' : 'form-control__number'
-            } ) }}
-    
-            {{ form_input(form.description, 'description') }}
-    
-            {{ form_known_date(form.valuationDate, 'valuationDate') }}
+            {% include 'AppBundle:Asset/' ~ assetToEdit.type ~ ':_form_fields.html.twig' with {
+                'form': form,
+             } %}
     
             {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
                 transDomain: translationDomain,

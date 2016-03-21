@@ -90,6 +90,7 @@ class FormFieldsExtension extends \Twig_Extension
            {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
         ]
        })
+     * //TODO consider refactor using getFormComponentTwigVariables
      */
     public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
     {
@@ -115,7 +116,8 @@ class FormFieldsExtension extends \Twig_Extension
             if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
-                $legendTextTrans = $this->translator->trans($translationKey . '.label', [], $domain);
+                $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+                $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
                 if ($legendTextTrans != $translationKey . '.label') {
                     $legendText = $legendTextTrans;
                 } else {
@@ -320,7 +322,7 @@ class FormFieldsExtension extends \Twig_Extension
      * @param array $vars
      * @param string|null $transIndex
      * 
-     * @return array with vars labelText,hintText,element,labelClass, to pass into twig templates AppBundle:Components/Form:*
+     * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates AppBundle:Components/Form:*
      */
     private function getFormComponentTwigVariables($element, $elementName, array $vars, $transIndex)
     {
