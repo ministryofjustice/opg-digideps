@@ -450,6 +450,21 @@ class Report
     {
         return $this->moneyTransfers;
     }
+    
+    /**
+     * @return MoneyTransfer
+     */
+    public function getMoneyTransferWithId($id)
+    {
+        foreach ($this->moneyTransfers as $t) {
+            if ($t->getId() == $id) {
+                return $t;
+            }
+        }
+        
+        return null;
+    }
+    
 
     public function setMoneyTransfers(array $transfers)
     {

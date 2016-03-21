@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -13,32 +14,43 @@ class MoneyTransfer
     /**
      * @JMS\Type("integer")
      * @var integer
-     * @JMS\Groups({"transfers", "basic"})
      */
     private $id;
 
     /**
      * @var string
+     * @Assert\NotBlank(message="transfer.amount.notBlank")
+     * @Assert\Range(min=0, max=10000000000, minMessage = "transfer.amount.minMessage", maxMessage = "transfer.amount.maxMessage")
      * @JMS\Type("string")
-     * @JMS\Groups({"transfers", "basic"})
      */
     private $amount;
 
     /**
      * @var Account
+     * @JMS\SerializedName("accountFrom")
      * @JMS\Type("AppBundle\Entity\Account")
-     * @JMS\Groups({"transfers", "basic"})
      */
     private $accountFrom;
 
     /**
+     * @Assert\NotBlank(message="transfer.accountFrom.notBlank")
+     */
+    private $accountFromId;
+
+    /**
      * @var Account
+     * @JMS\SerializedName("accountTo")
      * @JMS\Type("AppBundle\Entity\Account")
-     * @JMS\Groups({"transfers", "basic"})
      */
     private $accountTo;
 
-    
+    /**
+     * @JMS\SerializedName("transfer.accountTo.notBlank")
+     * @Assert\NotBlank(message="transfer.accountTo.notBlank")
+     */
+    private $accountToId;
+
+
     /**
      * Get id
      *
@@ -99,7 +111,7 @@ class MoneyTransfer
      * @param Account $from
      * @return MoneyTransfer
      */
-    public function setAccountFrom(Account $from)
+    public function setAccountFrom($from)
     {
         $this->accountFrom = $from;
         return $this;
@@ -110,10 +122,44 @@ class MoneyTransfer
      * @param Account $to
      * @return MoneyTransfer
      */
-    public function setAccountTo(Account $to)
+    public function setAccountTo($to)
     {
         $this->accountTo = $to;
         return $this;
+    }
+
+
+    public function setAccountFromId($accountFromId)
+    {
+        $this->accountFromId = $accountFromId;
+
+        // for JMS serialization
+        $from = new Account();
+        $from->setId($accountFromId);
+        $this->setAccountFrom($from);
+    }
+
+
+    public function setAccountToId($accountToId)
+    {
+        $this->accountToId = $accountToId;
+
+        // for JMS serialization
+        $to = new Account();
+        $to->setId($accountToId);
+        $this->setAccountTo($to);
+    }
+
+
+    public function getAccountFromId()
+    {
+        return $this->accountFromId;
+    }
+
+
+    public function getAccountToId()
+    {
+        return $this->accountToId;
     }
 
 }

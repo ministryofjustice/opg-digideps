@@ -17,7 +17,9 @@
             {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
         </p>
 
-        <div id="transfers-container"/>Loading...</div>
+        <div id="transfers-container-REMOVEME"/>
+             {% include 'AppBundle:Transfers:transfers_no_js.html.twig'%}
+        </div>
         <script>
             $(document).ready(function () {
                 new GOVUK.StickyHeader('#page-section-title-wrapper');

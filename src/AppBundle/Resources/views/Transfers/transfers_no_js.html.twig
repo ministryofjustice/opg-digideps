@@ -1,0 +1,103 @@
+<ul id="transfers" class="card-list"    >
+    {% for transfer in report.moneyTransfers %}
+        <li class="transfer">
+            <div class="grid-row card-select-row">
+
+                <div class="column-one-half">
+                    <div class="form-label">From:</div>
+                    <ul class="card-list">
+                        <li class="card-item">
+                            <div class="card">
+                                <div class="account card-title"><span>{{ transfer.accountFrom.bank }}</span>
+                                    <span> </span>
+                                    <span></span></div>
+                                <dl class="labelvalue">
+                                    <dt class="label">Account number:</dt>
+                                    <dd class="value"><span>{{ transfer.accountFrom.accountNumber }}</span>
+                                        <span>4566</span></dd>
+                                    <dt class="label">Sort code:</dt>
+                                    <dd class="value">{{ transfer.accountFrom.sortCode }}</dd>
+                                </dl>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="column-one-half">
+                    <div class="form-label">To:</div>
+                    <ul class="card-list">
+                        <li class="card-item">
+                            <div class="card">
+                                <div class="account card-title"><span>barcays</span><span> </span><span>cash</span></div>
+                                <dl class="labelvalue">
+                                    <dt class="label">Account number:</dt>
+                                    <dd class="value"><span>0000</span><span>1234</span></dd>
+                                    <dt class="label">Sort code:</dt>
+                                    <dd class="value">111111</dd>
+                                </dl>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+
+            <div class="grid-row">
+                <div class="column-one-half">
+                    <div class="form-group"><label class="form-label" for="balance">Amount:</label>
+                        <span class="input-group-prefix">£</span>
+                        <input id="balance" name="account[balance]" class="form-control form-control__number" 
+                               value=" {{ transfer.amount }}"   disabled="disabled"
+                               type="text"></div>
+                </div>
+                <div class="column-one-half">
+                <a href="{{ path('transfers_delete', {'reportId': report.id, 'transferId': transfer.id} )}}" id="delete-button" 
+                   class="delete-button button-warning behat-link-delete-confirm">Delete</a>
+                </div>
+            </div>
+        </li>
+    {% endfor%}
+    <li>
+        <h3 class="heading heading-small">Add a trasfer</h3>
+
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: '', id: 'asset-form-add-select-title' } }) }}
+
+        <div >
+            <div class="column-one-half">
+                {{ form_select(form.accountFromId, 'form.accountFrom') }}
+            </div>
+            <div class="column-one-half" >
+                {{ form_select(form.accountToId, 'form.accountTo') }}
+            </div>
+        </div>
+        <div  >
+            <div class="column-one-half" >
+
+                {{ form_input(form.amount, 'form.amount', {
+                    'inputPrefix' : '£',
+                    'inputClass' : 'form-control__number transaction-value',
+                }) }}
+
+            </div>
+            <div class="column-one-half"></div>
+        </div>
+
+        {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
+    transDomain: translationDomain,
+    section: 'transfer',
+    showDelete: false,
+    showCancel: false
+    } %}
+
+        <div id="no-transfers" >
+            <h3 class="heading heading-small">Didn't make any money transfers?</h3>
+            <div id="form-group-report_noTransfersToAdd" class="form-group form-group__checkbox "><label class="block-label" for="report_noTransfersToAdd"><input id="report_noTransfersToAdd" name="report[noTransfersToAdd]"   type="checkbox"><span>Tick this box if you didn't move any money between </span><span>peter</span><span>’s accounts between </span><span>1 Jan 2016</span><span> and </span><span>20 Jan 2016</span></label></div>
+        </div>
+
+        {{ form_end(form) }}
+
+    </li>
+</ul>
+

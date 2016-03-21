@@ -21,9 +21,9 @@ class TransfersController extends AbstractController
      * @param integer $reportId
      * @return array
      */
-    public function transfersAction($reportId)
+    public function transfersAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'client', 'accounts']);
+        $report = $this->getReport($reportId, ['basic', 'client', 'accounts', 'transfers']);
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
@@ -35,9 +35,20 @@ class TransfersController extends AbstractController
             ]);
         }
 
+        $transfer = new EntityDir\MoneyTransfer();
+        $form = $this->createForm(new FormDir\TransferType($report->getAccounts()), $transfer);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $this->get('restClient')->post('report/' .  $report->getId() . '/money-transfers', $form->getData());
+           
+            return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
+        }
+        
         return $this->render('AppBundle:Transfers:transfers.html.twig',[
             'report' => $report,
-            'subsection' => 'transfers'
+            'subsection' => 'transfers',
+            'form' => $form->createView()
         ]);
     }
 
@@ -120,6 +131,17 @@ class TransfersController extends AbstractController
         return new JsonResponse($ret);
     }
 
+     /**
+     * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_delete")
+     * @Method({"GET"})
+     */
+    public function transfersDelete(Request $request, $reportId, $transferId)
+    {
+        $this->get('restClient')->delete('report/' . $reportId . '/money-transfers/' . $transferId);
+        
+        return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
+    }
+    
     /**
      * @Route("/report/{reportId}/notransfers", name="transfers_update_none")
      * @Method({"PUT"})
