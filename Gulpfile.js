@@ -173,4 +173,3 @@ gulp.task('react', () => {
 });
 
 gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor', 'react']);
-gulp.task('dev', ['watch']);
