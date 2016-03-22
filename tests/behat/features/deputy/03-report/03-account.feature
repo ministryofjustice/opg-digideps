@@ -123,5 +123,5 @@ Feature: deputy / report / account
             | accountNumber | 8888 | | |
             | accountType | cash | | |
             | sortCode | 11 | 22 | 33 |
-            | openingBalance  | 100 | | |
-            | closingBalance  | 22 | | |
+            | openingBalance  | 0 | | |
+            | closingBalance  | 0 | | |
