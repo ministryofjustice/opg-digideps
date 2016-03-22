@@ -173,7 +173,7 @@ class Report
     /**
      * @var boolean
      * @JMS\Type("boolean")
-     * @JMS\Groups({"basic"})
+     * @JMS\Groups({"basic", "transfers"})
      * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noTransfersToAdd;
