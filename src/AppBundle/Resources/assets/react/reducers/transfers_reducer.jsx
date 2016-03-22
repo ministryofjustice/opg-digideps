@@ -82,11 +82,6 @@ function deleteItem(state, id) {
     return clonedState;
 }
 
-function hasTransferPayload(action) {
-    return action.payload.hasOwnProperty('data')
-        && action.payload.data.hasOwnProperty('transfer');
-}
-
 export default function(state = [], action) {
     switch (action.type) {
     case SAVE_TRANSFER: {
@@ -97,13 +92,15 @@ export default function(state = [], action) {
         return update(state, transfer);
     }
     case ADDED_TRANSFER: {
-        if (hasTransferPayload(action)) {
+        if (action.payload.hasOwnProperty('data')
+         && action.payload.data.hasOwnProperty('transfer')) {
             return updateNewWithRealId(state, action.payload.data.transfer);
         }
         break;
     }
     case GET_TRANSFERS:
-        if (hasTransferPayload(action)) {
+        if (action.payload.hasOwnProperty('data')
+         && action.payload.data.hasOwnProperty('transfers')) {
             return updateAll(state, action.payload.data.transfers, action.reportId);
         }
         break;
