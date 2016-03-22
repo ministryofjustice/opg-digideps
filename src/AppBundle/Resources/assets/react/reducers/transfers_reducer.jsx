@@ -1,11 +1,4 @@
-import {
-    GET_TRANSFERS,
-    UPDATE_TRANSFER,
-    DELETE_TRANSFER,
-    GET_TRANSFERS_ERROR,
-    SAVE_TRANSFER_ERROR,
-    ADDED_TRANSFER
-  } from '../actions/transfers_actions';
+import { GET_TRANSFERS, UPDATE_TRANSFER, DELETE_TRANSFER, SAVE_TRANSFER, ADDED_TRANSFER } from '../actions/transfers_actions';
 import { containsIncompleteTransfer, appendNewTransfer, formatCurrency } from '../utils/transfer_utils';
 
 function updateNewIncomplete(state, transfer) {
@@ -91,12 +84,20 @@ function deleteItem(state, id) {
 
 export default function(state = [], action) {
     switch (action.type) {
-    case ADDED_TRANSFER:
+    case SAVE_TRANSFER: {
+        let transfer = action.payload;
+        if (transfer.id === null) {
+            transfer.waitingForId = true;
+        }
+        return update(state, transfer);
+    }
+    case ADDED_TRANSFER: {
         if (action.payload.hasOwnProperty('data')
          && action.payload.data.hasOwnProperty('transfer')) {
             return updateNewWithRealId(state, action.payload.data.transfer);
         }
         break;
+    }
     case GET_TRANSFERS:
         if (action.payload.hasOwnProperty('data')
          && action.payload.data.hasOwnProperty('transfers')) {
@@ -107,11 +108,6 @@ export default function(state = [], action) {
         return update(state, action.payload);
     case DELETE_TRANSFER:
         return deleteItem(state, action.payload.id);
-    case GET_TRANSFERS_ERROR:
-    case SAVE_TRANSFER_ERROR:
-        return state;
-    default:
-      // Nothing
     }
     return state;
 }

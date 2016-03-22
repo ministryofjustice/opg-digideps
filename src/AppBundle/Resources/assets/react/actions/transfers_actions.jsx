@@ -63,6 +63,7 @@ export function saveTransfer(transfer) {
             const request = axios.post(`/report/${transfer.reportId}/transfers`, { transfer: transferClone });
             return {
                 types: [SAVE_TRANSFER, ADDED_TRANSFER, SAVE_TRANSFER_ERROR],
+                payload: transfer,
                 promise: request
             };
         }
@@ -70,6 +71,7 @@ export function saveTransfer(transfer) {
         const request = axios.put(`/report/${transfer.reportId}/transfers/${transfer.id}`, { transfer: transferClone });
         return {
             types: [SAVE_TRANSFER, SAVED_TRANSFER, SAVE_TRANSFER_ERROR],
+            payload: transfer,
             promise: request
         };
     }
