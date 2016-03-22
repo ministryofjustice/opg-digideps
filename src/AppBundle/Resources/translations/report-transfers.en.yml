@@ -16,3 +16,7 @@ cancel:
     label: Cancel
 delete:
     label: Delete
+    
+no_transfers:
+    label: Tick this box if you didn't move any money between %client%’s accounts
+        

@@ -37,8 +37,8 @@ class TransfersController extends AbstractController
 
         $transfer = new EntityDir\MoneyTransfer();
         $form = $this->createForm(new FormDir\TransferType($report->getAccounts()), $transfer);
-        $form->handleRequest($request);
         
+        $form->handleRequest($request);
         if ($form->isValid()) {
             $this->get('restClient')->post('report/' .  $report->getId() . '/money-transfers', $form->getData());
            
@@ -163,6 +163,30 @@ class TransfersController extends AbstractController
         }
 
        
+    }
+    
+    /**
+     * Sub controller action called when the no transfers form is embedded in another page.
+     *
+     * @Template("AppBundle:Transfers:_noTransfers.html.twig")
+     */
+    public function _noTransfersPartialAction(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
+        
+        $form = $this->createForm(new FormDir\NoTransfersToAddType(), $report, []);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $request->getMethod() == "POST" && $form->isValid()) {
+            $this->getRestClient()->put('report/' . $reportId, [
+                'no_transfers_to_add' => $form->getData()->getNoTransfersToAdd(),
+            ]);
+        }
+
+        return [
+            'form' => $form->createView(),
+            'report' => $report
+        ];
     }
 
 }
