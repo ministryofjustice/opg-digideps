@@ -7,32 +7,21 @@
 
   if (typeof GOVUK === 'undefined') { root.GOVUK = {}; }
 
-  function fakeSave () {
-      var statusElement = $('#page-section-title-container').find('.info');
-      statusElement.html('<span id="save-status" data-status="saving">Saving...</span>');
-      window.setTimeout(function () {
-          statusElement.html('<span id="save-status" data-status="saved">Saved</span>');
-      }, 1000);
-      window.setTimeout(function () {
-          statusElement.html('');
-      }, 2000);
-  }
   function remove(event) {
 
-      var target = $(event.target);
-      var field = target.prev();
+      var target = $(event.target),
+          thisGroup = target.parent(),
+          transaction = thisGroup.parent(),
+          removeButton = transaction.find('.remove-button');
 
-      field.val("");
-      field.trigger('recalc');
-
-      var transaction = target.parent().parent();
-      target.parent().remove();
+      thisGroup.remove();
 
       var groups = transaction.find('.form-group-value');
+
       if (groups.length > 1) {
-          transaction.find('.remove-button').show();
+          removeButton.show();
       } else {
-          transaction.find('.remove-button').hide();
+          removeButton.hide();
       }
 
       groups.each(function (index, element) {
@@ -43,29 +32,32 @@
           }
       });
 
+      transaction.trigger('removeField');
   }
   function addField(event) {
       event.preventDefault();
 
-      var target = $(event.target);
-      var existing = target.parent().prev();
-      var nextLine = $(existing[0].outerHTML);
+      var target = $(event.target),
+        transaction = target.parent().parent(),
+        existing = target.parent().prev(),
+        nextLine = $(existing[0].outerHTML),
+        newInput,
+        groups;
+
       existing.after(nextLine);
 
-      nextLine.find('input.transaction-value').val("")
-          .on('keyup', function () {
-              $(window).trigger({type:'TRANSACTION_TOTAL_CHANGE', input: event.target});
-          })
-          .on('blur', function (event) {
-              root.GOVUK.formatCurrency(event.target);
-              fakeSave();
-          })
-          .focus();
+      newInput = nextLine.find('input.transaction-value');
+
+      newInput
+        .val("")
+        .trigger('addField')
+        .on('blur', function (event) {
+          root.GOVUK.formatCurrency(event.target);
+        })
+        .focus();
 
       nextLine.find('label').hide();
-
-      var transaction = target.parent().parent();
-      var groups = transaction.find('.form-group-value');
+      groups = transaction.find('.form-group-value');
 
       if (groups.length > 1) {
           transaction.find('.remove-button').show().off('click').on('click', remove);

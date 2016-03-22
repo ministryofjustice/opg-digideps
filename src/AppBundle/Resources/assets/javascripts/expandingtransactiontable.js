@@ -13,15 +13,20 @@
         this.inputs = this.container.find('.transaction-value').not(".exclude-total");
         this.subTotals = this.container.find('.summary .sub-total .value');
         this.grandTotal = this.container.find('.grand-total .value');
+        this.summaries = this.container.find('.summary');
 
         this.handleSummaryClick = this.handleSummaryClick.bind(this);
-        this.totalChangeHandler = this.totalChangeHandler.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleAddField = this.handleAddField.bind(this);
+        this.handleRemoveField = this.handleRemoveField.bind(this);
 
-        $('.summary', this.element).on('click', this.handleSummaryClick);
+        this.summaries.on('click', this.handleSummaryClick);
         this.inputs.on('keyup input paste recalc', this.handleInputChange);
-        $(window).on('TRANSACTION_TOTAL_CHANGE', this.totalChangeHandler);
-        this.container.on('submit', this.formSubmitHandler);
+        this.container
+          .on('submit', this.formSubmitHandler)
+          .on('addField', this.handleAddField)
+          .on('removeField', this.handleRemoveField);
 
         this.closeAll();
         this.setInitialDescriptionVisibility();
@@ -29,10 +34,7 @@
     };
 
     ExpandingTransactionTable.prototype.handleInputChange = function (event) {
-        $(window).trigger({type:'TRANSACTION_TOTAL_CHANGE', input: event.target});
-    };
-    ExpandingTransactionTable.prototype.totalChangeHandler = function (event) {
-        var $target = $(event.input);
+        var $target = $(event.target);
         this.handleTotalChange($target);
         this.shouldDisplayDescription($target.closest('.transaction'));
     };
@@ -73,6 +75,12 @@
         $('.transaction', this.container).each(function (index, element) {
             clearDescription(element);
         });
+    };
+    ExpandingTransactionTable.prototype.handleAddField = function (event) {
+        $(event.target).on('keyup input paste recalc', this.handleInputChange);
+    };
+    ExpandingTransactionTable.prototype.handleRemoveField = function () {
+        this.recalc();
     };
     ExpandingTransactionTable.prototype.updateGrandTotal = function () {
         var total = 0;
@@ -126,6 +134,12 @@
            $(element).closest('.section').addClass('open').removeClass('closed');
         });
     };
+    ExpandingTransactionTable.prototype.recalc = function () {
+        this.container.find('.transaction-value').each(function (index, item) {
+            this.handleTotalChange($(item));
+        }.bind(this));
+    };
+
 
     root.GOVUK.ExpandingTransactionTable = ExpandingTransactionTable;
 
