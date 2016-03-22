@@ -114,3 +114,14 @@ Feature: deputy / report / account
         # delete and cancel
         And I click on "delete-button"
         Then I should not see the "account-9999" link
+
+    @deputy
+    Scenario: add another account (8888) 
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I add the following bank account:
+            | bank    | temp  | | |
+            | accountNumber | 8888 | | |
+            | accountType | cash | | |
+            | sortCode | 11 | 22 | 33 |
+            | openingBalance  | 100 | | |
+            | closingBalance  | 22 | | |

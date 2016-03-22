@@ -176,9 +176,9 @@ EOT;
         $this->getSession()->executeScript($javascript);
       } else {
         $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
-
-        if (null === $elementsFound) {
-          throw $this->elementNotFound('form field', 'id|name|label|value', $field);
+        
+        if (empty($elementsFound)) {
+          throw new \RuntimeException("Element $field not found");
         }
 
         $elementsFound[0]->setValue($value);
