@@ -68,7 +68,11 @@ class TransfersController extends AbstractController
            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
 
-        return new JsonResponse(['success' => true, 'transfers' => $data['money_transfers']]);
+        return new JsonResponse([
+            'success' => true, 
+            'noTransfers' => $data['no_transfers_to_add'], 
+            'transfers' => $data['money_transfers']
+        ]);
     }
 
     /**
