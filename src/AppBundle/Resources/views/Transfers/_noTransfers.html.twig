@@ -6,7 +6,7 @@
 
 {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'no-data-form behat-region-no-transfers-selected' } }) }}
 
-{{ form_checkbox(form.noTransfersToAdd,'no_transfers', { 
+{{ form_checkbox(form.noTransfersToAdd,'no_transfers', {
         'labelClass': 'required',
         'labelText': 'no_transfers.label' | trans({'%client%': report.client.firstname}, translationDomain)
     }) }}
@@ -15,11 +15,10 @@
 
 {{ form_end(form) }}
 
+<!--[if IE 8]>
 <script type="text/javascript">
     $(document).ready(function () {
         new GOVUK.SelectionButtons(":checkbox");
     });
 </script>
-
-
-
+<![endif]-->
