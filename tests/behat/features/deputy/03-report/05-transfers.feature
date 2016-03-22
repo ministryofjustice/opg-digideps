@@ -31,10 +31,7 @@ Feature: deputy / report / account transfers
         Given the checkbox "report_no_transfers_noTransfersToAdd" is not checked
         When I check "report_no_transfers_noTransfersToAdd"
         And I press "report_no_transfers_saveNoTransfer"
-        Then the checkbox "report_no_transfers_noTransfersToAdd" should not checked 
-            
-form-group-report_no_transfers_noTransfersToAdd" is not checked
-    When I check
+        Then the checkbox "report_no_transfers_noTransfersToAdd" should not be checked 
         
 
     @deputy
