@@ -42,19 +42,20 @@ class TransfersControllerTest extends WebTestCase
         
         $this->assertEquals(['success'=>false, 'exception'=>'sth went wrong'], $responseArray);
     }
+    
     public function testTransfersGetJson()
     {
         $this->restClient
                 ->shouldReceive('get')->with('report/1', 'array', [ 'query' => [ 'groups' => 'transfers']])
-            ->andReturn(['money_transfers'=>'test']);
+            ->andReturn(['money_transfers'=>'test', 'no_transfers_to_add'=>true]);
 
         $this->frameworkBundleClient->request('GET', '/report/1/transfers', [], [], ['CONTENT_TYPE' => 'application/json', 'X-Requested-With'=>'XMLHttpRequest']);
         $response = $this->frameworkBundleClient->getResponse();
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         $responseArray = json_decode($response->getContent(), 1);
-        
         $this->assertEquals('test', $responseArray['transfers']);
+        $this->assertEquals(1, $responseArray['noTransfers']);
     }
     
     public function testTransfersSaveJsonApiException()
