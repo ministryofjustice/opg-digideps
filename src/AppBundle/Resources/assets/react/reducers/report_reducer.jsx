@@ -1,6 +1,6 @@
 /* global opg: true */
 import { NO_TRANSFERS } from '../actions/report_actions';
-import { GET_TRANSFERS } from '../actions/transfer_actions';
+import { GET_TRANSFERS } from '../actions/transfers_actions';
 
 import update from 'react-addons-update';
 
