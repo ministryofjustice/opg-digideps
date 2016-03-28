@@ -131,7 +131,7 @@ export default class MoneyTransfer extends Component {
                         </div>
                     </div>
                     <div className="column-one-half">
-                        {completed && (
+                        { (completed && transfer.id) && (
                             <a className="button button-warning delete-button" onClick={this.clickDelete}>
                                 Delete
                             </a>

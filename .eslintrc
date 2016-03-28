@@ -10,7 +10,6 @@
         "react"
     ],
     "rules": {
-        "no-alert": 2,
         "no-array-constructor": 2,
         "no-caller": 2,
         "no-catch-shadow": 2,
