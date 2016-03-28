@@ -16,7 +16,13 @@
         }
 
         .delete-button {
-            margin: 20px 10px 20px 0;
+            margin: 30px 10px 20px 10px;
+        }
+
+        .cancel-link {
+            color: $link-colour;
+            text-decoration: underline;
+            cursor: pointer;
         }
 
         .column-one-half {
@@ -28,6 +34,9 @@
             height: 225px;
         }
 
+        .confirm-bar {
+            margin-right: 0;
+        }
 
     }
 

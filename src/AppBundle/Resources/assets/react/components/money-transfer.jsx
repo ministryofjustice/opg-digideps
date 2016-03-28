@@ -8,6 +8,7 @@ export default class MoneyTransfer extends Component {
         super(props);
         this.state = {
             error: false,
+            deleteConfirm: false,
         };
     }
 
@@ -30,7 +31,10 @@ export default class MoneyTransfer extends Component {
     }
 
     amountChange = (event) => {
-        this.setState({error: false});
+        this.setState({
+            error: false,
+            deleteConfirm: false,
+        });
         const newTransferState = this.mutate('amount', event.target.value);
         this.props.updateTransfer(newTransferState);
     }
@@ -43,9 +47,15 @@ export default class MoneyTransfer extends Component {
         valueCopy = valueCopy.replace(',', '');
 
         if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
-            this.setState({error: true});
+            this.setState({
+                error: true,
+                deleteConfirm: false,
+            });
         } else {
-            this.setState({error: false});
+            this.setState({
+                error: false,
+                deleteConfirm: false,
+            });
         }
 
         this.props.updateTransfer(newTransferState);
@@ -55,7 +65,25 @@ export default class MoneyTransfer extends Component {
     }
 
     clickDelete = () => {
+        this.setState({
+            error: false,
+            deleteConfirm: true,
+        });
+    }
+
+    cancelDelete = () => {
+        this.setState({
+            error: false,
+            deleteConfirm: false,
+        });
+    }
+
+    clickDeleteConfirm = () => {
         this.props.deleteTransfer(this.props.transfer);
+        this.setState({
+            error: false,
+            deleteConfirm: false,
+        });
     }
 
     setActiveTransfer = () => {
@@ -131,10 +159,24 @@ export default class MoneyTransfer extends Component {
                         </div>
                     </div>
                     <div className="column-one-half">
-                        { (completed && transfer.id) && (
+                        { (completed && transfer.id && this.state.deleteConfirm === false) && (
                             <a className="button button-warning delete-button" onClick={this.clickDelete}>
                                 Delete
                             </a>
+                        )}
+                        { (completed && transfer.id && this.state.deleteConfirm === true) && (
+                            <div className="confirm-bar button-bar">
+                                <p className="delete-confirm-message">
+                                    Are you sure that you want to delete this decision?
+                                </p>
+                                <a className="button-warning behat-link-delete-confirm"
+                                    onClick={this.clickDeleteConfirm}>
+                                    Delete
+                                </a>
+                                <a className="button-link cancel-link"
+                                    onClick={this.cancelDelete}>Cancel
+                                </a>
+                            </div>
                         )}
                     </div>
                 </div>
