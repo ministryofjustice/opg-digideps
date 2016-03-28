@@ -64,7 +64,11 @@ class TransferAccount extends Component {
         }
 
         return (
-            <a className="card add" onClick={this.clickEdit}>Select account</a>
+            <ul className="card-list">
+                <li className="card-item">
+                    <a className="card add" onClick={this.clickEdit}>Select account</a>
+                </li>
+            </ul>
         );
     }
 }

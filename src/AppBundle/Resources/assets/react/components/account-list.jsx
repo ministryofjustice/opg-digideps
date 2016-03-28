@@ -31,7 +31,7 @@ class AccountList extends Component {
                 {this.props.selectedAccount ?
                     null :
                     <li className="card-item">
-                        <div className="card blank">&nbsp;</div>
+                        <div className="card blank">Select account</div>
                     </li>
                 }
                 {displayAccounts.map(this.accountListItem)}
