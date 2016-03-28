@@ -37,14 +37,14 @@ class TransfersController extends AbstractController
 
         $transfer = new EntityDir\MoneyTransfer();
         $form = $this->createForm(new FormDir\TransferType($report->getAccounts()), $transfer);
-        
+
         $form->handleRequest($request);
         if ($form->isValid()) {
             $this->get('restClient')->post('report/' .  $report->getId() . '/money-transfers', $form->getData());
-           
+
             return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
         }
-        
+
         return $this->render('AppBundle:Transfers:transfers.html.twig',[
             'report' => $report,
             'subsection' => 'transfers',
@@ -69,8 +69,8 @@ class TransfersController extends AbstractController
         }
 
         return new JsonResponse([
-            'success' => true, 
-            'noTransfers' => $data['no_transfers_to_add'], 
+            'success' => true,
+            'noTransfers' => (array_key_exists ( "no_transfers_to_add" , $data ) ? $data['no_transfers_to_add'] : false ),
             'transfers' => $data['money_transfers']
         ]);
     }
@@ -142,10 +142,10 @@ class TransfersController extends AbstractController
     public function transfersDelete(Request $request, $reportId, $transferId)
     {
         $this->get('restClient')->delete('report/' . $reportId . '/money-transfers/' . $transferId);
-        
+
         return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
     }
-    
+
     /**
      * @Route("/report/{reportId}/notransfers", name="transfers_update_none")
      * @Method({"PUT"})
@@ -166,9 +166,9 @@ class TransfersController extends AbstractController
             return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
 
-       
+
     }
-    
+
     /**
      * Sub controller action called when the no transfers form is embedded in another page.
      *
@@ -177,7 +177,7 @@ class TransfersController extends AbstractController
     public function _noTransfersPartialAction(Request $request, $reportId)
     {
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
-        
+
         $form = $this->createForm(new FormDir\NoTransfersToAddType(), $report, []);
         $form->handleRequest($request);
 
