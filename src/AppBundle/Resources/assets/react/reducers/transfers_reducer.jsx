@@ -1,6 +1,23 @@
 import { GET_TRANSFERS, UPDATE_TRANSFER, DELETE_TRANSFER, SAVE_TRANSFER, ADDED_TRANSFER } from '../actions/transfers_actions';
 import { containsIncompleteTransfer, appendNewTransfer, formatCurrency } from '../utils/transfer_utils';
 
+function validateAmount(transfer) {
+    let value = transfer.amount;
+
+    if (value === null) {
+        transfer.error = false;
+        return;
+    }
+
+    let valueCopy = value.replace(/^\s+|\s+$/g, '');
+    valueCopy = valueCopy.replace(',', '');
+
+    if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
+        transfer.error = true;
+    } else {
+        transfer.error = false;
+    }
+}
 function updateNewIncomplete(state, transfer) {
     let clonedState = state.slice(0);
     for (let pos = 0; pos < clonedState.length; pos += 1) {
@@ -35,19 +52,23 @@ function regularUpdate(state, transfer) {
     return clonedState;
 }
 function updateNewWithRealId(state, transfer) {
+    let found = false;
+
     let clonedState = state.slice(0);
     for (let pos = 0; pos < clonedState.length; pos += 1) {
-        if (clonedState[pos].waitingForId) {
+        if (clonedState[pos].temporaryId == transfer.temporaryId) {
             clonedState[pos].id = transfer.id;
-            clonedState[pos].waitingForId = false;
+            clonedState[pos].temporaryId = null;
+            found = true;
             break;
         }
     }
-
     return clonedState;
 }
 function update(state, transfer) {
     let newState;
+
+    validateAmount(transfer);
 
     if (transfer.id === null) {
         if (transfer.waitingForId === false) {

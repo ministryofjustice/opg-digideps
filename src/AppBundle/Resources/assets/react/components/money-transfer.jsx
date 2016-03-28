@@ -7,9 +7,13 @@ export default class MoneyTransfer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: false,
             deleteConfirm: false,
+            waitingToSave: false,
         };
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timer);
     }
 
     setAccountFrom = (account) => {
@@ -31,49 +35,52 @@ export default class MoneyTransfer extends Component {
     }
 
     amountChange = (event) => {
-        this.setState({
-            error: false,
-            deleteConfirm: false,
-        });
+
         const newTransferState = this.mutate('amount', event.target.value);
+        let waitingToSave = false;
+
+        this.setState({
+            deleteConfirm: false,
+            waitingToSave,
+        });
+
         this.props.updateTransfer(newTransferState);
+    }
+
+    checkValid = () => {
+
+    }
+
+    save = () => {
+        clearTimeout(this.timer);
+        if (completeTransfer(this.props.transfer) && !this.props.transfer.error) {
+            this.props.saveTransfer(this.props.transfer);
+        }
     }
 
     amountBlur = (event) => {
-        let value = formatCurrency(event.target.value);
-        const newTransferState = this.mutate('amount', value);
+        clearTimeout(this.timer);
 
+        let value = formatCurrency(event.target.value);
         let valueCopy = value.replace(/^\s+|\s+$/g, '');
         valueCopy = valueCopy.replace(',', '');
-
-        if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
-            this.setState({
-                error: true,
-                deleteConfirm: false,
-            });
-        } else {
-            this.setState({
-                error: false,
-                deleteConfirm: false,
-            });
-        }
+        const newTransferState = this.mutate('amount', valueCopy);
 
         this.props.updateTransfer(newTransferState);
-        if (completeTransfer(newTransferState) && this.state.error === false) {
-            this.props.saveTransfer(newTransferState);
-        }
+        this.save();
     }
 
     clickDelete = () => {
+        clearTimeout(this.timer);
         this.setState({
-            error: false,
+            waitingToSave: false,
             deleteConfirm: true,
         });
     }
 
     cancelDelete = () => {
         this.setState({
-            error: false,
+            waitingToSave: false,
             deleteConfirm: false,
         });
     }
@@ -81,7 +88,7 @@ export default class MoneyTransfer extends Component {
     clickDeleteConfirm = () => {
         this.props.deleteTransfer(this.props.transfer);
         this.setState({
-            error: false,
+            waitingToSave: false,
             deleteConfirm: false,
         });
     }
@@ -93,6 +100,14 @@ export default class MoneyTransfer extends Component {
     mutate(key, value) {
         const newTransferState = Object.assign(this.props.transfer);
         newTransferState[key] = value;
+
+        if (completeTransfer(newTransferState)) {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.save();
+            }, 3000);
+        }
+
         return newTransferState;
     }
 
@@ -117,7 +132,7 @@ export default class MoneyTransfer extends Component {
             }
         }
 
-        if (this.state.error) {
+        if (this.props.transfer.error) {
             className += ' error';
         }
 

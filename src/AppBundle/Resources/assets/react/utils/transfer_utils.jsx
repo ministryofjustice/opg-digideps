@@ -2,10 +2,16 @@ const decimalplaces = 2,
     decimalcharacter = '.',
     thousandseparater = ',';
 
+
+
 export function appendNewTransfer(transfers, reportId) {
+    const d = new Date();
+    const n = d.getTime();
+
     return [...transfers, {
         reportId: reportId,
         id: null,
+        temporaryId: n,
         accountFrom: null,
         accountTo: null,
         amount: null
