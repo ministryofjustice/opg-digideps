@@ -107,8 +107,10 @@ export function validateAmount(transfer) {
     let valueCopy = value.replace(/^\s+|\s+$/g, '');
     valueCopy = valueCopy.replace(',', '');
 
-    if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) == 0.00 ) {
+    if (valueCopy === '' || isNaN(valueCopy)) {
         transfer.error = 'The amount must be a number';
+    } else if (parseFloat(valueCopy) === 0.00) {
+        transfer.error = 'The amount must be more than 0';
     } else if (parseFloat(valueCopy) < 0.00) {
         transfer.error = 'The amount can’t be a minus number';
     } else {
