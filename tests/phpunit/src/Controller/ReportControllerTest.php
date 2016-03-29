@@ -106,7 +106,8 @@ class ReportControllerTest extends AbstractTestController
 
         // assert transactions have been added
         $this->assertCount($transactionTypesCount, $report->getTransactions());
-        $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
+
+//        $this->assertEquals(null, $report->getTransactions()[0]->getAmount());
     }
 
 
@@ -273,17 +274,17 @@ class ReportControllerTest extends AbstractTestController
                 'start_date' => '2015-01-29',
                 'end_date' => '2015-12-29',
                 'transactions_in' => [
-                    ['id' => 'dividends', 'amount' => 1200, 'more_details' => ''],
-                    ['id' => 'salary-or-wages', 'amount' => 760],
+                    ['id' => 'dividends', 'amounts' => [1200.10, 400], 'more_details' => ''],
+                    ['id' => 'salary-or-wages', 'amounts' => [760]],
                 ],
                 'transactions_out' => [
-                    ['id' => 'accommodation-other', 'amount' => 24, 'more_details' => 'extra service charge'],
+                    ['id' => 'accommodation-other', 'amounts' => [24.50], 'more_details' => 'extra service charge'],
                 ],
                 'balance_mismatch_explanation' => 'bme'
             ]
         ]);
 
-
+        
         // both
         $q = http_build_query(['groups' => ['transactionsIn', 'transactionsOut', 'basic']]);
         //assert both groups (quick)
@@ -300,7 +301,7 @@ class ReportControllerTest extends AbstractTestController
         $t = array_shift(array_filter($data['transactions_in'], function($e){ return $e['id']==='dividends'; }));
         $this->assertEquals('in', $t['type']);
         $this->assertEquals('income-and-earnings', $t['category']);
-        $this->assertEquals(1200, $t['amount']);
+        $this->assertEquals([1200.10, 400], $t['amounts']);
         $this->assertEquals(null, $t['more_details']);
         $this->assertEquals(null, $t['has_more_details']);
         
@@ -309,10 +310,12 @@ class ReportControllerTest extends AbstractTestController
         $t = array_shift(array_filter($data['transactions_out'], function($e){ return $e['id']==='accommodation-other'; }));
         $this->assertEquals('out', $t['type']);
         $this->assertEquals('accommodation', $t['category']);
-        $this->assertEquals(24,  $t['amount']);
+        $this->assertEquals([24.50],  $t['amounts']);
         $this->assertEquals(true, $t['has_more_details']);
         $this->assertEquals('extra service charge', $t['more_details']);
         
+        $t = array_shift(array_filter($data['transactions_out'], function($e){ return $e['id']==='anything-else-paid-out'; }));
+        $this->assertEquals([],  $t['amounts']);
     }
 
 

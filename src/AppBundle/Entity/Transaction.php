@@ -48,6 +48,16 @@ class Transaction
      * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)
      */
     private $amount;
+    
+    /**
+     * @var array
+     * 
+     * @JMS\Type("array<string>")
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     *
+     * @ORM\Column(type="array")
+     */
+    private $amounts;
 
     /**
      * @var string
@@ -66,13 +76,13 @@ class Transaction
     private $hasMoreDetails;
 
 
-    public function __construct(Report $report, TransactionType $transactionType, $amount)
+    public function __construct(Report $report, TransactionType $transactionType, array $amounts)
     {
         $this->report = $report;
         $report->addTransaction($this);
 
         $this->transactionType = $transactionType;
-        $this->amount = $amount;
+        $this->amounts = $amounts;
     }
 
     /**
@@ -143,6 +153,14 @@ class Transaction
     {
         return $this->amount;
     }
+    
+    /**
+     * @return array of floats
+     */
+    public function getAmountsTotal()
+    {
+        return array_sum($this->getAmounts());
+    }
 
     /**
      * @return string
@@ -190,5 +208,19 @@ class Transaction
     {
         return $this->id;
     }
+    
+    public function getAmounts()
+    {
+        return $this->amounts;
+    }
+
+
+    public function setAmounts(array $amounts = [])
+    {
+        $this->amounts = $amounts;
+        return $this;
+    }
+
+
     
 }

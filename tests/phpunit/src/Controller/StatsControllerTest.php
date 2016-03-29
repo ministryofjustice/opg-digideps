@@ -30,9 +30,9 @@ class StatsControllerTest extends AbstractTestController
         // report 1
         self::$report1 = self::fixtures()->createReport(self::$client1, ['setEndDate'=>new \DateTime('yesterday')]);
         self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank'=>'bank1']);
-        self::fixtures()->createTransaction(self::$report1, 'rent'.microtime(1), 1);
-        self::fixtures()->createTransaction(self::$report1, 'mortgage'.microtime(1), 2);
-        self::fixtures()->createTransaction(self::$report1, 'salary'.microtime(1), 3);
+        self::fixtures()->createTransaction(self::$report1, 'rent'.microtime(1), [1]);
+        self::fixtures()->createTransaction(self::$report1, 'mortgage'.microtime(1), [2]);
+        self::fixtures()->createTransaction(self::$report1, 'salary'.microtime(1), [3]);
         
         // report2
         self::$report2 = self::fixtures()->createReport(self::$client1, [])->setSubmitted(true);

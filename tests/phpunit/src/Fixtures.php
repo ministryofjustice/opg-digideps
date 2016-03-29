@@ -176,14 +176,14 @@ class Fixtures
      /**
      * @return EntityDir\Transaction
      */
-    public function createTransaction(EntityDir\Report $report, $type, $amount, array $settersMap = [])
+    public function createTransaction(EntityDir\Report $report, $type, array $amounts, array $settersMap = [])
     {
         $ttype = new EntityDir\TransactionTypeIn();
         $ttype->setId($type);
         $ttype->setHasMoreDetails(false);
         $ttype->setCategory('cat');
         
-        $transaction = new EntityDir\Transaction($report, $ttype, $amount);
+        $transaction = new EntityDir\Transaction($report, $ttype, $amounts);
         
         foreach ($settersMap as $k=>$v) {
             $transaction->$k($v);
