@@ -15,11 +15,14 @@ class TransactionSingleType extends AbstractType
          $builder 
                  ->add('id', 'hidden')
                  ->add('type', 'hidden')
-                 ->add('amount', 'number', [
-                     'error_bubbling' => false,
-                     'precision' => 2,
-                     'grouping' => true,
-                     'invalid_message'=>'account.moneyInOut.amount.notNumeric'
+                 ->add('amounts', 'collection', [
+                      'entry_type' => 'number',
+                      'entry_options' => [
+                         'error_bubbling' => false,
+                         'precision' => 2,
+                         'grouping' => true,
+                         'invalid_message'=>'account.moneyInOut.amount.notNumeric'
+                      ]
                  ]);
          
          $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
