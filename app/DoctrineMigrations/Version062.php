@@ -18,8 +18,7 @@ class Version062 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE transaction ADD amounts TEXT NOT NULL');
-        $this->addSql('COMMENT ON COLUMN transaction.amounts IS \'(DC2Type:array)\'');
+        $this->addSql('ALTER TABLE transaction ADD amounts TEXT NULL');
     }
 
     /**

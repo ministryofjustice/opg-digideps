@@ -55,7 +55,7 @@ class Transaction
      * @JMS\Type("array<string>")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      *
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="simple_array")
      */
     private $amounts;
 
@@ -82,7 +82,7 @@ class Transaction
         $report->addTransaction($this);
 
         $this->transactionType = $transactionType;
-        $this->amounts = $amounts;
+        //$this->amounts = $amounts;
     }
 
     /**
@@ -215,7 +215,7 @@ class Transaction
     }
 
 
-    public function setAmounts(array $amounts = [])
+    public function setAmounts($amounts)
     {
         $this->amounts = $amounts;
         return $this;
