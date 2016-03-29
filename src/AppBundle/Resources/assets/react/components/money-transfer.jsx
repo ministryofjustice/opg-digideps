@@ -157,6 +157,9 @@ export default class MoneyTransfer extends Component {
                     <div className="column-one-half">
                         <div className="form-group">
                             <label className="form-label" htmlFor="balance">Amount:</label>
+                            {(this.props.transfer.error) && (
+                                <span className="error-message">{this.props.transfer.error}</span>
+                            )}
                             <span className="input-group-prefix">£</span>
                             <input type="text"
                               id="balance"
