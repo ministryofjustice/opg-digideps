@@ -35,6 +35,8 @@ gulp.task('clean', () => {
     del(['web/assets']);
 });
 
+// Build all style related files for all browsers and copy
+// related images and font files along with them
 gulp.task('sass', [
     'lint.sass',
     'sass.application',
@@ -138,14 +140,6 @@ gulp.task('lint.js', function () {
         .pipe(jshint.reporter('default'));
 });
 
-// Rerun the task when a file changes
-gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor', 'react-debug'], () => {
-    gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
-    gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
-    gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
-    gulp.watch(config.reactSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
-});
-
 gulp.task('react-debug', () => {
     browserify({
         entries: config.reactSrc + '/transfers.jsx',
@@ -158,6 +152,7 @@ gulp.task('react-debug', () => {
     .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
+// Compile React related code for Money Transfers in production mode, minified
 gulp.task('react', () => {
     browserify({
         entries: config.reactSrc + '/transfers.jsx',
@@ -170,6 +165,14 @@ gulp.task('react', () => {
     .pipe(buffer())
     .pipe(uglify())
     .pipe(gulp.dest(config.webAssets + '/javascripts'));
+});
+
+// Watch the source files and recompile in debug mode when there are changes.
+gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor', 'react-debug'], () => {
+    gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
+    gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
+    gulp.watch(config.jsSrc + '/**/*.js', { interval: 1000 }, ['lint.js', 'js.debug']);
+    gulp.watch(config.reactSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
 });
 
 gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor', 'react']);

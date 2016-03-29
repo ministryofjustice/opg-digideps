@@ -107,7 +107,7 @@ export function validateAmount(transfer) {
     let valueCopy = value.replace(/^\s+|\s+$/g, '');
     valueCopy = valueCopy.replace(',', '');
 
-    if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
+    if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) <= 0.00 ) {
         transfer.error = true;
     } else {
         transfer.error = false;
