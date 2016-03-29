@@ -1,4 +1,4 @@
-import { GET_TRANSFERS, UPDATE_TRANSFER, DELETE_TRANSFER, SAVE_TRANSFER, ADDED_TRANSFER } from '../actions/transfers_actions';
+import { GET_TRANSFERS, UPDATE_TRANSFER, DELETE_TRANSFER, ADDED_TRANSFER } from '../actions/transfers_actions';
 import { containsIncompleteTransfer, appendNewTransfer, formatCurrency, validateAmount } from '../utils/transfer_utils';
 
 function updateNewWithRealId(state, transfer) {
@@ -51,13 +51,6 @@ function deleteItem(state, id) {
 
 export default function(state = [], action) {
     switch (action.type) {
-    case SAVE_TRANSFER: {
-        let transfer = action.payload;
-        if (transfer.id === null) {
-            transfer.waitingForId = true;
-        }
-        return updateTransfer(state, transfer);
-    }
     case ADDED_TRANSFER: {
         if (action.payload.hasOwnProperty('data')
          && action.payload.data.hasOwnProperty('transfer')) {
