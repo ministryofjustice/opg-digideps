@@ -36,6 +36,14 @@ class Transaction
      */
     private $amount;
 
+     /**
+     * @var array
+     * 
+     * @JMS\Type("array<string>")
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     */
+    private $amounts;
+    
     /**
      * @var string
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
@@ -144,6 +152,18 @@ class Transaction
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
+    }
+
+    public function getAmounts()
+    {
+        return $this->amounts;
+    }
+
+
+    public function setAmounts($amounts)
+    {
+        $this->amounts = $amounts;
+        return $this;
     }
 
     
