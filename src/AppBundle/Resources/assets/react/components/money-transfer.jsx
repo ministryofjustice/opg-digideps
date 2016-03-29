@@ -45,10 +45,13 @@ export default class MoneyTransfer extends Component {
         });
 
         this.props.updateTransfer(newTransferState);
-    }
 
-    checkValid = () => {
-
+        if (completeTransfer(newTransferState)) {
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.save();
+            }, 3000);
+        }
     }
 
     save = () => {
@@ -100,14 +103,6 @@ export default class MoneyTransfer extends Component {
     mutate(key, value) {
         const newTransferState = Object.assign(this.props.transfer);
         newTransferState[key] = value;
-
-        if (completeTransfer(newTransferState)) {
-            clearTimeout(this.timer);
-            this.timer = setTimeout(() => {
-                this.save();
-            }, 3000);
-        }
-
         return newTransferState;
     }
 

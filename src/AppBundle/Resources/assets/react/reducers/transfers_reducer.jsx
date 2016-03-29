@@ -1,83 +1,29 @@
 import { GET_TRANSFERS, UPDATE_TRANSFER, DELETE_TRANSFER, SAVE_TRANSFER, ADDED_TRANSFER } from '../actions/transfers_actions';
-import { containsIncompleteTransfer, appendNewTransfer, formatCurrency } from '../utils/transfer_utils';
+import { containsIncompleteTransfer, appendNewTransfer, formatCurrency, validateAmount } from '../utils/transfer_utils';
 
-function validateAmount(transfer) {
-    let value = transfer.amount;
-
-    if (value === null) {
-        transfer.error = false;
-        return;
-    }
-
-    let valueCopy = value.replace(/^\s+|\s+$/g, '');
-    valueCopy = valueCopy.replace(',', '');
-
-    if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
-        transfer.error = true;
-    } else {
-        transfer.error = false;
-    }
-}
-function updateNewIncomplete(state, transfer) {
-    let clonedState = state.slice(0);
-    for (let pos = 0; pos < clonedState.length; pos += 1) {
-        if (clonedState[pos].id === null && !clonedState[pos].waitingForId) {
-            clonedState[pos] = transfer;
-            break;
-        }
-    }
-
-    return clonedState;
-}
-function updateNewCompleteWithoutId(state, transfer) {
-    let clonedState = state.slice(0);
-    for (let pos = 0; pos < clonedState.length; pos += 1) {
-        if (clonedState[pos].id === null && clonedState[pos].waitingForId) {
-            clonedState[pos] = transfer;
-            break;
-        }
-    }
-
-    return clonedState;
-}
-function regularUpdate(state, transfer) {
-    let clonedState = state.slice(0);
-    for (let pos = 0; pos < clonedState.length; pos += 1) {
-        if (clonedState[pos].id === transfer.id) {
-            clonedState[pos] = transfer;
-            break;
-        }
-    }
-
-    return clonedState;
-}
 function updateNewWithRealId(state, transfer) {
-    let found = false;
-
-    let clonedState = state.slice(0);
-    for (let pos = 0; pos < clonedState.length; pos += 1) {
-        if (clonedState[pos].temporaryId == transfer.temporaryId) {
-            clonedState[pos].id = transfer.id;
-            clonedState[pos].temporaryId = null;
-            found = true;
+    let newState = state.slice(0);
+    for (let pos = 0; pos < newState.length; pos += 1) {
+        if (newState[pos].temporaryId == transfer.temporaryId) {
+            newState[pos].id = transfer.id;
+            newState[pos].temporaryId = null;
             break;
         }
     }
-    return clonedState;
+    return newState;
 }
-function update(state, transfer) {
-    let newState;
+function updateTransfer(state, transfer) {
+    let newState = state.slice(0);
 
     validateAmount(transfer);
 
-    if (transfer.id === null) {
-        if (transfer.waitingForId === false) {
-            newState = updateNewIncomplete(state, transfer);
-        } else {
-            newState = updateNewCompleteWithoutId(state, transfer);
+    for (let pos = 0; pos < newState.length; pos += 1) {
+        if (transfer.id !== null && newState[pos].id === transfer.id ||
+            transfer.id === null && newState[pos].temporaryId === transfer.temporaryId)
+        {
+            newState[pos] = transfer;
+            break;
         }
-    } else {
-        newState = regularUpdate(state, transfer);
     }
 
     if (!containsIncompleteTransfer(newState) || newState.length === 0) {
@@ -110,7 +56,7 @@ export default function(state = [], action) {
         if (transfer.id === null) {
             transfer.waitingForId = true;
         }
-        return update(state, transfer);
+        return updateTransfer(state, transfer);
     }
     case ADDED_TRANSFER: {
         if (action.payload.hasOwnProperty('data')
@@ -126,7 +72,7 @@ export default function(state = [], action) {
         }
         break;
     case UPDATE_TRANSFER:
-        return update(state, action.payload);
+        return updateTransfer(state, action.payload);
     case DELETE_TRANSFER:
         return deleteItem(state, action.payload.id);
     }

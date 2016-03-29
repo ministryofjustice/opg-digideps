@@ -95,3 +95,21 @@ export function formatCurrency(number) {
 
     return formattedStr;
 }
+
+export function validateAmount(transfer) {
+    let value = transfer.amount;
+
+    if (value === null) {
+        transfer.error = false;
+        return;
+    }
+
+    let valueCopy = value.replace(/^\s+|\s+$/g, '');
+    valueCopy = valueCopy.replace(',', '');
+
+    if (valueCopy === '' || isNaN(valueCopy) || parseFloat(valueCopy) === 0.00 ) {
+        transfer.error = true;
+    } else {
+        transfer.error = false;
+    }
+}
