@@ -82,7 +82,7 @@ class Transaction
         $report->addTransaction($this);
 
         $this->transactionType = $transactionType;
-        //$this->amounts = $amounts;
+        $this->amounts = $amounts;
     }
 
     /**
