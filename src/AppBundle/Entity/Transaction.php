@@ -156,7 +156,7 @@ class Transaction
 
     public function getAmounts()
     {
-        return $this->amounts;
+        return $this->amounts ? $this->amounts : [null];
     }
 
 

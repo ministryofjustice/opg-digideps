@@ -41,13 +41,13 @@
         transaction = target.parent().parent(),
         existing = target.parent().prev(),
         nextLine = $(existing[0].outerHTML),
-        newInput,
-        groups;
+        newInput;
 
       existing.after(nextLine);
 
       newInput = nextLine.find('input.transaction-value');
 
+      // trigger AddField
       newInput
         .val("")
         .trigger('addField')
@@ -57,13 +57,16 @@
         .focus();
 
       nextLine.find('label').hide();
-      groups = transaction.find('.form-group-value');
 
-      if (groups.length > 1) {
+      // add "remove button" if there is more than one input
+      if ( transaction.find('.form-group-value') > 1) {
           transaction.find('.remove-button').show().off('click').on('click', remove);
       } else {
           transaction.find('.remove-button').hide();
       }
+      
+      //fix element names to allow submit
+      alert('FIXME');
 
   }
 
