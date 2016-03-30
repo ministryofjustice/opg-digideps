@@ -288,14 +288,6 @@ class AccountController extends AbstractController
                     ]
                 ], 500);
             }
-            
-            
-            //echo "<pre>";
-            \Doctrine\Common\Util\Debug::dump($form->getData()->getTransactionsIn()[0]->getAmounts(), 3);
-            error_log(__METHOD__);die;
-
-
-
 
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
                 'deserialise_group' => $type,

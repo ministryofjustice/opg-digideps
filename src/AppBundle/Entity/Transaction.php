@@ -34,7 +34,7 @@ class Transaction
      * @Assert\Type(type="numeric", message="account.moneyInOut.amount.notNumeric", groups={"transactions"})
      * @Assert\Range(min=0, max=10000000000, minMessage = "account.moneyInOut.amount.minMessage", maxMessage = "account.moneyInOut.amount.maxMessage", groups={"transactions"})
      */
-    private $amount;
+    //private $amount;
 
      /**
      * @var array
@@ -43,6 +43,12 @@ class Transaction
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      */
     private $amounts;
+    
+    /**
+     * @JMS\Type("string")
+     * @var float 
+     */
+    private $amountsTotal;
     
     /**
      * @var string
@@ -107,22 +113,6 @@ class Transaction
     }
 
     /**
-     * @return mixed
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
-
-    /**
-     * @param mixed $amount
-     */
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-    }
-
-    /**
      * @return string
      */
     public function getHasMoreDetails()
@@ -173,13 +163,26 @@ class Transaction
     public function moreDetailsValidate(ExecutionContextInterface $context)
     {
         $moreDetailsClean = trim($this->getMoreDetails(), " \n");
-        if ($this->getHasMoreDetails() && $this->getAmount() > 0.0  && !$moreDetailsClean){
+        if ($this->getHasMoreDetails() && $this->getAmountsTotal() > 0.0  && !$moreDetailsClean){
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
         }
         
-        if ($moreDetailsClean && !$this->getAmount()) {
+        if ($moreDetailsClean && !$this->getAmountsTotal()) {
             $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
         }
     }
+    
+    public function getAmountsTotal()
+    {
+        return $this->amountsTotal;
+    }
+
+    public function setAmountsTotal($amountsTotal)
+    {
+        $this->amountsTotal = $amountsTotal;
+        return $this;
+    }
+
+
 
 }

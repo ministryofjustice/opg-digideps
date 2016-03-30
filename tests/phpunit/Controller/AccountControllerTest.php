@@ -81,7 +81,7 @@ class AccountControllerTest extends WebTestCase
 
     public function testmoneySaveJsonWithFormNotValid()
     {
-        $this->t1->shouldReceive('getAmount')->andReturn('abc');
+        $this->t1->shouldReceive('getAmounts')->andReturn(['abc']);
 
         $this->report
                 ->shouldReceive('getSubmitted')->andReturn(false)
@@ -106,7 +106,7 @@ class AccountControllerTest extends WebTestCase
 
     public function testmoneySaveJsonExceptionOnApiPut()
     {
-        $this->t1->shouldReceive('getAmount')->andReturn(123, 34);
+        $this->t1->shouldReceive('getAmounts')->andReturn([123], 34);
 
         $this->report
                 ->shouldReceive('getSubmitted')->andReturn(false)

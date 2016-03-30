@@ -38,12 +38,13 @@
       event.preventDefault();
 
       var target = $(event.target),
-        transaction = target.parent().parent(),
-        existing = target.parent().prev(),
-        nextLine = $(existing[0].outerHTML),
+        transaction = target.parents('.transaction'),
+        lastInputGroup = transaction.find('.form-group:last'),
+        nextLine = $(lastInputGroup[0].outerHTML),
         newInput;
-
-      existing.after(nextLine);
+      
+      // add new line
+      lastInputGroup.after(nextLine);
 
       newInput = nextLine.find('input.transaction-value');
 
@@ -59,28 +60,34 @@
       nextLine.find('label').hide();
 
       // add "remove button" if there is more than one input
-      if ( transaction.find('.form-group-value') > 1) {
+      if ( transaction.find('.form-group-value').length > 1) {
           transaction.find('.remove-button').show().off('click').on('click', remove);
       } else {
           transaction.find('.remove-button').hide();
       }
       
-      //fix element names to allow submit
-      alert('FIXME');
-
+      // fix element names to allow submit
+      transaction.find('input.transaction-value').each(function(i) {
+        var el = $(this);
+        var name = el.attr('name');
+        el.attr('name', name.slice(0, -3) + '[' + i + ']');
+      });
+      
   }
 
   root.GOVUK.accountTransactionExpander = function() {
-    $('.transaction').each(function (index, element) {
-
-        var transactionElement = $(element);
-
-        var currentField = transactionElement.find('.form-group-value');
-        var currentInput = currentField.find('.transaction-value').eq(0);
-
-        var removeButton = $('<span class="remove-button">Remove</span>');
-        removeButton.on('click', remove);
-        removeButton.insertAfter(currentInput);
+    $('.transaction').each(function () {
+        var inputRows = $(this).find('.form-group-value');
+        inputRows.each(function() {
+            var currentInput = $(this).find('.transaction-value').eq(0);
+            var removeButton = $('<span class="remove-button">Remove</span>');
+            removeButton.on('click', remove);
+            removeButton.insertAfter(currentInput);
+            // show if there is more than one inputbox
+            if (inputRows.length > 1) {
+                removeButton.show();
+            }
+        });
     });
     $('.add-transaction a').on('click',addField);
   };

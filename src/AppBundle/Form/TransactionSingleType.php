@@ -17,6 +17,7 @@ class TransactionSingleType extends AbstractType
                  ->add('type', 'hidden')
                  ->add('amounts', 'collection', [
                       'entry_type' => 'number',
+                      'allow_add'    => true, //allow new fields added with JS
                       'entry_options' => [
                          'error_bubbling' => false,
                          'precision' => 2,
