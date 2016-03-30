@@ -37,7 +37,7 @@ form:
     value:
       label: What is the value of property? This can be an estimate.
     hasMortgage:
-      label: Is there mortgage on the property?
+      label: Is there a mortgage on the property?
     mortgageOutstandingAmount:
       label: How much is left to pay?
     hasCharges:
