@@ -32,7 +32,7 @@
                             }) }}
                         {% endfor %}
 
-                        <div class="add-transaction" style="display: none">
+                        <div class="add-transaction hidden">
                             <a href="#">{{ 'addAnother' | trans }}</a>
                         </div>
 
@@ -79,7 +79,7 @@
             preprocessor: GOVUK.moneyInOuPreprocessor
         });
         
-        $('.add-transaction').show();
+        $('.add-transaction').removeClass('hidden');
 
         $('input.transaction-value').on('blur', function (event) {
             GOVUK.formatCurrency(event.target);
