@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "gulp",
-    "lint": "eslint src/AppBundle/Resources/assets/react/**/*.jsx"
+    "lint": "gulp lint.js lint.sass",
+    "develop": "gulp watch"
   },
   "devDependencies": {
     "axios": "^0.8.1",

@@ -31,6 +31,7 @@ var config = {
     webAssets: 'web/assets/' + now
 };
 
+// Remove previous builds of javascript and css files
 gulp.task('clean', () => {
     del(['web/assets']);
 });
@@ -46,6 +47,7 @@ gulp.task('sass', [
     'sass.images',
     'sass.fonts']);
 
+// Compile the sass for the main styles for the site into a minified .css file
 gulp.task('sass.application', () => {
 
     return gulp.src(config.sassSrc + '/application.scss')
@@ -55,6 +57,8 @@ gulp.task('sass.application', () => {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
+
+// Compile styles that are unique to IE 7.
 gulp.task('sass.application-ie7', () => {
 
     return gulp.src(config.sassSrc + '/application-ie7.scss')
@@ -64,6 +68,8 @@ gulp.task('sass.application-ie7', () => {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
+
+// Compile styles that are unique to IE 8
 gulp.task('sass.application-ie8', () => {
 
     return gulp.src(config.sassSrc + '/application-ie8.scss')
@@ -72,6 +78,8 @@ gulp.task('sass.application-ie8', () => {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
+
+// Compile styles that are used when the user prints something.
 gulp.task('sass.application-print', () => {
 
     return gulp.src(config.sassSrc + '/application-print.scss')
@@ -81,6 +89,8 @@ gulp.task('sass.application-print', () => {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 
 });
+
+// Copy all style related images, we also bundle the external copy of fonts too, only used for ie 8
 gulp.task('sass.images', () => {
     gulp.src('./node_modules/govuk_template_mustache/assets/stylesheets/images/**/*')
         .pipe(gulp.dest(config.webAssets + '/stylesheets/images'));
@@ -99,11 +109,15 @@ gulp.task('sass.fonts', () => {
         .pipe(gulp.dest(config.webAssets + '/stylesheets'));
 });
 
+// Copy non css related images
 gulp.task('images', () => {
     gulp.src('./node_modules/govuk_frontend_toolkit/images/**/*').pipe(gulp.dest('./web/images'));
     gulp.src('./src/AppBundle/Resources/assets/images/**/*').pipe(gulp.dest('./web/images'));
 });
 
+
+// Creates the production version of the service javascript.
+// Files are concatinated and then minified with uglify.
 gulp.task('js.prod', ['lint.js'], () => {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
@@ -113,6 +127,10 @@ gulp.task('js.prod', ['lint.js'], () => {
         .pipe(uglify())
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
+
+// create a debug version of javascript to allow easier debugging by
+// having javascript that can easily have breakpoints and stepped through
+// Used by the watch process.
 gulp.task('js.debug', function () {
     return gulp.src([
             './node_modules/govuk_template_mustache/assets/javascripts/govuk-template.js',
@@ -121,25 +139,34 @@ gulp.task('js.debug', function () {
         .pipe(concat('application.js'))
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
+
+// Create IE javascript with polyfills for missing functions and support.
 gulp.task('js.ie', function() {
     gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/ie.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
     gulp.src('./node_modules/govuk_template_mustache/assets/javascripts/vendor/goog/webfont-debug.js').pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
+
+// Copy across javascript from other vendors.
 gulp.task('vendor', function () {
     gulp.src('./node_modules/jquery/dist/jquery.min.js')
         .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
+// Check that the sass complies with simple rules for it's creation to encourage good code.
 gulp.task('lint.sass', function() {
     return gulp.src('src/AppBundle/Resources/assets/scss/**/*.scss')
         .pipe(scsslint());
 });
+
+// Check javascript follows some good guidelines and check for obvious errors.
 gulp.task('lint.js', function () {
     gulp.src(config.jsSrc + '/**/*.js')
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
+// Compile React related code for Money Transfers in debug mode.
+// Allows for easy debugging in Chrome with the react developer plugin
 gulp.task('react-debug', () => {
     browserify({
         entries: config.reactSrc + '/transfers.jsx',
@@ -167,7 +194,7 @@ gulp.task('react', () => {
     .pipe(gulp.dest(config.webAssets + '/javascripts'));
 });
 
-// Watch the source files and recompile in debug mode when there are changes.
+// Watch the source files and recompile in debug mode when there are changed.
 gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', 'vendor', 'react-debug'], () => {
     gulp.watch(config.sassSrc + '/**/*', { interval: 1000 }, ['sass']);
     gulp.watch(config.imgSrc + '/**/*', { interval: 1000 }, ['images']);
@@ -175,4 +202,5 @@ gulp.task('watch', ['clean', 'lint.js', 'sass', 'images', 'js.debug', 'js.ie', '
     gulp.watch(config.reactSrc + '/**/*.jsx', { interval: 1000 }, ['react-debug']);
 });
 
+// Build all assets in production ready mode.
 gulp.task('default', ['clean', 'lint.js', 'sass', 'images', 'js.prod', 'js.ie', 'vendor', 'react']);
