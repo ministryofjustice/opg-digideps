@@ -36,7 +36,7 @@
   }
   function addField(event) {
       event.preventDefault();
-
+      
       var target = $(event.target),
         transaction = target.parents('.transaction'),
         lastInputGroup = transaction.find('.form-group:last'),
@@ -70,11 +70,14 @@
       transaction.find('input.transaction-value').each(function(i) {
         var element = $(this);
         var elementName = element.attr('name');
-        var elementId = element.attr('id');
         element.attr('name', elementName.replace(/\[(\d+)\]$/, '['+i+']'));
-        element.attr('id', elementId.replace(/\d+$/, i));
+        replaceLastDigitAttribute(element, 'id', i);
       });
-      
+  }
+  function replaceLastDigitAttribute(element, attributeName, newValue)
+  {
+      var attrVal = element.attr(attributeName);
+      element.attr('id', attrVal.replace(/\d+$/, newValue));
   }
 
   root.GOVUK.accountTransactionExpander = function() {
