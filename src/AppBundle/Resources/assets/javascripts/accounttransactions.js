@@ -72,12 +72,16 @@
         var elementName = element.attr('name');
         element.attr('name', elementName.replace(/\[(\d+)\]$/, '['+i+']'));
         replaceLastDigitAttribute(element, 'id', i);
+        // fix attributes of parent elements
+        var formGroup = element.parents('.form-group');
+        replaceLastDigitAttribute(formGroup, 'id', i);
+        replaceLastDigitAttribute(formGroup.find('label:first'), 'for', i);
       });
   }
-  function replaceLastDigitAttribute(element, attributeName, newValue)
+  function replaceLastDigitAttribute(element, attrName, newValue)
   {
-      var attrVal = element.attr(attributeName);
-      element.attr('id', attrVal.replace(/\d+$/, newValue));
+      var attrVal = element.attr(attrName);
+      element.attr(attrName, attrVal.replace(/\d+$/, newValue));
   }
 
   root.GOVUK.accountTransactionExpander = function() {
