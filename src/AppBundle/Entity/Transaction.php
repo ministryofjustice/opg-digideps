@@ -38,16 +38,6 @@ class Transaction
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
     private $transactionType;
-
-    /**
-     * @var decimal
-     * 
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactionsIn", "transactionsOut"})
-     *
-     * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)
-     */
-    private $amount;
     
     /**
      * @var array
@@ -145,17 +135,12 @@ class Transaction
     {
         return $this->getTransactionType()->getCategory();
     }
-
-    /**
-     * @return float
-     */
-    public function getAmount()
-    {
-        return $this->amount;
-    }
     
     /**
      * @return array of floats
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\SerializedName("amounts_total")
      */
     public function getAmountsTotal()
     {
@@ -181,13 +166,6 @@ class Transaction
     public function setTransactionType(TransactionType $transactionType)
     {
         $this->transactionType = $transactionType;
-        return $this;
-    }
-
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-        
         return $this;
     }
 
