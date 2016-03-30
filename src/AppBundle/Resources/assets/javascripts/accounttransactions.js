@@ -68,9 +68,11 @@
       
       // fix element names to allow submit
       transaction.find('input.transaction-value').each(function(i) {
-        var el = $(this);
-        var name = el.attr('name');
-        el.attr('name', name.slice(0, -3) + '[' + i + ']');
+        var element = $(this);
+        var elementName = element.attr('name');
+        var elementId = element.attr('id');
+        element.attr('name', elementName.replace(/\[(\d+)\]$/, '['+i+']'));
+        element.attr('id', elementId.replace(/\d+$/, i));
       });
       
   }
