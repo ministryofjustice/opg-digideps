@@ -56,6 +56,14 @@ class Report
     private $accounts;
 
     /**
+     * @JMS\Groups({"transfers"})
+     * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="report", cascade={"persist"})
+     */
+    private $moneyTransfers;
+    
+    
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -163,6 +171,14 @@ class Report
     private $noAssetToAdd;
     
     /**
+     * @var boolean
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic", "transfers"})
+     * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
+     */
+    private $noTransfersToAdd;
+    
+    /**
      * @var string
      *
      * @JMS\Type("string")
@@ -238,10 +254,12 @@ class Report
     {
         $this->contacts = new ArrayCollection();
         $this->accounts = new ArrayCollection();
+        $this->moneyTransfers = new ArrayCollection();
         $this->transactions = new ArrayCollection();
         $this->decisions = new ArrayCollection();
         $this->assets = new ArrayCollection();
         $this->noAssetToAdd = null;
+        $this->noTransfersToAdd = null;
         $this->reportSeen = true;
     }
     
@@ -529,6 +547,26 @@ class Report
     }
     
     /**
+     * @return MoneyTransfer[]
+     */
+    public function getMoneyTransfers()
+    {
+        return $this->moneyTransfers;
+    }
+
+    /**
+     * @param MoneyTransfer $moneyTransfer
+     * @return \Report
+     */
+    public function addMoneyTransfers(MoneyTransfer $moneyTransfer)
+    {
+        $this->moneyTransfers->add($moneyTransfer);
+        
+        return $this;
+    }
+
+    
+    /**
      * Add decisions
      *
      * @param Decision $decision
@@ -659,7 +697,25 @@ class Report
     {
         return $this->noAssetToAdd;
     }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function getNoTransfersToAdd()
+    {
+        return $this->noTransfersToAdd;
+    }
 
+    /**
+     * @param boolean $noTransfersToAdd
+     */
+    public function setNoTransfersToAdd($noTransfersToAdd)
+    {
+        $this->noTransfersToAdd = $noTransfersToAdd;
+        return $this;
+    }
+    
 
     /**
      * Get Safeguarding

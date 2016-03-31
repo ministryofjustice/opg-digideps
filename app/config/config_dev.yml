@@ -19,3 +19,9 @@ monolog:
    handlers:
        main:
            formatter: line_formatter
+           
+jms_serializer:
+    metadata:
+        cache: none
+        cache: file
+        debug: true           
