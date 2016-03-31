@@ -10,7 +10,7 @@ Feature: deputy / report / account transfers
         Then the following fields should have an error:
             | transfers_accountFromId |
             | transfers_accountToId   |
-            | transfers_amount_0        |
+            | transfers_amounts_0        |
         And I save the page as "report-account-transfers-errors"
         # right values
         When I fill in "transfers_amount_0" with "1200"
