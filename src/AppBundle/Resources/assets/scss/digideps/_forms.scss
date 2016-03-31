@@ -66,10 +66,8 @@ form {
             margin-bottom: 20px;
 
             .form-date {
-                .form-group {
-                    input {
-                        width: 100%;
-                    }
+                .form-group input {
+                    width: 100%;
                 }
             }
 
@@ -112,7 +110,7 @@ form {
 }
 
 .form-group {
-    float: none; /* Only flat left if within a form container. */
+    float: none; // Only flat left if within a form container.
     form & {
         float: left;
     }
@@ -297,11 +295,11 @@ label.extra-top {
 
   .hidden-section {
     margin-top: 20px;
-    
+
     form .form-group & {
       margin-bottom: 40px;
     }
-  
+
   }
 
 }

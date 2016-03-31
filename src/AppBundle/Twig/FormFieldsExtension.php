@@ -10,12 +10,12 @@ class FormFieldsExtension extends \Twig_Extension
      * @var TranslatorInterface
      */
     private $translator;
-
+    
     /**
      * @var \Twig_Environment
      */
     private $environment;
-
+    
     /**
      * @param type $translator
      * @param type $params
@@ -24,13 +24,13 @@ class FormFieldsExtension extends \Twig_Extension
     {
         $this->translator = $translator;
     }
-
+    
     public function initRuntime(\Twig_Environment $environment)
     {
         parent::initRuntime($environment);
         $this->environment = $environment;
     }
-
+    
     public function getFunctions()
     {
         return [
@@ -62,7 +62,7 @@ class FormFieldsExtension extends \Twig_Extension
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
-
+    
     /**
      * Renders form checkbox field
      *
@@ -78,8 +78,8 @@ class FormFieldsExtension extends \Twig_Extension
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
-
-
+    
+     
     /**
      * form_checkbox_group(element, 'allowedCourtOrderTypes', {
        'legendClass' : 'form-label-bold',
@@ -90,6 +90,7 @@ class FormFieldsExtension extends \Twig_Extension
            {'labelClass': 'inline-label', 'elementClass': 'checkbox' }
         ]
        })
+     * //TODO consider refactor using getFormComponentTwigVariables
      */
     public function renderCheckboxGroup(FormView $element, $elementName, $vars, $transIndex = null)
     {
@@ -102,20 +103,21 @@ class FormFieldsExtension extends \Twig_Extension
             $hintText = $vars['hintText'];
         } else {
             $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
-            $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
+            $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;           
         }
-
+        
         if (isset($vars['legendText'])) {
             $legendText = $vars['legendText'];
         } else {
-
+            
             //get legendText translation. Look for a .legend value, if there isn't one then try the top level
             $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
-
+            
             if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
-                $legendTextTrans = $this->translator->trans($translationKey . '.label', [], $domain);
+                $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+                $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
                 if ($legendTextTrans != $translationKey . '.label') {
                     $legendText = $legendTextTrans;
                 } else {
@@ -123,7 +125,7 @@ class FormFieldsExtension extends \Twig_Extension
                 }
             }
         }
-
+        
          //generate input field html using variables supplied
         echo $this->environment->render( 'AppBundle:Components/Form:_checkboxgroup.html.twig', [
             'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass']: null,
@@ -137,7 +139,7 @@ class FormFieldsExtension extends \Twig_Extension
             'translationDomain' => $domain
         ]);
     }
-
+    
     /**
      * Renders form select element
      *
@@ -150,33 +152,33 @@ class FormFieldsExtension extends \Twig_Extension
     {
         //generate input field html using variables supplied
         echo $this->environment->render(
-            'AppBundle:Components/Form:_select.html.twig',
+            'AppBundle:Components/Form:_select.html.twig', 
             $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
         );
     }
-
+    
     public function renderFormKnownDate($element, $elementName,array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
-
+        
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
         if (isset($vars['showDay'])) {
             $showDay = $vars['showDay'];
         } else {
             $showDay = 'true';
         }
-
+        
         //sort hint text translation
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
-
+        
         //get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
-
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);
+        
+        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);    
 
         if ($legendTextTrans != $translationKey.'.legend') {
             $legendText = $legendTextTrans;
@@ -191,7 +193,7 @@ class FormFieldsExtension extends \Twig_Extension
 
         $legendTextTransJS = $this->translator->trans($translationKey.'.legendjs', $legendParams, $domain);
         $legendTextJS =  ($legendTextTransJS != $translationKey.'.legendjs')? $legendTextTransJS: null;
-
+        
         $html = $this->environment->render('AppBundle:Components/Form:_known-date.html.twig', [ 'legendText' => $legendText,
                                                                                                 'legendTextJS' => $legendTextJS,
                                                                                                 'hintText' => $hintText,
@@ -200,32 +202,32 @@ class FormFieldsExtension extends \Twig_Extension
                                                                                                 'legendTextRaw' => !empty($vars['legendRaw'])]);
         echo $html;
     }
-
+    
     public function renderFormSortCode($element, $elementName,array $vars = [], $transIndex = null)
     {
         //lets get the translation for class and labelText
         $translationKey = (!is_null($transIndex))? $transIndex.'.'.$elementName : $elementName;
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
-
+        
         //sort hint text translation
         $hintTextTrans =  $this->translator->trans($translationKey.'.hint', [],$domain);
         $hintText =  ($hintTextTrans != $translationKey.'.hint')? $hintTextTrans: null;
-
+        
         //get legendText translation
         $legendTextTrans = $this->translator->trans($translationKey.'.legend', [],$domain);
-
+        
         $legendText =  ($legendTextTrans != $translationKey.'.legend')? $legendTextTrans: null;
-
+        
         $html = $this->environment->render('AppBundle:Components/Form:_sort-code.html.twig', [ 'legendText' => $legendText,
                                                                                                 'hintText' => $hintText,
                                                                                                 'element' => $element
                                                                                               ]);
         echo $html;
     }
-
-
-
+    
+    
+    
     /**
      * @param type $element
      * @param type $elementName
@@ -249,13 +251,13 @@ class FormFieldsExtension extends \Twig_Extension
                 'element'  => $element,
                 'buttonClass' => $buttonClass
             ]);
-
+        
         echo $html;
     }
-
+    
     /**
      * @param FormView $elementsFormView
-     *
+     * 
      * @return array
      */
     private function getErrorsFromFormViewRecursive(FormView $elementsFormView)
@@ -263,38 +265,38 @@ class FormFieldsExtension extends \Twig_Extension
         $ret = [];
         foreach ($elementsFormView as $elementFormView) {
             $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
-            foreach ($elementFormErrors as $formError) { /* @var $error FormError */
+            foreach ($elementFormErrors as $formError) { /* @var $error FormError */ 
                 $ret[] = ['elementId'=>$elementFormView->vars['id'], 'message'=>$formError->getMessage()];
             }
             $ret = array_merge(
-                $ret,
+                $ret, 
                 $this->getErrorsFromFormViewRecursive($elementFormView)
             );
         }
 
         return $ret;
     }
-
+    
     /**
      * get form errors list and render them inside Components/Alerts:error_summary.html.twig
      * Usage: {{ form_errors_list(form) }}
-     *
+     * 
      * @param FormView $form
      */
     public function renderFormErrorsList(FormView $form)
     {
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
-
+        
         $html = $this->environment->render('AppBundle:Components/Alerts:_validation-summary.html.twig', [
             'formErrorMessages' => $formErrorMessages,
             'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors']
         ]);
-
+        
         echo $html;
     }
-
-
-
+    
+    
+    
     /**
      * @param array $vars
      * @throws type
@@ -302,25 +304,25 @@ class FormFieldsExtension extends \Twig_Extension
     public function renderFormCancelLink(array $vars = [])
     {
         $linkClass = isset($vars['linkClass'])? $vars['linkClass'] : null;
-
+        
         if(!isset($vars['href'])){
             throw new \Exception("You must specify 'href' for cancel link");
         }
-
+        
         $html = $this->environment->render('AppBundle:Components/Form:_cancel.html.twig', [ 'linkClass' => $linkClass,
                                                                                             'href' => $vars['href']
                                                                                           ]);
-
+        
         echo $html;
     }
-
+    
     /**
      * @param \Symfony\Component\Form\FormView $element
      * @param string $elementName
      * @param array $vars
      * @param string|null $transIndex
-     *
-     * @return array with vars labelText,hintText,element,labelClass, to pass into twig templates AppBundle:Components/Form:*
+     * 
+     * @return array with vars labelText,labelParameters,hintText,element,labelClass, to pass into twig templates AppBundle:Components/Form:*
      */
     private function getFormComponentTwigVariables($element, $elementName, array $vars, $transIndex)
     {
@@ -338,7 +340,7 @@ class FormFieldsExtension extends \Twig_Extension
         //sort hintList text translation
         $hintListTextTrans =  $this->translator->trans($translationKey.'.hintList', [],$domain);
         $hintListEntriesText = ($hintListTextTrans != $translationKey.'.hintList') ? array_filter(explode("\n", $hintListTextTrans)) : [];
-
+        
         //sort out labelText translation
         $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
         $labelText = isset($vars['labelText'])? $vars['labelText']: $this->translator->trans($translationKey.'.label', $labelParams, $domain);
@@ -349,13 +351,12 @@ class FormFieldsExtension extends \Twig_Extension
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass']: null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass']: null;
         $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass']: "";
-
+        
         //Text to insert to the left of an input, e.g. * * * * for account
         $preInputTextTrans =  $this->translator->trans($translationKey.'.preInput', [],$domain);
         $preInputText =  ($preInputTextTrans != $translationKey.'.preInput')? $preInputTextTrans: null;
-
-
-        return [
+        
+        return [ 
             'labelText' => $labelText,
             'hintText' => $hintText,
             'hintListArray' => $hintListEntriesText,
@@ -368,7 +369,7 @@ class FormFieldsExtension extends \Twig_Extension
             'preInputText' => $preInputText
         ];
     }
-
+    
     public function getName()
     {
         return 'form_input_extension';

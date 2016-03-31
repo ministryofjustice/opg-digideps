@@ -1,19 +1,19 @@
-pageTitle: Sign in
-header: Sign in to the admin area
+pageTitle: Log in
+header: Log in to the admin area
 email:
     label: Email address
     hint: We sent your registration link to this email address.
 password:
     label: Password
 login:
-    label: Sign in
+    label: Log in
     invalidMessage: Invalid email or password
 forgotPassword: Forgotten your password?
-sessionTimeoutOutWarning: Sorry, your session has timed out either due to inactivity or because you have signed in on another browser. Please sign in again.
+sessionTimeoutOutWarning: Sorry, your session has timed out either due to inactivity or because you have signed in on another browser. Please log in again.
 manualLogout:
-  title: You are now signed out
+  title: You are now logged out
   thankYou: Thank you for using the Complete the deputy report service.
-  startAgain: Sign in to get started again.
+  startAgain: Log in to get started again.
 
 #_security:
 #    403_error:

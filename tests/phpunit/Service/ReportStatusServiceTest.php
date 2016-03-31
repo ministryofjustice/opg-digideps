@@ -80,6 +80,53 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertFalse($reportStatusService->hasOutstandingAccounts());
     }
+    
+    public static function missingTransfersProvider()
+    {
+        return [
+            [0, 0, false, false],
+            [0, 0, true, false],
+            // 1 acccount
+            [1, 0, false, false],
+            [1, 0, true, false],
+            // 2 accounts
+            [2, 0, false, true], // no transfers, unticked => missing
+            [2, 0, true, false], // no transfers, ticked
+            [2, 1, true, false], // 1 transfer, ticked
+            [2, 1, true, false], // 1 transfer, unticked
+        ];
+    }
+    
+    /**
+     * @dataProvider missingTransfersProvider
+     */
+    public function testMissingTransfers($nOfAccounts, $nOfTransfers, $noTransfersToAdd, $expected)
+    {
+         $accounts = [];
+         while ($nOfAccounts--) {
+             $accounts[]= m::mock('AppBundle\Entity\Account')
+                ->shouldIgnoreMissing(true)
+                ->shouldReceive('hasClosingBalance')->andReturn(true)
+                ->getMock();
+         }
+         
+         $transfers = [];
+         while ($nOfTransfers--) {
+             $transfers[] = m::mock('AppBundle\Entity\MoneyTransfer');
+         }
+
+         $report = m::mock('AppBundle\Entity\Report')
+            ->shouldIgnoreMissing(true)
+            ->shouldReceive('getAccounts')->andReturn($accounts)
+            ->shouldReceive('getMoneyTransfers')->andReturn($transfers)
+            ->shouldReceive('getNoTransfersToAdd')->andReturn($noTransfersToAdd)
+            ->shouldReceive('getCourtOrderType')->andReturn(Report::PROPERTY_AND_AFFAIRS)
+            ->getMock();
+         
+        $reportStatusService = new ReportStatusService($report, $this->translator);
+        
+        $this->assertEquals($expected, $reportStatusService->missingTransfers());
+    }
 
     
     /** @test */
@@ -676,6 +723,8 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
             ->shouldReceive('hasMoneyIn')->andReturn($hasMoneyIn)
             ->shouldReceive('hasMoneyOut')->andReturn($hasMoneyOut)
             ->shouldReceive('getAccounts')->andReturn($accountsMocks)
+            ->shouldReceive('getMoneyTransfers')->andReturn([])
+            ->shouldReceive('getNoTransfersToAdd')->andReturn(true)
             ->shouldReceive('isTotalsMatch')->andReturn($isTotalMatch)
             ->shouldReceive('getBalanceMismatchExplanation')->andReturn($balanceExpl)
             ->getMock();

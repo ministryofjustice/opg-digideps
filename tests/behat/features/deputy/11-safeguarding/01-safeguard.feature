@@ -174,6 +174,3 @@ Feature: Safeguarding Data entry
             | safeguarding_doesClientHaveACarePlan_0 |
             | safeguarding_doesClientHaveACarePlan_1 |
             | safeguarding_whoIsDoingTheCaring |
-            | safeguarding_whenWasCarePlanLastReviewed_day |
-            | safeguarding_whenWasCarePlanLastReviewed_month |
-            | safeguarding_whenWasCarePlanLastReviewed_year |

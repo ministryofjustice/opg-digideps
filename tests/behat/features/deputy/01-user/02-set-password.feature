@@ -9,7 +9,7 @@ Feature: deputy / user / set password
         # follow link as it is
         When I save the application status into "activation-link-before-opening"
         When I open the "/user/activate/" link from the email
-        Then the response status code should be 200
+        #Then the response status code should be 200
         And I save the page as "deputy-step1"
          # empty
         When I fill in the following: 

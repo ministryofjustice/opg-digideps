@@ -2,6 +2,7 @@
 
 namespace DigidepsBehat;
 
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 
 
@@ -13,7 +14,7 @@ trait FormTrait
      */
     public function theFormShouldBeInvalid()
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         if (!$this->getSession()->getPage()->has('css','.form-group.error')) {
             throw new \RuntimeException("No errors found");    
         }    
@@ -24,10 +25,29 @@ trait FormTrait
      */
     public function theFormShouldBeValid()
     {
-        $this->assertResponseStatus(200);
+        //$this->assertResponseStatus(200);
         if ($this->getSession()->getPage()->has('css','.form-group.error')) {
-            throw new \RuntimeException("Errors found");    
+            throw new \RuntimeException("Errors found in elements: "
+                . implode(',', $this->getElementsIdsWithValidationErrors()));    
         }
+    }
+    
+    /**
+     * @return array of IDs of input/select/textarea elements inside a  .form-group.error CSS class
+     */
+    private function getElementsIdsWithValidationErrors()
+    {
+        $ret = [];
+        
+        $errorRegions = $this->getSession()->getPage()->findAll('css', ".form-group.error");
+        foreach ($errorRegions as $errorRegion) {
+            $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
+            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
+                $ret[] = $elementWithError->getAttribute('id');
+            }
+        }
+        
+        return $ret;
     }
     
     /**
@@ -38,16 +58,9 @@ trait FormTrait
      */
     public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
     {
+        $foundIdsWithErrors = $this->getElementsIdsWithValidationErrors();
+        
         $fields = array_keys($table->getRowsHash());
-
-        $errorRegions = $this->getSession()->getPage()->findAll('css', ".form-group.error");
-        $foundIdsWithErrors = [];
-        foreach ($errorRegions as $errorRegion) {
-            $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
-            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
-                $foundIdsWithErrors[] = $elementWithError->getAttribute('id');
-            }
-        }
         $untriggeredField = array_diff($fields, $foundIdsWithErrors);
         $unexpectedFields = array_diff($foundIdsWithErrors, $fields);
         
@@ -87,6 +100,88 @@ trait FormTrait
         }    
     }
 
-
+    /**
+     * @Then /^I click on the first decision$/
+     * @Then /^I click on the first contact$/
+     */
+    public function iClickOnTheFirstDecision()
+    {
+        $this->getSession()->getPage()->clickLink("edit-1-link");
+    }
     
+    /**
+     * Fills in form field with specified id|name|label|value.
+     *
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with "(?P<value>(?:[^"]|\\")*)"$/
+     * @When /^(?:|I )fill in "(?P<field>(?:[^"]|\\")*)" with:$/
+     * @When /^(?:|I )fill in "(?P<value>(?:[^"]|\\")*)" for "(?P<field>(?:[^"]|\\")*)"$/
+     */
+    public function fillField($field, $value)
+    {
+      $driver = $this->getSession()->getDriver();
+      $field = $this->fixStepArgument($field);
+      $value = $this->fixStepArgument($value);
+
+      if (substr($field, 0, 1) != '.' && substr($field, 0, 1) != '#') {
+        $field = '#' . $field;
+      }
+      
+      if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
+        
+        $this->scrollTo($field);
+
+        $javascript = <<<EOT
+            var field = $('$field');
+            var value = '$value';
+            
+            $(':focus').trigger('blur').trigger('change');
+            var tag = field.prop('tagName');
+      
+            if (field.prop('type') === 'checkbox' || 
+                field.prop('type') === 'radio')
+            {
+            
+                field.prop('checked', true);
+            
+            } else if (tag === 'SELECT') {
+                
+                field.focus().val(value).trigger('change');
+            
+            } else {
+                var pos = 0,
+                    length = value.length,
+                    character, charCode;
+                    
+                for (;pos < length; pos += 1) {
+                    
+                    character = value[pos];
+                    charCode = character.charCodeAt(0);
+                    
+                    var keyPressEvent = $.Event('keypress', {which: charCode}),
+                        keyDownEvent = $.Event('keydown', {which: charCode}),
+                        keyUpEvent = $.Event('keyup', {which: charCode});
+                    
+                    field
+                        .focus()
+                        .trigger(keyDownEvent)
+                        .trigger(keyPressEvent)
+                        .val(value.substr(0,pos+1))
+                        .trigger(keyUpEvent);
+    
+                }
+            }
+
+EOT;
+
+        $this->getSession()->executeScript($javascript);
+      } else {
+        $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
+        
+        if (empty($elementsFound)) {
+          throw new \RuntimeException("Element $field not found");
+        }
+
+        $elementsFound[0]->setValue($value);
+      }
+    }
 }

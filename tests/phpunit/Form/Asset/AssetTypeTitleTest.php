@@ -1,5 +1,5 @@
 <?php
-namespace AppBundle\Form;
+namespace AppBundle\Form\Asset;
 
 use Mockery as m;
 
@@ -9,9 +9,6 @@ class AssetTypeTitleTest extends \PHPUnit_Framework_TestCase
     {
         $this->translator = m::mock('Symfony\Component\Translation\TranslatorInterface');
         $this->translator->shouldReceive('trans')->with(m::any(), [], 'domain')->andReturnUsing(function($a) { return $a.'-TRANSLATED';});
-        
-        
-        
     }
     
     public function titleChoices()

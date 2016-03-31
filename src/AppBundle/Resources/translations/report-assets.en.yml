@@ -4,14 +4,53 @@ page:
   pageSectionDescription: "Add details of any property, savings or investments owned by %client%."
   pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
-  subSectionTitleAdd: Add an asset
-  subSectionTitleEdit: "Edit this asset"
+  subSectionTitleAdd: 
+    other: Add an asset
+    property: Add a property
+  subSectionTitleEdit: 
+    other: "Edit this asset"
+    property: Edit this property
 form:
   controls:
     addButton:
       label: "Add an asset"
       moreLabel: "Add another asset"
-
+    next:
+      label: Continue
+  property:
+    address:
+      label: Address
+    address2:
+      label: ""
+    county:
+      label: ""
+    postcode:
+      label: "Postcode"
+    occupants:
+      label: "Who lives at this property?"
+    owned:
+      label: Is the property fully or part-owned by %client%?
+    ownedPercentage:
+      label: What is %client%’s share of the property?
+    isSubjectToEquityRelease:
+      label: Is this property subject to an equity release scheme?
+    value:
+      label: What is the value of property? This can be an estimate.
+    hasMortgage:
+      label: Is there a mortgage on the property?
+    mortgageOutstandingAmount:
+      label: How much is left to pay?
+    hasCharges:
+      label: Is there a charge on the property? For example, from the local authority to pay for care.
+    isRentedOut:
+      label: Is the property rented out? (partly or fully)
+    rentAgreementEndDate:
+      label: When does the rental agreement end?
+      hint: (MM/YYYY)
+    rentIncomeMonth:
+      label: What is the rental income each month?
+           
+           
 title:
     label: Select an asset category, such as ‘Property’.
     hint: ""
@@ -27,7 +66,9 @@ valuationDate:
     label: Valuation date
 next:
     label: Next
-editLink: "Edit this asset"
+editLink: 
+    other: "Edit this asset"
+    property: "Edit this property"
 
 no_assets:
     label: %client% has no assets

@@ -74,6 +74,12 @@ class Report
      */
     private $accounts;
     
+     /**
+     * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
+     * @var MoneyTransfer[]
+     */
+    private $moneyTransfers;
+    
     /**
      * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @var Contact[]
@@ -121,6 +127,12 @@ class Report
      * @var boolean $noAssetToAdd
      */
     private $noAssetToAdd;
+    
+     /**
+     * @JMS\Type("boolean")
+     * @var boolean
+     */
+    private $noTransfersToAdd;
     
     /**
      * @JMS\Type("boolean")
@@ -423,13 +435,43 @@ class Report
     }
     
     /**
-     * @return array $accounts
+     * @return Account[]
      */
     public function getAccounts()
     {
         return $this->accounts;
     }
     
+    /**
+     * 
+     * @return MoneyTransfer[]
+     */
+    public function getMoneyTransfers()
+    {
+        return $this->moneyTransfers;
+    }
+    
+    /**
+     * @return MoneyTransfer
+     */
+    public function getMoneyTransferWithId($id)
+    {
+        foreach ($this->moneyTransfers as $t) {
+            if ($t->getId() == $id) {
+                return $t;
+            }
+        }
+        
+        return null;
+    }
+    
+
+    public function setMoneyTransfers(array $transfers)
+    {
+        $this->moneyTransfers = $transfers;
+        return $this;
+    }
+
     /**
      * @param array $accounts
      * @return \AppBundle\Entity\Report
@@ -635,6 +677,24 @@ class Report
         return $this;
     }
     
+    /**
+     * @return boolean
+     */
+    public function getNoTransfersToAdd()
+    {
+        return $this->noTransfersToAdd;
+    }
+
+    /**
+     * @param boolean
+     */
+    public function setNoTransfersToAdd($noTransfersToAdd)
+    {
+        $this->noTransfersToAdd = $noTransfersToAdd;
+        return $this;
+    }
+
+        
     /**
      * @return boolean $submitted
      */

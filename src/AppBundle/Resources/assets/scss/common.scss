@@ -1,7 +1,7 @@
 $path: '/images/';
-@import "main";
+@import "govuk-elements";
 
-/* DIGIDEPS */
+// DIGIDEPS
 @import "digideps/colours";
 @import "digideps/popups/session-timeout";
 @import "digideps/alert";
@@ -61,3 +61,4 @@ $path: '/images/';
 @import "digideps/autosave";
 @import "digideps/back-bar";
 @import "digideps/swatch";
+@import "digideps/transfers";

@@ -48,7 +48,7 @@ Feature: deputy / report / account
             | account_closingBalance  | 1,155.00 |
         And I press "account_save"
         And I save the page as "report-account-list"
-        Then the response status code should be 200
+        #Then the response status code should be 200
         And the form should be valid
         And the URL should match "/report/\d+/accounts"
         And I should see "HSBC - main account" in the "list-accounts" region
@@ -114,3 +114,14 @@ Feature: deputy / report / account
         # delete and cancel
         And I click on "delete-button"
         Then I should not see the "account-9999" link
+
+    @deputy
+    Scenario: add another account (8888) 
+        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        And I add the following bank account:
+            | bank    | temp  | | |
+            | accountNumber | 8888 | | |
+            | accountType | cash | | |
+            | sortCode | 11 | 22 | 33 |
+            | openingBalance  | 0 | | |
+            | closingBalance  | 0 | | |

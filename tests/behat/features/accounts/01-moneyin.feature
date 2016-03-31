@@ -1,7 +1,7 @@
 Feature: New accounts money in
 
     
-    @accounts @javascript
+    @accounts
     Scenario: Set things up
         Given I am logged in as "laydeputy@publicguardian.gsi.gov.uk" with password "PDEtnLay1234"
         Then I should be on "/user/details"
@@ -23,7 +23,7 @@ Feature: New accounts money in
         And I press "report_save"
         Then I save the application status into "laydeputy-ready"
 
-    @accounts @javascript
+    @accounts
     Scenario: A Deputy can access the money in page
         Given I load the application status from "laydeputy-ready"
         And  I am logged in as "laydeputy@publicguardian.gsi.gov.uk" with password "PDEtnLay1234"
