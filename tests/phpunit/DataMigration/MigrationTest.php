@@ -24,7 +24,7 @@ class MigrationTest extends WebTestCase
     public function testMigrateToLastOne()
     {
         $this->importDb('v055.test.sql');
-        $this->migrate('063');
+        $this->migrate('065');
 
         $rows = $this->em->getConnection()->query('SELECT * from transaction WHERE amount IS NULL LIMIT 1')->fetchAll();
         $this->assertEquals(null, $rows[0]['amounts']);
@@ -40,11 +40,11 @@ class MigrationTest extends WebTestCase
     {
         $this->importDb('v055.test.sql');
 
-        $this->migrate('063');
+        $this->migrate('065');
         $this->migrate('061');
-        $this->migrate('063');
+        $this->migrate('065');
         $this->migrate('061');
-        $this->migrate('063');
+        $this->migrate('065');
     }
 
     private function migrate($to)
