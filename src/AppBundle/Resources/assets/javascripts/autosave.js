@@ -1,12 +1,12 @@
 /* globals jQuery: true, GOVUK: true */
 /* jshint browser: true */
-if (typeof GOVUK === 'undefined') { 
-    GOVUK = {}; 
+if (typeof GOVUK === 'undefined') {
+    GOVUK = {};
 }
 
 (function ($, GOVUK) {
     "use strict";
-    
+
     var AutoSave = function(options) {
 
         this.form = $(options.form);
@@ -17,25 +17,25 @@ if (typeof GOVUK === 'undefined') {
         this.addEventHandlers();
 
         this.form.find('button[type="submit"]').hide();
-        
+
         this.preprocessor = options.preprocessor||null;
-        
+
     };
-    
+
     var NONE =  {label:'', state:''};
     var SAVING =  {label:'Saving...', state:'saving'};
     var SAVED =  {label:'Saved', state:'saved'};
     var NOTSAVED =  {label:'Not saved', state:'notsaved'};
 
     var ignoreCodes = [93, 13, 9, 35, 36, 45,34, 33, 37, 38, 39, 40, 27, 44, 145,19, 125, 124,126];
-    
+
     AutoSave.prototype.addEventHandlers = function () {
         this.blurHandler = this.getBlurHandler();
         this.submitHandler = this.getSubmitHandler();
         this.keyPressHandler = this.getKeyPressHandler();
         this.keyDownHandler = this.getKeyDownHandler();
         this.pasteHandler = this.getPasteHandler();
-        
+
         this.form.on('submit', this.submitHandler);
         this.form.find('input,textarea')
             .on('blur', this.blurHandler)
@@ -43,7 +43,7 @@ if (typeof GOVUK === 'undefined') {
             .on('keydown', this.keyDownHandler)
             .on('paste', this.pasteHandler);
     };
-    
+
     AutoSave.prototype.getBlurHandler = function () {
         return function (e) {
             e.preventDefault();
@@ -81,7 +81,7 @@ if (typeof GOVUK === 'undefined') {
             } else {
                 return;
             }
-            
+
             // If the user entered a key that affects the field value then mark things as changed
             // otherwise ignore it, for things like tab or arrow keys
             if ($.inArray(char, ignoreCodes) === -1 || (event.target.tagName === 'TEXTAREA' && char === 13)) {
@@ -90,7 +90,7 @@ if (typeof GOVUK === 'undefined') {
                 this.clearErrorsOnField($(event.target));
                 this.startSaveTimer();
             }
-            
+
         }.bind(this);
     };
     AutoSave.prototype.getPasteHandler = function () {
@@ -99,19 +99,19 @@ if (typeof GOVUK === 'undefined') {
            this.displayStatus(NONE);
         }.bind(this);
     };
-    
+
     AutoSave.prototype.save = function () {
         this.displayStatus(SAVING);
         this.clearSaveTimer();
-        
+
         if (this.preprocessor) {
             this.preprocessor(this.form);
         }
-        
+
         var data = this.form.serialize();
         var saveDone = this.handleSaveDone.bind(this);
         var saveFail = this.handleSaveError.bind(this);
-        
+
         $.ajax({
             type: 'PUT',
             url: this.url,
@@ -119,7 +119,7 @@ if (typeof GOVUK === 'undefined') {
             success: saveDone,
             error: saveFail
         });
- 
+
     };
     AutoSave.prototype.clearErrors = function () {
         this.form.find('.error-message').remove();
@@ -132,18 +132,18 @@ if (typeof GOVUK === 'undefined') {
     };
     AutoSave.prototype.showFieldErrors = function (errors) {
         var group, label;
-        
+
         $.each(errors, function(key, value) {
             group = $('#' + key).parent();
             label = group.find('label').eq(0);
-            
+
             group.addClass('error');
-            
+
             $('<span/>')
                 .text(value)
                 .addClass('error-message')
                 .insertAfter(label);
-            
+
         });
 
     };
@@ -180,7 +180,7 @@ if (typeof GOVUK === 'undefined') {
             this.timer = null;
         }
     };
-    
+
     GOVUK.AutoSave = AutoSave;
-    
+
 })(jQuery, GOVUK);

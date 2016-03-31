@@ -12,7 +12,7 @@
     <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>
     <span class="status {{ state }}">{{ status }}</span>
 
-    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" href="{{ path(subSection, {reportId: report.id}) }}" >
+    <span  class="edit-link {% if allowEdit == false %}disabled{% endif %}" {% if allowEdit == true %}href="{{ path(subSection, {reportId: report.id}) }}"{% endif %} >
         {% if state == 'not-started' %}
             {{ (subSection ~ '.start') | trans({}, translationDomain) }}
         {% else %}

@@ -6,6 +6,7 @@ nav:
   moneyOut: Money out
   bankAccounts: Bank accounts
   balanceAccounts: Balance
+  transfers: Money transfers
 
 save:
   label: Save

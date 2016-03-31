@@ -189,6 +189,7 @@ class ReportStatusService
             && !$this->hasOutstandingAccounts()
             && $this->report->hasMoneyIn() 
             && $this->report->hasMoneyOut() 
+            && !$this->missingTransfers()
             && !$this->missingBalance()) {
             return self::DONE;
         }
@@ -228,6 +229,7 @@ class ReportStatusService
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
             return !$this->hasOutstandingAccounts() 
                 && !$this->missingAccounts() 
+                && !$this->missingTransfers()
                 && !$this->missingBalance()
                 && !$this->missingContacts() 
                 && !$this->missingAssets() 
@@ -297,6 +299,23 @@ class ReportStatusService
         return empty($this->report->getAccounts());
     }
     
+    
+    /**
+     * If 
+     * @return boolean
+     */
+    public function missingTransfers()
+    {
+        if (count($this->report->getAccounts())<=1) {
+            return false;
+        }
+        
+        $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
+        $valid =  $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
+        
+        return !$valid;
+    }
+    
     /** @return boolean */
     public function missingBalance()
     {
@@ -326,7 +345,7 @@ class ReportStatusService
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
             $count = 6;
 
-            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingBalance()) {
+            if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingTransfers() && !$this->missingBalance()) {
                 $count--;
             }
 

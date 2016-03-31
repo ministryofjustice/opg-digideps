@@ -15,6 +15,7 @@ RUN  curl -L https://www.npmjs.com/install.sh | sh
 RUN  cd /tmp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer
 
 RUN  npm install --global gulp
+RUN  npm install --global browserify
 RUN  gem install sass scss_lint
 
 # build app dependencies
@@ -36,7 +37,7 @@ USER app
 ENV  HOME /app
 #do we still need the post-install-cmd
 RUN  composer run-script post-install-cmd --no-interaction
-RUN  npm run build
+RUN  NODE_ENV=production gulp
 
 # cleanup
 RUN  rm /app/app/config/parameters.yml

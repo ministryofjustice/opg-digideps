@@ -62,10 +62,10 @@
             } %}
         </li>
     {% endif %}
-    
+
 
     <li id="report-submit-section" class="overview-section">
-        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>  
+        <h2 class="heading">{{ 'heading.finishYourReport' | trans() }}</h2>
         {% include 'AppBundle:Overview:_subsection.html.twig' with {
             transDomain: translationDomain,
             subSection: 'actions',
@@ -75,7 +75,7 @@
             status: reportStatus.actionsStatus,
             list: true
         } %}
-  
+
         {% if reportStatus.isReadyToSubmit and report.isDue %}
             {% include 'AppBundle:Overview:_subsection.html.twig' with {
                 transDomain: translationDomain,
@@ -93,7 +93,7 @@
                 description: false,
                 state: "not-started",
                 status: "Not started",
-                disableedit: true 
+                disableedit: true
             } %}
         {%  endif %}
     </li>

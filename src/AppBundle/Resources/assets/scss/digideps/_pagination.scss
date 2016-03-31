@@ -1,4 +1,4 @@
-/* guides pagination */
+// guides pagination
 .pagination {
     display: block;
     margin: 2em 0 0 0;
@@ -15,23 +15,23 @@
             text-align: left;
         }
     }
-    
-    
+
+
     &.top {
         margin: 0 0 2em 0;
         padding: 0;
         border-top: 0;
         border-bottom: 1px solid $border-colour;
-    
+
         .previous a {
             padding-left: 1.5em;
         }
-        
+
         .next a {
             padding-right: 1.5em;
         }
     }
-    
+
     ul {
         margin: 0;
         padding: 0;
@@ -57,7 +57,7 @@
                 text-align: right;
             }
         }
-        
+
         a {
             background-color: transparent;
             display: block;
@@ -91,8 +91,8 @@
             a {
                 padding: .75em 3em .75em 0;
             }
-            
-            
+
+
             a::before {
                 background: transparent file-url("arrow-sprite.png") no-repeat -102px -11px;
                 margin: -4px -32px 0 0;
@@ -102,9 +102,9 @@
                 height: 38px;
                 content: " ";
             }
-        
+
         }
-        
+
         &.previous {
             float: left;
             text-align: left;
@@ -122,9 +122,9 @@
                 height: 38px;
                 content: " ";
             }
-            
+
         }
-        
+
     }
 
     .first,
@@ -151,5 +151,5 @@
             margin-bottom: .5em;
         }
     }
-    
+
 }
