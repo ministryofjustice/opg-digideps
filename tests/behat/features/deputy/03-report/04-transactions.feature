@@ -14,22 +14,17 @@ Feature: deputy / report / account transactions
         # wrong values (wrong amount types, amount without explanation, explanation without amount)
         When I fill in the following:
             | transactions_transactionsIn_0_amounts_0        | in |
-            | transactions_transactionsIn_5_amounts_0        | 10000000001 |
         And I press "transactions_save"
         Then the following fields should have an error:
             | transactions_transactionsIn_0_amounts_0  |
-            | transactions_transactionsIn_5_amounts_0  |
         And I save the page as "report-account-transactions-errors"
         # right values
         When I fill in the following:
             | transactions_transactionsIn_0_amounts_0       | 1250 |
-            | transactions_transactionsIn_1_amounts_0       |  |
-            | transactions_transactionsIn_2_amounts_0       |  |
-            | transactions_transactionsIn_3_amounts_0       |  |
-            | transactions_transactionsIn_5_amounts_0       |  |
             | transactions_transactionsIn_26_amounts_0      | 2000.0 |
             | transactions_transactionsIn_26_moreDetails | more-details-in-15  |
         And I press "transactions_save"
+        And debug
         Then the form should be valid
         # reload page
         And I follow "account-moneyin"
@@ -55,11 +50,9 @@ Feature: deputy / report / account transactions
         # wrong values (wrong amount types, amount without explanation, explanation without amount)
         When I fill in the following:
             | transactions_transactionsOut_0_amounts_0        | in |
-            | transactions_transactionsOut_4_amounts_0        | 10000000001 |
         And I press "transactions_save"
         Then the following fields should have an error:
             | transactions_transactionsOut_0_amounts_0  |
-            | transactions_transactionsOut_4_amounts_0  |
         And I save the page as "report-account-transactions-errors"
         # right values
         When I fill in the following:
