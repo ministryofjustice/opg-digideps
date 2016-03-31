@@ -13,7 +13,7 @@ Feature: deputy / report / account transfers
             | transfers_amount        |
         And I save the page as "report-account-transfers-errors"
         # right values
-        When I fill in "transfers_amount" with "1200"
+        When I fill in "transfers_amount_0" with "1200"
         And I select "HSBC main account (****0876)" from "transfers_accountFromId"
         And I select "temp (****8888)" from "transfers_accountToId"
         And I press "transfers_save"

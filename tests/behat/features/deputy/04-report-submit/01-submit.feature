@@ -81,9 +81,9 @@ Feature: deputy / report / submit
             | account_bank  | HSBC main account |
             | account_openingBalance  | 1,155.00 |
         When I click on "account-moneyin"
-        Then I should see an "#transactions_transactionsIn_0_amount" element
+        Then I should see an "#transactions_transactionsIn_0_amount_0" element
         When I click on "account-moneyout"
-        Then I should see an "#transactions_transactionsOut_0_amount" element
+        Then I should see an "#transactions_transactionsOut_0_amount_0" element
         
 
     @deputy
