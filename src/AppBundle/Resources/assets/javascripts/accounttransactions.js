@@ -39,7 +39,7 @@
       
       var target = $(event.target),
         transaction = target.parents('.transaction'),
-        lastInputGroup = transaction.find('.form-group:last'),
+        lastInputGroup = transaction.find('.form-group-value:last'),
         nextLine = $(lastInputGroup[0].outerHTML),
         newInput;
       
