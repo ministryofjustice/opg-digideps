@@ -17,7 +17,7 @@ class Account
 {
     /**
      * @var integer
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -28,14 +28,14 @@ class Account
     
     /**
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * @ORM\Column(name="bank_name", type="string", length=100, nullable=true)
      */
     private $bank;
 
     /**
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      *
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
@@ -43,7 +43,7 @@ class Account
 
     /**
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="sort_code", type="string", length=6, nullable=true)
      */
@@ -51,7 +51,7 @@ class Account
 
     /**
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="account_number", type="string", length=4, nullable=true)
      */
@@ -59,7 +59,7 @@ class Account
 
     /**
      * @var \DateTime
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
@@ -67,7 +67,7 @@ class Account
     
     /**
      * @var \DateTime
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
@@ -75,7 +75,7 @@ class Account
 
     /**
      * @var decimal
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * @JMS\Type("string")
      * 
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
@@ -85,7 +85,7 @@ class Account
     /**
      * @deprecated since accounts_mk2
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="opening_date_explanation", type="text", nullable=true)
      */
@@ -95,7 +95,7 @@ class Account
      * @var decimal
      * 
      * @JMS\Type("string")
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="closing_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
@@ -104,7 +104,7 @@ class Account
     /**
      * @deprecated since accounts_mk2
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="closing_balance_explanation", type="text", nullable=true)
      */
@@ -113,7 +113,7 @@ class Account
     /**
      * @deprecated since accounts_mk2
      * @var \Date
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="opening_date", type="date", nullable=true)
      */
@@ -122,7 +122,7 @@ class Account
     /**
      * @deprecated since accounts_mk2
      * @var \Date
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
@@ -131,7 +131,7 @@ class Account
     /**
      * @deprecated since accounts_mk2
      * @var string
-     * @JMS\Groups({"transactions", "basic"})
+     * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
      * @ORM\Column(name="closing_date_explanation", type="text", nullable=true)
      */
