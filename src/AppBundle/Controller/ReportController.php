@@ -76,7 +76,7 @@ class ReportController extends AbstractController
         $report = $this->getReport($reportId, [ 
             'transactions', 'transactionsIn', 'transactionsOut', 
             'basic', 'accounts', 'client', 
-            'asset', 'contacts', 'decisions', 'action'
+            'asset', 'contacts', 'decisions', 'action', 'transfers'
         ]);
         
         if ($report->getSubmitted()) {
