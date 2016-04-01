@@ -13,7 +13,7 @@ Feature: deputy / report / account transactions
         And I should see "£105.00" in the "unaccounted-for" region
         # fix and assert is good
         When I follow "account-moneyin"
-        And I fill in "transactions_transactionsIn_2_amount_0" with "105"
+        And I fill in "transactions_transactionsIn_2_amounts_0" with "105"
         And I press "transactions_save"
         And I follow "account-balance"
         Then I should see the "balance-good" region

@@ -343,10 +343,10 @@ trait ReportTrait
 //
 //        foreach ($records as $key => $value) {
 //            if (is_array($value)) { 
-//                $this->fillField("transactions_{$key}_amount_0", $value[0]);
+//                $this->fillField("transactions_{$key}_amounts_0", $value[0]);
 //                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
 //            } else {
-//                $this->fillField("transactions_{$key}_amount_0", $value);
+//                $this->fillField("transactions_{$key}_amounts_0", $value);
 //            }
 //        }
 //
