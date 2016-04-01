@@ -31,9 +31,11 @@ class MoneyTransferController extends RestController
         
         $transfer = new EntityDir\MoneyTransfer();
         $transfer->setReport($report);
+        $report->setNoTransfersToAdd(null);
         $this->fillEntity($transfer, $data);
 
         $this->persistAndFlush($transfer);
+        $this->persistAndFlush($report);
         
         $this->setJmsSerialiserGroups(['transfers']);
         
@@ -79,9 +81,11 @@ class MoneyTransferController extends RestController
         $transfer = $this->findEntityBy('MoneyTransfer', $transferId);
         $this->denyAccessIfReportDoesNotBelongToUser($transfer->getReport());
         
+        $report->setNoTransfersToAdd(null);
+        
         $this->getEntityManager()->remove($transfer);
-        $this->getEntityManager()->flush($transfer);
-
+        $this->getEntityManager()->flush();
+        
         return [];
     }
     
