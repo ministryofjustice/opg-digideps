@@ -14,6 +14,12 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
 {
+    private static $reportGroupsForValidation = [
+        'basic',  'accounts', 'client', 
+        'transactions', 'transactionsIn', 'transactionsOut', 
+        'asset', 'contacts', 'decisions', 'action', 'transfers'
+    ];
+    
     /**
      * Create report
      * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
@@ -65,7 +71,7 @@ class ReportController extends AbstractController
 
         return [ 'form' => $form->createView() ];
     }
-    
+   
     /**
      * @Route("/report/{reportId}/overview", name="report_overview")
      * @Template("AppBundle:Overview:overview.html.twig")
@@ -73,11 +79,7 @@ class ReportController extends AbstractController
     public function overviewAction($reportId)
     {
         // get all the groups (needed by ReportStatusService
-        $report = $this->getReport($reportId, [ 
-            'transactions', 'transactionsIn', 'transactionsOut', 
-            'basic', 'accounts', 'client', 
-            'asset', 'contacts', 'decisions', 'action', 'transfers'
-        ]);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
         
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
@@ -101,7 +103,7 @@ class ReportController extends AbstractController
     public function furtherInformationAction(Request $request, $reportId, $action = 'view')
     {
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -150,7 +152,7 @@ class ReportController extends AbstractController
      */
     public function declarationAction(Request $request, $reportId)
     {
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -190,7 +192,7 @@ class ReportController extends AbstractController
      */
     public function submitConfirmationAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic' ,'transactions']);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -227,7 +229,7 @@ class ReportController extends AbstractController
      */
     public function submitFeedbackAction($reportId)
     {
-        $report = $this->getReport($reportId, ['basic', 'transactions']);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
         
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
@@ -251,7 +253,7 @@ class ReportController extends AbstractController
         $restClient = $this->get('restClient');
 
         /** @var \AppBundle\Entity\Report $report */
-        $report = $this->getReport($reportId, [ 'transactions', 'basic', 'accounts', 'client', 'asset', 'contacts', 'decisions', 'action']);
+        $report = $this->getReport($reportId, self::$reportGroupsForValidation);
 
         /** @var TranslatorInterface $translator*/
         $translator =  $this->get('translator');
