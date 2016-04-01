@@ -24,7 +24,6 @@ Feature: deputy / report / account transactions
             | transactions_transactionsIn_26_amounts_0      | 2000.0 |
             | transactions_transactionsIn_26_moreDetails | more-details-in-15  |
         And I press "transactions_save"
-        And debug
         Then the form should be valid
         # reload page
         And I follow "account-moneyin"
