@@ -287,9 +287,10 @@ class Client
         $this->courtDate = $courtDate;
     }
     
-    public function setCourtDateWithoutTime($courtDate)
+    public function setCourtDateWithoutTime($courtDate = null)
     {
-        $this->courtDate = new \DateTime($courtDate->format('Y-m-d'));
+        $this->courtDate = ($courtDate instanceof \DateTime) ? 
+                new \DateTime($courtDate->format('Y-m-d')) : null;
     }
     
     /**
