@@ -148,6 +148,20 @@ class Transaction
     {
         return $this->amounts ? $this->amounts : [null];
     }
+    
+    /**
+     * get amounts not null or empty string
+     * 0.0 values are considered valid
+     * non-numeric values are considered valid too,
+     * 
+     * @return array
+     */
+    public function getNotNullAmounts()
+    {
+        return array_filter($this->getAmounts(), function($a){
+            return ($a !== null && trim($a) !== '');
+        });
+    }
 
 
     public function setAmounts($amounts)
@@ -158,16 +172,26 @@ class Transaction
 
     
     /**
+     * flag moreDetails invalid if amount is given and moreDetails is empty
+     * flag amount invalid if moreDetails is given and amount is empty
+     * 
      * @param ExecutionContextInterface $context
      */
     public function moreDetailsValidate(ExecutionContextInterface $context)
     {
-        $moreDetailsClean = trim($this->getMoreDetails(), " \n");
-        if ($this->getHasMoreDetails() && $this->getAmountsTotal() > 0.0  && !$moreDetailsClean){
+        // if the transaction required no moreDetails, no validation is needed
+        if (!$this->getHasMoreDetails()) {
+            return;
+        }
+        
+        $hasAtLeastOneAmount = count($this->getNotNullAmounts()) > 0;
+        $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
+        
+        if ($hasAtLeastOneAmount && !$hasMoreDetails){
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
         }
         
-        if ($moreDetailsClean && !$this->getAmountsTotal()) {
+        if ($hasMoreDetails && !$hasAtLeastOneAmount) {
             $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
         }
     }
