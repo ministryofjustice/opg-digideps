@@ -97,7 +97,7 @@ class RestInputOuputFormatter
             }
         }
 
-        $context = SerializationContext::create(); //->setSerializeNull(true);
+        $context = SerializationContext::create()->setSerializeNull(true);
         // context modifier
         foreach ($this->contextModifiers as $modifier) {
             $modifier($context);
