@@ -28,7 +28,7 @@ class AccountController extends AbstractController
         if ($report->getSubmitted()) {
             throw new \RuntimeException("Report already submitted and not editable.");
         }
-        
+
         $form = $this->createForm(new FormDir\TransactionsType('transactionsIn'), $report);
         $form->handleRequest($request);
         
@@ -261,7 +261,7 @@ class AccountController extends AbstractController
         try {
             
             $report = $this->getReport($reportId, [$type, 'basic', 'balance']);
-            
+        
             if ($report->getSubmitted()) {
                 
                 return new JsonResponse([
@@ -288,8 +288,7 @@ class AccountController extends AbstractController
                     ]
                 ], 500);
             }
-            
-            
+
             $this->get('restClient')->put('report/' . $report->getId(), $form->getData(), [
                 'deserialise_group' => $type,
             ]);

@@ -6,7 +6,7 @@
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyOut' | trans({}, "report-accounts") }}{% endblock %}
     {% block info %}<span id="save-status"></span>{% endblock %}
-    
+
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
@@ -15,15 +15,6 @@
 
         <h3 class="heading-medium-large">{{ 'moneyOut.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">{{ 'moneyOut.pageSectionDescription' | trans({'%client%': report.client.firstname, '%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
-
-        {% if not report.hasMoneyOut %}
-            <div>
-                <span class="icon icon__notification_yellow_small"></span>
-                <span class="page-section-description left-margin">
-                    {{ 'moneyOut.noEntriesWarning' | trans({'%client%': report.client.firstname}, translationDomain)}}
-                </span>  
-            </div>
-        {% endif %}
         
         {% include 'AppBundle:Account:transactions.html.twig' with {
         transDomain: translationDomain,

@@ -82,12 +82,12 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $transaction1 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(100)
+            ->shouldReceive("getAmounts")->andReturn([100])
             ->getMock();
 
         $transaction2 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(null)
+            ->shouldReceive("getAmounts")->andReturn([null])
             ->getMock();
         
         $this->report->setTransactionsIn([$transaction1, $transaction2]);
@@ -100,12 +100,12 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $transaction1 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(null)
+            ->shouldReceive("getAmounts")->andReturn([null])
             ->getMock();
 
         $transaction2 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(null)
+            ->shouldReceive("getAmounts")->andReturn([null])
             ->getMock();
 
         $this->report->setTransactionsIn([$transaction1, $transaction2]);
@@ -118,12 +118,12 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $transaction1 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(100)
+            ->shouldReceive("getAmounts")->andReturn([100])
             ->getMock();
 
         $transaction2 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(null)
+            ->shouldReceive("getAmounts")->andReturn([null])
             ->getMock();
 
         $this->report->setTransactionsOut([$transaction1, $transaction2]);
@@ -136,12 +136,12 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     {
         $transaction1 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(null)
+            ->shouldReceive("getAmounts")->andReturn([null])
             ->getMock();
 
         $transaction2 =  m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmount")->andReturn(null)
+            ->shouldReceive("getAmounts")->andReturn([null])
             ->getMock();
 
         $this->report->setTransactionsOut([$transaction1, $transaction2]);

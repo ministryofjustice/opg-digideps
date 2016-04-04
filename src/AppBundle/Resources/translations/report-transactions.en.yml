@@ -214,3 +214,4 @@ moneyin:
 moneyout:
     grandtotal: Total money out
 leaveWarning: "You haven't saved the transactions you have entered. Do you want to leave without saving?"
+addAnother: add another

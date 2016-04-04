@@ -869,7 +869,7 @@ class Report
                 $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
             }
             $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $transaction->getAmount();
+            $ret[$cat]['amountTotal'] += $transaction->getAmountsTotal();
         }
 
         return $ret;
@@ -1017,7 +1017,7 @@ class Report
     public function hasMoneyIn()
     {
         return count(array_filter($this->getTransactionsIn()?:[], function($t){
-            return $t->getAmount() !== null;
+            return count(array_filter($t->getAmounts())) > 0;
         })) > 0;
     }
     
@@ -1027,7 +1027,7 @@ class Report
     public function hasMoneyOut()
     {
         return count(array_filter($this->getTransactionsOut()?:[], function($t){
-            return $t->getAmount() !== null;
+             return count(array_filter($t->getAmounts())) > 0;
         })) > 0;
     }
     

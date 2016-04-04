@@ -10,7 +10,7 @@
                 <div class="title">{{ ('form.categories.' ~ category)  | trans({'%client%': report.client.firstname}, 'report-transactions') | raw  }}</div>
                 <div class="sub-total">£<span class="value">{{ transactions.amountTotal | money_format}}</span></div>
             </div>
-            <div class="detail transactions">
+            <div class="detail transactions detail-view">
                 {% for id, transaction in transactions.entries %}
                     {% if formTransactions[id].moreDetails is defined %}
                     {%     set formGroupClass = 'form-group-compound' %}
@@ -21,14 +21,21 @@
                         {#access the element via ID, set from the model therefore matching#}
                         {{ form_row(formTransactions[id].id) }}
                         {{ form_row(formTransactions[id].type) }}
-    
-                        {{ form_input(formTransactions[id].amount, 'form.entries.' ~ transaction.id, {
-                            'inputPrefix' : '£',
-                            'inputClass' : 'form-control__number transaction-value',
-                            'labelText': ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions'),
-                            'formGroupClass': formGroupClass
-                        }) }}
-    
+                        
+                        {% for a in formTransactions[id].amounts %}
+                            {% set labelText =  loop.index == 1 ? ('form.entries.' ~ transaction.id ~ '.label') | trans({'%client%': report.client.firstname}, 'report-transactions') : '' %}
+                            {{ form_input(a, 'form.entries.' ~ transaction.id, {
+                                'inputPrefix' : '£',
+                                'inputClass' : 'form-control__number transaction-value',
+                                'labelText': labelText,
+                                'formGroupClass': formGroupClass ~ ' form-group-value'
+                            }) }}
+                        {% endfor %}
+
+                        <div class="add-transaction hidden">
+                            <a href="#">{{ 'addAnother' | trans }}</a>
+                        </div>
+
                         {% if formTransactions[id].moreDetails is defined %}
                             {{ form_input(formTransactions[id].moreDetails, '', {
                                 'labelText': ('form.entries.' ~ transaction.id ~ '.moreInformations') | trans({'%client%': report.client.firstname}, 'report-transactions'),
@@ -36,6 +43,8 @@
                                 'inputClass': 'expanding transaction-more-details'
                             }) }}
                         {% endif %}
+
+
                     </div>
                 {% endfor %}
                 <div class="sub-total">
@@ -45,7 +54,7 @@
         </div>
         {% endfor %}
         <div class="grand-total">
-            {{ (subsection ~ '.grandtotal')| trans }}: 
+            {{ (subsection ~ '.grandtotal')| trans }}:
             <span class="currency">£</span>
             <span class="value behat-region-transaction-total">{{ transactionsTotal | money_format}}</span>
         </div>
@@ -63,7 +72,6 @@
 <script>
     $( document ).ready(function() {
         new GOVUK.ExpandingTransactionTable('.expanding-transaction-table');
-        
         new GOVUK.AutoSave({
             form: $('form.expanding-transaction-table'),
             statusElement: $('#save-status'),
@@ -71,9 +79,12 @@
             preprocessor: GOVUK.moneyInOuPreprocessor
         });
         
+        $('.add-transaction').removeClass('hidden');
+
         $('input.transaction-value').on('blur', function (event) {
             GOVUK.formatCurrency(event.target);
         });
-    
+
+        GOVUK.accountTransactionExpander();
     });
 </script>

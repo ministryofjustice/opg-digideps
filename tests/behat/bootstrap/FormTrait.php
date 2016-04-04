@@ -25,8 +25,11 @@ trait FormTrait
      */
     public function theFormShouldBeValid()
     {
-        //$this->assertResponseStatus(200);
-        if ($this->getSession()->getPage()->has('css','.form-group.error')) {
+        $page = $this->getSession()->getPage();
+        $this->assertResponseStatus(200);
+        
+        if ($page->has('css','.form-group.error') ||
+            $page->has('css', '#error-summary-heading')) {
             throw new \RuntimeException("Errors found in elements: "
                 . implode(',', $this->getElementsIdsWithValidationErrors()));    
         }

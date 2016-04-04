@@ -17,26 +17,26 @@ Feature: browser - accounts
         Then I follow "account-moneyin"
         And I click on "income-and-earnings"
         And I save the page as "moneyin-1"
-        Then I fill in "transactions_transactionsIn_0_amount" with "100"
+        Then I fill in "transactions_transactionsIn_0_amounts_0" with "100"
         And I tab to the next field
         And I pause
         And I save the page as "moneyin-2"
         Then I should see "Saved" in the section title info panel
-        And the "transactions_transactionsIn_0_amount" field should contain "100.00"
+        And the "transactions_transactionsIn_0_amounts_0" field should contain "100.00"
         And I follow "account-moneyin"
-        And the "transactions_transactionsIn_0_amount" field should contain "100.00"
+        And the "transactions_transactionsIn_0_amounts_0" field should contain "100.00"
         # Test money out autosave and formatting
         Then I follow "account-moneyout"
         And I click on "accommodation"
         And I save the page as "moneyout-1"
-        Then I fill in "transactions_transactionsOut_13_amount" with "101"
+        Then I fill in "transactions_transactionsOut_13_amounts_0" with "101"
         And I tab to the next field
         And I pause
         Then I should see "Saved" in the section title info panel
         And I save the page as "moneyout-2"
-        And the "transactions_transactionsOut_13_amount" field should contain "101.00"
+        And the "transactions_transactionsOut_13_amounts_0" field should contain "101.00"
         Then I follow "account-moneyout"
-        And the "transactions_transactionsOut_13_amount" field should contain "101.00"
+        And the "transactions_transactionsOut_13_amounts_0" field should contain "101.00"
         # Test bad balance screen
         Then I follow "account-balance"
         And I pause
@@ -45,7 +45,7 @@ Feature: browser - accounts
         # Test good balance screen
         Then I follow "account-moneyout"
         And I click on "accommodation"
-        Then I fill in "transactions_transactionsOut_13_amount" with "100"
+        Then I fill in "transactions_transactionsOut_13_amounts_0" with "100"
         And I tab to the next field
         And I pause
         Then I follow "account-balance"
