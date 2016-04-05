@@ -58,7 +58,9 @@ client:
     county:
         maxMessage: The county can't be longer than {{ limit }} characters
     allowedCourtOrderTypes:
-        notBlank: You must select Property and Affairs
+        notBlank: | 
+            You can only select property and affairs. 
+            We’re working on a service for people with health and welfare orders, but it’s not available yet.
     postcode:
         notBlank: Enter your client's postcode
         minMessage: The postcode must be at least {{ limit }} characters
