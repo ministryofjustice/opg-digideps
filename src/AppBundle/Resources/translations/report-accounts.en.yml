@@ -94,7 +94,7 @@ banks:
       <a href="%moneyOutLink%">money out</a>. Once you’ve entered this information, we can <a href="%balanceLink%">balance the accounts</a> for you.
     before: Have you filled in an annual report for OPG before?
     beforeDescription: |
-      You may notice the questions are different. This is because we
+      You may notice the questions have changed. This is because we
       need to find out more about how deputies make financial decisions. We’ve made these changes to the paper
       forms as well.
     balanceOn: Balance on

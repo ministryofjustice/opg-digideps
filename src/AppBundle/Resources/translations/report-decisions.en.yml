@@ -1,7 +1,7 @@
 page:
     htmlTitle: "Deputy report - decisions | GOV.UK"
     pageSectionTitle: Decisions made over the reporting period
-    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying and selling property, making gifts or changing care home.
+    pageSectionDescription: Add the significant decisions you made during the reporting period, such as buying, selling or renting property, making gifts or changing care home.
     pageSectionEditInfo: "You can update the details of a decision or delete a decision by using the 'Edit this decision' link below."
     addDecisionButton: Add a decision
     subSectionTitleAdd: Add a decision
@@ -36,7 +36,7 @@ clientInvolvedBoolean:
   defaultOption: Please select...
 clientInvolvedDetails:
   label: " "
-  hint: If yes, tell us how you involved %client% in the decision. If no, tell us why that has not been possible.
+  hint: If yes, tell us how you involved %client% in the decision. If no, tell us why you couldn't.
 save:
   label: Save
 cancel:
