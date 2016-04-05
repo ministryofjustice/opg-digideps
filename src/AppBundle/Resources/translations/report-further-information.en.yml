@@ -1,7 +1,7 @@
 page:
   htmlTitle: "Deputy report - additional information | GOV.UK"
   pageSectionTitle: "Is there anything else you'd like to tell us?"
-  pageSectionDescription: For example, changes to %client%'s quality of life, concerns about paying care home fees, managing %client%'s property, what expenses you can claim.
+  pageSectionDescription: For example, changes to %client%'s quality of life, concerns about paying care home fees, managing %client%'s property, what expenses you can claim
   goBackLink: "Go back to make changes to the report"
   editLink: Edit
   nextButton: Next
