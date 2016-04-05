@@ -27,7 +27,7 @@ howIsCareFunded.label: How is the care funded?
 client_gets_financial_help: %client% gets some financial help (for example, from the local authority NHS)
 all_care_is_paid_by_someone_else: All care is paid for by someone else (for example, by the local authority or NHS)
 whoIsDoingTheCaring.label: Who is doing the caring?
-whoIsDoingTheCaring.hint: For example, local authority or private residential care, live-in or visiting care workers, family members.
+whoIsDoingTheCaring.hint: For example, local authority or private residential care, live-in or visiting care workers, family members
 doesClientHaveACarePlan.label: Does %client% have a care plan?
 whenWasCarePlanLastReviewed:
     label: When was the care plan last reviewed?
