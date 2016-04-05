@@ -21,7 +21,6 @@ class Version066 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         
         $twig = new \Twig_Environment(new \Twig_Loader_String());
-        
          // merge value 1 into 2, resulting into 3
          $stmt = $this->connection->prepare(
             "UPDATE transaction 
@@ -59,11 +58,10 @@ class Version066 extends AbstractMigration
             $row['amounts2sum'] = array_sum(explode(',', $row['amounts2']));
             // render new more_details
             $row['moredet3'] = $twig->render(
-                "{% if moredet2 %}£{{ amounts2sum | number_format(2, '.', ',') }}: {{ moredet2 }}\n{% endif %}"
-                  ."Transfers in from {{client}}'s other accounts: £ {{ amounts1sum | number_format(2, '.', ',') }} - {{ moredet1 }}",
+                "{% if moredet2 %}£{{ amounts2sum | number_format(2, '.', ',') }}: {{ moredet2 | raw }}\n{% endif %}"
+                  ."Transfers in from {{client}}'s other accounts: £ {{ amounts1sum | number_format(2, '.', ',') }} - {{ moredet1 | raw }}",
                 $row
               );
-            
             $stmt->execute([
                 'amounts' => $row['amounts3'],
                 'more_details' => $row['moredet3'],
