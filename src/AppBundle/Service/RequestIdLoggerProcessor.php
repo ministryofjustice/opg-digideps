@@ -42,9 +42,8 @@ class RequestIdLoggerProcessor
      */
     public function processRecord(array $record)
     {
-        if (!$this->container->isScopeActive('request')
-            || !$this->container->has('request')
-            || !($request = $this->container->get('request'))
+        if (!$this->container->has('request_stack')
+            || !($request = $this->container->get('request_stack')->getCurrentRequest())
             || !$request->headers->has('x-request-id')
         ) {
             return $record;
