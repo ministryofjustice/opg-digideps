@@ -11,7 +11,6 @@ form:
     major-purchases: Major purchases
     spending-on-other-people: Spending on other people
     debt-and-charges: Debts and charges
-    moving-money: Moving money
     income-and-earnings: Income from investments
     state-benefits: State benefits
     pensions: Pensions
@@ -74,8 +73,6 @@ form:
     sale-of-asset:
       label: Sale of assets
       moreInformations: For each asset, give a description, the date it was sold and the value
-    moving-money:
-      label: Moving money
     transfers-in-from-client-s-other-accounts:
       label: Transfers from client's other accounts
       moreInformations: Enter the bank or building society name, the last 4 digits of the account number and the amount transferred
