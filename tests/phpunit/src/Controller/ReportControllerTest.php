@@ -292,8 +292,8 @@ class ReportControllerTest extends AbstractTestController
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-        $this->assertEquals(28, count($data['transactions_in']));
-        $this->assertEquals(45, count($data['transactions_out']));
+        $this->assertTrue(count($data['transactions_in']) > 25);
+        $this->assertTrue(count($data['transactions_out']) > 40);
         $this->assertArrayHasKey('start_date', $data);
         $this->assertArrayHasKey('end_date', $data);
         
