@@ -71,6 +71,7 @@ class Version066 extends AbstractMigration
         }
 
         $this->connection->query("DELETE FROM transaction WHERE transaction_type_id = 'transfers-in-from-client-s-other-accounts'");
+        $this->connection->query("DELETE FROM transaction_type WHERE id = 'transfers-in-from-client-s-other-accounts'");
         
         $this->connection->commit();
         
