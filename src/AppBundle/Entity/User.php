@@ -408,7 +408,7 @@ class User implements AdvancedUserInterface
      * @param \DateTime $registrationDate
      * @return \AppBundle\Entity\User
      */
-    public function setRegistrationDate(\DateTime $registrationDate)
+    public function setRegistrationDate(\DateTime $registrationDate = null)
     {
         $this->registrationDate = $registrationDate;
         return $this;
