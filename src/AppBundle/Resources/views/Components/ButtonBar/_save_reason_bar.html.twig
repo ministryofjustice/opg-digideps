@@ -8,6 +8,8 @@
     {% endif %}
 {% endif %}
 
+{% set deleteLabelPrefix = deleteLabelPrefix is defined ? deleteLabelPrefix : 'delete' %}
+
 {% if showCancel is not defined %}
     {% set showCancel = true %}
 {% endif %}
@@ -30,7 +32,7 @@
         {% if showDelete == true %}
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
             transDomain: translationDomain,
-            linkButtonLabel: 'delete.label',
+            linkButtonLabel: deleteLabelPrefix ~ '.label',
             linkId: 'delete-button',
             linkClass: 'delete-button button-warning behat-link-delete',
             linkHref: path('delete_nonereason_' ~ section ~ 's' , {'reportId': report.id})
@@ -40,10 +42,10 @@
 
     {% if showDelete == true %}
         <div class="confirm-bar button-bar hidden">
-            <p class="delete-confirm-message">{{ 'delete.message' | trans() }}</p>
+            <p class="delete-confirm-message">{{ (deleteLabelPrefix ~ '.message') | trans() }}</p>
             {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
             transDomain: translationDomain,
-            linkButtonLabel: 'delete.label',
+            linkButtonLabel: deleteLabelPrefix ~ '.label',
             linkId: 'delete-confirm-button',
             linkClass: 'button-warning behat-link-delete-confirm',
             linkHref: path('delete_nonereason_' ~ section ~ 's', {'reportId': report.id })
