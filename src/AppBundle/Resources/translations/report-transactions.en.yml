@@ -10,6 +10,7 @@ form:
     major-purchases: Major purchases
     spending-on-other-people: Spending on other people
     debt-and-charges: Debts and charges
+    moving-money: Moving money
     income-and-earnings: Income from investments
     state-benefits: State benefits
     pensions: Pensions
@@ -72,6 +73,8 @@ form:
     sale-of-asset:
       label: Sale of asset
       moreInformations: For each asset, give a description, the date it was sold and the value
+    moving-money:
+      label: Moving money
     refunds:
       label: Refunds
     anything-else:
