@@ -12,7 +12,14 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  */
 class Report
 {
+    /**
+     * 
+     */
+    const PERSONAL_WELFARE = 1;
     
+    /**
+     * same sections as personal welfare, + accounts and assets
+     */
     const PROPERTY_AND_AFFAIRS = 2;
     
     /**

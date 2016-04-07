@@ -14,7 +14,7 @@ Feature: deputy / report / edit client
             | client_courtDate_day | 01 |
             | client_courtDate_month | 01 |
             | client_courtDate_year | 2016 |
-            | client_allowedCourtOrderTypes_1 | 1 |
+            | client_allowedCourtOrderTypes_0 | 2 |
             | client_address |  1 South Parade |
             | client_address2 | First Floor  |
             | client_county | Nottingham  |
@@ -53,7 +53,7 @@ Feature: deputy / report / edit client
             | client_courtDate_day | 1 |
             | client_courtDate_month | 1 |
             | client_courtDate_year | 2016 |
-            | client_allowedCourtOrderTypes_1 | 1 |
+            | client_allowedCourtOrderTypes_0 | 2 |
             | client_address |  2 South Parade |
             | client_address2 | First Floor  |
             | client_county | Nottingham  |

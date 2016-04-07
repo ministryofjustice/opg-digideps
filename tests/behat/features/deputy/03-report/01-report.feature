@@ -1,18 +1,19 @@
 Feature: deputy / report / edit and test tabs
     
-    @deputy
-    Scenario: test tabs for "Health & Welfare" report
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I save the page as "report-health-welfare-homepage"
-        And I should see a "#edit-decisions" element
-        And I should see a "#edit-contacts" element
-        But I should not see a "#edit-accounts" element
-        And I should not see a "#edit-assets" element
-        And I should see a "#edit-safeguarding" element
+#    (enable if HW cot is re-enabled)
+#    @deputy
+#    Scenario: test tabs for "Health & Welfare" report
+#        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+#        And I save the page as "report-health-welfare-homepage"
+#        And I should see a "#edit-decisions" element
+#        And I should see a "#edit-contacts" element
+#        But I should not see a "#edit-accounts" element
+#        And I should not see a "#edit-assets" element
+#        And I should see a "#edit-safeguarding" element
 
-    @deputy
-    Scenario: change report type to "Property and Affairs"
-        Given I change the report "1" court order type to "Property and Affairs"
+#    @deputy
+#    Scenario: change report type to "Property and Affairs"
+#        Given I change the report "1" court order type to "Property and Affairs"
         
     @deputy
     Scenario: edit report
