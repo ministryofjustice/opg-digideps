@@ -3,7 +3,7 @@
 
 {% embed "AppBundle:Components/Listing:_card_item.html.twig" %}
     {% block card %}
-        <div class="account card-title">{{ account.bank }} {{ account.accountType }}</div>
+        <div class="account card-title">{{ account.bank }} {{ account.accountTypeText }}</div>
         <dl class="labelvalue">
             <dt class="label">{{ 'banks.accountNumber' | trans({}, translationDomain) }}:</dt>
             <dd class="value">****{{ account.accountNumber }}</dd>

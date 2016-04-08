@@ -15,6 +15,14 @@ class Account
     
     const OPENING_DATE_SAME_YES = 'yes';
     const OPENING_DATE_SAME_NO = 'no';
+    
+    public static $types = [
+        'current' => 'Current account',
+        'savings' => 'Savings account',
+        'postoffice' => 'Post office account',
+        'cfo' => 'Court funds office account',
+    ];
+    
     /**
      * @JMS\Type("integer")
      * @var integer $id
@@ -453,6 +461,14 @@ class Account
     public function getAccountType()
     {
         return $this->accountType;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getAccountTypeText()
+    {
+        return isset(self::$types[$this->accountType]) ? self::$types[$this->accountType] : null;
     }
 
     /**

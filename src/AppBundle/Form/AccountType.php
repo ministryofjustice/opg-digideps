@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Entity\Account;
 
 class AccountType extends AbstractType
 {
@@ -14,7 +15,10 @@ class AccountType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('id', 'hidden');
-        $builder->add('accountType', 'text');
+        $builder->add('accountType', 'choice', [
+            'choices' => Account::$types,
+            'expanded' => false
+        ]);
         $builder->add('bank', 'text');
         $builder->add('accountNumber', 'text', ['max_length' => 4]);
         $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false]);
