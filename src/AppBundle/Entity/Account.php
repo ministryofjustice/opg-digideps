@@ -19,6 +19,7 @@ class Account
     public static $types = [
         'current' => 'Current account',
         'savings' => 'Savings account',
+        'isa' => 'ISA',
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
     ];
