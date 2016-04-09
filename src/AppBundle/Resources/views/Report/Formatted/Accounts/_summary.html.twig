@@ -16,8 +16,12 @@
             {% for account in report.accounts %}
                 <tr>
                     <td>
-                        <div class="account-name">{{ account.bank }} {{ account.accountType }}</div>
-                        <div class="account-number">****{{ account.accountNumber }}, {{ account.sortCode | split('', 2) | join('-') }}</div>
+                        <div class="account-name">{{ account.bank }} {{ account.accountTypeText }}</div>
+                        <div class="account-number">****{{ account.accountNumber }}
+                            {% if  account.sortCode %}
+                            , {{ account.sortCode | split('', 2) | join('-') }}
+                            {% endif %}
+                        </div>
                     </td>
                     <td class="numeric grey">£{{ account.openingBalance | money_format }}</td>
                     <td class="numeric ">£ {{ (account.closingBalance - account.openingBalance) | money_format }}</td>

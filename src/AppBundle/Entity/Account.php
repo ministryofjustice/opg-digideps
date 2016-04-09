@@ -15,6 +15,14 @@ use Doctrine\ORM\QueryBuilder;
  */
 class Account 
 {
+    public static $types = [
+        'current' => 'Current account',
+        'savings' => 'Savings account',
+        'isa' => 'ISA',
+        'postoffice' => 'Post office account',
+        'cfo' => 'Court funds office account',
+    ];
+     
     /**
      * @var integer
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -196,6 +204,15 @@ class Account
         return $this->accountType;
     }
 
+    /**
+     * @return string
+     */
+    public function getAccountTypeText()
+    {
+        return isset(self::$types[$this->getAccountType()]) 
+               ? self::$types[$this->getAccountType()] : null;
+    }
+    
     /**
      * @param string $accountType
      */
