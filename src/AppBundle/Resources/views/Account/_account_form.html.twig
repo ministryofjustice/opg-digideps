@@ -11,9 +11,11 @@
         'inputClass' : 'account-number'
     }) }}
     
+    <div id="account_sortcode_block">
     {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
         'inputType' : 'Number'
     }) }}
+    </div>
     
     {{ form_input(form.openingBalance, '', {
         'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
@@ -39,4 +41,22 @@
     $('input.form-control__number').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
     });
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    //new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
+    var sortCodeBlock = $('#account_sortcode_block');
+    
+    $('#account_accountType').change(function() {
+        var selectedVal = $(this).val(); 
+        if (selectedVal === 'postoffice' || selectedVal === 'cfo') {
+            sortCodeBlock.hide();
+        } else {
+            sortCodeBlock.show();
+        }
+    }).trigger('change');
+    
+});
 </script>
