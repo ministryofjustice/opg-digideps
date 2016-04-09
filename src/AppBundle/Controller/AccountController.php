@@ -49,7 +49,6 @@ class AccountController extends RestController
         
         $data = $this->deserializeBodyContent($request, [
            'bank' => 'notEmpty',
-           'sort_code' => 'notEmpty',
            'opening_balance' => 'mustExist'
         ]);
         
@@ -133,7 +132,11 @@ class AccountController extends RestController
         }
 
         if (array_key_exists('sort_code', $data)) {
-           $account->setSortCode($data['sort_code']);
+            $account->setSortCode($data['sort_code']);
+        }
+       
+        if (!$account->requiresSortCode()) {
+            $account->setSortCode(null);
         }
         
         if (array_key_exists('account_number', $data)) {

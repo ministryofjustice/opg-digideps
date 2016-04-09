@@ -459,5 +459,15 @@ class Account
     {
         return $this->report;
     }
+    
+     
+    /**
+     * Sort code required
+     * @return string
+     */
+    public function requiresSortCode()
+    {
+        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
+    }
 
 }
