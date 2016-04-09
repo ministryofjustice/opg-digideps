@@ -4,6 +4,7 @@ namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use AppBundle\Form\Type\SortCodeType;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,7 +22,10 @@ class AccountType extends AbstractType
         ]);
         $builder->add('bank', 'text');
         $builder->add('accountNumber', 'text', ['max_length' => 4]);
-        $builder->add('sortCode', new SortCodeType(), [ 'error_bubbling' => false]);
+        $builder->add('sortCode', new SortCodeType(), [ 
+            'error_bubbling' => false,
+            'required' => false
+        ]);
 
         $builder->add('openingBalance', 'number', [
             'precision' => 2,
@@ -49,7 +53,17 @@ class AccountType extends AbstractType
     {
         $resolver->setDefaults( [
             'translation_domain' => 'report-account-form',
-            'validation_groups' => ['add_edit'],
+            'validation_groups' => function(FormInterface $form){
+
+            	$data = $form->getData(); /* @var $data \AppBundle\Entity\Account */
+            	$validationGroups = ['add_edit'];
+
+            	if ($data->requiresSortCode()){
+            		$validationGroups[] = "sortcode";
+            	}
+                
+            	return $validationGroups;
+            },
         ]);
     }
 }

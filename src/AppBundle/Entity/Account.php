@@ -54,9 +54,9 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic", "add_edit"})
-     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "add_edit"})
+     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "sortcode"})
+     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic", "sortcode"})
+     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "sortcode"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
      * @var string $sortCode
@@ -470,6 +470,16 @@ class Account
     public function getAccountTypeText()
     {
         return isset(self::$types[$this->accountType]) ? self::$types[$this->accountType] : null;
+    }
+    
+     
+    /**
+     * Sort code required
+     * @return string
+     */
+    public function requiresSortCode()
+    {
+        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
     }
 
     /**
