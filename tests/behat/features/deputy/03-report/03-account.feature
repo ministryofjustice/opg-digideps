@@ -106,7 +106,7 @@ Feature: deputy / report / account
         And I add the following bank account:
             | bank    | temp  | | |
             | accountNumber | 9999 | | |
-            | accountType | cash | | |
+            | accountType | isa | | |
             | sortCode | 11 | 22 | 33 |
             | openingBalance  | 100 | | |
             | closingBalance  | 22 | | |
@@ -121,7 +121,7 @@ Feature: deputy / report / account
         And I add the following bank account:
             | bank    | temp  | | |
             | accountNumber | 8888 | | |
-            | accountType | cash | | |
+            | accountType | isa | | |
             | sortCode | 11 | 22 | 33 |
             | openingBalance  | 0 | | |
             | closingBalance  | 0 | | |
