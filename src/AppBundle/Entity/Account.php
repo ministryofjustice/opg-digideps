@@ -487,7 +487,7 @@ class Account
      * Sort code required
      * @return string
      */
-    public function requiresSortCode()
+    public function requiresBankNameAndSortCode()
     {
         return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
     }

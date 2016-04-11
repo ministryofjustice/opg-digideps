@@ -18,7 +18,7 @@
                     <td>
                         <div class="account-name">{{ account.bank }} {{ account.accountTypeText }}</div>
                         <div class="account-number">****{{ account.accountNumber }}
-                            {% if  account.sortCode %}
+                            {% if account.requiresBankNameAndSortCode %}
                             , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
                         </div>

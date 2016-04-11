@@ -48,7 +48,6 @@ class AccountController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $data = $this->deserializeBodyContent($request, [
-           'bank' => 'notEmpty',
            'opening_balance' => 'mustExist'
         ]);
         
@@ -135,7 +134,8 @@ class AccountController extends RestController
             $account->setSortCode($data['sort_code']);
         }
        
-        if (!$account->requiresSortCode()) {
+        if (!$account->requiresBankNameAndSortCode()) {
+            $account->setBank(null);
             $account->setSortCode(null);
         }
         
