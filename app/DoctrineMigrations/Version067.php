@@ -18,7 +18,7 @@ class Version067 extends AbstractMigration
          $this->addSql('ALTER TABLE account ALTER bank_name TYPE VARCHAR(300)');
          
         // prepend account_type (if existing)
-        $this->addSql("UPDATE account SET bank = account_type || ' - ' || bank_name 
+        $this->addSql("UPDATE account SET bank_name = account_type || ' - ' || bank_name 
             WHERE account_type IS NOT NULL AND account_type<> '' ");
         
         // set to "isa" if containing "isa" (Case insensitive)
