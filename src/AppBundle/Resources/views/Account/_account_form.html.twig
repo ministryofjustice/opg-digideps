@@ -49,11 +49,11 @@ $(document).ready(function() {
     // hide sortcode when account type is "cfo" or "postoffice"
     $('#account_accountType').change(function(event, duration) {
         var duration = typeof duration !== 'undefined' ? duration : 400;
-        var sortCodeBlock = $('#form-group-account_bank, #form-group-account_sortCode');
+        var bankAndsortCodeBlocks = $('#form-group-account_bank, #form-group-account_sortCode');
         if ($(this).val().match(/^(cfo|postoffice)$/)) {
-            sortCodeBlock.fadeOut(duration);
+            bankAndsortCodeBlocks.fadeOut(duration);
         }else {
-            sortCodeBlock.fadeIn(duration);
+            bankAndsortCodeBlocks.fadeIn(duration);
         }
     }).trigger('change', [1]);
     
