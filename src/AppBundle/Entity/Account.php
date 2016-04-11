@@ -22,6 +22,7 @@ class Account
         'isa' => 'ISA',
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
+        'other' => 'Other'
     ];
     
     /**
