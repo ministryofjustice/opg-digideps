@@ -15,6 +15,9 @@ use Doctrine\ORM\QueryBuilder;
  */
 class Account 
 {
+    /**
+     * @JMS\Exclude 
+     */
     public static $types = [
         'current' => 'Current account',
         'savings' => 'Savings account',
