@@ -19,16 +19,20 @@ class Version067 extends AbstractMigration
         $this->addSql("UPDATE account SET account_type = 'isa' 
             WHERE account_type ILIKE '%isa%'  ");
         
-        // set to "savings" if containing "saver" or "savings" or "cashbuilder" (Case insensitive)
+        // set to "savings" if containing "saver" or "savings" (Case insensitive)
         $this->addSql("UPDATE account SET account_type = 'savings' 
             WHERE account_type ILIKE '%saver%' 
             OR account_type ILIKE '%saving%'
-            OR account_type ILIKE '%cashbuilder%'
         ");
         
-        // set to "current" all the others
+        // set to "savings" if containing "current" (Case insensitive)
         $this->addSql("UPDATE account SET account_type = 'current' 
-            WHERE account_type NOT IN ('isa', 'savings') ");
+            WHERE account_type ILIKE '%current%' 
+        ");
+        
+        // set to "other" any type not mapped above
+        $this->addSql("UPDATE account SET account_type = 'other' 
+            WHERE account_type NOT IN ('isa', 'savings', 'current') or account_type is null ");
         
         
     }
