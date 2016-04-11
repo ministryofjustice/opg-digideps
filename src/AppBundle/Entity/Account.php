@@ -42,7 +42,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
-     * @ORM\Column(name="bank_name", type="string", length=100, nullable=true)
+     * @ORM\Column(name="bank_name", type="string", length=300, nullable=true)
      */
     private $bank;
 

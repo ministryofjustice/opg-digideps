@@ -15,6 +15,12 @@ class Version067 extends AbstractMigration
      */
     public function up(Schema $schema)
     {
+         $this->addSql('ALTER TABLE account ALTER bank_name TYPE VARCHAR(300)');
+         
+        // prepend account_type (if existing)
+        $this->addSql("UPDATE account SET bank = account_type || ' - ' || bank_name 
+            WHERE account_type IS NOT NULL AND account_type<> '' ");
+        
         // set to "isa" if containing "isa" (Case insensitive)
         $this->addSql("UPDATE account SET account_type = 'isa' 
             WHERE account_type ILIKE '%isa%'  ");
