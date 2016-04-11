@@ -46,17 +46,20 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-    //new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
-    var sortCodeBlock = $('#account_sortcode_block');
     
-    $('#account_accountType').change(function() {
-        var selectedVal = $(this).val(); 
-        if (selectedVal === 'postoffice' || selectedVal === 'cfo') {
-            sortCodeBlock.hide();
-        } else {
-            sortCodeBlock.show();
+    
+    // hide sortcode when account type is "cfo" or "postoffice"
+    $('#account_accountType').change(function(event, duration) {
+        var duration = typeof duration !== 'undefined' ? duration : 400;
+        var sortCodeBlock = $('#account_sortcode_block');
+        if ($(this).val().match(/^(cfo|postoffice)$/)) {
+            sortCodeBlock.fadeOut(duration);
+        }else {
+            sortCodeBlock.fadeIn(duration);
         }
-    }).trigger('change');
+    }).trigger('change', [1]);
+    
+    
     
 });
 </script>
