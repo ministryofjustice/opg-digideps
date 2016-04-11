@@ -16,6 +16,7 @@ use Doctrine\ORM\QueryBuilder;
 class Account 
 {
     /**
+     * Keep in sync with client
      * @JMS\Exclude 
      */
     public static $types = [
@@ -24,6 +25,7 @@ class Account
         'isa' => 'ISA',
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
+        'other' => 'Other'
     ];
      
     /**
