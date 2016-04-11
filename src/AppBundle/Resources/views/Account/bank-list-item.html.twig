@@ -7,8 +7,10 @@
         <dl class="labelvalue">
             <dt class="label">{{ 'banks.accountNumber' | trans({}, translationDomain) }}:</dt>
             <dd class="value">****{{ account.accountNumber }}</dd>
-            <dt class="label">{{ 'banks.sortCode' | trans({}, translationDomain) }}:</dt>
-            <dd class="value">{{ account.sortCode }}</dd>
+           {% if account.requiresSortCode %}
+                <dt class="label">{{ 'banks.sortCode' | trans({}, translationDomain) }}:</dt>
+                <dd class="value">{{ account.fsortCode }}</dd>
+            {% endif %}
         </dl>
     {% endblock %}
     {% block meta %}
