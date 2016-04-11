@@ -16,6 +16,9 @@ class Account
     const OPENING_DATE_SAME_YES = 'yes';
     const OPENING_DATE_SAME_NO = 'no';
     
+    /**
+     * Keep in sync with api
+     */
     public static $types = [
         'current' => 'Current account',
         'savings' => 'Savings account',
