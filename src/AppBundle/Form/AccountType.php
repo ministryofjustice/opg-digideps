@@ -18,7 +18,8 @@ class AccountType extends AbstractType
         $builder->add('id', 'hidden');
         $builder->add('accountType', 'choice', [
             'choices' => Account::$types,
-            'expanded' => false
+            'expanded' => false,
+            'empty_value' => 'Please select'
         ]);
         $builder->add('bank', 'text');
         $builder->add('accountNumber', 'text', ['max_length' => 4]);
