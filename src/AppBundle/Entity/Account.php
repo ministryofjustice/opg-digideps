@@ -15,6 +15,19 @@ class Account
     
     const OPENING_DATE_SAME_YES = 'yes';
     const OPENING_DATE_SAME_NO = 'no';
+    
+    /**
+     * Keep in sync with api
+     */
+    public static $types = [
+        'current' => 'Current account',
+        'savings' => 'Savings account',
+        'isa' => 'ISA',
+        'postoffice' => 'Post office account',
+        'cfo' => 'Court funds office account',
+        'other' => 'Other'
+    ];
+    
     /**
      * @JMS\Type("integer")
      * @var integer $id
@@ -23,8 +36,8 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Length(max=100, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "add_edit"})
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "bank_name"})
+     * @Assert\Length(max=100, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "bank_name"})
      * 
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
@@ -45,9 +58,9 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic", "add_edit"})
-     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "add_edit"})
+     * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "sortcode"})
+     * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic", "sortcode"})
+     * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "sortcode"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
      * @var string $sortCode
@@ -453,6 +466,24 @@ class Account
     public function getAccountType()
     {
         return $this->accountType;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getAccountTypeText()
+    {
+        return isset(self::$types[$this->accountType]) ? self::$types[$this->accountType] : null;
+    }
+    
+     
+    /**
+     * Sort code required
+     * @return string
+     */
+    public function requiresBankNameAndSortCode()
+    {
+        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
     }
 
     /**

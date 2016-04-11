@@ -12,7 +12,6 @@ accountForm:
     legend: Branch sort code
   accountType:
     label: Account type
-    hint: For example, current account, savings account
   openingBalance:
     label: How much was in the account on %startDate%? 
   closingBalance:

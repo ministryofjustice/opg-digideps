@@ -21,7 +21,7 @@ Feature: deputy / report / account
         When I fill in the following:
             | account_bank    | x |
             | account_accountNumber | x |
-            | account_accountType | cash | 
+            | account_accountType | current | 
             | account_sortCode_sort_code_part_1 | g |
             | account_sortCode_sort_code_part_2 | h |
             | account_sortCode_sort_code_part_3 |  |
@@ -40,7 +40,7 @@ Feature: deputy / report / account
         And I fill in the following:
             | account_bank    | HSBC - main account |
             | account_accountNumber | 0876 |
-            | account_accountType | cash | 
+            | account_accountType | current | 
             | account_sortCode_sort_code_part_1 | 08 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 00 |
@@ -70,7 +70,7 @@ Feature: deputy / report / account
         Then the following fields should have the corresponding values:
             | account_bank    | HSBC - main account |
             | account_accountNumber | 0876 |
-            | account_accountType | cash | 
+            | account_accountType | current | 
             | account_sortCode_sort_code_part_1 | 08 |
             | account_sortCode_sort_code_part_2 | 77 |
             | account_sortCode_sort_code_part_3 | 00 |
@@ -80,7 +80,7 @@ Feature: deputy / report / account
         When I fill in the following:
             | account_bank    | HSBC main account |
             | account_accountNumber | 0876 |
-            | account_accountType | cash | 
+            | account_accountType | current | 
             | account_sortCode_sort_code_part_1 | 12 |
             | account_sortCode_sort_code_part_2 | 34 |
             | account_sortCode_sort_code_part_3 | 56 |
@@ -106,7 +106,7 @@ Feature: deputy / report / account
         And I add the following bank account:
             | bank    | temp  | | |
             | accountNumber | 9999 | | |
-            | accountType | cash | | |
+            | accountType | isa | | |
             | sortCode | 11 | 22 | 33 |
             | openingBalance  | 100 | | |
             | closingBalance  | 22 | | |
@@ -121,7 +121,7 @@ Feature: deputy / report / account
         And I add the following bank account:
             | bank    | temp  | | |
             | accountNumber | 8888 | | |
-            | accountType | cash | | |
+            | accountType | isa | | |
             | sortCode | 11 | 22 | 33 |
             | openingBalance  | 0 | | |
             | closingBalance  | 0 | | |

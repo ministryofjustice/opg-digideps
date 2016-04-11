@@ -4,8 +4,8 @@
 
 {{ form_start(form, {attr: {id: 'account-form' } }) }}
 
-    {{ form_input(form.bank, 'accountForm.bank') }}
     {{ form_input(form.accountType, 'accountForm.accountType') }}
+    {{ form_input(form.bank, 'accountForm.bank') }}
 
     {{ form_input(form.accountNumber, 'accountForm.accountNumber', {
         'inputClass' : 'account-number'
@@ -39,4 +39,25 @@
     $('input.form-control__number').on('blur', function (event) {
         GOVUK.formatCurrency(event.target);
     });
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    
+    
+    // hide sortcode when account type is "cfo" or "postoffice"
+    $('#account_accountType').change(function(event, duration) {
+        var duration = typeof duration !== 'undefined' ? duration : 400;
+        var bankAndsortCodeBlocks = $('#form-group-account_bank, #form-group-account_sortCode');
+        if ($(this).val().match(/^(cfo|postoffice)$/)) {
+            bankAndsortCodeBlocks.fadeOut(duration);
+        }else {
+            bankAndsortCodeBlocks.fadeIn(duration);
+        }
+    }).trigger('change', [1]);
+    
+    
+    
+});
 </script>
