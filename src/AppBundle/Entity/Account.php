@@ -36,8 +36,8 @@ class Account
     
     /**
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "add_edit"})
-     * @Assert\Length(max=100, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "add_edit"})
+     * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "bank_name"})
+     * @Assert\Length(max=100, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "bank_name"})
      * 
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
@@ -481,7 +481,7 @@ class Account
      * Sort code required
      * @return string
      */
-    public function requiresSortCode()
+    public function requiresBankNameAndSortCode()
     {
         return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
     }

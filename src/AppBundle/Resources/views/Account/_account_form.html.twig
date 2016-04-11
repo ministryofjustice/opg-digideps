@@ -11,11 +11,9 @@
         'inputClass' : 'account-number'
     }) }}
     
-    <div id="account_sortcode_block">
     {{ form_sort_code(form.sortCode, 'accountForm.sortCode', {
         'inputType' : 'Number'
     }) }}
-    </div>
     
     {{ form_input(form.openingBalance, '', {
         'labelText': 'accountForm.openingBalance.label' | trans({'%startDate%': report.startDate | date("j F Y")}, translationDomain),
@@ -51,7 +49,7 @@ $(document).ready(function() {
     // hide sortcode when account type is "cfo" or "postoffice"
     $('#account_accountType').change(function(event, duration) {
         var duration = typeof duration !== 'undefined' ? duration : 400;
-        var sortCodeBlock = $('#account_sortcode_block');
+        var sortCodeBlock = $('#form-group-account_bank, #form-group-account_sortCode');
         if ($(this).val().match(/^(cfo|postoffice)$/)) {
             sortCodeBlock.fadeOut(duration);
         }else {

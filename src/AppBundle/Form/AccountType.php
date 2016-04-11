@@ -21,7 +21,9 @@ class AccountType extends AbstractType
             'expanded' => false,
             'empty_value' => 'Please select'
         ]);
-        $builder->add('bank', 'text');
+        $builder->add('bank', 'text', [
+            'required' => false
+        ]);
         $builder->add('accountNumber', 'text', ['max_length' => 4]);
         $builder->add('sortCode', new SortCodeType(), [ 
             'error_bubbling' => false,
@@ -59,8 +61,9 @@ class AccountType extends AbstractType
             	$data = $form->getData(); /* @var $data \AppBundle\Entity\Account */
             	$validationGroups = ['add_edit'];
 
-            	if ($data->requiresSortCode()){
+            	if ($data->requiresBankNameAndSortCode()){
             		$validationGroups[] = "sortcode";
+            		$validationGroups[] = "bank_name";
             	}
                 
             	return $validationGroups;
