@@ -15,7 +15,7 @@ class AccountCard extends Component {
                 <div className="account card-title">{account.bank} {account.account_type}</div>
                 <dl className="labelvalue">
                     <dt className="label">Account number:</dt>
-                    <dd className="value">0000{account.account_number}</dd>
+                    <dd className="value">****{account.account_number}</dd>
                     <dt className="label">Sort code:</dt>
                     <dd className="value">{account.sort_code}</dd>
                 </dl>
