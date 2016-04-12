@@ -53,7 +53,7 @@ class Account
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
     private $accountType;
-
+    
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -218,7 +218,9 @@ class Account
      */
     public function getAccountTypeText()
     {
-        return isset(self::$types[$this->accountType]) ? self::$types[$this->accountType] : null;
+        $type = $this->getAccountType();
+        
+        return isset(self::$types[$type]) ? self::$types[$type] : null;
     }
     
     /**
