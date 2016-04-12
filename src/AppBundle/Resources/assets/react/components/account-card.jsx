@@ -12,7 +12,7 @@ class AccountCard extends Component {
         const account = this.props.account;
         return (
             <div className="card" onClick={this.selectAccount}>
-                <div className="account card-title">{account.bank} {account.account_type}</div>
+                <div className="account card-title">{account.bank} {account.account_type_text}</div>
                 <dl className="labelvalue">
                     <dt className="label">Account number:</dt>
                     <dd className="value">****{account.account_number}</dd>
