@@ -209,13 +209,16 @@ class Account
         return $this->accountType;
     }
 
-    /**
+     /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("account_type_text")
+     * @JMS\Groups({"transactions", "basic", "transfers"})
+      * 
      * @return string
      */
     public function getAccountTypeText()
     {
-        return isset(self::$types[$this->getAccountType()]) 
-               ? self::$types[$this->getAccountType()] : null;
+        return isset(self::$types[$this->accountType]) ? self::$types[$this->accountType] : null;
     }
     
     /**
