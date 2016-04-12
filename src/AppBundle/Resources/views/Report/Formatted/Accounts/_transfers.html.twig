@@ -17,11 +17,11 @@
                         <td>Transfer {{ loop.index }}</td>
                         <td>
                             {% set currentBank = transfer.from %}
-                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>{{ currentBank.accountNumber }}
+                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
                         </td>
                         <td>
                              {% set currentBank = transfer.to %}
-                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>{{ currentBank.accountNumber }}
+                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>****{{ currentBank.accountNumber }}
                         </td>
                         <td>£{{ transfer.amount | money_format }}</td>
                     </tr>
