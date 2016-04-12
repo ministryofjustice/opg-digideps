@@ -15,8 +15,14 @@
                 {% for transfer in transfers %}
                     <tr>
                         <td>Transfer {{ loop.index }}</td>
-                        <td>{{ transfer.from.bank }}<br/>{{ transfer.from.accountNumber }}</td>
-                        <td>{{ transfer.to.bank }}<br/>{{ transfer.to.accountNumber }}</td>
+                        <td>
+                            {% set currentBank = transfer.from %}
+                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>{{ currentBank.accountNumber }}
+                        </td>
+                        <td>
+                             {% set currentBank = transfer.to %}
+                            {{ currentBank.bank }} {{ currentBank.accountTypeText }}<br/>{{ currentBank.accountNumber }}
+                        </td>
                         <td>£{{ transfer.amount | money_format }}</td>
                     </tr>
                 {% endfor %}
