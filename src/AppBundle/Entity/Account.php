@@ -58,6 +58,13 @@ class Account
     
     /**
      * @JMS\Type("string")
+     *
+     * @var string $accountType
+     */
+    private $accountTypeText;
+    
+    /**
+     * @JMS\Type("string")
      * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "sortcode"})
      * @Assert\Type(type="numeric", message="account.sortCode.type", groups={"basic", "sortcode"})
      * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "sortcode"})
@@ -468,12 +475,9 @@ class Account
         return $this->accountType;
     }
     
-    /**
-     * @return string
-     */
     public function getAccountTypeText()
     {
-        return isset(self::$types[$this->accountType]) ? self::$types[$this->accountType] : null;
+        return $this->accountTypeText;
     }
     
      
