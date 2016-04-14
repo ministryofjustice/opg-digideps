@@ -38,25 +38,20 @@
             {% endif %}
         </ul>
 
-        <div style="display: none" id="account-cards-selection-ul">
+        <ul class="card-lists" style="display: none" id="account-cards-selection-ul">
             {% include 'AppBundle:Transfers:cards-select.html.twig' with { 
                 'accounts': report.accounts,
                 'additionalClass': 'not-expandable'
              }%}
-        </div>
+        </ul>
 
         <script>
             $(document).ready(function () {
-                var accountSelectionUl = $('#account-cards-selection-ul');
+                var cardSelectionHtml = $('#account-cards-selection-ul').html();
                 $('#transfers')
                         // replace li elements
                         .on('click', '.card-item.expandable', function () {
-                            var ulParent = $(this).parent('.card-list');
-                            ulParent.find('li').remove();
-                            accountSelectionUl.find('li').each(function(i, e) {
-                                var li = $(e).clone();
-                                ulParent.append(li);
-                            });
+                            $(this).parent('.card-list').html(cardSelectionHtml);
                         })
                         .on('click', '.card-item.notexpandable', function () {
                             var cardId = $(this).data('id');

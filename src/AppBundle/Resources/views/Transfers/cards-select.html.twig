@@ -1,8 +1,6 @@
-<ul class="card-lists"  >
-    {% for account in accounts %}
-        {% include 'AppBundle:Transfers:card.html.twig' with {
-           'account': account,
-           'additionalClass': 'notexpandable'
-        }%}
-    {% endfor %}
- </ul>
+{% for account in accounts %}
+    {% include 'AppBundle:Transfers:card.html.twig' with {
+       'account': account,
+       'additionalClass': 'notexpandable'
+    }%}
+{% endfor %}
