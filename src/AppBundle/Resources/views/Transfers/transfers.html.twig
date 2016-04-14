@@ -17,25 +17,59 @@
             {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
         </p>
 
-        <div id="transfers-container"/>
-             {% include 'AppBundle:Transfers:transfers_no_js.html.twig'%}
+        <ul id="transfers" class="card-list behat-region-transfers"    >
+            {# transfers #}
+            {% for transfer in report.moneyTransfers %}
+                {% include 'AppBundle:Transfers:row.html.twig'%}
+            {% endfor %}
+
+            {# add one #}
+            {% include 'AppBundle:Transfers:add-one.html.twig'%}
+            {#            {% include 'AppBundle:Transfers:add-one-no-js.html.twig'%}#}
+
+            {# noTransfers checkbox option #}
+            {% if report.moneyTransfers is empty %}
+                <div id="no-transfers">
+                    {{ render(controller('AppBundle:Transfers:_noTransfersPartial', { 
+                        'reportId': report.id, 
+                        'request': app.request 
+                    })) }}
+                </div>
+            {% endif %}
+        </ul>
+
+        <div style="display: none" id="account-cards-selection-ul">
+            {% include 'AppBundle:Transfers:cards-select.html.twig' with { 
+                'accounts': report.accounts,
+                'additionalClass': 'not-expandable'
+             }%}
         </div>
+
         <script>
             $(document).ready(function () {
-                new GOVUK.StickyHeader('#page-section-title-wrapper');
+                var accountSelectionUl = $('#account-cards-selection-ul');
+                $('#transfers')
+                        // replace li elements
+                        .on('click', '.card-item.expandable', function () {
+                            var ulParent = $(this).parent('.card-list');
+                            ulParent.find('li').remove();
+                            accountSelectionUl.find('li').each(function(i, e) {
+                                var li = $(e).clone();
+                                ulParent.append(li);
+                            });
+                        })
+                        .on('click', '.card-item.notexpandable', function () {
+                            var cardId = $(this).data('id');
+                            $(this).parent('ul.card-list').find('li').each(function(){
+                                var el = $(this);
+                                if (el.data('id') != cardId) {
+                                    el.remove();
+                                }
+                                el.removeClass('notexpandable').addClass('expandable');
+                            });
+                        });
             });
-
-            var opg = opg || {};
-            opg.accounts = {{ report.accounts | serialize | raw }};
-            opg.report = {
-                id: {{report.id}},
-                noTransfers: false,
-                startDate: '{{ report.startDate | date("j M Y") }}',
-                endDate: '{{ report.endDate | date("j M Y") }}',
-                client: {{report.client | serialize | raw }}
-            };
         </script>
-        <script src="{{ 'javascripts/transfers.js' | assetUrl }}"></script>
 
     {% endblock %}
 

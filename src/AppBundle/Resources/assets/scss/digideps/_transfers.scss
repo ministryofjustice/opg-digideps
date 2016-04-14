@@ -42,7 +42,10 @@
 
     .card-list {
         @include inline-block();
+        /*
+        if absolute, the card list overlaps other content
         position: absolute;
+        */
         background: $grey-3;
         z-index: 100;
         width: 86%;
