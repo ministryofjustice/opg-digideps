@@ -24,8 +24,8 @@ class MoneyTransferController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $data = $this->deserializeBodyContent($request, [
-           'accountFrom' => 'notEmpty',
-           'accountTo' => 'notEmpty',
+           'accountFromId' => 'notEmpty',
+           'accountToId' => 'notEmpty',
            'amount' => 'mustExist'
         ]);
         
@@ -54,8 +54,8 @@ class MoneyTransferController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         
         $data = $this->deserializeBodyContent($request, [
-           'accountFrom' => 'notEmpty',
-           'accountTo' => 'notEmpty',
+           'accountFromId' => 'notEmpty',
+           'accountToId' => 'notEmpty',
            'amount' => 'mustExist'
         ]);
         
@@ -92,8 +92,8 @@ class MoneyTransferController extends RestController
     private function fillEntity(EntityDir\MoneyTransfer $transfer, array $data)
     {
         $transfer    
-            ->setFrom($this->findEntityBy('Account', $data['accountFrom']['id']))
-            ->setTo($this->findEntityBy('Account', $data['accountTo']['id']))
+            ->setFrom($this->findEntityBy('Account', $data['accountFromId']))
+            ->setTo($this->findEntityBy('Account', $data['accountToId']))
             ->setAmount($data['amount']);
     }
 
