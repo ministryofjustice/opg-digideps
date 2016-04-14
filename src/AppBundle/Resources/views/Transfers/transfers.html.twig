@@ -46,22 +46,58 @@
         </ul>
 
         <script>
+            // SAVE callback
+            function saveTransfer(form){
+                var id = parseInt(form.find('input[name=id]').val());
+                var from = parseInt(form.find('input.account:nth(0)').val());
+                var to = parseInt(form.find('input.account:nth(1)').val());
+                var amount = parseFloat(form.find('input[name=amount]').val());
+                
+                if (from > 0 && to > 0 && amount > 0) {
+                    var method = (id > 0) ? ('PUT ' +id) : 'POST';
+                    console.log(method + ' of ' +from + ' -> ' + to + ' (' + amount + ' )');
+                    
+                    console.log(form.serialize());
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ path('transfers_save_json', {'reportId': report.id}) }}",
+                        data: form.serialize(),
+                        dataType: "json",
+                        success: function(data) {
+                            //var obj = jQuery.parseJSON(data); if the dataType is not specified as json uncomment this
+                            // do what ever you want with the server response
+                        },
+                        error: function() {
+                           
+                        }
+                    });
+                }
+            }
+            // attach events
             $(document).ready(function () {
                 var cardSelectionHtml = $('#account-cards-selection-ul').html();
                 $('#transfers')
-                        // replace li elements
-                        .on('click', '.card-item.expandable', function () {
+                        // expand selection showing all the accounts
+                        .on('click', '.card-item.expandable', function (e) {
+                            e.stopPropagation();
                             $(this).parent('.card-list').html(cardSelectionHtml);
+                            console.log('chose account');
                         })
-                        .on('click', '.card-item.notexpandable', function () {
+                        // after selecting one account. remove all the others and toggle the expandable class
+                        .on('click', '.card-item.not-expandable', function (e) {
+                            console.log('account selected');
                             var cardId = $(this).data('id');
                             $(this).parent('ul.card-list').find('li').each(function(){
                                 var el = $(this);
                                 if (el.data('id') != cardId) {
                                     el.remove();
                                 }
-                                el.removeClass('notexpandable').addClass('expandable');
+                                el.removeClass('not-expandable').addClass('expandable');
                             });
+                            saveTransfer( $(this).parents('form'));
+                        }).on('change', 'input.balance', function(){
+                            saveTransfer( $(this).parents('form'));
                         });
             });
         </script>

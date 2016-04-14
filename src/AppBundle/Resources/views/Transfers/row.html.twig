@@ -1,66 +1,34 @@
-{#<li class="transfer">
-    <div class="grid-row card-select-row behat-region-transfer-n-{{ loop.index }}">
-
-        <div class="column-one-half">
-            <div class="form-label">From:</div>
-            {% include 'AppBundle:Transfers:card.html.twig' with {
-                            'account': transfer.accountFrom
-                       }%}
-        </div>
-
-        <div class="column-one-half">
-            <div class="form-label">To:</div>
-            {% include 'AppBundle:Transfers:card.html.twig' with {
-                            'account': transfer.accountTo
-                       }%}
-        </div>
-
-
-    </div>
-
-    <div class="grid-row">
-        <div class="column-one-half">
-            <div class="form-group"><label class="form-label" for="balance">Amount:</label>
-                <span class="input-group-prefix">£</span>
-                <input id="balance" name="account[balance]" class="form-control form-control__number" 
-                       value=" {{ transfer.amount }}"   disabled="disabled"
-                       type="text"></div>
-        </div>
-        <div class="column-one-half">
-            <a href="{{ path('transfers_delete', {'reportId': report.id, 'transferId': transfer.id} )}}" id="delete-button" 
-               class="delete-button button-warning behat-link-delete-confirm">Delete</a>
-        </div>
-    </div>
-</li>#}
-
-
-
 <li class="transfer" >
-   <div class="grid-row card-select-row behat-region-transfer-n-{{ loop.index }}"  >
+   <form id="form_transfer_{{ transfer.id }}">
+   <input type="hidden" name="id" value="{{ transfer.id }}" />
+   <div class="grid-row card-select-row behat-region-transfer-n-{{ transfer.id }}"  >
       <div class="column-one-half"  >
          <div class="form-label"  >
             From:
          </div>
-         <ul class="card-list"  >
+         <ul class="card-list">
             {% include 'AppBundle:Transfers:card.html.twig' with {
                 'account': transfer.accountFrom,
-                'additionalClass': 'expandable'
+                'additionalClass': 'expandable',
             }%}
          </ul>
       </div>
       <div class="column-one-half"  >
          <div class="form-label"  >To:</div>
-         <ul class="card-list"  >
+         <ul class="card-list">
             {% include 'AppBundle:Transfers:card.html.twig' with {
                 'account': transfer.accountTo,
-                'additionalClass': 'expandable'
+                'additionalClass': 'expandable',
             }%}
          </ul>
       </div>
    </div>
    <div class="grid-row"  >
-      <div class="column-one-half"  >
-         <div class="form-group"  ><label class="form-label" for="balance"  >Amount:</label><span class="input-group-prefix"  >£</span><input id="balance" name="account[balance]" class="form-control form-control__number"   type="text"></div>
+      <div class="column-one-half">
+         <div class="form-group"  ><label class="form-label" for="balance"  >Amount:</label>
+             <span class="input-group-prefix"  >£</span>
+             <input id="balance" name="amount" class="balance form-control form-control__number"  type="text" value="{{ transfer.amount }}">
+         </div>
       </div>
       <div class="column-one-half"  >
           <a 
@@ -68,5 +36,6 @@
               class="button button-warning delete-button behat-link-delete-confirm"  >Delete</a>
       </div>
    </div>
+   </form>
 </li>
 
