@@ -6,7 +6,8 @@
     {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
     {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
     {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
-
+    {% block info %}<span id="save-status"></span>{% endblock %}
+    
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
@@ -52,19 +53,20 @@
                 var from = parseInt(form.find('input.account:nth(0)').val());
                 var to = parseInt(form.find('input.account:nth(1)').val());
                 var amount = parseFloat(form.find('input[name=amount]').val());
+                var statusEl = $('#save-status');
                 
                 if (from > 0 && to > 0 && amount > 0) {
+                    statusEl.text('Saving...');
                     $.ajax({
                         type: "POST",
                         url: "{{ path('transfers_save_json', {'reportId': report.id}) }}",
                         data: form.serialize(),
                         dataType: "json",
                         success: function(data) {
-                            //var obj = jQuery.parseJSON(data); if the dataType is not specified as json uncomment this
-                            // do what ever you want with the server response
+                            statusEl.text('Saved');
                         },
                         error: function() {
-                           
+                           statusEl.text('Not saved');
                         }
                     });
                 }
