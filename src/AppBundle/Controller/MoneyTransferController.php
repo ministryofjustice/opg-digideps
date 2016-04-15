@@ -39,7 +39,7 @@ class MoneyTransferController extends RestController
         
         $this->setJmsSerialiserGroups(['transfers']);
         
-        return $transfer;
+        return $transfer->getId();
     }
     
     /**
@@ -64,7 +64,7 @@ class MoneyTransferController extends RestController
         
         $this->persistAndFlush($transfer);
         
-        return $transfer;
+        return [];
     }
   
     /**
