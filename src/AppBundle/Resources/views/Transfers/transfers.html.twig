@@ -38,14 +38,21 @@
                 </div>
             {% endif %}
         </ul>
+        
+        {# partial templates loaded via JS #}
+        <div style="display: none">
+            <ul class="card-lists"  id="account-cards-selection-ul">
+                {% include 'AppBundle:Transfers:cards-select.html.twig' with { 
+                    'accounts': report.accounts,
+                    'additionalClass': 'not-expandable'
+                 }%}
+            </ul>
 
-        <ul class="card-lists" style="display: none" id="account-cards-selection-ul">
-            {% include 'AppBundle:Transfers:cards-select.html.twig' with { 
-                'accounts': report.accounts,
-                'additionalClass': 'not-expandable'
-             }%}
-        </ul>
-
+            <div id="transfers-add-one">
+                {% include 'AppBundle:Transfers:add-one.html.twig'%}
+            </div>
+        </div>
+        
         <script>
             // SAVE callback
             function saveTransfer(form){
@@ -68,6 +75,13 @@
                             // save ID into the input field for future editing before page reloading
                             if (isNewRecord) {
                                 idElement.val(data.transferId);
+                                // add new emtpy record for adding
+                                $('#transfers').append(
+                                    $('#transfers-add-one').html()
+                                );
+                                form.find('.delete-button-container').html(
+                                    '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/1/transfers/' + data.transferId + '">Delete</a>'                    
+                                );
                             }
                         },
                         error: function() {
@@ -78,12 +92,11 @@
             }
             // attach events
             $(document).ready(function () {
-                var cardSelectionHtml = $('#account-cards-selection-ul').html();
                 $('#transfers')
                         // expand selection showing all the accounts
                         .on('click', '.card-item.expandable', function (e) {
                             e.stopPropagation();
-                            $(this).parent('.card-list').html(cardSelectionHtml);
+                            $(this).parent('.card-list').html($('#account-cards-selection-ul').html());
                             console.log('chose account');
                         })
                         // after selecting one account. remove all the others and toggle the *not-)expandable classes
