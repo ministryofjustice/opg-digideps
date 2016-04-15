@@ -1,7 +1,7 @@
 <li class="card-item {{additionalClass is defined ? additionalClass : ''}}" data-id="{{ account.id}}">
     <input type="hidden" name="account[]" class="account" value="{{ account.id}}" />
     <div class="card" >
-        <div class="account card-title"><span>{{ account.bank }}</span>
+        <div class="account card-title"><span>{{ account.bank }} {{ account.accountTypeText }}</span>
             <span> </span>
             <span></span></div>
         <dl class="labelvalue">
