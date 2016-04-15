@@ -244,7 +244,7 @@ class RestClient
     public function post($endpoint, $mixed, array $options = [])
     {
         $body = $this->toJson($mixed, $options);
-        
+
         $response = $this->rawSafeCall('post', $endpoint, [
             'body' => $body,
             'addAuthToken' => true,
@@ -252,7 +252,7 @@ class RestClient
 
         return $this->extractDataArray($response);
     }
-
+    
 
     /**
      * @param string $endpoint e.g. /user
@@ -512,5 +512,11 @@ class RestClient
         
         return false;
     }
+    
+    private function debugJsonString($jsonString)
+    {
+        echo "<pre>".json_encode(json_decode($jsonString), JSON_PRETTY_PRINT)."</pre>";
+    }
+
     
 }

@@ -63,8 +63,8 @@ class TransfersController extends AbstractController
     public function transfersSaveJson(Request $request, $reportId)
     {
         $data = [
-            'accountFromId' => $request->get('account')[0],
-            'accountToId' => $request->get('account')[1],
+            'account_from_id' => $request->get('account')[0],
+            'account_to_id' => $request->get('account')[1],
             'amount' => $request->get('amount'),
         ];
         

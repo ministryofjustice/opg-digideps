@@ -26,7 +26,7 @@
 
             {# add one #}
             {% include 'AppBundle:Transfers:add-one.html.twig'%}
-            {#            {% include 'AppBundle:Transfers:add-one-no-js.html.twig'%}#}
+            {% include 'AppBundle:Transfers:add-one-no-js.html.twig'%}
 
             {# noTransfers checkbox option #}
             <div id="no-transfers" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
@@ -92,6 +92,9 @@
             }
             // attach events
             $(document).ready(function () {
+                $('#add-transfer-no-js,#report_no_transfers_saveNoTransfer').hide();
+                $('.add-new-transfer-row').show();
+                
                 $('#transfers')
                         // expand selection showing all the accounts
                         .on('click', '.card-item.expandable', function (e) {
