@@ -97,11 +97,9 @@
                         .on('click', '.card-item.expandable', function (e) {
                             e.stopPropagation();
                             $(this).parent('.card-list').html($('#account-cards-selection-ul').html());
-                            console.log('chose account');
                         })
                         // after selecting one account. remove all the others and toggle the *not-)expandable classes
                         .on('click', '.card-item.not-expandable', function (e) {
-                            console.log('account selected');
                             var cardId = $(this).data('id');
                             $(this).parent('ul.card-list').find('li').each(function(){
                                 var el = $(this);
