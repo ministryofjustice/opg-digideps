@@ -54,7 +54,7 @@ class TransfersController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/transfer", name="transfers_save_json")
-     * @Method({"POST"})
+     * @Method({"POST", "PUT"})
      * @param Request $request
      * @param integer $reportId
      *
@@ -62,26 +62,27 @@ class TransfersController extends AbstractController
      */
     public function transfersSaveJson(Request $request, $reportId)
     {
-        $id = $request->get('id');
-        
         $data = [
             'accountFromId' => $request->get('account')[0],
             'accountToId' => $request->get('account')[1],
             'amount' => $request->get('amount'),
         ];
-       
+        
         try {
-            if ($id) {
+            if ($request->getMethod() == 'PUT') {
+                $id = $request->get('id');
                 $this->get('restClient')->put("report/{$reportId}/money-transfers/{$id}", $data);
-            } else {
-                $this->get('restClient')->post("report/{$reportId}/money-transfers", $data);
+                
+                return new JsonResponse(['success' => true]); 
+            } else { //POST
+                $createdTransferId = $this->get('restClient')->post("report/{$reportId}/money-transfers", $data);
+                
+                return new JsonResponse(['success' => true, 'transferId'=>$createdTransferId]); 
             }
 
         } catch (\Exception $e) {
             return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
-        
-         return new JsonResponse(['success' => true]); 
     }
     
     /**

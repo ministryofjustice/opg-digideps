@@ -49,24 +49,29 @@
         <script>
             // SAVE callback
             function saveTransfer(form){
-                var id = parseInt(form.find('input[name=id]').val());
-                var from = parseInt(form.find('input.account:nth(0)').val());
-                var to = parseInt(form.find('input.account:nth(1)').val());
-                var amount = parseFloat(form.find('input[name=amount]').val());
-                var statusEl = $('#save-status');
+                var idElement = form.find('input[name=id]');
+                var isNewRecord = idElement.val() == 0;
+                var fromVal = parseInt(form.find('input.account:nth(0)').val());
+                var toVal = parseInt(form.find('input.account:nth(1)').val());
+                var amountVal = parseFloat(form.find('input[name=amount]').val());
+                var statusElement = $('#save-status');
                 
-                if (from > 0 && to > 0 && amount > 0) {
-                    statusEl.text('Saving...');
+                if (fromVal > 0 && toVal > 0 && amountVal > 0) {
+                    statusElement.text('Saving...');
                     $.ajax({
-                        type: "POST",
+                        type: (isNewRecord ? "POST" : "PUT"),
                         url: "{{ path('transfers_save_json', {'reportId': report.id}) }}",
                         data: form.serialize(),
                         dataType: "json",
                         success: function(data) {
-                            statusEl.text('Saved');
+                            statusElement.text('Saved');
+                            // save ID into the input field for future editing before page reloading
+                            if (isNewRecord) {
+                                idElement.val(data.transferId);
+                            }
                         },
                         error: function() {
-                           statusEl.text('Not saved');
+                           statusElement.text('Not saved');
                         }
                     });
                 }
