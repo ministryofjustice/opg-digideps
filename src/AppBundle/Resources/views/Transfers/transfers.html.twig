@@ -14,7 +14,7 @@
 
     {% block maincontent %}
 
-        <p class="page-section-description}}">
+        <p class="page-section-description">
             {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
         </p>
 
@@ -29,14 +29,13 @@
             {#            {% include 'AppBundle:Transfers:add-one-no-js.html.twig'%}#}
 
             {# noTransfers checkbox option #}
-            {% if report.moneyTransfers is empty %}
-                <div id="no-transfers">
-                    {{ render(controller('AppBundle:Transfers:_noTransfersPartial', { 
-                        'reportId': report.id, 
-                        'request': app.request 
-                    })) }}
-                </div>
-            {% endif %}
+            <div id="no-transfers" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
+                {{ render(controller('AppBundle:Transfers:_noTransfersPartial', { 
+                    'reportId': report.id, 
+                    'request': app.request 
+                })) }}
+            </div>
+            
         </ul>
         
         {# partial templates loaded via JS #}
@@ -82,6 +81,7 @@
                                 form.find('.delete-button-container').html(
                                     '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/1/transfers/' + data.transferId + '">Delete</a>'                    
                                 );
+                                $('#no-transfers').hide();
                             }
                         },
                         error: function() {
@@ -111,6 +111,21 @@
                             saveTransfer( $(this).parents('form'));
                         }).on('change', 'input.balance', function(){
                             saveTransfer( $(this).parents('form'));
+                        }).on('click', '#report_no_transfers_noTransfersToAdd', function(){
+                            var statusElement = $('#save-status');
+                            var form = $(this).parents('form');
+                            $.ajax({
+                                type: "POST",
+                                url: "{{ path('transfers_no_transfers', {'reportId': report.id}) }}",
+                                data: form.serialize(),
+                                dataType: "json",
+                                success: function() {
+                                    statusElement.text('Saved');
+                                },
+                                error: function() {
+                                   statusElement.text('Not saved');
+                                }
+                            });
                         });
             });
         </script>

@@ -185,27 +185,27 @@ class TransfersController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/notransfers", name="transfers_update_none")
-     * @Method({"PUT"})
+     * @Route("/report/{reportId}/notransfers", name="transfers_no_transfers")
+     * @Method({"POST"})
      * @param Request $request
      * @param integer $reportId
      * return JsonResponse
      */
-//     public function transfersUpdateNone(Request $request, $reportId)
-//    {
-//        $noTransfersToAdd = json_decode($request->getContent(), true)['noTransfers'];
-//
-//        try {
-//            $this->getRestClient()->put('report/' . $reportId, [
-//                'no_transfers_to_add' => $noTransfersToAdd,
-//            ]);
-//            return new JsonResponse(['success'=>true]);
-//        } catch (\Exception $e) {
-//            return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
-//        }
-//
-//
-//    }
+     public function transfersUpdateNone(Request $request, $reportId)
+    {
+        $report = $this->getReportIfReportNotSubmitted($reportId, ['transfers', 'basic', 'client']);
+
+        $form = $this->createForm(new FormDir\NoTransfersToAddType(), $report, []);
+        $form->handleRequest($request);
+        
+        if ($form->isValid()) {
+            $this->getRestClient()->put('report/' . $reportId, [
+                'no_transfers_to_add' => $form->getData()->getNoTransfersToAdd(),
+            ]);
+        }
+        
+        return new JsonResponse(['success'=>true]);
+    }
 
     /**
      * Sub controller action called when the no transfers form is embedded in another page.
