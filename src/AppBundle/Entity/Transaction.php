@@ -38,16 +38,16 @@ class Transaction
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
     private $transactionType;
-
+    
     /**
-     * @var decimal
+     * @var array
      * 
-     * @JMS\Type("string")
+     * @JMS\Type("array<string>")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      *
-     * @ORM\Column(type="decimal", precision=14, scale=2, nullable=true)
+     * @ORM\Column(type="simple_array")
      */
-    private $amount;
+    private $amounts;
 
     /**
      * @var string
@@ -66,13 +66,13 @@ class Transaction
     private $hasMoreDetails;
 
 
-    public function __construct(Report $report, TransactionType $transactionType, $amount)
+    public function __construct(Report $report, TransactionType $transactionType, array $amounts)
     {
         $this->report = $report;
         $report->addTransaction($this);
 
         $this->transactionType = $transactionType;
-        $this->amount = $amount;
+        $this->amounts = $amounts;
     }
 
     /**
@@ -135,13 +135,16 @@ class Transaction
     {
         return $this->getTransactionType()->getCategory();
     }
-
+    
     /**
-     * @return float
+     * @return array of floats
+     * @JMS\VirtualProperty
+     * @JMS\Groups({"transactionsIn", "transactionsOut"})
+     * @JMS\SerializedName("amounts_total")
      */
-    public function getAmount()
+    public function getAmountsTotal()
     {
-        return $this->amount;
+        return array_sum($this->getAmounts());
     }
 
     /**
@@ -166,13 +169,6 @@ class Transaction
         return $this;
     }
 
-    public function setAmount($amount)
-    {
-        $this->amount = $amount;
-        
-        return $this;
-    }
-
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
@@ -190,5 +186,19 @@ class Transaction
     {
         return $this->id;
     }
+    
+    public function getAmounts()
+    {
+        return $this->amounts;
+    }
+
+
+    public function setAmounts($amounts)
+    {
+        $this->amounts = $amounts;
+        return $this;
+    }
+
+
     
 }

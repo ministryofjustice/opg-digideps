@@ -80,7 +80,7 @@ class ReportRepository extends EntityRepository
             ->findBy([], ['displayOrder'=>'ASC']);
 
         foreach ($transactionTypes as $transactionType) {
-            $transaction = new Transaction($report, $transactionType, null);
+            $transaction = new Transaction($report, $transactionType, []);
             $report->getTransactions()->add($transaction);
             $this->_em->persist($transaction);
             $ret++;

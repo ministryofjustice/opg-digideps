@@ -1017,7 +1017,7 @@ class Report
     {
         $ret = 0;
         foreach ($this->getTransactionsIn() as $t) {
-            $ret += $t->getAmount();
+            $ret += $t->getAmountsTotal();
         }
 
         return $ret;
@@ -1033,7 +1033,7 @@ class Report
     {
         $ret = 0;
         foreach ($this->getTransactionsOut() as $t) {
-            $ret += $t->getAmount();
+            $ret +=  $t->getAmountsTotal();
         }
 
         return $ret;
@@ -1122,13 +1122,13 @@ class Report
     {
         $ret = [];
 
-        foreach ($transactions as $id => $transaction) {
-            $cat = $transaction->getCategoryString();
+        foreach ($transactions as $id => $t) {
+            $cat = $t->getCategoryString();
             if (!isset($ret[$cat])) {
                 $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
             }
-            $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $transaction->getAmount();
+            $ret[$cat]['entries'][$id] = $t; // needed to find the corresponding transaction in the form
+            $ret[$cat]['amountTotal'] += $t->getAmountsTotal();
         }
 
         return $ret;

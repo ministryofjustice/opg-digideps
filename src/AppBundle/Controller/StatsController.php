@@ -64,7 +64,7 @@ class StatsController extends RestController
                         $row['active_reports_due']++;
                         $row['active_reports_added_bank_accounts']+=count($report->getAccounts());
                         foreach($report->getTransactions() as $transaction) {
-                            if ($transaction->getAmount() !== null) {
+                            if (!empty($transaction->getAmounts())) {
                                 $row['active_reports_added_transactions']++;
                             }
                         }

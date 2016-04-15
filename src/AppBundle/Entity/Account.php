@@ -16,6 +16,19 @@ use Doctrine\ORM\QueryBuilder;
 class Account 
 {
     /**
+     * Keep in sync with client
+     * @JMS\Exclude 
+     */
+    public static $types = [
+        'current' => 'Current account',
+        'savings' => 'Savings account',
+        'isa' => 'ISA',
+        'postoffice' => 'Post office account',
+        'cfo' => 'Court funds office account',
+        'other' => 'Other'
+    ];
+     
+    /**
      * @var integer
      * @JMS\Groups({"transactions", "basic", "transfers"})
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -29,7 +42,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
-     * @ORM\Column(name="bank_name", type="string", length=100, nullable=true)
+     * @ORM\Column(name="bank_name", type="string", length=300, nullable=true)
      */
     private $bank;
 
@@ -40,7 +53,7 @@ class Account
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
     private $accountType;
-
+    
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -196,6 +209,20 @@ class Account
         return $this->accountType;
     }
 
+     /**
+     * @JMS\VirtualProperty
+     * @JMS\SerializedName("account_type_text")
+     * @JMS\Groups({"transactions", "basic", "transfers"})
+      * 
+     * @return string
+     */
+    public function getAccountTypeText()
+    {
+        $type = $this->getAccountType();
+        
+        return isset(self::$types[$type]) ? self::$types[$type] : null;
+    }
+    
     /**
      * @param string $accountType
      */
@@ -458,6 +485,16 @@ class Account
     public function getReport()
     {
         return $this->report;
+    }
+    
+     
+    /**
+     * Sort code required
+     * @return string
+     */
+    public function requiresBankNameAndSortCode()
+    {
+        return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
     }
 
 }
