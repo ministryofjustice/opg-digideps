@@ -4,9 +4,8 @@ var opg = opg || {};
 
 
 /**
- * Handles CRUD operations
- * used on transfers page
- * Refactor if needed
+ * Handles Transfer operations
+ * Prototype version. Refactor if needed
  */
 (function ($, opg) {
     "use strict";
@@ -25,12 +24,12 @@ var opg = opg || {};
         this.thereAreNoRecords = options.thereAreNoRecords;
         this.emptyRow = options.emptyRow;
         this.cardSelectionList = options.cardSelectionList;
-       
+
         this.that = this;
         this.init();
     };
 
-    Transfers.prototype.isFormValid = function(form) {
+    Transfers.prototype.isFormValid = function (form) {
         var fromVal = parseInt(form.find('input.account:nth(0)').val());
         var toVal = parseInt(form.find('input.account:nth(1)').val());
         var amountVal = parseFloat(form.find('input[name=amount]').val());
@@ -43,7 +42,7 @@ var opg = opg || {};
 
     Transfers.prototype.init = function () {
         var _this = this.that;
-        
+
         this.removeAtStart.remove();
         this.showAtStart.show();
 
@@ -52,7 +51,7 @@ var opg = opg || {};
             e.stopPropagation();
             $(this).parent('.card-list').html(_this.cardSelectionList.html());
         });
-        
+
         // selecting one from list
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
             _this.setStatus('');
@@ -66,39 +65,35 @@ var opg = opg || {};
             });
             _this.saveTransfer($(this).parents('form'));
         });
-        
+
         // when editable fields change
         this.wrapper.on('change', 'input.balance', function (e) {
             _this.setStatus('');
             var form = $(e.target).parents('form');
-            _this.saveTransfer( form );
+            _this.saveTransfer(form);
         });
-        
-        
+
+
         // noTransfers checkbox click
         this.wrapper.on('click', _this.noTransferWrapperSelector + ' input[type=checkbox]', function () {
             _this.setStatus('');
             var form = $(this).parents('form');
-            $.ajax({
-                type: "POST",
-                url: _this.noTransferWrapperSelector,
-                data: form.serialize(),
-                dataType: "json",
-                success: function () {
-                    _this.setStatus('Saved');
-                },
-                error: function () {
-                    _this.setStatus('Not saved');
-                }
+
+            _this.setStatus('Saving......');
+            $.post(_this.noTransferWrapperSelector, form.serialize(), function () {
+                _this.setStatus('Saved');
+            }).fail(function () {
+                _this.setStatus('Not saved');
             });
         });
-        
+
         // on delete
         this.wrapper.on('click', '.delete-button', function (e) {
             _this.setStatus('');
             e.preventDefault();
 
             var form = $(this).parents('form');
+            _this.setStatus('Deleting......');
             $.ajax({
                 type: "DELETE",
                 url: _this.deleteEndpoint,
@@ -119,52 +114,58 @@ var opg = opg || {};
         });
     };
 
-
+    // save callback
     Transfers.prototype.saveTransfer = function (form) {
         var _this = this.that;
-        
+
         if (!_this.isFormValid(form)) {
             return;
         }
-        
+
         var idElement = form.find('input[name=id]');
         var isNewRecord = parseInt(idElement.val()) === 0;
-        
+
         _this.setStatus('Saving...');
-        $.ajax({
-            type: (isNewRecord ? "POST" : "PUT"),
-            url: _this.saveEndpoint,
-            data: form.serialize(),
-            dataType: "json",
-            success: function (data) {
+        if (isNewRecord) {
+            $.post(_this.saveEndpoint, form.serialize(), function (data) {
                 // if a new record is added: set <input name=id > value for future editing, add new empty row, and add delete button
-                if (isNewRecord) {
-                    idElement.val(data.transferId);
-                    _this.addEmptyRow(form.parents('li.transfer'));
-                    _this.addDeleteButton(form, data);
-                    
-                    // remove noTransfers checkbox 
-                    _this.noTransferWrapper.hide().find('input[type=checkbox]').attr('checked', false);
-                }
+                idElement.val(data.transferId);
+                _this.addEmptyRow(form.parents('li.transfer'));
+                _this.addDeleteButton(form, data);
+                // remove noTransfers checkbox 
+                _this.noTransferWrapper.hide().find('input[type=checkbox]').attr('checked', false);
                 _this.setStatus('Saved');
-            },
-            error: function () {
-               _this.setStatus('Not saved');
-            }
-        });
+            }).fail(function () {
+                _this.setStatus('Not saved');
+            });
+        } else {
+            $.ajax({
+                type: "PUT",
+                url: _this.saveEndpoint,
+                data: form.serialize(),
+                dataType: "json",
+                success: function (data) {
+                    _this.setStatus('Saved');
+                },
+                error: function () {
+                    _this.setStatus('Not saved');
+                }
+            });
+        }
+
     };
 
-     Transfers.prototype.addEmptyRow = function (after) {
-         var _this = this.that;
-         
-         after.after(_this.emptyRow.html());
-     };
-     
-      Transfers.prototype.addDeleteButton = function (form, data) {
-         var _this = this.that;
-         
-        form.find('.delete-button-container').html( _this.renderDeleteButtonAfterEndpointCalled(data) );
-     };
+    Transfers.prototype.addEmptyRow = function (after) {
+        var _this = this.that;
+
+        after.after(_this.emptyRow.html());
+    };
+
+    Transfers.prototype.addDeleteButton = function (form, data) {
+        var _this = this.that;
+
+        form.find('.delete-button-container').html(_this.renderDeleteButtonAfterEndpointCalled(data));
+    };
 
 
     opg.Transfers = Transfers;
