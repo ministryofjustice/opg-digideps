@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class TransfersController extends AbstractController
+class MoneyTransferController extends AbstractController
 {
 
     /**
