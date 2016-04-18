@@ -29,12 +29,12 @@
             {% include 'AppBundle:MoneyTransfer:add-one-no-js.html.twig'%}
 
             {# noTransfers checkbox option #}
-            <div id="no-transfers" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
+            <li id="no-transfers" class="transfer" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
                 {{ render(controller('AppBundle:MoneyTransfer:_noTransfersPartial', { 
                     'reportId': report.id, 
                     'request': app.request 
                 })) }}
-            </div>
+            </li>
             
         </ul>
         
@@ -98,7 +98,7 @@
             }
             // attach events
             $(document).ready(function () {
-                $('#add-transfer-no-js,#report_no_transfers_saveNoTransfer').hide();
+                $('#add-transfer-no-js,#report_no_transfers_saveNoTransfer').remove();
                 $('.add-new-transfer-row').show();
                 var statusElement = $('#save-status');
                
