@@ -11,6 +11,8 @@ var opg = opg || {};
     "use strict";
 
     var Transfers = function (options) {
+        this.that = this;
+        
         this.statusElement = options.statusElement;
         this.removeAtStart = options.removeAtStart;
         this.showAtStart = options.showAtStart;
@@ -24,9 +26,10 @@ var opg = opg || {};
         this.thereAreNoRecords = options.thereAreNoRecords;
         this.emptyRow = options.emptyRow;
         this.cardSelectionList = options.cardSelectionList;
-
-        this.that = this;
+        
         this.init();
+        this.attachEvents();
+        this.attachGlobalEvents();
     };
 
     Transfers.prototype.isFormValid = function (form) {
@@ -45,6 +48,11 @@ var opg = opg || {};
 
         this.removeAtStart.remove();
         this.showAtStart.show();
+    };
+
+
+    Transfers.prototype.attachEvents = function () {
+        var _this = this.that;
 
         // show card selection
         this.wrapper.on('click', '.card-item.expandable', function (e) {
@@ -79,12 +87,7 @@ var opg = opg || {};
             _this.setStatus('');
             var form = $(this).parents('form');
 
-            _this.setStatus('Saving......');
-            $.post(_this.noTransferWrapperSelector, form.serialize(), function () {
-                _this.setStatus('Saved');
-            }).fail(function () {
-                _this.setStatus('Not saved');
-            });
+            $.post(_this.noTransferWrapperSelector, form.serialize());
         });
 
         // on delete
@@ -93,7 +96,6 @@ var opg = opg || {};
             e.preventDefault();
 
             var form = $(this).parents('form');
-            _this.setStatus('Deleting......');
             $.ajax({
                 type: "DELETE",
                 url: _this.deleteEndpoint,
@@ -105,12 +107,21 @@ var opg = opg || {};
                     if (_this.thereAreNoRecords(_this.wrapper)) {
                         _this.noTransferWrapper.show();
                     }
-                    _this.setStatus('Saved');
-                },
-                error: function () {
-                    _this.setStatus('Not saved');
                 }
             });
+        });
+    };
+    
+    
+    Transfers.prototype.attachGlobalEvents = function () {
+        var _this = this.that;
+
+        $(document).bind("ajaxSend", function(){
+            _this.setStatus('');
+        }).bind("ajaxSuccess", function () {
+            _this.setStatus('Saved');
+        }).bind("ajaxError", function () {
+            _this.setStatus('Not saved');
         });
     };
 
@@ -125,31 +136,22 @@ var opg = opg || {};
         var idElement = form.find('input[name=id]');
         var isNewRecord = parseInt(idElement.val()) === 0;
 
-        _this.setStatus('Saving...');
         if (isNewRecord) {
-            $.post(_this.saveEndpoint, form.serialize(), function (data) {
-                // if a new record is added: set <input name=id > value for future editing, add new empty row, and add delete button
-                idElement.val(data.transferId);
-                _this.addEmptyRow(form.parents('li.transfer'));
-                _this.addDeleteButton(form, data);
-                // remove noTransfers checkbox 
-                _this.noTransferWrapper.hide().find('input[type=checkbox]').attr('checked', false);
-                _this.setStatus('Saved');
-            }).fail(function () {
-                _this.setStatus('Not saved');
-            });
+            $.post(_this.saveEndpoint, form.serialize())
+                    .success(function (data) {
+                        // if a new record is added: set <input name=id > value for future editing, add new empty row, and add delete button
+                        idElement.val(data.transferId);
+                        _this.addEmptyRow(form.parents('li.transfer'));
+                        _this.addDeleteButton(form, data);
+                        // remove noTransfers checkbox 
+                        _this.noTransferWrapper.hide().find('input[type=checkbox]').attr('checked', false);
+                    });
         } else {
             $.ajax({
                 type: "PUT",
                 url: _this.saveEndpoint,
                 data: form.serialize(),
-                dataType: "json",
-                success: function (data) {
-                    _this.setStatus('Saved');
-                },
-                error: function () {
-                    _this.setStatus('Not saved');
-                }
+                dataType: "json"
             });
         }
 
