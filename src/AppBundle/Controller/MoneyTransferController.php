@@ -64,7 +64,7 @@ class MoneyTransferController extends RestController
         
         $this->persistAndFlush($transfer);
         
-        return [];
+        return $transfer->getId();
     }
   
     /**
