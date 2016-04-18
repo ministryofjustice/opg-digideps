@@ -50,6 +50,9 @@ var opg = opg || {};
         this.showAtStart.show();
     };
 
+    Transfers.prototype.filterCards = function(){
+        
+    };
 
     Transfers.prototype.attachEvents = function () {
         var _this = this.that;
@@ -63,14 +66,24 @@ var opg = opg || {};
         // selecting one from list
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
             _this.setStatus('');
-            var cardId = parseInt($(this).data('id'));
-            $(this).parent('ul.card-list').find('li').each(function () {
-                var el = $(this);
-                if (parseInt(el.data('id')) !== cardId) {
-                    el.remove();
-                }
-                el.removeClass('not-expandable').addClass('expandable');
-            });
+            var cardsList = $(this).parent('ul.card-list');
+            var selectedCardId = parseInt($(this).data('id'));
+            // remove cards except the selected one
+            cardsList.find('li').filter(function() {
+                return parseInt($(this).data('id')) !== selectedCardId;
+            }).remove();
+            
+            cardsList.find('li.not-expandable').addClass('expandable');
+            
+//            $(this).parent('ul.card-list').find('li').each(function () {
+//                var el = $(this);
+//                // remove cards except the selected one
+//                if (parseInt(el.data('id')) !== selectedCardId) {
+//                    el.remove();
+//                    el.removeClass('not-expandable').addClass('expandable');
+//                }
+//                
+//            });
             _this.saveTransfer($(this).parents('form'));
         });
 
