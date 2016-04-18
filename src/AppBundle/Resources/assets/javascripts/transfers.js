@@ -137,21 +137,35 @@ var opg = opg || {};
             data: form.serialize(),
             dataType: "json",
             success: function (data) {
-                // set <input name=id > value for future editing
+                // if a new record is added: set <input name=id > value for future editing, add new empty row, and add delete button
                 if (isNewRecord) {
                     idElement.val(data.transferId);
-                    form.parents('li.transfer').after(_this.emptyRow.html());
-                    form.find('.delete-button-container').html( _this.renderDeleteButtonAfterEndpointCalled(data) );
+                    _this.addEmptyRow(form.parents('li.transfer'));
+                    _this.addDeleteButton(form, data);
+                    
                     // remove noTransfers checkbox 
                     _this.noTransferWrapper.hide().find('input[type=checkbox]').attr('checked', false);
-                    _this.setStatus('Saved');
                 }
+                _this.setStatus('Saved');
             },
             error: function () {
                _this.setStatus('Not saved');
             }
         });
     };
+
+     Transfers.prototype.addEmptyRow = function (after) {
+         var _this = this.that;
+         
+         after.after(_this.emptyRow.html());
+     };
+     
+      Transfers.prototype.addDeleteButton = function (form, data) {
+         var _this = this.that;
+         
+        form.find('.delete-button-container').html( _this.renderDeleteButtonAfterEndpointCalled(data) );
+     };
+
 
     opg.Transfers = Transfers;
 
