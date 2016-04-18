@@ -79,13 +79,12 @@
                         if (isNewRecord) {
                             idElement.val(data.transferId);
                             // add new emtpy record for adding a new one
-                            $('#transfers').append(
-                                $('#transfers-add-one').html()
-                            );
+                            form.parents('li.transfer').after($('#transfers-add-one').html());
+                    
                             //ADD INTO THE RIGHT PLACE !!!
                             // add DELETE button for this newly created row
                             form.find('.delete-button-container').html(
-                                '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/1/transfers/' + data.transferId + '">Delete</a>'                    
+                                '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/{{ report.id }}/transfers/' + data.transferId + '">Delete</a>'                    
                             );
                             // remove noTransfers checkbox 
                             $('#report_no_transfers_noTransfersToAdd').attr('checked', false);
