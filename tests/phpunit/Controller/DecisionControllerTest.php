@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Controller;
 
-class DecisionControllerTest extends ControllerTestCase
+class DecisionControllerTest extends AbstractControllerTestCase
 {
     
     /** @test */

@@ -119,7 +119,7 @@
                             var form = $(this).parents('form');
                             $.ajax({
                                 type: "POST",
-                                url: "{{ path('transfers_no_transfers', {'reportId': report.id}) }}",
+                                url: "{{ path('transfers_no_transfers_json', {'reportId': report.id}) }}",
                                 data: form.serialize(),
                                 dataType: "json",
                                 success: function() {

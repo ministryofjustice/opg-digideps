@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Client;
 
 use Mockery as m;
 
-abstract class ControllerTestCase extends WebTestCase {
+abstract class AbstractControllerTestCase extends WebTestCase {
 
     protected $report;
     protected $client;
@@ -45,6 +45,24 @@ abstract class ControllerTestCase extends WebTestCase {
 
         static::$kernel->getContainer()->set('restClient', $this->restClient);
 
+    }
+    
+    
+     /**
+     * @param string $method
+     * @param string $uri
+     * @param array $parameters
+     * @param array $files
+     * @param array $server
+     * 
+     * @return Response
+     */
+    protected function ajaxRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
+    {
+        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With'=>'XMLHttpRequest'] + $server);
+        
+        return $this->frameworkBundleClient->getResponse();
+        
     }
     
     
