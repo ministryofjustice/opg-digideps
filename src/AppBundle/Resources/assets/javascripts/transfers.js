@@ -67,24 +67,17 @@ var opg = opg || {};
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
             _this.setStatus('');
             var cardsList = $(this).parent('ul.card-list');
-            var selectedCardId = parseInt($(this).data('id'));
+            var selectedCard = $(this);
+            var form = $(this).parents('form');
+            
             // remove cards except the selected one
             cardsList.find('li').filter(function() {
-                return parseInt($(this).data('id')) !== selectedCardId;
+                return parseInt($(this).data('id')) !== parseInt(selectedCard.data('id'));
             }).remove();
-            
+            // re-add expandable class for future clicks
             cardsList.find('li.not-expandable').addClass('expandable');
             
-//            $(this).parent('ul.card-list').find('li').each(function () {
-//                var el = $(this);
-//                // remove cards except the selected one
-//                if (parseInt(el.data('id')) !== selectedCardId) {
-//                    el.remove();
-//                    el.removeClass('not-expandable').addClass('expandable');
-//                }
-//                
-//            });
-            _this.saveTransfer($(this).parents('form'));
+            _this.saveTransfer(form);
         });
 
         // when editable fields change
