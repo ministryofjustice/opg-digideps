@@ -60,7 +60,27 @@ var opg = opg || {};
         // show card selection
         this.wrapper.on('click', '.card-item.expandable', function (e) {
             e.stopPropagation();
-            $(this).parent('.card-list').html(_this.cardSelectionList.html());
+            var el = $(this);
+            var cards = $(_this.cardSelectionList.clone());
+            
+            // find sibling
+            var column = el.parents('.column-one-half');
+            if (column.next().length === 1) {
+                var sibling = column.next();
+            } else if (column.prev().length === 1) {
+                var sibling = column.prev();
+            } else {
+                var sibling = null;
+            }
+            // change colour if card equal to sibling
+            if (sibling) {
+                var idFromOtherColumn = sibling.find('.card-item').data('id');
+                cards.find('.card-item').filter(function(){
+                    return parseInt($(this).data('id')) === parseInt(idFromOtherColumn);
+                }).find('.card').css('background-color', 'red');
+            }
+            
+            el.parent('.card-list').html(cards.html());
         });
 
         // selecting one from list
