@@ -28,7 +28,7 @@ class MoneyTransferController extends AbstractController
         }
 
         if (count($report->getAccounts()) < 2) {
-            return $this->render('AppBundle:Transfers:transfers_unhappy.html.twig', [
+            return $this->render('AppBundle:MoneyTransfer:index_unhappy.html.twig', [
                     'report' => $report,
                     'subsection' => 'transfers'
             ]);
@@ -44,7 +44,7 @@ class MoneyTransferController extends AbstractController
             return $this->redirect($this->generateUrl('transfers', ['reportId' => $reportId]));
         }
 
-        return $this->render('AppBundle:Transfers:transfers.html.twig', [
+        return $this->render('AppBundle:MoneyTransfer:index.html.twig', [
                 'report' => $report,
                 'subsection' => 'transfers',
                 'form' => $form->createView()
@@ -67,7 +67,7 @@ class MoneyTransferController extends AbstractController
     /**
      * Sub controller action called when the no transfers form is embedded in another page.
      *
-     * @Template("AppBundle:Transfers:_noTransfers.html.twig")
+     * @Template("AppBundle:MoneyTransfer:_noTransfers.html.twig")
      */
     public function _noTransfersPartialAction(Request $request, $reportId)
     {
