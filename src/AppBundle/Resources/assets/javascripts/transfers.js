@@ -56,10 +56,10 @@ var opg = opg || {};
         // selecting one from list
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
             _this.setStatus('');
-            var cardId = $(this).data('id');
+            var cardId = parseInt($(this).data('id'));
             $(this).parent('ul.card-list').find('li').each(function () {
                 var el = $(this);
-                if (el.data('id') != cardId) {
+                if (parseInt(el.data('id')) !== cardId) {
                     el.remove();
                 }
                 el.removeClass('not-expandable').addClass('expandable');
