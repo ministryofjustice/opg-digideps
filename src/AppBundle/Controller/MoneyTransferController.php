@@ -128,22 +128,21 @@ class MoneyTransferController extends AbstractController
 
 
     /**
-     * @Route("/report/{reportId}/transfers/{transferId}", name="transfers_delete_json")
+     * @Route("/report/{reportId}/transfers", name="transfers_delete_json")
      * @Method({"DELETE"})
      * @param Request $request
      * @param integer $reportId
      * @param integer $transferId
      * return JsonResponse
      */
-    public function deleteJson($reportId, $transferId)
+    public function deleteJson(Request $request, $reportId)
     {
         try {
-            $ret = $this->get('restClient')->delete('report/' . $reportId . '/money-transfers/' . $transferId);
+            $this->get('restClient')->delete('report/' . $reportId . '/money-transfers/' . $request->get('id'));
+            return new JsonResponse(['success' => true]);
         } catch (\Exception $e) {
             return new JsonResponse(['success' => false, 'exception' => $e->getMessage()], 500);
         }
-
-        return new JsonResponse($ret);
     }
 
 
