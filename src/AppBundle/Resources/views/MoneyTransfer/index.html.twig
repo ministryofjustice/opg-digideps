@@ -53,116 +53,28 @@
         </div>
         
         <script>
-            // SAVE callback
-            function saveTransfer(form){
-                var idElement = form.find('input[name=id]');
-                var isNewRecord = parseInt(idElement.val()) === 0;
-                var fromVal = parseInt(form.find('input.account:nth(0)').val());
-                var toVal = parseInt(form.find('input.account:nth(1)').val());
-                var amountVal = parseFloat(form.find('input[name=amount]').val());
-                var statusElement = $('#save-status');
-                var formSelectionIsComplete = fromVal > 0 && toVal > 0 && amountVal > 0 && form.find('input.account').length === 2;
-                
-                if (!formSelectionIsComplete) {
-                    return;
-                }
-                
-                statusElement.text('Saving...');
-                $.ajax({
-                    type: (isNewRecord ? "POST" : "PUT"),
-                    url: "{{ path('transfers_save_json', {'reportId': report.id}) }}",
-                    data: form.serialize(),
-                    dataType: "json",
-                    success: function(data) {
-                        statusElement.text('Saved');
-                        // save ID into the input field for future editing before page reloading
-                        if (isNewRecord) {
-                            idElement.val(data.transferId);
-                            // add new emtpy record for adding a new one
-                            form.parents('li.transfer').after($('#transfers-add-one').html());
-                    
-                            //ADD INTO THE RIGHT PLACE !!!
-                            // add DELETE button for this newly created row
-                            form.find('.delete-button-container').html(
-                                '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/{{ report.id }}/transfers/' + data.transferId + '">Delete</a>'                    
-                            );
-                            // remove noTransfers checkbox 
-                            $('#report_no_transfers_noTransfersToAdd').attr('checked', false);
-                            $('#no-transfers').hide();
-                        }
-                    },
-                    error: function() {
-                       statusElement.text('Not saved');
-                    }
-                });
-            }
-            // attach events
             $(document).ready(function () {
-                $('#add-transfer-no-js,#report_no_transfers_saveNoTransfer').remove();
-                $('.add-new-transfer-row').show();
-                var statusElement = $('#save-status');
-                
-                $('#transfers')
-                        // expand selection showing all the accounts
-                        .on('click', '.card-item.expandable', function (e) {
-                            statusElement.text('');
-                            e.stopPropagation();
-                            $(this).parent('.card-list').html($('#account-cards-selection-ul').html());
-                        })
-                        // after selecting one account. remove all the others and toggle the not-expandable classes
-                        .on('click', '.card-item.not-expandable', function (e) {
-                            statusElement.text('');
-                            var cardId = $(this).data('id');
-                            $(this).parent('ul.card-list').find('li').each(function(){
-                                var el = $(this);
-                                if (el.data('id') != cardId) {
-                                    el.remove();
-                                }
-                                el.removeClass('not-expandable').addClass('expandable');
-                            });
-                            saveTransfer( $(this).parents('form'));
-                        }).on('change', 'input.balance', function(){
-                            statusElement.text('');
-                            saveTransfer( $(this).parents('form'));
-                        }).on('click', '#report_no_transfers_noTransfersToAdd', function(){
-                            statusElement.text('');
-                            var form = $(this).parents('form');
-                            $.ajax({
-                                type: "POST",
-                                url: "{{ path('transfers_no_transfers_json', {'reportId': report.id}) }}",
-                                data: form.serialize(),
-                                dataType: "json",
-                                success: function() {
-                                    statusElement.text('Saved');
-                                },
-                                error: function() {
-                                   statusElement.text('Not saved');
-                                }
-                            });
-                        }).on('click', '.delete-button', function(e){
-                            statusElement.text('');
-                            e.preventDefault();
-                            
-                            var form = $(this).parents('form');
-                            $.ajax({
-                                type: "DELETE",
-                                url: "{{ path('transfers_delete_json', {'reportId': report.id}) }}",
-                                data: form.serialize(),
-                                dataType: "json",
-                                success: function() {
-                                    var li = form.parents('li.transfer');
-                                    li.remove();
-                                    statusElement.text('Saved');
-                                     //READD checkbox if needed
-                                    if ($('#transfers li.transfer form input[name=id][value!=0]').length === 0) {
-                                        $('#no-transfers').show();
-                                    }
-                                },
-                                error: function() {
-                                   statusElement.text('Not saved');
-                                }
-                            });
-                        });
+                $(document).ready(function() {
+                    new opg.Transfers({
+                        statusElement: $('#save-status'),
+                        removeAtStart: $('#add-transfer-no-js,#report_no_transfers_saveNoTransfer'),
+                        showAtStart: $('.add-new-transfer-row'),
+                        wrapper: $('#transfers'),
+                        cardSelectionList:$('#account-cards-selection-ul'),
+                        noTransferWrapperSelector: '#no-transfers',
+                        saveEndpoint: "{{ path('transfers_save_json', {'reportId': report.id}) }}",
+                        deleteEndpoint: "{{ path('transfers_delete_json', {'reportId': report.id}) }}",
+                        noTransfersEndpoint: "{{ path('transfers_no_transfers_json', {'reportId': report.id}) }}",
+                        renderDeleteButtonAfterEndpointCalled: function(data) {
+                            return '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/{{ report.id }}/transfers/' + data.transferId + '">Delete</a>';
+                        },
+                        
+                        thereAreNoRecords: function(wrapper) {
+                            return wrapper.find('li.transfer form input[name=id][value!=0]').length === 0;
+                        },
+                        emptyRow: $('#transfers-add-one')
+                    });
+                });
             });
         </script>
 
