@@ -65,6 +65,22 @@ var opg = opg || {};
         }
         return null;
     };
+    
+    // find the data.id of the sibling card-item (traverse up to column-one-half)
+    Transfers.prototype.getCardsList = function (idSibling) {
+        var _this = this.that;
+        
+        var cards = $(_this.cardSelectionList.clone());
+
+        // set grey and last position for the card selected on the other side
+        if (idSibling) {
+            cards.find('.card-item').filter(function () {
+                return parseInt($(this).data('id')) === parseInt(idSibling);
+            }).appendTo(cards).find('.card').addClass('disabled');
+        }
+        
+        return cards;
+    };
 
     Transfers.prototype.attachEvents = function () {
         var _this = this.that;
@@ -74,16 +90,10 @@ var opg = opg || {};
             console.log('expand');
             e.stopPropagation();
             var el = $(this);
-            var cards = $(_this.cardSelectionList.clone());
-
-            // set grey and last position for the card selected on the other side
-            var idSibling = _this.getSiblingDataId(el);
-            if (idSibling) {
-                cards.find('.card-item').filter(function () {
-                    return parseInt($(this).data('id')) === parseInt(idSibling);
-                }).appendTo(cards).find('.card').addClass('disabled');
-            }
-
+            
+            var dataIdSelectedBySibling = _this.getSiblingDataId(el);
+            var cards = _this.getCardsList(dataIdSelectedBySibling);
+            
             el.parent('.card-list').html(cards.html());
         });
 
