@@ -12,7 +12,7 @@ var opg = opg || {};
 
     var Transfers = function (options) {
         this.that = this;
-        
+
         this.statusElement = options.statusElement;
         this.removeAtStart = options.removeAtStart;
         this.showAtStart = options.showAtStart;
@@ -26,7 +26,7 @@ var opg = opg || {};
         this.thereAreNoRecords = options.thereAreNoRecords;
         this.emptyRow = options.emptyRow;
         this.cardSelectionList = options.cardSelectionList;
-        
+
         this.init();
         this.attachEvents();
         this.attachGlobalEvents();
@@ -50,24 +50,22 @@ var opg = opg || {};
         this.showAtStart.show();
     };
 
-    Transfers.prototype.filterCards = function(){
-        
+    Transfers.prototype.filterCards = function () {
+
     };
-    
+
     // find the data.id of the sibling card-item (traverse up to column-one-half)
-    Transfers.prototype.getSiblingDataId = function(el) {
+    Transfers.prototype.getSiblingDataId = function (el) {
         // find sibling
-            var column = el.parents('.column-one-half');
-            if (column.next().length === 1) {
-                var sibling = column.next();
-            } else if (column.prev().length === 1) {
-                var sibling = column.prev();
-            } else {
-                return null;
-            }
-            return sibling.find('.card-item').data('id');
+        var column = el.parents('.column-one-half');
+        if (column.next().length === 1) {
+            return column.next().find('.card-item').data('id');
+        } else if (column.prev().length === 1) {
+            return column.prev().find('.card-item').data('id');
+        }
+        return null;
     };
-    
+
     Transfers.prototype.attachEvents = function () {
         var _this = this.that;
 
@@ -77,37 +75,37 @@ var opg = opg || {};
             e.stopPropagation();
             var el = $(this);
             var cards = $(_this.cardSelectionList.clone());
-            
+
             // set grey and last position for the card selected on the other side
             var idSibling = _this.getSiblingDataId(el);
             if (idSibling) {
-                cards.find('.card-item').filter(function(){
+                cards.find('.card-item').filter(function () {
                     return parseInt($(this).data('id')) === parseInt(idSibling);
                 }).appendTo(cards).find('.card').addClass('disabled');
             }
-            
+
             el.parent('.card-list').html(cards.html());
         });
 
         // selecting one from list
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
             console.log('selecting one');
-             e.stopPropagation();
+            e.stopPropagation();
             _this.setStatus('');
             var selectedCard = $(this);
             var cardsList = selectedCard.parent('ul.card-list');
             var form = selectedCard.parents('form');
-            
+
             // remove cards except the selected one
-            cardsList.find('li').filter(function() {
+            cardsList.find('li').filter(function () {
                 return parseInt($(this).data('id')) !== parseInt(selectedCard.data('id'));
             }).remove();
             // re-add expandable class for future clicks
             cardsList.find('li.not-expandable').addClass('expandable');
-            
+
             // restore original class
             selectedCard.find('.card').removeClass('disabled');
-            
+
             _this.saveTransfer(form);
         });
 
@@ -147,21 +145,21 @@ var opg = opg || {};
                 }
             });
         });
-        
+
         // disable ENTER key on input boxes
-        $('input.balance').bind('keypress', function(e) {
-           if(e.keyCode == 13)
-           {
-              return false;
-           }
+        $('input.balance').bind('keypress', function (e) {
+            if (e.keyCode == 13)
+            {
+                return false;
+            }
         });
     };
-    
-    
+
+
     Transfers.prototype.attachGlobalEvents = function () {
         var _this = this.that;
 
-        $(document).bind("ajaxSend", function(){
+        $(document).bind("ajaxSend", function () {
             _this.setStatus('');
         }).bind("ajaxSuccess", function () {
             _this.setStatus('Saved');
