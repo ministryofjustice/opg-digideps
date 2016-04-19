@@ -136,6 +136,14 @@ var opg = opg || {};
                 }
             });
         });
+        
+        // disable ENTER key on input boxes
+        $('input.balance').bind('keypress', function(e) {
+           if(e.keyCode == 13)
+           {
+              return false;
+           }
+        });
     };
     
     
