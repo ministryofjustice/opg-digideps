@@ -18,10 +18,10 @@ Feature: deputy / report / account transfers
         And I select "temp (****8888)" from "transfers_accountToId"
         And I press "transfers_save"
         Then the form should be valid
-        Then I should see the "transfer-n-1" region
+        Then I should see the "transfer" region
         # delete
-        When I follow "delete-button"
-        Then I should not see the "transfer-n-1" region
+        When I click on "delete-confirm"
+        Then I should not see the "transfer" region
         # no transfers
         Given the checkbox "report_no_transfers_noTransfersToAdd" is not checked
         When I check "report_no_transfers_noTransfersToAdd"
