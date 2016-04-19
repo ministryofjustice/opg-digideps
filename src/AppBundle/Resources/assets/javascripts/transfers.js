@@ -77,7 +77,7 @@ var opg = opg || {};
                 var idFromOtherColumn = sibling.find('.card-item').data('id');
                 cards.find('.card-item').filter(function(){
                     return parseInt($(this).data('id')) === parseInt(idFromOtherColumn);
-                }).find('.card').css('background-color', 'red');
+                }).remove();
             }
             
             el.parent('.card-list').html(cards.html());
