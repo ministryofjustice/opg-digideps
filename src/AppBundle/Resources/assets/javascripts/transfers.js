@@ -87,7 +87,6 @@ var opg = opg || {};
 
         // show card selection
         this.wrapper.on('click', '.card-item.expandable', function (e) {
-            console.log('expand');
             e.stopPropagation();
             var el = $(this);
             
@@ -99,7 +98,6 @@ var opg = opg || {};
 
         // selecting one from list
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
-            console.log('selecting one');
             e.stopPropagation();
             _this.setStatus('');
             var selectedCard = $(this);
