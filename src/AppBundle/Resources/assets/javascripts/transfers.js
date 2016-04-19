@@ -63,14 +63,9 @@ var opg = opg || {};
             } else if (column.prev().length === 1) {
                 var sibling = column.prev();
             } else {
-                var sibling = null;
+                return null;
             }
-            // change colour if card equal to sibling
-            if (sibling) {
-                return sibling.find('.card-item').data('id');
-            }
-            
-            return null;
+            return sibling.find('.card-item').data('id');
     };
     
     Transfers.prototype.attachEvents = function () {
@@ -78,16 +73,17 @@ var opg = opg || {};
 
         // show card selection
         this.wrapper.on('click', '.card-item.expandable', function (e) {
+            console.log('expand');
             e.stopPropagation();
             var el = $(this);
             var cards = $(_this.cardSelectionList.clone());
             
-            // do not show the card already selected on the sibling
+            // set grey and last position for the card selected on the other side
             var idSibling = _this.getSiblingDataId(el);
             if (idSibling) {
                 cards.find('.card-item').filter(function(){
                     return parseInt($(this).data('id')) === parseInt(idSibling);
-                }).remove();
+                }).appendTo(cards).find('.card').addClass('disabled');
             }
             
             el.parent('.card-list').html(cards.html());
@@ -95,10 +91,12 @@ var opg = opg || {};
 
         // selecting one from list
         this.wrapper.on('click', '.card-item.not-expandable', function (e) {
+            console.log('selecting one');
+             e.stopPropagation();
             _this.setStatus('');
-            var cardsList = $(this).parent('ul.card-list');
             var selectedCard = $(this);
-            var form = $(this).parents('form');
+            var cardsList = selectedCard.parent('ul.card-list');
+            var form = selectedCard.parents('form');
             
             // remove cards except the selected one
             cardsList.find('li').filter(function() {
@@ -106,6 +104,9 @@ var opg = opg || {};
             }).remove();
             // re-add expandable class for future clicks
             cardsList.find('li.not-expandable').addClass('expandable');
+            
+            // restore original class
+            selectedCard.find('.card').removeClass('disabled');
             
             _this.saveTransfer(form);
         });
