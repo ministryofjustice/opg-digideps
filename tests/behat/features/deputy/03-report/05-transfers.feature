@@ -14,8 +14,8 @@ Feature: deputy / report / account transfers
         And I save the page as "report-account-transfers-errors"
         # right values
         When I fill in "transfers_amount" with "1200"
-        And I select "HSBC main account (****0876)" from "transfers_accountFromId"
-        And I select "temp (****8888)" from "transfers_accountToId"
+        And I select "HSBC main account Current account (****0876)" from "transfers_accountFromId"
+        And I select "temp ISA (****8888)" from "transfers_accountToId"
         And I press "transfers_save"
         Then the form should be valid
         Then I should see the "transfer" region

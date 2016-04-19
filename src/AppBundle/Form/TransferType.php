@@ -22,7 +22,7 @@ class TransferType extends AbstractType
 
         foreach ($banks as $bank) {
             /* $var $bank \AppBundle\Entity\Account */
-            $this->banks[$bank->getId()] = $bank->getBank() . ' (****' . $bank->getAccountNumber() . ')';
+            $this->banks[$bank->getId()] = $bank->getBank() . ' '. $bank->getAccountTypeText(). ' (****' . $bank->getAccountNumber() . ')';
         }
     }
 
