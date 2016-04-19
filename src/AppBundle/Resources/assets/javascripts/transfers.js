@@ -53,17 +53,10 @@ var opg = opg || {};
     Transfers.prototype.filterCards = function(){
         
     };
-
-    Transfers.prototype.attachEvents = function () {
-        var _this = this.that;
-
-        // show card selection
-        this.wrapper.on('click', '.card-item.expandable', function (e) {
-            e.stopPropagation();
-            var el = $(this);
-            var cards = $(_this.cardSelectionList.clone());
-            
-            // find sibling
+    
+    // find the data.id of the sibling card-item (traverse up to column-one-half)
+    Transfers.prototype.getSiblingDataId = function(el) {
+        // find sibling
             var column = el.parents('.column-one-half');
             if (column.next().length === 1) {
                 var sibling = column.next();
@@ -74,9 +67,26 @@ var opg = opg || {};
             }
             // change colour if card equal to sibling
             if (sibling) {
-                var idFromOtherColumn = sibling.find('.card-item').data('id');
+                return sibling.find('.card-item').data('id');
+            }
+            
+            return null;
+    };
+    
+    Transfers.prototype.attachEvents = function () {
+        var _this = this.that;
+
+        // show card selection
+        this.wrapper.on('click', '.card-item.expandable', function (e) {
+            e.stopPropagation();
+            var el = $(this);
+            var cards = $(_this.cardSelectionList.clone());
+            
+            // do not show the card already selected on the sibling
+            var idSibling = _this.getSiblingDataId(el);
+            if (idSibling) {
                 cards.find('.card-item').filter(function(){
-                    return parseInt($(this).data('id')) === parseInt(idFromOtherColumn);
+                    return parseInt($(this).data('id')) === parseInt(idSibling);
                 }).remove();
             }
             
