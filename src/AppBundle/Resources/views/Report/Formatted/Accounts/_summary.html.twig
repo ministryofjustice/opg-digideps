@@ -21,6 +21,11 @@
                             {% if account.requiresBankNameAndSortCode %}
                             , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
+                             {% if account.isClosed %}
+                                <span style="border: 2px solid #4a4a4a; border-radius: 5px; margin: 2px; padding: 1px">
+                                    ACCOUNT CLOSED
+                                </span>
+                            {% endif %}
                         </div>
                     </td>
                     <td class="numeric grey">£{{ account.openingBalance | money_format }}</td>
