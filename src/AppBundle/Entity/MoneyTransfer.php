@@ -33,6 +33,7 @@ class MoneyTransfer
     private $accountFrom;
 
     /**
+     * @JMS\Type("integer")
      * @Assert\NotBlank(message="transfer.accountFrom.notBlank")
      */
     private $accountFromId;
@@ -45,7 +46,7 @@ class MoneyTransfer
     private $accountTo;
 
     /**
-     * @JMS\SerializedName("transfer.accountTo.notBlank")
+     * @JMS\Type("integer")
      * @Assert\NotBlank(message="transfer.accountTo.notBlank")
      */
     private $accountToId;

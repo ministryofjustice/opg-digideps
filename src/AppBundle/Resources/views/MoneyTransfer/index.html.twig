@@ -1,0 +1,91 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' %}
+
+    {% set translationDomain = "report-transfers" %}
+    {% trans_default_domain translationDomain %}
+
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }}{% endblock %}
+    {% block contentClass %}{{ parent() }} js-report-contacts-input{% endblock %}
+    {% block title %}{{ 'page.pageSectionTitle' | trans }}{% endblock %}
+    {% block info %}<span id="save-status"></span>{% endblock %}
+    
+    {% block leftcontent %}
+        {% include 'AppBundle:Account:left-nav.html.twig'%}
+    {% endblock %}
+
+    {% block maincontent %}
+
+        <p class="page-section-description">
+            {{ 'page.pageSectionDescription'|trans({'%client%': report.client.firstname}, translationDomain ) }}
+        </p>
+
+        <ul id="transfers" class="card-list behat-region-transfers"    >
+            {# transfers #}
+            {% for transfer in report.moneyTransfers %}
+                {% include 'AppBundle:MoneyTransfer:row.html.twig'%}
+            {% endfor %}
+
+            {# add one #}
+            {% include 'AppBundle:MoneyTransfer:add-one.html.twig'%}
+            {% include 'AppBundle:MoneyTransfer:add-one-no-js.html.twig'%}
+
+            {# noTransfers checkbox option #}
+            <li id="no-transfers" class="transfer" {% if report.moneyTransfers is not empty %}style="display: none"{% endif %}>
+                {{ render(controller('AppBundle:MoneyTransfer:_noTransfersPartial', { 
+                    'reportId': report.id, 
+                    'request': app.request 
+                })) }}
+            </li>
+            
+        </ul>
+        
+        {# partial templates loaded via JS #}
+        <div style="display: none">
+            <ul class="card-lists"  id="account-cards-selection-ul">
+                {% include 'AppBundle:MoneyTransfer:cards-select.html.twig' with { 
+                    'accounts': report.accounts,
+                    'additionalClass': 'not-expandable'
+                 }%}
+            </ul>
+
+            <div id="transfers-add-one">
+                {% include 'AppBundle:MoneyTransfer:add-one.html.twig'%}
+            </div>
+        </div>
+        
+        <script>
+            $(document).ready(function () {
+                $(document).ready(function() {
+                    new opg.Transfers({
+                        statusElement: $('#save-status'),
+                        removeAtStart: $('#add-transfer-no-js,#report_no_transfers_saveNoTransfer'),
+                        showAtStart: $('.add-new-transfer-row'),
+                        wrapper: $('#transfers'),
+                        cardSelectionList:$('#account-cards-selection-ul'),
+                        noTransferWrapperSelector: '#no-transfers',
+                        saveEndpoint: "{{ path('transfers_save_json', {'reportId': report.id}) }}",
+                        deleteEndpoint: "{{ path('transfers_delete_json', {'reportId': report.id}) }}",
+                        noTransfersEndpoint: "{{ path('transfers_no_transfers_json', {'reportId': report.id}) }}",
+                        renderDeleteButtonAfterEndpointCalled: function(data) {
+                            return '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/{{ report.id }}/transfers/' + data.transferId + '">Delete</a>';
+                        },
+                        
+                        thereAreNoRecords: function(wrapper) {
+                            return wrapper.find('li.transfer form input[name=id][value!=0]').length === 0;
+                        },
+                        emptyRow: $('#transfers-add-one')
+                    });
+                });
+            });
+        </script>
+
+    {% endblock %}
+
+    {% block pageBodyFooterNav %}
+        {% include 'AppBundle:Components:nextprevious.html.twig' with {
+        'previousLink': path("accounts" , {'reportId': report.id }),
+        'previousLabel': 'Bank accounts',
+        'nextLink': path("accounts_moneyin" , {'reportId': report.id }),
+        'nextLabel': 'Money in'
+        } %}
+    {% endblock %}
+{% endembed %}

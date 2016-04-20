@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Controller;
 
-class ContactControllerTest extends ControllerTestCase
+class ContactControllerTest extends AbstractControllerTestCase
 {
     /** @test */
     public function listActionRedirectToAddIfNoContactsAndNotDue() {
