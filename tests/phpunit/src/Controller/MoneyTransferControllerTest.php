@@ -103,20 +103,17 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin); 
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy); 
         
-        $return = $this->assertJsonRequest('POST', $url, [
+        $data = $this->assertJsonRequest('POST', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data'=> [
-                'accountFrom' => ['id'=>self::$account1->getId()],
-                'accountTo' => ['id'=>self::$account2->getId()],
+                'account_from_id' => self::$account1->getId(),
+                'account_to_id' => self::$account2->getId(),
                 'amount' => 123,
             ]
-        ]);
-        $this->assertTrue($return['data']['id'] > 0);
-        $this->assertEquals(self::$account1->getId(), $return['data']['accountFrom']['id']);
-        $this->assertEquals(self::$account2->getId(), $return['data']['accountTo']['id']);
-        $this->assertEquals(123, $return['data']['amount']);
+        ])['data'];
         
+        $this->assertTrue($data > 0);
         self::fixtures()->clear();
         
         // assert account created with transactions
@@ -139,19 +136,17 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin); 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy); 
         
-        $return = $this->assertJsonRequest('PUT', $url, [
+        $data = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data'=> [
-                'accountFrom' => ['id'=>self::$account2->getId()],
-                'accountTo' => ['id'=>self::$account1->getId()],
+                'account_from_id' =>  self::$account2->getId(),
+                'account_to_id' => self::$account1->getId(),
                 'amount' => 124,
             ]
-        ]);
-        $this->assertTrue($return['data']['id'] > 0);
-        $this->assertEquals(self::$account2->getId(), $return['data']['accountFrom']['id']);
-        $this->assertEquals(self::$account1->getId(), $return['data']['accountTo']['id']);
-        $this->assertEquals(124, $return['data']['amount']);
+        ])['data'];
+        
+        $this->assertTrue($data > 0);
         
         self::fixtures()->clear();
         

@@ -159,6 +159,16 @@ class Account
     private $report;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="from", cascade={"remove"})
+     */
+    private $transfersFrom;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="to", cascade={"remove"})
+     */
+    private $transfersTo;
+    
+    /**
      * Constructor
      */
     public function __construct()
