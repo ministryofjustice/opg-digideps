@@ -123,6 +123,14 @@ class Account
      */
     private $closingBalanceExplanation;
     
+     /**
+     * @var boolean
+     * @JMS\Groups({"transactions", "basic", "transfers"})
+     * @JMS\Type("boolean")
+     * @ORM\Column(name="is_closed", type="boolean")
+     */
+    private $isClosed;
+    
     /**
      * @deprecated since accounts_mk2
      * @var \Date
@@ -176,6 +184,7 @@ class Account
         $this->transactions = new ArrayCollection();
         $this->lastEdit = null;
         $this->createdAt = new \DateTime();
+        $this->isClosed = false;
     }
 
     /**
@@ -391,6 +400,18 @@ class Account
     public function getClosingBalance()
     {
         return $this->closingBalance;
+    }
+    
+    public function getIsClosed()
+    {
+        return $this->isClosed;
+    }
+
+
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+        return $this;
     }
     
     /**
