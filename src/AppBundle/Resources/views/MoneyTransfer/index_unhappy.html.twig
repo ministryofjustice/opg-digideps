@@ -27,7 +27,9 @@
                 <h3 class="heading heading-medium">More than one account?</h3>
             </div>
             <div>
-                <a href="{{ path('accounts' , {'reportId': report.id}) }}" class="button btn-big">Add another account</a>
+                <a href="{{ path('accounts' , {'reportId': report.id}) }}" class="button btn-big">
+                    {{ 'unhappy.add.label' | transchoice(nOfAccounts) }}
+                </a>
             </div>
         </div>
 

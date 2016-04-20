@@ -19,4 +19,8 @@ delete:
     
 no_transfers:
     label: Tick this box if you didn't move any money between %client%’s accounts
+    
+unhappy:
+    add.label: "{0} Add an account|[1,Inf[ Add another account"
+       
         
