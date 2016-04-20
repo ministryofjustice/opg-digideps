@@ -79,6 +79,11 @@
             border-color: $orange-status;
         }
 
+        &.account-closed {
+            color: $red-unknown;
+            border: 2px solid $red-unknown;
+        }
+
     }
 
     .description {

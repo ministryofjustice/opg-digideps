@@ -34,6 +34,12 @@
         </dl>
         <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
         
+        {% if account.isClosed %}
+            <div class="descriptive-list-item">
+                    <span class="status account-closed">ACCOUNT CLOSED</span>
+            </div>
+        {% endif %}
+        
         {% if account.closingBalance == null %}
         <div class="warning">
             <span class="icon icon__notification_yellow_small"></span>
