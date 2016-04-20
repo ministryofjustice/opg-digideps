@@ -45,7 +45,7 @@ class Transaction
      * @JMS\Type("array<string>")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      *
-     * @ORM\Column(type="simple_array")
+     * @ORM\Column(type="simple_array", nullable=true)
      */
     private $amounts;
 
