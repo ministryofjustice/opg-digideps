@@ -158,6 +158,13 @@ class Account
      */
     private $closingDateExplanation;
     
+     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic", "add_edit"})
+     * @var boolean
+     */
+    private $isClosed;
+    
     /**
      * @JMS\Type("DateTime")
      * @var \DateTime 
@@ -289,6 +296,19 @@ class Account
         }
         return true;
     }
+    
+    public function getIsClosed()
+    {
+        return $this->isClosed;
+    }
+
+
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+        return $this;
+    }
+
     
     public function setLastEdit($lastEdit)
     {

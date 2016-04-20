@@ -42,6 +42,9 @@ class AccountType extends AbstractType
             'invalid_message' => 'account.closingBalance.type',
             'required' => false
         ]);
+        $builder->add('isClosed', 'checkbox', [
+            'required' => false
+        ]);
 
         $builder->add('save', 'submit');
 
