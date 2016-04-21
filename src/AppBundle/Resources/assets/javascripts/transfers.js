@@ -26,6 +26,7 @@ var opg = opg || {};
         this.thereAreNoRecords = options.thereAreNoRecords;
         this.emptyRow = options.emptyRow;
         this.cardSelectionList = options.cardSelectionList;
+        this.inputAmountSelector = options.inputAmountSelector;
 
         this.init();
         this.attachEvents();
@@ -38,6 +39,7 @@ var opg = opg || {};
 
         this.removeAtStart.remove();
         this.showAtStart.show();
+        $(_this.inputAmountSelector).removeAttr('disabled');
     };
 
     Transfers.prototype.filterCards = function () {
@@ -108,7 +110,7 @@ var opg = opg || {};
         });
 
         // when editable fields change
-        this.wrapper.on('change', 'input.balance', function (e) {
+        this.wrapper.on('change', _this.inputAmountSelector, function (e) {
             _this.setStatus('');
             var form = $(e.target).parents('form');
             _this.saveTransfer(form);

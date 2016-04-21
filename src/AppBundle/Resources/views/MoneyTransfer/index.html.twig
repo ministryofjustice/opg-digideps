@@ -68,11 +68,11 @@
                         renderDeleteButtonAfterEndpointCalled: function(data) {
                             return '<a class="button button-warning delete-button behat-link-delete-confirm" href="/report/{{ report.id }}/transfers/' + data.transferId + '">Delete</a>';
                         },
-                        
                         thereAreNoRecords: function(wrapper) {
                             return wrapper.find('li.transfer form input[name=id][value!=0]').length === 0;
                         },
-                        emptyRow: $('#transfers-add-one')
+                        emptyRow: $('#transfers-add-one'),
+                        inputAmountSelector: 'input.balance'
                     });
                 });
             });
