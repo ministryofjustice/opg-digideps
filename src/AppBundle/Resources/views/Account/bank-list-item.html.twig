@@ -32,7 +32,7 @@
             {% endif %}
             
         </dl>
-        <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('add_edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
+        <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('upsert_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
         
         {% if account.isClosed %}
             <div class="descriptive-list-item">

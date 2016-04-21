@@ -26,9 +26,13 @@
         'inputClass' : 'form-control__number'
     } ) }}
     
-     {{ form_checkbox(form.isClosed,'accountForm.isClosed', { 
-        'labelClass': 'required',
-    }) }}
+    {% if type =='edit' and account.isClosingBalanceZero %}
+        {{ form_checkbox(form.isClosed,'accountForm.isClosed', { 
+            'labelClass': 'required',
+        }) }}
+    {% else %}
+        {% do form.isClosed.setRendered %}
+    {% endif %}
     
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {

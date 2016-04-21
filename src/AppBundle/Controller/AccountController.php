@@ -139,14 +139,14 @@ class AccountController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/edit/{id}", name="add_edit_account", defaults={ "id" = null })
+     * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="upsert_account", defaults={ "id" = null })
      * @param integer $reportId
      * @param integer $id account Id
      * @param Request $request
      * @Template()
      * @return array
      */
-    public function addEditAccountAction(Request $request, $reportId, $id = null) 
+    public function upsertAccountAction(Request $request, $reportId, $id = null) 
     {
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
@@ -173,9 +173,13 @@ class AccountController extends AbstractController
                     'deserialise_group' => 'add_edit'
                 ]);
             } else {
-                 $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
+                $addedAccount = $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
                     'deserialise_group' => 'add_edit'
                 ]);
+                // if a closing balance of 0.00 was saved, redirect to edit version, so that the closing checkbox will appear
+                if ($data->isClosingBalanceZero()) {
+                    return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$addedAccount['id']]) . '#form-group-account_sortCode');
+                }
             }
 
             return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
@@ -186,7 +190,8 @@ class AccountController extends AbstractController
             'report' => $report,
             'subsection' => 'banks',
             'form' => $form->createView(),
-            'type' => $id ? 'edit' : 'add'
+            'type' => $type,
+            'account' => $account
         ];
 
     }
