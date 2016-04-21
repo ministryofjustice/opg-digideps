@@ -161,6 +161,7 @@ class AccountController extends AbstractController
             $account = new EntityDir\Account();
             $account->setReport($report);
         }
+        $existingClosingBalance = $account->getClosingBalance();
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
         $form->handleRequest($request);
@@ -168,7 +169,13 @@ class AccountController extends AbstractController
         if($form->isValid()){
             $data = $form->getData();
             $data->setReport($report);
+            // if closing balance is not zero, delete the isClosed value before saving
+            if (!$data->isClosingBalanceZero()) {
+                $data->setIsClosed(false);
+            }
             if ($type === 'edit') {
+                
+                
                 $restClient->put('/account/' . $id, $account, [
                     'deserialise_group' => 'add_edit'
                 ]);
@@ -176,12 +183,17 @@ class AccountController extends AbstractController
                 $addedAccount = $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
                     'deserialise_group' => 'add_edit'
                 ]);
-                // if a closing balance of 0.00 was saved, redirect to edit version, so that the closing checkbox will appear
-                if ($data->isClosingBalanceZero()) {
-                    return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$addedAccount['id']]) . '#form-group-account_sortCode');
-                }
+                $id = $addedAccount['id'];
             }
 
+            // if a closing balance of 0.00 was saved, and it's different from the previous value,
+            //  redirect to edit version, so that the closing checkbox will appear
+            if ($existingClosingBalance != $account->getClosingBalance() 
+                    && $data->isClosingBalanceZero()
+            ) {
+                return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$id]) . '#form-group-account_sortCode');
+            }
+            
             return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
         
         }
