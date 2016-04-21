@@ -68,7 +68,7 @@
         .label {
             @include core-16();
             box-sizing: border-box;
-            width: 50%;
+            width: 55%;
             padding: 0 10px 0 0;
             float: left;
             clear: both;
@@ -77,7 +77,7 @@
         .value {
             @include core-16();
             box-sizing: border-box;
-            width: 50%;
+            width: 45%;
             padding: 0;
             float: left;
         }
