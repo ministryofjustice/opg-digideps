@@ -16,7 +16,7 @@
         </dl>
     {% endblock %}
     {% block meta %}
-        <dl class="labelvalue">
+        <dl class="labelvalue behat-region-account-{{ account.accountNumber }}">
             <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.startDate | date("j M Y") }}:</dt>
             <dd class="value">£{{ account.openingBalance == null ? '—,-' : (account.openingBalance | money_format) }}
             </dd>

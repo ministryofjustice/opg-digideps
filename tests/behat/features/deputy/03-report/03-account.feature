@@ -101,15 +101,25 @@ Feature: deputy / report / account
 
 
     @deputy
-    Scenario: add another account (9999) and delete it
+    Scenario: add another account, close it and delete it
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I add the following bank account:
-            | bank    | temp  | | |
-            | accountNumber | 9999 | | |
-            | accountType | isa | | |
-            | sortCode | 11 | 22 | 33 |
-            | openingBalance  | 100 | | |
-            | closingBalance  | 22 | | |
+        And I follow "edit-accounts"
+        And I follow "add-account"
+        And I fill in the following:
+            | account_bank    | temp |
+            | account_accountNumber | 9999 |
+            | account_accountType | isa | 
+            | account_sortCode_sort_code_part_1 | 11 |
+            | account_sortCode_sort_code_part_2 | 22 |
+            | account_sortCode_sort_code_part_3 | 33 |
+            | account_openingBalance  | 100 |
+            | account_closingBalance  | 0.00 |
+        And I press "account_save"
+        # assert it redirects to edit page since the closing balance is 0.0
+        Then I should see a "#account_isClosed" element 
+        When I check "account_isClosed"
+        And I press "account_save"
+        Then I should see "ACCOUNT CLOSED" in the "account-9999" region
         When I click on "account-9999"
         # delete and cancel
         And I click on "delete-button"

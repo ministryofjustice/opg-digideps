@@ -188,7 +188,7 @@ class AccountController extends AbstractController
 
             // if a closing balance of 0.00 was saved, and it's different from the previous value,
             //  redirect to edit version, so that the closing checkbox will appear
-            if ($existingClosingBalance != $account->getClosingBalance() 
+            if ($existingClosingBalance !== $account->getClosingBalance() 
                     && $data->isClosingBalanceZero()
             ) {
                 return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$id]) . '#form-group-account_sortCode');
