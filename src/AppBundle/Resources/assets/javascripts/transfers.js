@@ -32,16 +32,6 @@ var opg = opg || {};
         this.attachGlobalEvents();
     };
 
-    Transfers.prototype.isFormValid = function (form) {
-        var fromVal = parseInt(form.find('input.account:nth(0)').val());
-        var toVal = parseInt(form.find('input.account:nth(1)').val());
-        var amountVal = parseFloat(form.find('input[name=amount]').val());
-        return fromVal > 0 && toVal > 0 && amountVal > 0 && form.find('input.account').length === 2;
-    };
-
-    Transfers.prototype.setStatus = function (text) {
-        this.statusElement.text(text);
-    };
 
     Transfers.prototype.init = function () {
         var _this = this.that;
@@ -220,6 +210,17 @@ var opg = opg || {};
         form.find('.delete-button-container').html(_this.renderDeleteButtonAfterEndpointCalled(data));
     };
 
+
+    Transfers.prototype.isFormValid = function (form) {
+        var fromVal = parseInt(form.find('input.account:nth(0)').val());
+        var toVal = parseInt(form.find('input.account:nth(1)').val());
+        var amountVal = parseFloat(form.find('input[name=amount]').val());
+        return fromVal > 0 && toVal > 0 && amountVal > 0 && form.find('input.account').length === 2;
+    };
+
+    Transfers.prototype.setStatus = function (text) {
+        this.statusElement.text(text);
+    };
 
     opg.Transfers = Transfers;
 
