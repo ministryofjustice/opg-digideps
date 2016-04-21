@@ -259,7 +259,8 @@ class Account
     public function setClosingBalance($closingBalance)
     {
         $this->closingBalance = $closingBalance;
-        return $this->closingBalance;
+        
+        return $this;
     }
     
     /**
@@ -268,6 +269,11 @@ class Account
     public function getClosingBalance()
     {
         return $this->closingBalance;
+    }
+    
+    public function isClosingBalanceZero()
+    {
+        return $this->closingBalance !== null && round($this->closingBalance, 2) === 0.00;
     }
     
     /**
