@@ -137,76 +137,46 @@ class AccountController extends AbstractController
             'subsection' => 'banks'
         ];
     }
-    
-    /**
-     * @Route("/{reportId}/accounts/banks/add", name="add_account")
-     * @param integer $reportId
-     * @param Request $request
-     * @Template()
-     * @return array    
-     */
-    public function addAction(Request $request, $reportId) 
-    {
-
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'client']);
-
-        $account = new EntityDir\Account();
-        $account->setReport($report);
-        
-        $form = $this->createForm(new FormDir\AccountType(), $account);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-
-            $data = $form->getData();
-            $data->setReport($report);
-            $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
-                'deserialise_group' => 'add_edit'
-            ]);
-
-            return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
-
-        }
-
-        return [
-            'report' => $report,
-            'subsection' => 'banks',
-            'form' => $form->createView()
-        ]; 
-    }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/{id}/edit", name="edit_account")
+     * @Route("/report/{reportId}/accounts/banks/edit/{id}", name="add_edit_account", defaults={ "id" = null })
      * @param integer $reportId
      * @param integer $id account Id
      * @param Request $request
      * @Template()
      * @return array
      */
-    public function editAction(Request $request, $reportId, $id) 
+    public function addEditAccountAction(Request $request, $reportId, $id = null) 
     {
-
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
-
-        if (!$report->hasAaccountWithId($id)) {
-            throw new \RuntimeException("Account not found."); 
-        }
+        $type = $id ? 'edit' : 'add';
         
-        $account = $restClient->get('report/account/' . $id, 'Account');
+        if ($type === 'edit') {
+            if (!$report->hasAaccountWithId($id)) {
+                throw new \RuntimeException("Account not found."); 
+            }
+            $account = $restClient->get('report/account/' . $id, 'Account');
+        } else {
+            $account = new EntityDir\Account();
+            $account->setReport($report);
+        }
 
         $form = $this->createForm(new FormDir\AccountType(), $account);
         $form->handleRequest($request);
 
         if($form->isValid()){
-
             $data = $form->getData();
             $data->setReport($report);
-            $restClient->put('/account/' . $id, $account, [
-                'deserialise_group' => 'add_edit'
-            ]);
+            if ($type === 'edit') {
+                $restClient->put('/account/' . $id, $account, [
+                    'deserialise_group' => 'add_edit'
+                ]);
+            } else {
+                 $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
+                    'deserialise_group' => 'add_edit'
+                ]);
+            }
 
             return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
         
@@ -215,7 +185,8 @@ class AccountController extends AbstractController
         return [
             'report' => $report,
             'subsection' => 'banks',
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'type' => $id ? 'edit' : 'add'
         ];
 
     }

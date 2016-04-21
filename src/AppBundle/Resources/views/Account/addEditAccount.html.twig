@@ -11,14 +11,14 @@
     {% endblock %}
 
     {% set formId = "account_add_form" %}
-
+    
     {% block maincontent %}
 
-        <h3 class="heading-medium-large">{{ 'banks.edit.pageSectionTitle' | trans }}</h3>
-        <p class="page-section-description">{{ 'banks.edit.pageSectionDescription' | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
+        <h3 class="heading-medium-large">{{ ('banks.' ~ type ~ '.pageSectionTitle') | trans }}</h3>
+        <p class="page-section-description">{{ ('banks.' ~ type ~ '.pageSectionDescription') | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
         
         {% include 'AppBundle:Account:_account_form.html.twig' %}
-
+        
     {% endblock %}
 
 {% endembed %}
