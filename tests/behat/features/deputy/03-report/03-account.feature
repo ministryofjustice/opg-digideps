@@ -121,7 +121,7 @@ Feature: deputy / report / account
         # close account
         #
         When I click on "account-9999"
-        And I fill in "closingBalance" with "0"
+        And I fill in "account_closingBalance" with "0"
         And I press "account_save"
         Then I should see a "#account_isClosed" element 
         When I check "account_isClosed"
@@ -134,7 +134,7 @@ Feature: deputy / report / account
         And I press "account_save"
         Then I should not see "ACCOUNT CLOSED" in the "account-9999" region
         When I click on "account-9999"
-        Then the "account_isClosed" checkbox should be unchecked
+        Then the "account_isClosed" checkbox should not be checked
         # 
         # delete
         # 

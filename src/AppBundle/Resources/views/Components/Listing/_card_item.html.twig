@@ -1,4 +1,4 @@
-<li class="card-item">
+<li class="card-item {{ additionalClass is defined ? additionalClass : '' }}">
     <div class="card">
         {% block card %}{% endblock %}
     </div>

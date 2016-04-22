@@ -1,7 +1,9 @@
 {% set translationDomain = "report-accounts" %}
 {% trans_default_domain translationDomain %}
 
-{% embed "AppBundle:Components/Listing:_card_item.html.twig" %}
+{% embed "AppBundle:Components/Listing:_card_item.html.twig" with {
+    additionalClass: 'behat-region-account-' ~ account.accountNumber
+} %}
     {% block card %}
         <div class="account card-title">
               {{ account.bank }}  {{ account.accountTypeText }}
@@ -16,7 +18,7 @@
         </dl>
     {% endblock %}
     {% block meta %}
-        <dl class="labelvalue behat-region-account-{{ account.accountNumber }}">
+        <dl class="labelvalue">
             <dt class="label">{{ 'banks.balanceOn' | trans({}, translationDomain) }} {{ report.startDate | date("j M Y") }}:</dt>
             <dd class="value">£{{ account.openingBalance == null ? '—,-' : (account.openingBalance | money_format) }}
             </dd>
