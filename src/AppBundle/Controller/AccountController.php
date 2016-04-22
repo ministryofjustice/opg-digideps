@@ -161,41 +161,32 @@ class AccountController extends AbstractController
             $account = new EntityDir\Account();
             $account->setReport($report);
         }
-        $existingClosingBalance = $account->getClosingBalance();
-
+        $showIsClosed = $request->query->get('show-is-closed') == 'yes';
         $form = $this->createForm(new FormDir\AccountType(), $account);
         $form->handleRequest($request);
-
+        
         if($form->isValid()){
             $data = $form->getData();
             $data->setReport($report);
-            // if closing balance is not zero, delete the isClosed value before saving
-            if (!$data->isClosingBalanceZero()) {
-                $data->setIsClosed(false);
-            }
             if ($type === 'edit') {
-                
-                
                 $restClient->put('/account/' . $id, $account, [
                     'deserialise_group' => 'add_edit'
                 ]);
+                
             } else {
                 $addedAccount = $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
                     'deserialise_group' => 'add_edit'
                 ]);
                 $id = $addedAccount['id'];
             }
-
-            // if a closing balance of 0.00 was saved, and it's different from the previous value,
-            //  redirect to edit version, so that the closing checkbox will appear
-            if ($existingClosingBalance !== $account->getClosingBalance() 
-                    && $data->isClosingBalanceZero()
+            
+            if ($data->isClosingBalanceZero() &&
+                !$showIsClosed // avoid loops    
             ) {
-                return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$id]) . '#form-group-account_sortCode');
+                return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$id, 'show-is-closed'=>'yes']) . '#form-group-account_sortCode');
             }
             
             return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
-        
         }
 
         return [
@@ -203,7 +194,8 @@ class AccountController extends AbstractController
             'subsection' => 'banks',
             'form' => $form->createView(),
             'type' => $type,
-            'account' => $account
+            'account' => $account,
+            'showIsClosed' => $showIsClosed == 'yes'
         ];
 
     }

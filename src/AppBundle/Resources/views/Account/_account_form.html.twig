@@ -26,7 +26,7 @@
         'inputClass' : 'form-control__number'
     } ) }}
     
-    {% if type =='edit' and account.isClosingBalanceZero %}
+    {% if showIsClosed %}
         {{ form_checkbox(form.isClosed,'accountForm.isClosed', { 
             'labelClass': 'required',
         }) }}

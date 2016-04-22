@@ -45,6 +45,10 @@ class AccountType extends AbstractType
         $builder->add('isClosed', 'checkbox', [
             'required' => false
         ]);
+        $builder->add('isClosedDisplayed', 'hidden', [
+            'required' => false,
+            'mapped'=>false
+        ]);
 
         $builder->add('save', 'submit');
 
