@@ -169,9 +169,6 @@ class AccountController extends RestController
         
         if (array_key_exists('closing_balance', $data)) {
            $account->setClosingBalance($data['closing_balance']);
-           if (!$account->isClosingBalanceZero()) {
-               $account->setIsClosed(false);
-           }
         }
         
         
