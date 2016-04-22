@@ -87,6 +87,7 @@ Feature: deputy / report / account
             | account_openingBalance  | 1,150 |
             | account_closingBalance  | 1,155.00 |
         And I press "account_save"
+        Then I should not see a "#account_isClosed" element 
         # check values are saved
         When I click on "account-0876"
         Then the following fields should have the corresponding values:
@@ -113,16 +114,31 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_2 | 22 |
             | account_sortCode_sort_code_part_3 | 33 |
             | account_openingBalance  | 100 |
-            | account_closingBalance  | 0.00 |
+            | account_closingBalance  | 0.01 |
         And I press "account_save"
-        # assert it redirects to edit page since the closing balance is 0.0
+        Then I should not see a "#account_isClosed" element 
+        # 
+        # close account
+        #
+        When I click on "account-9999"
+        And I fill in "closingBalance" with "0"
+        And I press "account_save"
         Then I should see a "#account_isClosed" element 
         When I check "account_isClosed"
         And I press "account_save"
         Then I should see "ACCOUNT CLOSED" in the "account-9999" region
+        # un-close
         When I click on "account-9999"
-        # delete and cancel
-        And I click on "delete-button"
+        Then the "account_isClosed" checkbox should be checked
+        When I uncheck "account_isClosed"
+        And I press "account_save"
+        Then I should not see "ACCOUNT CLOSED" in the "account-9999" region
+        When I click on "account-9999"
+        Then the "account_isClosed" checkbox should be unchecked
+        # 
+        # delete
+        # 
+        When I click on "delete-button"
         Then I should not see the "account-9999" link
 
     @deputy
