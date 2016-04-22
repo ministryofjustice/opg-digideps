@@ -402,6 +402,11 @@ class Account
         return $this->closingBalance;
     }
     
+    public function isClosingBalanceZero()
+    {
+        return $this->getClosingBalance() !== null && round($this->getClosingBalance(), 2) === 0.00;
+    }
+    
     public function getIsClosed()
     {
         return $this->isClosed;

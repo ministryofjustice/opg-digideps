@@ -163,13 +163,17 @@ class AccountController extends RestController
            $account->setClosingDateExplanation($data['closing_date_explanation']);
         }
         
-        if (array_key_exists('closing_balance', $data)) {
-           $account->setClosingBalance($data['closing_balance']);
-        }
-        
         if (array_key_exists('is_closed', $data)) {
            $account->setIsClosed((boolean) $data['is_closed']);
         }
+        
+        if (array_key_exists('closing_balance', $data)) {
+           $account->setClosingBalance($data['closing_balance']);
+           if (!$account->isClosingBalanceZero()) {
+               $account->setIsClosed(false);
+           }
+        }
+        
         
         if (array_key_exists('closing_balance_explanation', $data)) {
            $account->setClosingBalanceExplanation($data['closing_balance_explanation']);
