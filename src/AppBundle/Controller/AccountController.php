@@ -146,7 +146,7 @@ class AccountController extends AbstractController
      * @Template()
      * @return array
      */
-    public function upsertAccountAction(Request $request, $reportId, $id = null) 
+    public function upsertAction(Request $request, $reportId, $id = null) 
     {
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
