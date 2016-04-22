@@ -161,7 +161,8 @@ class AccountController extends AbstractController
             $account = new EntityDir\Account();
             $account->setReport($report);
         }
-        $showIsClosed = $request->query->get('show-is-closed') == 'yes';
+        // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
+        $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
         $form = $this->createForm(new FormDir\AccountType(), $account);
         $form->handleRequest($request);
         
