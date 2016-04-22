@@ -100,5 +100,9 @@
             width: 100%;
         }
     }
+    
+    &.no-border {
+        border-top: none;
+    }
 
 }
