@@ -180,6 +180,7 @@ class AccountController extends AbstractController
                 $id = $addedAccount['id'];
             }
             
+            // if the balance is zero, and the isClosed checkbox is not shown, redirect to the edit page with the checkbox visible
             if ($data->isClosingBalanceZero() &&
                 !$showIsClosed // avoid loops    
             ) {
