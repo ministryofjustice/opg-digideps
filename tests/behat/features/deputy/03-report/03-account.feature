@@ -135,10 +135,18 @@ Feature: deputy / report / account
         Then I should not see "ACCOUNT CLOSED" in the "account-9999" region
         When I click on "account-9999"
         Then the "account_isClosed" checkbox should not be checked
+        # assert non-zero values reset the isClosed value
+        When I check "account_isClosed"
+        And I press "account_save"
+        And I click on "account-9999"
+        And I fill in "account_closingBalance" with "0.01"
+        And I press "account_save"
+        Then I should not see "ACCOUNT CLOSED" in the "account-9999" region
         # 
         # delete
         # 
-        When I click on "delete-button"
+        When I click on "account-9999"
+        And I click on "delete-button"
         Then I should not see the "account-9999" link
 
     @deputy

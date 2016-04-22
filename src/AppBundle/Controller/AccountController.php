@@ -169,6 +169,10 @@ class AccountController extends AbstractController
         if($form->isValid()){
             $data = $form->getData();
             $data->setReport($report);
+            // if closing balance is set to non-zero values, un-close the account
+            if (!$data->isClosingBalanceZero()) {
+                $data->setIsClosed(false);
+            }
             if ($type === 'edit') {
                 $restClient->put('/account/' . $id, $account, [
                     'deserialise_group' => 'add_edit'
