@@ -103,6 +103,7 @@ class AccountControllerTest extends AbstractTestController
         // assert account created with transactions
         $account = self::fixtures()->getRepo('Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
+        $this->assertFalse($account->getIsClosed());
         
         // assert cannot create account for a report not belonging to logged user
         $url2 = '/report/' . self::$report2->getId() . '/account';
@@ -148,13 +149,15 @@ class AccountControllerTest extends AbstractTestController
             'mustSucceed'=>true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'bank' => 'bank1-modified'
-                //TODO add other fields
+                'bank' => 'bank1-modified',
+                'opening_balance' => '500',
+                'is_closed' => true,
             ]
         ])['data'];
         
         $account = self::fixtures()->getRepo('Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
+        $this->assertTrue($account->getIsClosed());
         
         // assert user cannot modify another users' account
         $url2 = '/account/'.self::$account2->getId();

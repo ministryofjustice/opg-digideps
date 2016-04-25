@@ -8,8 +8,8 @@ table.money {
 
     td {
         @include core-12();
-        padding: em(6, 12) em(20, 12) em(3, 12) 0;
-
+        padding: em(6, 12) em(20, 12) em(6, 12) 0;
+        
         text-align: left;
         color: $black;
         border-bottom: 1px solid $border-colour;
@@ -50,7 +50,17 @@ table.money {
 
     .account-number {
         color: $grey-1;
+        padding: 5px;
+        
+        .account-closed {
+            border-radius: 5px;
+            border: 2px solid rgb(74, 74, 74);
+            font-size: 1em;
+            padding: 2px;
+        }
     }
+    
+    
 }
 
 table#money-transfers-table {
