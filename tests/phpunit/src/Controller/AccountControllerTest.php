@@ -104,6 +104,7 @@ class AccountControllerTest extends AbstractTestController
         $account = self::fixtures()->getRepo('Account')->find($return['data']['id']); /* @var $account \AppBundle\Entity\Account */
         $this->assertNull($account->getLastEdit(), 'account.lastEdit must be null on creation');
         $this->assertFalse($account->getIsClosed());
+        $this->assertNull($account->getIsJointAccount());
         
         // assert cannot create account for a report not belonging to logged user
         $url2 = '/report/' . self::$report2->getId() . '/account';
@@ -152,12 +153,14 @@ class AccountControllerTest extends AbstractTestController
                 'bank' => 'bank1-modified',
                 'opening_balance' => '500',
                 'is_closed' => true,
+                'is_joint_account' => 'yes',
             ]
         ])['data'];
         
         $account = self::fixtures()->getRepo('Account')->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertTrue($account->getIsClosed());
+        $this->assertEquals('yes', $account->getIsJointAccount());
         
         // assert user cannot modify another users' account
         $url2 = '/account/'.self::$account2->getId();

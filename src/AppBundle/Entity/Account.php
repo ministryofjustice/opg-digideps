@@ -176,6 +176,16 @@ class Account
      */
     private $transfersTo;
     
+    
+     /**
+     * @var string
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "transfers"})
+     *
+     * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
+     */
+    private $isJointAccount;
+    
     /**
      * Constructor
      */
@@ -526,6 +536,23 @@ class Account
     public function requiresBankNameAndSortCode()
     {
         return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
+    }
+    
+    public function getIsJointAccount()
+    {
+        return $this->isJointAccount;
+    }
+
+    /**
+     * @param string $isJointAccount yes/no/null
+     * 
+     * @return \AppBundle\Entity\Account
+     */
+    public function setIsJointAccount($isJointAccount)
+    {
+        $this->isJointAccount = trim(strtolower($isJointAccount));
+        
+        return $this;
     }
 
 }
