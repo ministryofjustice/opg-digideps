@@ -143,10 +143,13 @@ class Account
     
     /**
      * @deprecated since accounts_mk2
+     * 
      * @JMS\Type("DateTime")
+     * @JMS\Groups({"balance", "edit_details_report_due"})
+     * 
      * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
      * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
-     * @JMS\Groups({"balance", "edit_details_report_due"})
+     * 
      * @var \DateTime  
      */
     private $closingDate;
@@ -164,6 +167,16 @@ class Account
      * @var boolean
      */
     private $isClosed;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic", "add_edit"})
+     * @Assert\NotBlank(message="account.isJointAccount.notBlank", groups={"basic", "add_edit"})
+     * 
+     * @var string
+     */
+    private $isJointAccount;
+    
     
     /**
      * @JMS\Type("DateTime")
@@ -522,6 +535,18 @@ class Account
     public function setAccountType($accountType)
     {
         $this->accountType = $accountType;
+    }
+    
+    public function getIsJointAccount()
+    {
+        return $this->isJointAccount;
+    }
+
+
+    public function setIsJointAccount($isJointAccount)
+    {
+        $this->isJointAccount = $isJointAccount;
+        return $this;
     }
     
     

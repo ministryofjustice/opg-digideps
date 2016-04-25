@@ -49,6 +49,10 @@ class AccountType extends AbstractType
             'required' => false,
             'mapped'=>false
         ]);
+        $builder->add('isJointAccount', 'choice', array(
+            'choices' => ['yes' => 'Yes', 'no' => 'No'],
+            'expanded' => true
+        ));
 
         $builder->add('save', 'submit');
 
