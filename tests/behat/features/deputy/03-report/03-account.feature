@@ -36,6 +36,8 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 
             | account_openingBalance  |
             | account_closingBalance  |
+            | account_isJointAccount_0  |
+            | account_isJointAccount_1  |
         # right values
         And I fill in the following:
             | account_bank    | HSBC - main account |
@@ -46,6 +48,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 00 |
             | account_openingBalance  | 1155 |
             | account_closingBalance  | 1,155.00 |
+            | account_isJointAccount_1  | no |
         And I press "account_save"
         And I save the page as "report-account-list"
         #Then the response status code should be 200
@@ -76,6 +79,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 00 |
             | account_openingBalance  | 1,155.00 |
             | account_closingBalance  | 1,155.00 |
+            | account_isJointAccount_1  | no |
         # right values
         When I fill in the following:
             | account_bank    | HSBC main account |
@@ -115,6 +119,7 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_3 | 33 |
             | account_openingBalance  | 100 |
             | account_closingBalance  | 0.01 |
+            | account_isJointAccount_0  | yes |
         And I press "account_save"
         Then I should not see a "#account_isClosed" element 
         # 
