@@ -18,7 +18,7 @@ class Version069 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('ALTER TABLE account ADD is_closed BOOLEAN NOT NULL');
+        $this->addSql('ALTER TABLE account ADD is_closed BOOLEAN DEFAULT FALSE');
     }
 
     /**
