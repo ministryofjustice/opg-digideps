@@ -321,58 +321,13 @@ trait ReportTrait
 
         $this->fillField('account_openingBalance', $rows['openingBalance'][0]);
         $this->fillField('account_closingBalance', $rows['closingBalance'][0]);
+        $this->fillField('account_isJointAccount_1', 'no');
 
         $this->pressButton("account_save");
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
-        
-//        $this->clickLink('account-moneyin');
-//        $this->addTransactions($rows, 'moneyIn_', 'transactions_saveMoneyIn');
-//        
-//        $this->clickLink('account-moneyout');
-//        $this->addTransactions($rows, 'moneyOut_', 'transactions_saveMoneyOut');
 
     }
-
-//    private function addTransactions(array $rows, $prefix, $buttonId)
-//    {
-//        $records = $this->getRowsMatching($rows, $prefix);
-//        if (!$records) {
-//            return;
-//        }
-//
-//        foreach ($records as $key => $value) {
-//            if (is_array($value)) { 
-//                $this->fillField("transactions_{$key}_amounts_0", $value[0]);
-//                $this->fillField("transactions_{$key}_moreDetails", $value[1]);
-//            } else {
-//                $this->fillField("transactions_{$key}_amounts_0", $value);
-//            }
-//        }
-//
-//        // save and return to page
-//        $this->pressButton($buttonId);
-//        $this->theFormShouldBeValid();
-//        $this->assertResponseStatus(200);
-//    }
-
-    /**
-     * @param array $rows
-     * @param string $needle
-     *
-     * @return array
-     */
-//    private function getRowsMatching(array $rows, $needle)
-//    {
-//        $ret = $rows;
-//        foreach ($ret as $k => $value) {
-//            if (strpos($k, $needle) === false) {
-//                unset($ret[$k]);
-//            }
-//        }
-//
-//        return $ret;
-//    }
 
      /**
      * @When I submit the report with further info :moreInfo

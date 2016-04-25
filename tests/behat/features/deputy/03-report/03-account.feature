@@ -17,6 +17,8 @@ Feature: deputy / report / account
             | account_sortCode_sort_code_part_2 |
             | account_sortCode_sort_code_part_3 |
             | account_openingBalance |
+            | account_isJointAccount_0  |
+            | account_isJointAccount_1  |
         # test validators
         When I fill in the following:
             | account_bank    | x |
