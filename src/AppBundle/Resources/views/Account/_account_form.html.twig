@@ -2,7 +2,7 @@
 
 {{ form_errors_list(form) }}
 
-{{ form_start(form, {attr: {id: 'account-form' } }) }}
+{{ form_start(form, {attr: {id: 'account-form', novalidate: 'novalidate' } }) }}
 
     {{ form_input(form.accountType, 'accountForm.accountType') }}
     {{ form_input(form.bank, 'accountForm.bank') }}

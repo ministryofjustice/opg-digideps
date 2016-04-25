@@ -176,6 +176,8 @@ account:
         mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
     closingBalanceExplanation:
         notBlankOnDateMismatch: You must explain why the final balance from your statement and the balance in the accounts section are different
+    isJointAccount:
+        notBlank: Choose Yes or No
     moneyInOut:
         amount:
           notNumeric: Enter the total amount
