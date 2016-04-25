@@ -166,6 +166,14 @@ class Account
     private $isClosed;
     
     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic", "add_edit"})
+     * @var boolean
+     */
+    private $isJointAccount;
+    
+    
+    /**
      * @JMS\Type("DateTime")
      * @var \DateTime 
      */
@@ -522,6 +530,18 @@ class Account
     public function setAccountType($accountType)
     {
         $this->accountType = $accountType;
+    }
+    
+    public function getIsJointAccount()
+    {
+        return $this->isJointAccount;
+    }
+
+
+    public function setIsJointAccount($isJointAccount)
+    {
+        $this->isJointAccount = $isJointAccount;
+        return $this;
     }
     
     

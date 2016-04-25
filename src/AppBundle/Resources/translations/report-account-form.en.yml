@@ -18,6 +18,9 @@ accountForm:
     label: How much was in the account on %endDate%?
   isClosed:
     label: I have closed this account
+  isJointAccount:
+    label: Is this a joint account ?
+    hint: " "
     
 save:
   label: Save
