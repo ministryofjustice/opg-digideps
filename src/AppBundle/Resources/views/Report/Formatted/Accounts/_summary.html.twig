@@ -16,12 +16,17 @@
             {% for account in report.accounts %}
                 <tr>
                     <td>
-                        <div class="account-name"> {{ account.bank }} {{ account.accountTypeText }}</div>
+                        <div class="account-name">
+                            {{ account.bank }} {{ account.accountTypeText }}
+                        </div>
                         <div class="account-number">****{{ account.accountNumber }}
                             {% if account.requiresBankNameAndSortCode %}
                             , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
-                             {% if account.isClosed %}
+                            {% if account.isJointAccount %}
+                                <span class="account-closed">JOINT ACCOUNT</span>
+                            {% endif %}
+                            {% if account.isClosed %}
                                 <span class="account-closed">ACCOUNT CLOSED</span>
                             {% endif %}
                         </div>
