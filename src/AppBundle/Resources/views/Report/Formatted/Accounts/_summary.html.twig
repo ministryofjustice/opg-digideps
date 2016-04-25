@@ -16,7 +16,12 @@
             {% for account in report.accounts %}
                 <tr>
                     <td>
-                        <div class="account-name"> {{ account.bank }} {{ account.accountTypeText }}</div>
+                        <div class="account-name">
+                            {{ account.bank }} {{ account.accountTypeText }}
+                            {% if account.isJointAccount %}
+                                (JOINT)
+                            {% endif %}
+                        </div>
                         <div class="account-number">****{{ account.accountNumber }}
                             {% if account.requiresBankNameAndSortCode %}
                             , {{ account.sortCode | split('', 2) | join('-') }}
