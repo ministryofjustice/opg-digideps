@@ -158,6 +158,13 @@ class Account
      */
     private $closingDateExplanation;
     
+     /**
+     * @JMS\Type("boolean")
+     * @JMS\Groups({"basic", "add_edit"})
+     * @var boolean
+     */
+    private $isClosed;
+    
     /**
      * @JMS\Type("DateTime")
      * @var \DateTime 
@@ -252,7 +259,8 @@ class Account
     public function setClosingBalance($closingBalance)
     {
         $this->closingBalance = $closingBalance;
-        return $this->closingBalance;
+        
+        return $this;
     }
     
     /**
@@ -261,6 +269,11 @@ class Account
     public function getClosingBalance()
     {
         return $this->closingBalance;
+    }
+    
+    public function isClosingBalanceZero()
+    {
+        return $this->closingBalance !== null && round($this->closingBalance, 2) === 0.00;
     }
     
     /**
@@ -289,6 +302,19 @@ class Account
         }
         return true;
     }
+    
+    public function getIsClosed()
+    {
+        return $this->isClosed;
+    }
+
+
+    public function setIsClosed($isClosed)
+    {
+        $this->isClosed = $isClosed;
+        return $this;
+    }
+
     
     public function setLastEdit($lastEdit)
     {

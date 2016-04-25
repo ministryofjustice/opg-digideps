@@ -1,7 +1,9 @@
 {% set translationDomain = "report-accounts" %}
 {% trans_default_domain translationDomain %}
 
-{% embed "AppBundle:Components/Listing:_card_item.html.twig" %}
+{% embed "AppBundle:Components/Listing:_card_item.html.twig" with {
+    additionalClass: 'behat-region-account-' ~ account.accountNumber
+} %}
     {% block card %}
         <div class="account card-title">
               {{ account.bank }}  {{ account.accountTypeText }}
@@ -32,7 +34,13 @@
             {% endif %}
             
         </dl>
-        <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('edit_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
+        <a class="edit-link behat-link-account-{{ account.accountNumber }}" href="{{ path('upsert_account' , {'reportId': report.id, 'id': account.id}) }}">Edit this account</a>
+        
+        {% if account.isClosed %}
+            <div class="descriptive-list-item no-border">
+                    <span class="status account-closed">ACCOUNT CLOSED</span>
+            </div>
+        {% endif %}
         
         {% if account.closingBalance == null %}
         <div class="warning">

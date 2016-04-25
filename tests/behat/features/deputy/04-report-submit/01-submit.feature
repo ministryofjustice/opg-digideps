@@ -99,7 +99,7 @@ Feature: deputy / report / submit
         And the URL "/report/1/contacts" should not be accessible
         And the URL "/report/1/decisions" should not be accessible
         And the URL "/report/1/accounts" should not be accessible
-        And the URL "/report/1/accounts/banks/1/edit" should not be accessible
+        And the URL "/report/1/accounts/banks/upsert/1" should not be accessible
         And the URL "/report/1/accounts/banks/1/delete" should not be accessible
         And the URL "/report/1/assets" should not be accessible
         

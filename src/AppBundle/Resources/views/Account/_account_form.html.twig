@@ -25,6 +25,15 @@
         'inputPrefix' : '£',
         'inputClass' : 'form-control__number'
     } ) }}
+    
+    {% if showIsClosed %}
+        {{ form_checkbox(form.isClosed,'accountForm.isClosed', { 
+            'labelClass': 'required',
+        }) }}
+    {% else %}
+        {% do form.isClosed.setRendered %}
+    {% endif %}
+    
 
     {% include 'AppBundle:Components/ButtonBar:_save_bar.html.twig' with {
     transDomain: translationDomain,

@@ -16,6 +16,8 @@ accountForm:
     label: How much was in the account on %startDate%? 
   closingBalance:
     label: How much was in the account on %endDate%?
+  isClosed:
+    label: I have closed this account
     
 save:
   label: Save

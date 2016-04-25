@@ -87,6 +87,7 @@ Feature: deputy / report / account
             | account_openingBalance  | 1,150 |
             | account_closingBalance  | 1,155.00 |
         And I press "account_save"
+        Then I should not see a "#account_isClosed" element 
         # check values are saved
         When I click on "account-0876"
         Then the following fields should have the corresponding values:
@@ -101,17 +102,50 @@ Feature: deputy / report / account
 
 
     @deputy
-    Scenario: add another account (9999) and delete it
+    Scenario: add another account, close it and delete it
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I add the following bank account:
-            | bank    | temp  | | |
-            | accountNumber | 9999 | | |
-            | accountType | isa | | |
-            | sortCode | 11 | 22 | 33 |
-            | openingBalance  | 100 | | |
-            | closingBalance  | 22 | | |
+        And I follow "edit-accounts"
+        And I follow "add-account"
+        And I fill in the following:
+            | account_bank    | temp |
+            | account_accountNumber | 9999 |
+            | account_accountType | isa | 
+            | account_sortCode_sort_code_part_1 | 11 |
+            | account_sortCode_sort_code_part_2 | 22 |
+            | account_sortCode_sort_code_part_3 | 33 |
+            | account_openingBalance  | 100 |
+            | account_closingBalance  | 0.01 |
+        And I press "account_save"
+        Then I should not see a "#account_isClosed" element 
+        # 
+        # close account
+        #
         When I click on "account-9999"
-        # delete and cancel
+        And I fill in "account_closingBalance" with "0"
+        And I press "account_save"
+        Then I should see a "#account_isClosed" element 
+        When I check "account_isClosed"
+        And I press "account_save"
+        Then I should see "ACCOUNT CLOSED" in the "account-9999" region
+        # un-close
+        When I click on "account-9999"
+        Then the "account_isClosed" checkbox should be checked
+        When I uncheck "account_isClosed"
+        And I press "account_save"
+        Then I should not see "ACCOUNT CLOSED" in the "account-9999" region
+        When I click on "account-9999"
+        Then the "account_isClosed" checkbox should not be checked
+        # assert non-zero values reset the isClosed value
+        When I check "account_isClosed"
+        And I press "account_save"
+        And I click on "account-9999"
+        And I fill in "account_closingBalance" with "0.01"
+        And I press "account_save"
+        Then I should not see "ACCOUNT CLOSED" in the "account-9999" region
+        # 
+        # delete
+        # 
+        When I click on "account-9999"
         And I click on "delete-button"
         Then I should not see the "account-9999" link
 

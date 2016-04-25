@@ -52,7 +52,7 @@ Feature: deputy / acl / security on pages
         | /report/1/assets/add-complete/Antiques | 200 | 
         # accounts
         | /report/1/accounts | 200 | 
-        | /report/1/accounts/banks/1/edit | 200 | 
+        | /report/1/accounts/banks/upsert/1 | 200 | 
         | /report/1/accounts/banks/1/delete | 200 | 
       # behat-malicious CANNOT access the same URLs
       Given I am logged in as "behat-malicious@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -83,7 +83,7 @@ Feature: deputy / acl / security on pages
         | /report/1/assets/add-complete/Antiques | 500 | 
         # accounts
         | /report/1/accounts | 500 | 
-        | /report/1/accounts/banks/1/edit | 500 | 
+        | /report/1/accounts/banks/upsert/1 | 500 | 
         | /report/1/accounts/banks/1/delete | 500 | 
         # submit
         | /report/1/add_further_information | 500 | 

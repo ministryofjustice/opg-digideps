@@ -159,5 +159,26 @@ class AccountControllerTest extends WebTestCase
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
         return json_decode($response->getContent(), 1);
     }
+    
+    public function testaccountsetClosingBalanceTest()
+    {
+        
+        $account = new \AppBundle\Entity\Account;
+        
+        // false case
+        $this->assertFalse($account->isClosingBalanceZero());
+        $this->assertFalse($account->setClosingBalance(0.01)->isClosingBalanceZero());
+        
+        $this->assertFalse($account->setClosingBalance(1.00)->isClosingBalanceZero());
+        
+        // true cases
+        $this->assertTrue($account->setClosingBalance(0)->isClosingBalanceZero());
+        $this->assertTrue($account->setClosingBalance(0.0)->isClosingBalanceZero());
+        $this->assertTrue($account->setClosingBalance(0.00)->isClosingBalanceZero());
+        $this->assertTrue($account->setClosingBalance(0.0001)->isClosingBalanceZero());
+        $this->assertTrue($account->setClosingBalance('0')->isClosingBalanceZero());
+        $this->assertTrue($account->setClosingBalance('0.0')->isClosingBalanceZero());
+        $this->assertTrue($account->setClosingBalance('0.00')->isClosingBalanceZero());
+    }
 
 }

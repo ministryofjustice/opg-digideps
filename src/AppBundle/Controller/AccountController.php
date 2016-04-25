@@ -137,85 +137,71 @@ class AccountController extends AbstractController
             'subsection' => 'banks'
         ];
     }
-    
-    /**
-     * @Route("/{reportId}/accounts/banks/add", name="add_account")
-     * @param integer $reportId
-     * @param Request $request
-     * @Template()
-     * @return array    
-     */
-    public function addAction(Request $request, $reportId) 
-    {
-
-        $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'client']);
-
-        $account = new EntityDir\Account();
-        $account->setReport($report);
-        
-        $form = $this->createForm(new FormDir\AccountType(), $account);
-
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-
-            $data = $form->getData();
-            $data->setReport($report);
-            $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
-                'deserialise_group' => 'add_edit'
-            ]);
-
-            return $this->redirect($this->generateUrl('accounts', ['reportId' => $reportId]));
-
-        }
-
-        return [
-            'report' => $report,
-            'subsection' => 'banks',
-            'form' => $form->createView()
-        ]; 
-    }
 
     /**
-     * @Route("/report/{reportId}/accounts/banks/{id}/edit", name="edit_account")
+     * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="upsert_account", defaults={ "id" = null })
      * @param integer $reportId
      * @param integer $id account Id
      * @param Request $request
      * @Template()
      * @return array
      */
-    public function editAction(Request $request, $reportId, $id) 
+    public function upsertAction(Request $request, $reportId, $id = null) 
     {
-
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
-
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
-
-        if (!$report->hasAaccountWithId($id)) {
-            throw new \RuntimeException("Account not found."); 
-        }
+        $type = $id ? 'edit' : 'add';
         
-        $account = $restClient->get('report/account/' . $id, 'Account');
-
+        if ($type === 'edit') {
+            if (!$report->hasAaccountWithId($id)) {
+                throw new \RuntimeException("Account not found."); 
+            }
+            $account = $restClient->get('report/account/' . $id, 'Account');
+        } else {
+            $account = new EntityDir\Account();
+            $account->setReport($report);
+        }
+        // display the checkbox if either told by the URL, or closing balance is zero, or it was previously ticked
+        $showIsClosed = $request->query->get('show-is-closed') == 'yes' || $account->isClosingBalanceZero() || $account->getIsClosed();
         $form = $this->createForm(new FormDir\AccountType(), $account);
         $form->handleRequest($request);
-
+        
         if($form->isValid()){
-
             $data = $form->getData();
             $data->setReport($report);
-            $restClient->put('/account/' . $id, $account, [
-                'deserialise_group' => 'add_edit'
-            ]);
-
+            // if closing balance is set to non-zero values, un-close the account
+            if (!$data->isClosingBalanceZero()) {
+                $data->setIsClosed(false);
+            }
+            if ($type === 'edit') {
+                $restClient->put('/account/' . $id, $account, [
+                    'deserialise_group' => 'add_edit'
+                ]);
+                
+            } else {
+                $addedAccount = $this->get('restClient')->post('report/' . $reportId . '/account', $account, [
+                    'deserialise_group' => 'add_edit'
+                ]);
+                $id = $addedAccount['id'];
+            }
+            
+            // if the balance is zero, and the isClosed checkbox is not shown, redirect to the edit page with the checkbox visible
+            if ($data->isClosingBalanceZero() &&
+                !$showIsClosed // avoid loops    
+            ) {
+                return $this->redirect($this->generateUrl('upsert_account', ['reportId'=>$reportId, 'id'=>$id, 'show-is-closed'=>'yes']) . '#form-group-account_sortCode');
+            }
+            
             return $this->redirect($this->generateUrl('accounts', ['reportId'=>$reportId]));
-        
         }
 
         return [
             'report' => $report,
             'subsection' => 'banks',
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'type' => $type,
+            'account' => $account,
+            'showIsClosed' => $showIsClosed == 'yes'
         ];
 
     }

@@ -79,6 +79,11 @@
             border-color: $orange-status;
         }
 
+        &.account-closed {
+            color: $red-unknown;
+            border: 2px solid $red-unknown;
+        }
+
     }
 
     .description {
@@ -94,6 +99,10 @@
         @include media(mobile) {
             width: 100%;
         }
+    }
+    
+    &.no-border {
+        border-top: none;
     }
 
 }
