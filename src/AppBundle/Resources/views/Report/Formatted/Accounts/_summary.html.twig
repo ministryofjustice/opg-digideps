@@ -23,7 +23,7 @@
                             {% if account.requiresBankNameAndSortCode %}
                             , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
-                            {% if account.isJointAccount %}
+                            {% if account.isJointAccount =='yes' %}
                                 <span class="account-closed">JOINT ACCOUNT</span>
                             {% endif %}
                             {% if account.isClosed %}
