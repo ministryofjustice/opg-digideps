@@ -247,6 +247,24 @@ class Report
      */
     private $balanceMismatchExplanation;
 
+    /** 
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
+     */
+    private $agreedBehalfDeputy;
+    
+     /** 
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
+     */
+    private $agreedBehalfDeputyExplanation;
+    
      /**
      * Constructor
      */
@@ -900,6 +918,28 @@ class Report
     public function setReasonNotAllAgreed($reasonNotAllAgreed)
     {
         $this->reasonNotAllAgreed = $reasonNotAllAgreed;
+    }
+
+    public function getAgreedBehalfDeputy()
+    {
+        return $this->agreedBehalfDeputy;
+    }
+
+    public function setAgreedBehalfDeputy($agreeBehalfDeputy)
+    {
+        $this->agreedBehalfDeputy = $agreeBehalfDeputy;
+        return $this;
+    }
+    
+    public function getAgreedBehalfDeputyExplanation()
+    {
+        return $this->agreedBehalfDeputyExplanation;
+    }
+
+    public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
+    {
+        $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+        return $this;
     }
 
     /**
