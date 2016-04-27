@@ -28,17 +28,18 @@
 
         {{ form_checkbox(form.agree, 'agree', { 'labelClass': 'required extra-top' }) }}
 
-        {{ form_checkbox_group(form.allAgreed, 'allAgreed', {
-            'fieldSetClass' : 'inline all-agreed',
+        {{ form_checkbox_group(form.agreedBehalfDeputy, 'agreedBehalfDeputy', {
+            'fieldSetClass' : 'inline radio-agreed-behalf-deputy',
             'legendClass' : 'form-label',
             'items': [
+            {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' },
             {'labelClass': 'block-label', 'elementClass': '' }
             ]
         }) }}
         
-        <div id="not-agreed-section">
-            {{ form_input(form.reasonNotAllAgreed,'reasonNotAllAgreed', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
+         <div id="agreed-behalf-deputy-explanation-section">
+            {{ form_input(form.agreedBehalfDeputyExplanation,'agreedBehalfDeputyExplanation', { 'labelClass': 'required', 'inputClass': 'expanding' }) }}
         </div>
 
         <nav id="bottom-button-bar">
@@ -52,9 +53,10 @@
                 new GOVUK.SelectionButtons(":checkbox");
                 new GOVUK.SelectionButtons('.form-group__checkbox-group :radio');
                 new opg.RadioHide({
-                    radio:'.all-agreed input[type=radio]',
-                    content: '#not-agreed-section',
-                    hideOnYes: true
+                    radio:'.radio-agreed-behalf-deputy input[type=radio]',
+                    content: '#agreed-behalf-deputy-explanation-section',
+                    hideByDefault: true,
+                    showWithValue: 'more_deputies_not_behalf'
                 });
             });
         </script>
