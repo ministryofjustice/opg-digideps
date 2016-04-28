@@ -84,11 +84,11 @@ report:
 #    allagreed:
 #        notBlank: Value is required and can’t be empty
 #        reason: You must tell us if all deputies agree
-    agree: You must agree to the declaration
+    agree: If you want to submit your report, you must agree to the declaration
     agreedBehalfDeputy:  
-        notBlank: You must select one of the options
+        notBlank: You must select one option
     agreedBehalfDeputyExplanation:  
-        notBlank: Value is required and can’t be empty
+        notBlank: You must explain why you are not signing on everyone's behalf
 
 report-declaration:
     agree:
