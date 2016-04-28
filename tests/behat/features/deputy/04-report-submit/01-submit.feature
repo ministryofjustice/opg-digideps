@@ -29,13 +29,35 @@ Feature: deputy / report / submit
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"
-        # tick agree and submit
-        When I check "report_declaration_agree"
-        When I fill in the following:
-            | report_declaration_allAgreed_0 | 1 |
+        #
+        # empty form   
+        #
+        When I press "report_declaration_save"
+        Then the following fields should have an error:
+            | report_declaration_agree |
+            | report_declaration_agreedBehalfDeputy_0 | 
+            | report_declaration_agreedBehalfDeputy_1 | 
+            | report_declaration_agreedBehalfDeputy_2 |
+        # 
+        # missing explanation
+        #
+        #When I check "report_declaration_agree"
+        And I fill in the following:
+            | report_declaration_agree | 1 |
+            | report_declaration_agreedBehalfDeputy_2 | more_deputies_not_behalf |
+            | report_declaration_agreedBehalfDeputyExplanation |  |
         And I press "report_declaration_save"
-        And the form should be valid
-        And the response status code should be 200
+        Then the following fields should have an error:
+            | report_declaration_agreedBehalfDeputyExplanation |
+        #
+        # change to one deputy and submit
+        #
+        When I fill in the following:
+            | report_declaration_agree | 1 |
+            | report_declaration_agreedBehalfDeputy_0 | only_deputy |
+            | report_declaration_agreedBehalfDeputyExplanation |  |
+        And I press "report_declaration_save"
+        Then the form should be valid
         And the URL should match "/report/\d+/submitted"
         And I save the page as "report-submit-submitted"
         # assert report display page is not broken
@@ -129,69 +151,4 @@ Feature: deputy / report / submit
     Scenario: change report to "not submitted" 
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I change the report "1" submitted to "false"
-
-
-    @deputy @wip
-    Scenario: Must agree
-        Given I reset the email log
-        When I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "/report/1/declaration"
-        When I fill in the following:
-            | report_declaration_allAgreed_0 | 1 |
-        And I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_agree |
-        Then I check "report_declaration_agree"
-        When I fill in the following:
-            | report_declaration_allAgreed_0 | 1 |
-        And I press "report_declaration_save"
-        Then the URL should match "/report/\d+/submitted"
-        Then I load the application status from "report-submit-post"
-
-        
-    @deputy @wip
-    Scenario: Must all agree
-        Given I reset the email log
-        When I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "/report/1/declaration"
-        Then I check "report_declaration_agree"
-        And I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_allAgreed_0 |
-            | report_declaration_allAgreed_1 |
-            | report_declaration_reasonNotAllAgreed |
-        When I load the application status from "report-submit-post"
-
-        
-    @deputy @wip
-    Scenario: If not all agree, need reason
-        Given I reset the email log
-        When I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "/report/1/declaration"
-        Then I check "report_declaration_agree"
-        When I fill in the following:
-            | report_declaration_allAgreed_1 | 0 |
-        And I press "report_declaration_save"
-        Then the following fields should have an error:
-            | report_declaration_reasonNotAllAgreed |
-        When I load the application status from "report-submit-post"
-
-
-    @deputy @wip
-    Scenario: Submit with reason we dont all agree
-        Given I reset the email log
-        When I load the application status from "report-submit-pre"
-        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Then I go to "/report/1/declaration"
-        Then I check "report_declaration_agree"
-        When I fill in the following:
-            | report_declaration_allAgreed_1 | 0 |
-        Then I fill in the following:
-            | report_declaration_reasonNotAllAgreed | test |
-        And I press "report_declaration_save"
-        Then the URL should match "/report/\d+/submitted"
-        When I load the application status from "report-submit-post"
 
