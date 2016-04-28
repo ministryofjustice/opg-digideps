@@ -205,7 +205,8 @@ class ReportControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [
                 'submit_date' => '2015-12-30',
-                'reason_not_all_agreed' => 'dont agree reason'
+                'agreed_behalf_deputy' => 'more_deputies_not_behalf',
+                'agreed_behalf_deputy_explanation' => 'abdexplanation'
             ]
         ]);
 
@@ -213,8 +214,8 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId);
         /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(true, $report->getSubmitted());
-        $this->assertEquals(false, $report->isAllAgreed());
-        $this->assertEquals('dont agree reason', $report->getReasonNotAllAgreed());
+        $this->assertEquals('more_deputies_not_behalf', $report->getAgreedBehalfDeputy());
+        $this->assertEquals('abdexplanation', $report->getAgreedBehalfDeputyExplanation());
     }
 
 
@@ -230,7 +231,9 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'submit_date' => '2015-12-30'
+                'submit_date' => '2015-12-30',
+                'agreed_behalf_deputy'=>'only_deputy',
+                'agreed_behalf_deputy_explanation'=>'should not be saved',
             ]
         ]);
 
@@ -238,9 +241,9 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->clear()->getRepo('Report')->find($reportId);
         /* @var $report \AppBundle\Entity\Report */
         $this->assertEquals(true, $report->getSubmitted());
-        $this->assertEquals(true, $report->isAllAgreed());
-
-        // todo put back in test for submit date
+        $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
+        $this->assertEquals(null, $report->getAgreedBehalfDeputyExplanation());
+        $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));
     }
 
 
