@@ -22,7 +22,7 @@ agree:
   label: "I agree to this statement"
 save:
   label: "Submit report"
-status: Status
+declaration: Declaration
 declarationTime: Declaration time
 deputyName: Deputy name
 agreedBehalfDeputy:

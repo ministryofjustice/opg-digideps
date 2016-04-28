@@ -16,8 +16,8 @@
 
     <div class="item">
         <dl class="labelvalue">
-            <dt class="label">{{ 'status' | trans() }}</dt>
-            <dd class="value" id="statusString">
+            <dt class="label">{{ 'declaration' | trans() }}</dt>
+            <dd class="value" id="declarationString">
                 {{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans() }}
             </dd>
             {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
