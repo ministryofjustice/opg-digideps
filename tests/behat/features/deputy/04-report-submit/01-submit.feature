@@ -120,6 +120,9 @@ Feature: deputy / report / submit
         And the URL "/report/1/overview" should not be accessible
         And the URL "/report/1/contacts" should not be accessible
         And the URL "/report/1/decisions" should not be accessible
+        And the URL "/report/1/declaration" should not be accessible
+        And the URL "/report/1/add_further_information/view" should not be accessible
+        And the URL "/report/1/add_further_information/edit" should not be accessible
         And the URL "/report/1/accounts" should not be accessible
         And the URL "/report/1/accounts/banks/upsert/1" should not be accessible
         And the URL "/report/1/accounts/banks/1/delete" should not be accessible
