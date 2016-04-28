@@ -887,38 +887,6 @@ class Report
         return in_array($user->getId(), $this->getClient()->getUserIds());
     }
 
-    /**
-     * @return boolean
-     */
-    public function isAllAgreed()
-    {
-        return $this->allAgreed;
-    }
-
-    /**
-     * @param boolean $allAgreed
-     */
-    public function setAllAgreed($allAgreed)
-    {
-        $this->allAgreed = $allAgreed;
-    }
-
-
-    /**
-     * @return string
-     */
-    public function getReasonNotAllAgreed()
-    {
-        return $this->reasonNotAllAgreed;
-    }
-
-    /**
-     * @param string $reasonNotAllAgreed
-     */
-    public function setReasonNotAllAgreed($reasonNotAllAgreed)
-    {
-        $this->reasonNotAllAgreed = $reasonNotAllAgreed;
-    }
 
     public function getAgreedBehalfDeputy()
     {
@@ -927,6 +895,11 @@ class Report
 
     public function setAgreedBehalfDeputy($agreeBehalfDeputy)
     {
+        $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
+        if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
+            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+        }
+        
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;
         return $this;
     }
