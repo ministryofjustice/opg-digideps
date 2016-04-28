@@ -18,16 +18,11 @@
         <dl class="labelvalue">
             <dt class="label">{{ 'status' | trans() }}</dt>
             <dd class="value" id="statusString">
-                {% if (report.isAllAgreed == true) %}
-                    {{ 'deputyAgreed' | trans() }}
-                {% else %}
-                    {{ 'partlyAgreed' | trans() }}
-                {% endif %}
+                {{ ('agreedBehalfDeputy.' ~ report.agreedBehalfDeputy) | trans() }}
             </dd>
-
-            {% if (report.isAllAgreed == false) %}
-                <dt class="label">{{ 'partAgreedReason' | trans() }}</dt>
-                <dd class="value">{{ report.reasonNotAllAgreed }}</dd>
+            {% if (report.agreedBehalfDeputy == 'more_deputies_not_behalf') %}
+                <dt class="label">{{ 'agreedBehalfDeputyExplanation' | trans() }}</dt>
+                <dd class="value">{{ report.agreedBehalfDeputyExplanation | nl2br }}</dd>
             {% endif %}
             <dt class="label">{{ 'declarationTime' | trans() }}</dt>
             <dd class="value">{{report.submitDate | date("H:i") }}&nbsp;&nbsp;&nbsp;{{report.submitDate | date("d/m/Y") }}</dd>

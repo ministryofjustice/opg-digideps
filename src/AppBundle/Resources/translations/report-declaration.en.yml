@@ -25,6 +25,11 @@ save:
 status: Status
 declarationTime: Declaration time
 deputyName: Deputy name
-deputyAgreed: Signed on behalf of all deputies
-partlyAgreed: Not signed on behalf of all deputies
-partAgreedReason: Reason
+agreedBehalfDeputy:
+    only_deputy: "I am the only deputy"
+    more_deputies_behalf: "There is more than one deputy, and I’m signing on everyone’s behalf"
+    more_deputies_not_behalf: "There is more than one deputy, but I’m not signing on everyone’s behalf"
+agreedBehalfDeputyExplanation:  Reason                  
+#deputyAgreed: Signed on behalf of all deputies
+#partlyAgreed: Not signed on behalf of all deputies
+#partAgreedReason: Reason
