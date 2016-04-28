@@ -19,10 +19,11 @@ class ReportDeclarationType extends AbstractType
                  ])
                  ->add('agreedBehalfDeputy', 'choice', array(
                     'choices' => [
+                        // api models contains those keys too. Change them accordingly if needed
                         'only_deputy'=>'I am the only deputy', //TODO move to translation file
                         'more_deputies_behalf'=>'There is more than one deputy, and I’m signing on everyone’s behalf',
                         'more_deputies_not_behalf'=>'There is more than one deputy, but I’m not signing on everyone’s behalf'
-                        ],
+                    ],
                     'expanded' => true
                 ))
                 ->add('agreedBehalfDeputyExplanation', 'textarea')
