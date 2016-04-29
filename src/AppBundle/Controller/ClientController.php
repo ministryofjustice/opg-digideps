@@ -12,10 +12,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/show/{action}/{reportId}", name="client_home", defaults={ "action" = "show", "reportId" = " "})
+     * @Route("/show/{action}", name="client_home", defaults={ "action" = "show"})
      * @Template()
      */
-    public function indexAction($action, $reportId)
+    public function indexAction($action)
     {   
         $restClient = $this->get('restClient');
         
@@ -34,7 +34,6 @@ class ClientController extends AbstractController
         $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
         $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
         $clientForm = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
-        
         $clientForm->handleRequest($request);
         
         // edit client form
@@ -46,46 +45,13 @@ class ClientController extends AbstractController
             return $this->redirect($this->generateUrl('client_home'));
         }
         
-        // edit report dates
-        if ($action == 'edit-report' && $reportId) {
-            $report = $this->getReport($reportId, [ 'transactions', 'basic']);
-            $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
-                'translation_domain' => 'report-edit-dates'
-            ]);
-            $editReportDatesForm->handleRequest($request);
-            if ($editReportDatesForm->isValid()) {
-                $restClient->put('report/' . $reportId, $report, [
-                     'deserialise_group' => 'startEndDates',
-                ]);
-                return $this->redirect($this->generateUrl('client_home'));
-            }
-        }
-        
-        $newReportNotification = null;
-        
-        foreach($reports as $report){
-          if($report->getReportSeen() === false){
-              $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
-              
-              $reportObj = $this->getReport($report->getId(), [ 'transactions', 'basic']);
-              //update report to say message has been seen
-              $reportObj->setReportSeen(true);
-              
-              $restClient->put('report/' . $report->getId(), $reportObj);
-          }   
-        }
-        
         return [
-            'client' => $client,
-            'reports' => $reports,
             'action' => $action,
-            'reportId' => $reportId,
-            'editReportDatesForm' => ($action == 'edit-report') ? $editReportDatesForm->createView() : null,
+            'client' => $client,
             'formEditClient' => $clientForm->createView(),
             'formClientNewReport' => $formClientNewReport->createView(),
             'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
             'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
-            'newReportNotification' => $newReportNotification
         ];
 
     }

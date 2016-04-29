@@ -57,6 +57,10 @@
                 {% endif %}
 
                 {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
+                    <li><a href="{{path('reports')}}" class="behat-link-reports reports-link"  >{{ 'reports' | trans }}</a></li>
+                {% endif %}
+                
+                {% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
                     <li><a href="{{path('client_home')}}" class="behat-link-client-home client-home-link"  >{% trans %}clientHome{% endtrans %} </a></li>
                 {% endif %}
 

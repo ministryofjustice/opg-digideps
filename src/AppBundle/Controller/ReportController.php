@@ -21,6 +21,64 @@ class ReportController extends AbstractController
     ];
     
     /**
+     * @Route("/reports/{reportId}", name="reports", defaults={"reportId" = ""})
+     * @Template()
+     */
+    public function indexAction($reportId = null)
+    {   
+        $restClient = $this->get('restClient');
+        
+        $clients = $this->getUser()->getClients(); 
+        $request = $this->getRequest();
+        
+        $client = !empty($clients)? $clients[0]: null;
+        
+        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
+        arsort($reports);
+        
+        $report = new EntityDir\Report();
+        $report->setClient($client);
+
+        // edit report dates
+        if ($reportId) {
+            $report = $this->getReport($reportId, [ 'transactions', 'basic']);
+            $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
+                'translation_domain' => 'report-edit-dates'
+            ]);
+            $editReportDatesForm->handleRequest($request);
+            if ($editReportDatesForm->isValid()) {
+                $restClient->put('report/' . $reportId, $report, [
+                     'deserialise_group' => 'startEndDates',
+                ]);
+                return $this->redirect($this->generateUrl('reports'));
+            }
+        }
+        
+        $newReportNotification = null;
+        foreach($reports as $report){
+          if($report->getReportSeen() === false){
+              $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
+              
+              $reportObj = $this->getReport($report->getId(), [ 'transactions', 'basic']);
+              //update report to say message has been seen
+              $reportObj->setReportSeen(true);
+              
+              $restClient->put('report/' . $report->getId(), $reportObj);
+          }   
+        }
+        
+        return [
+            'client' => $client,
+            'reports' => $reports,
+            'reportId' => $reportId,
+            'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
+            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+            'newReportNotification' => $newReportNotification
+        ];
+
+    }
+    
+    /**
      * Create report
      * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
      * action "add" will instead add another report

@@ -4,7 +4,7 @@
     {% for report in reports %}
         {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
         {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
-        {% set linkEditReportingPeriod = path('client_home', {'action': 'edit-report', 'reportId': report.id}) %}
+        {% set linkEditReportingPeriod = path('reports', {'reportId': report.id}) %}
         <li class="item">
             
             <h3 class="title">
