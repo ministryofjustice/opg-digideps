@@ -25,10 +25,10 @@
                   </a>
             {% else %}
                 <span class="button-wrapper">
-                    <a href="{{ linkToReportOverviewPage }}" class="open-button button">{{ 'reportDataList.open' | trans }}</a>
+                    <a href="{{ linkToReportOverviewPage }}" class="open-button button behat-link-report-open behat-link-report-{{ report.getPeriod() | behat_namify }}-open">{{ 'reportDataList.open' | trans }}</a>
                 </span>
                 <a href="{{ linkEditReportingPeriod }}"
-                   class="edit-button edit-report behat-link-edit-report-period-{{ report.getPeriod() | behat_namify }}-report">{{ 'reportDataList.edit'| trans }}</a>
+                   class="edit-button edit-report behat-link-report-{{ report.getPeriod() | behat_namify }}-edit">{{ 'reportDataList.edit'| trans }}</a>
             {% endif %}            
 
             <dl class="item-data">

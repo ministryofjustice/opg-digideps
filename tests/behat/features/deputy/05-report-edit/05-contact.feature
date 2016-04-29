@@ -4,8 +4,7 @@ Feature: deputy / report / edit user contact
     Scenario: edit and remove contacts
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
-        And I click on "report-2016"
+        And I click on "reports, report-2016"
         And I follow "edit-contacts"
         And the URL should match "/report/\d+/contacts"
         And I click on "contact-n1"
@@ -53,8 +52,7 @@ Feature: deputy / report / edit user contact
     @deputy
     Scenario: add explanation for no contacts
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I click on "client-home"
-      And I click on "report-2016"
+      And I click on "reports,report-2016"
       #delete current contact
       And I follow "edit-contacts"
       And I save the page as "report-no-contact-empty"

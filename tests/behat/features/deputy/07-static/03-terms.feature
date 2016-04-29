@@ -13,6 +13,6 @@ Feature: Tems and Conditions
     @terms @deputy
     Scenario: The terms and conditions page contains a back link
         Given I am on the login page
-        And I goto the terms page
+        And I go to "/terms"
         Then the "Return to deputy report" link url should contain "/"
     

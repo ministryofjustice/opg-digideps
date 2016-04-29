@@ -9,8 +9,7 @@ Feature: Browser - manage decisions
         And I save the page as "decision-reason"
         And I press "reason_for_no_decision_save"
         Then I should see "small budget" in the "reason-no-decisions" region
-        When I click on "edit-reason-no-decisions"
-        And I click on "delete-button"
+        When I click on "edit-reason-no-decisions, delete-button"
         And I save the page as "decision-reason-delete-confirm"
         Then I should see a confirmation
         When I click on "delete-confirm"

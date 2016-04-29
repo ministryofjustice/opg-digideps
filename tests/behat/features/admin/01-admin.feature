@@ -60,8 +60,7 @@ Feature: admin / admin
     Scenario: change user password on admin area
         Given I am logged in to admin as "behat-admin-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "admin-pasword-change-init"
-        And I click on "my-details"
-        And I click on "edit-user-details"
+        And I click on "my-details, edit-user-details"
         # wrong old password
         When I fill in "user_details_password_current_password" with "this.is.the.wrong.password"
         And I press "user_details_save"

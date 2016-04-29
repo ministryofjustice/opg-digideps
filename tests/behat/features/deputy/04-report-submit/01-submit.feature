@@ -4,9 +4,9 @@ Feature: deputy / report / submit
     Scenario: report declaration page
         Given I set the report 1 end date to 3 days ago
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
+        And I click on "reports"
         Then I should not see the "download-2016-report" link
-        When I click on "report-2016"    
+        When I click on "report-2016-open"    
         And I follow "edit-report_add_further_info"
         #And I fill in "report_add_info_furtherInformation" with "test"
         Then I press "report_add_info_saveAndContinue"
@@ -25,7 +25,7 @@ Feature: deputy / report / submit
         # assert I cannot access the submit page from declaration page
         When I go to "/report/1/declaration"
         Then the URL "/report/1/submitted" should not be accessible
-        And I go to the "2016" report overview page
+        And I click on "reports, report-2016-open"
         # submit without ticking "agree"
         When I go to "/report/1/declaration"
         And I press "report_declaration_save"
@@ -87,10 +87,7 @@ Feature: deputy / report / submit
     @deputy
     Scenario: assert 2nd year report has been created
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
-        And I edit lastest active report
-        When I click on "client-home"
-        And I click on "report-2016-to-2017"
+        And I click on "reports, report-open"
         And I save the page as "report-property-affairs-homepage"
         Then I should see a "#edit-contacts" element
         And I should see a "#edit-decisions" element
@@ -111,10 +108,8 @@ Feature: deputy / report / submit
     @deputy
     Scenario: assert report is not editable after submission
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "client-home"
-        # assert I'm on the client homepage (cannot redirect to report overview as not acessible anymore)
-        Then I should be on "/client/show"
-        Then I should not see the "edit-report-period-2016-report" link
+        When I click on "reports"
+        Then I should not see the "report-2016-edit" link
         And I should not see the "report-2016" link
         And I should see the "report-2016-submitted-on" region
         And the URL "/report/1/overview" should not be accessible
@@ -131,7 +126,7 @@ Feature: deputy / report / submit
     @deputy
     Scenario: report download
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "client-home"
+        When I click on "reports"
         # download report from confirmation page
         When I go to "/report/1/submitted"
         When I click on "download-report"
@@ -140,7 +135,7 @@ Feature: deputy / report / submit
         And the response should contain "White"
         # download report from client page
         #When I go to the homepage
-        When I click on "client-home"
+        When I click on "reports"
         And I click on "download-2016-report"
         And the response should contain "12345ABC"
         And the response should contain "Peter"

@@ -4,9 +4,7 @@ Feature: deputy / report / edit asset
     Scenario: edit and remove other asset
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
-        And I click on "report-2016"
-        And I follow "edit-assets"
+        And I click on "reports, report-2016-open, edit-assets"
         And I save the page as "report-assets-other-init"
         And I click on "asset-alfa-romeo-156-jtd"
         Then the following fields should have the corresponding values:
@@ -37,9 +35,7 @@ Feature: deputy / report / edit asset
     Scenario: edit and remove property asset
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
-        And I click on "report-2016"
-        And I follow "edit-assets"
+        And I click on "reports,report-2016-open,edit-assets"
         And I save the page as "report-assets-property-init"
         And I click on "asset-12-gold-house-sw115tf"
         Then the following fields should have the corresponding values:
@@ -81,8 +77,7 @@ Feature: deputy / report / edit asset
     @deputy
     Scenario: add explanation for no assets
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-      And I click on "client-home"
-      And I click on "report-2016"
+      And I click on "reports, report-2016-open"
       # delete current asset
       And I follow "edit-assets"
       And I click on "asset-12-gold-house-sw115tf"

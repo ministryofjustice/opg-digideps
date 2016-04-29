@@ -10,64 +10,59 @@ trait LinksTrait
      */
     public function linkWithTextContains($text, $expectedLink)
     {
-    
+
         $linksElementsFound = $this->getSession()->getPage()->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
-        
+
         if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element not found");
         }
-        
+
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Returned multiple elements");
         }
-    
+
         $href = $linksElementsFound->getAttribute('href');
-        
+
         if (strpos($href, $expectedLink) === FALSE) {
             throw new \Exception("Link: $href does not contain $expectedLink");
         }
-
     }
-    
+
     /**
      * @Given I visit the behat link :link
      */
     public function visitBehatLink($link)
     {
-       $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
-      
-       $this->visit("/behat/{$secret}/{$link}");
-       // non-200 response -> debug content
-       //if (200 != $this->getSession()->getStatusCode()) {
-       //   $this->printLastResponse();
-       //}
+        $secret = md5('behat-dd-' . $this->getSymfonyParam('secret'));
+
+        $this->visit("/behat/{$secret}/{$link}");
+        // non-200 response -> debug content
+        //if (200 != $this->getSession()->getStatusCode()) {
+        //   $this->printLastResponse();
+        //}
     }
 
-     /**
-     * Click sequentially on comma-separated elements with attribute [behat-link=:link]
-     * 
-     * @When I sequentially click on :link
-     */
-    public function clickSequentiallyOnBehatLinks($links)
-    {
-        foreach(explode(',',$links) as $link) {
-            $this->clickOnBehatLink(trim($link));
-        }
-    }
-    
     /**
      * Click on element with attribute [behat-link=:link]
      * 
-     * @When I click on :link
+     * @When I click on ":link"
      */
     public function clickOnBehatLink($link)
     {
+        // if multiple links are specified (comma-separated), click on all of them
+        if (strpos($link, ',') !== false) {
+            foreach (explode(',', $link) as $singleLink) {
+                $this->clickOnBehatLink(trim($singleLink));
+            }
+            return;
+        }
+
         // find link inside the region
         $linkSelector = self::behatElementToCssSelector($link, 'link');
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
         $count = count($linksElementsFound);
-        
+
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than one $linkSelector element in the page ($count). Interrupted");
         }
@@ -75,13 +70,13 @@ trait LinksTrait
             $this->clickOnHashLink($link);
             return;
         }
-        
+
         // click on the found link
         $this->scrollTo($linkSelector);
         $linksElementsFound[0]->click();
     }
 
-    private function clickOnHashLink($link) 
+    private function clickOnHashLink($link)
     {
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#' . $link);
         if (count($linksElementsFound) > 1) {
@@ -92,10 +87,9 @@ trait LinksTrait
         }
 
         // click on the found link
-        $this->scrollTo( '#' . $link);
-        $linksElementsFound[0]->click();    
+        $this->scrollTo('#' . $link);
+        $linksElementsFound[0]->click();
     }
-    
 
     /**
      * Click on element with attribute [behat-link=:link]
@@ -114,7 +108,7 @@ trait LinksTrait
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Returned multiple elements");
         }
-        
+
         // click on the found link
         $linksElementsFound[0]->click();
     }
@@ -129,7 +123,7 @@ trait LinksTrait
     public function clickOnLinkWithTextInRegion($text, $region)
     {
         $region = $this->findRegion($region);
-        
+
         $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
@@ -143,7 +137,6 @@ trait LinksTrait
 
         // click on the found link
         $linksElementsFound->click();
-
     }
 
     private function findRegion($region)
@@ -157,9 +150,8 @@ trait LinksTrait
         if (count($regionsFound) === 0) {
             throw new \RuntimeException("Region $regionSelector not found.");
         }
-        
+
         return $regionsFound[0];
-        
     }
 
     /**
@@ -170,7 +162,7 @@ trait LinksTrait
     public function clickLinkInsideElement($link, $region)
     {
         $this->findRegion($region);
-        
+
         // find link inside the region
         $linkSelector = self::behatElementToCssSelector($link, 'link');
         $linksElementsFound = $regionsFound[0]->findAll('css', $linkSelector);
@@ -178,39 +170,39 @@ trait LinksTrait
             throw new \RuntimeException("Found more than a $linkSelector element inside $regionSelector . Interrupted");
         }
         if (count($linksElementsFound) === 0) {
-           throw new \RuntimeException("Element $linkSelector not found inside $regionSelector . Interrupted");
+            throw new \RuntimeException("Element $linkSelector not found inside $regionSelector . Interrupted");
         }
-        
-        
+
+
         // click on the found link
         $linksElementsFound[0]->click();
     }
-    
+
     /**
      * @Then the :text link, in the :region region, url should contain ":expectedLink"
      * @Then the :text link, in the :region, url should contain ":expectedLink"
      */
     public function linkWithTextInRegionContains($text, $expectedLink, $region)
     {
-    
+
         $region = $this->findRegion($region);
-    
+
         $linksElementsFound = $region->find('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
-        
+
         if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element not found");
         }
-        
+
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Returned multiple elements");
         }
-    
+
         $href = $linksElementsFound->getAttribute('href');
-        
+
         if (strpos($href, $expectedLink) === FALSE) {
             throw new \Exception("Link: $href does not contain $expectedLink");
         }
-
     }
+
 }

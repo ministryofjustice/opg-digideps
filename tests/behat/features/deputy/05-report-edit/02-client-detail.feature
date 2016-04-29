@@ -4,8 +4,7 @@ Feature: deputy / report / edit client
     Scenario: edit client details
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home"
-        And I click on "edit-client-details"
+        And I click on "client-home, edit-client-details"
         Then I should be on "client/show/edit-client#edit-client"
         Then the following fields should have the corresponding values:
             | client_firstname | Peter |

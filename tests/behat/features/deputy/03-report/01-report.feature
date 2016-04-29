@@ -18,8 +18,7 @@ Feature: deputy / report / edit and test tabs
     @deputy
     Scenario: edit report
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        When I click on "client-home"
-        And I click on "edit-report-period-2016-report"
+        And I click on "reports, report-2016-edit" 
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 01 |
@@ -54,7 +53,7 @@ Feature: deputy / report / edit and test tabs
         And I press "report_edit_save"
         Then the form should be valid
         # check values
-        And I click on "edit-report-period-2016-report"
+        And I click on "report-2016-edit"
         Then the following fields should have the corresponding values:
             | report_edit_startDate_day | 01 |
             | report_edit_startDate_month | 01 |
