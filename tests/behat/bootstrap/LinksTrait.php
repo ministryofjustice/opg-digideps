@@ -44,6 +44,18 @@ trait LinksTrait
        //}
     }
 
+     /**
+     * Click sequentially on comma-separated elements with attribute [behat-link=:link]
+     * 
+     * @When I sequentially click on :link
+     */
+    public function clickSequentiallyOnBehatLinks($links)
+    {
+        foreach(explode(',',$links) as $link) {
+            $this->clickOnBehatLink(trim($link));
+        }
+    }
+    
     /**
      * Click on element with attribute [behat-link=:link]
      * 
