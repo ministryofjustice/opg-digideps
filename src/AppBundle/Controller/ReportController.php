@@ -73,7 +73,8 @@ class ReportController extends AbstractController
             'reportId' => $reportId,
             'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
             'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
-            'newReportNotification' => $newReportNotification
+            'newReportNotification' => $newReportNotification,
+            'filter' => 'propFinance' // extend with param when required
         ];
 
     }

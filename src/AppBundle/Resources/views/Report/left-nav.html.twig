@@ -1,0 +1,6 @@
+{% set translationDomain = "report" %}
+{% trans_default_domain translationDomain %}
+
+<nav id="account-sub-nav">
+    <a id="report-prop-fin" href="{{ path('reports') }}" {% if true %}class="active"{% endif %}>{{ 'nav.propFinance' | trans() }}</a>
+</nav>

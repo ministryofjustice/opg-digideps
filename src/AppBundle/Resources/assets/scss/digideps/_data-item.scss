@@ -150,6 +150,10 @@ $declaration-margin: 170px;
         }
     }
 
+    
+}
+
+.reports-page {
     .reports {
         .edit-button {
             bottom: 30px;
@@ -158,6 +162,10 @@ $declaration-margin: 170px;
         
         .open-button {
             @include core-24();
+        }
+        
+        .item {
+            list-style-type: none;
         }
     }
 }

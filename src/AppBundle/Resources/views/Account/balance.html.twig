@@ -9,7 +9,7 @@
     {% block leftcontent %}
         {% include 'AppBundle:Account:left-nav.html.twig'%}
     {% endblock %}
-
+    
     {% block maincontent %}
         {% if report.isMissingMoneyOrAccountsOrClosingBalance() %}
             {% include 'AppBundle:Account:_balance-incomplete.html.twig'%}

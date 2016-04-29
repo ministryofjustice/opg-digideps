@@ -1,49 +1,41 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% set translationDomain = "client" %}
-{% trans_default_domain translationDomain %}
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
+    'hideReportNav': true
+} %}
+    {% set translationDomain = "report" %}
+    {% trans_default_domain translationDomain %}
+    {% block bodyClasses %}reports-page{% endblock %}
+    {% block pageTitle %}
+        {{ ('page.' ~ filter ~ '.htmlTitle') | trans }}
+    {% endblock %}
+    {% block contentClass %}{{ parent() }} reports-list{% endblock %}
+    {% block title %}{{ 'page.title' | trans }}{% endblock %}
 
-{% if (reportId) %}
-    {% set hideForm = false %}
-    {% set formClass = 'in-page-form' %}
-{% else %}
-    {% set hideForm = true %}
-    {% set formClass = '' %}
-{% endif %}
+{% block backLinktop %}{% endblock %}
 
-{% block bodyClasses %}reports-page{% endblock %}
-
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} my-client{% endblock %}
-{% block title %}{{ client.getFullname }}{% endblock %}
-
-{% block afterTitle %}
-    {% if lastSignedIn %}
-        <dl class="behat-region-last-loggedin last-logged-in item-data">
-            <dt class="item-label">{{ 'page.lastLoggedIn' | trans({}) }}</dt>
-            <dd class="item-value">{{ (lastSignedIn | last_loggedin_date_formatter) }}</dd>
-        </dl>
-    {% endif %}
+{% block leftcontent %}
+    {% include 'AppBundle:Report:left-nav.html.twig'%}
 {% endblock %}
 
-{% block pageBody %}
-
+{% block maincontent %}
+   <h3 class="heading-medium-large">{{ ('page.' ~ filter ~ '.pageSectionTitle') | trans({'%client%': client.firstname}) }}</h3>
     {% if reportId and newReportNotification %}
         <p class="flash">{{ newReportNotification }}</p>
     {% endif %}
-    
+
     {% if reportId %}
         {% include 'AppBundle:Report:_edit-dates.html.twig' with {
-            'form' : editReportDatesForm
-        } %}
+                    'form' : editReportDatesForm
+                } %}
         <hr class="item-list" />
     {% endif %}
-    
-    
+
     {% if not reportId and reports is not empty %}
         {% include 'AppBundle:Report:_list-reports.html.twig' with {
-        'translationDomain': translationDomain,
-        'reports': reports
-        } %}
+                'translationDomain': translationDomain,
+                'reports': reports
+                } %}
     {% endif %}
-
 {% endblock %}
+{% endembed %}
+
+{#{% extends 'AppBundle:Components/Page:page-service.html.twig' %}#}
