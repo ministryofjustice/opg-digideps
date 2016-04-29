@@ -90,13 +90,25 @@ class ReportController extends RestController
         if (empty($data['submit_date'])) {
             throw new \InvalidArgumentException("Missing submit_date");
         }
-
-        if (!empty($data['reason_not_all_agreed'])) {
-            $currentReport->setAllAgreed(false);
-            $currentReport->setReasonNotAllAgreed($data['reason_not_all_agreed']);
-        } else {
-            $currentReport->setAllAgreed(true);
+        
+        if (empty($data['agreed_behalf_deputy'])) {
+            throw new \InvalidArgumentException("Missing agreed_behalf_deputy");
         }
+
+        $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
+        if ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf') {
+            $currentReport->setAgreedBehalfDeputyExplanation($data['agreed_behalf_deputy_explanation']);
+        } else {
+            $currentReport->setAgreedBehalfDeputyExplanation(null);
+        }
+        
+        
+//        if (!empty($data['reason_not_all_agreed'])) {
+//            $currentReport->setAllAgreed(false);
+//            $currentReport->setReasonNotAllAgreed($data['reason_not_all_agreed']);
+//        } else {
+//            $currentReport->setAllAgreed(true);
+//        }
 
         $currentReport->setSubmitted(true);
         $currentReport->setSubmitDate(new \DateTime($data['submit_date']));

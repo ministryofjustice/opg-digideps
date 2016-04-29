@@ -247,6 +247,24 @@ class Report
      */
     private $balanceMismatchExplanation;
 
+    /** 
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
+     */
+    private $agreedBehalfDeputy;
+    
+     /** 
+     * @var string
+     *
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
+     */
+    private $agreedBehalfDeputyExplanation;
+    
      /**
      * Constructor
      */
@@ -869,37 +887,32 @@ class Report
         return in_array($user->getId(), $this->getClient()->getUserIds());
     }
 
-    /**
-     * @return boolean
-     */
-    public function isAllAgreed()
+
+    public function getAgreedBehalfDeputy()
     {
-        return $this->allAgreed;
+        return $this->agreedBehalfDeputy;
     }
 
-    /**
-     * @param boolean $allAgreed
-     */
-    public function setAllAgreed($allAgreed)
+    public function setAgreedBehalfDeputy($agreeBehalfDeputy)
     {
-        $this->allAgreed = $allAgreed;
+        $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
+        if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
+            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+        }
+        
+        $this->agreedBehalfDeputy = $agreeBehalfDeputy;
+        return $this;
+    }
+    
+    public function getAgreedBehalfDeputyExplanation()
+    {
+        return $this->agreedBehalfDeputyExplanation;
     }
 
-
-    /**
-     * @return string
-     */
-    public function getReasonNotAllAgreed()
+    public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
     {
-        return $this->reasonNotAllAgreed;
-    }
-
-    /**
-     * @param string $reasonNotAllAgreed
-     */
-    public function setReasonNotAllAgreed($reasonNotAllAgreed)
-    {
-        $this->reasonNotAllAgreed = $reasonNotAllAgreed;
+        $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+        return $this;
     }
 
     /**
