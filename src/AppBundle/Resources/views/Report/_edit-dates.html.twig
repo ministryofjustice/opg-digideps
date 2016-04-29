@@ -6,9 +6,10 @@
     {{ form_errors_list(form) }}
 {% endblock %}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: ''  }}) }}
+<h3 class="heading-medium">{{ 'page.title'| trans({'%period%': report.period}, translationDomain) }}</h3>
+<p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
 
-    <h3 class="heading-medium">{{ 'form.subSectionTitle'| trans({}, translationDomain) }}</h3>
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: ''  }}) }}
 
     {{ form_known_date(form.startDate, 'form.controls.startDate') }}
 

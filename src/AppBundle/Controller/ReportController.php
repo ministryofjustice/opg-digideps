@@ -69,6 +69,7 @@ class ReportController extends AbstractController
         
         return [
             'client' => $client,
+            'report' => $report,
             'reports' => $reports,
             'reportId' => $reportId,
             'editReportDatesForm' => ($reportId) ? $editReportDatesForm->createView() : null,
