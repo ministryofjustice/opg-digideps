@@ -12,16 +12,21 @@ class ReportDeclarationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder /*->add('title', 'text')*/
+        $builder 
                 ->add('id', 'hidden')
                 ->add('agree', 'checkbox', [
                      'constraints' => new NotBlank(['message'=>'report-declaration.agree.notBlank']),
                  ])
-                ->add('allAgreed', 'choice', array(
-                    'choices' => [1=>'Yes', 0=>'No'],
+                 ->add('agreedBehalfDeputy', 'choice', array(
+                    'choices' => [
+                        // api models contains those keys too. Change them accordingly if needed
+                        'only_deputy'=>'I am the only deputy',
+                        'more_deputies_behalf'=>'There is more than one deputy, and I’m signing on everyone’s behalf',
+                        'more_deputies_not_behalf'=>'There is more than one deputy, but I’m not signing on everyone’s behalf'
+                    ],
                     'expanded' => true
                 ))
-                ->add('reasonNotAllAgreed', 'textarea')
+                ->add('agreedBehalfDeputyExplanation', 'textarea')
                 ->add('save', 'submit');
     }
     
@@ -32,10 +37,10 @@ class ReportDeclarationType extends AbstractType
             'validation_groups' => function(FormInterface $form){
 
                 $data = $form->getData();
-                $validationGroups = ['submitted','declare'];
+                $validationGroups = ['submitted', 'declare'];
 
-                if($data->isAllAgreed() == false){
-                    $validationGroups[] = "allagreed-no";
+                if($data->getAgreedBehalfDeputy() == 'more_deputies_not_behalf'){
+                    $validationGroups[] = 'declare-explanation';
                 }
 
                 return $validationGroups;

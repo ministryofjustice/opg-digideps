@@ -113,6 +113,10 @@ class ReportController extends AbstractController
         if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission',[], 'validators'));
         }
+        if($report->getSubmitted()) {
+            throw new \RuntimeException('Report already submitted');
+        }
+        
         
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
@@ -162,6 +166,9 @@ class ReportController extends AbstractController
         if(!$report->isDue() || !$reportStatusService->isReadyToSubmit()) {
             throw new \RuntimeException($translator->trans('report.submissionExceptions.readyForSubmission',[], 'validators'));
         }
+        if($report->getSubmitted()) {
+            throw new \RuntimeException('Report already submitted');
+        }    
         
         $clients = $this->getUser()->getClients();
         $client = $clients[0];
@@ -245,6 +252,7 @@ class ReportController extends AbstractController
     }
     
     /**
+     * Used for active and archived report
      * @Route("/report/{reportId}/review", name="report_review")
      * @Template()
      */

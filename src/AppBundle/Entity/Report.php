@@ -173,32 +173,31 @@ class Report
      */
     private $reportSeen;
     
-    
-
-    /**
-     * @var boolean
-     *
-     * @JMS\Type("boolean")
-     * @JMS\Groups({"basic"})
-     * @Assert\NotBlank(message="report.allagreed.reason", groups={"declare"} )
-     */
-    private $allAgreed;
-
-    /** @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"basic","submit"})
-     * @Assert\NotBlank(message="report.allagreed.notBlank", groups={"allagreed-no"} )
-     */
-    private $reasonNotAllAgreed;
-    
     /** @var boolean
      *  
      * @JMS\Type("boolean")
-     * @Assert\True(message="report.agreed", groups={"declare"} )
+     * @Assert\True(message="report.agree", groups={"declare"} )
      */
     private $agree;
 
+    /** 
+     * @var string
+     *  
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic","submit"})
+     * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
+     */
+    private $agreedBehalfDeputy;
+    
+    /** 
+     * @var string
+     *  
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic","submit"})
+     * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
+     */
+    private $agreedBehalfDeputyExplanation;
+    
     /**
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\Groups({"transactionsIn"})
@@ -781,39 +780,6 @@ class Report
     /**
      * @return boolean
      */
-    public function isAllAgreed()
-    {
-        return $this->allAgreed;
-    }
-
-    /**
-     * @param boolean $allAgreed
-     */
-    public function setAllAgreed($allAgreed)
-    {
-        $this->allAgreed = $allAgreed;
-    }
-
-    /**
-     * @return string
-     *
-     */
-    public function getReasonNotAllAgreed()
-    {
-        return $this->reasonNotAllAgreed;
-    }
-
-    /**
-     * @param string $reasonNotAllAgreed
-     */
-    public function setReasonNotAllAgreed($reasonNotAllAgreed)
-    {
-        $this->reasonNotAllAgreed = $reasonNotAllAgreed;
-    }
-
-    /**
-     * @return boolean
-     */
     public function isAgree()
     {
         return $this->agree;
@@ -827,6 +793,40 @@ class Report
         $this->agree = $agree;
     }
 
+    /**
+     * @return string
+     */
+    public function getAgreedBehalfDeputy()
+    {
+        return $this->agreedBehalfDeputy;
+    }
+
+    /**
+     * @param string $agreedBehalfDeputy
+     */
+    public function setAgreedBehalfDeputy($agreedBehalfDeputy)
+    {
+        $this->agreedBehalfDeputy = $agreedBehalfDeputy;
+        return $this;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getAgreedBehalfDeputyExplanation()
+    {
+        return $this->agreedBehalfDeputyExplanation;
+    }
+
+    /**
+     * @param string $agreedBehalfDeputyExplanation
+     */
+    public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
+    {
+        $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+        return $this;
+    }
+    
     /**
      * @return Transaction[]
      */

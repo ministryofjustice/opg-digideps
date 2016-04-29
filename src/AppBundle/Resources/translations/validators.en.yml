@@ -81,10 +81,14 @@ report:
         submitted: Report not submitted
         reviewedAndChecked: Report not reviewed and checked
         readyForSubmission: Report not ready for submission
-    allagreed:
-        notBlank: Value is required and can’t be empty
-        reason: You must tell us if all deputies agree
-    agreed:  You must agree to the declaration
+#    allagreed:
+#        notBlank: Value is required and can’t be empty
+#        reason: You must tell us if all deputies agree
+    agree: If you want to submit your report, you must agree to the declaration
+    agreedBehalfDeputy:  
+        notBlank: You must select one option
+    agreedBehalfDeputyExplanation:  
+        notBlank: You must explain why you are not signing on everyone's behalf
 
 report-declaration:
     agree:
