@@ -5,7 +5,7 @@
 {% trans_default_domain translationDomain %}
 {% block contentClass %}{{ parent() }} deputy{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block title %}Account: Settings{% endblock %}
+{% block title %}Account: deputy details{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 
@@ -15,11 +15,25 @@
 
 {% block maincontent %}
 
-    {{ form_start(form, {attr: {novalidate: 'novalidate', class: '' } }) }}
+    {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
 
-    {{ form_input(form.current_password,'form.changeYourPassword.controls.currentPassword') }}
-    {{ form_input(form.plain_password.first,'form.changeYourPassword.controls.newPassword') }}
-    {{ form_input(form.plain_password.second,'form.changeYourPassword.controls.confirmNewPassword') }}
+    {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
+
+    {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_AD') %}
+        {{ form_input(form.address1,'address1', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.address2,'address2') }}
+
+        {{ form_input(form.address3,'address3') }}
+
+        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
+
+        {{ form_select(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.phoneMain,'phoneMain', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
+    {% endif %}
 
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
@@ -33,8 +47,6 @@
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
-
-    {{ form_end(form) }}
 
 
 {% endblock %}

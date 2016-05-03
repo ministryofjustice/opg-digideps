@@ -11,9 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-/**
-* @Route("user")
-*/
 class UserController extends AbstractController
 {
     /**
@@ -21,7 +18,7 @@ class UserController extends AbstractController
      * 
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
      * 
-     * @Route("/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
+     * @Route("/user/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
      *   "action" = "(activate|password-reset)"
      * })
      * @Template()
@@ -111,7 +108,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/activate/password/send/{token}", name="activation_link_send")
+     * @Route("/user/activate/password/send/{token}", name="activation_link_send")
      * @Template()
      */
     public function activateLinkSendAction(Request $request, $token)
@@ -129,7 +126,7 @@ class UserController extends AbstractController
     }
     
      /**
-     * @Route("/activate/password/sent/{token}", name="activation_link_sent")
+     * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
      * @Template()
      */
     public function activateLinkSentAction(Request $request, $token)
@@ -143,7 +140,7 @@ class UserController extends AbstractController
     /**
      * Registration steps
      *
-     * @Route("/details", name="user_details")
+     * @Route("/user/details", name="user_details")
      * @Template()
      */
     public function detailsAction(Request $request)
@@ -189,9 +186,7 @@ class UserController extends AbstractController
     }
     
      /**
-     * Registration steps
-     *
-     * @Route("/user-account/password", name="user_password_edit")
+     * @Route("/user/password-edit", name="user_password_edit")
      * @Template()
      */
     public function passwordEditAction(Request $request)
@@ -238,10 +233,10 @@ class UserController extends AbstractController
      * - change user data
      * - chang user password
      * 
-     * @Route("/{action}", name="user_view", defaults={ "action" = ""})
+     * @Route("/user/edit", name="user_edit")
      * @Template()
      **/
-    public function indexAction($action)
+    public function editAction()
     {
         $request = $this->getRequest();
         $user = $this->getUser();
@@ -266,12 +261,11 @@ class UserController extends AbstractController
             
             $restClient->put('user/' . $user->getId(), $formData);
 
-            return $this->redirect($this->generateUrl('user_view'));
+            return $this->redirect($this->generateUrl('user_edit'));
         }
             
 
         return [
-            'action' => $action,
             'user' => $user,
             'form' => $form->createView()
         ];

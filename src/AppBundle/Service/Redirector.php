@@ -39,7 +39,7 @@ class Redirector
      */
     private $redirectableRoutes = [
         'user_details',
-        'user_view',
+        'user_edit',
         'report_overview',
         'account',
         'accounts',
@@ -49,7 +49,7 @@ class Redirector
         'report_declaration',
         'report_add_further_info',
         'report_submit_confirmation',
-        'client_home',
+        'client',
     ];
 
 
@@ -157,7 +157,7 @@ class Redirector
                 return $this->router->generate('report_overview', ['reportId' => $reportId]);
             }
         }
-        return $this->router->generate('client_home');
+        return $this->router->generate('client');
     }
 
 

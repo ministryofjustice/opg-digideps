@@ -6,16 +6,13 @@ use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
-/**
- * @Route("/client")
- */
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/show/{action}", name="client_home", defaults={ "action" = "show"})
+     * @Route("/user/client-edit", name="client_edit")
      * @Template()
      */
-    public function indexAction($action)
+    public function editAction()
     {   
         $restClient = $this->get('restClient');
         
@@ -24,42 +21,32 @@ class ClientController extends AbstractController
         
         $client = !empty($clients)? $clients[0]: null;
         
-        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
-        arsort($reports);
-        
         $report = new EntityDir\Report();
         $report->setClient($client);
 
-        $formClientNewReport = $this->createForm(new FormDir\ReportType(), $report);
-        $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
         $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
-        $clientForm = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit'])]);
-        $clientForm->handleRequest($request);
+        $form = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_edit', [ 'action' => 'edit'])]);
+        $form->handleRequest($request);
         
         // edit client form
-        if ($clientForm->isValid()) {
-            $clientUpdated = $clientForm->getData();
+        if ($form->isValid()) {
+            $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
             $restClient->put('client/upsert', $clientUpdated);
 
-            return $this->redirect($this->generateUrl('client_home'));
+            return $this->redirect($this->generateUrl('client_edit'));
         }
         
         return [
-            'hideForm' => ($action != 'edit'),
-            'formClass' => ($action == 'edit') ? 'in-page-form' : '',
-            'action' => $action,
             'client' => $client,
-            'formEditClient' => $clientForm->createView(),
-            'formClientNewReport' => $formClientNewReport->createView(),
-            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
+            'form' => $form->createView(),
             'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
         ];
 
     }
     
     /**
-     * @Route("/add", name="client_add")
+     * @Route("/client/add", name="client_add")
      * @Template()
      */
     public function addAction()

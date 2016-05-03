@@ -60,15 +60,15 @@
                     <li><a href="{{path('reports')}}" class="behat-link-reports reports-link"  >{{ 'nav.reports' | trans }}</a></li>
                 {% endif %}
                 {% if not is_granted('ROLE_ADMIN') %}
-                    <li><a href="{{path('client_home')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li><a href="{{path('client_edit')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
                 
                 {#{% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
-                    <li><a href="{{path('client_home')}}" class="behat-link-client-home client-home-link"  >{% trans %}nav.clientHome{% endtrans %} </a></li>
+                    <li><a href="{{path('client_edit')}}" class="behat-link-client-home client-home-link"  >{% trans %}nav.clientHome{% endtrans %} </a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
-                    <li><a href="{{path('user_view')}}" class="behat-link-my-details your-home-link" >{% trans %}nav.userDetails{% endtrans %} </a></li>
+                    <li><a href="{{path('user_edit')}}" class="behat-link-my-details your-home-link" >{% trans %}nav.userDetails{% endtrans %} </a></li>
                 {% endif %}#}
 
                 {% if app.session.get('ad') %}

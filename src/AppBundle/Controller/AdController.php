@@ -82,7 +82,7 @@ class AdController extends AbstractController
                     'You are now logged as a deputy.'
                 );
                 
-                return $this->redirect($this->generateUrl('client_home'));
+                return $this->redirect($this->generateUrl('client_edit'));
                 
             } catch(\Exception $e){
                 $error = $e->getMessage();
