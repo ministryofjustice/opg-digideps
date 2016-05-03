@@ -4,8 +4,7 @@ Feature: deputy / report / edit user
     Scenario: edit user details
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "my-details"
-        And I click on "edit-user-details"
+        And I click on "user-account, deputy-details"
         Then I should be on "user/edit-your-details#edit-your-details"
         Then the following fields should have the corresponding values:
              | user_details_firstname | John |
@@ -46,19 +45,12 @@ Feature: deputy / report / edit user
            | user_details_phoneAlternative | 020 1234 5679  |
         And I press "user_details_save"
         Then the form should be valid
-        Then I should be on "user"
-        Then I should see "Paul Jamie" in the "my-details-name" region
-        And I should see "103 Petty France" in the "my-details-address" region
-        And I should see "020 3334 3556" in the "my-details-phone-main" region
-        And I should see "020 1234 5679" in the "my-details-phone-alt" region
-        And I should see "behat-user@publicguardian.gsi.gov.uk" in the "my-details" region
      
   
     @deputy   
     Scenario: change user password
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "my-details"
-        And I click on "edit-user-details"
+        And I click on "user-account, deputy-details"
         # wrong old password
         When I fill in "user_details_password_current_password" with "this.is.the.wrong.password"
         And I press "user_details_save"

@@ -32,7 +32,7 @@ Feature: assisted digital / admin
     Scenario: change Assisted Digital user password on admin area
         Given I am logged in to admin as "behat-ad-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "ad-password-change-init"
-        And I click on "my-details, edit-user-details"
+        And I click on "user-account,deputy-details, edit-user-details"
         # wrong old password
         When I fill in "user_details_password_current_password" with "this.is.the.wrong.password"
         And I press "user_details_save"

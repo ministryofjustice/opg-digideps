@@ -4,10 +4,10 @@ Feature: deputy / login and logout functionalities
     Scenario: test login goes to previous page
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to the homepage
-        And I click on "my-details"
-        Then the URL should match "/user"
+        And I click on "user-account"
+        Then the URL should match "/user/client-edit"
         When I expire the session
-        # reload the page and trigger SesionListener 
+        # reload the page and trigger SessionListener 
         And I reload the page
         Then I should be on "/login"
         #And I should see the "session-timeout" region
@@ -28,7 +28,7 @@ Feature: deputy / login and logout functionalities
     Scenario: no cache
       Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
       And I go to the homepage
-      And I click on "my-details"
+      And I click on "user-account"
       Then the response should have the "Cache-Control" header containing "no-cache"
       Then the response should have the "Cache-Control" header containing "no-store"
       Then the response should have the "Cache-Control" header containing "must-revalidate"

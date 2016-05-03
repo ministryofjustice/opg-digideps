@@ -155,15 +155,6 @@ Feature: deputy / user / add client and report
 
 
     @deputy
-    Scenario: user details
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I click on "my-details"
-        Then I should see "John Doe" in the "my-details-name" region
-        And I should see "102 Petty France" in the "my-details-address" region
-        And I should see "020 3334 3555" in the "my-details-phone-main" region
-        And I should see "behat-user@publicguardian.gsi.gov.uk" in the "my-details-email" region
-
-    @deputy
     Scenario: my client
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         Given I click on "client-home"
