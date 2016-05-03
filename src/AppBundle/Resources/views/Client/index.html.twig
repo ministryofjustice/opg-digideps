@@ -1,26 +1,21 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
-{% set translationDomain = "client" %}
-{% trans_default_domain translationDomain %}
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
+    'hideReportNav': true
+} %}
+    {% set translationDomain = "client" %}
+    {% trans_default_domain translationDomain %}
+    {% block bodyClasses %}client{% endblock %}
+    {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
+    {% block contentClass %}{{ parent() }} reports-list{% endblock %}
+    {% block title %}Account: Your client’s{% endblock %}
 
-{% block bodyClasses %}your-client-page{% endblock %}
+{% block backLinktop %}{% endblock %}
 
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} my-client{% endblock %}
-{% block title %}{{ client.getFullname }}{% endblock %}
-
-{% block afterTitle %}
-    {% if lastSignedIn %}
-        <dl class="behat-region-last-loggedin last-logged-in item-data">
-            <dt class="item-label">{{ 'page.lastLoggedIn' | trans({}) }}</dt>
-            <dd class="item-value">{{ (lastSignedIn | last_loggedin_date_formatter) }}</dd>
-        </dl>
-    {% endif %}
+{% block leftcontent %}
+    {% include 'AppBundle:User:left-nav.html.twig'%}
 {% endblock %}
 
-{% block pageBody %}
-
-
-    <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
+{% block maincontent %}
+     <p class="page-section-description">{{ 'page.pageSectionDescription' | trans({'%client%': client.firstname}, translationDomain) }}</p>
 
 
     {% if hideForm %}
@@ -35,5 +30,6 @@
         'translationDomain': translationDomain
         } %}
     </div>
-
+     
 {% endblock %}
+{% endembed %}
