@@ -2,7 +2,7 @@
 
 <div itemscope itemtype="http://schema.org/Person" class="item client-details">
     
-    <a href="{{ path('client_home', {'action': 'edit-client' })~'#edit-client' }}"
+    <a href="{{ path('client_home', {'action': 'edit' })~'#edit-client' }}"
        class="edit-button behat-link-edit-client-details">{{ 'clientDetails.edit'| trans({'%client%': client.firstname}, translationDomain) }}</a>
     
     <dl class="item-data item-data-fixed">

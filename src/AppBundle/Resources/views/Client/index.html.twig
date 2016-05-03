@@ -2,14 +2,6 @@
 {% set translationDomain = "client" %}
 {% trans_default_domain translationDomain %}
 
-{% if (action == 'edit-client') %}
-    {% set hideForm = false %}
-    {% set formClass = 'in-page-form' %}
-{% else %}
-    {% set hideForm = true %}
-    {% set formClass = '' %}
-{% endif %}
-
 {% block bodyClasses %}your-client-page{% endblock %}
 
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
@@ -37,7 +29,7 @@
         } %}
     {% endif %}
 
-    <div id="edit-client" class="{% if hideForm %}visuallyhidden{% endif %}">
+    <div id="edit" class="{% if hideForm %}visuallyhidden{% endif %}">
         {% include 'AppBundle:Client:_edit.html.twig' with {
         'form': formEditClient,
         'translationDomain': translationDomain

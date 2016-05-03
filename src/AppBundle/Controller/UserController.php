@@ -188,6 +188,54 @@ class UserController extends AbstractController
         
     }
     
+     /**
+     * Registration steps
+     *
+     * @Route("/user-account/password", name="user_password_edit")
+     * @Template()
+     */
+    public function passwordEditAction(Request $request)
+    {
+        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
+        $userId = $this->get('security.context')->getToken()->getUser()->getId();
+        $user = $restClient->get('user/' . $userId, 'User'); /* @var $user EntityDir\User*/
+        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
+        $notification = $request->query->has('notification')? $request->query->get('notification'): null;
+
+        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
+            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
+        ]);
+        $form = $this->createForm($formType, $user);
+        
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $restClient->put('user/' . $user->getId(), $form->getData(), [
+                    'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
+                ]);
+                
+                if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+                    $route = 'admin_homepage';
+                } elseif ($this->get('security.context')->isGranted('ROLE_AD')) {
+                    $route = 'ad_homepage';
+                } else {
+                    $route = 'client_add';
+                }
+                
+                // after details are added, admin users to go their homepage, deputies go to next step
+                return $this->redirect($this->generateUrl($route));
+            }
+        } else {
+            // fill the form in (edit mode)
+            $form->setData($user);
+        }
+        
+        return [
+            'form' => $form->createView()
+        ];
+        
+    }
+    
     /**
      * - change user data
      * - chang user password

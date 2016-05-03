@@ -33,7 +33,7 @@ class ClientController extends AbstractController
         $formClientNewReport = $this->createForm(new FormDir\ReportType(), $report);
         $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
         $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
-        $clientForm = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
+        $clientForm = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit'])]);
         $clientForm->handleRequest($request);
         
         // edit client form
@@ -46,6 +46,8 @@ class ClientController extends AbstractController
         }
         
         return [
+            'hideForm' => ($action != 'edit'),
+            'formClass' => ($action == 'edit') ? 'in-page-form' : '',
             'action' => $action,
             'client' => $client,
             'formEditClient' => $clientForm->createView(),
