@@ -1,7 +1,7 @@
 {% trans_default_domain translationDomain %}
 
 {% block validationSummary %}
-    {{ form_errors_list(formEditDetails) }}
+    {{ form_errors_list(form) }}
 {% endblock %}
 
 
@@ -59,14 +59,14 @@
 
 <div id="edit-your-details" {% if hideForm %} class="visuallyhidden" {% endif %}>
 
-    {{ form_start(formEditDetails, {attr: {novalidate: 'novalidate', class: formClass } }) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate', class: formClass } }) }}
 
     {% include 'AppBundle:User:_edit.html.twig' with {
-    'form': formEditDetails,
+    'form': form,
     'translationDomain': translationDomain
     } %}
 
-    {{ form_end(formEditDetails) }}
+    {{ form_end(form) }}
 
 
     <form class="in-page-form">

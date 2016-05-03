@@ -1,18 +1,19 @@
-{% extends 'AppBundle:Components/Page:page-service.html.twig' %}
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
+    'hideReportNav': true
+} %}
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
-
+{% block contentClass %}{{ parent() }} deputy{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block contentClass %}{{ parent() }} your-details{% endblock %}
-{% block title %}{% trans %}page.pageSectionTitle{% endtrans %}{% endblock %}
+{% block title %}Account: deputy details{% endblock %}
 
-{% block validationSummary %}
-    {# {{ form_errors_list(form) }} #}
+{% block backLinktop %}{% endblock %}
+
+{% block leftcontent %}
+    {% include 'AppBundle:User:left-nav.html.twig'%}
 {% endblock %}
 
-{% block bodyClasses %}your-details-page{% endblock %}
-
-{% block pageBody %}
+{% block maincontent %}
 
     {% include 'AppBundle:Components/Page:_page-section-description.html.twig' with {
     transDomain: translationDomain,
@@ -22,6 +23,5 @@
     {% include 'AppBundle:User:_your-details.html.twig' with {
     'translationDomain': translationDomain
     } %}
-
-
 {% endblock %}
+{% endembed %}

@@ -1,8 +1,10 @@
 {% set translationDomain = "user-account" %}
 {% trans_default_domain translationDomain %}
 
+{% set route = app.request.attributes.get('_route') %}
+
 <nav id="account-sub-nav">
-    <a href="{{ path('client_home') }}" class="active behat-link-client-details">{{ 'nav.client-details' | trans() }}</a>
-    <a href="{{ path('user_view') }}" class="behat-link-deputy-details">{{ 'nav.deputy-details' | trans() }}</a>
-    <a href="{{ path('user_password_edit') }}" class="behat-link-change-password">{{ 'nav.change-password' | trans() }}</a>
+    <a href="{{ path('client_home') }}" class="{{ route =='client_home' ? 'active':'' }} behat-link-client-details">{{ 'nav.client-details' | trans() }}</a>
+    <a href="{{ path('user_view') }}" class="{{ route =='user_view' ? 'active':'' }} behat-link-deputy-details">{{ 'nav.deputy-details' | trans() }}</a>
+    <a href="{{ path('user_password_edit') }}" class="{{ route =='user_password_edit' ? 'active':'' }} behat-link-change-password">{{ 'nav.change-password' | trans() }}</a>
 </nav>

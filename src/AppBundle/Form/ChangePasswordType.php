@@ -11,6 +11,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 
 class ChangePasswordType extends AbstractType
 {
+
     private $request;
 
     const VALIDATION_GROUP = 'change_password';
@@ -23,25 +24,28 @@ class ChangePasswordType extends AbstractType
         $this->request = $request;
     }
 
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('current_password', 'password', [
-            'constraints' => new DUserPassword([ 'message' => 'Please enter your correct current password',
-                    'groups' => [self::VALIDATION_GROUP]])
-            ])
-            ->add('plain_password', 'repeated', [
-                'type' => 'password',
-                'invalid_message' => 'Password does not match',
-                'constraints' => [
-                    new Assert\Length(['min' => 8, 'max' => 50, 'minMessage' => "user.password.minLength", 'maxMessage' => "user.password.maxLength", 'groups' => [self::VALIDATION_GROUP]]),
-                    new Assert\Regex(['pattern' => "/[a-z]/", 'message' => 'user.password.noLowerCaseChars', 'groups' => self::VALIDATION_GROUP]),
-                    new Assert\Regex(['pattern' => "/[A-Z]/", 'message' => 'user.password.noUpperCaseChars', 'groups' => self::VALIDATION_GROUP]),
-                    new Assert\Regex(['pattern' => "/[0-9]/", 'message' => 'user.password.noNumber', 'groups' => self::VALIDATION_GROUP]),
-                ]
-        ]);
+                    'mapped' => false,
+                    'constraints' => new DUserPassword([ 'message' => 'Please enter your correct current password',
+                        'groups' => [self::VALIDATION_GROUP]])
+                ])
+                ->add('plain_password', 'repeated', [
+                    'mapped' => false,
+                    'type' => 'password',
+                    'invalid_message' => 'Password does not match',
+                    'constraints' => [
+                        new Assert\Length(['min' => 8, 'max' => 50, 'minMessage' => "user.password.minLength", 'maxMessage' => "user.password.maxLength", 'groups' => [self::VALIDATION_GROUP]]),
+                        new Assert\Regex(['pattern' => "/[a-z]/", 'message' => 'user.password.noLowerCaseChars', 'groups' => self::VALIDATION_GROUP]),
+                        new Assert\Regex(['pattern' => "/[A-Z]/", 'message' => 'user.password.noUpperCaseChars', 'groups' => self::VALIDATION_GROUP]),
+                        new Assert\Regex(['pattern' => "/[0-9]/", 'message' => 'user.password.noNumber', 'groups' => self::VALIDATION_GROUP]),
+                    ]
+                ])
+                ->add('id', 'hidden')
+                ->add('save', 'submit');
+        ;
     }
-
 
     public function checkNewPasswordIsNotBlank($data, ExecutionContextInterface $context)
     {
@@ -50,12 +54,10 @@ class ChangePasswordType extends AbstractType
         }
     }
 
-
     public function getParent()
     {
         return 'form';
     }
-
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -66,7 +68,6 @@ class ChangePasswordType extends AbstractType
             'validation_groups' => [self::VALIDATION_GROUP],
         ]);
     }
-
 
     public function getName()
     {

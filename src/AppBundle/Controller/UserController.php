@@ -196,41 +196,39 @@ class UserController extends AbstractController
      */
     public function passwordEditAction(Request $request)
     {
-        $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $restClient->get('user/' . $userId, 'User'); /* @var $user EntityDir\User*/
-        $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
-        $notification = $request->query->has('notification')? $request->query->get('notification'): null;
+        $user = $this->getUser();
+        
+        $form = $this->createForm(new FormDir\ChangePasswordType($request), $user);
+        $form->handleRequest($request);
+        $restClient = $this->get('restClient');
 
-        $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
-            'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
-        ]);
-        $form = $this->createForm($formType, $user);
-        
-        if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            if ($form->isValid()) {
-                $restClient->put('user/' . $user->getId(), $form->getData(), [
-                    'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
-                ]);
+        if($form->isValid()){
+            $formRawData = $request->request->get('user_details');
+            /**
+             * if new password has been set then we need to encode this using the encoder and pass it to
+             * the api
+             */
+            if (!empty($formRawData['password']['plain_password']['first'])){
+                $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+                    'password_plain' => $formRawData['password']['plain_password']['first'],
+                    'send_email' => true
+                ]));
                 
-                if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-                    $route = 'admin_homepage';
-                } elseif ($this->get('security.context')->isGranted('ROLE_AD')) {
-                    $route = 'ad_homepage';
-                } else {
-                    $route = 'client_add';
-                }
-                
-                // after details are added, admin users to go their homepage, deputies go to next step
-                return $this->redirect($this->generateUrl($route));
+                $request->getSession()->getFlashBag()->add(
+                    'notification',
+                    'page.passwordChangedNotification'
+                );
+
             }
-        } else {
-            // fill the form in (edit mode)
-            $form->setData($user);
+            //FIXME
+            //$restClient->put('user/' . $user->getId(), $formData);
+
+            return $this->redirect($this->generateUrl('user_password_edit'));
         }
-        
+            
+
         return [
+            'user' => $user,
             'form' => $form->createView()
         ];
         
@@ -253,32 +251,18 @@ class UserController extends AbstractController
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
         ]);
         
-        $formEditDetails = $this->createForm($formType, $user);
+        $form = $this->createForm($formType, $user);
         
-        $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
-        
-        $formEditDetails->handleRequest($request);
+        $form->handleRequest($request);
         $restClient = $this->get('restClient');
 
-        if($formEditDetails->isValid()){
-            $formData = $formEditDetails->getData();
+        if($form->isValid()){
+            $formData = $form->getData();
             $formRawData = $request->request->get('user_details');
             /**
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            if (!empty($formRawData['password']['plain_password']['first'])){
-                $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
-                    'password_plain' => $formRawData['password']['plain_password']['first'],
-                    'send_email' => true
-                ]));
-                
-                $request->getSession()->getFlashBag()->add(
-                    'notification',
-                    'page.passwordChangedNotification'
-                );
-
-            }
             
             $restClient->put('user/' . $user->getId(), $formData);
 
@@ -289,7 +273,7 @@ class UserController extends AbstractController
         return [
             'action' => $action,
             'user' => $user,
-            'formEditDetails' => $formEditDetails->createView()
+            'form' => $form->createView()
         ];
     }
     

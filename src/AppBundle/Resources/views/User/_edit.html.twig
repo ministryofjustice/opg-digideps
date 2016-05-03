@@ -24,12 +24,6 @@ formTitle: "form.editYourDetails.subSectionTitle" | trans
     {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
 {% endif %}
 
-<h3 class="heading-medium">{{ 'form.changeYourPassword.subSectionTitle' | trans({}, translationDomain) }}</h3>
-
-{{ form_input(form.password.current_password,'form.changeYourPassword.controls.currentPassword') }}
-{{ form_input(form.password.plain_password.first,'form.changeYourPassword.controls.newPassword') }}
-{{ form_input(form.password.plain_password.second,'form.changeYourPassword.controls.confirmNewPassword') }}
-
 {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
