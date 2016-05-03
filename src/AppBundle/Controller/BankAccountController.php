@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class AccountController extends AbstractController
+class BankAccountController extends AbstractController
 {
     /**
      * @Route("/report/{reportId}/accounts/moneyin", name="accounts_moneyin")
