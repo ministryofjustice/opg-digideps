@@ -1,0 +1,8 @@
+{% set translationDomain = "user-account" %}
+{% trans_default_domain translationDomain %}
+
+<nav id="account-sub-nav">
+    <a href="{{ '#' }}" class="behat-link-client-details">{{ 'nav.client-details' | trans() }}</a>
+    <a href="{{ '#' }}" class="behat-link-deputy-details">{{ 'nav.deputy-details' | trans() }}</a>
+    <a href="{{ '#' }}" class="behat-link-change-password">{{ 'nav.change-password' | trans() }}</a>
+</nav>
