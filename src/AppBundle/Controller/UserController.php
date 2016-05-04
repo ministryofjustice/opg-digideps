@@ -221,8 +221,11 @@ class UserController extends AbstractController
             return $this->redirect($this->generateUrl('user_password_edit'));
         }
             
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
 
         return [
+            'client' => $client,
             'user' => $user,
             'form' => $form->createView()
         ];
@@ -264,8 +267,11 @@ class UserController extends AbstractController
             return $this->redirect($this->generateUrl('user_edit'));
         }
             
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
 
         return [
+            'client' => $client,
             'user' => $user,
             'form' => $form->createView()
         ];

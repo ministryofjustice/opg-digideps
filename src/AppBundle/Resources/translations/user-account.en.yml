@@ -1,4 +1,4 @@
 nav:
-    client-details: "Your client’s details"
-    deputy-details: "Deputy details"
+    client-details: "%client%'s details"
+    deputy-details: "Your details"
     change-password: "Change password"

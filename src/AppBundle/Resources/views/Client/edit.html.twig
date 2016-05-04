@@ -5,7 +5,7 @@
 {% trans_default_domain translationDomain %}
 {% block bodyClasses %}client-page{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block title %}Account: Your client’s{% endblock %}
+{% block title %}Account: {{ client.firstname }}’s details{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 
