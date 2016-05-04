@@ -329,6 +329,9 @@ class Report
      */
     public function getDueDate()
     {
+        if (!$this->endDate instanceof \DateTime) {
+            return null;
+        }
         $dueDate = clone $this->endDate;
         $dueDate->modify('+8 weeks');
         

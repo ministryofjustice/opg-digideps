@@ -21,10 +21,10 @@ class ReportController extends AbstractController
     ];
     
     /**
-     * @Route("/reports/{reportId}", name="reports", defaults={"reportId" = ""})
+     * @Route("/reports/{cot}/{reportId}", name="reports", defaults={"reportId" = ""})
      * @Template()
      */
-    public function indexAction($reportId = null)
+    public function indexAction($cot, $reportId = null)
     {   
         $restClient = $this->get('restClient');
         
@@ -34,6 +34,9 @@ class ReportController extends AbstractController
         $client = !empty($clients)? $clients[0]: null;
         
         $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
+        $reports = array_filter($reports, function ($r) use ($cot) {
+            return $r->getCourtOrderType() == $cot;
+        });
         arsort($reports);
         
         $report = new EntityDir\Report();

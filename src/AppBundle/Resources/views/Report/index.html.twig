@@ -5,10 +5,10 @@
     {% trans_default_domain translationDomain %}
     {% block bodyClasses %}reports-page{% endblock %}
     {% block pageTitle %}
-        {{ ('page.' ~ filter ~ '.htmlTitle') | trans }}
+        {{ ('page.' ~ filter ~ '.htmlTitle') | trans({'%client%': client.firstname}) }}
     {% endblock %}
     {% block contentClass %}{{ parent() }} reports-list{% endblock %}
-    {% block title %}{{ 'page.title' | trans }}{% endblock %}
+    {% block title %}{{ ('page.' ~ filter ~ '.title') | trans({'%client%': client.firstname}) }}{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 

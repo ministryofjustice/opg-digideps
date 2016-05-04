@@ -2,8 +2,8 @@ page:
   propFinance:
       htmlTitle: "Deputy report - Property and finance reports | GOV.UK"
       pageSectionTitle: Property and finance reports for %client%
+      title: Property and finance reports for %client%
   lastLoggedIn: "Last logged in:"
-  title: Reports
 nav:
     propFinance: Property and finance
 reportDataList:
