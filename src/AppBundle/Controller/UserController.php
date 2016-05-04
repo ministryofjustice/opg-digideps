@@ -198,27 +198,13 @@ class UserController extends AbstractController
         $restClient = $this->get('restClient');
 
         if($form->isValid()){
-            $formRawData = $request->request->get('change_password');
-            /**
-             * if new password has been set then we need to encode this using the encoder and pass it to
-             * the api
-             */
-            if (!empty($formRawData['plain_password']['first'])){
-                $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
-                    'password_plain' => $formRawData['plain_password']['first'],
-                    'send_email' => false
-                ]));
-                
-                $request->getSession()->getFlashBag()->add(
-                    'notification',
-                    'page.passwordChangedNotification'
-                );
+            $plainPassword = $request->request->get('change_password')['plain_password']['first'];
+            $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+                'password_plain' => $plainPassword,
+                'send_email' => false
+            ]));
 
-            }
-            //FIXME
-            //$restClient->put('user/' . $user->getId(), $formData);
-
-            return $this->redirect($this->generateUrl('user_password_edit'));
+            return $this->redirect($this->generateUrl('user_password_edit_done'));
         }
             
         $clients = $this->getUser()->getClients(); 

@@ -1,6 +1,6 @@
 Feature: Safeguarding Data entry
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: data entry - Setup the test user
       Given I load the application status from "init" 
       And I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
@@ -25,7 +25,7 @@ Feature: Safeguarding Data entry
       And I reset the email log
       Then I save the application status into "safeentryuser"
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Lives with client
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -39,7 +39,7 @@ Feature: Safeguarding Data entry
         And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doYouLiveWithClient_0" should be checked
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Does not live with client
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -55,7 +55,7 @@ Feature: Safeguarding Data entry
         And the "safeguarding_howOftenDoYouContactClient" field should contain "every week"
         And I save the page as "safeguarding-dataentry"
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Client does not receive care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -69,7 +69,7 @@ Feature: Safeguarding Data entry
         And I follow "edit-safeguarding"    
         Then the checkbox "safeguarding_doesClientReceivePaidCare_1" should be checked
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Client does receive care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -85,7 +85,7 @@ Feature: Safeguarding Data entry
         Then the checkbox "safeguarding_doesClientReceivePaidCare_0" should be checked
         And the checkbox "safeguarding_howIsCareFunded_0" should be checked
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: User must answer sub questions when receiving care
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -99,7 +99,7 @@ Feature: Safeguarding Data entry
             | safeguarding_howIsCareFunded_1 |
             | safeguarding_howIsCareFunded_2 |
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Who is doing the caring?
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -113,7 +113,7 @@ Feature: Safeguarding Data entry
         And I follow "edit-safeguarding"
         And the "safeguarding_whoIsDoingTheCaring" field should contain "Fred Jones"
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Client has care plan
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -131,7 +131,7 @@ Feature: Safeguarding Data entry
         And the "safeguarding_whenWasCarePlanLastReviewed_month" field should contain "01"
         And the "safeguarding_whenWasCarePlanLastReviewed_year" field should contain "2016"
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Client does not have care plan
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -145,7 +145,7 @@ Feature: Safeguarding Data entry
         And I follow "edit-safeguarding"
         Then the checkbox "safeguarding_doesClientHaveACarePlan_1" should be checked
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Client must answer sub questions when there is a care plan
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"
@@ -159,7 +159,7 @@ Feature: Safeguarding Data entry
             | safeguarding_whenWasCarePlanLastReviewed_month |
             | safeguarding_whenWasCarePlanLastReviewed_year |
 
-    @safeguarding @entry @deputy
+    @deputy
     Scenario: Deputy must answer top level questions
         When I load the application status from "safeentryuser"
         And I am logged in as "behat-safe-entry@publicguardian.gsi.gov.uk" with password "Abcd1234"

@@ -4,7 +4,7 @@ Feature: deputy / report / edit user
     Scenario: edit user details
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "user-account, deputy-details"
+        And I click on "user-account, deputy-edit"
         Then I should be on "user/edit-your-details#edit-your-details"
         Then the following fields should have the corresponding values:
              | user_details_firstname | John |
@@ -50,53 +50,52 @@ Feature: deputy / report / edit user
     @deputy   
     Scenario: change user password
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "user-account, deputy-details"
+        And I click on "user-account, change-password"
         # wrong old password
-        When I fill in "user_details_password_current_password" with "this.is.the.wrong.password"
+        When I fill in "change_password_current_password" with "this.is.the.wrong.password"
         And I press "user_details_save"
         Then the following fields should have an error:
-              | user_details_password_current_password |
-              | user_details_password_plain_password_first |
+              | change_password_current_password |
+              | change_password_plain_password_first |
         # invalid new password
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | 1 |
-          | user_details_password_plain_password_second | 2 |
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | 1 |
+          | change_password_plain_password_second | 2 |
         And I press "user_details_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |      
+              | change_password_plain_password_first |      
         # unmatching new passwords
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | Abcd1234 |
-          | user_details_password_plain_password_second | Abcd12345 |
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | Abcd1234 |
+          | change_password_plain_password_second | Abcd12345 |
         And I press "user_details_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |
+              | change_password_plain_password_first |
         #empty password
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | |
-          | user_details_password_plain_password_second | |
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | |
+          | change_password_plain_password_second | |
         And I press "user_details_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |
+              | change_password_plain_password_first |
         # valid new password
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | Abcd12345 |
-          | user_details_password_plain_password_second | Abcd12345 |
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | Abcd12345 |
+          | change_password_plain_password_second | Abcd12345 |
         And I press "user_details_save"
         Then the form should be valid
-        And I should be on "/user"
         # restore old password (and assert the current password can be used as old password)
-        When I click on "edit-user-details"
+        When I click on "change-password"
         And I fill in the following:
-          | user_details_password_current_password | Abcd12345 |
-          | user_details_password_plain_password_first | Abcd1234 |
-          | user_details_password_plain_password_second | Abcd1234 |
+          | change_password_current_password | Abcd12345 |
+          | change_password_plain_password_first | Abcd1234 |
+          | change_password_plain_password_second | Abcd1234 |
         And I press "user_details_save"
         Then the form should be valid
-        And I should be on "/user"
+        And I should be on "/user/password-edit-done"   
       
     

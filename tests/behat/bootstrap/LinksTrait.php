@@ -62,7 +62,7 @@ trait LinksTrait
         $linkSelector = self::behatElementToCssSelector($link, 'link');
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $linkSelector);
         $count = count($linksElementsFound);
-
+        
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than one $linkSelector element in the page ($count). Interrupted");
         }

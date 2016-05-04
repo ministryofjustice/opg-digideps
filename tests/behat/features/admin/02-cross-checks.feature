@@ -21,14 +21,16 @@ Feature: admin / acl
         Given I reset the email log
         And I am on admin login page
         When I click on "forgotten-password"
-        And I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
+        Then I should be on "/password/forgotten"
+        When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
         And I press "password_forgotten_submit"
         Then the last email should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         # check admin CANNOT recover password from DEPUTY site
         Given I reset the email log
         And I am on the login page
         When I click on "forgotten-password"
-        And I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
+        Then I should be on "/password/forgotten"
+        When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
         And I press "password_forgotten_submit"
         #Then the response status code should be 200
         And no email should have been sent

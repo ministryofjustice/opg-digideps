@@ -1,12 +1,12 @@
 Feature:  provide feedback
     
-    @feedback @deputy
+    @deputy
     Scenario: Feedback can be accessed by users who are not logged in
         Given I am not logged in
         And I go to "/feedback"
         Then I should see "Your feedback"
 
-    @feedback @deputy
+    @deputy
     Scenario: I give feedback on all fields and it is emailed to OPG
         Given I am not logged in
         And I reset the email log
@@ -25,7 +25,7 @@ Feature:  provide feedback
         And the last email should contain "Satisfied"
         And the last email should contain "No, I filled in this form myself"
 
-    @feedback @deputy
+    @deputy
     Scenario: I give feedback on all fields including email and it is emailed to OPG
         Given I am not logged in
         And I reset the email log
@@ -68,7 +68,7 @@ Feature:  provide feedback
         And the last email should contain "behat-feedback-sender-custom@publicguardian.gsi.gov.uk"
 
 
-    @feedback @deputy
+    @deputy
     Scenario: When I give feedback I dont have to fill all the fields in
         Given I am not logged in
         And I reset the email log
@@ -81,7 +81,7 @@ Feature:  provide feedback
         And the last email should have been sent to "behat-digideps+feedback@digital.justice.gov.uk"
         And the last email should contain "No, I filled in this form myself"
     
-    @feedback @deputy
+    @deputy
     Scenario: After giving feedback I see a thank you
         Given I am on "/feedback"
         And I fill in the following:
@@ -89,7 +89,7 @@ Feature:  provide feedback
         And I press "feedback_save"
         Then I should see "Thank you for sending your feedback"
 
-    @feedback @deputy
+    @deputy
     Scenario: Feedback email filled with logged users' email
         Given I am logged in to admin as "ADMIN@PUBLICGUARDIAN.GSI.GOV.UK" with password "Abcd1234"
         When I create a new "Lay Deputy" user "Feedback" "Sender" with email "behat-feedback-sender@publicguardian.gsi.gov.uk"
@@ -99,13 +99,13 @@ Feature:  provide feedback
         Then I should see "Your feedback"
         And the "feedback_email" field should contain "behat-feedback-sender@publicguardian.gsi.gov.uk"
 
-    @feedback @deputy
+    @deputy
     Scenario: On the feedback screen I can go back to my previous page
         Given I am on the login page
         And I go to "/feedback"
         Then the "Back to deputy report" link url should contain "/"
             
-    @feedback @deputy
+    @deputy
     Scenario: On the thank you screen I see a link back to the client home
         Given I am on the login page
         And I go to "/feedback"
