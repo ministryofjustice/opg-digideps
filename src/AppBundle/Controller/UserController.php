@@ -233,6 +233,20 @@ class UserController extends AbstractController
     }
     
     /**
+     * @Route("/user/password-edit-done", name="user_password_edit_done")
+     * @Template()
+     */
+    public function passwordEditDoneAction(Request $request)
+    {
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
+        
+        return [
+            'client' => $client,
+        ];
+    }
+    
+    /**
      * - change user data
      * - chang user password
      * 
