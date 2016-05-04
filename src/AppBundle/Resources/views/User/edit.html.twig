@@ -14,7 +14,9 @@
 {% endblock %}
 
 {% block maincontent %}
-
+    
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    
     {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
 
     {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
@@ -48,6 +50,7 @@
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
+    {{ form_end(form) }}
 
 {% endblock %}
 {% endembed %}

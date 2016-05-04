@@ -193,20 +193,20 @@ class UserController extends AbstractController
     {
         $user = $this->getUser();
         
-        $form = $this->createForm(new FormDir\ChangePasswordType($request), $user);
+        $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true ]);
         $form->handleRequest($request);
         $restClient = $this->get('restClient');
 
         if($form->isValid()){
-            $formRawData = $request->request->get('user_details');
+            $formRawData = $request->request->get('change_password');
             /**
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            if (!empty($formRawData['password']['plain_password']['first'])){
+            if (!empty($formRawData['plain_password']['first'])){
                 $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
-                    'password_plain' => $formRawData['password']['plain_password']['first'],
-                    'send_email' => true
+                    'password_plain' => $formRawData['plain_password']['first'],
+                    'send_email' => false
                 ]));
                 
                 $request->getSession()->getFlashBag()->add(
@@ -256,13 +256,13 @@ class UserController extends AbstractController
 
         if($form->isValid()){
             $formData = $form->getData();
-            $formRawData = $request->request->get('user_details');
             /**
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            
-            $restClient->put('user/' . $user->getId(), $formData);
+            $restClient->put('user/' . $user->getId(), $formData, [
+                'deserialise_group' => 'user_details_full'
+            ]);
 
             return $this->redirect($this->generateUrl('user_edit'));
         }

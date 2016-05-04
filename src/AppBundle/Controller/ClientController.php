@@ -32,7 +32,9 @@ class ClientController extends AbstractController
         if ($form->isValid()) {
             $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
-            $restClient->put('client/upsert', $clientUpdated);
+            $restClient->put('client/upsert', $clientUpdated, [
+                 'deserialise_group' => 'edit'
+            ]);
 
             return $this->redirect($this->generateUrl('client_edit'));
         }
