@@ -7,7 +7,7 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.bankAccounts' | trans({}, "report-accounts") }}{% endblock %}
 
     {% block leftcontent %}
-        {% include 'AppBundle:Account:left-nav.html.twig'%}
+        {% include 'AppBundle:BankAccount:left-nav.html.twig'%}
     {% endblock %}
 
     {% block maincontent %}
@@ -31,7 +31,7 @@
 
                 {% if report.accounts is not empty %}
                     {% for account in report.accounts %}
-                        {% include 'AppBundle:Account:bank-list-item.html.twig' with {
+                        {% include 'AppBundle:BankAccount:bank-list-item.html.twig' with {
                             account: account,
                             report: report
                         }%}

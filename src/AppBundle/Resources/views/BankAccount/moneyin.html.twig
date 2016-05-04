@@ -7,14 +7,14 @@
     {% block title %}{{ 'page.pageSectionTitle' | trans }}: {{ 'nav.moneyIn' | trans({}, "report-accounts") }}{% endblock %}
     {% block info %}<span id="save-status"></span>{% endblock %}
     {% block leftcontent %}
-        {% include 'AppBundle:Account:left-nav.html.twig'%}
+        {% include 'AppBundle:BankAccount:left-nav.html.twig'%}
     {% endblock %}
 
     {% block maincontent %}
 
         <h3 class="heading-medium-large">{{ 'moneyIn.pageSectionTitle' | trans({'%client%': report.client.firstname}, translationDomain) }}</h3>
         <p class="page-section-description">{{ 'moneyIn.pageSectionDescription' | trans({'%client%': report.client.firstname, '%startDate%': report.startDate | date("j F Y"), '%endDate%': report.endDate | date("j F Y")}) | raw }}</p>
-        {% include 'AppBundle:Account:transactions.html.twig' with {
+        {% include 'AppBundle:BankAccount:transactions.html.twig' with {
         transDomain: translationDomain,
         transactionsGrouped: report.groupByCategory(report.transactionsIn),
         transactionsTotal: report.getMoneyInTotal,
