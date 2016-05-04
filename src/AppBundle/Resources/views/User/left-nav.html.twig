@@ -4,7 +4,9 @@
 {% set route = app.request.attributes.get('_route') %}
 
 <nav id="account-sub-nav">
-    <a href="{{ path('client_edit') }}" class="{{ route =='client_edit' ? 'active':'' }} behat-link-client-edit">{{ 'nav.client-edit' | trans({'%client%': client.firstname}, translationDomain) }}</a>
+    {% if not is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('client_edit') }}" class="{{ route =='client_edit' ? 'active':'' }} behat-link-client-edit">{{ 'nav.client-edit' | trans({'%client%': client.firstname}, translationDomain) }}</a>
+    {% endif %}
     <a href="{{ path('user_edit') }}" class="{{ route =='user_edit' ? 'active':'' }} behat-link-deputy-edit">{{ 'nav.deputy-edit' | trans() }}</a>
     <a href="{{ path('user_password_edit') }}" class="{{ (route =='user_password_edit' or route =='user_password_edit_done') ? 'active':'' }} behat-link-change-password">{{ 'nav.change-password' | trans() }}</a>
 </nav>
