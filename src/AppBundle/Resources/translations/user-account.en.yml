@@ -1,4 +1,12 @@
 nav:
-    client-details: "%client%'s details"
-    deputy-details: "Your details"
+    client-edit: "%client%'s details"
+    deputy-edit: "Your details"
     change-password: "Change password"
+h1Title:
+    client-edit: "Account: %client%'s details"
+    deputy-edit: "Account: Your details"
+    change-password: "Account: Change password"    
+htmlTitle:
+    client-edit: "Deputy report - %client%'s details | GOV.UK"
+    deputy-edit: "Deputy report - your details | GOV.UK"
+    change-password: "Deputy report - change password | GOV.UK"

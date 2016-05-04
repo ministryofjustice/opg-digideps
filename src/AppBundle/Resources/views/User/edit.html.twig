@@ -4,8 +4,8 @@
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
 {% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
-{% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
-{% block title %}Account: Deputy details{% endblock %}
+{% block pageTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block title %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
 
 {% block backLinktop %}{% endblock %}
 
