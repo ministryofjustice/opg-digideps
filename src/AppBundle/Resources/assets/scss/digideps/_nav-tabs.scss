@@ -191,7 +191,9 @@
 }
 
 .reports-page #global-header .header-proposition #proposition-links a.reports-link,
-.your-client-page #global-header .header-proposition #proposition-links a.client-home-link,
-.your-details-page #global-header .header-proposition #proposition-links a.your-home-link {
+.client-page #global-header .header-proposition #proposition-links a.user-account-link,
+.deputy-page #global-header .header-proposition #proposition-links a.user-account-link,
+.deputy-password-page #global-header .header-proposition #proposition-links a.user-account-link
+{
     color: $link-colour;
 }

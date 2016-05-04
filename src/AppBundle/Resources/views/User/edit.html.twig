@@ -3,7 +3,7 @@
 } %}
 {% set translationDomain = "user-details" %}
 {% trans_default_domain translationDomain %}
-{% block contentClass %}{{ parent() }} deputy{% endblock %}
+{% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
 {% block pageTitle %}{{ 'page.htmlTitle' | trans }} {% endblock %}
 {% block title %}Account: deputy details{% endblock %}
 

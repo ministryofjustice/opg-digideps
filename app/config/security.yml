@@ -19,7 +19,7 @@ security:
             security: false
            
         passwordManaging:
-            pattern:  ^/user/password*
+            pattern:  ^/user/password/(forgotten|sent)*
             security: false    
             
         userActivate:
