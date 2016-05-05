@@ -51,14 +51,6 @@
 
         {{ form_submit(form.save,'save', {'buttonClass' : ''}) }}
 
-        {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
-    transDomain: translationDomain,
-    linkButtonLabel: 'form.editClientForm.controls.cancel.label',
-        
-    linkClass: 'button-link',
-    linkHref: path('client_edit', {'action': 'show' })
-    } %}
-
         {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
         {{ form_end(form) }}
