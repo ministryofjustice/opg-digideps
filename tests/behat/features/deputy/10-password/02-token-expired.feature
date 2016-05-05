@@ -25,5 +25,5 @@ Feature: deputy / Activation link resending
         When I go to "/user/password-reset/behatuser123abc"
         And I save the page as "password-reset-token-expired"
         And I click on "go-back-to-reset-password"
-        Then I should be on "/user/password/forgotten"
+        Then I should be on "/password-managing/forgotten"
         And I save the page as "password-reset-token-expired-back-to-reset-password"
