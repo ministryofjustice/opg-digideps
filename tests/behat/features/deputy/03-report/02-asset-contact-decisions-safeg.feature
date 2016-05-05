@@ -6,6 +6,7 @@ Feature: deputy / report / add contact, decision, assets
         And I follow "edit-contacts"
         And I save the page as "report-contact-empty"
         # wrong form
+        When I follow "add-contacts-button"
         And I press "contact_save"
         And I save the page as "report-contact-add-error"
         Then the following fields should have an error:
