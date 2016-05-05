@@ -3,7 +3,8 @@ Feature: deputy / acl / cross domain (admin and deputy) checks
     @deputy
     Scenario: A deputy cannot login into admin area
         # check deputy can login into deputy site
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
+        Given I load the application status from "report-submit-pre"
+        And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         #Then the response status code should be 200
         # check deputy CANNOT login into ADMIN site
         Given I go to "/logout"
