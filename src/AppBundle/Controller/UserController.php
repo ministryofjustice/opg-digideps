@@ -278,7 +278,7 @@ class UserController extends AbstractController
     }
     
      /**
-     * @Route("/password/forgotten", name="password_forgotten")
+     * @Route("/password-managing/forgotten", name="password_forgotten")
      * @Template()
      **/
     public function passwordForgottenAction(Request $request)
@@ -307,7 +307,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/password/sent", name="password_sent")
+     * @Route("/password-managing/sent", name="password_sent")
      * @Template()
      **/
     public function passwordSentAction()
