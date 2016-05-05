@@ -14,6 +14,8 @@ class Client
 {
     /**
      * @JMS\Type("integer")
+     * @JMS\Groups({"edit"})
+
      * @var integer
      */
     private $id;

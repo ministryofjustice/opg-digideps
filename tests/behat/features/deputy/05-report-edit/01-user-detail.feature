@@ -5,7 +5,7 @@ Feature: deputy / report / edit user
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "user-account, deputy-edit"
-        Then I should be on "user/edit-your-details#edit-your-details"
+        Then I should be on "user-account/user-edit"
         Then the following fields should have the corresponding values:
              | user_details_firstname | John |
              | user_details_lastname | Doe |
@@ -53,7 +53,7 @@ Feature: deputy / report / edit user
         And I click on "user-account, change-password"
         # wrong old password
         When I fill in "change_password_current_password" with "this.is.the.wrong.password"
-        And I press "user_details_save"
+        And I press "change_password_save"
         Then the following fields should have an error:
               | change_password_current_password |
               | change_password_plain_password_first |
@@ -62,7 +62,7 @@ Feature: deputy / report / edit user
           | change_password_current_password | Abcd1234 |
           | change_password_plain_password_first | 1 |
           | change_password_plain_password_second | 2 |
-        And I press "user_details_save"
+        And I press "change_password_save"
         Then the following fields should have an error:
               | change_password_plain_password_first |      
         # unmatching new passwords
@@ -70,7 +70,7 @@ Feature: deputy / report / edit user
           | change_password_current_password | Abcd1234 |
           | change_password_plain_password_first | Abcd1234 |
           | change_password_plain_password_second | Abcd12345 |
-        And I press "user_details_save"
+        And I press "change_password_save"
         Then the following fields should have an error:
               | change_password_plain_password_first |
         #empty password
@@ -78,7 +78,7 @@ Feature: deputy / report / edit user
           | change_password_current_password | Abcd1234 |
           | change_password_plain_password_first | |
           | change_password_plain_password_second | |
-        And I press "user_details_save"
+        And I press "change_password_save"
         Then the following fields should have an error:
               | change_password_plain_password_first |
         # valid new password
@@ -86,7 +86,7 @@ Feature: deputy / report / edit user
           | change_password_current_password | Abcd1234 |
           | change_password_plain_password_first | Abcd12345 |
           | change_password_plain_password_second | Abcd12345 |
-        And I press "user_details_save"
+        And I press "change_password_save"
         Then the form should be valid
         # restore old password (and assert the current password can be used as old password)
         When I click on "change-password"
@@ -94,8 +94,8 @@ Feature: deputy / report / edit user
           | change_password_current_password | Abcd12345 |
           | change_password_plain_password_first | Abcd1234 |
           | change_password_plain_password_second | Abcd1234 |
-        And I press "user_details_save"
+        And I press "change_password_save"
         Then the form should be valid
-        And I should be on "/user/password-edit-done"   
+        And I should be on "/user-account/password-edit-done"   
       
     

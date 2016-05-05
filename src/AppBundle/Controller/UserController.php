@@ -186,7 +186,7 @@ class UserController extends AbstractController
     }
     
      /**
-     * @Route("/user/password-edit", name="user_password_edit")
+     * @Route("/user-account/password-edit", name="user_password_edit")
      * @Template()
      */
     public function passwordEditAction(Request $request)
@@ -219,7 +219,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/user/password-edit-done", name="user_password_edit_done")
+     * @Route("/user-account/password-edit-done", name="user_password_edit_done")
      * @Template()
      */
     public function passwordEditDoneAction(Request $request)
@@ -236,7 +236,7 @@ class UserController extends AbstractController
      * - change user data
      * - chang user password
      * 
-     * @Route("/user/edit", name="user_edit")
+     * @Route("/user-account/user-edit", name="user_edit")
      * @Template()
      **/
     public function editAction()

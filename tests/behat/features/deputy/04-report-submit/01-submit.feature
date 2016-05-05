@@ -142,7 +142,7 @@ Feature: deputy / report / submit
         And the response should contain "White"
         # test go back link
         When I click on "back-to-client"
-        Then I should be on "/user/client-edit"
+        Then I should be on "/user-account/client-edit"
 
 
     @deputy

@@ -9,7 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/user/client-edit", name="client_edit")
+     * @Route("/user-account/client-edit", name="client_edit")
      * @Template()
      */
     public function editAction()

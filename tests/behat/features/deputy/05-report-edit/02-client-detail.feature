@@ -4,8 +4,7 @@ Feature: deputy / report / edit client
     Scenario: edit client details
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "client-home, edit-client-details"
-        Then I should be on "client/show/edit-client#edit-client"
+        And I click on "user-account, client-edit"
         Then the following fields should have the corresponding values:
             | client_firstname | Peter |
             | client_lastname | White |
@@ -60,8 +59,7 @@ Feature: deputy / report / edit client
             | client_country | GB |
             | client_phone | 0123456789  |
         And I press "client_save"
-        Then I should be on "client/show"
-        Then I should see "Nolan Ross" in the page header
-        Then I should see "12345ABC" in the "case-number" region
-        Then I should see "2 South Parade" in the "client-address" region
+        Then I should be on "user-account/client-edit"
+        Then the following fields should have the corresponding values:
+            | client_firstname | Nolan |
         
