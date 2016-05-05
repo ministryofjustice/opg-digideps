@@ -53,7 +53,7 @@ class ReportController extends AbstractController
                 $restClient->put('report/' . $reportId, $report, [
                      'deserialise_group' => 'startEndDates',
                 ]);
-                return $this->redirect($this->generateUrl('reports'));
+                return $this->redirect($this->generateUrl('reports', ['cot'=>$report->getCourtOrderType()]));
             }
         }
         

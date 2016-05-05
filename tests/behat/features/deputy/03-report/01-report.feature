@@ -16,7 +16,7 @@ Feature: deputy / report / edit and test tabs
 #        Given I change the report "1" court order type to "Property and Affairs"
         
     @deputy
-    Scenario: edit report
+    Scenario: edit report dates
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I click on "reports, report-2016-edit" 
         Then the following fields should have the corresponding values:

@@ -153,18 +153,6 @@ Feature: deputy / user / add client and report
         And I press "report_save"
         Then the URL should match "report/\d+/overview"
 
-
-    @deputy
-    Scenario: my client
-        Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        Given I click on "client-home"
-        Then the URL should match "client/show"
-        And I should see "Peter White" in the page header
-        And I should see the "edit-client-details" link
-        And I should see "12345ABC" in the "case-number" region
-        And I should see "1 South Parade" in the "client-address" region
-        And I save the page as "deputy-client-home"
-        
     @deputy
     Scenario: report-overview
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
