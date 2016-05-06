@@ -19,14 +19,15 @@ class Version073 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         
+        ini_set('memory_limit', '2048M');
+        
         foreach([
             'ISAs' => 'isa', //(239)
             'Court Funds Office accounts' => 'cfo', // (21)
             'Savings accounts' => 'savings' //(233)
         ] as $title => $accountType) {
-            $assets = $this->connection->query("
-            select * from asset 
-            WHERE title ='{$title}'")->fetchAll();
+            $assets = $this->connection
+            ->query("select * from asset WHERE title ='{$title}'")->fetchAll();
             foreach ($assets as $asset) {
                 $account = [
                     'report_id' => $asset['report_id'],
