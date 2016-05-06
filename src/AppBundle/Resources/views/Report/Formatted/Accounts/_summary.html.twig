@@ -20,8 +20,8 @@
                             {{ account.bank }} {{ account.accountTypeText }}
                         </div>
                         <div class="account-number">****{{ account.accountNumber }}
-                            {% if account.requiresBankNameAndSortCode %}
-                            , {{ account.sortCode | split('', 2) | join('-') }}
+                            {% if account.requiresBankNameAndSortCode and account.sortCode %}
+                               , {{ account.sortCode | split('', 2) | join('-') }}
                             {% endif %}
                             {% if account.isJointAccount =='yes' %}
                                 <span class="account-closed">JOINT ACCOUNT</span>
