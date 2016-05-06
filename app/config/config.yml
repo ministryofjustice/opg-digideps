@@ -92,9 +92,9 @@ parameters:
     # key is ignored
     asset_dropdown:
         1:  property 
-        2:  savings_accounts
+        #2:  savings_accounts
         3:  investment_bonds 
-        4:  isa 
+        #4:  isa 
         5:  unit_trusts 
         6:  national_savings_certificates 
         7:  stocks_shares
@@ -104,7 +104,7 @@ parameters:
         11: antiques 
         12: jewellery
         14: assets_held_outside_england_and_wales
-        15: court_funds_office_accounts 
+        #15: court_funds_office_accounts 
         16: other_assets
 
 services:
