@@ -25,7 +25,7 @@
             <dt class="item-label">{{ 'clientDetails.caseNumber' | trans }}</dt>
             <dd class="item-value behat-region-case-number">{{ client.getCaseNumber }}</dd>
 
-            <dt class="item-label">{{ 'clientDetails.address' | trans }}</dt>
+            <dt class="item-label">{{ 'clientDetails.address' | trans({'%client%': client.firstname}) }}</dt>
             <dd class="item-value" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                 {% if client.address is not empty %}
                     <div itemprop="streetAddress">{{ client.address }}</div>

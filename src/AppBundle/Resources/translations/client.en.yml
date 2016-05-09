@@ -6,9 +6,8 @@ page:
 clientDetails:
   editClient: "Edit client"
   edit: "Edit %client%'s details"
-  clientName: "Client name"
   caseNumber: "Case number"
-  address: "Client's address"
+  address: "%client%'s address"
   courtDate: "Court order date"
 
 form:
