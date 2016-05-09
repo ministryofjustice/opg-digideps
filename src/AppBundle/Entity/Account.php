@@ -187,6 +187,11 @@ class Account
     private $isJointAccount;
     
     /**
+     * @ORM\Column(name="meta", type="text", nullable=true)
+     */
+    private $meta;
+    
+    /**
      * Constructor
      */
     public function __construct()
@@ -552,6 +557,17 @@ class Account
     {
         $this->isJointAccount = trim(strtolower($isJointAccount));
         
+        return $this;
+    }
+    
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
         return $this;
     }
 

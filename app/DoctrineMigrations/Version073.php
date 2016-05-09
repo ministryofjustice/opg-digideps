@@ -33,6 +33,7 @@ class Version073 extends AbstractMigration
                     'report_id' => $asset['report_id'],
                     'bank_name' => $asset['description'].' (created from existing asset)',
                     'account_number' => null,
+                    'sort_code' => null,
                     'opening_balance' =>  $asset['asset_value'],
                     'closing_balance' => $asset['asset_value'],
                     'opening_date' => null,
@@ -40,7 +41,8 @@ class Version073 extends AbstractMigration
                     'created_at' => date('Y-m-d'),
                     'account_type' => $accountType,
                     'is_closed' => 'false',
-                    'is_joint_account' => null
+                    'is_joint_account' => null,
+                    'meta' => "Migrated from asset {$asset['id']} with migration 73 on ".date('c')
                 ];
                 //echo str_replace(["\n", "\r", "\r\n"], " ", implode(';', $asset). ';' . implode(';', $account)) . "\n";
                 $this->connection->insert('account', $account);
