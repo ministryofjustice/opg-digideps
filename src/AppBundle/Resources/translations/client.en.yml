@@ -7,7 +7,7 @@ clientDetails:
   editClient: "Edit client"
   edit: "Edit %client%'s details"
   clientName: "Client name"
-  caseReference: "Case reference"
+  caseNumber: "Case number"
   address: "Client's address"
 
 form:
