@@ -9,6 +9,7 @@ clientDetails:
   clientName: "Client name"
   caseNumber: "Case number"
   address: "Client's address"
+  courtDate: "Court order date"
 
 form:
   editClientForm:

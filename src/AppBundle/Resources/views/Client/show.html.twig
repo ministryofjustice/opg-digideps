@@ -43,6 +43,9 @@
                     <div itemprop="addressCountry">{{ client.country | country_name }}</div>
                 {% endif %}
             </dd>
+            
+            <dt class="item-label">{{ 'clientDetails.courtDate' | trans }}</dt>
+            <dd class="item-value behat-region-case-number">{{ client.courtDate | date("d/m/Y") }}</dd>
         </dl>
     </div>
 
