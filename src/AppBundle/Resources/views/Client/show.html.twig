@@ -28,7 +28,7 @@
             <dt class="item-label">{{ 'clientDetails.address' | trans }}</dt>
             <dd class="item-value" itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
                 {% if client.address is not empty %}
-                    <div itemprop="streetAddress" class="behat-region-client-address">{{ client.address }}</div>
+                    <div itemprop="streetAddress">{{ client.address }}</div>
                 {% endif %}
                 {% if client.address2 is not empty %}
                     <div itemprop="addressLocality">{{ client.address2 }}</div>
@@ -37,7 +37,7 @@
                     <div itemprop="addressRegion">{{ client.county }}</div>
                 {% endif %}
                 {% if client.postcode is not empty %}
-                    <div itemprop="postalCode">{{ client.postcode }}</div>
+                    <div itemprop="postalCode" class="behat-region-client-address-postcode">{{ client.postcode }}</div>
                 {% endif %}
                 {% if client.country is not empty %}
                     <div itemprop="addressCountry">{{ client.country | country_name }}</div>

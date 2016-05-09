@@ -61,8 +61,8 @@ Feature: deputy / report / edit client
         And I press "client_save"
         Then I should be on "user-account/client-show"
         And I should see "12345ABC" in the "case-number" region
-        And I should see "NG1 2HT" in the "client-address" region
-        When I click on "deputy-edit"
+        And I should see "NG1 2HT" in the "client-address-postcode" region
+        When I click on "client-edit"
         Then the following fields should have the corresponding values:
             | client_firstname | Nolan |
         
