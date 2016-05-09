@@ -1,0 +1,58 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
+    'hideReportNav': true
+} %}
+{% set translationDomain = "user-details" %}
+{% trans_default_domain translationDomain %}
+{% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
+{% block pageTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block title %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+
+{% block backLinktop %}{% endblock %}
+
+{% block leftcontent %}
+    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% endblock %}
+
+{% block maincontent %}
+    
+    <div itemscope itemtype="http://schema.org/Person" class="item your-details behat-region-my-details">
+        
+        <a href="{{ path('user_edit') }}#edit-your-details"
+           class="edit-button behat-link-edit-user-details">{{ 'yourDetails.edit'| trans }}</a>
+           
+       <h2 class="title behat-region-my-details-name" itemprop="name">{{ user.getFullname }}</h2>
+
+        <dl class="item-data item-data-fixed behat-region-my-details">
+            <dt class="item-label">{{ 'yourDetails.address' | trans }}</dt>
+            <dd class="item-value behat-region-my-details-address" itemprop="address" itemscope
+                itemtype="http://schema.org/PostalAddress">
+                {% if user.address1 is not empty %}
+                    <div itemprop="streetAddress">{{ user.address1 }}</div>
+                {% endif %}
+                {% if user.address2 is not empty %}
+                    <div itemprop="addressLocality">{{ user.address2 }}</div>
+                {% endif %}
+                {% if user.address3 is not empty %}
+                    <div itemprop="addressRegion">{{ user.address3 }}</div>
+                {% endif %}
+                {% if user.addressPostcode is not empty %}
+                    <div itemprop="postalCode">{{ user.addressPostcode }}</div>
+                {% endif %}
+                {% if user.addressCountry is not empty %}
+                    <div itemprop="addressCountry">{{ user.addressCountry | country_name }}</div>
+                {% endif %}
+            </dd>
+            
+            <dt class="item-label">{{ 'yourDetails.mainPhoneNumber' | trans }}</dt>
+            <dd class="item-value behat-region-my-details-phone-main">{{ user.phoneMain }}&nbsp;</dd>
+
+            <dt class="item-label">{{ 'yourDetails.alternativePhoneNumber' | trans }}</dt>
+            <dd class="item-value behat-region-my-details-phone-alt">{{ user.phoneAlternative }}&nbsp;</dd>
+
+            <dt class="item-label">{{ 'yourDetails.emailAddress' | trans }}</dt>
+            <dd class="item-value behat-region-my-details-email">{{ user.email }}&nbsp;</dd>
+        </dl>
+    </div>
+
+{% endblock %}
+{% endembed %}

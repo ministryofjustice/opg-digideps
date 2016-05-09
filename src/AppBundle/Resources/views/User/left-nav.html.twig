@@ -5,8 +5,8 @@
 
 <nav id="account-sub-nav">
     {% if not is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('client_edit') }}" class="{{ route =='client_edit' ? 'active':'' }} behat-link-client-edit">{{ 'nav.client-edit' | trans({'%client%': client.firstname}, translationDomain) }}</a>
+        <a href="{{ path('client_show') }}" class="{{ (route =='client_edit' or route =='client_show') ? 'active':'' }} behat-link-client-edit">{{ 'nav.client-edit' | trans({'%client%': client.firstname}, translationDomain) }}</a>
     {% endif %}
-    <a href="{{ path('user_edit') }}" class="{{ route =='user_edit' ? 'active':'' }} behat-link-deputy-edit">{{ 'nav.deputy-edit' | trans() }}</a>
+    <a href="{{ path('user_show') }}" class="{{ (route =='user_edit' or route =='user_show') ? 'active':'' }} behat-link-deputy-edit">{{ 'nav.deputy-edit' | trans() }}</a>
     <a href="{{ path('user_password_edit') }}" class="{{ (route =='user_password_edit' or route =='user_password_edit_done') ? 'active':'' }} behat-link-change-password">{{ 'nav.change-password' | trans() }}</a>
 </nav>

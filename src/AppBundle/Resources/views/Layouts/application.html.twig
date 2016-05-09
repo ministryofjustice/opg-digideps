@@ -62,11 +62,11 @@
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') %}
                     <li><a href="{{path('user_edit')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% else %}
-                    <li><a href="{{path('client_edit')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
+                    <li><a href="{{path('client_show')}}" class="behat-link-user-account user-account-link"  >{{ 'nav.userAccount' | trans }}</a></li>
                 {% endif %}
                 
                 {#{% if not is_granted('ROLE_ADMIN') and (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}
-                    <li><a href="{{path('client_edit')}}" class="behat-link-client-home client-home-link"  >{% trans %}nav.clientHome{% endtrans %} </a></li>
+                    <li><a href="{{path('client_show')}}" class="behat-link-client-home client-home-link"  >{% trans %}nav.clientHome{% endtrans %} </a></li>
                 {% endif %}
 
                 {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or (app.user.hasDetails() and app.user.hasClients() and app.user.hasReports()) %}

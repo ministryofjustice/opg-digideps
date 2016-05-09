@@ -236,6 +236,25 @@ class UserController extends AbstractController
      * - change user data
      * - chang user password
      * 
+     * @Route("/user-account/user-show", name="user_show")
+     * @Template()
+     **/
+    public function showAction()
+    {
+        $user = $this->getUser();
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
+
+        return [
+            'client' => $client,
+            'user' => $user,
+        ];
+    }
+    
+    /**
+     * - change user data
+     * - chang user password
+     * 
      * @Route("/user-account/user-edit", name="user_edit")
      * @Template()
      **/
@@ -264,7 +283,7 @@ class UserController extends AbstractController
                 'deserialise_group' => 'user_details_full'
             ]);
 
-            return $this->redirect($this->generateUrl('user_edit'));
+            return $this->redirect($this->generateUrl('user_show'));
         }
             
         $clients = $this->getUser()->getClients(); 

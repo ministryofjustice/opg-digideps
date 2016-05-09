@@ -5,9 +5,30 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
 class ClientController extends AbstractController
 {
+    /**
+     * @Route("/user-account/client-show", name="client_show")
+     * @Template()
+     */
+    public function showAction(Request $request)
+    {   
+        $clients = $this->getUser()->getClients(); 
+        
+        $client = !empty($clients)? $clients[0]: null;
+        
+        $report = new EntityDir\Report();
+        $report->setClient($client);
+        
+        return [
+            'client' => $client,
+            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+        ];
+
+    }
+    
     /**
      * @Route("/user-account/client-edit", name="client_edit")
      * @Template()
@@ -36,7 +57,7 @@ class ClientController extends AbstractController
                  'deserialise_group' => 'edit'
             ]);
 
-            return $this->redirect($this->generateUrl('client_edit'));
+            return $this->redirect($this->generateUrl('client_show'));
         }
         
         return [
