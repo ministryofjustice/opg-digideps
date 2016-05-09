@@ -10,4 +10,16 @@
     </div>
 {% else %}
 
+<p class="flash flash-news">
+    {% for account in report.accounts %}
+        {% if not account.accountNumber or (account.requiresBankNameAndSortCode and not account.sortCode) %}
+            - We moved your existing asset "{{ account.bank }} {{ account.accountTypeText }}" 
+            into a bank account. Please <a href="">click here</a> add add the missing information<br/>
+        {% endif %}
+        {#{% if account.isJointAccount is null %}
+            - {{ account.bank }} {{ account.accountTypeText }}: please specify if it's a joint account. <a href="">Click here</a> to add it <br/>
+        {% endif %}#}
+    {% endfor %}
+</p>
+    
 {% endif %}
