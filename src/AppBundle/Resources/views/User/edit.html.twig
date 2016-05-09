@@ -40,7 +40,14 @@
     {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
 
     {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
-
+    
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('user_show')
+    } %}
+    
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
 
     {{ form_end(form) }}
