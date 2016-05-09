@@ -6,7 +6,7 @@ Feature: deputy / login and logout functionalities
         Given I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I go to the homepage
         And I click on "user-account"
-        Then the URL should match "/user-account/client-edit"
+        Then the URL should match "/user-account/client-show"
         When I expire the session
         # reload the page and trigger SessionListener 
         And I reload the page

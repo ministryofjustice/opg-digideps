@@ -4,7 +4,7 @@ Feature: deputy / report / edit user
     Scenario: edit user details
         Given I load the application status from "report-submit-pre"
         And I am logged in as "behat-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
-        And I click on "user-account, deputy-edit"
+        And I click on "user-account, deputy-show, deputy-edit"
         Then I should be on "user-account/user-edit"
         Then the following fields should have the corresponding values:
              | user_details_firstname | John |
@@ -45,6 +45,9 @@ Feature: deputy / report / edit user
            | user_details_phoneAlternative | 020 1234 5679  |
         And I press "user_details_save"
         Then the form should be valid
+        And I should be on "/user-account/user-show"
+        And I should see "Paul Jamie" in the "my-details-name" region
+        And I should see "SW1H 9AA" in the "my-details-address" region
      
   
     @deputy   
