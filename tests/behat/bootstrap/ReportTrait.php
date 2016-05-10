@@ -115,27 +115,6 @@ trait ReportTrait
     }
 
     /**
-     * @Given I edit lastest active report
-     */
-    public function iClickActiveReportEditLink()
-    {
-        $this->visit('/client/show');
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.edit-report');
-
-        if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element .edit-report not found");
-        }
-
-        if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Returned multiple elements");
-        }
-
-        $url = $linksElementsFound[0]->getAttribute('href');
-
-        $this->visit($url);
-    }
-
-    /**
      * @When I set the report end date to :endDateDMY
      */
     public function iSetTheReportEndDateToAndEndDateTo($endDateDMY)

@@ -2,9 +2,11 @@
 
 {% block pageContent %}
     
-    {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
-        'report': report
-    } %}
+    {% if hideReportNav is not defined or hideReportNav != true %}
+        {% include 'AppBundle:Components/Navigation:_report-nav.html.twig' with {
+            'report': report
+        } %}
+    {% endif %}
 
     <div id="page-section-title-wrapper" class="page-section-title-wrapper">
         <div id="page-section-title-container" class="page-section-title-container">

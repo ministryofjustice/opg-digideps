@@ -16,7 +16,7 @@ Feature: assisted digital / acl
         And I should be on "/login"
 
 
-    Scenario: An admin cannot reset password from the deputy area
+    Scenario: An ad user cannot reset password from the deputy area
         # check admin can recover password from admin site
         Given I reset the email log
         And I am on admin login page

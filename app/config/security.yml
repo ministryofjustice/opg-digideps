@@ -19,8 +19,12 @@ security:
             security: false
            
         passwordManaging:
-            pattern:  ^/user/password*
-            security: false    
+            pattern:  ^/password-managing*
+            security: false   
+            
+        passwordReset:
+            pattern:  ^/user/password-reset/*
+            security: false 
             
         userActivate:
             pattern:  ^/user/activate*

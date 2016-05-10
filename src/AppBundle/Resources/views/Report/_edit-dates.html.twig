@@ -6,9 +6,10 @@
     {{ form_errors_list(form) }}
 {% endblock %}
 
-{{ form_start(form, {attr: {novalidate: 'novalidate', class: 'in-page-form'  }}) }}
+<h3 class="heading-medium">{{ 'page.title'| trans({'%period%': report.period}, translationDomain) }}</h3>
+<p class="page-section-description">{{ 'page.pageSectionDescription' | trans }}</p>
 
-    <h3 class="heading-medium">{{ 'form.subSectionTitle'| trans({}, translationDomain) }}</h3>
+{{ form_start(form, {attr: {novalidate: 'novalidate', class: ''  }}) }}
 
     {{ form_known_date(form.startDate, 'form.controls.startDate') }}
 
@@ -22,7 +23,7 @@
         transDomain: translationDomain,
         linkButtonLabel: 'form.controls.cancel.label',
         linkClass: 'button-link',
-        linkHref: path('client_home')
+        linkHref: path('reports', {'cot': report.courtOrderType})
     } %}
 
     {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}

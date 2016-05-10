@@ -1,0 +1,56 @@
+{% trans_default_domain translationDomain %}
+
+<ul class="item-list reports">
+    {% for report in reports %}
+        {% set linkToReportOverviewPage = path('report_overview', { 'reportId': report.id }) %}
+        {% set linkToDownloadReport = path('report_overview', { 'reportId': report.id }) %}
+        {% set linkEditReportingPeriod = path('reports', {'reportId': report.id, 'cot': report.courtOrderType}) %}
+        <li class="item">
+
+            <h3 class="title">
+                {% if report.submitted %}
+                    {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
+                {% else %}
+                    <a href="{{ linkToReportOverviewPage }}#account-header" 
+                       id="report-{{ report.startDate | date("Y") }}"
+                       class="behat-link-report-{{ report.getPeriod | behat_namify }}">
+                        {{ report.getPeriod() }}{{ 'reportDataList.nameSuffix' | trans }}
+                    </a>
+                {% endif %}
+            </h3>
+
+            {% if report.submitted %}
+                <a href="{{ path('report_review', {'reportId': report.id}) }}" class="view-button view-report-link behat-link-download-{{ report.getPeriod() }}-report">
+                    {{ 'reportDataList.downloadThisReportLink' | trans() }}
+                </a>
+            {% else %}
+                <span class="button-wrapper">
+                    <a href="{{ linkToReportOverviewPage }}" class="open-button button behat-link-report-open behat-link-report-{{ report.getPeriod() | behat_namify }}-open">{{ 'reportDataList.open' | trans }}</a>
+                </span>
+                <a href="{{ linkEditReportingPeriod }}"
+                   class="edit-button edit-report behat-link-report-{{ report.getPeriod() | behat_namify }}-edit">{{ 'reportDataList.edit'| trans }}</a>
+            {% endif %}            
+
+            <dl class="item-data">
+                {% if report.submitted %}
+                    {% set submitDate = ( report.getSubmitDate() is null ? 'reportDataList.submitDateNotSet'|trans : report.getSubmitDate() | date(" d F Y") ) %}
+                    <dt class="item-label">{{ 'reportDataList.status' | trans }}</dt>
+                    <dd class="item-value behat-region-report-{{ report.getPeriod() }}-submitted-on">{{ 'reportDataList.submitted' | trans( { '%date%': submitDate } ) }}</dd>
+                {% elseif report.isDue() %}
+                    <dt class="item-label">{{ 'reportDataList.status' | trans }}</dt>
+                    <dd class="item-value">{{ 'reportDataList.isDue' | trans }}</dd>
+                {% else %}
+                    <dt class="item-label">{{ 'reportDataList.status' | trans }}</dt>
+                    <dd class="item-value">{{ 'reportDataList.inProgress' | trans }}</dd>
+                {% endif %}
+               {# <dt class="item-label">{{ 'reportDataList.type' | trans }}</dt>
+                <dd class="item-value">{{ ('reportDataList.'~(report.courtOrderType == 2 ? 'pa' : 'hw')) | trans }}</dd>#}
+                {% if not report.submitted %}
+                    <dt class="item-label">{{ 'reportDataList.dueDate' | trans }}</dt>
+                    <dd class="item-value">{{ report.dueDate | date(" d F Y") }}</dd>
+                {% endif %}
+            </dl>
+
+        </li>
+    {% endfor %}
+</ul>

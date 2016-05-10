@@ -16,19 +16,21 @@ Feature: admin / acl
         And I should be on "/login"
 
 
-    Scenario: An admin cannot reset password from the deptuy area
+    Scenario: An admin cannot reset password from the deputy area
         # check admin can recover password from admin site
         Given I reset the email log
         And I am on admin login page
         When I click on "forgotten-password"
-        And I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
+        Then I should be on "/password-managing/forgotten"
+        When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
         And I press "password_forgotten_submit"
         Then the last email should have been sent to "behat-admin-user@publicguardian.gsi.gov.uk"
         # check admin CANNOT recover password from DEPUTY site
         Given I reset the email log
         And I am on the login page
         When I click on "forgotten-password"
-        And I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
+        Then I should be on "/password-managing/forgotten"
+        When I fill in "password_forgotten_email" with "behat-admin-user@publicguardian.gsi.gov.uk"
         And I press "password_forgotten_submit"
         #Then the response status code should be 200
         And no email should have been sent

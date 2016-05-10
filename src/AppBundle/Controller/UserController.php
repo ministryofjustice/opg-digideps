@@ -11,9 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 
-/**
-* @Route("user")
-*/
 class UserController extends AbstractController
 {
     /**
@@ -21,7 +18,7 @@ class UserController extends AbstractController
      * 
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
      * 
-     * @Route("/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
+     * @Route("/user/{action}/{token}", name="user_activate", defaults={ "action" = "activate"}, requirements={
      *   "action" = "(activate|password-reset)"
      * })
      * @Template()
@@ -111,7 +108,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/activate/password/send/{token}", name="activation_link_send")
+     * @Route("/user/activate/password/send/{token}", name="activation_link_send")
      * @Template()
      */
     public function activateLinkSendAction(Request $request, $token)
@@ -129,7 +126,7 @@ class UserController extends AbstractController
     }
     
      /**
-     * @Route("/activate/password/sent/{token}", name="activation_link_sent")
+     * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
      * @Template()
      */
     public function activateLinkSentAction(Request $request, $token)
@@ -143,7 +140,7 @@ class UserController extends AbstractController
     /**
      * Registration steps
      *
-     * @Route("/details", name="user_details")
+     * @Route("/user/details", name="user_details")
      * @Template()
      */
     public function detailsAction(Request $request)
@@ -188,14 +185,80 @@ class UserController extends AbstractController
         
     }
     
+     /**
+     * @Route("/user-account/password-edit", name="user_password_edit")
+     * @Template()
+     */
+    public function passwordEditAction(Request $request)
+    {
+        $user = $this->getUser();
+        
+        $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true ]);
+        $form->handleRequest($request);
+        $restClient = $this->get('restClient');
+
+        if($form->isValid()){
+            $plainPassword = $request->request->get('change_password')['plain_password']['first'];
+            $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+                'password_plain' => $plainPassword,
+                'send_email' => false
+            ]));
+
+            return $this->redirect($this->generateUrl('user_password_edit_done'));
+        }
+            
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
+
+        return [
+            'client' => $client,
+            'user' => $user,
+            'form' => $form->createView()
+        ];
+        
+    }
+    
+    /**
+     * @Route("/user-account/password-edit-done", name="user_password_edit_done")
+     * @Template()
+     */
+    public function passwordEditDoneAction(Request $request)
+    {
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
+        
+        return [
+            'client' => $client,
+        ];
+    }
+    
     /**
      * - change user data
      * - chang user password
      * 
-     * @Route("/{action}", name="user_view", defaults={ "action" = ""})
+     * @Route("/user-account/user-show", name="user_show")
      * @Template()
      **/
-    public function indexAction($action)
+    public function showAction()
+    {
+        $user = $this->getUser();
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
+
+        return [
+            'client' => $client,
+            'user' => $user,
+        ];
+    }
+    
+    /**
+     * - change user data
+     * - chang user password
+     * 
+     * @Route("/user-account/user-edit", name="user_edit")
+     * @Template()
+     **/
+    public function editAction()
     {
         $request = $this->getRequest();
         $user = $this->getUser();
@@ -205,48 +268,36 @@ class UserController extends AbstractController
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
         ]);
         
-        $formEditDetails = $this->createForm($formType, $user);
+        $form = $this->createForm($formType, $user);
         
-        $formEditDetails->add('password', new FormDir\ChangePasswordType($request), [ 'error_bubbling' => false, 'mapped' => false ]);
-        
-        $formEditDetails->handleRequest($request);
+        $form->handleRequest($request);
         $restClient = $this->get('restClient');
 
-        if($formEditDetails->isValid()){
-            $formData = $formEditDetails->getData();
-            $formRawData = $request->request->get('user_details');
+        if($form->isValid()){
+            $formData = $form->getData();
             /**
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            if (!empty($formRawData['password']['plain_password']['first'])){
-                $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
-                    'password_plain' => $formRawData['password']['plain_password']['first'],
-                    'send_email' => true
-                ]));
-                
-                $request->getSession()->getFlashBag()->add(
-                    'notification',
-                    'page.passwordChangedNotification'
-                );
+            $restClient->put('user/' . $user->getId(), $formData, [
+                'deserialise_group' => 'user_details_full'
+            ]);
 
-            }
-            
-            $restClient->put('user/' . $user->getId(), $formData);
-
-            return $this->redirect($this->generateUrl('user_view'));
+            return $this->redirect($this->generateUrl('user_show'));
         }
             
+        $clients = $this->getUser()->getClients(); 
+        $client = !empty($clients)? $clients[0]: null;
 
         return [
-            'action' => $action,
+            'client' => $client,
             'user' => $user,
-            'formEditDetails' => $formEditDetails->createView()
+            'form' => $form->createView()
         ];
     }
     
      /**
-     * @Route("/password/forgotten", name="password_forgotten")
+     * @Route("/password-managing/forgotten", name="password_forgotten")
      * @Template()
      **/
     public function passwordForgottenAction(Request $request)
@@ -275,7 +326,7 @@ class UserController extends AbstractController
     }
     
     /**
-     * @Route("/password/sent", name="password_sent")
+     * @Route("/password-managing/sent", name="password_sent")
      * @Template()
      **/
     public function passwordSentAction()

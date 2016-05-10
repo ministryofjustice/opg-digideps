@@ -6,7 +6,7 @@
 
 <div id="{{ subSection }}-sub-section" class="descriptive-list-item">
     {% if allowEdit == true %}
-        <a id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
+        <a class="behat-link-edit-{{ subSection }}" id="edit-{{ subSection }}" href="{{ path(subSection, {reportId: report.id}) }}" aria-label="{{ (subSection ~ '.edit') | trans({}, translationDomain) }}">
     {% endif %}
     
     <h3 class="heading heading-medium">{{ (subSection ~ '.subSectionTitle') | trans({}, translationDomain) }}</h3>

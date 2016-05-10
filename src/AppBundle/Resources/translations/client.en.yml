@@ -6,44 +6,11 @@ page:
 clientDetails:
   editClient: "Edit client"
   edit: "Edit %client%'s details"
-  clientName: "Client name"
-  caseReference: "Case reference"
-  address: "Client's address"
-reportDataList:
-  editReportingPeriod: "Edit report dates"
-  edit: "Edit reporting period"
-  downloadThisReportLink: View this report
-  name: "Report Name"
-  nameSuffix: " report"
-  status: "Status:"
-  isDue: "Due"
-  inProgress: "In progress"
-  submitted: "Submitted %date%"
-  submitDateNotSet: "(Date Not Set)"
-  type: "Type:"
-  hw: "Health and welfare"
-  pa: "Property and affairs"
-  dueDate: "Due date:"
-  open: "Open report"
-newReportNotification: Your new report has been created
+  caseNumber: "Case number"
+  address: "%client%'s address"
+  courtDate: "Court order date"
+
 form:
-  newReportForm:
-    subSectionTitle: "Create a new report"
-    subSectionDescription: "In the first year, your reporting period starts on the date your court order is issued. For all subsequent reports use the anniversary of that date."
-    subSectionDescription-2: "The reporting period is usually for a 12-month period. Set the end date now for a 12-month period. If OPG need you to send a report before this, we will let you know."
-    controls:
-      createNewReportLink:
-        label: "Create new report"
-      startDate:
-        legend: "Start date"
-        hint: "(DD/MM/YYYY)"
-      endDate:
-        legend: "End date"
-        hint: "(DD/MM/YYYY)"
-      save:
-        label: "Save"
-      cancel:
-        label: "Cancel"
   editClientForm:
     subSectionTitle: "Edit %client%'s details"
     controls:

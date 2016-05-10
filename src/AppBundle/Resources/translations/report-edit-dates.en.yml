@@ -1,5 +1,7 @@
+page:
+    title: %period% reporting period
+    pageSectionDescription: Tell us when your reporting period starts and finishes.
 form:
-  subSectionTitle: Edit reporting period
   controls:
     createNewReportLink:
       label: "Create new report"
