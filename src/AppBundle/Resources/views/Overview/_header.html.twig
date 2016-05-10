@@ -10,16 +10,20 @@
     </div>
 {% else %}
 
-<p class="flash flash-news">
     {% for account in report.accounts %}
         {% if not account.accountNumber or (account.requiresBankNameAndSortCode and not account.sortCode) %}
-            - We moved your existing asset "{{ account.bank }} {{ account.accountTypeText }}" 
-            into a bank account. Please <a href="">click here</a> add add the missing information<br/>
+            <p class="flash flash-news">
+                We moved "{{ account.bank | trim('.') }}" into bank accounts, so we need some extra information:<br/>
+            {% if not account.accountNumber %}
+                - <a href="{{ path('upsert_account', {'reportId': report.id, 'id': account.id }) }}#account_accountType">
+                    enter the account number</a><br/>
+            {% endif %}
+            {% if account.requiresBankNameAndSortCode and not account.sortCode %}
+                - <a href="{{ path('upsert_account', {'reportId': report.id, 'id': account.id }) }}#account_bank">
+                    enter the sort code</a><br/>
+            {% endif %}
+            </p>
         {% endif %}
-        {#{% if account.isJointAccount is null %}
-            - {{ account.bank }} {{ account.accountTypeText }}: please specify if it's a joint account. <a href="">Click here</a> to add it <br/>
-        {% endif %}#}
     {% endfor %}
-</p>
     
 {% endif %}
