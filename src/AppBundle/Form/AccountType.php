@@ -24,6 +24,9 @@ class AccountType extends AbstractType
         $builder->add('bank', 'text', [
             'required' => false
         ]);
+        $builder->add('meta', 'textarea', [
+            'required' => false
+        ]);
         $builder->add('accountNumber', 'text', ['max_length' => 4]);
         $builder->add('sortCode', new SortCodeType(), [ 
             'error_bubbling' => false,
