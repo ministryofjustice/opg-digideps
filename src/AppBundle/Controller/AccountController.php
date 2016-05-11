@@ -140,9 +140,11 @@ class AccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="upsert_account", defaults={ "id" = null })
+     * 
+     * @param Request $request
      * @param integer $reportId
      * @param integer $id account Id
-     * @param Request $request
+     * 
      * @Template()
      * @return array
      */
