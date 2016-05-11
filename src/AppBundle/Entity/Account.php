@@ -190,6 +190,14 @@ class Account
      */
     private $createdAt;
 
+     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * 
+     * @var string $bank
+     */
+    private $meta;
+    
     public function getId()
     {
         return $this->id;
@@ -549,5 +557,16 @@ class Account
         return $this;
     }
     
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
     
 }
