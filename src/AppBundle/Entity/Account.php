@@ -187,6 +187,7 @@ class Account
     private $isJointAccount;
     
     /**
+     * @JMS\Type("string")
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
     private $meta;
