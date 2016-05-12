@@ -569,4 +569,26 @@ class Account
         return $this;
     }
     
+    public function hasMissingInformation()
+    {
+        if (!$this->getAccountNumber()) {
+            return true;
+        }
+
+        if ($this->getIsJointAccount() === null) {
+            return true;
+        }
+
+        if ($this->requiresBankNameAndSortCode()) {
+            if (!$this->getBank()) {
+                return true;
+            }
+            if (!$this->getSortCode()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

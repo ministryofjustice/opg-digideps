@@ -161,8 +161,7 @@ class AccountController extends AbstractController
             }
             $account = $restClient->get('report/account/' . $id, 'Account');
             // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
-            $showMigrationWarning = !$account->getAccountNumber() || 
-                    ($account->requiresBankNameAndSortCode() && !$account->getSortCode());
+            $showMigrationWarning = $account->hasMissingInformation();
         } else {
             $account = new EntityDir\Account();
             $account->setReport($report);
