@@ -569,21 +569,20 @@ class Account
         return $this;
     }
     
+    /**
+     * Only for partial account created during migrations
+     * e.g. asset -> bank account
+     * 
+     * @return boolean
+     */
     public function hasMissingInformation()
     {
-        if (!$this->getAccountNumber()) {
-            return true;
-        }
-
-        if ($this->getIsJointAccount() === null) {
+        if (!$this->getAccountNumber() || $this->getIsJointAccount() === null) {
             return true;
         }
 
         if ($this->requiresBankNameAndSortCode()) {
-            if (!$this->getBank()) {
-                return true;
-            }
-            if (!$this->getSortCode()) {
+            if (!$this->getBank() || !$this->getSortCode()) {
                 return true;
             }
         }
