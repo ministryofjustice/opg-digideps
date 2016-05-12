@@ -188,6 +188,8 @@ class Account
     
     /**
      * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "transfers"})
+     * 
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
     private $meta;
