@@ -153,12 +153,16 @@ class AccountController extends AbstractController
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
         $type = $id ? 'edit' : 'add';
+        $showMigrationWarning = false;
         
         if ($type === 'edit') {
             if (!$report->hasAaccountWithId($id)) {
                 throw new \RuntimeException("Account not found."); 
             }
             $account = $restClient->get('report/account/' . $id, 'Account');
+            // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
+            $showMigrationWarning = !$account->getAccountNumber() || 
+                    ($account->requiresBankNameAndSortCode() && !$account->getSortCode());
         } else {
             $account = new EntityDir\Account();
             $account->setReport($report);
@@ -202,6 +206,7 @@ class AccountController extends AbstractController
             'subsection' => 'banks',
             'form' => $form->createView(),
             'type' => $type,
+            'showMigrationWarning' => $showMigrationWarning,
             'account' => $account,
             'showIsClosed' => $showIsClosed == 'yes'
         ];

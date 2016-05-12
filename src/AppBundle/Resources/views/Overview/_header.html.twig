@@ -14,7 +14,10 @@
         {% if not account.accountNumber or (account.requiresBankNameAndSortCode and not account.sortCode) %}
             {% set linkToAccount = path('upsert_account', {'reportId': report.id, 'id': account.id }) %}
             <p class="flash flash-news">
-                We moved "{{ account.bank | trim('.') }}" into bank accounts, so we need some extra information:<br/>
+                We moved "{{ account.meta | trim('.') }}" into bank accounts, so we need some extra information:<br/>
+                {% if not account.bank %}
+                    - <a href="{{ linkToAccount }}">enter the bank account name</a><br/>
+                {% endif %}
                 {% if not account.accountNumber %}
                     - <a href="{{ linkToAccount }}#account_accountType">enter the account number</a><br/>
                 {% endif %}
