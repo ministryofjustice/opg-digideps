@@ -31,7 +31,7 @@ class Version073 extends AbstractMigration
             foreach ($assets as $asset) {
                 $account = [
                     'report_id' => $asset['report_id'],
-                    'bank_name' => $asset['description'].' (created from existing asset)',
+                    'bank_name' => null,
                     'account_number' => null,
                     'sort_code' => null,
                     'opening_balance' =>  $asset['asset_value'],
@@ -42,7 +42,7 @@ class Version073 extends AbstractMigration
                     'account_type' => $accountType,
                     'is_closed' => 'false',
                     'is_joint_account' => null,
-                    'meta' => "Migrated from asset {$asset['id']} with migration 73 on ".date('c')
+                    'meta' => $asset['description']
                 ];
                 //echo str_replace(["\n", "\r", "\r\n"], " ", implode(';', $asset). ';' . implode(';', $account)) . "\n";
                 $this->connection->insert('account', $account);
