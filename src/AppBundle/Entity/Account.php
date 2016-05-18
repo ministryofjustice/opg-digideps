@@ -42,7 +42,7 @@ class Account
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
-     * @ORM\Column(name="bank_name", type="string", length=300, nullable=true)
+     * @ORM\Column(name="bank_name", type="string", length=500, nullable=true)
      */
     private $bank;
 
@@ -185,6 +185,14 @@ class Account
      * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
     private $isJointAccount;
+    
+    /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"transactions", "basic", "transfers"})
+     * 
+     * @ORM\Column(name="meta", type="text", nullable=true)
+     */
+    private $meta;
     
     /**
      * Constructor
@@ -552,6 +560,17 @@ class Account
     {
         $this->isJointAccount = trim(strtolower($isJointAccount));
         
+        return $this;
+    }
+    
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
         return $this;
     }
 
