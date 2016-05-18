@@ -7,7 +7,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception as AppExceptions;
 
 class ReportController extends RestController
 {
@@ -23,7 +22,7 @@ class ReportController extends RestController
 
         // new report
         if (empty($reportData['client']['id'])) {
-            throw new \InvalidArgumentException("Missing client.id");
+            throw new \InvalidArgumentException('Missing client.id');
         }
         $client = $this->findEntityBy('Client', $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
@@ -47,14 +46,14 @@ class ReportController extends RestController
 
         $this->persistAndFlush($report);
 
-        return [ 'report' => $report->getId()];
+        return ['report' => $report->getId()];
     }
 
     /**
      * @Route("/report/{id}")
      * @Method({"GET"})
      * 
-     * @param integer $id
+     * @param int $id
      */
     public function getById(Request $request, $id)
     {
@@ -64,13 +63,12 @@ class ReportController extends RestController
         $this->setJmsSerialiserGroups($groups);
 
         $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
-        
+
         $report = $this->findEntityBy('Report', $id); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         return $report;
     }
-
 
     /**
      * @Route("/report/{id}/submit")
@@ -88,11 +86,11 @@ class ReportController extends RestController
         $data = $this->deserializeBodyContent($request);
 
         if (empty($data['submit_date'])) {
-            throw new \InvalidArgumentException("Missing submit_date");
+            throw new \InvalidArgumentException('Missing submit_date');
         }
-        
+
         if (empty($data['agreed_behalf_deputy'])) {
-            throw new \InvalidArgumentException("Missing agreed_behalf_deputy");
+            throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
         }
 
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
@@ -101,8 +99,7 @@ class ReportController extends RestController
         } else {
             $currentReport->setAgreedBehalfDeputyExplanation(null);
         }
-        
-        
+
 //        if (!empty($data['reason_not_all_agreed'])) {
 //            $currentReport->setAllAgreed(false);
 //            $currentReport->setReasonNotAllAgreed($data['reason_not_all_agreed']);
@@ -117,14 +114,14 @@ class ReportController extends RestController
         $reportContent = $this->forward('AppBundle:Report:pdf', ['reportId' => $currentReport->getId()])->getContent();
 
         $reportEmail = $this->getMailFactory()->createReportEmail($user, $client, $reportContent);
-        $this->getMailSender()->send($reportEmail, [ 'html'], 'secure-smtp');
+        $this->getMailSender()->send($reportEmail, ['html'], 'secure-smtp');
 
         //lets create subsequent year's report
         $nextYearReport = $this->getRepository('Report')->createNextYearReport($currentReport);
 
         //send confirmation email
         $reportConfirmEmail = $this->getMailFactory()->createReportSubmissionConfirmationEmail($user, $currentReport, $nextYearReport);
-        $this->getMailSender()->send($reportConfirmEmail, [ 'text', 'html']);
+        $this->getMailSender()->send($reportConfirmEmail, ['text', 'html']);
 
         $this->getEntityManager()->flush($currentReport);
 
@@ -156,10 +153,10 @@ class ReportController extends RestController
                 'decisions' => $report->getDecisions(),
                 'isEmailAttachment' => true,
                 'deputy' => $report->getClient()->getUsers()->first(),
-                'transfers' => $report->getMoneyTransfers()
+                'transfers' => $report->getMoneyTransfers(),
         ]);
     }
-    
+
     /**
      * @Route("/report/{reportId}/pdf")
      * @Method({"GET"})
@@ -168,23 +165,20 @@ class ReportController extends RestController
     {
         try {
             $html = $this->forward('AppBundle:Report:formatted', array(
-                'reportId'  => $reportId,
-                'addLayout' => true
+                'reportId' => $reportId,
+                'addLayout' => true,
             ))->getContent();
-            
+
             $pdf = $this->get('wkhtmltopdf')->getPdfFromHtml($html);
-            
+
             $response = new Response($pdf);
             $response->headers->set('Content-Type', 'application/pdf');
 
             return $response;
-        
         } catch (\Exception $e) {
             throw $e;
         }
-        
     }
-
 
     /**
      * @Route("/report/{id}")
@@ -193,19 +187,23 @@ class ReportController extends RestController
     public function update(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        
+
         $this->getRepository('Report')->warmUpArrayCacheTransactionTypes();
-        
+
         $report = $this->findEntityBy('Report', $id, 'Report not found'); /* @var $report EntityDir\Report */
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->deserializeBodyContent($request);
 
         foreach (['transactions_in', 'transactions_out'] as $tk) {
-            if (!isset($data[$tk])) { continue; }
+            if (!isset($data[$tk])) {
+                continue;
+            }
             foreach ($data[$tk] as $transactionRow) {
                 $t = $report->getTransactionByTypeId($transactionRow['id']); /* @var $t EntityDir\Transaction */
-                if (!$t instanceof EntityDir\Transaction) { continue; }
+                if (!$t instanceof EntityDir\Transaction) {
+                    continue;
+                }
                 $t->setAmounts($transactionRow['amounts'] ?: []);
                 if (array_key_exists('more_details', $transactionRow)) {
                     $t->setMoreDetails($transactionRow['more_details']);
@@ -214,7 +212,6 @@ class ReportController extends RestController
             }
             $this->setJmsSerialiserGroups(['transactions']);
         }
-
 
         if (array_key_exists('cot_id', $data)) {
             $cot = $this->findEntityBy('CourtOrderType', $data['cot_id']);
@@ -244,7 +241,7 @@ class ReportController extends RestController
         if (array_key_exists('no_asset_to_add', $data)) {
             $report->setNoAssetToAdd($data['no_asset_to_add']);
         }
-        
+
         if (array_key_exists('no_transfers_to_add', $data)) {
             $report->setNoTransfersToAdd($data['no_transfers_to_add']);
         }
@@ -265,5 +262,4 @@ class ReportController extends RestController
 
         return ['id' => $report->getId()];
     }
-
 }

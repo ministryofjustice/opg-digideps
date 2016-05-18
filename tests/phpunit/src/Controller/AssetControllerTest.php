@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 class AssetControllerTest extends AbstractTestController
 {
-
     private static $deputy1;
     private static $client1;
     private static $report1;
@@ -16,7 +15,6 @@ class AssetControllerTest extends AbstractTestController
     private static $asset2;
     private static $tokenAdmin = null;
     private static $tokenDeputy = null;
-
 
     public static function setUpBeforeClass()
     {
@@ -38,9 +36,8 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
     }
 
-
     /**
-     * clear fixtures 
+     * clear fixtures.
      */
     public static function tearDownAfterClass()
     {
@@ -48,7 +45,6 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
     }
-
 
     public function setUp()
     {
@@ -58,70 +54,64 @@ class AssetControllerTest extends AbstractTestController
         }
     }
 
-
     public function testgetAssetsAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/assets';
+        $url = '/report/'.self::$report1->getId().'/assets';
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-
     public function testgetAssetsAcl()
     {
-        $url2 = '/report/' . self::$report2->getId() . '/assets';
+        $url2 = '/report/'.self::$report2->getId().'/assets';
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-
     public function testgetAssets()
     {
-        $url = '/report/' . self::$report1->getId() . '/assets';
+        $url = '/report/'.self::$report1->getId().'/assets';
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenDeputy,
             ])['data'];
-        
+
         // order by id ASC (insert order)
-        usort($data, function($a, $b){
+        usort($data, function ($a, $b) {
             return $a['id'] > $b['id'];
         });
-        
+
         $this->assertCount(2, $data);
-        
+
         $this->assertEquals(self::$asset1->getId(), $data[0]['id']);
         $this->assertEquals('asset1', $data[0]['title']);
         $this->assertEquals('other', $data[0]['type']);
-        
+
         $this->assertEquals(self::$assetp1->getId(), $data[1]['id']);
         $this->assertEquals('ha1', $data[1]['address']);
         $this->assertEquals('property', $data[1]['type']);
     }
 
-
     public function testgetOneByIdAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
+        $url = '/report/'.self::$report1->getId().'/asset/'.self::$asset1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/' . self::$report1->getId() . '/asset/' . self::$asset2->getId();
+        $url2 = '/report/'.self::$report1->getId().'/asset/'.self::$asset2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-
     public function testgetOneById()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
+        $url = '/report/'.self::$report1->getId().'/asset/'.self::$asset1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -133,27 +123,24 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(self::$asset1->getTitle(), $data['title']);
     }
 
-
     public function testPostAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset';
+        $url = '/report/'.self::$report1->getId().'/asset';
 
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
     }
 
-
     public function testPostAcl()
     {
-        $url2 = '/report/' . self::$report2->getId() . '/asset';
+        $url2 = '/report/'.self::$report2->getId().'/asset';
 
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
     }
 
-
     public function testPostOther()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset';
+        $url = '/report/'.self::$report1->getId().'/asset';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -163,7 +150,7 @@ class AssetControllerTest extends AbstractTestController
                 'value' => 123,
                 'description' => 'de',
                 'valuation_date' => '01/01/2015',
-            ]
+            ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -177,10 +164,9 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(self::$report1->getId(), $asset->getReport()->getId());
     }
 
-
     public function testPostProperty()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset';
+        $url = '/report/'.self::$report1->getId().'/asset';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
@@ -201,8 +187,8 @@ class AssetControllerTest extends AbstractTestController
                 'address2' => 'gold house',
                 'county' => 'London',
                 'postcode' => 'SW1 H11',
-                'value' => 250000.50
-            ]
+                'value' => 250000.50,
+            ],
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -228,34 +214,31 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(250000.50, $asset->getValue());
     }
 
-
     public function testDeleteAuth()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset/'.  self::$asset1->getId();
+        $url = '/report/'.self::$report1->getId().'/asset/'.self::$asset1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
 
-
     public function testDeleteAcl()
     {
-        $url2 = '/report/' . self::$report1->getId() . '/asset/'.  self::$asset2->getId();
-        $url3 = '/report/' . self::$report2->getId() . '/asset/'.  self::$asset2->getId();
+        $url2 = '/report/'.self::$report1->getId().'/asset/'.self::$asset2->getId();
+        $url3 = '/report/'.self::$report2->getId().'/asset/'.self::$asset2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
     }
 
-
     /**
-     * Run this last to avoid corrupting the data
+     * Run this last to avoid corrupting the data.
      * 
      * @depends testgetAssets
      */
     public function testDelete()
     {
-        $url = '/report/' . self::$report1->getId() . '/asset/'.  self::$asset1->getId();
+        $url = '/report/'.self::$report1->getId().'/asset/'.self::$asset1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -263,5 +246,4 @@ class AssetControllerTest extends AbstractTestController
 
         $this->assertTrue(null === self::fixtures()->getRepo('Asset')->find(self::$asset1->getId()));
     }
-
 }

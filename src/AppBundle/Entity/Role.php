@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -6,21 +7,33 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Roles
+ * Roles.
  *
  * @ORM\Table(name="role")
  * @ORM\Entity
  */
 class Role implements RoleInterface
-{ 
+{
+
     const ROLE_ADMIN = 1;
     const ROLE_LAY_DEPUTY = 2;
-    
     const ADMIN = 'ROLE_ADMIN';
     const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    
+
     /**
-     * @var integer
+     * Added via digideps:fixtures command
+     * @JMS\Exclude
+     */
+    public static $fixtures = [
+        self::ROLE_ADMIN => ['OPG Administrator', self::ADMIN],
+        self::ROLE_LAY_DEPUTY => ['Lay Deputy', self::LAY_DEPUTY],
+        3 => ['Professional Deputy', 'ROLE_PROFESSIONAL_DEPUTY'],
+        4 => ['Local Authority Deputy', 'ROLE_LOCAL_AUTHORITY_DEPUTY'],
+        5 => ['Assisted Digital Support', 'ROLE_AD']
+    ];
+
+    /**
+     * @var int
      *
      * @JMS\Groups({"basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -29,7 +42,7 @@ class Role implements RoleInterface
      * @ORM\SequenceGenerator(sequenceName="role_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-    
+
     /**
      * @JMS\Groups({"basic", "audit_log"})
      * @ORM\Column(name="name", type="string", length=60 )
@@ -37,29 +50,24 @@ class Role implements RoleInterface
     private $name;
 
     /**
-     * @JMS\Exclude
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="role" )
-     */
-    private $user;
-    
-    /**
      * @JMS\Groups({"basic"})
      * @ORM\Column( name="role", type="string", length=50, nullable=true)
      */
     private $role;
 
     /**
-     * Constructor
+     * @param int $id
      */
-    public function __construct()
+    public function setId($id)
     {
-        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->id = $id;
+        return $this;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -67,9 +75,10 @@ class Role implements RoleInterface
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Role
      */
     public function setName($name)
@@ -80,24 +89,25 @@ class Role implements RoleInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
     public function getRole()
     {
         return $this->role;
     }
- 
+
     /**
-     * Set role
+     * Set role.
      *
      * @param string $role
+     *
      * @return Role
      */
     public function setRole($role)
@@ -105,38 +115,5 @@ class Role implements RoleInterface
         $this->role = $role;
 
         return $this;
-    }
-
-    /**
-     * Add user
-     *
-     * @param User $user
-     * @return Role
-     */
-    public function addUser(User $user)
-    {
-        $this->user[] = $user;
-
-        return $this;
-    }
-
-    /**
-     * Remove user
-     *
-     * @param User $user
-     */
-    public function removeUser(User $user)
-    {
-        $this->user->removeElement($user);
-    }
-
-    /**
-     * Get user
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 }

@@ -1,20 +1,19 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-
-use Doctrine\ORM\QueryBuilder;
 
 /**
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="action")
  * @ORM\Entity
  */
-class Action 
+class Action
 {
     /**
-     * @var integer
+     * @var int
      *
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -38,7 +37,7 @@ class Action
      * @ORM\Column(name="do_you_expect_decisions", type="string", length=4, nullable=true)
      */
     private $doYouExpectFinancialDecisions;
-    
+
     /**
      * @var string
      *
@@ -48,7 +47,6 @@ class Action
      */
     private $doYouExpectFinancialDecisionsDetails;
 
-    
     /**
      * @var string
      *
@@ -57,7 +55,7 @@ class Action
      * @ORM\Column( name="do_you_have_concerns", type="string", length=4, nullable=true)
      */
     private $doYouHaveConcerns;
-    
+
     /**
      * @var string
      *
@@ -77,20 +75,20 @@ class Action
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-
     /**
-     * Set report
+     * Set report.
      *
      * @param Report $report
+     *
      * @return Contact
      */
     public function setReport(Report $report = null)
@@ -101,7 +99,7 @@ class Action
     }
 
     /**
-     * Get report
+     * Get report.
      *
      * @return Report
      */
@@ -109,7 +107,6 @@ class Action
     {
         return $this->report;
     }
-
 
     public function getDoYouExpectFinancialDecisions()
     {
@@ -124,12 +121,14 @@ class Action
     public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
+
         return $this;
     }
 
     public function setDoYouHaveConcerns($doYouHaveConcerns)
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
+
         return $this;
     }
 
@@ -138,27 +137,22 @@ class Action
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
-
     public function getDoYouHaveConcernsDetails()
     {
         return $this->doYouHaveConcernsDetails;
     }
 
-
     public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
+
         return $this;
     }
-
 
     public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
+
         return $this;
     }
-
-
-
-
 }

@@ -9,7 +9,6 @@ use AppBundle\Entity as EntityDir;
 
 class ActionController extends RestController
 {
-
     /**
      * @Route("/report/{reportId}/action")
      * @Method({"PUT"})
@@ -19,12 +18,12 @@ class ActionController extends RestController
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
         $report = $this->findEntityBy('Report', $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
-            
+
         $action = $report->getAction();
         if (!$action) {
-            $action =  new EntityDir\Action($report);
+            $action = new EntityDir\Action($report);
             $this->getEntityManager()->persist($action);
-        } 
+        }
 
         $data = $this->deserializeBodyContent($request);
         $this->updateEntity($data, $action);
@@ -34,25 +33,24 @@ class ActionController extends RestController
         return ['id' => $action->getId()];
     }
 
-
     /**
      * @Route("/report/{reportId}/action")
      * @Method({"GET"})
      * 
-     * @param integer $id
+     * @param int $id
      */
     public function getOneById(Request $request, $id)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
 
-        $action = $this->findEntityBy('Action', $id, "Action with id:" . $id . " not found");
+        $action = $this->findEntityBy('Action', $id, 'Action with id:'.$id.' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
         return $action;
     }
 
     /**
-     * @param array $data
+     * @param array            $data
      * @param EntityDir\Action $action
      * 
      * @return \AppBundle\Entity\Report $report
@@ -62,7 +60,7 @@ class ActionController extends RestController
         if (array_key_exists('do_you_expect_financial_decisions', $data)) {
             $action->setDoYouExpectFinancialDecisions($data['do_you_expect_financial_decisions']);
         }
-        
+
         if (array_key_exists('do_you_expect_financial_decisions_details', $data)) {
             $action->setDoYouExpectFinancialDecisionsDetails($data['do_you_expect_financial_decisions_details']);
         }
@@ -70,12 +68,11 @@ class ActionController extends RestController
         if (array_key_exists('do_you_have_concerns', $data)) {
             $action->setDoYouHaveConcerns($data['do_you_have_concerns']);
         }
-        
+
         if (array_key_exists('do_you_have_concerns_details', $data)) {
             $action->setDoYouHaveConcernsDetails($data['do_you_have_concerns_details']);
         }
 
         return $action;
     }
-
 }

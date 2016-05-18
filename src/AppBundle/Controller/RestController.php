@@ -35,7 +35,7 @@ abstract class RestController extends Controller
     protected function validateArray($data, array $assertions = [])
     {
         $errors = [];
-        
+
         foreach ($assertions as $requiredKey => $validation) {
             switch ($validation) {
                 case 'notEmpty':
@@ -43,34 +43,32 @@ abstract class RestController extends Controller
                         $errors[] = "Expected value for '$requiredKey' key";
                     }
                     break;
-                    
+
                 case 'mustExist':
                     if (!array_key_exists($requiredKey, $data)) {
                         $errors[] = "Missing '$requiredKey' key";
                     }
                     break;
-                    
+
                 default:
-                    throw new \InvalidArgumentException(__METHOD__ . ": {$validation} not recognised.");
+                    throw new \InvalidArgumentException(__METHOD__.": {$validation} not recognised.");
             }
         }
-        
+
         if (!empty($errors)) {
-            throw new \InvalidArgumentException('Errors('.count($errors).'): ' . implode(', ', $errors));
+            throw new \InvalidArgumentException('Errors('.count($errors).'): '.implode(', ', $errors));
         }
     }
-
 
     protected function getRepository($entityClass)
     {
-        return $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\' . $entityClass);
+        return $this->getDoctrine()->getManager()->getRepository('AppBundle\\Entity\\'.$entityClass);
     }
 
-
     /**
-     * @param string $entityClass
-     * @param array|integer $criteriaOrId
-     * @param string $errorMessage
+     * @param string    $entityClass
+     * @param array|int $criteriaOrId
+     * @param string    $errorMessage
      * 
      * @throws NotFound
      */
@@ -78,14 +76,13 @@ abstract class RestController extends Controller
     {
         $repo = $this->getRepository($entityClass);
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
-        
+
         if (!$entity) {
-            throw new NotFound($errorMessage ? : $entityClass . ' not found');
+            throw new NotFound($errorMessage ?: $entityClass.' not found');
         }
 
         return $entity;
     }
-
 
     /**
      * @return \Doctrine\ORM\EntityManager
@@ -94,7 +91,6 @@ abstract class RestController extends Controller
     {
         return $this->getDoctrine()->getManager();
     }
-
 
     /**
      * @param mixed $object
@@ -110,10 +106,9 @@ abstract class RestController extends Controller
         }
     }
 
-
     /**
      * Set serialise group used by JMS serialiser to composer ouput response
-     * Attach setting to REquest as header, to be read by REstInputOuputFormatter kernel listener
+     * Attach setting to REquest as header, to be read by REstInputOuputFormatter kernel listener.
      * 
      * @param string $groups user 
      */
@@ -132,7 +127,6 @@ abstract class RestController extends Controller
         return $this->get('mailFactory');
     }
 
-
     /**
      * @return \AppBundle\Service\Mailer\MailSender
      */
@@ -140,7 +134,7 @@ abstract class RestController extends Controller
     {
         return $this->get('mailSender');
     }
-    
+
     /**
      * @return AuthService
      */
@@ -148,8 +142,7 @@ abstract class RestController extends Controller
     {
         return $this->get('authService');
     }
-    
-    
+
     /**
      * @param Report $report
      */
@@ -159,8 +152,8 @@ abstract class RestController extends Controller
             throw $this->createAccessDeniedException('Report does not belong to user');
         }
     }
-    
-     /**
+
+    /**
      * @param Client $client
      */
     protected function denyAccessIfClientDoesNotBelongToUser(EntityDir\Client $client)
@@ -169,12 +162,10 @@ abstract class RestController extends Controller
             throw $this->createAccessDeniedException('Client does not belong to user');
         }
     }
-    
+
     protected function persistAndFlush($e)
     {
         $this->getEntityManager()->persist($e);
         $this->getEntityManager()->flush($e);
     }
-    
-
 }

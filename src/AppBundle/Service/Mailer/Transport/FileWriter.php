@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service\Mailer\Transport;
 
 use Swift_Transport;
@@ -7,21 +8,21 @@ use Swift_Mime_Message;
 use AppBundle\Service\Mailer\MessageUtils;
 
 /**
- * Mock transport used for BDD testing
+ * Mock transport used for BDD testing.
  * 
  * saves email into a class property, no real mail are sent
  */
 class FileWriter implements Swift_Transport
 {
     private $path;
-    
+
     public function __construct($path)
     {
         $this->path = $path;
     }
-    
+
     /**
-     * @var boolean
+     * @var bool
      */
     protected $started;
 
@@ -33,7 +34,7 @@ class FileWriter implements Swift_Transport
     /**
      * @see Swift_Transport::isStarted
      * 
-     * @return boolean always true
+     * @return bool always true
      */
     public function isStarted()
     {
@@ -48,29 +49,29 @@ class FileWriter implements Swift_Transport
      */
     public function registerPlugin(Swift_Events_EventListener $plugin)
     {
-        
     }
-    
+
     /**
-     * Just adds message to internal property
+     * Just adds message to internal property.
      *
      * @param Swift_Mime_Message $message
-     * @param array &$failedRecipients
+     * @param array              &$failedRecipients
      * 
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
      * @see Swift_Transport::send
      */
     public function send(Swift_Mime_Message $message, &$failedRecipients = null)
     {
         $data = MessageUtils::messageToArray($message);
-        
-        file_put_contents($this->path, json_encode($data) . PHP_EOL, FILE_APPEND);
-        
+
+        file_put_contents($this->path, json_encode($data).PHP_EOL, FILE_APPEND);
+
         $this->messages[] = $message;
     }
 
     /**
-     * Empty implementation
+     * Empty implementation.
      *
      * @see Swift_Transport::start
      */
@@ -81,7 +82,7 @@ class FileWriter implements Swift_Transport
     }
 
     /**
-     * Empty implementation
+     * Empty implementation.
      * 
      * @see Swift_Transport::stop
      * @codeCoverageIgnore
@@ -91,7 +92,7 @@ class FileWriter implements Swift_Transport
     }
 
     /**
-     * Get messages added with "send"
+     * Get messages added with "send".
      * 
      * @return array
      */
@@ -100,15 +101,16 @@ class FileWriter implements Swift_Transport
         $messages = $this->messages;
 
         if (empty($messages)) {
-            $messages = array_map(function($msg) {
+            $messages = array_map(function ($msg) {
                 return MessageUtils::arrayToMessage(json_decode($msg, true));
             }, explode(PHP_EOL, trim(file_get_contents($this->path))));
         }
+
         return $messages;
     }
 
     /**
-     * Return message if sent
+     * Return message if sent.
      *
      * @param type $subject
      * @param type $to
@@ -122,6 +124,7 @@ class FileWriter implements Swift_Transport
                 return $message;
             }
         }
-        return null;
+
+        return;
     }
 }

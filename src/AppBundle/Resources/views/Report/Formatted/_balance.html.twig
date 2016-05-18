@@ -72,7 +72,7 @@
         </li>
     </ul>
 
-    <fieldset class="accountBalance_closingBalanceExplanation">
+    <fieldset class="">
         <div class="form-group form-group-vertical">
             <div class="label">If the figures in box 5 and box 6 are different, tell us why (for example, if you’ve
                 rounded up or down any amounts or you have used a different date on the bank statement).
@@ -80,40 +80,5 @@
             <div class="value textarea">{% if not report.getTotalsMatch %}{{ report.balanceMismatchExplanation }}{% endif %}</div>
         </div>
     </fieldset>
-
-    {#<fieldset class="account-date-explanation">#}
-
-        {#<div class="label intro">If the dates used to calculate the opening and closing balances are different from the#}
-            {#reporting period shown on the front page, write the dates you used below.#}
-        {#</div>#}
-
-        {#<div class="form-group form-group-vertical half-width">#}
-            {#<div class="label">From</div>#}
-            {#<div class="value">#}
-                {#{% if account.openingDateExplanation or account.closingDateExplanation %}#}
-                    {#{{ account.openingDate | date("d/m/Y") }}#}
-                {#{% endif %}#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="form-group form-group-vertical half-width">#}
-            {#<div class="label">To</div>#}
-            {#<div class="value">#}
-                {#{% if account.openingDateExplanation or account.closingDateExplanation %}#}
-                    {#{{ account.closingDate | date("d/m/Y") }}#}
-                {#{% endif %}#}
-            {#</div>#}
-        {#</div>#}
-
-        {#<div class="form-group form-group-vertical full-width">#}
-            {#<div class="label">Tell us why the dates are different.</div>#}
-            {#<div class="textarea">#}
-                {#{% if account.openingDateExplanation or account.closingDateExplanation %}#}
-                    {#{{ account.openingDateExplanation }}<br/>#}
-                    {#{{ account.closingDateExplanation }}#}
-                {#{% endif %}#}
-            {#</div>#}
-        {#</div>#}
-    {#</fieldset>#}
 
 </div>

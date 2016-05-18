@@ -1,21 +1,20 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Contacts
+ * Contacts.
  *
  * @ORM\Table(name="contact")
  * @ORM\Entity
  */
-class Contact 
+class Contact
 {
     /**
-     * @var integer
+     * @var int
      * 
      * @JMS\Type("integer")
      * @JMS\Groups({"basic"})
@@ -43,7 +42,7 @@ class Contact
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private $address;
-    
+
     /**
      * @var string
      *
@@ -52,7 +51,7 @@ class Contact
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
-    
+
     /**
      * @var string
      *
@@ -70,7 +69,7 @@ class Contact
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     private $postcode;
-    
+
     /**
      * @var string
      *
@@ -115,7 +114,7 @@ class Contact
     private $lastedit;
 
     /**
-     * @var integer
+     * @var int
      * @JMS\Groups({"report"})
      * @JMS\Type("AppBundle\Entity\Report")
      * 
@@ -124,11 +123,10 @@ class Contact
      */
     private $report;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -136,9 +134,10 @@ class Contact
     }
 
     /**
-     * Set contact_name
+     * Set contact_name.
      *
      * @param string $contact_name
+     *
      * @return Contact
      */
     public function setContactName($contactName)
@@ -149,9 +148,9 @@ class Contact
     }
 
     /**
-     * Get contactName
+     * Get contactName.
      *
-     * @return string 
+     * @return string
      */
     public function getContactName()
     {
@@ -159,9 +158,10 @@ class Contact
     }
 
     /**
-     * Set postcode
+     * Set postcode.
      *
      * @param string $postcode
+     *
      * @return Contact
      */
     public function setPostcode($postcode)
@@ -172,9 +172,9 @@ class Contact
     }
 
     /**
-     * Get postcode
+     * Get postcode.
      *
-     * @return string 
+     * @return string
      */
     public function getPostcode()
     {
@@ -182,9 +182,10 @@ class Contact
     }
 
     /**
-     * Set explanation
+     * Set explanation.
      *
      * @param string $explanation
+     *
      * @return Contact
      */
     public function setExplanation($explanation)
@@ -195,9 +196,9 @@ class Contact
     }
 
     /**
-     * Get explanation
+     * Get explanation.
      *
-     * @return string 
+     * @return string
      */
     public function getExplanation()
     {
@@ -205,9 +206,10 @@ class Contact
     }
 
     /**
-     * Set relationship
+     * Set relationship.
      *
      * @param string $relationship
+     *
      * @return Contact
      */
     public function setRelationship($relationship)
@@ -218,9 +220,9 @@ class Contact
     }
 
     /**
-     * Get relationship
+     * Get relationship.
      *
-     * @return string 
+     * @return string
      */
     public function getRelationship()
     {
@@ -228,9 +230,10 @@ class Contact
     }
 
     /**
-     * Set phone1
+     * Set phone1.
      *
      * @param string $phone1
+     *
      * @return Contact
      */
     public function setPhone1($phone1)
@@ -241,9 +244,9 @@ class Contact
     }
 
     /**
-     * Get phone1
+     * Get phone1.
      *
-     * @return string 
+     * @return string
      */
     public function getPhone1()
     {
@@ -251,9 +254,10 @@ class Contact
     }
 
     /**
-     * Set lastedit
+     * Set lastedit.
      *
      * @param \DateTime $lastedit
+     *
      * @return Contact
      */
     public function setLastedit($lastedit)
@@ -264,19 +268,20 @@ class Contact
     }
 
     /**
-     * Get lastedit
+     * Get lastedit.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastedit()
     {
         return $this->lastedit;
     }
-    
+
     /**
-     * Set report
+     * Set report.
      *
      * @param Report $report
+     *
      * @return Contact
      */
     public function setReport(Report $report = null)
@@ -287,28 +292,30 @@ class Contact
     }
 
     /**
-     * Get report
+     * Get report.
      *
-     * @return Report 
+     * @return Report
      */
     public function getReport()
     {
         return $this->report;
     }
-    
+
     /**
-     * Return full name, e.g. Mr John Smith
+     * Return full name, e.g. Mr John Smith.
      */
     public function getFullName()
     {
         $space = ' ';
-        return $this->getFirstname().$space. $this->getLastname();
+
+        return $this->getFirstname().$space.$this->getLastname();
     }
 
     /**
-     * Set address
+     * Set address.
      *
      * @param string $address
+     *
      * @return Contact
      */
     public function setAddress($address)
@@ -319,9 +326,9 @@ class Contact
     }
 
     /**
-     * Get address
+     * Get address.
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -329,9 +336,10 @@ class Contact
     }
 
     /**
-     * Set address2
+     * Set address2.
      *
      * @param string $address2
+     *
      * @return Contact
      */
     public function setAddress2($address2)
@@ -342,9 +350,9 @@ class Contact
     }
 
     /**
-     * Get address2
+     * Get address2.
      *
-     * @return string 
+     * @return string
      */
     public function getAddress2()
     {
@@ -352,9 +360,10 @@ class Contact
     }
 
     /**
-     * Set county
+     * Set county.
      *
      * @param string $county
+     *
      * @return Contact
      */
     public function setCounty($county)
@@ -365,9 +374,9 @@ class Contact
     }
 
     /**
-     * Get county
+     * Get county.
      *
-     * @return string 
+     * @return string
      */
     public function getCounty()
     {
@@ -375,9 +384,10 @@ class Contact
     }
 
     /**
-     * Set country
+     * Set country.
      *
      * @param string $country
+     *
      * @return Contact
      */
     public function setCountry($country)
@@ -388,13 +398,12 @@ class Contact
     }
 
     /**
-     * Get country
+     * Get country.
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
         return $this->country;
     }
-    
 }

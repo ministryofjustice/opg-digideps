@@ -1,12 +1,13 @@
 <?php
+
 namespace AppBundle\Exception;
 
 class UnauthorisedException extends \RuntimeException implements HasDataInterface
 {
     protected $code = 403;
- 
+
     protected $data;
-    
+
     public function getData()
     {
         return $this->data;
@@ -16,5 +17,4 @@ class UnauthorisedException extends \RuntimeException implements HasDataInterfac
     {
         $this->data = $data;
     }
-
 }

@@ -1,25 +1,26 @@
 <?php
+
 namespace AppBundle\Service\Mailer;
 
 /**
- * \Swift_Message utils
+ * \Swift_Message utils.
  */
 class MessageUtils
 {
     /**
      */
     protected static $fieldsToSerialize = array(
-        'to', 
-        'from', 
-        'bcc', 
-        'cc', 
-        'replyTo', 
+        'to',
+        'from',
+        'bcc',
+        'cc',
+        'replyTo',
         'returnPath',
-        'subject', 
+        'subject',
         'body',
-        'sender'
+        'sender',
     );
-    
+
     /**
      * @param Swift_Mime_Message $message
      *
@@ -29,10 +30,10 @@ class MessageUtils
     {
         $ret = array();
         foreach (self::$fieldsToSerialize as $field) {
-            $method = "get".ucfirst($field);
+            $method = 'get'.ucfirst($field);
             $ret[$field] = $message->$method();
         }
-        
+
         // add parts
         $ret['parts'] = array();
         foreach ($message->getChildren() as $child) {
@@ -41,10 +42,10 @@ class MessageUtils
                 'contentType' => $child->getContentType(),
             );
         }
-        
+
         return $ret;
     }
-    
+
     /**
      * @param array $array
      * 
@@ -52,23 +53,22 @@ class MessageUtils
      */
     public static function arrayToMessage($array)
     {
-        $message = new \Swift_Message;
-        
+        $message = new \Swift_Message();
+
         foreach (self::$fieldsToSerialize as $field) {
             if (!empty($array[$field])) {
-                $method = "set".ucfirst($field);
+                $method = 'set'.ucfirst($field);
                 $message->$method($array[$field]);
             }
         }
-        
-        foreach ((array)$array['parts'] as $part) {
+
+        foreach ((array) $array['parts'] as $part) {
             $message->addPart($part['body'], $part['contentType']);
         }
-        
+
         return $message;
     }
-    
-    
+
     /**
      * @param Swift_Mime_Message $message
      *
@@ -78,14 +78,14 @@ class MessageUtils
     {
         $ret = '';
         foreach (self::$fieldsToSerialize as $field) {
-            $method = "get".ucfirst($field);
+            $method = 'get'.ucfirst($field);
             $methodReturned = $message->$method();
             if (is_array($methodReturned)) {
                 $methodReturned = print_r($methodReturned, true);
             }
             $ret .= sprintf("%s: %s\n", $field, $methodReturned);
         }
-        
+
         // add parts
         foreach ($message->getChildren() as $k => $child) {
             $ret .= sprintf("PART $k -----\n Body: %s\n ContentType:%s\n",
@@ -93,10 +93,9 @@ class MessageUtils
                 $child->getContentType()
             );
         }
-        
+
         $ret .= "--------------------------\n";
-        
+
         return $ret;
     }
-    
 }

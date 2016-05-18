@@ -50,3 +50,17 @@ jms_serializer:
         cache: none
         cache: file
         debug: true
+        
+parameters:
+    fixtures:
+        deputy@example.org:
+            firstname: test
+            lastname: deputy
+            roleId: 2
+            password: Abcd1234
+        
+        admin@example.org:
+            firstname: test
+            lastname: admin
+            roleId: 1
+            password: Abcd1234

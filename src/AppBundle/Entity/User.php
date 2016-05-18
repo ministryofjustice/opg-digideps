@@ -7,7 +7,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Users
+ * Users.
  *
  * @ORM\Table(name="dd_user")
  * @ORM\Entity
@@ -15,9 +15,9 @@ use JMS\Serializer\Annotation as JMS;
 class User implements UserInterface
 {
     const TOKEN_EXPIRE_HOURS = 48;
-    
+
     /**
-     * @var integer
+     * @var int
      * @JMS\Type("integer")
      * @JMS\Groups({"basic","audit_log"})
      * 
@@ -27,8 +27,7 @@ class User implements UserInterface
      * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-    
-   
+
     /**
      * @JMS\Groups({"basic"})
      * @JMS\Type("array")
@@ -44,7 +43,7 @@ class User implements UserInterface
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
     private $firstname;
-    
+
     /**
      * @var string
      *
@@ -53,7 +52,7 @@ class User implements UserInterface
      * @JMS\Groups({"basic", "audit_log"})
      */
     private $lastname;
-    
+
     /**
      * @var string
      * @ORM\Column(name="password", type="string", length=100, nullable=false)
@@ -71,7 +70,7 @@ class User implements UserInterface
     private $email;
 
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic"})
      * 
@@ -104,13 +103,12 @@ class User implements UserInterface
     private $registrationToken;
 
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic"})
      * @ORM\Column(name="email_confirmed", type="boolean", nullable=true)
      */
     private $emailConfirmed;
-
 
     /**
      * @var \DateTime
@@ -122,26 +120,25 @@ class User implements UserInterface
     private $tokenDate;
 
     /**
-     * @var integer
+     * @var int
      * 
      * @JMS\Groups({"basic","audit_log"})
      * @JMS\Type("AppBundle\Entity\Role")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role")
      * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
      */
     private $role;
-    
+
     /**
      * This id is supplied to GA for UserID tracking. It is an md5 of the user id,
-     * does not get stored in the database
+     * does not get stored in the database.
      * 
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({"basic"})
      */
     private $gaTrackingId;
-    
-    
+
     /**
      * @var string
      *
@@ -150,7 +147,7 @@ class User implements UserInterface
      * @ORM\Column(name="address1", type="string", length=200, nullable=true)
      */
     private $address1;
-    
+
     /**
      * @var string
      * 
@@ -159,7 +156,7 @@ class User implements UserInterface
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
-    
+
     /**
      * @var string
      *
@@ -177,7 +174,7 @@ class User implements UserInterface
      * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
      */
     private $addressPostcode;
-    
+
     /**
      * @var string
      *
@@ -195,16 +192,16 @@ class User implements UserInterface
      * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     private $phoneMain;
-    
-     /**
+
+    /**
      * @var string
      *
-      * @JMS\Type("string")
-      * @JMS\Groups({"basic"})
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
      * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
     private $phoneAlternative;
-    
+
     /**
      * @var \DateTime
      * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
@@ -213,17 +210,17 @@ class User implements UserInterface
      * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
     private $lastLoggedIn;
-    
-     /**
+
+    /**
      * @var string
      * 
      * @JMS\Type("string")
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
     private $deputyNo;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -232,9 +229,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -242,9 +239,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set firstname
+     * Set firstname.
      *
      * @param string $firstname
+     *
      * @return User
      */
     public function setFirstname($firstname)
@@ -255,9 +253,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get firstname
+     * Get firstname.
      *
-     * @return string 
+     * @return string
      */
     public function getFirstname()
     {
@@ -265,23 +263,25 @@ class User implements UserInterface
     }
 
     /**
-     * Set password
+     * Set password.
      *
      * @param string $password
+     *
      * @return User
      */
     public function setPassword($password)
     {
         $this->password = $password;
         $this->setRegistrationToken('');
-        
+
         return $this;
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
+     *
      * @return User
      */
     public function setEmail($email)
@@ -292,9 +292,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get email
+     * Get email.
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -302,22 +302,23 @@ class User implements UserInterface
     }
 
     /**
-     * Set active
+     * Set active.
      *
-     * @param boolean $active
+     * @param bool $active
+     *
      * @return User
      */
     public function setActive($active)
     {
-        $this->active = (bool)$active;
+        $this->active = (bool) $active;
 
         return $this;
     }
 
     /**
-     * Get active
+     * Get active.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getActive()
     {
@@ -325,9 +326,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set salt
+     * Set salt.
      *
      * @param string $salt
+     *
      * @return User
      */
     public function setSalt($salt)
@@ -338,9 +340,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set registrationDate
+     * Set registrationDate.
      *
      * @param \DateTime $registrationDate
+     *
      * @return User
      */
     public function setRegistrationDate($registrationDate)
@@ -351,9 +354,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get registrationDate
+     * Get registrationDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getRegistrationDate()
     {
@@ -361,35 +364,36 @@ class User implements UserInterface
     }
 
     /**
-     * Set registrationToken
+     * Set registrationToken.
      *
      * @return User
      */
     public function recreateRegistrationToken()
     {
-        $this->setRegistrationToken('digideps' . date('dmY') . time(true) . rand(17, 999917));
+        $this->setRegistrationToken('digideps'.date('dmY').time(true).rand(17, 999917));
         $this->setTokenDate(new \DateTime());
-        
+
         return $this;
     }
-    
+
     /**
-     * Set registrationToken
+     * Set registrationToken.
      *
      * @param string $registrationToken
+     *
      * @return User
      */
     public function setRegistrationToken($registrationToken)
     {
         $this->registrationToken = $registrationToken;
-        
+
         return $this;
     }
 
     /**
-     * Get registrationToken
+     * Get registrationToken.
      *
-     * @return string 
+     * @return string
      */
     public function getRegistrationToken()
     {
@@ -397,9 +401,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set emailConfirmed
+     * Set emailConfirmed.
      *
-     * @param boolean $emailConfirmed
+     * @param bool $emailConfirmed
+     *
      * @return User
      */
     public function setEmailConfirmed($emailConfirmed)
@@ -410,9 +415,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get emailConfirmed
+     * Get emailConfirmed.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getEmailConfirmed()
     {
@@ -420,9 +425,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set lastname
+     * Set lastname.
      *
      * @param string $lastname
+     *
      * @return User
      */
     public function setLastname($lastname)
@@ -433,9 +439,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get lastname
+     * Get lastname.
      *
-     * @return string 
+     * @return string
      */
     public function getLastname()
     {
@@ -443,9 +449,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set tokenDate
+     * Set tokenDate.
      *
      * @param \DateTime $tokenDate
+     *
      * @return User
      */
     public function setTokenDate($tokenDate)
@@ -456,9 +463,9 @@ class User implements UserInterface
     }
 
     /**
-     * Get tokenDate
+     * Get tokenDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getTokenDate()
     {
@@ -466,9 +473,10 @@ class User implements UserInterface
     }
 
     /**
-     * Add clients
+     * Add clients.
      *
      * @param Client $client
+     *
      * @return User
      */
     public function addClient(Client $client)
@@ -480,7 +488,7 @@ class User implements UserInterface
     }
 
     /**
-     * Remove clients
+     * Remove clients.
      *
      * @param Client $clients
      */
@@ -490,7 +498,7 @@ class User implements UserInterface
     }
 
     /**
-     * Get clients
+     * Get clients.
      *
      * @return Client[]
      */
@@ -500,9 +508,10 @@ class User implements UserInterface
     }
 
     /**
-     * Set role
+     * Set role.
      *
      * @param Role $role
+     *
      * @return User
      */
     public function setRole(Role $role = null)
@@ -513,63 +522,63 @@ class User implements UserInterface
     }
 
     /**
-     * Get role
+     * Get role.
      *
-     * @return Role 
+     * @return Role
      */
     public function getRole()
     {
         return $this->role;
     }
-    
-    public function getUsername() 
+
+    public function getUsername()
     {
         return $this->email;
     }
-    
-    public function getSalt() 
+
+    public function getSalt()
     {
         //return $this->salt;
-        return null;
+        return;
     }
-    
-    public function getPassword() 
+
+    public function getPassword()
     {
         return $this->password;
     }
-    
-    public function getRoles() 
+
+    public function getRoles()
     {
-        return [ $this->role->getRole() ];
+        return [$this->role->getRole()];
     }
-    
-    public function eraseCredentials() 
+
+    public function eraseCredentials()
     {
     }
-    
+
     /**
-     * Get gaTrackingId
+     * Get gaTrackingId.
      * 
      * @return string $gaTrackingId
      */
     public function getGaTrackingId()
     {
-        if(!empty($this->gaTrackingId)){
+        if (!empty($this->gaTrackingId)) {
             return $this->gaTrackingId;
         }
         $this->gaTrackingId = md5($this->id);
-       
+
         return $this->gaTrackingId;
     }
-    
+
     /**
      * @return string
      */
     public function getFullName()
     {
-        return $this->firstname . ' ' . $this->lastname;
+        return $this->firstname.' '.$this->lastname;
     }
-    
+
     /**
      * @return string
      */
@@ -601,7 +610,7 @@ class User implements UserInterface
     {
         return $this->addressPostcode;
     }
-    
+
     /**
      * @return string
      */
@@ -657,7 +666,7 @@ class User implements UserInterface
     {
         $this->addressPostcode = $addressPostcode;
     }
-    
+
     /**
      * @return string
      */
@@ -681,7 +690,7 @@ class User implements UserInterface
     {
         $this->phoneAlternative = $phoneAlternative;
     }
-    
+
     /**
      * @return \DateTime
      */
@@ -696,9 +705,10 @@ class User implements UserInterface
     public function setLastLoggedIn(\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -713,7 +723,7 @@ class User implements UserInterface
     public function setDeputyNo($deputyNo)
     {
         $this->deputyNo = $deputyNo;
+
         return $this;
     }
-
 }

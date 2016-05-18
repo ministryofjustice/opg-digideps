@@ -1,10 +1,11 @@
 <?php
+
 namespace AppBundle\Service;
 
 use Symfony\Component\DependencyInjection\Container;
 
 /**
- * RequestIdLoggerProcessor
+ * RequestIdLoggerProcessor.
  *
  * Log processor to add and extra key 'request_id' to the log entry with the 'x-request-id' value found in the request header
  *
@@ -14,7 +15,6 @@ use Symfony\Component\DependencyInjection\Container;
  *        arguments:  [ @service_container ]
  *        tags:
  *            - { name: monolog.processor, method: processRecord }
- *
  */
 class RequestIdLoggerProcessor
 {
@@ -25,6 +25,7 @@ class RequestIdLoggerProcessor
 
     /**
      * RequestIdLoggerProcessor constructor.
+     *
      * @param Container $container
      */
     public function __construct(Container $container)
@@ -34,7 +35,7 @@ class RequestIdLoggerProcessor
 
     /**
      * Add request header 'x-request-id' into ['extra']['request_id']
-     * Does not change the record if the scope is not active, or the request is not found or doesn't contain the header
+     * Does not change the record if the scope is not active, or the request is not found or doesn't contain the header.
      *
      * @param array $record
      *

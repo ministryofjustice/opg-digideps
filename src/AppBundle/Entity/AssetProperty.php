@@ -11,7 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AssetProperty extends Asset
 {
-
     const OCCUPANTS_OTHER = 'other';
     const OWNED_FULLY = 'fully';
     const OWNED_PARTLY = 'partly';
@@ -19,6 +18,7 @@ class AssetProperty extends Asset
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
+     *
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
@@ -28,6 +28,7 @@ class AssetProperty extends Asset
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
+     *
      * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
@@ -37,6 +38,7 @@ class AssetProperty extends Asset
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
+     *
      * @var string
      *
      * @ORM\Column(name="county", type="string", length=75, nullable=true)
@@ -46,6 +48,7 @@ class AssetProperty extends Asset
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"asset"})
+     *
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
@@ -132,7 +135,7 @@ class AssetProperty extends Asset
     private $rentIncomeMonth;
 
     /**
-     * Set address
+     * Set address.
      *
      * @param string $address
      */
@@ -144,7 +147,7 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Get address
+     * Get address.
      */
     public function getAddress()
     {
@@ -152,7 +155,7 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Set postcode
+     * Set postcode.
      *
      * @param string $postcode
      */
@@ -164,9 +167,9 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Get address2
+     * Get address2.
      *
-     * @return string 
+     * @return string
      */
     public function getAddress2()
     {
@@ -174,7 +177,7 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Set county
+     * Set county.
      *
      * @param string $county
      */
@@ -186,9 +189,9 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Get county
+     * Get county.
      *
-     * @return string 
+     * @return string
      */
     public function getCounty()
     {
@@ -196,7 +199,7 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Get postcode
+     * Get postcode.
      */
     public function getPostcode()
     {
@@ -204,7 +207,7 @@ class AssetProperty extends Asset
     }
 
     /**
-     * Set address2
+     * Set address2.
      *
      * @param string $address2
      */
@@ -268,64 +271,74 @@ class AssetProperty extends Asset
     public function setOccupants($occupants)
     {
         $this->occupants = $occupants;
+
         return $this;
     }
 
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
-            throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
+            throw new \InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
         }
 
         $this->owned = $owned;
+
         return $this;
     }
 
     public function setOwnedPercentage($ownedPercentage)
     {
         $this->ownedPercentage = $ownedPercentage;
+
         return $this;
     }
 
     public function setIsSubjectToEquityRelease($isSubjectToEquityRelease)
     {
         $this->isSubjectToEquityRelease = $isSubjectToEquityRelease;
+
         return $this;
     }
 
     public function setHasMortgage($hasMortgage)
     {
         $this->hasMortgage = $hasMortgage;
+
         return $this;
     }
 
     public function setMortgageOutstandingAmount($mortgageOutstandingAmount)
     {
         $this->mortgageOutstandingAmount = $mortgageOutstandingAmount;
+
         return $this;
     }
 
     public function setHasCharges($hasCharges)
     {
         $this->hasCharges = $hasCharges;
+
         return $this;
     }
 
     public function setIsRentedOut($isRentedOut)
     {
         $this->isRentedOut = $isRentedOut;
+
         return $this;
     }
 
     public function setRentAgreementEndDate($rentAgreementEndDate)
     {
         $this->rentAgreementEndDate = $rentAgreementEndDate;
+
         return $this;
     }
 
     public function setRentIncomeMonth($rentIncomeMonth)
     {
         $this->rentIncomeMonth = $rentIncomeMonth;
+
         return $this;
     }
 
@@ -358,10 +371,9 @@ class AssetProperty extends Asset
     {
         return 'property';
     }
-    
+
     public function getType()
     {
         return 'property';
     }
-
 }

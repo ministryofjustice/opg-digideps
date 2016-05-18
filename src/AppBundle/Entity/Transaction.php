@@ -1,9 +1,9 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-
 
 /**
  * @ORM\Table(name="transaction", uniqueConstraints={@ORM\UniqueConstraint(name="report_unique_trans", columns={"report_id", "transaction_type_id"})})
@@ -12,7 +12,7 @@ use JMS\Serializer\Annotation as JMS;
 class Transaction
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -38,7 +38,7 @@ class Transaction
      * @ORM\JoinColumn(name="transaction_type_id", referencedColumnName="id")
      */
     private $transactionType;
-    
+
     /**
      * @var array
      * 
@@ -65,7 +65,6 @@ class Transaction
      */
     private $hasMoreDetails;
 
-
     public function __construct(Report $report, TransactionType $transactionType, array $amounts)
     {
         $this->report = $report;
@@ -90,7 +89,6 @@ class Transaction
     {
         $this->report = $report;
     }
-
 
     /**
      * @return TransactionType
@@ -135,7 +133,7 @@ class Transaction
     {
         return $this->getTransactionType()->getCategory();
     }
-    
+
     /**
      * @return array of floats
      * @JMS\VirtualProperty
@@ -156,7 +154,7 @@ class Transaction
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasMoreDetails()
     {
@@ -166,39 +164,36 @@ class Transaction
     public function setTransactionType(TransactionType $transactionType)
     {
         $this->transactionType = $transactionType;
+
         return $this;
     }
 
     public function setMoreDetails($moreDetails)
     {
         $this->moreDetails = $moreDetails;
-        
+
         return $this;
     }
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function getAmounts()
     {
         return $this->amounts;
     }
 
-
     public function setAmounts($amounts)
     {
         $this->amounts = $amounts;
+
         return $this;
     }
-
-
-    
 }

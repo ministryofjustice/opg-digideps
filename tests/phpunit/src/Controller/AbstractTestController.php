@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
-
 use Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
@@ -13,39 +12,43 @@ abstract class AbstractTestController extends WebTestCase
      * @var \Fixtures
      */
     protected static $fixtures;
-    
+
     /**
-     * @var Client 
+     * @var Client
      */
     protected static $frameworkBundleClient;
-    
+
     /**
-     * Create static client and fixtures
+     * Create static client and fixtures.
      */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
-        
+
+        // each test restores the db before launching the entire suite, 
+        // help to cleanup records created from previously-executed tests
         Fixtures::restoreDb();
-        
-        self::$frameworkBundleClient = static::createClient([ 'environment' => 'test',
-                                               'debug' => true ]);
+
+        self::$frameworkBundleClient = static::createClient(['environment' => 'test',
+                                               'debug' => true, ]);
         $em = self::$frameworkBundleClient->getContainer()->get('em');
+
+        $t = self::$frameworkBundleClient->getContainer()->getParameter('fixtures');
         
         self::$fixtures = new Fixtures($em);
         $em->clear();
     }
-    
+
     /**
-     * clear fixtures 
+     * clear fixtures.
      */
     public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
-        
+
         self::fixtures()->clear();
     }
-    
+
     /**
      * @return \Fixtures
      */
@@ -53,7 +56,7 @@ abstract class AbstractTestController extends WebTestCase
     {
         return self::$fixtures;
     }
-    
+
     /**
      * @return Client
      */
@@ -61,10 +64,10 @@ abstract class AbstractTestController extends WebTestCase
     {
         return self::$frameworkBundleClient;
     }
-    
+
     /**
-     * 
      * @param array $options with keys method, uri, data, mustSucceed, mustFail, assertId
+     *
      * @return type
      */
     public function assertJsonRequest($method, $uri, array $options = [])
@@ -76,46 +79,45 @@ abstract class AbstractTestController extends WebTestCase
         if (isset($options['ClientSecret'])) {
             $headers['HTTP_ClientSecret'] = $options['ClientSecret'];
         }
-        
+
         $rawData = null;
         if (isset($options['data'])) {
             $rawData = json_encode($options['data']);
         } elseif (isset($options['rawData'])) {
             $rawData = $options['rawData'];
         }
-        
+
         self::$frameworkBundleClient->request(
-            $method, 
+            $method,
             $uri,
             [], [],
             $headers,
            $rawData
         );
-        $response =  self::$frameworkBundleClient->getResponse();
+        $response = self::$frameworkBundleClient->getResponse();
 
-        $this->assertTrue($response->headers->contains('Content-Type','application/json'), 'wrong content type. Headers: ' . $response->headers);
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: '.$response->headers);
         $return = json_decode($response->getContent(), true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
-            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: " . print_r($return, true));
+            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: ".print_r($return, true));
             if (!empty($options['assertId'])) {
                 $this->assertTrue($return['data']['id'] > 0);
             }
         }
         if (!empty($options['mustFail'])) {
-            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: " . print_r($return, true));
+            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: ".print_r($return, true));
         }
-         if (!empty($options['assertCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $return['code'], "Response: " . print_r($return, true));
+        if (!empty($options['assertCode'])) {
+            $this->assertEquals($options['assertResponseCode'], $return['code'], 'Response: '.print_r($return, true));
         }
         if (!empty($options['assertResponseCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), "Response: " .  $response->getStatusCode() . print_r($return, true));
+            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: '.$response->getStatusCode().print_r($return, true));
         }
-        
+
         return $return;
     }
-    
-    
+
     /**
      * @param string $email
      * @param string $password
@@ -125,69 +127,65 @@ abstract class AbstractTestController extends WebTestCase
     public function login($email, $password, $clientSecret)
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
-        
+
         // reset brute-force counters
         $key = 'email'.$email;
         self::$frameworkBundleClient->getContainer()->get('attemptsInTimeChecker')->resetAttempts($key);
         self::$frameworkBundleClient->getContainer()->get('attemptsIncrementalWaitingChecker')->resetAttempts($key);
-        
-        
+
         $responseArray = $this->assertJsonRequest('POST', '/auth/login', [
             'mustSucceed' => true,
             'ClientSecret' => $clientSecret,
             'data' => [
                 'email' => $email,
-                'password' => $password
+                'password' => $password,
             ],
         ])['data'];
         $this->assertEquals($email, $responseArray['email']);
-        
+
         // check token
         $token = self::$frameworkBundleClient->getResponse()->headers->get('AuthToken');
-        
+
         return $token;
     }
-   
 
-    
     protected static function assertKeysArePresentWithTheFollowingValues($subset, $array)
     {
-        foreach ($subset as $k=>$v) {
+        foreach ($subset as $k => $v) {
             $this->assertEquals($v, $array[$k]);
         }
     }
-    
+
     protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
     {
         $response = $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
             'AuthToken' => $authToken,
-            'assertResponseCode' => 419
+            'assertResponseCode' => 419,
         ]);
         $this->assertEquals(419, $response['code']);
     }
-    
-    
+
     protected function assertEndpointNotAllowedFor($method, $uri, $token, $data = [])
     {
         $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
             'data' => $data,
             'AuthToken' => $token,
-            'assertResponseCode' => 403
+            'assertResponseCode' => 403,
         ]);
     }
-    
+
     protected function assertEndpointAllowedFor($method, $uri, $token, $data = [])
     {
         $this->assertJsonRequest($method, $uri, [
             'mustSucceed' => true,
             'data' => $data,
             'AuthToken' => $token,
-            'assertResponseCode' => 200
+            'assertResponseCode' => 200,
         ]);
     }
-    
+
     /**
      * @return string token
      */
@@ -195,8 +193,7 @@ abstract class AbstractTestController extends WebTestCase
     {
         return $this->login('deputy@example.org', 'Abcd1234', '123abc-deputy');
     }
-    
-    
+
     /**
      * @return string token
      */
@@ -204,6 +201,4 @@ abstract class AbstractTestController extends WebTestCase
     {
         return $this->login('admin@example.org', 'Abcd1234', '123abc-admin');
     }
-    
-    
 }

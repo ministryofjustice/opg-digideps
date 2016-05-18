@@ -4,19 +4,18 @@ namespace AppBundle\Service\Auth;
 
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\EntityRepository;
 use AppBundle\Entity\User;
 use Symfony\Bridge\Monolog\Logger;
 
 class AuthService
 {
     const HEADER_CLIENT_SECRET = 'ClientSecret';
-    
+
     /**
      * @var Logger
      */
     private $logger;
-    
+
     /**
      * @param Container $container
      */
@@ -31,17 +30,17 @@ class AuthService
         $this->logger = $container->get('logger');
         $this->securityEncoderFactory = $container->get('security.encoder_factory');
     }
-    
+
     /**
      * @return array
      */
     public function isSecretValid(Request $request)
     {
         $clientSecretFromRequest = $request->headers->get(self::HEADER_CLIENT_SECRET);
-        
+
         return isset($this->clientSecrets[$clientSecretFromRequest]);
     }
-    
+
     /**
      * @param string $email
      * @param string $pass
@@ -51,31 +50,31 @@ class AuthService
     public function getUserByEmailAndPassword($email, $pass)
     {
         if (!$email || !$pass) {
-            return null;
+            return;
         }
          // get user by email
         $user = $this->userRepo->findOneBy([
-            'email'=> $email
+            'email' => $email,
         ]);
         if (!$user instanceof User) {
-            $this->logger->info("Login: user by email not found ");
+            $this->logger->info('Login: user by email not found ');
+
             return false;
         }
-        
+
         // check hashed password matching
         $encodedPass = $this->securityEncoderFactory->getEncoder($user)
             ->encodePassword($pass, $user->getSalt());
-        
+
         if ($user->getPassword() == $encodedPass) {
             return $user;
-        } 
-        
-        $this->logger->info("Login: password mismatch");
-        
-        
-        return null;
+        }
+
+        $this->logger->info('Login: password mismatch');
+
+        return;
     }
-    
+
     /**
      * @param string $token
      * 
@@ -83,16 +82,16 @@ class AuthService
      */
     public function getUserByToken($token)
     {
-       return $this->userRepo->findOneBy([
-            'registrationToken'=> $token
+        return $this->userRepo->findOneBy([
+            'registrationToken' => $token,
         ]) ?: null;
     }
-    
+
     /**
-     * @param User $user
+     * @param User    $user
      * @param Request $request
      * 
-     * @return boolean
+     * @return bool
      */
     public function isSecretValidForUser(User $user, Request $request)
     {
@@ -102,7 +101,7 @@ class AuthService
         }
         $permissions = $this->clientSecrets[$clientSecretFromRequest]['permissions'];
         $userRole = $user->getRole()->getRole();
-        
+
         return in_array($userRole, $permissions);
     }
 }

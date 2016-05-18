@@ -1,22 +1,22 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Account
+ * Account.
  *
  * @ORM\Table(name="account")
  * @ORM\Entity()
  */
-class Account 
+class Account
 {
     /**
-     * Keep in sync with client
+     * Keep in sync with client.
+     *
      * @JMS\Exclude 
      */
     public static $types = [
@@ -25,11 +25,11 @@ class Account
         'isa' => 'ISA',
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
-        'other' => 'Other'
+        'other' => 'Other',
     ];
-     
+
     /**
-     * @var integer
+     * @var int
      * @JMS\Groups({"transactions", "basic", "transfers"})
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -37,8 +37,7 @@ class Account
      * @ORM\SequenceGenerator(sequenceName="account_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-    
-    
+
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -53,7 +52,7 @@ class Account
      * @ORM\Column(name="account_type", type="string", length=125, nullable=true)
      */
     private $accountType;
-    
+
     /**
      * @var string
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -77,7 +76,7 @@ class Account
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastEdit;
-    
+
     /**
      * @var \DateTime
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -94,15 +93,6 @@ class Account
      * @ORM\Column(name="opening_balance", type="decimal", precision=14, scale=2, nullable=true)
      */
     private $openingBalance;
-    
-    /**
-     * @deprecated since accounts_mk2
-     * @var string
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="opening_date_explanation", type="text", nullable=true)
-     */
-    private $openingDateExplanation;
 
     /**
      * @var decimal
@@ -115,49 +105,13 @@ class Account
     private $closingBalance;
 
     /**
-     * @deprecated since accounts_mk2
-     * @var string
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="closing_balance_explanation", type="text", nullable=true)
-     */
-    private $closingBalanceExplanation;
-    
-     /**
-     * @var boolean
+     * @var bool
      * @JMS\Groups({"transactions", "basic", "transfers"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="is_closed", type="boolean")
      */
     private $isClosed;
-    
-    /**
-     * @deprecated since accounts_mk2
-     * @var \Date
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="opening_date", type="date", nullable=true)
-     */
-    private $openingDate;
 
-    /**
-     * @deprecated since accounts_mk2
-     * @var \Date
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="closing_date", type="date", nullable=true)
-     */
-    private $closingDate;
-
-    /**
-     * @deprecated since accounts_mk2
-     * @var string
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="closing_date_explanation", type="text", nullable=true)
-     */
-    private $closingDateExplanation;
-    
     /**
      * @var Report
      *
@@ -170,14 +124,13 @@ class Account
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="from", cascade={"remove"})
      */
     private $transfersFrom;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="to", cascade={"remove"})
      */
     private $transfersTo;
-    
-    
-     /**
+
+    /**
      * @var string
      * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -185,7 +138,7 @@ class Account
      * @ORM\Column(name="is_joint_account", type="string", length=3, nullable=true)
      */
     private $isJointAccount;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic", "transfers"})
@@ -193,9 +146,9 @@ class Account
      * @ORM\Column(name="meta", type="text", nullable=true)
      */
     private $meta;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -206,9 +159,9 @@ class Account
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -216,9 +169,10 @@ class Account
     }
 
     /**
-     * Set bank
+     * Set bank.
      *
      * @param string $bank
+     *
      * @return Account
      */
     public function setBank($bank)
@@ -229,9 +183,9 @@ class Account
     }
 
     /**
-     * Get bank
+     * Get bank.
      *
-     * @return string 
+     * @return string
      */
     public function getBank()
     {
@@ -246,20 +200,20 @@ class Account
         return $this->accountType;
     }
 
-     /**
+    /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("account_type_text")
      * @JMS\Groups({"transactions", "basic", "transfers"})
-      * 
+     * 
      * @return string
      */
     public function getAccountTypeText()
     {
         $type = $this->getAccountType();
-        
+
         return isset(self::$types[$type]) ? self::$types[$type] : null;
     }
-    
+
     /**
      * @param string $accountType
      */
@@ -268,11 +222,11 @@ class Account
         $this->accountType = $accountType;
     }
 
-
     /**
-     * Set sortCode
+     * Set sortCode.
      *
      * @param string $sortCode
+     *
      * @return Account
      */
     public function setSortCode($sortCode)
@@ -283,9 +237,9 @@ class Account
     }
 
     /**
-     * Get sortCode
+     * Get sortCode.
      *
-     * @return string 
+     * @return string
      */
     public function getSortCode()
     {
@@ -293,9 +247,10 @@ class Account
     }
 
     /**
-     * Set accountNumber
+     * Set accountNumber.
      *
      * @param string $accountNumber
+     *
      * @return Account
      */
     public function setAccountNumber($accountNumber)
@@ -306,9 +261,9 @@ class Account
     }
 
     /**
-     * Get accountNumber
+     * Get accountNumber.
      *
-     * @return string 
+     * @return string
      */
     public function getAccountNumber()
     {
@@ -316,9 +271,10 @@ class Account
     }
 
     /**
-     * Set lastEdit
+     * Set lastEdit.
      *
      * @param \DateTime $lastEdit
+     *
      * @return Account
      */
     public function setLastEdit($lastEdit)
@@ -329,15 +285,15 @@ class Account
     }
 
     /**
-     * Get lastEdit
+     * Get lastEdit.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastEdit()
     {
         return $this->lastEdit;
     }
-    
+
     /**
      * @return \DateTime
      */
@@ -352,13 +308,15 @@ class Account
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
-    
+
     /**
-     * Set openingBalance
+     * Set openingBalance.
      *
      * @param string $openingBalance
+     *
      * @return Account
      */
     public function setOpeningBalance($openingBalance)
@@ -369,38 +327,21 @@ class Account
     }
 
     /**
-     * Get openingBalance
+     * Get openingBalance.
      *
-     * @return string 
+     * @return string
      */
     public function getOpeningBalance()
     {
         return $this->openingBalance;
     }
-    
-    /**
-     * @return string
-     */
-    public function getOpeningDateExplanation()
-    {
-        return $this->openingDateExplanation;
-    }
 
-    
-    /**
-     * @param string $openingDateExplanation
-     */
-    public function setOpeningDateExplanation($openingDateExplanation)
-    {
-        $this->openingDateExplanation = $openingDateExplanation;
-        return $this;
-    }
 
-    
     /**
-     * Set closingBalance
+     * Set closingBalance.
      *
      * @param string $closingBalance
+     *
      * @return Account
      */
     public function setClosingBalance($closingBalance)
@@ -411,112 +352,33 @@ class Account
     }
 
     /**
-     * Get closingBalance
+     * Get closingBalance.
      *
-     * @return string 
+     * @return string
      */
     public function getClosingBalance()
     {
         return $this->closingBalance;
     }
-    
+
     public function getIsClosed()
     {
         return $this->isClosed;
     }
 
-
     public function setIsClosed($isClosed)
     {
         $this->isClosed = $isClosed;
-        return $this;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getClosingBalanceExplanation()
-    {
-        return $this->closingBalanceExplanation;
-    }
-
-    /**
-     * @param string $closingBalanceExplanation
-     */
-    public function setClosingBalanceExplanation($closingBalanceExplanation)
-    {
-        $this->closingBalanceExplanation = $closingBalanceExplanation;
-        return $this;
-    }
-
-    
-    /**
-     * Set openingDate
-     *
-     * @param \DateTime $openingDate
-     * @return Account
-     */
-    public function setOpeningDate($openingDate)
-    {
-        $this->openingDate = $openingDate;
 
         return $this;
     }
 
-    /**
-     * Get openingDate
-     *
-     * @return \DateTime 
-     */
-    public function getOpeningDate()
-    {
-        return $this->openingDate;
-    }
 
     /**
-     * Set closingDate
-     *
-     * @param \DateTime $closingDate
-     * @return Account
-     */
-    public function setClosingDate($closingDate)
-    {
-        $this->closingDate = $closingDate;
-
-        return $this;
-    }
-
-    /**
-     * Get closingDate
-     *
-     * @return \DateTime 
-     */
-    public function getClosingDate()
-    {
-        return $this->closingDate;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getClosingDateExplanation()
-    {
-        return $this->closingDateExplanation;
-    }
-
-    /**
-     * @param string $closingDateExplanation
-     */
-    public function setClosingDateExplanation($closingDateExplanation)
-    {
-        $this->closingDateExplanation = $closingDateExplanation;
-        return $this;
-    }
-
-    /**
-     * Set report
+     * Set report.
      *
      * @param Report $report
+     *
      * @return Account
      */
     public function setReport(Report $report = null)
@@ -527,25 +389,25 @@ class Account
     }
 
     /**
-     * Get report
+     * Get report.
      *
-     * @return Report 
+     * @return Report
      */
     public function getReport()
     {
         return $this->report;
     }
-    
-     
+
     /**
-     * Sort code required
+     * Sort code required.
+     *
      * @return string
      */
     public function requiresBankNameAndSortCode()
     {
         return !in_array($this->getAccountType(), ['postoffice', 'cfo']);
     }
-    
+
     public function getIsJointAccount()
     {
         return $this->isJointAccount;
@@ -559,10 +421,10 @@ class Account
     public function setIsJointAccount($isJointAccount)
     {
         $this->isJointAccount = trim(strtolower($isJointAccount));
-        
+
         return $this;
     }
-    
+
     public function getMeta()
     {
         return $this->meta;
@@ -571,7 +433,7 @@ class Account
     public function setMeta($meta)
     {
         $this->meta = $meta;
+
         return $this;
     }
-
 }

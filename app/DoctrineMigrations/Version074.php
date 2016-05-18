@@ -8,18 +8,19 @@ use Doctrine\DBAL\Schema\Schema;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version047 extends AbstractMigration
+class Version074 extends AbstractMigration
 {
     /**
-     * @param Schema $schema
+     * clean up old migrations
      */
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql("INSERT INTO role (name, role) VALUES ('Assisted Digital Support', 'ROLE_AD')");
-        
+        for($i = 39; $i < 73; $i++) {
+            $this->addSql("DELETE FROM migrations WHERE version ='0{$i}'");
+        }
     }
 
     /**
@@ -27,10 +28,5 @@ class Version047 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-
-        $this->addSql("DELETE FROM role WHERE role='ROLE_AD'");
-        
     }
 }

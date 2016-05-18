@@ -1,23 +1,22 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Client
+ * Client.
  * 
  * @JMS\XmlRoot("client")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="client")
  * @ORM\Entity
  */
-class Client 
+class Client
 {
     /**
-     * @var integer
+     * @var int
      * 
      * @JMS\Type("integer")
      * @JMS\Groups({"related","basic"})
@@ -27,7 +26,7 @@ class Client
      * @ORM\SequenceGenerator(sequenceName="client_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-    
+
     /**
      * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getUserIds")
@@ -39,14 +38,14 @@ class Client
      *     )
      */
     private $users;
-    
+
     /**
      * @JMS\Groups({"related"})
      * @JMS\Accessor(getter="getUsers", setter="addUser")
      * @JMS\Type("array<AppBundle\Entity\User>")
      */
     private $userObjs;
-    
+
     /**
      * @JMS\Groups({"basic"})
      * @JMS\Accessor(getter="getReportIds")
@@ -54,7 +53,7 @@ class Client
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="client", cascade={"persist"})
      */
     private $reports;
-    
+
     /**
      * @JMS\Groups({"related"})
      * @JMS\Accessor(getter="getReports", setter="addReport")
@@ -65,6 +64,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
@@ -74,6 +74,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      * 
      * @ORM\Column(name="email", type="string", length=60, nullable=true)
@@ -83,6 +84,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=20, nullable=true)
@@ -92,24 +94,27 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
     private $address;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
     private $address2;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="county", type="string", length=75, nullable=true)
@@ -119,15 +124,17 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     private $postcode;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=10, nullable=true)
@@ -137,6 +144,7 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
@@ -146,24 +154,26 @@ class Client
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"related","basic"})
+     *
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     private $lastname;
-    
+
     /**
      * @JMS\Type("array")
      * @JMS\Groups({"related","basic"})
      * @ORM\Column( name="allowed_court_order_types", type="array", nullable=true)
      * 
-     * @var array $allowedCourtOrderTypes
+     * @var array
      */
     private $allowedCourtOrderTypes;
 
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"related","basic"})
+     *
      * @var \Date
      *
      * @ORM\Column(name="court_date", type="date", nullable=true)
@@ -172,14 +182,15 @@ class Client
 
     /**
      * @JMS\Exclude
+     *
      * @var \DateTime
      *
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
      */
     private $lastedit;
-    
+
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -188,9 +199,9 @@ class Client
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -198,9 +209,10 @@ class Client
     }
 
     /**
-     * Set caseNumber
+     * Set caseNumber.
      *
      * @param string $caseNumber
+     *
      * @return Client
      */
     public function setCaseNumber($caseNumber)
@@ -212,9 +224,9 @@ class Client
     }
 
     /**
-     * Get caseNumber
+     * Get caseNumber.
      *
-     * @return string 
+     * @return string
      */
     public function getCaseNumber()
     {
@@ -222,9 +234,10 @@ class Client
     }
 
     /**
-     * Set email
+     * Set email.
      *
      * @param string $email
+     *
      * @return Client
      */
     public function setEmail($email)
@@ -235,9 +248,9 @@ class Client
     }
 
     /**
-     * Get email
+     * Get email.
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -245,9 +258,10 @@ class Client
     }
 
     /**
-     * Set phone
+     * Set phone.
      *
      * @param string $phone
+     *
      * @return Client
      */
     public function setPhone($phone)
@@ -258,9 +272,9 @@ class Client
     }
 
     /**
-     * Get phone
+     * Get phone.
      *
-     * @return string 
+     * @return string
      */
     public function getPhone()
     {
@@ -268,9 +282,10 @@ class Client
     }
 
     /**
-     * Set address
+     * Set address.
      *
      * @param string $address
+     *
      * @return Client
      */
     public function setAddress($address)
@@ -281,9 +296,9 @@ class Client
     }
 
     /**
-     * Get address
+     * Get address.
      *
-     * @return string 
+     * @return string
      */
     public function getAddress()
     {
@@ -291,9 +306,10 @@ class Client
     }
 
     /**
-     * Set postcode
+     * Set postcode.
      *
      * @param string $postcode
+     *
      * @return Client
      */
     public function setPostcode($postcode)
@@ -304,9 +320,9 @@ class Client
     }
 
     /**
-     * Get postcode
+     * Get postcode.
      *
-     * @return string 
+     * @return string
      */
     public function getPostcode()
     {
@@ -314,9 +330,10 @@ class Client
     }
 
     /**
-     * Set firstname
+     * Set firstname.
      *
      * @param string $firstname
+     *
      * @return Client
      */
     public function setFirstname($firstname)
@@ -327,9 +344,9 @@ class Client
     }
 
     /**
-     * Get firstname
+     * Get firstname.
      *
-     * @return string 
+     * @return string
      */
     public function getFirstname()
     {
@@ -337,9 +354,10 @@ class Client
     }
 
     /**
-     * Set lastname
+     * Set lastname.
      *
      * @param string $lastname
+     *
      * @return Client
      */
     public function setLastname($lastname)
@@ -350,9 +368,9 @@ class Client
     }
 
     /**
-     * Get lastname
+     * Get lastname.
      *
-     * @return string 
+     * @return string
      */
     public function getLastname()
     {
@@ -360,9 +378,10 @@ class Client
     }
 
     /**
-     * Set courtDate
+     * Set courtDate.
      *
      * @param \DateTime $courtDate
+     *
      * @return Client
      */
     public function setCourtDate(\DateTime $courtDate = null)
@@ -373,9 +392,9 @@ class Client
     }
 
     /**
-     * Get courtDate
+     * Get courtDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCourtDate()
     {
@@ -383,9 +402,10 @@ class Client
     }
 
     /**
-     * Set lastedit
+     * Set lastedit.
      *
      * @param \DateTime $lastedit
+     *
      * @return Client
      */
     public function setLastedit($lastedit)
@@ -396,9 +416,9 @@ class Client
     }
 
     /**
-     * Get lastedit
+     * Get lastedit.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastedit()
     {
@@ -406,9 +426,10 @@ class Client
     }
 
     /**
-     * Add users
+     * Add users.
      *
      * @param User $user
+     *
      * @return Client
      */
     public function addUser(User $user)
@@ -419,7 +440,7 @@ class Client
     }
 
     /**
-     * Remove users
+     * Remove users.
      *
      * @param User $users
      */
@@ -429,35 +450,36 @@ class Client
     }
 
     /**
-     * Get users
+     * Get users.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUsers()
     {
         return $this->users;
     }
-    
+
     /**
-     * 
      * @return array $userIds
      */
     public function getUserIds()
     {
         $userIds = [];
-        
-        if(!empty($this->users)){
-            foreach($this->users as $user){
+
+        if (!empty($this->users)) {
+            foreach ($this->users as $user) {
                 $userIds[] = $user->getId();
             }
         }
+
         return $userIds;
     }
 
     /**
-     * Add reports
+     * Add reports.
      *
      * @param Report $reports
+     *
      * @return Client
      */
     public function addReport(Report $reports)
@@ -468,7 +490,7 @@ class Client
     }
 
     /**
-     * Remove reports
+     * Remove reports.
      *
      * @param Report $reports
      */
@@ -478,7 +500,7 @@ class Client
     }
 
     /**
-     * Get reports
+     * Get reports.
      *
      * @return Report[]
      */
@@ -486,26 +508,28 @@ class Client
     {
         return $this->reports;
     }
-    
+
     /**
      * @return array $reportIds
      */
     public function getReportIds()
     {
         $reportIds = [];
-        
-        if(!empty($this->reports)){
-            foreach($this->reports as $report){
+
+        if (!empty($this->reports)) {
+            foreach ($this->reports as $report) {
                 $reportIds[] = $report->getId();
             }
         }
+
         return $reportIds;
     }
 
     /**
-     * Set allowedCourtOrderTypes
+     * Set allowedCourtOrderTypes.
      *
      * @param array $allowedCourtOrderTypes
+     *
      * @return Client
      */
     public function setAllowedCourtOrderTypes($allowedCourtOrderTypes)
@@ -516,9 +540,9 @@ class Client
     }
 
     /**
-     * Get allowedCourtOrderTypes
+     * Get allowedCourtOrderTypes.
      *
-     * @return array 
+     * @return array
      */
     public function getAllowedCourtOrderTypes()
     {
@@ -526,18 +550,18 @@ class Client
     }
 
     /**
-     * Return full name, e.g. Mr John Smith
+     * Return full name, e.g. Mr John Smith.
      */
-    public function getFullName($space =  "&nbsp;")
-    {   
-        return $this->getFirstname() . $space. $this->getLastname();
+    public function getFullName($space = '&nbsp;')
+    {
+        return $this->getFirstname().$space.$this->getLastname();
     }
-    
 
     /**
-     * Set address2
+     * Set address2.
      *
      * @param string $address2
+     *
      * @return Client
      */
     public function setAddress2($address2)
@@ -548,9 +572,9 @@ class Client
     }
 
     /**
-     * Get address2
+     * Get address2.
      *
-     * @return string 
+     * @return string
      */
     public function getAddress2()
     {
@@ -558,9 +582,10 @@ class Client
     }
 
     /**
-     * Set county
+     * Set county.
      *
      * @param string $county
+     *
      * @return Client
      */
     public function setCounty($county)
@@ -571,9 +596,9 @@ class Client
     }
 
     /**
-     * Get county
+     * Get county.
      *
-     * @return string 
+     * @return string
      */
     public function getCounty()
     {
@@ -581,9 +606,10 @@ class Client
     }
 
     /**
-     * Set country
+     * Set country.
      *
      * @param string $country
+     *
      * @return Client
      */
     public function setCountry($country)
@@ -594,13 +620,12 @@ class Client
     }
 
     /**
-     * Get country
+     * Get country.
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
         return $this->country;
     }
-    
 }

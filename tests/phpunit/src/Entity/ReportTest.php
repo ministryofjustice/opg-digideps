@@ -1,9 +1,9 @@
 <?php
+
 namespace AppBundle\Entity;
 
 //use AppBundle\Entity\Transaction;
 //use AppBundle\Entity\Account;
-use Mockery as m;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
@@ -27,7 +27,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, $this->report->getMoneyInTotal());
     }
 
-
     public function getMoneyOutTotalProvider($expected, array $data)
     {
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
@@ -37,7 +36,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(3, $this->report->getMoneyOutTotal());
     }
-
 
     public function testGetAccountsOpeningBalanceTotal()
     {
@@ -64,7 +62,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
     }
 
-
     public function testGetCalculatedBalance()
     {
         $this->assertEquals(0, $this->report->getCalculatedBalance());
@@ -80,7 +77,6 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $calculatedBalance = 1 + 20 + 20 - 15 - 15;
 
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
-
     }
 
     public function testGetTotalsOffsetAndMatch()

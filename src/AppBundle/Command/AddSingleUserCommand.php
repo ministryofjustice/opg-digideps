@@ -2,7 +2,6 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +27,6 @@ class AddSingleUserCommand extends ContainerAwareCommand
         ;
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $data = [
@@ -36,20 +34,19 @@ class AddSingleUserCommand extends ContainerAwareCommand
             'lastname' => $input->getOption('lastname'),
             'roleId' => $input->getOption('role'),
             'password' => $input->getOption('password'),
-            'email' => $input->getArgument('email')
+            'email' => $input->getArgument('email'),
         ];
-        if (count(array_filter($data))!==count($data)) {
+        if (count(array_filter($data)) !== count($data)) {
             throw new \RuntimeException('Missing params');
         }
-        
-        $this->addSingleUser($output, $data, ['flush'=>true]);
-    }
 
+        $this->addSingleUser($output, $data, ['flush' => true]);
+    }
 
     /**
      * @param OutputInterface $output
-     * @param string $email
-     * @param array $data keys: firstname lastname roleId password
+     * @param string          $email
+     * @param array           $data   keys: firstname lastname roleId password
      */
     protected function addSingleUser(OutputInterface $output, array $data, array $options)
     {
@@ -57,41 +54,49 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $userRepo = $em->getRepository('AppBundle\Entity\User');
         $roleRepo = $em->getRepository('AppBundle\Entity\Role');
         $email = $data['email'];
+
+        $output->write("User $email: ");
         
         if ($userRepo->findBy(['email' => $email])) {
-            $output->writeln("User $email already existing.");
+            $output->writeln("skip.");
+
             return;
         }
 
-        
-        $user = (new User)
+        $role = $roleRepo->find($data['roleId']);
+        if (!$role) {
+            $output->writeln("role {$data['roleId']} not found");
+            
+            return;
+        }
+        $user = (new User())
             ->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
             ->setEmail($email)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setRole($roleRepo->find($data['roleId']));
+            ->setRole($role);
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
         // check params
         $violations = $this->getContainer()->get('validator')->validate($user, 'admin_add_user'); /* @var $violations ConstraintViolationList */
         if ($violations->count()) {
-            $output->writeln("Cannot add user $email: $violations");
+            $output->writeln("error: $violations");
+
             return;
         }
-        
+
         $em->persist($user);
         if ($options['flush']) {
             $em->flush($user);
         }
 
-        $output->writeln("User $email created.");
+        $output->writeln("created.");
     }
 
-
     /**
-     * @param User $user
+     * @param User   $user
      * @param string $passwordPlain
      * 
      * @return string encoded password
@@ -102,5 +107,4 @@ class AddSingleUserCommand extends ContainerAwareCommand
             ->getEncoder($user)
             ->encodePassword($passwordPlain, $user->getSalt());
     }
-
 }

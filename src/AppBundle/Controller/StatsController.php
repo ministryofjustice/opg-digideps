@@ -37,12 +37,12 @@ class StatsController extends RestController
         // $deputy = $this->getRepository('Role')->findBy(['role'=>'ROLE_LAY_DEPUTY']);
         // $users = $this->getRepository('User')->findBy(['role'=>$deputy], ['id' => 'DESC']);
 
-        foreach ($users as $user) { /** @var $user EntityDir\User */
+        foreach ($users as $user) { /* @var $user EntityDir\User */
             $row = [
-                'id'=>$user->getId(),
+                'id' => $user->getId(),
                 'created_at' => $user->getRegistrationDate() ? $user->getRegistrationDate()->format('Y-m-d') : '-',
                 'email' => $user->getEmail(),
-                'name' => $user->getFirstname() . ' ' . $user->getLastname(),
+                'name' => $user->getFirstname().' '.$user->getLastname(),
                 'last_logged_in' => $user->getLastLoggedIn() ?  $user->getLastLoggedIn()->format('Y-m-d') : '-',
                 'is_active' => $user->getActive() ? 'true' : 'false',
                 'has_details' => $user->getAddress1() ? 'true' : 'false',
@@ -55,17 +55,17 @@ class StatsController extends RestController
 
             foreach ($user->getClients() as $client) {
                 foreach ($client->getReports() as $report) {
-                    $row['total_reports']++;
+                    ++$row['total_reports'];
                     if ($report->getSubmitted()) {
                         continue;
                     }
-                    $row['active_reports']++;
+                    ++$row['active_reports'];
                     if ($report->isDue()) {
-                        $row['active_reports_due']++;
-                        $row['active_reports_added_bank_accounts']+=count($report->getAccounts());
-                        foreach($report->getTransactions() as $transaction) {
+                        ++$row['active_reports_due'];
+                        $row['active_reports_added_bank_accounts'] += count($report->getAccounts());
+                        foreach ($report->getTransactions() as $transaction) {
                             if (!empty($transaction->getAmounts())) {
-                                $row['active_reports_added_transactions']++;
+                                ++$row['active_reports_added_transactions'];
                             }
                         }
                     }
@@ -75,7 +75,7 @@ class StatsController extends RestController
             $ret[] = $row;
         }
 
-        $this->get('kernel.listener.responseConverter')->addContextModifier(function ($context)  {
+        $this->get('kernel.listener.responseConverter')->addContextModifier(function ($context) {
             $context->setSerializeNull(true);
         });
 
@@ -93,6 +93,4 @@ class StatsController extends RestController
 
         return $connection->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
@@ -7,12 +8,9 @@ use AppBundle\Entity\User;
 use Doctrine\ORM\ORMInvalidArgumentException;
 use Mockery as m;
 
-
 class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     *
      * @var UserRegistrationService
      */
     private $userRegistrationService;
@@ -32,11 +30,11 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $mockRoleRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['role'=>'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
+            ->shouldReceive('findOneBy')->with(['role' => 'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
             ->getMock();
-        
+
         $this->casRec = m::mock('\AppBundle\Entity\CasRec');
-        
+
         $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(false)
             ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
@@ -93,7 +91,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $token_time = $user->getTokenDate();
         $now = new \DateTime();
-        $diffInSeconds =  $now->getTimestamp() - $token_time->getTimestamp();
+        $diffInSeconds = $now->getTimestamp() - $token_time->getTimestamp();
 
         $this->assertLessThan(60, $diffInSeconds);  // time was set to just now
     }
@@ -123,7 +121,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function saveUserAndClientAndJoinThem()
     {
-
         $mockUser = m::mock('\AppBundle\Entity\User')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getId')->andReturn(1)
@@ -159,7 +156,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
-
     }
 
     /**
@@ -184,7 +180,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('rollback')->once()
             ->getMock();
 
-        $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()' , $mockUser);
+        $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()', $mockUser);
 
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
             ->shouldIgnoreMissing(true)
@@ -203,7 +199,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
-
     }
 
     /**
@@ -228,7 +223,7 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('rollback')->once()
             ->getMock();
 
-        $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()' , $mockUser);
+        $exception = ORMInvalidArgumentException::invalidObject('EntityManager#persist()', $mockUser);
 
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
             ->shouldIgnoreMissing(true)
@@ -248,7 +243,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
 
         $this->userRegistrationService->saveUserAndClient($mockUser, $mockClient);
-
     }
 
     /**
@@ -257,13 +251,13 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
     public function userIsNotUnique()
     {
         $user = new User();
-        $user->setFirstname("zac");
-        $user->setLastname("tolley");
-        $user->setEmail("zac@thetolleys.com");
+        $user->setFirstname('zac');
+        $user->setLastname('tolley');
+        $user->setEmail('zac@thetolleys.com');
 
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['email'=>'zac@thetolleys.com'])->andReturn($user)
+            ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn($user)
             ->getMock();
 
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
@@ -284,7 +278,6 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
         $result = $this->userRegistrationService->userIsUnique($user);
 
         $this->assertFalse($result);
-
     }
 
     /**
@@ -292,10 +285,9 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
      */
     public function userIsUnique()
     {
-
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['email'=>'zaz@thetolleys.com'])->andReturn(null)
+            ->shouldReceive('findOneBy')->with(['email' => 'zaz@thetolleys.com'])->andReturn(null)
             ->getMock();
 
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
@@ -313,16 +305,14 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
 
-
         $user2 = new User();
-        $user2->setFirstname("zac");
-        $user2->setLastname("tolley");
-        $user2->setEmail("zaz@thetolleys.com");
+        $user2->setFirstname('zac');
+        $user2->setLastname('tolley');
+        $user2->setEmail('zaz@thetolleys.com');
 
         $result = $this->userRegistrationService->userIsUnique($user2);
 
         $this->assertTrue($result);
-
     }
 
     /** @test */
@@ -353,29 +343,29 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
 
         $mockUserRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['email'=>'zac@thetolleys.com'])->andReturn(null)
+            ->shouldReceive('findOneBy')->with(['email' => 'zac@thetolleys.com'])->andReturn(null)
             ->getMock();
 
         $mockRoleRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('findOneBy')->with(['role'=>'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
+            ->shouldReceive('findOneBy')->with(['role' => 'ROLE_LAY_DEPUTY'])->andReturn($this->mockRole)
             ->getMock();
 
         $this->casRec = m::mock('\AppBundle\Entity\CasRec')
             ->shouldReceive('getDeputyPostCode')->andReturn(null)
             ->shouldReceive('getDeputyNo')->andReturn('D01')
             ->getMock();
-        
+
         $mockCasRecRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(false)
             ->shouldReceive('findOneBy')->withAnyArgs()->andReturn($this->casRec)
             ->getMock();
-        
+
         $mockClientRepository = m::mock('\Doctrine\ORM\EntityRepository')
             ->shouldIgnoreMissing(false)
             ->shouldReceive('findOneBy')->withAnyArgs()->andReturn(false)
             ->getMock();
-        
+
         $em = m::mock('\Doctrine\Common\Persistence\ObjectManager')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getConnection')->andReturn($mockConnection)
@@ -403,10 +393,8 @@ class UserRegistrationServiceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('send')->with($mockEmail)->once()
             ->getMock();
 
-
         $this->userRegistrationService = new UserRegistrationService($em, $mailFactory, $mailSender);
 
         $this->userRegistrationService->selfRegisterUser($data);
     }
-
 }

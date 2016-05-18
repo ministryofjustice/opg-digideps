@@ -6,17 +6,15 @@ use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * SelfRegisterData
+ * SelfRegisterData.
  */
 class SelfRegisterData
 {
-
     /**
-     * @var string $firstname
+     * @var string
      * @JMS\Type("string")
      * @Assert\NotBlank( message="user.firstname.notBlank" )
      * @Assert\Length(min=2, max=50, minMessage="user.firstname.minLength", maxMessage="user.firstname.maxLength" )
-     *
      */
     private $firstname;
 
@@ -36,7 +34,7 @@ class SelfRegisterData
      * @Assert\Length( max=60, maxMessage="user.email.maxLength" )
      */
     private $email;
-    
+
     /**
      * @var string email
      * @JMS\Type("string")
@@ -51,7 +49,6 @@ class SelfRegisterData
      * @Assert\Length(min = 2, minMessage= "client.lastname.minMessage", max=50, maxMessage= "client.lastname.maxMessage")
      */
     private $clientLastname;
-
 
     /**
      * @var string caseNumber
@@ -108,7 +105,7 @@ class SelfRegisterData
     {
         $this->email = $email;
     }
-    
+
     /**
      * @return string
      */
@@ -124,7 +121,7 @@ class SelfRegisterData
     {
         $this->postcode = $postcode;
     }
-    
+
     /**
      * @return string
      */
@@ -165,9 +162,7 @@ class SelfRegisterData
             //'deputy_email' => $this->email,
             'deputy_postcode' => $this->postcode,
             'client_lastname' => $this->clientLastname,
-            'client_case_number' => $this->caseNumber
+            'client_case_number' => $this->caseNumber,
         ];
     }
-
-
 }

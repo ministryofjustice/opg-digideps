@@ -6,12 +6,12 @@ use MockeryStub as m;
 
 // create a simple predis Mock to just return keys
 
-require_once __DIR__ . '/PredisMock.php';
+require_once __DIR__.'/PredisMock.php';
 
 class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var AttemptsInTime 
+     * @var AttemptsInTime
      */
     private $object;
 
@@ -21,7 +21,7 @@ class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
         $this->object = new AttemptsIncrementalWaitingChecker($this->redis, 'prefix');
         $this->key = 'key';
     }
-    
+
 //    public static function attempts()
 //    {
 //        return [ 
@@ -41,66 +41,62 @@ class AttemptsIncrementalWaitingCheckerTest extends \PHPUnit_Framework_TestCase
     public function testMaxAttemptsReached()
     {
         $this->object->overrideTimestamp(9990 + 0);
-        
+
         $this->object->addFreezingRule(2, 10); // after 2 attempts, lock for 10 seconds
         $this->object->addFreezingRule(4, 35); // after 4 attempts, lock for 35 seconds
-        
+
         $this->assertAccessible();
         $this->attempt();
         $this->assertAccessible();
         $this->attempt();
         $this->assertFrozen();
         $this->assertFrozen();
-        
+
         $this->assertEquals(9990 + 10, $this->object->getUnfrozenAt($this->key));
-         
+
         $this->object->overrideTimestamp(9990 + 20);
         $this->assertAccessible();
-        
+
         $this->attempt();
         $this->attempt();
         $this->assertEquals(9990 + 20 + 35, $this->object->getUnfrozenAt($this->key));
-        
+
         $this->assertFrozen();
         $this->assertFrozen();
-        
+
         $this->object->overrideTimestamp(9990 + 20 + 35 + 1);
-        
+
         $this->assertAccessible();
     }
-    
-    
+
     private function attempt()
     {
-         $this->object->registerAttempt($this->key);
+        $this->object->registerAttempt($this->key);
     }
-    
-    
+
     private function assertFrozen()
     {
         $this->assertTrue($this->object->isFrozen($this->key));
     }
-    
+
     private function assertAccessible()
     {
         $this->assertFalse($this->object->isFrozen($this->key));
     }
-    
+
     public function testResetAttempts()
     {
         $this->object->overrideTimestamp(0);
-        
+
         $this->object->addFreezingRule(1, 10); // after 2 attempts, lock for 10 seconds
         $this->attempt();
         $this->assertFrozen();
         $this->object->resetAttempts($this->key);
         $this->assertAccessible();
-        
     }
-    
+
     public function tearDown()
     {
         m::close();
     }
-
 }

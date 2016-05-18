@@ -2,7 +2,6 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +27,7 @@ class DebugCommand extends \Symfony\Bundle\FrameworkBundle\Command\ContainerAwar
         die;
         $user = $this->getContainer()->get('em')->getRepository('AppBundle\Entity\User')->find(1);
         $mailerFactory->sendActivationEmail($user);
-        
+
 //        echo file_get_contents("/tmp/dd_mail_mock");
     }
 }

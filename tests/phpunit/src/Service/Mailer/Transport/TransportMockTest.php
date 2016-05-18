@@ -1,18 +1,18 @@
 <?php
-namespace AppBundle\Service\Mailer\Transport;
 
+namespace AppBundle\Service\Mailer\Transport;
 
 class TransportMockTest extends \PHPUnit_Framework_TestCase
 {
     protected $transport;
     protected $mailer;
     protected $path = '/tmp/dd_fwt';
-    
+
     protected function setUp()
     {
         $this->transport = new FileWriter($this->path);
         file_put_contents($this->path, '');
-        
+
         $this->mailer = new \Swift_Mailer($this->transport);
     }
 
@@ -21,16 +21,15 @@ class TransportMockTest extends \PHPUnit_Framework_TestCase
         $this->transport = null;
         $this->mailer = null;
     }
-    
-    
+
     public function testMailerSavesEMailInsideTheMock()
     {
         $this->mailer->createMessage();
-        
+
         $message = $this->mailer->createMessage();
         $message->setSubject('test');
         $this->mailer->send($message);
-        
+
         $this->assertEquals('test', $this->transport->getMessages()[0]->getSubject());
     }
 

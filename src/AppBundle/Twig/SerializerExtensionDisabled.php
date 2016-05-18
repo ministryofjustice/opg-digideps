@@ -1,8 +1,8 @@
 <?php
+
 namespace AppBundle\Twig;
 
 use JMS\Serializer\SerializerInterface;
-use JMS\Serializer\SerializationContext;
 
 class SerializerExtensionDisabled extends \Twig_Extension
 {

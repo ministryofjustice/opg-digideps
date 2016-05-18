@@ -4,37 +4,33 @@ namespace AppBundle\Service\Auth;
 
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Predis\Client as PredisClient;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * Get the user from a token (=username) looking at the AuthToken store info
- * throw exception if not found, or the token expired 
+ * throw exception if not found, or the token expired.
  */
 class UserProvider implements UserProviderInterface
 {
-
     /**
-     * @var PredisClient 
+     * @var PredisClient
      */
     private $redis;
 
     /**
-     * @var EntityManager 
+     * @var EntityManager
      */
     private $em;
 
     /**
-     * @var Logger 
+     * @var Logger
      */
     private $logger;
 
     /**
-     * @var integer 
+     * @var int
      */
     private $timeoutSeconds;
 
@@ -46,11 +42,11 @@ class UserProvider implements UserProviderInterface
         $this->timeoutSeconds = $options['timeout_seconds'];
     }
 
-
     /**
-     * Called by HeaderTokenAuthenticator::authenticateToken() for each request
+     * Called by HeaderTokenAuthenticator::authenticateToken() for each request.
      * 
      * @param string $username token (String)
+     *
      * @return User
      * 
      * @throws RuntimeException with specific codes, in order to avoid being wrapped and losing their` type
@@ -76,31 +72,27 @@ class UserProvider implements UserProviderInterface
         return $user;
     }
 
-
     /**
-     * not implemented
+     * not implemented.
      */
     public function refreshUser(\Symfony\Component\Security\Core\User\UserInterface $user)
     {
-        
     }
-
 
     public function supportsClass($class)
     {
         return 'AppBundle\Entity\User' === $class || is_subclass_of($class, 'AppBundle\Entity\User');
     }
 
-
     /**
      * @param string $token
-     * @param User $user
+     * @param User   $user
      * 
      * @return string
      */
     public function generateRandomTokenAndStore(User $user)
     {
-        $token = $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
+        $token = $user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
 
         $this->redis->set($token, $user->getId());
         $this->redis->expire($token, $this->timeoutSeconds);
@@ -108,10 +100,8 @@ class UserProvider implements UserProviderInterface
         return $token;
     }
 
-
     public function removeToken($token)
     {
         return $this->redis->set($token, null);
     }
-
 }

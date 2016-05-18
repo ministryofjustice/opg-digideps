@@ -1,26 +1,26 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\Common\Collections\ArrayCollection;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Reports
+ * Reports.
+ *
  * @JMS\XmlRoot("report")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="report")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ReportRepository")
  */
-class Report 
+class Report
 {
     const PROPERTY_AND_AFFAIRS = 2;
-    
+
     /**
-     * @var integer
+     * @var int
      *
      * @JMS\Groups({"basic"})
      * @JMS\Type("integer")
@@ -32,7 +32,7 @@ class Report
     private $id;
 
     /**
-     * @var integer
+     * @var int
      * 
      * @JMS\Groups({"basic"})
      * @JMS\Type("AppBundle\Entity\Client")
@@ -40,14 +40,14 @@ class Report
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
     private $client;
-    
+
     /**
      * @JMS\Groups({"contacts"})
      * @JMS\Type("array<AppBundle\Entity\Contact>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Contact", mappedBy="report", cascade={"persist"})
      */
     private $contacts;
-    
+
     /**
      * @JMS\Groups({"accounts"})
      * @JMS\Type("array<AppBundle\Entity\Account>")
@@ -61,21 +61,20 @@ class Report
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
-    
-    
+
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Transaction", mappedBy="report", cascade={"persist"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $transactions;
-    
+
     /**
      * @JMS\Groups({"decisions"})
      * @JMS\Type("array<AppBundle\Entity\Decision>")
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Decision", mappedBy="report", cascade={"persist"})
      */
     private $decisions;
-    
+
     /**
      * @JMS\Groups({"asset"})
      * @JMS\Type("array<AppBundle\Entity\Asset>")
@@ -89,7 +88,7 @@ class Report
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Safeguarding",  mappedBy="report", cascade={"persist"})
      **/
     private $safeguarding;
-    
+
     /**
      * @JMS\Groups({"basic", "action"})
      * @JMS\Type("AppBundle\Entity\Action")
@@ -101,7 +100,7 @@ class Report
      * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
      */
     private $courtOrderType;
@@ -150,7 +149,7 @@ class Report
      * @JMS\Accessor(getter="getLastedit")
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @ORM\Column(name="last_edit", type="datetime", nullable=true)
-     */	 
+     */
     private $lastedit;
 
     /**
@@ -161,23 +160,23 @@ class Report
      * @ORM\Column(name="further_information", type="text", nullable=true)
      */
     private $furtherInformation;
-    
+
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic"})
      * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noAssetToAdd;
-    
+
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic", "transfers"})
      * @ORM\Column(name="no_transfers_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
     private $noTransfersToAdd;
-    
+
     /**
      * @var string
      *
@@ -186,7 +185,7 @@ class Report
      * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
     private $reasonForNoContacts;
-    
+
     /**
      * @var string
      *
@@ -197,24 +196,24 @@ class Report
     private $reasonForNoDecisions;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @JMS\Groups({ "basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="submitted", type="boolean", nullable=true)
      */
     private $submitted;
-    
+
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Groups({"basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="reviewed", type="boolean", nullable=true)
      */
     private $reviewed;
-    
+
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Groups({"basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="report_seen", type="boolean", options={"default": true})
@@ -222,7 +221,7 @@ class Report
     private $reportSeen;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic"})
@@ -231,7 +230,6 @@ class Report
     private $allAgreed;
 
     /** @var string
-     *
      * @JMS\Type("string")
      * @JMS\Groups({"basic"})
      * @ORM\Column(name="reason_not_all_agreed", type="text", nullable=true)
@@ -255,8 +253,8 @@ class Report
      * @ORM\Column(name="agreed_behalf_deputy", type="string", length=50, nullable=true)
      */
     private $agreedBehalfDeputy;
-    
-     /** 
+
+    /** 
      * @var string
      *
      * @JMS\Type("string")
@@ -264,9 +262,9 @@ class Report
      * @ORM\Column(name="agreed_behalf_deputy_explanation", type="text", nullable=true)
      */
     private $agreedBehalfDeputyExplanation;
-    
-     /**
-     * Constructor
+
+    /**
+     * Constructor.
      */
     public function __construct()
     {
@@ -280,11 +278,11 @@ class Report
         $this->noTransfersToAdd = null;
         $this->reportSeen = true;
     }
-    
+
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -292,9 +290,10 @@ class Report
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
+     *
      * @return Report
      */
     public function setTitle($title)
@@ -305,9 +304,9 @@ class Report
     }
 
     /**
-     * Get title
+     * Get title.
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -315,32 +314,34 @@ class Report
     }
 
     /**
-     * Set startDate
+     * Set startDate.
      *
      * @param \DateTime $startDate
+     *
      * @return Report
      */
     public function setStartDate(\DateTime $startDate)
     {
         $this->startDate = new \DateTime($startDate->format('Y-m-d'));
-        
+
         return $this;
     }
 
     /**
-     * Get startDate
+     * Get startDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
-    {   
+    {
         return $this->startDate;
     }
 
     /**
-     * Set endDate
+     * Set endDate.
      *
      * @param \DateTime $endDate
+     *
      * @return Report
      */
     public function setEndDate(\DateTime $endDate)
@@ -351,19 +352,20 @@ class Report
     }
 
     /**
-     * Get endDate
+     * Get endDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
-    {   
+    {
         return $this->endDate;
     }
 
     /**
-     * Set submitDate
+     * Set submitDate.
      *
      * @param string $submitDate
+     *
      * @return Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
@@ -374,9 +376,9 @@ class Report
     }
 
     /**
-     * Get submitDate
+     * Get submitDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getSubmitDate()
     {
@@ -384,9 +386,10 @@ class Report
     }
 
     /**
-     * Set lastedit
+     * Set lastedit.
      *
      * @param \DateTime $lastedit
+     *
      * @return Report
      */
     public function setLastedit(\DateTime $lastedit)
@@ -397,9 +400,9 @@ class Report
     }
 
     /**
-     * Get lastedit
+     * Get lastedit.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastedit()
     {
@@ -407,24 +410,25 @@ class Report
     }
 
     /**
-     * Set furtherInformation
+     * Set furtherInformation.
      *
      * @param string $furtherInformation
+     *
      * @return Report
      */
     public function setFurtherInformation($furtherInformation)
     {
         $furtherInformation = trim($furtherInformation, " \n");
-        
+
         $this->furtherInformation = $furtherInformation;
 
         return $this;
     }
 
     /**
-     * Get furtherInformation
+     * Get furtherInformation.
      *
-     * @return string 
+     * @return string
      */
     public function getFurtherInformation()
     {
@@ -432,9 +436,10 @@ class Report
     }
 
     /**
-     * Set submitted
+     * Set submitted.
      *
-     * @param boolean $submitted
+     * @param bool $submitted
+     *
      * @return Report
      */
     public function setSubmitted($submitted)
@@ -445,17 +450,17 @@ class Report
     }
 
     /**
-     * Get submitted
+     * Get submitted.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getSubmitted()
     {
         return $this->submitted;
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function getReviewed()
     {
@@ -463,18 +468,20 @@ class Report
     }
 
     /**
-     * @param boolean $reviewed
+     * @param bool $reviewed
      */
     public function setReviewed($reviewed)
     {
         $this->reviewed = $reviewed;
+
         return $this;
     }
 
     /**
-     * Set client
+     * Set client.
      *
      * @param Client $client
+     *
      * @return Report
      */
     public function setClient(Client $client = null)
@@ -485,24 +492,25 @@ class Report
     }
 
     /**
-     * Get client
+     * Get client.
      *
-     * @return Client 
+     * @return Client
      */
     public function getClient()
     {
         return $this->client;
     }
-    
+
     public function getClientId()
     {
         return $this->client->getId();
     }
 
     /**
-     * Add contacts
+     * Add contacts.
      *
      * @param Contact $contacts
+     *
      * @return Report
      */
     public function addContact(Contact $contacts)
@@ -512,7 +520,7 @@ class Report
         return $this;
     }
     /**
-     * Remove contacts
+     * Remove contacts.
      *
      * @param Contact $contacts
      */
@@ -522,9 +530,9 @@ class Report
     }
 
     /**
-     * Get contacts
+     * Get contacts.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getContacts()
     {
@@ -532,9 +540,10 @@ class Report
     }
 
     /**
-     * Add accounts
+     * Add accounts.
      *
      * @param Account $accounts
+     *
      * @return Report
      */
     public function addAccount(Account $accounts)
@@ -545,7 +554,7 @@ class Report
     }
 
     /**
-     * Remove accounts
+     * Remove accounts.
      *
      * @param Account $accounts
      */
@@ -555,7 +564,7 @@ class Report
     }
 
     /**
-     * Get accounts
+     * Get accounts.
      *
      * @return Account[]
      */
@@ -563,7 +572,7 @@ class Report
     {
         return $this->accounts;
     }
-    
+
     /**
      * @return MoneyTransfer[]
      */
@@ -574,20 +583,21 @@ class Report
 
     /**
      * @param MoneyTransfer $moneyTransfer
+     *
      * @return \Report
      */
     public function addMoneyTransfers(MoneyTransfer $moneyTransfer)
     {
         $this->moneyTransfers->add($moneyTransfer);
-        
+
         return $this;
     }
 
-    
     /**
-     * Add decisions
+     * Add decisions.
      *
      * @param Decision $decision
+     *
      * @return Report
      */
     public function addDecision(Decision $decision)
@@ -598,7 +608,7 @@ class Report
     }
 
     /**
-     * Remove decisions
+     * Remove decisions.
      *
      * @param Decision $decision
      */
@@ -608,9 +618,9 @@ class Report
     }
 
     /**
-     * Get decisions
+     * Get decisions.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getDecisions()
     {
@@ -618,9 +628,10 @@ class Report
     }
 
     /**
-     * Add assets
+     * Add assets.
      *
      * @param Asset $assets
+     *
      * @return Report
      */
     public function addAsset(Asset $assets)
@@ -631,7 +642,7 @@ class Report
     }
 
     /**
-     * Remove assets
+     * Remove assets.
      *
      * @param Asset $assets
      */
@@ -641,25 +652,24 @@ class Report
     }
 
     /**
-     * Get assets
+     * Get assets.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAssets()
     {
         return $this->assets;
     }
-    
-    
+
     /**
-     * Get array of assets grouped by type
+     * Get array of assets grouped by type.
      *
      * @return array of Asset[]
      */
     public function getAssetsGroupedByType()
     {
         $ret = array();
-        
+
         foreach ($this->getAssets() as $asset) {
             $type = $asset->getType();
             if ($type == 'other') {
@@ -671,15 +681,15 @@ class Report
                 $ret[$type] = array($asset);
             }
         }
-    
+
         // sort the assets by their type now.
         ksort($ret);
-    
+
         return $ret;
     }
-    
+
     /**
-     * Get assets total value
+     * Get assets total value.
      *
      * @return float
      */
@@ -689,14 +699,15 @@ class Report
         foreach ($this->getAssets() as $asset) {
             $ret += $asset->getValue();
         }
-        
+
         return $ret;
     }
-    
+
     /**
-     * Set noAssetToAdd
+     * Set noAssetToAdd.
      *
-     * @param boolean $noAssetToAdd
+     * @param bool $noAssetToAdd
+     *
      * @return Report
      */
     public function setNoAssetToAdd($noAssetToAdd)
@@ -707,18 +718,17 @@ class Report
     }
 
     /**
-     * Get noAssetToAdd
+     * Get noAssetToAdd.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getNoAssetToAdd()
     {
         return $this->noAssetToAdd;
     }
-    
+
     /**
-     * 
-     * @return boolean
+     * @return bool
      */
     public function getNoTransfersToAdd()
     {
@@ -726,17 +736,17 @@ class Report
     }
 
     /**
-     * @param boolean $noTransfersToAdd
+     * @param bool $noTransfersToAdd
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
     {
         $this->noTransfersToAdd = $noTransfersToAdd;
+
         return $this;
     }
-    
 
     /**
-     * Get Safeguarding
+     * Get Safeguarding.
      *
      * @return Safeguarding
      */
@@ -746,9 +756,10 @@ class Report
     }
 
     /**
-     * Set Safeguarding
+     * Set Safeguarding.
      *
      * @param Safeguarding $safeguarding
+     *
      * @return Report
      */
     public function setSafeguarding(Safeguarding $safeguarding = null)
@@ -767,22 +778,22 @@ class Report
     }
 
     /**
-     * 
      * @param \AppBundle\Entity\Action $action
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setAction(Action $action)
     {
         $this->action = $action;
-        
+
         return $this;
     }
 
-        
     /**
-     * Set reasonForNoContact
+     * Set reasonForNoContact.
      *
      * @param string $reasonForNoContacts
+     *
      * @return Report
      */
     public function setReasonForNoContacts($reasonForNoContacts)
@@ -793,9 +804,9 @@ class Report
     }
 
     /**
-     * Get reasonForNoContacts
+     * Get reasonForNoContacts.
      *
-     * @return string 
+     * @return string
      */
     public function getReasonForNoContacts()
     {
@@ -803,9 +814,10 @@ class Report
     }
 
     /**
-     * Set reasonForNoDecisions
+     * Set reasonForNoDecisions.
      *
      * @param string $reasonForNoDecisions
+     *
      * @return Report
      **/
     public function setReasonForNoDecisions($reasonForNoDecisions)
@@ -816,7 +828,7 @@ class Report
     }
 
     /**
-     * Get ReasonForNoDecisions
+     * Get ReasonForNoDecisions.
      *
      * @return string
      */
@@ -824,12 +836,12 @@ class Report
     {
         return $this->reasonForNoDecisions;
     }
-    
 
     /**
-     * Set courtOrderType
+     * Set courtOrderType.
      *
      * @param CourtOrderType $courtOrderType
+     *
      * @return Report
      */
     public function setCourtOrderType(CourtOrderType $courtOrderType = null)
@@ -840,24 +852,25 @@ class Report
     }
 
     /**
-     * Get courtOrderType
+     * Get courtOrderType.
      *
-     * @return CourtOrderType 
+     * @return CourtOrderType
      */
     public function getCourtOrderType()
     {
         return $this->courtOrderType;
     }
-    
+
     public function getCourtOrderTypeId()
     {
         return $this->courtOrderType->getId();
     }
 
     /**
-     * Set reportSeen
+     * Set reportSeen.
      *
-     * @param boolean $reportSeen
+     * @param bool $reportSeen
+     *
      * @return Report
      */
     public function setReportSeen($reportSeen)
@@ -868,25 +881,24 @@ class Report
     }
 
     /**
-     * Get reportSeen
+     * Get reportSeen.
      *
-     * @return boolean 
+     * @return bool
      */
     public function getReportSeen()
     {
         return $this->reportSeen;
     }
-    
+
     /**
      * @param User $user
      * 
-     * @return boolean
+     * @return bool
      */
     public function belongsToUser(User $user)
     {
         return in_array($user->getId(), $this->getClient()->getUserIds());
     }
-
 
     public function getAgreedBehalfDeputy()
     {
@@ -899,11 +911,12 @@ class Report
         if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
             throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
         }
-        
+
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;
+
         return $this;
     }
-    
+
     public function getAgreedBehalfDeputyExplanation()
     {
         return $this->agreedBehalfDeputyExplanation;
@@ -912,6 +925,7 @@ class Report
     public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
     {
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+
         return $this;
     }
 
@@ -931,8 +945,6 @@ class Report
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
 
-
-
     /**
      * @return Transaction[]
      */
@@ -942,7 +954,7 @@ class Report
     }
 
     /**
-     * Virtual JMS property with IN transaction
+     * Virtual JMS property with IN transaction.
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"transactionsIn"})
@@ -954,7 +966,7 @@ class Report
     public function getTransactionsIn()
     {
         $ret = [];
-        
+
         foreach ($this->transactions as $t) {
             if ($t->getTransactionType() instanceof TransactionTypeIn) {
                 $ret[] = $t;
@@ -963,12 +975,12 @@ class Report
         uasort($ret, function ($t1, $t2) {
             return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
         });
-        
+
         return $ret;
     }
 
     /**
-     * Virtual JMS property with OUT transaction
+     * Virtual JMS property with OUT transaction.
      *
      * @JMS\VirtualProperty
      * @JMS\Groups({"transactionsOut"})
@@ -980,7 +992,7 @@ class Report
     public function getTransactionsOut()
     {
         $ret = [];
-        
+
         foreach ($this->transactions as $t) {
             if ($t->getTransactionType() instanceof TransactionTypeOut) {
                 $ret[] = $t;
@@ -989,11 +1001,9 @@ class Report
         uasort($ret, function ($t1, $t2) {
             return $t1->getTransactionType()->getDisplayOrder() >= $t2->getTransactionType()->getDisplayOrder();
         });
-        
+
         return $ret;
     }
-
-
 
     /**
      * @param Transaction $transaction
@@ -1007,7 +1017,6 @@ class Report
         return $this;
     }
 
-
     /**
      * @param string $transactionTypeId
      *
@@ -1015,7 +1024,7 @@ class Report
      */
     public function getTransactionByTypeId($transactionTypeId)
     {
-        return $this->getTransactions()->filter(function(Transaction $transaction) use($transactionTypeId) {
+        return $this->getTransactions()->filter(function (Transaction $transaction) use ($transactionTypeId) {
             return $transaction->getTransactionTypeId() == $transactionTypeId;
         })->first();
     }
@@ -1069,21 +1078,21 @@ class Report
     }
 
     /**
-     * Return sum of closing balances (if all of them have a value, otherwise returns null)
+     * Return sum of closing balances (if all of them have a value, otherwise returns null).
      * 
      * @JMS\VirtualProperty
      * @JMS\Groups({"balance"})
      * @JMS\Type("double")
      * @JMS\SerializedName("accounts_closing_balance_total")
      * 
-     * @return float 
+     * @return float
      */
     public function getAccountsClosingBalanceTotal()
     {
         $ret = 0;
         foreach ($this->getAccounts() as $a) {
             if ($a->getClosingBalance() === null) {
-                return null;
+                return;
             }
             $ret += $a->getClosingBalance();
         }
@@ -1138,7 +1147,7 @@ class Report
         foreach ($transactions as $id => $t) {
             $cat = $t->getCategoryString();
             if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
+                $ret[$cat] = ['entries' => [], 'amountTotal' => 0];
             }
             $ret[$cat]['entries'][$id] = $t; // needed to find the corresponding transaction in the form
             $ret[$cat]['amountTotal'] += $t->getAmountsTotal();
@@ -1154,7 +1163,7 @@ class Report
         }
 
         // reset time on dates
-        $today = new \DateTime;
+        $today = new \DateTime();
         $today->setTime(0, 0, 0);
 
         $reportDueOn = clone $this->getEndDate();
@@ -1162,5 +1171,4 @@ class Report
 
         return $today >= $reportDueOn;
     }
-    
 }

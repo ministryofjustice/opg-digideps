@@ -4,16 +4,14 @@ namespace AppBundle\Service;
 
 /**
  * Client to connect to docker-wkhtmltopdf-aas
- * https://github.com/openlabs/docker-wkhtmltopdf-aas
+ * https://github.com/openlabs/docker-wkhtmltopdf-aas.
  */
 class WkHtmlToPdfGenerator
 {
-
     /**
-     * @var string 
+     * @var string
      */
     private $url;
-
 
     /**
      * @param string $url
@@ -24,9 +22,8 @@ class WkHtmlToPdfGenerator
         $this->timeoutSeconds = $timeoutSeconds;
     }
 
-
     /**
-     * @return boolean true if working
+     * @return bool true if working
      */
     public function isAlive()
     {
@@ -35,9 +32,9 @@ class WkHtmlToPdfGenerator
         return strlen($pdf) > 5000 && preg_match('/PDF-\d/', $pdf);
     }
 
-
     /**
      * @param string $html
+     *
      * @return string pdf
      */
     public function getPdfFromHtml($html)
@@ -49,11 +46,10 @@ class WkHtmlToPdfGenerator
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/json')); // Assuming you're requesting JSON
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $body = json_encode([
-            'contents' => base64_encode($html)
+            'contents' => base64_encode($html),
         ]);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 
         return curl_exec($ch);
     }
-
 }
