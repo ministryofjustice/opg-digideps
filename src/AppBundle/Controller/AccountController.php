@@ -167,10 +167,6 @@ class AccountController extends RestController
             $account->setClosingBalance($data['closing_balance']);
         }
 
-        if (array_key_exists('closing_balance_explanation', $data)) {
-            $account->setClosingBalanceExplanation($data['closing_balance_explanation']);
-        }
-
         if (array_key_exists('is_joint_account', $data)) {
             $account->setIsJointAccount($data['is_joint_account']);
         }

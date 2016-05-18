@@ -105,16 +105,6 @@ class Account
     private $closingBalance;
 
     /**
-     * @deprecated since accounts_mk2
-     *
-     * @var string
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="closing_balance_explanation", type="text", nullable=true)
-     */
-    private $closingBalanceExplanation;
-
-    /**
      * @var bool
      * @JMS\Groups({"transactions", "basic", "transfers"})
      * @JMS\Type("boolean")
@@ -409,24 +399,6 @@ class Account
     public function setIsClosed($isClosed)
     {
         $this->isClosed = $isClosed;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClosingBalanceExplanation()
-    {
-        return $this->closingBalanceExplanation;
-    }
-
-    /**
-     * @param string $closingBalanceExplanation
-     */
-    public function setClosingBalanceExplanation($closingBalanceExplanation)
-    {
-        $this->closingBalanceExplanation = $closingBalanceExplanation;
 
         return $this;
     }
