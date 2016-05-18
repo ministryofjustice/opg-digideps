@@ -165,8 +165,6 @@ account:
         notBlank: You must enter the closing balance date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
         mismatch: The end date of the report and the date here is different. Tell us why below.
-    closingDateExplanation:
-        notBlankOnDateMismatch: You must explain why these dates are different
     openingBalance:
         notBlank: You must enter an opening balance
         type: You must enter a valid opening balance

@@ -47,7 +47,6 @@ class Fixtures extends \PHPUnit_Framework_TestCase
             $closingOptions = $data['closing'];
             $account->setClosingBalance($closingOptions['balance']);
             $account->setClosingDate($closingOptions['date']);
-            $account->setClosingDateExplanation($closingOptions['dateExplanation']);
         }
 
         return $account;

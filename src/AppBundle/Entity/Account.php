@@ -131,13 +131,6 @@ class Account
     private $closingDate;
 
     /**
-     * @deprecated since accounts_mk2
-     * @JMS\Type("string")
-     * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
-     */
-    private $closingDateExplanation;
-
-    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic", "add_edit"})
      *
@@ -326,22 +319,6 @@ class Account
     public function setClosingDate($closingDate)
     {
         $this->closingDate = $closingDate;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClosingDateExplanation()
-    {
-        return $this->closingDateExplanation;
-    }
-
-    /**
-     * @param string $closingDateExplanation
-     */
-    public function setClosingDateExplanation($closingDateExplanation)
-    {
-        $this->closingDateExplanation = $closingDateExplanation;
     }
 
     /**
