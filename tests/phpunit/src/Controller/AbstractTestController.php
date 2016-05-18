@@ -25,12 +25,16 @@ abstract class AbstractTestController extends WebTestCase
     {
         parent::setUpBeforeClass();
 
+        // each test restores the db before launching the entire suite, 
+        // help to cleanup records created from previously-executed tests
         Fixtures::restoreDb();
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test',
                                                'debug' => true, ]);
         $em = self::$frameworkBundleClient->getContainer()->get('em');
 
+        $t = self::$frameworkBundleClient->getContainer()->getParameter('fixtures');
+        
         self::$fixtures = new Fixtures($em);
         $em->clear();
     }
