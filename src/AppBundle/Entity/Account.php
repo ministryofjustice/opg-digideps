@@ -84,18 +84,6 @@ class Account
     private $accountNumber;
 
     /**
-     * @deprecated since accounts_mk2
-     * 
-     * @JMS\Type("DateTime")
-     * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"opening_balance"})
-     * @Assert\Date(message="account.openingDate.date", groups={"opening_balance"})
-     * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
-     * 
-     * @var \DateTime
-     */
-    private $openingDate;
-
-    /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      *
@@ -217,16 +205,6 @@ class Account
         return $this->accountNumber;
     }
 
-    public function setOpeningDate(\DateTime $openingDate = null)
-    {
-        $this->openingDate = $openingDate;
-    }
-
-    public function getOpeningDate()
-    {
-        return $this->openingDate;
-    }
-
     public function setOpeningBalance($openingBalance)
     {
         $this->openingBalance = $openingBalance;
@@ -328,33 +306,6 @@ class Account
     {
         $this->createdAt = $createdAt;
     }
-
-
-
-    /**
-     * @return bool
-     */
-    public function isOpeningDateValid()
-    {
-        if (!$this->getOpeningDate()) {
-            return false;
-        }
-
-        return $this->report->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClosingDateEqualToReportEndDate()
-    {
-        if (!$this->getClosingDate()) {
-            return false;
-        }
-
-        return $this->report->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
-    }
-
 
     /**
      * @return string

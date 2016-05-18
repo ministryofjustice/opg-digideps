@@ -135,11 +135,6 @@ decision:
     no-decision-reason:
         notBlank: Enter a reason here
 account:
-    openingDate:
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
-        notBlank: Please enter opening balance date
-        notSameAsReport: The start date of the report and the date here is different. Tell us why below.
-        date: Please enter a valid date
     bank:
         notBlank: Enter the bank or building society name
         minMessage: The bank or building society name must be at least {{ limit }} characters long
@@ -155,12 +150,6 @@ account:
         notBlank: Enter the last four numbers of the account number
         type: The account number must be numbers
         length: Enter the last four digits of the account number
-    openingDate:
-        notBlank: Enter the opening balance date
-        notSameAsReport: The start date of the report and the date here is different. Tell us why below.
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
-    openingDateSameAsReportDate:
-        notBlank: Choose Yes or No
     closingDate:
         notBlank: You must enter the closing balance date
         invalidMessage: Enter a valid date in this format: DD/MM/YYYY
