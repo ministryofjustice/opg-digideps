@@ -63,7 +63,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
 
         $role = $roleRepo->find($data['roleId']);
         if (!$role) {
-            $output->writel("Cannot add user $email: role {$data['roleId']} not found");
+            $output->writeln("Cannot add user $email: role {$data['roleId']} not found");
             
             return;
         }

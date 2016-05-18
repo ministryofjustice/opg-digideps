@@ -29,17 +29,18 @@ class FixturesCommand extends AddSingleUserCommand
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $em->clear();
 
+        // court order type
         $this->cot($output);
-        $this->roles($output);
+        
+        // transaction types
         $this->transactionTypes($output);
 
-        $em->beginTransaction();
-
+        // user and roles
+        $this->roles($output);
         $fixtures = (array) $this->getContainer()->getParameter('fixtures');
         foreach ($fixtures as $email => $data) {
             $this->addSingleUser($output, ['email' => $email] + $data, ['flush' => false]);
         }
-        $em->commit();
         $em->flush();
     }
 
