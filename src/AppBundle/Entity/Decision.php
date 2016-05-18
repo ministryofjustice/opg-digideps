@@ -4,24 +4,26 @@ namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\ExecutionContextInterface;
+
 /**
  * @JMS\XmlRoot("decision")
  */
 class Decision
 {
     use Traits\HasReportTrait;
-    
+
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="decision.description.notBlank" )
      * @Assert\Length( min=2, minMessage="decision.description.length")
+     *
      * @var string
      */
     private $description;
@@ -29,7 +31,8 @@ class Decision
     /**
      * @Assert\NotBlank( message="decision.clientInvolvedBoolean.notBlank")
      * @JMS\Type("boolean")
-     * @var boolean
+     *
+     * @var bool
      */
     private $clientInvolvedBoolean;
 
@@ -37,10 +40,10 @@ class Decision
      * @Assert\NotBlank( message="decision.clientInvolvedDetails.notBlank")
      * @Assert\Length( min=2, minMessage="decision.clientInvolvedDetails.length")
      * @JMS\Type("string")
-     * @var boolean
+     *
+     * @var bool
      */
     private $clientInvolvedDetails;
-
 
     public function getId()
     {
@@ -81,5 +84,4 @@ class Decision
     {
         $this->description = $description;
     }
-    
 }

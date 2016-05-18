@@ -4,7 +4,7 @@ namespace DigidepsBehat;
 
 /**
  * Contains mail data, constructed on a single mail log,
- * for instance written by Zend_Mail_Transport_File
+ * for instance written by Zend_Mail_Transport_File.
  */
 class MailEntry
 {
@@ -12,30 +12,29 @@ class MailEntry
      * @var string
      */
     protected $subject;
-    
+
     /**
      * @var string
      */
     protected $to;
-    
-     /**
+
+    /**
      * @var string
      */
     protected $raw;
-    
-    
+
     /**
      * @param string $filename Mail content
      */
     public function __construct($content)
     {
         $this->raw = $content;
-        
+
         foreach (explode("\n", $content) as $line) {
             $this->processLine($line);
         }
     }
-    
+
     /**
      * @param string $line
      */
@@ -59,7 +58,7 @@ class MailEntry
                 break;
         }
     }
-    
+
     /**
      * @return string
      */
@@ -75,13 +74,12 @@ class MailEntry
     {
         return $this->to;
     }
-    
-     /**
+
+    /**
      * @return string
      */
     public function getRaw()
     {
         return $this->raw;
     }
-    
 }

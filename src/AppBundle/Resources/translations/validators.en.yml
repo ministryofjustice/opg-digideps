@@ -135,11 +135,6 @@ decision:
     no-decision-reason:
         notBlank: Enter a reason here
 account:
-    openingDate:
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
-        notBlank: Please enter opening balance date
-        notSameAsReport: The start date of the report and the date here is different. Tell us why below.
-        date: Please enter a valid date
     bank:
         notBlank: Enter the bank or building society name
         minMessage: The bank or building society name must be at least {{ limit }} characters long
@@ -155,31 +150,15 @@ account:
         notBlank: Enter the last four numbers of the account number
         type: The account number must be numbers
         length: Enter the last four digits of the account number
-    openingDate:
-        notBlank: Enter the opening balance date
-        notSameAsReport: The start date of the report and the date here is different. Tell us why below.
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
-    openingDateSameAsReportDate:
-        notBlank: Choose Yes or No
-    closingDate:
-        notBlank: You must enter the closing balance date
-        invalidMessage: Enter a valid date in this format: DD/MM/YYYY
-        mismatch: The end date of the report and the date here is different. Tell us why below.
-    closingDateExplanation:
-        notBlankOnDateMismatch: You must explain why these dates are different
     openingBalance:
         notBlank: You must enter an opening balance
         type: You must enter a valid opening balance
         outOfRange: The opening balance must be less than £10,000,000,000
-    openingDateExplanation:
-        notBlankOnDateMismatch: You must explain why the opening balance date is different to your report start date
     closingBalance:
         notBlank: You must enter a closing balance
         type: Enter a valid closing balance
         outOfRange: Enter a valid closing balance
         mismatch: The final balance from your statement (£ %moneyTotal%) is different from the balance in the accounts section.
-    closingBalanceExplanation:
-        notBlankOnDateMismatch: You must explain why the final balance from your statement and the balance in the accounts section are different
     isJointAccount:
         notBlank: Choose Yes or No
     moneyInOut:

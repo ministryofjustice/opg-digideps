@@ -1,14 +1,13 @@
 <?php
-namespace AppBundle\Controller;
 
+namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
-
 use Mockery as m;
 
-abstract class AbstractControllerTestCase extends WebTestCase {
-
+abstract class AbstractControllerTestCase extends WebTestCase
+{
     protected $report;
     protected $client;
     protected $restClient;
@@ -20,7 +19,7 @@ abstract class AbstractControllerTestCase extends WebTestCase {
 
     public function setUp()
     {
-        $this->frameworkBundleClient = static::createClient(['environment' => 'test','debug' => true]);
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => true]);
 
         $this->report = m::mock('AppBundle\Entity\Report')
             ->shouldIgnoreMissing(true)
@@ -28,7 +27,7 @@ abstract class AbstractControllerTestCase extends WebTestCase {
             ->shouldReceive('getDecisions')->andReturn([])
             ->shouldReceive('getSubmitted')->andReturn(false)
             ->shouldReceive('getClient')->andReturn(1)
-            ->shouldReceive('getReasonForNoDecisions')->andReturn("")
+            ->shouldReceive('getReasonForNoDecisions')->andReturn('')
             ->getMock();
 
         $this->client = m::mock('AppBundle\Entity\Client')
@@ -38,32 +37,27 @@ abstract class AbstractControllerTestCase extends WebTestCase {
 
         $this->restClient = m::mock('AppBundle\Service\Client\RestClient')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])->andReturn($this->report)
+            ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])->andReturn($this->report)
 
             ->shouldReceive('get')->withArgs(['client/1', 'Client', m::any()])->andReturn($this->client)
             ->getMock();
 
         static::$kernel->getContainer()->set('restClient', $this->restClient);
-
     }
-    
-    
-     /**
+
+    /**
      * @param string $method
      * @param string $uri
-     * @param array $parameters
-     * @param array $files
-     * @param array $server
+     * @param array  $parameters
+     * @param array  $files
+     * @param array  $server
      * 
      * @return Response
      */
     protected function ajaxRequest($method, $uri, array $parameters = array(), array $files = array(), array $server = array())
     {
-        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With'=>'XMLHttpRequest'] + $server);
-        
+        $this->frameworkBundleClient->request($method, $uri, $parameters, $files, ['CONTENT_TYPE' => 'application/json', 'HTTP_X-Requested-With' => 'XMLHttpRequest'] + $server);
+
         return $this->frameworkBundleClient->getResponse();
-        
     }
-    
-    
 }

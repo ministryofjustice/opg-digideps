@@ -1,28 +1,28 @@
 <?php
+
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use AppBundle\Entity\Role;
 
 class AddUserType extends AbstractType
 {
     /**
-     * @var array 
+     * @var array
      */
     private $roleChoices = [];
-    
+
     /**
      * @var string
      */
     private $roleIdEmptyValue;
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $roleIdDisabled;
-    
+
     /**
      * @param array $options keys: array roles, roleIdEmptyValue
      */
@@ -37,25 +37,25 @@ class AddUserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder ->add('email', 'text')
+        $builder->add('email', 'text')
                  ->add('firstname', 'text')
                  ->add('lastname', 'text')
                  ->add('roleId', 'choice', array(
                     'choices' => $this->roleChoices,
                     'empty_value' => $this->roleIdEmptyValue,
-                    'disabled'    => $this->roleIdDisabled
+                    'disabled' => $this->roleIdDisabled,
                   ))
                  ->add('save', 'submit');
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults( [
+        $resolver->setDefaults([
               'translation_domain' => 'admin',
               'validation_groups' => ['admin_add_user'],
         ]);
     }
-    
+
     public function getName()
     {
         return 'admin';

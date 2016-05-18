@@ -1,12 +1,11 @@
 <?php
+
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints as Constraints;
-
 
 class SelfRegisterDataType extends AbstractType
 {
@@ -16,19 +15,18 @@ class SelfRegisterDataType extends AbstractType
             ->add('firstname', 'text')
             ->add('lastname', 'text')
             ->add('postcode', 'text')
-            ->add('email', 'email',  [ 'constraints' => [
-                new Constraints\Email(['message' => 'login.email.inValid']) ]
+            ->add('email', 'email',  ['constraints' => [
+                new Constraints\Email(['message' => 'login.email.inValid']), ],
             ])
             ->add('clientLastname', 'text')
             ->add('caseNumber', 'text')
             ->add('save', 'submit');
     }
 
-
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults( [
-            'translation_domain' => 'register'
+        $resolver->setDefaults([
+            'translation_domain' => 'register',
         ]);
     }
 

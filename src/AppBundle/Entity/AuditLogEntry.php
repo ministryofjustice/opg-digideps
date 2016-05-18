@@ -2,32 +2,29 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * AuditLogEntry
+ * AuditLogEntry.
  */
 class AuditLogEntry
 {
-
     const ACTION_LOGIN = 'login';
     const ACTION_LOGOUT = 'logout';
     const ACTION_USER_ADD = 'user_add';
     const ACTION_USER_EDIT = 'user_edit';
     const ACTION_USER_DELETE = 'user_delete';
 
-
     /**
      * @JMS\Exclude
      */
     private static $allowedActions = [
         self::ACTION_LOGIN, self::ACTION_LOGOUT,
-        self::ACTION_USER_ADD, self::ACTION_USER_DELETE, self::ACTION_USER_EDIT
+        self::ACTION_USER_ADD, self::ACTION_USER_DELETE, self::ACTION_USER_EDIT,
     ];
 
     /**
-     * @var integer
+     * @var int
      * @JMS\Groups({"audit_log"})
      * @JMS\Type("integer")
      */
@@ -92,7 +89,6 @@ class AuditLogEntry
      */
     private $userEditedEmail;
 
-
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -142,7 +138,7 @@ class AuditLogEntry
     public function setAction($action)
     {
         if (!in_array($action, self::$allowedActions)) {
-            throw new \InvalidArgumentException("Action '$action' not valid. Allowed actions: " . implode(',', self::$allowedActions));
+            throw new \InvalidArgumentException("Action '$action' not valid. Allowed actions: ".implode(',', self::$allowedActions));
         }
         $this->action = $action;
 
@@ -152,6 +148,7 @@ class AuditLogEntry
     public function setUserEdited(User $userEdited = null)
     {
         $this->userEdited = $userEdited;
+
         return $this;
     }
 
@@ -180,7 +177,7 @@ class AuditLogEntry
     }
 
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -226,5 +223,4 @@ class AuditLogEntry
     {
         return $this->userEditedEmail;
     }
-
 }

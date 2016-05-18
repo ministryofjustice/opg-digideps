@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class AssetOther extends Asset
 {
     /**
-     * 
      * @Assert\NotBlank(message="asset.description.notBlank")
      * @Assert\Length(min=3, minMessage="asset.description.length")
      * 
@@ -18,14 +17,16 @@ class AssetOther extends Asset
 
     /**
      * @JMS\Type("DateTime")
+     *
      * @var \Date
      */
     private $valuationDate;
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
+     *
      * @return Asset
      */
     public function setDescription($description)
@@ -36,9 +37,9 @@ class AssetOther extends Asset
     }
 
     /**
-     * Get description
+     * Get description.
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -46,9 +47,10 @@ class AssetOther extends Asset
     }
 
     /**
-     * Set valuationDate
+     * Set valuationDate.
      *
      * @param \DateTime $valuationDate
+     *
      * @return Asset
      */
     public function setValuationDate($valuationDate)
@@ -59,15 +61,15 @@ class AssetOther extends Asset
     }
 
     /**
-     * Get valuationDate
+     * Get valuationDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getValuationDate()
     {
         return $this->valuationDate;
     }
-    
+
     public function getType()
     {
         return 'other';

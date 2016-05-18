@@ -1,14 +1,15 @@
 <?php
+
 namespace AppBundle\Exception;
 
 class RestClientException extends DisplayableException
 {
     protected $data;
-    
+
     public function __construct($message, $code, array $data = [])
     {
         parent::__construct($message, $code);
-        
+
         $this->data = $data;
     }
 
@@ -19,5 +20,4 @@ class RestClientException extends DisplayableException
     {
         return $this->data;
     }
-
 }

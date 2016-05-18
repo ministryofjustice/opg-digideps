@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service\Client\TokenStorage;
 
 use Predis\Client as PredisClient;
@@ -6,16 +7,15 @@ use Predis\Client as PredisClient;
 class RedisStorage implements TokenStorageInterface
 {
     /**
-     * @var PredisClient 
+     * @var PredisClient
      */
     private $redis;
-    
+
     /**
-     * @var string 
+     * @var string
      */
     private $prefix;
-    
-     
+
     public function __construct(PredisClient $redis, $prefix)
     {
         $this->redis = $redis;
@@ -24,18 +24,17 @@ class RedisStorage implements TokenStorageInterface
 
     public function get($id)
     {
-        return $this->redis->get($this->prefix . $id);
+        return $this->redis->get($this->prefix.$id);
     }
-
 
     public function set($id, $value)
     {
-        return $this->redis->set($this->prefix . $id, $value);
+        return $this->redis->set($this->prefix.$id, $value);
     }
-    
+
     public function remove($id)
     {
-        $this->redis->set($this->prefix . $id, null);
-        $this->redis->expire($this->prefix . $id, 0);
+        $this->redis->set($this->prefix.$id, null);
+        $this->redis->expire($this->prefix.$id, 0);
     }
 }

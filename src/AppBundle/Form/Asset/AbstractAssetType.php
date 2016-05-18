@@ -7,14 +7,15 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 /**
- * Asset form
+ * Asset form.
  * 
  * note: title is hidden (filled from the controller based on AssetTypeTitle form)
  */
 abstract class AbstractAssetType extends AbstractType
 {
-     /**
+    /**
      * @param string $type
+     *
      * @return AbstractAssetType instance
      */
     public static function factory($type)
@@ -26,8 +27,7 @@ abstract class AbstractAssetType extends AbstractType
                 return new AssetTypeOther();
         }
     }
-    
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addFields($builder, $options);
@@ -49,13 +49,12 @@ abstract class AbstractAssetType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
-            'validation_groups' => $this->getValidationGroups()
+            'validation_groups' => $this->getValidationGroups(),
         ]);
     }
-    
+
     protected function getValidationGroups()
     {
         return [];
     }
-
 }

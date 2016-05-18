@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use JMS\Serializer\Annotation as JMS;
@@ -26,7 +27,7 @@ class Transaction
      */
     private $type;
 
-     /**
+    /**
      * @var decimal
      * 
      * @JMS\Type("string")
@@ -36,20 +37,21 @@ class Transaction
      */
     //private $amount;
 
-     /**
+    /**
      * @var array
      * 
      * @JMS\Type("array<string>")
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
      */
     private $amounts;
-    
+
     /**
      * @JMS\Type("string")
-     * @var float 
+     *
+     * @var float
      */
     private $amountsTotal;
-    
+
     /**
      * @var string
      * @JMS\Groups({"transactionsIn", "transactionsOut"})
@@ -148,32 +150,31 @@ class Transaction
     {
         return $this->amounts ? $this->amounts : [null];
     }
-    
+
     /**
      * get amounts not null or empty string
      * 0.0 values are considered valid
-     * non-numeric values are considered valid too,
+     * non-numeric values are considered valid too,.
      * 
      * @return array
      */
     public function getNotNullAmounts()
     {
-        return array_filter($this->getAmounts(), function($a){
-            return ($a !== null && trim($a) !== '');
+        return array_filter($this->getAmounts(), function ($a) {
+            return $a !== null && trim($a) !== '';
         });
     }
-
 
     public function setAmounts($amounts)
     {
         $this->amounts = $amounts;
+
         return $this;
     }
 
-    
     /**
      * flag moreDetails invalid if amount is given and moreDetails is empty
-     * flag amount invalid if moreDetails is given and amount is empty
+     * flag amount invalid if moreDetails is given and amount is empty.
      * 
      * @param ExecutionContextInterface $context
      */
@@ -183,19 +184,19 @@ class Transaction
         if (!$this->getHasMoreDetails()) {
             return;
         }
-        
+
         $hasAtLeastOneAmount = count($this->getNotNullAmounts()) > 0;
         $hasMoreDetails = trim($this->getMoreDetails(), " \n") ? true : false;
-        
-        if ($hasAtLeastOneAmount && !$hasMoreDetails){
+
+        if ($hasAtLeastOneAmount && !$hasMoreDetails) {
             $context->addViolationAt('moreDetails', 'account.moneyInOut.moreDetails.empty');
         }
-        
+
         if ($hasMoreDetails && !$hasAtLeastOneAmount) {
             $context->addViolationAt('amount', 'account.moneyInOut.amount.missingWhenDetailsFilled');
         }
     }
-    
+
     public function getAmountsTotal()
     {
         return $this->amountsTotal;
@@ -204,9 +205,7 @@ class Transaction
     public function setAmountsTotal($amountsTotal)
     {
         $this->amountsTotal = $amountsTotal;
+
         return $this;
     }
-
-
-
 }

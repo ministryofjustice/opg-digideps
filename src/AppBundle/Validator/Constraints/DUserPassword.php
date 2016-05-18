@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Validator\Constraints;
 
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;

@@ -11,7 +11,6 @@ use Mockery as m;
 
 class SafeguardTest extends WebTestCase
 {
-
     /** @var  \Symfony\Bundle\TwigBundle\TwigEngine */
     private $twig;
 
@@ -20,7 +19,7 @@ class SafeguardTest extends WebTestCase
 
     public function setUp()
     {
-        $client = static::createClient([ 'environment' => 'test', 'debug' => false]);
+        $client = static::createClient(['environment' => 'test', 'debug' => false]);
         $this->container = $client->getContainer();
 
         $this->twig = $this->container->get('templating');
@@ -41,7 +40,6 @@ class SafeguardTest extends WebTestCase
     /** @test */
     public function showContinueWhenSafeguardingSaved()
     {
-
         $safeguarding = new EntityDir\Safeguarding();
 
         // mock data
@@ -52,35 +50,31 @@ class SafeguardTest extends WebTestCase
                 ->shouldReceive('getSafeguarding')->andReturn($safeguarding)
                 ->getMock();
 
-
         $client = m::mock('AppBundle\Entity\Client')
                 ->shouldIgnoreMissing(true)
                 ->getMock();
 
         $form = $this->createForm(new FormDir\SafeguardingType(), $safeguarding);
 
-
         $html = $this->twig->render('AppBundle:Safeguard:edit.html.twig', [
             'report' => $report,
             'form' => $form->createView(),
-            'client' => $client
+            'client' => $client,
         ]);
 
         $crawler = new Crawler($html);
 
         $this->assertCount(1, $crawler->filter('nav.pagination .previous'));
-        $this->assertEquals("/report/1/contacts", $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
-        $this->assertEquals("Contacts", $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
-
+        $this->assertEquals('/report/1/contacts', $crawler->filter('nav.pagination .previous a')->eq(0)->attr('href'));
+        $this->assertEquals('Contacts', $crawler->filter('nav.pagination .previous .pagination-part-title')->eq(0)->text());
 
         $this->assertCount(1, $crawler->filter('nav.pagination .next'));
-        $this->assertEquals("/report/1/accounts", $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
-        $this->assertEquals("Accounts", $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
+        $this->assertEquals('/report/1/accounts', $crawler->filter('nav.pagination .next a')->eq(0)->attr('href'));
+        $this->assertEquals('Accounts', $crawler->filter('nav.pagination .next .pagination-part-title')->eq(0)->text());
     }
 
     public function createForm($type, $data = null, array $options = array())
     {
         return $this->container->get('form.factory')->create($type, $data, $options);
     }
-
 }

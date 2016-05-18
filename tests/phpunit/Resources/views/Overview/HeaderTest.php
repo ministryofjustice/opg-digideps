@@ -10,7 +10,6 @@ use Mockery as m;
 
 class HeaderTest extends WebTestCase
 {
-
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
@@ -21,7 +20,7 @@ class HeaderTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient([ 'environment' => 'test', 'debug' => false]);
+        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
         $this->client->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
@@ -40,7 +39,6 @@ class HeaderTest extends WebTestCase
     /** @test */
     public function reportDueAllSectionsCompletedShowSubmission()
     {
-
         $this->report = m::mock('AppBundle\Entity\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
@@ -53,7 +51,7 @@ class HeaderTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -87,7 +85,7 @@ class HeaderTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -111,7 +109,7 @@ class HeaderTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -136,7 +134,7 @@ class HeaderTest extends WebTestCase
         $html = $this->twig->render('AppBundle:Overview:_header.html.twig', [
             'report' => $this->report,
             'reportStatus' => $this->reportStatus,
-            'app' => $this->getApp()
+            'app' => $this->getApp(),
         ]);
 
         $crawler = new Crawler($html);
@@ -148,10 +146,9 @@ class HeaderTest extends WebTestCase
 
     private function getApp()
     {
-
         $flashbag = m::mock('Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('get')->with('news')->andReturn(["test"])
+                ->shouldReceive('get')->with('news')->andReturn(['test'])
                 ->getMock();
 
         $session = m::mock('Symfony\Component\HttpFoundation\Session\Session')
@@ -164,8 +161,6 @@ class HeaderTest extends WebTestCase
                 ->shouldReceive('getSession')->andReturn($session)
                 ->getMock();
 
-
         return $app;
     }
-
 }

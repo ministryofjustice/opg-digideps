@@ -2,7 +2,6 @@
 
 namespace AppBundle\Command;
 
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,24 +21,24 @@ class ValidationCommand extends \Symfony\Bundle\FrameworkBundle\Command\Containe
     {
         $validator = $this->getContainer()->get('validator');
         $data = $validator->getMetadataFor($entity); /* @var $data \Symfony\Component\Validator\Mapping\ClassMetadata */
-        
+
         $ret = [];
         foreach ($data->getConstrainedProperties() as $property) {
             $propMetaData = $data->getMemberMetadatas($property)[0]; /* @var $propMetaData \Symfony\Component\Validator\Mapping\PropertyMetadata */
             $ret[$property] = $propMetaData->getConstraints();
         }
-        
+
         return $ret;
     }
-    
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $ret = [];
-        foreach (glob($this->getContainer()->get('kernel')->getRootDir() . '/../src/AppBundle/Entity/*.php') as $entity) {
+        foreach (glob($this->getContainer()->get('kernel')->getRootDir().'/../src/AppBundle/Entity/*.php') as $entity) {
             if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
-                $className = '\\AppBundle\\Entity\\' . $matches[1];
+                $className = '\\AppBundle\\Entity\\'.$matches[1];
                 if (class_exists($className)) {
-                    $ret[$className] = $this->getClassValidationRules(new $className);
+                    $ret[$className] = $this->getClassValidationRules(new $className());
                 }
             }
         }

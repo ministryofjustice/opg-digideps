@@ -10,7 +10,7 @@ class AppKernel extends Kernel
         date_default_timezone_set('Europe/London');
         parent::__construct($environment, $debug);
     }
-    
+
     public function registerBundles()
     {
         $bundles = array(

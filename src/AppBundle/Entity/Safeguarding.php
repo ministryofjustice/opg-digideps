@@ -1,9 +1,9 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @JMS\XmlRoot("safeguarding")
@@ -12,17 +12,17 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Safeguarding
 {
     use Traits\HasReportTrait;
-    
+
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $id;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doYouLiveWithClient.notBlank", groups={"safeguarding"})
-     * 
      */
     private $doYouLiveWithClient;
 
@@ -31,32 +31,28 @@ class Safeguarding
      * @Assert\NotBlank(message="safeguarding.howOftenDoYouContactClient.notBlank", groups={"safeguarding-no"})
      */
     private $howOftenDoYouContactClient;
-    
+
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientReceivePaidCare.notBlank", groups={"safeguarding"})
-     *      
      */
     private $doesClientReceivePaidCare;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.howIsCareFunded.notBlank", groups={"safeguarding-paidCare"})
-     *      
      */
     private $howIsCareFunded;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.whoIsDoingTheCaring.notBlank", groups={"safeguarding"})
-     *      
      */
     private $whoIsDoingTheCaring;
 
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="safeguarding.doesClientHaveACarePlan.notBlank", groups={"safeguarding"})
-     *      
      */
     private $doesClientHaveACarePlan;
 
@@ -64,17 +60,11 @@ class Safeguarding
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @Assert\NotBlank(message="safeguarding.whenWasCarePlanLastReviewed.notBlank", groups={"safeguarding-hasCarePlan"})
      * @Assert\Date( message="safeguarding.whenWasCarePlanLastReviewed.invalidMessage", groups={"safeguarding-hasCarePlan"} )
-     *      
      */
     private $whenWasCarePlanLastReviewed;
 
-
-
-
-
     /**
-     *
-     * @return integer $id
+     * @return int $id
      */
     public function getId()
     {
@@ -82,18 +72,20 @@ class Safeguarding
     }
 
     /**
-     * @param integer $id
+     * @param int $id
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     /**
-     * Set doYouLiveWithClient
+     * Set doYouLiveWithClient.
      *
      * @param string $doYouLiveWithClient
+     *
      * @return Safeguarding
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
@@ -104,7 +96,7 @@ class Safeguarding
     }
 
     /**
-     * Get doYouLiveWithClient
+     * Get doYouLiveWithClient.
      *
      * @return string
      */
@@ -129,11 +121,11 @@ class Safeguarding
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
     }
 
-    
     /**
-     * Set doesClientReceivePaidCare
+     * Set doesClientReceivePaidCare.
      *
      * @param string $doesClientReceivePaidCare
+     *
      * @return Safeguarding
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
@@ -144,7 +136,7 @@ class Safeguarding
     }
 
     /**
-     * Get doesClientReceivePaidCare
+     * Get doesClientReceivePaidCare.
      *
      * @return string
      */
@@ -154,9 +146,10 @@ class Safeguarding
     }
 
     /**
-     * Set whoIsDoingTheCaring
+     * Set whoIsDoingTheCaring.
      *
      * @param string $whoIsDoingTheCaring
+     *
      * @return Safeguarding
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
@@ -167,7 +160,7 @@ class Safeguarding
     }
 
     /**
-     * Get whoIsDoingTheCaring
+     * Get whoIsDoingTheCaring.
      *
      * @return string
      */
@@ -177,9 +170,10 @@ class Safeguarding
     }
 
     /**
-     * Set doesClientHaveACarePlan
+     * Set doesClientHaveACarePlan.
      *
      * @param string $doesClientHaveACarePlan
+     *
      * @return Safeguarding
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
@@ -190,7 +184,7 @@ class Safeguarding
     }
 
     /**
-     * Get doesClientHaveACarePlan
+     * Get doesClientHaveACarePlan.
      *
      * @return string
      */
@@ -200,9 +194,10 @@ class Safeguarding
     }
 
     /**
-     * Set whenWasCarePlanLastReviewed
+     * Set whenWasCarePlanLastReviewed.
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
+     *
      * @return Safeguarding
      */
     public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
@@ -213,7 +208,7 @@ class Safeguarding
     }
 
     /**
-     * Get whenWasCarePlanLastReviewed
+     * Get whenWasCarePlanLastReviewed.
      *
      * @return \DateTime
      */
@@ -223,9 +218,10 @@ class Safeguarding
     }
 
     /**
-     * Set howIsCareFunded
+     * Set howIsCareFunded.
      *
      * @param string $howIsCareFunded
+     *
      * @return Safeguarding
      */
     public function setHowIsCareFunded($howIsCareFunded)
@@ -236,7 +232,7 @@ class Safeguarding
     }
 
     /**
-     * Get howIsCareFunded
+     * Get howIsCareFunded.
      *
      * @return string
      */
@@ -244,45 +240,42 @@ class Safeguarding
     {
         return $this->howIsCareFunded;
     }
-    
-    
+
     /**
      * If deputy lives with client then we don't
-     * all this other responses
+     * all this other responses.
      *
-     * @return boolean
+     * @return bool
      */
     public function keepOnlyRelevantSafeguardingData()
     {
-        if($this->doYouLiveWithClient == "yes"){
+        if ($this->doYouLiveWithClient == 'yes') {
             $this->howOftenDoYouContactClient = null;
         }
 
-        if($this->doesClientReceivePaidCare == "no"){
+        if ($this->doesClientReceivePaidCare == 'no') {
             $this->howIsCareFunded = null;
         }
 
-        if($this->doesClientHaveACarePlan == "no"){
+        if ($this->doesClientHaveACarePlan == 'no') {
             $this->whenWasCarePlanLastReviewed = null;
         }
+
         return true;
     }
-    
-
 
     /**
      * checks if report is missing safeguarding
-     * information
+     * information.
      *
-     * @return boolean
+     * @return bool
      */
     public function missingSafeguardingInfo()
     {
-        if(empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)){
+        if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
             return true;
         }
+
         return false;
     }
-    
-    
 }

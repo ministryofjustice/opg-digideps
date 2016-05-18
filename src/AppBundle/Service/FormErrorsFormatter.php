@@ -1,8 +1,9 @@
-<?php 
+<?php
+
+
 namespace AppBundle\Service;
 
-use Symfony\Component\Form\Form;
-use \Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormError;
 
 class FormErrorsFormatter
@@ -17,12 +18,12 @@ class FormErrorsFormatter
 
     /**
      * @param FormInterface $element
-     * @param array $errors
-     * @param string $name
+     * @param array         $errors
+     * @param string        $name
      */
     private function formErrorsToJson(FormInterface $element, &$errors, $name = '')
     {
-        $currentName = $name ? $name . '_' . $element->getName() : $element->getName();
+        $currentName = $name ? $name.'_'.$element->getName() : $element->getName();
 
         foreach ($element->getErrors() as $error) { /* @var $error FormError  */
             $errors[$currentName][] = $error->getMessage();
@@ -31,6 +32,4 @@ class FormErrorsFormatter
             $this->formErrorsToJson($subElement, $errors, $currentName);
         }
     }
-
-
 }

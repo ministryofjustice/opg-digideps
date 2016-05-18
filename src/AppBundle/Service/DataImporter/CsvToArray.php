@@ -6,7 +6,7 @@ class CsvToArray
 {
     const DELIMITER = ',';
     const ENCLOSURE = '"';
-    const ESCAPE = "\\";
+    const ESCAPE = '\\';
 
     /**
      * @var resource
@@ -19,14 +19,15 @@ class CsvToArray
     private $expectedColumns = [];
 
     /**
-     * @var boolean
+     * @var bool
      */
     private $normaliseNewLines;
 
     /**
-     * @param string $file path to file
-     * @param array $expectedColumns e.g. ['Case','Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode']
-     * @param boolean $normaliseNewLines
+     * @param string $file              path to file
+     * @param array  $expectedColumns   e.g. ['Case','Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode']
+     * @param bool   $normaliseNewLines
+     *
      * @throws \RuntimeException
      */
     public function __construct($file, $normaliseNewLines)
@@ -40,22 +41,20 @@ class CsvToArray
         // if line endings need to be normalised, the stream is replaced with a string stream with the content replaced
         if ($this->normaliseNewLines) {
             $content = str_replace(["\r\n", "\r"], ["\n", "\n"], file_get_contents($file));
-            $this->handle = fopen('data://text/plain,' . $content, 'r');
+            $this->handle = fopen('data://text/plain,'.$content, 'r');
         } else {
             ini_set('auto_detect_line_endings', true);
             $this->handle = fopen($file, 'r');
         }
-
     }
-    
+
     public function setExpectedColumns(array $expectedColumns)
     {
         $this->expectedColumns = $expectedColumns;
-        
+
         return $this;
     }
 
-    
     /**
      * @return array or false when EOF
      */
@@ -64,9 +63,8 @@ class CsvToArray
         return fgetcsv($this->handle, 2000, self::DELIMITER, self::ENCLOSURE, self::ESCAPE);
     }
 
-
     /**
-     * Returns 
+     * Returns.
      * 
      * @return array
      */
@@ -81,7 +79,7 @@ class CsvToArray
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
         if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find header columns ' . implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find header columns '.implode(', ', $missingColumns));
         }
 
         // read rows
@@ -94,7 +92,6 @@ class CsvToArray
         return $ret;
     }
 
-
     public function __destruct()
     {
         fclose($this->handle);
@@ -103,5 +100,4 @@ class CsvToArray
             ini_set('auto_detect_line_endings', false);
         }
     }
-
 }

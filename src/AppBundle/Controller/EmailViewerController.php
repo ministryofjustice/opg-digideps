@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,13 +13,12 @@ class EmailViewerController extends AbstractController
      */
     public function emailViewerAction($action)
     {
-        if($action == ''){
+        if ($action == '') {
             die('No action specified');
         }
 
-        $emailToView = 'AppBundle:Email:' . $action .'.html.twig';
+        $emailToView = 'AppBundle:Email:'.$action.'.html.twig';
 
         return $this->render($emailToView);
     }
-
 }

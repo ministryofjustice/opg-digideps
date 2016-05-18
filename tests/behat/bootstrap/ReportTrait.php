@@ -6,7 +6,6 @@ use Behat\Gherkin\Node\TableNode;
 
 trait ReportTrait
 {
-
     /**
      * @Given I change the report :reportId court order type to :cotName
      */
@@ -14,7 +13,7 @@ trait ReportTrait
     {
         $cotNameToId = ['Health & Welfare' => 1, 'Property and Affairs' => 2];
 
-        $this->visitBehatLink('report/' . $reportId . '/change-report-cot/' . $cotNameToId[$cotName]);
+        $this->visitBehatLink('report/'.$reportId.'/change-report-cot/'.$cotNameToId[$cotName]);
     }
 
     /**
@@ -22,11 +21,11 @@ trait ReportTrait
      */
     public function iSetTheReportDue($reportId, $days)
     {
-        $endDate = new \DateTime;
+        $endDate = new \DateTime();
         $endDate->modify("-{$days} days");
 
-        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
-        $this->visit("/");
+        $this->visitBehatLink("report/{$reportId}/change-report-end-date/".$endDate->format('Y-m-d'));
+        $this->visit('/');
     }
 
     /**
@@ -34,11 +33,11 @@ trait ReportTrait
      */
     public function iSetTheReportNotDue($reportId, $days)
     {
-        $endDate = new \DateTime;
+        $endDate = new \DateTime();
         $endDate->modify("+{$days} days");
 
-        $this->visitBehatLink("report/{$reportId}/change-report-end-date/" . $endDate->format('Y-m-d'));
-        $this->visit("/");
+        $this->visitBehatLink("report/{$reportId}/change-report-end-date/".$endDate->format('Y-m-d'));
+        $this->visit('/');
     }
 
     /**
@@ -46,7 +45,7 @@ trait ReportTrait
      */
     public function iChangeTheReportToNotSubmitted($reportId, $value)
     {
-        $this->visitBehatLink('report/' . $reportId . '/set-sumbmitted/' . $value);
+        $this->visitBehatLink('report/'.$reportId.'/set-sumbmitted/'.$value);
     }
 
     /**
@@ -54,7 +53,7 @@ trait ReportTrait
      */
     public function theAssetGroupShouldBe($index, $text)
     {
-        $css = '#assets-section .asset-group:nth-child(' . $index . ')';
+        $css = '#assets-section .asset-group:nth-child('.$index.')';
         $this->assertSession()->elementTextContains('css', $css, $text);
     }
 
@@ -63,7 +62,7 @@ trait ReportTrait
      */
     public function theAssetInTheAssetGroupShouldHaveA($assetIndex, $group, $field, $text)
     {
-        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child(' . $assetIndex . ') .asset-' . $field . ' .value';
+        $css = '#assets-section [data-group="'.$group.'"] .asset-item:nth-child('.$assetIndex.') .asset-'.$field.' .value';
         $this->assertSession()->elementTextContains('css', $css, $text);
     }
 
@@ -72,15 +71,15 @@ trait ReportTrait
      */
     public function theAssetInTheAssetGroupShouldHaveEmpty($assetIndex, $group, $field)
     {
-        $css = '#assets-section [data-group="' . $group . '"] .asset-item:nth-child(' . $assetIndex . ') .asset-' . $field . ' .value';
+        $css = '#assets-section [data-group="'.$group.'"] .asset-item:nth-child('.$assetIndex.') .asset-'.$field.' .value';
 
         $elementsFound = $this->getSession()->getPage()->findAll('css', $css);
         if (count($elementsFound) === 0) {
-            throw new \RuntimeException("Element not found");
+            throw new \RuntimeException('Element not found');
         }
 
         if ($elementsFound[0]->getText() != '') {
-            throw new \RuntimeException("Element should be empty but contains: " . $elementsFound[0]->getText());
+            throw new \RuntimeException('Element should be empty but contains: '.$elementsFound[0]->getText());
         }
     }
 
@@ -93,11 +92,11 @@ trait ReportTrait
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.view-report-link');
 
         if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element .view-report-link not found");
+            throw new \RuntimeException('Element .view-report-link not found');
         }
 
         if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Returned multiple elements");
+            throw new \RuntimeException('Returned multiple elements');
         }
 
         $url = $linksElementsFound[0]->getAttribute('href');
@@ -109,7 +108,7 @@ trait ReportTrait
         if (count($reportNumberSplit) > 1) {
             $reportNumber = $reportNumberSplit[count($reportNumberSplit) - 1];
         }
-        $newUrl = '/report/' . $reportNumber . '/formatted';
+        $newUrl = '/report/'.$reportNumber.'/formatted';
 
         $this->visit($newUrl);
     }
@@ -145,20 +144,18 @@ trait ReportTrait
         $this->fillField('report_startDate_year', $startDatePieces[2]);
     }
 
-
-    private function gotoOverview() {
-
+    private function gotoOverview()
+    {
         $overviewButton = $this->getSession()->getPage()->find('css', '#overview-button');
-        
+
         if (isset($overviewButton)) {
             $overviewButton->click();
         }
-        
     }
 
     /**
      * Click on contacts tab and add a contact
-     * If the form is not shown, click first on "add-a-contact" button (with no exception thrown)
+     * If the form is not shown, click first on "add-a-contact" button (with no exception thrown).
      *
      * @When I add the following contacts:
      */
@@ -169,7 +166,7 @@ trait ReportTrait
             $this->clickLink('edit-contacts');
 
             if (1 === count($this->getSession()->getPage()->findAll('css', '#add-contacts-button'))) {
-                $this->clickLink("add-contacts-button");
+                $this->clickLink('add-contacts-button');
             }
 
             $this->fillField('contact_contactName', $row['contactName']);
@@ -181,7 +178,7 @@ trait ReportTrait
             $this->fillField('contact_postcode', $row['postcode']);
             $this->fillField('contact_country', $row['country']);
 
-            $this->pressButton("contact_save");
+            $this->pressButton('contact_save');
             $this->theFormShouldBeValid();
             $this->assertResponseStatus(200);
         }
@@ -189,7 +186,7 @@ trait ReportTrait
 
     /**
      * Click on decisions tab and add a decision
-     * If the form is not shown, click first on "add-a-decision" button (with no exception thrown)
+     * If the form is not shown, click first on "add-a-decision" button (with no exception thrown).
      *
      * @When I add the following decisions:
      */
@@ -197,12 +194,12 @@ trait ReportTrait
     {
         foreach ($table->getHash() as $row) {
             $this->gotoOverview();
-            $this->clickLink("edit-decisions");
+            $this->clickLink('edit-decisions');
 
             if (1 === count($this->getSession()->getPage()->findAll('css', '#add-decisions-button'))) {
-                $this->clickLink("add-decisions-button");
+                $this->clickLink('add-decisions-button');
             }
-            
+
             $this->fillField('decision_description', $row['description']);
             switch ($row['clientInvolved']) {
                 case 'yes':
@@ -213,12 +210,12 @@ trait ReportTrait
                     $this->fillField('decision_clientInvolvedBoolean_1', 0);
                     break;
                 default:
-                    throw new \RuntimeException("Invalid value for clientInvolved");
+                    throw new \RuntimeException('Invalid value for clientInvolved');
             }
 
             $this->fillField('decision_clientInvolvedDetails', $row['clientInvolvedDetails']);
 
-            $this->pressButton("decision_save");
+            $this->pressButton('decision_save');
             $this->theFormShouldBeValid();
             $this->assertResponseStatus(200);
         }
@@ -231,7 +228,7 @@ trait ReportTrait
     {
         foreach ($table->getHash() as $row) {
             $this->gotoOverview();
-            $this->clickLink("edit-assets");
+            $this->clickLink('edit-assets');
 
             // click on "Add" if form not present
             if (0 === count($this->getSession()->getPage()->findAll('css', '#asset_title_title'))) {
@@ -239,10 +236,10 @@ trait ReportTrait
             }
 
             $this->fillField('asset_title_title', $row['title']);
-            $this->pressButton("asset_title_next");
+            $this->pressButton('asset_title_next');
             $this->theFormShouldBeValid();
             $this->assertResponseStatus(200);
-            
+
             $this->fillField('asset_value', $row['value']);
             $this->fillField('asset_description', $row['description']);
 
@@ -253,19 +250,19 @@ trait ReportTrait
                 $this->fillField('asset_valuationDate_year', $datePieces[2]);
             }
 
-            $this->pressButton("asset_save");
+            $this->pressButton('asset_save');
             $this->theFormShouldBeValid();
             $this->assertResponseStatus(200);
         }
     }
-    
+
     /**
      * @When I fill in the safeguarding form with the following:
      */
     public function iSetTheFollowingSafeguarding(TableNode $table)
     {
         $this->gotoOverview();
-        $this->clickLink("edit-safeguarding");
+        $this->clickLink('edit-safeguarding');
 
         $rows = $table->getRowsHash();
 
@@ -273,7 +270,7 @@ trait ReportTrait
             $this->fillField($key, $value);
         }
 
-        $this->pressButton("safeguarding_save");
+        $this->pressButton('safeguarding_save');
     }
 
     /**
@@ -282,7 +279,7 @@ trait ReportTrait
     public function iAddTheFollowingBankAccount(TableNode $table)
     {
         $this->gotoOverview();
-        $this->clickLink("edit-accounts");
+        $this->clickLink('edit-accounts');
 
         // expand form if collapsed
         //if (0 === count($this->getSession()->getPage()->findAll('css', '#account_bank'))) {
@@ -302,61 +299,60 @@ trait ReportTrait
         $this->fillField('account_closingBalance', $rows['closingBalance'][0]);
         $this->fillField('account_isJointAccount_1', 'no');
 
-        $this->pressButton("account_save");
+        $this->pressButton('account_save');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
-
     }
 
-     /**
+    /**
      * @When I submit the report with further info :moreInfo
      */
     public function iSubmitTheReportWithFurtherInfo($moreInfo)
     {
         // get the report then goto the overview
         $css = 'meta[name="reportId"]';
-        
-        $element = $this->getSession()->getPage()->find('css',$css);
-        
+
+        $element = $this->getSession()->getPage()->find('css', $css);
+
         $reportId = $element->getAttribute('content');
-        $this->visit('/report/' . $reportId . '/overview');
+        $this->visit('/report/'.$reportId.'/overview');
 
         # more info page
         $this->clickLink('edit-report_add_further_info');
         $this->fillField('report_add_info_furtherInformation', $moreInfo);
-        $this->pressButton("report_add_info_saveAndContinue");
+        $this->pressButton('report_add_info_saveAndContinue');
 
         # declaration page
-        $this->checkOption("report_declaration_agree");
-        $this->fillField("report_declaration_allAgreed_0", 1);
-        $this->pressButton("report_declaration_save");
+        $this->checkOption('report_declaration_agree');
+        $this->fillField('report_declaration_allAgreed_0', 1);
+        $this->pressButton('report_declaration_save');
 
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
 
-    private function replace_dashes($string) {
-        $string = str_replace(" ", "-", $string);
+    private function replace_dashes($string)
+    {
+        $string = str_replace(' ', '-', $string);
+
         return strtolower($string);
     }
-
 
     /**
      * @Then the report should indicate that the :checkboxvalue checkbox for :checkboxname is checked
      */
     public function theReportShouldIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
     {
-        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]';
-        $element = $this->getSession()->getPage()->find('css',$css);
+        $css = '[data-checkbox="'.$this->replace_dashes($checkboxname).'--'.$this->replace_dashes($checkboxvalue).'"]';
+        $element = $this->getSession()->getPage()->find('css', $css);
 
-        if(!isset($element)) {
+        if (!isset($element)) {
             throw new \RuntimeException("Checkbox not found:$css");
         }
 
-        if ($element->getText() != "X") {
-            throw new \RuntimeException("Checkbox not checked");
+        if ($element->getText() != 'X') {
+            throw new \RuntimeException('Checkbox not checked');
         }
-
     }
 
     /**
@@ -364,17 +360,16 @@ trait ReportTrait
      */
     public function theReportShouldNotIndicateThatTheCheckboxForIsChecked($checkboxvalue, $checkboxname)
     {
-        $css = '[data-checkbox="' . $this->replace_dashes($checkboxname) . '--' . $this->replace_dashes($checkboxvalue) . '"]';
-        $element = $this->getSession()->getPage()->find('css',$css);
+        $css = '[data-checkbox="'.$this->replace_dashes($checkboxname).'--'.$this->replace_dashes($checkboxvalue).'"]';
+        $element = $this->getSession()->getPage()->find('css', $css);
 
-        if(!isset($element)) {
+        if (!isset($element)) {
             throw new \RuntimeException("Checkbox not found:$css");
         }
 
-        if ($element->getText() == "X") {
-            throw new \RuntimeException("Checkbox not unchecked");
+        if ($element->getText() == 'X') {
+            throw new \RuntimeException('Checkbox not unchecked');
         }
-
     }
 
     /**
@@ -382,15 +377,15 @@ trait ReportTrait
      */
     public function theReportShouldIndicateThatTheCheckboxIsChecked($checkbox)
     {
-        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]';
-        $element = $this->getSession()->getPage()->find('css',$css);
+        $css = '[data-checkbox="'.$this->replace_dashes($checkbox).'"]';
+        $element = $this->getSession()->getPage()->find('css', $css);
 
-        if(!isset($element)) {
+        if (!isset($element)) {
             throw new \RuntimeException("Checkbox not found:$css");
         }
 
-        if ($element->getText() != "X") {
-            throw new \RuntimeException("Checkbox not checked");
+        if ($element->getText() != 'X') {
+            throw new \RuntimeException('Checkbox not checked');
         }
     }
 
@@ -399,15 +394,15 @@ trait ReportTrait
      */
     public function theReportShouldNotIndicateThatTheCheckboxIsChecked($checkbox)
     {
-        $css = '[data-checkbox="' . $this->replace_dashes($checkbox) . '"]';
-        $element = $this->getSession()->getPage()->find('css',$css);
+        $css = '[data-checkbox="'.$this->replace_dashes($checkbox).'"]';
+        $element = $this->getSession()->getPage()->find('css', $css);
 
-        if(!isset($element)) {
+        if (!isset($element)) {
             throw new \RuntimeException("Checkbox not found: $css");
         }
 
-        if ($element->getText() == "X") {
-            throw new \RuntimeException("Checkbox checked");
+        if ($element->getText() == 'X') {
+            throw new \RuntimeException('Checkbox checked');
         }
     }
 
@@ -420,11 +415,11 @@ trait ReportTrait
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', '.view-report-link');
 
         if (count($linksElementsFound) === 0) {
-            throw new \RuntimeException("Element .view-report-link not found");
+            throw new \RuntimeException('Element .view-report-link not found');
         }
 
         if (count($linksElementsFound) > 1) {
-            throw new \RuntimeException("Returned multiple elements");
+            throw new \RuntimeException('Returned multiple elements');
         }
 
         $url = $linksElementsFound[0]->getAttribute('href');
@@ -436,19 +431,17 @@ trait ReportTrait
         if (count($reportNumberSplit) > 1) {
             $reportNumber = $reportNumberSplit[count($reportNumberSplit) - 1];
         }
-        $newUrl = '/report/' . $reportNumber . '/display';
+        $newUrl = '/report/'.$reportNumber.'/display';
 
         $this->visit($newUrl);
     }
-
 
     /**
      * @Then the :question question should be answered with :answer
      */
     public function theQuestionShouldBeAnsweredWith($question, $answer)
     {
-
-        $questionElement = $this->getSession()->getPage()->find('xpath', '//div[text()="' . $question . '"]');
+        $questionElement = $this->getSession()->getPage()->find('xpath', '//div[text()="'.$question.'"]');
 
         if (!isset($questionElement)) {
             throw new \RuntimeException("Can't find element with: $question");
@@ -458,7 +451,7 @@ trait ReportTrait
         $answerElement = $parent->find('css', '.answer');
 
         if (!isset($answerElement)) {
-            throw new \RuntimeException("This question has no answers");
+            throw new \RuntimeException('This question has no answers');
         }
 
         $text = strtolower($answerElement->getText());
@@ -467,7 +460,6 @@ trait ReportTrait
         if ($text != $answer) {
             throw new \RuntimeException("Not the answer I had hoped for :(  $text -  $$answer");
         }
-
     }
 
     /**
@@ -475,23 +467,22 @@ trait ReportTrait
      */
     public function theQuestionInSectionShouldBeAnsweredWith($question, $section, $answer)
     {
-        $section = $this->getSession()->getPage()->find('css', '#' . $section . '-section');
+        $section = $this->getSession()->getPage()->find('css', '#'.$section.'-section');
         if (!isset($section)) {
             throw new \RuntimeException("Can't find section with: $section");
         }
 
-        $questionElement = $section->find('xpath', '//div[text()="' . $question . '"]');
+        $questionElement = $section->find('xpath', '//div[text()="'.$question.'"]');
 
         if (!isset($questionElement)) {
             throw new \RuntimeException("Can't find element with: $question");
         }
 
-
         $parent = $questionElement->getParent();
         $answerElement = $parent->find('css', '.answer');
 
         if (!isset($answerElement)) {
-            throw new \RuntimeException("This question has no answers");
+            throw new \RuntimeException('This question has no answers');
         }
 
         $text = strtolower($answerElement->getText());
@@ -500,7 +491,6 @@ trait ReportTrait
         if ($text != $answer) {
             throw new \RuntimeException("Not the answer I had hoped for :(  $text -  $$answer");
         }
-
     }
 
     /**
@@ -511,11 +501,10 @@ trait ReportTrait
         $this->gotoOverview();
         $this->clickLink('edit-decisions');
         $this->fillField('reason_for_no_decision_reason', $text);
-        $this->pressButton("reason_for_no_decision_saveReason");
+        $this->pressButton('reason_for_no_decision_saveReason');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
-
 
     /**
      * @Then I say there were no contacts because :text
@@ -525,11 +514,11 @@ trait ReportTrait
         $this->gotoOverview();
         $this->clickLink('edit-contacts');
         $this->fillField('reason_for_no_contact_reason', $text);
-        $this->pressButton("reason_for_no_contact_saveReason");
+        $this->pressButton('reason_for_no_contact_saveReason');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
-    
+
     /**
      * @Then I say there no assets
      */
@@ -537,13 +526,12 @@ trait ReportTrait
     {
         $this->gotoOverview();
         $this->clickLink('edit-assets');
-        $this->checkOption("report_noAssetToAdd");
-        $this->pressButton("report_saveNoAsset");
+        $this->checkOption('report_noAssetToAdd');
+        $this->pressButton('report_saveNoAsset');
         $this->theFormShouldBeValid();
         $this->assertResponseStatus(200);
     }
-    
-    
+
     /**
      * @Given the report should be submittable
      */
@@ -551,7 +539,7 @@ trait ReportTrait
     {
         $this->assertSession()->elementExists('css', '#edit-report_add_further_info');
     }
-    
+
     /**
      * @Given the report should not be submittable
      */
@@ -559,5 +547,4 @@ trait ReportTrait
     {
         $this->assertSession()->elementNotExists('css', '#edit-report_add_further_info');
     }
-
 }

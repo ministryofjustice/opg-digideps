@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Form\Asset;
 
 use Symfony\Component\Form\AbstractType;
@@ -7,26 +8,25 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
- * Displays "title" and "next" for the asset
+ * Displays "title" and "next" for the asset.
  */
 class AssetTypeTitle extends AbstractType
 {
     /**
-     * @var array 
+     * @var array
      */
     private $assetDropdownKeys;
-    
+
     /**
-     * @var Translator 
+     * @var Translator
      */
     private $translator;
-    
+
     /**
-     * @var string 
+     * @var string
      */
     private $translatorDomain;
-    
-    
+
     public function __construct(array $assetDropdownKeys, TranslatorInterface $translator, $translatorDomain)
     {
         $this->assetDropdownKeys = $assetDropdownKeys;
@@ -42,11 +42,11 @@ class AssetTypeTitle extends AbstractType
         if (empty($this->assetDropdownKeys)) {
             return [];
         }
-        
+
         $ret = [];
-        
+
         // translate keys and order by name
-        foreach($this->assetDropdownKeys as $key) {
+        foreach ($this->assetDropdownKeys as $key) {
             $translation = $this->translator->trans('dropdown.'.$key, [], $this->translatorDomain);
             $ret[$translation] = $translation;
         }
@@ -55,27 +55,25 @@ class AssetTypeTitle extends AbstractType
         // order by name
         asort($ret);
         $ret[$last] = $last;
-        
+
         return $ret;
     }
-    
-    
-    
-    public function buildForm(FormBuilderInterface $builder, array $options) 
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'choice', [ 'choices' => $this->getTitleChoices(), 'empty_value' => 'Please select' ])
+        $builder->add('title', 'choice', ['choices' => $this->getTitleChoices(), 'empty_value' => 'Please select'])
             ->add('next', 'submit');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults( [
+        $resolver->setDefaults([
             'translation_domain' => 'report-assets',
-            'validation_groups' => 'title_only'
+            'validation_groups' => 'title_only',
         ]);
     }
-    
-    public function getName() 
+
+    public function getName()
     {
         return 'asset_title';
     }

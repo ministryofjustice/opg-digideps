@@ -1,10 +1,8 @@
 <?php
+
 namespace AppBundle\Service;
 
 use Mockery as m;
-use Symfony\Component\Form\Form;
-use \Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormError;
 
 class FormErrorsFormatterTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,12 +32,9 @@ class FormErrorsFormatterTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getIterator')->andReturn($iterator)
             ->getMock();
 
-
-        $object = new FormErrorsFormatter;
+        $object = new FormErrorsFormatter();
 
         $actual = $object->toArray($form);
         $this->assertEquals(['root' => ['error1'], 'root_subelement1' => ['error2']], $actual);
     }
-
-
 }

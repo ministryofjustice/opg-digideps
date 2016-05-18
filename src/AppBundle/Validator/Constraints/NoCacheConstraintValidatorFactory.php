@@ -24,7 +24,7 @@ class NoCacheConstraintValidatorFactory implements ConstraintValidatorFactoryInt
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getInstance(Constraint $constraint)
     {

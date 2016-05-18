@@ -1,7 +1,7 @@
 <?php
+
 namespace AppBundle\Entity;
 
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -11,48 +11,47 @@ use JMS\Serializer\Annotation as JMS;
  * @JMS\ExclusionPolicy("none")
  */
 class Role
-{ 
+{
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @JMS\Type("string")
      */
     private $name;
-    
+
     /**
      * @JMS\Type("string")
      */
     private $role;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-    
-    
+
     /**
-     * @param integer $id
+     * @param int $id
      */
     public function setId($id)
     {
         $this->id = $id;
     }
 
-    
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Role
      */
     public function setName($name)
@@ -63,24 +62,25 @@ class Role
     }
 
     /**
-     * Get name
+     * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
     public function getRole()
     {
         return $this->role;
     }
- 
+
     /**
-     * Set role
+     * Set role.
      *
      * @param string $role
+     *
      * @return Role
      */
     public function setRole($role)
@@ -89,5 +89,4 @@ class Role
 
         return $this;
     }
-
 }
