@@ -14,6 +14,12 @@ use JMS\Serializer\Annotation as JMS;
  */
 class CourtOrderType
 {
+
+    public static $fixtures = [
+        1 => 'Personal Welfare',
+        2 => 'Property and Affairs'
+    ];
+
     /**
      * @var int
      * @JMS\Type("integer")
@@ -32,19 +38,12 @@ class CourtOrderType
     private $name;
 
     /**
-     * @JMS\Exclude
-     * @JMS\Accessor(getter="getReportIds")
-     * @JMS\Type("array")
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="courtOrderType")
+     * @param int $id
      */
-    private $reports;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
+    public function setId($id)
     {
-        $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -81,50 +80,4 @@ class CourtOrderType
         return $this->name;
     }
 
-    /**
-     * Add reports.
-     *
-     * @param Report $reports
-     *
-     * @return CourtOrderType
-     */
-    public function addReport(Report $reports)
-    {
-        $this->reports[] = $reports;
-
-        return $this;
-    }
-
-    /**
-     * Remove reports.
-     *
-     * @param Report $reports
-     */
-    public function removeReport(Report $reports)
-    {
-        $this->reports->removeElement($reports);
-    }
-
-    public function getReportIds()
-    {
-        $reports = [];
-
-        if (!empty($this->reports)) {
-            foreach ($this->reports as $report) {
-                $reports[] = $report->getId();
-            }
-        }
-
-        return $reports;
-    }
-
-    /**
-     * Get reports.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getReports()
-    {
-        return $this->reports;
-    }
 }

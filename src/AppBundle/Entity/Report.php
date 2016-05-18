@@ -100,7 +100,7 @@ class Report
      * @JMS\Groups({ "basic"})
      * @JMS\Accessor(getter="getCourtOrderTypeId")
      * @JMS\Type("integer")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType", inversedBy="reports")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\CourtOrderType")
      * @ORM\JoinColumn( name="court_order_type_id", referencedColumnName="id" )
      */
     private $courtOrderType;
