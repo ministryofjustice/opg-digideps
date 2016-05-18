@@ -196,7 +196,6 @@ class AccountsTest extends AbstractReportTest
             ->shouldReceive('getAccountNumber')->andReturn('7999')
             ->shouldReceive('getOpeningDate')->andReturn($startDate)
             ->shouldReceive('getOpeningDateMatchesReportDate')->andReturn(true)
-            ->shouldReceive('getOpeningDateExplanation')->andReturn('one two three five')
             ->shouldReceive('getOpeningBalance')->andReturn(100.00)
             ->shouldReceive('getClosingBalance')->andReturn(100.00)
             ->shouldReceive('getClosingDate')->andReturn($endDate)

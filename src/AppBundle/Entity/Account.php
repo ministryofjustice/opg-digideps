@@ -95,16 +95,6 @@ class Account
     private $openingBalance;
 
     /**
-     * @deprecated since accounts_mk2
-     *
-     * @var string
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="opening_date_explanation", type="text", nullable=true)
-     */
-    private $openingDateExplanation;
-
-    /**
      * @var decimal
      * 
      * @JMS\Type("string")
@@ -386,23 +376,6 @@ class Account
         return $this->openingBalance;
     }
 
-    /**
-     * @return string
-     */
-    public function getOpeningDateExplanation()
-    {
-        return $this->openingDateExplanation;
-    }
-
-    /**
-     * @param string $openingDateExplanation
-     */
-    public function setOpeningDateExplanation($openingDateExplanation)
-    {
-        $this->openingDateExplanation = $openingDateExplanation;
-
-        return $this;
-    }
 
     /**
      * Set closingBalance.

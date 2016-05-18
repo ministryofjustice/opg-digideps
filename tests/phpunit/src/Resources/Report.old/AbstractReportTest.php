@@ -155,7 +155,6 @@ class AbstractReportTest extends WebTestCase
             ->shouldReceive('getMoneyTotal')->andReturn(0.00)
             ->shouldReceive('getMoneyIn')->andReturn($moneyIn)
             ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
-            ->shouldReceive('getOpeningDateExplanation')->andReturn(null)
             ->shouldReceive('getClosingDateExplanation')->andReturn(null)
             ->shouldReceive('getClosingBalanceExplanation')->andReturn(null)
             ->getMock();
