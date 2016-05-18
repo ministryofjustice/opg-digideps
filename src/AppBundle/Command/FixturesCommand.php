@@ -24,9 +24,9 @@ class FixturesCommand extends AddSingleUserCommand
         $em = $this->getContainer()->get('em'); /* @var $em \Doctrine\ORM\EntityManager */
         $em->clear();
 
-        $em->beginTransaction();
-
         $this->cot($output);
+        
+        $em->beginTransaction();
         
         $fixtures = (array) $this->getContainer()->getParameter('fixtures');
         foreach ($fixtures as $email => $data) {
@@ -54,13 +54,5 @@ class FixturesCommand extends AddSingleUserCommand
             }
         }
         $em->flush();
-        
-        
-        
-    }
-    
-    protected function addTransactionCategories()
-    {
-        
     }
 }
