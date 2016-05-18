@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation as JMS;
 abstract class TransactionType
 {
     /**
+     * Added via digideps:fixtures command
      * @JMS\Exclude
      */
     public static $fixtures = [

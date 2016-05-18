@@ -21,6 +21,7 @@ class Role implements RoleInterface
     const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
 
     /**
+     * Added via digideps:fixtures command
      * @JMS\Exclude
      */
     public static $fixtures = [

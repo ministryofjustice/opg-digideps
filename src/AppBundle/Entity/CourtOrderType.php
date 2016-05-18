@@ -15,6 +15,8 @@ use JMS\Serializer\Annotation as JMS;
 class CourtOrderType
 {
     /**
+     * Added via digideps:fixtures command
+     * 
      * @JMS\Exclude
      */
     public static $fixtures = [
