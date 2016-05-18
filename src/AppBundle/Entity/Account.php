@@ -106,19 +106,6 @@ class Account
     private $closingBalance;
 
     /**
-     * @deprecated since accounts_mk2
-     * 
-     * @JMS\Type("DateTime")
-     * @JMS\Groups({"balance", "edit_details_report_due"})
-     * 
-     * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
-     * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
-     * 
-     * @var \DateTime
-     */
-    private $closingDate;
-
-    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic", "add_edit"})
      *
@@ -286,18 +273,6 @@ class Account
         return $this->createdAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getClosingDate()
-    {
-        return $this->closingDate;
-    }
-
-    public function setClosingDate($closingDate)
-    {
-        $this->closingDate = $closingDate;
-    }
 
     /**
      * @param \DateTime $createdAt

@@ -82,7 +82,7 @@ balance:
             description: You need to give details of at least 1 bank account that you use on behalf of %client%
             addLink: Add bank accounts
         accounts:
-            missing: Tell us how much money was in the account on %closingDate%
+            missing: Tell us how much money was in the account on %reportEndDate%
             editLink: Edit this account
 
 banks:

@@ -21,7 +21,6 @@ page:
     closingBalance:
       label: "Closing balance"
     pleaseTellUsWhy:
-      closingDatesMismatch: "Please tell us why the closing dates do not match:"
       closingBalancesMismatch: "Please tell us why the closing balances do not match:"
 moneyIn:
   panelTitle: Money paid in
