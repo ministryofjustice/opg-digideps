@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @codeCoverageIgnore
  */
-class AddUsersFromFixturesCommand extends AddSingleUserCommand
+class FixturesCommand extends AddSingleUserCommand
 {
     protected function configure()
     {
