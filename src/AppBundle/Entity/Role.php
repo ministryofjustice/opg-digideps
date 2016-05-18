@@ -50,24 +50,10 @@ class Role implements RoleInterface
     private $name;
 
     /**
-     * @JMS\Exclude
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="role" )
-     */
-    private $user;
-
-    /**
      * @JMS\Groups({"basic"})
      * @ORM\Column( name="role", type="string", length=50, nullable=true)
      */
     private $role;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->user = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * @param int $id
@@ -130,39 +116,4 @@ class Role implements RoleInterface
 
         return $this;
     }
-
-    /**
-     * Add user.
-     *
-     * @param User $user
-     *
-     * @return Role
-     */
-    public function addUser(User $user)
-    {
-        $this->user[] = $user;
-
-        return $this;
-    }
-
-    /**
-     * Remove user.
-     *
-     * @param User $user
-     */
-    public function removeUser(User $user)
-    {
-        $this->user->removeElement($user);
-    }
-
-    /**
-     * Get user.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
 }

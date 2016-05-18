@@ -124,7 +124,7 @@ class User implements UserInterface
      * 
      * @JMS\Groups({"basic","audit_log"})
      * @JMS\Type("AppBundle\Entity\Role")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role", inversedBy="user" )
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Role")
      * @ORM\JoinColumn( name="role_id", referencedColumnName="id" )
      */
     private $role;
