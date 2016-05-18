@@ -2,9 +2,7 @@
 
 namespace DigidepsBehat;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\PyStringNode;
-use Behat\Mink\Exception\ExpectationException;
 
 /**
  * @method Behat\Mink\WebAssert assertSession
@@ -12,9 +10,8 @@ use Behat\Mink\Exception\ExpectationException;
  */
 trait RegionTrait
 {
-
     /**
-     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist
+     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist.
      *
      * @Then I should not see the :element :type
      */
@@ -38,7 +35,7 @@ trait RegionTrait
     }
 
     /**
-     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist
+     * Assert that the HTML elemtn with class behat-<type>-<element> does not exist.
      *
      * @Then I should see the :element :type
      */
@@ -57,13 +54,11 @@ trait RegionTrait
      */
     public function iShouldSeeTheSubsection($subsection)
     {
-        $elementsFound = $this->getSession()->getPage()->findAll('css', '#' . $subsection . '-subsection');
+        $elementsFound = $this->getSession()->getPage()->findAll('css', '#'.$subsection.'-subsection');
         if (count($elementsFound) === 0) {
             throw new \RuntimeException("Subsection $subsection not found");
         }
     }
-
-
 
     /**
      * @Then I should see :text in the :region region
@@ -73,22 +68,22 @@ trait RegionTrait
         //$this->assertResponseStatus(200);
         $this->assertSession()->elementTextContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
-    
+
     /**
      * @Then I should see :text in :section section
      */
     public function iShouldSeeInSection($text, $section)
     {
-        $this->assertSession()->elementTextContains('css', '#' . $section . '-section', $text);
+        $this->assertSession()->elementTextContains('css', '#'.$section.'-section', $text);
     }
-    
+
     /**
      * @Then I should not see :text in the :section section
      */
     public function iShouldNotSeeInTheSection($text, $section)
     {
         //$this->assertResponseStatus(200);
-        $this->assertSession()->elementTextNotContains('css', '#' . $section . '-section', $text);
+        $this->assertSession()->elementTextNotContains('css', '#'.$section.'-section', $text);
     }
 
     /**
@@ -96,7 +91,7 @@ trait RegionTrait
      */
     public function iShouldSeeInTheContainer($text, $container)
     {
-        $this->assertSession()->elementTextContains('css', '#' . $container . ', .' . $container , $text);
+        $this->assertSession()->elementTextContains('css', '#'.$container.', .'.$container, $text);
     }
 
     /**
@@ -104,9 +99,9 @@ trait RegionTrait
      */
     public function theElementShouldBeEmpty($selector)
     {
-        $this->assertSession()->elementExists('css', '#' . $selector);
-        if ( !empty($this->getSession()->getPage()->find('css', '#' . $selector)->getText()) ) {
-            throw new \RuntimeException("Element Not Empty");
+        $this->assertSession()->elementExists('css', '#'.$selector);
+        if (!empty($this->getSession()->getPage()->find('css', '#'.$selector)->getText())) {
+            throw new \RuntimeException('Element Not Empty');
         }
     }
 
@@ -131,7 +126,7 @@ trait RegionTrait
 
     public static function behatElementToCssSelector($element, $type)
     {
-        return '.behat-'.$type.'-' . preg_replace('/\s+/', '-', $element);
+        return '.behat-'.$type.'-'.preg_replace('/\s+/', '-', $element);
     }
 
     /**
@@ -142,10 +137,9 @@ trait RegionTrait
         $driver = $this->getSession()->getDriver();
 
         if (get_class($driver) != 'Behat\Mink\Driver\GoutteDriver') {
-
             $elementsFound = $this->getSession()->getPage()->findAll('css', '#global-cookie-message');
             if (count($elementsFound) === 0) {
-                throw new \RuntimeException("Cookie banner not found");
+                throw new \RuntimeException('Cookie banner not found');
             }
 
             foreach ($elementsFound as $node) {
@@ -176,7 +170,7 @@ trait RegionTrait
                 // Note: getText() will return an empty string when using Selenium2D. This
                 // is ok since it will cause a failed step.
                 if ($node->getText() != '' && $node->isVisible()) {
-                    throw new \RuntimeException("Cookie banner Visible");
+                    throw new \RuntimeException('Cookie banner Visible');
                 }
             }
         }
@@ -195,16 +189,15 @@ trait RegionTrait
      */
     public function iShouldSeeAConfirmation()
     {
-        $elementsFound = $this->getSession()->getPage()->findAll('css', ".confirm-bar");
+        $elementsFound = $this->getSession()->getPage()->findAll('css', '.confirm-bar');
         $count = count($elementsFound);
         if ($count < 1) {
-            throw new \RuntimeException("No confirmation dialog found");
+            throw new \RuntimeException('No confirmation dialog found');
         }
-        
+
         if ($elementsFound[0]->isVisible() == false) {
-            throw new \RuntimeException("Confirmation dialog not visible");
+            throw new \RuntimeException('Confirmation dialog not visible');
         }
-    
     }
 
     /**
@@ -212,8 +205,7 @@ trait RegionTrait
      */
     public function iShouldSeeInSectionTitleInfoPanel($text)
     {
-        $css = "#page-section-title-container .info";
+        $css = '#page-section-title-container .info';
         $this->assertSession()->elementTextContains('css', $css, $text);
     }
-
 }

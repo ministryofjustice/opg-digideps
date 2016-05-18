@@ -8,7 +8,6 @@ use Mockery as m;
 
 class AccountControllerTest extends WebTestCase
 {
-
     protected $restClient;
     protected $form;
     protected $formErrorsFormatter;
@@ -56,7 +55,7 @@ class AccountControllerTest extends WebTestCase
             'code' => 403,
         ]);
         $this->restClient
-                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
+                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])
                 ->andThrow($restClientException);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -70,7 +69,7 @@ class AccountControllerTest extends WebTestCase
         $this->report->shouldReceive('getSubmitted')->andReturn(true);
 
         $this->restClient
-                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
+                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])
                 ->andReturn($this->report);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -96,7 +95,7 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('toArray')->andReturn([]);
 
         $this->restClient
-                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])
+                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])
                 ->andReturn($this->report);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
@@ -118,10 +117,9 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getData')->andReturn([]);
 
         $this->restClient
-                ->shouldReceive('get')->withArgs(["report/1", "Report", m::any()])->andReturn($this->report)
-                ->shouldReceive('put')->withArgs(["report/1", m::any(), m::any()])->andThrow(new \AppBundle\Exception\RestClientException('put error', 1))
+                ->shouldReceive('get')->withArgs(['report/1', 'Report', m::any()])->andReturn($this->report)
+                ->shouldReceive('put')->withArgs(['report/1', m::any(), m::any()])->andThrow(new \AppBundle\Exception\RestClientException('put error', 1))
         ;
-
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
 
@@ -144,8 +142,8 @@ class AccountControllerTest extends WebTestCase
                 ->shouldReceive('getData')->andReturn([]);
 
         $this->restClient
-                ->shouldReceive('get')->with("report/1", "Report", m::any())->andReturn($this->report)
-                ->shouldReceive('put')->with("report/1", m::any(), m::any())->andReturn(null);
+                ->shouldReceive('get')->with('report/1', 'Report', m::any())->andReturn($this->report)
+                ->shouldReceive('put')->with('report/1', m::any(), m::any())->andReturn(null);
 
         $responseArray = $this->getArrayResponseFrom('/report/1/accounts/transactionsIn.json');
 
@@ -154,23 +152,23 @@ class AccountControllerTest extends WebTestCase
 
     private function getArrayResponseFrom($url)
     {
-        $this->frameworkBundleClient->request("PUT", $url);
+        $this->frameworkBundleClient->request('PUT', $url);
         $response = $this->frameworkBundleClient->getResponse();
         $this->assertInstanceOf('Symfony\Component\HttpFoundation\JsonResponse', $response);
+
         return json_decode($response->getContent(), 1);
     }
-    
+
     public function testaccountsetClosingBalanceTest()
     {
-        
-        $account = new \AppBundle\Entity\Account;
-        
+        $account = new \AppBundle\Entity\Account();
+
         // false case
         $this->assertFalse($account->isClosingBalanceZero());
         $this->assertFalse($account->setClosingBalance(0.01)->isClosingBalanceZero());
-        
+
         $this->assertFalse($account->setClosingBalance(1.00)->isClosingBalanceZero());
-        
+
         // true cases
         $this->assertTrue($account->setClosingBalance(0)->isClosingBalanceZero());
         $this->assertTrue($account->setClosingBalance(0.0)->isClosingBalanceZero());
@@ -180,5 +178,4 @@ class AccountControllerTest extends WebTestCase
         $this->assertTrue($account->setClosingBalance('0.0')->isClosingBalanceZero());
         $this->assertTrue($account->setClosingBalance('0.00')->isClosingBalanceZero());
     }
-
 }

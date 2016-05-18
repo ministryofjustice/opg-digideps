@@ -5,13 +5,10 @@ namespace AppBundle\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class TransferType extends AbstractType
 {
-
     private $banks;
-
 
     /**
      * @param \AppBundle\Entity\Account[] $banks
@@ -22,23 +19,21 @@ class TransferType extends AbstractType
 
         foreach ($banks as $bank) {
             /* $var $bank \AppBundle\Entity\Account */
-            $this->banks[$bank->getId()] = $bank->getBank() . ' '. $bank->getAccountTypeText(). ' (****' . $bank->getAccountNumber() . ')';
+            $this->banks[$bank->getId()] = $bank->getBank().' '.$bank->getAccountTypeText().' (****'.$bank->getAccountNumber().')';
         }
     }
-
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('accountFromId', 'choice', [
-                'choices' => $this->banks, 'empty_value' => 'Please select']
+                'choices' => $this->banks, 'empty_value' => 'Please select', ]
             )->add('accountToId', 'choice', [
-                'choices' => $this->banks, 'empty_value' => 'Please select']
+                'choices' => $this->banks, 'empty_value' => 'Please select', ]
             )
             ->add('amount', 'text')
             ->add('save', 'submit');
     }
-
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
@@ -47,10 +42,8 @@ class TransferType extends AbstractType
         ]);
     }
 
-
     public function getName()
     {
         return 'transfers';
     }
-
 }

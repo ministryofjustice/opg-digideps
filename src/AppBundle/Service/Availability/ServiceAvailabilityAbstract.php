@@ -4,9 +4,8 @@ namespace AppBundle\Service\Availability;
 
 abstract class ServiceAvailabilityAbstract
 {
-
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isHealthy;
 
@@ -15,9 +14,8 @@ abstract class ServiceAvailabilityAbstract
      */
     protected $errors;
 
-
     /**
-     * @return boolean
+     * @return bool
      */
     public function isHealthy()
     {
@@ -42,10 +40,9 @@ abstract class ServiceAvailabilityAbstract
             'errors' => $this->getErrors(),
         ];
     }
-    
-     /**
+
+    /**
      * @return string
      */
     abstract public function getName();
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -7,20 +8,19 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class UploadCsvType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder ->add('file', 'file')
+        $builder->add('file', 'file')
                  ->add('upload', 'submit');
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults( [
+        $resolver->setDefaults([
               'translation_domain' => 'admin',
         ]);
     }
-    
+
     public function getName()
     {
         return 'admin_upload';

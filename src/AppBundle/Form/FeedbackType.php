@@ -1,7 +1,7 @@
 <?php
+
 namespace AppBundle\Form;
 
-use AppBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -24,26 +24,25 @@ class FeedbackType extends AbstractType
             ->add('satisfactionLevel', 'choice', array(
                 'choices' => array_combine($satisfactionLevelChoices, $satisfactionLevelChoices),
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ))
             ->add('help', 'choice', array(
                 'choices' => array_combine($helpChoices, $helpChoices),
                 'expanded' => true,
-                'multiple' => false
+                'multiple' => false,
             ))
             ->add('emailYesNo', 'choice', array(
                 'choices' => ['yes' => 'Yes', 'no' => 'No'],
                 'expanded' => true,
-                'mapped' => false
+                'mapped' => false,
             ))
             ->add('email', 'email', [
                 'constraints' => [
-                    new Constraints\Email(['message' => 'login.email.inValid'])
+                    new Constraints\Email(['message' => 'login.email.inValid']),
                 ],
                 'data' => $this->getLoggedUserEmail(),
             ])
             ->add('save', 'submit');
-
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
@@ -53,14 +52,14 @@ class FeedbackType extends AbstractType
             }
         });
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults( [
-              'translation_domain' => 'feedback'
+        $resolver->setDefaults([
+              'translation_domain' => 'feedback',
         ]);
     }
-    
+
     public function getName()
     {
         return 'feedback';

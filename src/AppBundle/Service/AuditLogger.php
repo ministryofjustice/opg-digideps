@@ -17,15 +17,14 @@ class AuditLogger
     private $restClient;
 
     /**
-     * @var SecurityContextInterface 
+     * @var SecurityContextInterface
      */
     private $securityContext;
 
     /**
-     * @var Request 
+     * @var Request
      */
     private $request;
-
 
     public function __construct(RestClient $restClient, SecurityContextInterface $securityContext, Container $container)
     {
@@ -40,7 +39,7 @@ class AuditLogger
         if (!$this->securityContext->isGranted('ROLE_ADMIN')) {
             return;
         }
-        
+
         $performedByUser = $this->securityContext->getToken()->getUser();
 
         $entry = new AuditLogEntry();
@@ -51,10 +50,9 @@ class AuditLogger
             ->setUserEdited($userEdited);
 
         $ret = $this->restClient->post('audit-log', $entry, [
-            'deserialise_group' => 'audit_log_save'
+            'deserialise_group' => 'audit_log_save',
          ]);
 
         return $ret;
     }
-
 }

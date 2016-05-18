@@ -3,25 +3,21 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Report;
-use AppBundle\Entity\Account;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ReportStatusService
 {
+    const NOTSTARTED = 'not-started'; //grey
 
-    const NOTSTARTED = "not-started"; //grey
-    
-    const DONE = "done"; //green
-    const INCOMPLETE = "incomplete"; //orange
-    const NOTFINISHED = "notFinished";
-    const READYTOSUBMIT = "readyToSubmit";
-    
-    
+    const DONE = 'done'; //green
+    const INCOMPLETE = 'incomplete'; //orange
+    const NOTFINISHED = 'notFinished';
+    const READYTOSUBMIT = 'readyToSubmit';
+
     // for status
-    const STATUS_GREY = "not-started";
-    const STATUS_AMBER = "incomplete";
-    const STATUS_GREEN = "done";
-
+    const STATUS_GREY = 'not-started';
+    const STATUS_AMBER = 'incomplete';
+    const STATUS_GREEN = 'done';
 
     /** @var Report */
     private $report;
@@ -29,28 +25,24 @@ class ReportStatusService
     /** @var TranslatorInterface */
     private $translator;
 
-
     public function __construct(Report $report, TranslatorInterface $translator)
     {
         $this->report = $report;
         $this->translator = $translator;
     }
 
-
     /** @return string */
     public function getDecisionsStatus()
     {
-
         $decisions = $this->report->getDecisions();
 
         if (isset($decisions)) {
-
             $count = count($decisions);
 
             if ($count == 1) {
-                return "1 " . $this->trans('decision');
-            } else if ($count > 1) {
-                return "${count} " . $this->trans('decisions');
+                return '1 '.$this->trans('decision');
+            } elseif ($count > 1) {
+                return "${count} ".$this->trans('decisions');
             }
         }
 
@@ -60,23 +52,20 @@ class ReportStatusService
             return $this->trans('nodecisions');
         }
     }
-    
 
     /** @return string */
     public function getContactsStatus()
     {
-
         $contacts = $this->report->getContacts();
 
         if (isset($contacts)) {
-
             $count = count($contacts);
-            
+
             // TODO use transcount
             if ($count == 1) {
-                return "1 " . $this->trans('contact');
-            } else if ($count > 1) {
-                return "${count} " . $this->trans('contacts');
+                return '1 '.$this->trans('contact');
+            } elseif ($count > 1) {
+                return "${count} ".$this->trans('contacts');
             }
         }
 
@@ -86,7 +75,6 @@ class ReportStatusService
             return $this->trans('nocontacts');
         }
     }
-
 
     /** @return string */
     public function getSafeguardingStatus()
@@ -98,21 +86,18 @@ class ReportStatusService
         }
     }
 
-
-
     /** @return string */
     public function getAssetsStatus()
     {
         $assets = $this->report->getAssets();
 
         if (isset($assets)) {
-
             $count = count($assets);
 
             if ($count == 1) {
-                return "1 " . $this->trans('asset');
-            } else if ($count > 1) {
-                return "${count} " . $this->trans('assets');
+                return '1 '.$this->trans('asset');
+            } elseif ($count > 1) {
+                return "${count} ".$this->trans('assets');
             }
         }
 
@@ -123,7 +108,6 @@ class ReportStatusService
         }
     }
 
-
     /** @return string */
     public function getDecisionsState()
     {
@@ -133,8 +117,7 @@ class ReportStatusService
             return self::DONE;
         }
     }
-    
-    
+
     /** @return string */
     public function getActionsStatus()
     {
@@ -144,13 +127,12 @@ class ReportStatusService
             return $this->trans('finished');
         }
     }
-    
-     /** @return string */
+
+    /** @return string */
     public function getActionsState()
     {
         return $this->missingActions() ? self::NOTSTARTED : self::DONE;
     }
-
 
     /** @return string */
     public function getContactsState()
@@ -162,7 +144,6 @@ class ReportStatusService
         }
     }
 
-
     /** @return string */
     public function getSafeguardingState()
     {
@@ -173,32 +154,30 @@ class ReportStatusService
         }
     }
 
-
     /** @return string */
     public function getAccountsState()
     {
         // not started
         if ($this->missingAccounts()
-            && !$this->report->hasMoneyIn() 
+            && !$this->report->hasMoneyIn()
             && !$this->report->hasMoneyOut()) {
-           return self::STATUS_GREY;
-        } 
-        
+            return self::STATUS_GREY;
+        }
+
         // all done
         if (!$this->missingAccounts()
             && !$this->hasOutstandingAccounts()
-            && $this->report->hasMoneyIn() 
-            && $this->report->hasMoneyOut() 
+            && $this->report->hasMoneyIn()
+            && $this->report->hasMoneyOut()
             && !$this->missingTransfers()
             && !$this->missingBalance()) {
             return self::DONE;
         }
-        
+
         // amber in all the other cases
         return self::STATUS_AMBER;
     }
-    
-    
+
     /** @return string */
     public function getAccountsStatus()
     {
@@ -222,51 +201,47 @@ class ReportStatusService
         }
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function isReadyToSubmit()
     {
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
-            return !$this->hasOutstandingAccounts() 
-                && !$this->missingAccounts() 
+            return !$this->hasOutstandingAccounts()
+                && !$this->missingAccounts()
                 && !$this->missingTransfers()
                 && !$this->missingBalance()
-                && !$this->missingContacts() 
-                && !$this->missingAssets() 
-                && !$this->missingDecisions() 
+                && !$this->missingContacts()
+                && !$this->missingAssets()
+                && !$this->missingDecisions()
                 && !$this->missingSafeguarding()
                 && !$this->missingActions();
         } else {
-            return !$this->missingContacts() 
-                && !$this->missingDecisions() 
+            return !$this->missingContacts()
+                && !$this->missingDecisions()
                 && !$this->missingSafeguarding();
         }
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function missingAssets()
     {
-        return (empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd()));
+        return empty($this->report->getAssets()) && (!$this->report->getNoAssetToAdd());
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function missingSafeguarding()
     {
         $safeguarding = $this->report->getSafeguarding();
 
-        return (!$safeguarding || $safeguarding->missingSafeguardingInfo() == true);
+        return !$safeguarding || $safeguarding->missingSafeguardingInfo() == true;
     }
-    
-    /** @return boolean */
+
+    /** @return bool */
     public function missingActions()
     {
         return !$this->report->getAction() || !$this->report->getAction()->isComplete();
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function hasOutstandingAccounts()
     {
         foreach ($this->report->getAccounts() as $account) {
@@ -278,49 +253,46 @@ class ReportStatusService
         return false;
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function missingContacts()
     {
-        return (empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts()));
+        return empty($this->report->getContacts()) && empty($this->report->getReasonForNoContacts());
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function missingDecisions()
     {
-        return (empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions()));
+        return empty($this->report->getDecisions()) && empty($this->report->getReasonForNoDecisions());
     }
 
-
-    /** @return boolean */
+    /** @return bool */
     public function missingAccounts()
     {
         return empty($this->report->getAccounts());
     }
-    
-    
+
     /**
-     * If 
-     * @return boolean
+     * If.
+     *
+     * @return bool
      */
     public function missingTransfers()
     {
-        if (count($this->report->getAccounts())<=1) {
+        if (count($this->report->getAccounts()) <= 1) {
             return false;
         }
-        
+
         $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
-        $valid =  $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
-        
+        $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
+
         return !$valid;
     }
-    
-    /** @return boolean */
+
+    /** @return bool */
     public function missingBalance()
     {
         $balanceValid = $this->report->isTotalsMatch() || $this->report->getBalanceMismatchExplanation();
-        
+
         return !$balanceValid;
     }
 
@@ -338,63 +310,60 @@ class ReportStatusService
         }
     }
 
-
     public function getRemainingSectionCount()
     {
-
         if ($this->report->getCourtOrderType() == Report::PROPERTY_AND_AFFAIRS) {
             $count = 6;
 
             if (!$this->hasOutstandingAccounts() && !$this->missingAccounts() && !$this->missingTransfers() && !$this->missingBalance()) {
-                $count--;
+                --$count;
             }
 
             if (!$this->missingContacts()) {
-                $count--;
+                --$count;
             }
 
             if (!$this->missingAssets()) {
-                $count--;
+                --$count;
             }
 
             if (!$this->missingDecisions()) {
-                $count--;
+                --$count;
             }
 
             if (!$this->missingSafeguarding()) {
-                $count--;
+                --$count;
             }
-            
+
             if (!$this->missingActions()) {
-                $count--;
+                --$count;
             }
         } else {
             $count = 3;
 
             if (!$this->missingContacts()) {
-                $count--;
+                --$count;
             }
 
             if (!$this->missingSafeguarding()) {
-                $count--;
+                --$count;
             }
 
             if (!$this->missingDecisions()) {
-                $count--;
+                --$count;
             }
         }
 
         return $count;
     }
-    
-    
+
     /**
      * @param string $key
+     *
      * @return string
      */
     private function trans($key)
     {
         return  $this->translator->trans($key, [], 'status');
     }
-
 }

@@ -10,7 +10,6 @@ use Mockery as m;
 
 class PeriodTest extends WebTestCase
 {
-
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
@@ -24,7 +23,7 @@ class PeriodTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient([ 'environment' => 'test', 'debug' => false]);
+        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
         $this->client->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
@@ -43,18 +42,17 @@ class PeriodTest extends WebTestCase
     /** @test */
     public function confirmDisplaysCorrectDateRange()
     {
-
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_period.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
 
         $dateRangeElement = $crawler->filter('#report-period');
 
-        $expected = $this->todayFormatted . " to " . $this->nextYearformatted;
+        $expected = $this->todayFormatted.' to '.$this->nextYearformatted;
 
         $this->assertContains($expected, $dateRangeElement->eq(0)->text());
     }
@@ -65,7 +63,7 @@ class PeriodTest extends WebTestCase
         $this->setupReport();
 
         $html = $this->twig->render('AppBundle:Overview:_period.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -77,22 +75,21 @@ class PeriodTest extends WebTestCase
 
     private function setupReport()
     {
-        $today = new \DateTime;
+        $today = new \DateTime();
         $today->setTime(0, 0, 0);
 
-        $this->todayFormatted = $today->format(" d F Y");
+        $this->todayFormatted = $today->format(' d F Y');
 
-
-        $nextYear = new \DateTime;
+        $nextYear = new \DateTime();
         $nextYear->setTime(0, 0, 0);
         $nextYear->modify('1 year');
 
-        $this->nextYearFormatted = $nextYear->format(" d F Y");
+        $this->nextYearFormatted = $nextYear->format(' d F Y');
 
         $dueDate = clone $nextYear;
         $dueDate->modify('+8 weeks');
 
-        $this->dueFormatted = $dueDate->format(" d F Y");
+        $this->dueFormatted = $dueDate->format(' d F Y');
 
         $this->report = m::mock('AppBundle\Entity\Report')
                 ->shouldIgnoreMissing(true)
@@ -107,18 +104,17 @@ class PeriodTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getDecisionsState')->andReturn("done")
-                ->shouldReceive('getDecisionsStatus')->andReturn("1 Decision")
-                ->shouldReceive('getContactsState')->andReturn("done")
-                ->shouldReceive('getContactsStatus')->andReturn("1 Contact")
-                ->shouldReceive('getSafeguardingState')->andReturn("done")
-                ->shouldReceive('getSafeguardingStatus')->andReturn("Complete")
-                ->shouldReceive('getAccountsState')->andReturn("done")
-                ->shouldReceive('getAccountsStatus')->andReturn("1 Account")
-                ->shouldReceive('getAssetsState')->andReturn("done")
-                ->shouldReceive('getAssetsStatus')->andReturn("1 Asset")
+                ->shouldReceive('getDecisionsState')->andReturn('done')
+                ->shouldReceive('getDecisionsStatus')->andReturn('1 Decision')
+                ->shouldReceive('getContactsState')->andReturn('done')
+                ->shouldReceive('getContactsStatus')->andReturn('1 Contact')
+                ->shouldReceive('getSafeguardingState')->andReturn('done')
+                ->shouldReceive('getSafeguardingStatus')->andReturn('Complete')
+                ->shouldReceive('getAccountsState')->andReturn('done')
+                ->shouldReceive('getAccountsStatus')->andReturn('1 Account')
+                ->shouldReceive('getAssetsState')->andReturn('done')
+                ->shouldReceive('getAssetsStatus')->andReturn('1 Asset')
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
     }
-
 }

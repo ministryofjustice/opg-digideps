@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -12,12 +13,12 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Account
 {
     use Traits\HasReportTrait;
-    
+
     const OPENING_DATE_SAME_YES = 'yes';
     const OPENING_DATE_SAME_NO = 'no';
-    
+
     /**
-     * Keep in sync with api
+     * Keep in sync with api.
      */
     public static $types = [
         'current' => 'Current account',
@@ -25,15 +26,16 @@ class Account
         'isa' => 'ISA',
         'postoffice' => 'Post office account',
         'cfo' => 'Court funds office account',
-        'other' => 'Other'
+        'other' => 'Other',
     ];
-    
+
     /**
      * @JMS\Type("integer")
-     * @var integer $id
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "bank_name"})
@@ -41,7 +43,7 @@ class Account
      * 
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
-     * @var string $bank
+     * @var string
      */
     private $bank;
 
@@ -52,17 +54,17 @@ class Account
      *
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      *
-     * @var string $accountType
+     * @var string
      */
     private $accountType;
-    
+
     /**
      * @JMS\Type("string")
      *
-     * @var string $accountType
+     * @var string
      */
     private $accountTypeText;
-    
+
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank( message="account.sortCode.notBlank", groups={"basic", "sortcode"})
@@ -70,32 +72,31 @@ class Account
      * @Assert\Length(min=6, max=6, exactMessage = "account.sortCode.length", groups={"basic", "sortcode"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
-     * @var string $sortCode
+     * @var string
      */
     private $sortCode;
-    
+
     /**
-     *
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.accountNumber.notBlank", groups={"basic", "add_edit"})
      * @Assert\Type(type="numeric", message="account.accountNumber.type", groups={"basic", "add_edit"})
      * @Assert\Length(exactMessage="account.accountNumber.length",min=4, max=4, groups={"basic", "add_edit"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
-     * @var string $accountNumber
+     * @var string
      */
     private $accountNumber;
-    
+
     /**
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"opening_balance"})
      * @Assert\Date(message="account.openingDate.date", groups={"opening_balance"})
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
-     * @var \DateTime 
+     * @var \DateTime
      */
     private $openingDate;
-    
+
     /**
      * @deprecated since accounts_mk2
      * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"checkbox_matches_date"})
@@ -103,14 +104,14 @@ class Account
      * @var string OPENING_DATE_SAME_* values
      */
     private $openingDateMatchesReportDate;
-      
+
     /**
      * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
      */
     private $openingDateExplanation;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
@@ -122,8 +123,7 @@ class Account
      * @var decimal
      */
     private $openingBalance;
-  
-    
+
     /**
      * @JMS\Type("string")
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"closing_balance", "add_edit"})
@@ -133,14 +133,14 @@ class Account
      * @var decimal
      */
     private $closingBalance;
-    
+
     /**
      * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
     private $closingBalanceExplanation;
-    
+
     /**
      * @deprecated since accounts_mk2
      * 
@@ -150,24 +150,25 @@ class Account
      * @Assert\NotBlank(message="account.closingDate.notBlank", groups={"closing_balance"})
      * @Assert\Date(message="account.closingDate.date", groups={"closing_balance"})
      * 
-     * @var \DateTime  
+     * @var \DateTime
      */
     private $closingDate;
-    
+
     /**
      * @deprecated since accounts_mk2
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
      */
     private $closingDateExplanation;
-    
-     /**
+
+    /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"basic", "add_edit"})
-     * @var boolean
+     *
+     * @var bool
      */
     private $isClosed;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"basic", "add_edit"})
@@ -176,93 +177,99 @@ class Account
      * @var string
      */
     private $isJointAccount;
-    
-    
+
     /**
      * @JMS\Type("DateTime")
-     * @var \DateTime 
+     *
+     * @var \DateTime
      */
     private $lastEdit;
-    
-     /**
+
+    /**
      * @JMS\Type("DateTime")
-     * @var \DateTime 
+     *
+     * @var \DateTime
      */
     private $createdAt;
 
-     /**
+    /**
      * @JMS\Type("string")
      * @JMS\Groups({"basic"})
      * 
-     * @var string $bank
+     * @var string
      */
     private $meta;
-    
+
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
-    
+
     public function setBank($bank)
     {
         $this->bank = $bank;
+
         return $this;
     }
-    
+
     public function getBank()
     {
         return $this->bank;
     }
-    
+
     public function setSortCode($sortCode)
     {
         $this->sortCode = $sortCode;
+
         return $this;
     }
-    
+
     public function getSortCode()
     {
         return $this->sortCode;
     }
-    
+
     public function setAccountNumber($accountNumber)
     {
         $this->accountNumber = $accountNumber;
+
         return $this;
     }
-    
+
     public function getAccountNumber()
     {
         return $this->accountNumber;
     }
-    
+
     public function setOpeningDate(\DateTime $openingDate = null)
     {
         $this->openingDate = $openingDate;
     }
-    
+
     public function getOpeningDate()
     {
         return $this->openingDate;
     }
-    
+
     public function setOpeningBalance($openingBalance)
     {
         $this->openingBalance = $openingBalance;
+
         return $this;
     }
-    
+
     public function getOpeningBalance()
     {
         return $this->openingBalance;
     }
-    
+
     public function getOpeningDateExplanation()
     {
         return $this->openingDateExplanation;
@@ -272,18 +279,19 @@ class Account
     {
         $this->openingDateExplanation = $openingDateExplanation;
     }
-        
+
     /**
      * @param type $closingBalance
+     *
      * @return type
      */
     public function setClosingBalance($closingBalance)
     {
         $this->closingBalance = $closingBalance;
-        
+
         return $this;
     }
-    
+
     /**
      * @return decimal $closingBalance
      */
@@ -291,12 +299,12 @@ class Account
     {
         return $this->closingBalance;
     }
-    
+
     public function isClosingBalanceZero()
     {
         return $this->closingBalance !== null && round($this->closingBalance, 2) === 0.00;
     }
-    
+
     /**
      * @return string
      */
@@ -314,40 +322,41 @@ class Account
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasClosingBalance()
     {
-        if(is_null($this->closingBalance)){
+        if (is_null($this->closingBalance)) {
             return false;
         }
+
         return true;
     }
-    
+
     public function getIsClosed()
     {
         return $this->isClosed;
     }
 
-
     public function setIsClosed($isClosed)
     {
         $this->isClosed = $isClosed;
+
         return $this;
     }
 
-    
     public function setLastEdit($lastEdit)
     {
         $this->lastEdit = $lastEdit;
+
         return $this;
     }
-    
+
     public function getLastEdit()
     {
         return $this->lastEdit;
     }
-    
+
     /**
      * @return \DateTime
      */
@@ -368,7 +377,7 @@ class Account
     {
         $this->closingDate = $closingDate;
     }
-    
+
     /**
      * @return string
      */
@@ -384,7 +393,7 @@ class Account
     {
         $this->closingDateExplanation = $closingDateExplanation;
     }
-    
+
     /**
      * @param \DateTime $createdAt
      */
@@ -392,9 +401,9 @@ class Account
     {
         $this->createdAt = $createdAt;
     }
-        
+
     /**
-     * Add violation if Opening date is not the same as the report start date and there is not explanation
+     * Add violation if Opening date is not the same as the report start date and there is not explanation.
      */
     public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
     {
@@ -404,9 +413,9 @@ class Account
             $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
         }
     }
-    
+
     /**
-     * Add violation if closing date is not the same as the report end date and there is not explanation
+     * Add violation if closing date is not the same as the report end date and there is not explanation.
      */
     public function isClosingDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
     {
@@ -416,48 +425,47 @@ class Account
             $context->addViolationAt('closingDateExplanation', 'account.closingDateExplanation.notBlankOnDateMismatch');
         }
     }
-    
+
     /**
-     * Add violation if closing balance does not match sum of transactions
+     * Add violation if closing balance does not match sum of transactions.
      */
     public function isClosingBalanceMatchingTransactionsSum(ExecutionContextInterface $context)
     {
         // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
         if ($this->getClosingBalance() !== null && !$this->isClosingBalanceValid()) {
             $context->addViolationAt('closingBalance', 'account.closingBalance.mismatch', [
-                '%moneyTotal%' => $this->getMoneyTotal()
+                '%moneyTotal%' => $this->getMoneyTotal(),
             ]);
             $context->addViolationAt('closingBalanceExplanation', 'account.closingBalanceExplanation.notBlankOnDateMismatch');
         }
     }
-    
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOpeningDateValid()
     {
         if (!$this->getOpeningDate()) {
             return false;
         }
-        
+
         return $this->report->getStartDate()->format('Y-m-d') === $this->getOpeningDate()->format('Y-m-d');
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClosingDateEqualToReportEndDate()
     {
         if (!$this->getClosingDate()) {
             return false;
         }
-        
+
         return $this->report->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClosingBalanceMatchingTransactionSum()
     {
@@ -465,39 +473,37 @@ class Account
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClosingDateValid()
     {
         return $this->isClosingDateEqualToReportEndDate() || $this->getClosingDateExplanation();
     }
-    
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClosingBalanceValid()
     {
         return $this->isClosingBalanceMatchingTransactionSum() || $this->getClosingBalanceExplanation();
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function isClosingBalanceAndDateValid()
     {
         return $this->isClosingDateValid() && $this->isClosingBalanceValid();
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function needsClosingBalanceData()
     {
         return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
     }
-    
-    
+
     /**
      * @return string
      */
@@ -505,7 +511,7 @@ class Account
     {
         return $this->openingDateMatchesReportDate;
     }
-    
+
     /**
      * @param string $openingDateMatchesReportDate
      */
@@ -521,15 +527,15 @@ class Account
     {
         return $this->accountType;
     }
-    
+
     public function getAccountTypeText()
     {
         return $this->accountTypeText;
     }
-    
-     
+
     /**
-     * Sort code required
+     * Sort code required.
+     *
      * @return string
      */
     public function requiresBankNameAndSortCode()
@@ -544,36 +550,36 @@ class Account
     {
         $this->accountType = $accountType;
     }
-    
+
     public function getIsJointAccount()
     {
         return $this->isJointAccount;
     }
 
-
     public function setIsJointAccount($isJointAccount)
     {
         $this->isJointAccount = $isJointAccount;
+
         return $this;
     }
-    
+
     public function getMeta()
     {
         return $this->meta;
     }
 
-
     public function setMeta($meta)
     {
         $this->meta = $meta;
+
         return $this;
     }
-    
+
     /**
      * Only for partial account created during migrations
-     * e.g. asset -> bank account
+     * e.g. asset -> bank account.
      * 
-     * @return boolean
+     * @return bool
      */
     public function hasMissingInformation()
     {
@@ -589,5 +595,4 @@ class Account
 
         return false;
     }
-
 }

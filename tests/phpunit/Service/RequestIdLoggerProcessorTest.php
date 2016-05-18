@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service;
 
 use Mockery as m;
@@ -12,7 +13,7 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
      */
     private $object;
 
-    private $record = ['key1'=>'abc', 'key2'=>2];
+    private $record = ['key1' => 'abc', 'key2' => 2];
 
     public function setUp()
     {
@@ -20,7 +21,6 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
 
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
-
 
     public function testProcessRecordScopeInactive()
     {
@@ -62,9 +62,8 @@ class RequestIdLoggerProcessorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('has')->with('request')->andReturn(true)
             ->shouldReceive('get')->with('request')->andReturn($request);
 
-        $this->assertEquals($this->record + ['extra'=>['request_id'=>'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
+        $this->assertEquals($this->record + ['extra' => ['request_id' => 'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
     }
-
 
     public function tearDown()
     {

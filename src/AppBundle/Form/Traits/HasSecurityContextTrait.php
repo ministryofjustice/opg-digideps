@@ -43,5 +43,4 @@ trait HasSecurityContextTrait
     {
         return ($this->getLoggedUser() instanceof User) ? $this->getLoggedUser()->getEmail() : null;
     }
-
 }

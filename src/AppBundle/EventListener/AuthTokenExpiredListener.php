@@ -11,12 +11,11 @@ class AuthTokenExpiredListener
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
-        
-        if (RestClient::HTTP_CODE_AUTHTOKEN_EXPIRED == (int)$exception->getCode()) {
+
+        if (RestClient::HTTP_CODE_AUTHTOKEN_EXPIRED == (int) $exception->getCode()) {
             $response = new RedirectResponse('/login?from=api');
             $event->setResponse($response);
             $event->stopPropagation();
         }
     }
-    
 }

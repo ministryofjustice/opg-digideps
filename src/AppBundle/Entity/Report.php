@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,165 +17,182 @@ class Report
      * 
      */
     const PERSONAL_WELFARE = 1;
-    
+
     /**
-     * same sections as personal welfare, + accounts and assets
+     * same sections as personal welfare, + accounts and assets.
      */
     const PROPERTY_AND_AFFAIRS = 2;
-    
+
     /**
      * @JMS\Type("integer")
      * @JMS\Groups({"safeguarding"})
-     * @var integer
+     *
+     * @var int
      */
     private $id;
-    
+
     /**
      * @Assert\NotBlank( message="report.startDate.notBlank")
      * @Assert\Date( message="report.startDate.invalidMessage" )
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
-     * @var \DateTime $startDate
+     *
+     * @var \DateTime
      */
     private $startDate;
-    
+
     /**
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"startEndDates"})
      * @Assert\NotBlank( message="report.endDate.notBlank" )
      * @Assert\Date( message="report.endDate.invalidMessage" )
-     * @var \DateTime $endDate
+     *
+     * @var \DateTime
      */
     private $endDate;
 
     /**
-     * @var \DateTime $submitDate
+     * @var \DateTime
      * @JMS\Accessor(getter="getSubmitDate", setter="setSubmitDate")
      * @JMS\Type("DateTime")
      * @JMS\Groups({"submit"})
      */
     private $submitDate;
-    
+
     /**
      * @JMS\Type("AppBundle\Entity\Client")
-     * @var Client $client
+     *
+     * @var Client
      */
     private $client;
-    
+
     /**
      * @JMS\Type("integer")
      * @Assert\NotBlank( message="report.courtOrderType.notBlank" )
-     * @var integer $courtOrderType
+     *
+     * @var int
      */
     private $courtOrderType;
-    
+
     /**
      * @JMS\Exclude
+     *
      * @var string
      */
     private $period;
-    
-    
+
     /**
      * @JMS\Type("array<AppBundle\Entity\Account>")
+     *
      * @var Account[]
      */
     private $accounts;
-    
-     /**
+
+    /**
      * @JMS\Type("array<AppBundle\Entity\MoneyTransfer>")
+     *
      * @var MoneyTransfer[]
      */
     private $moneyTransfers;
-    
+
     /**
      * @JMS\Type("array<AppBundle\Entity\Contact>")
+     *
      * @var Contact[]
      */
     private $contacts;
-    
+
     /**
      * @JMS\Type("array<AppBundle\Entity\Asset>")
+     *
      * @var Asset[]
      */
     private $assets;
-    
+
     /**
      * @JMS\Type("array<AppBundle\Entity\Decision>")
+     *
      * @var Decision[]
      */
     private $decisions;
-    
+
     /**
      * @JMS\Type("AppBundle\Entity\Safeguarding")
+     *
      * @var \AppBundle\Entity\Safeguarding
      */
     private $safeguarding;
-    
+
     /**
      * @JMS\Type("AppBundle\Entity\Action")
+     *
      * @var \AppBundle\Entity\Action
      */
     private $action;
-    
+
     /**
      * @JMS\Type("string")
-     * @var string $reasonForNoContacts
+     *
+     * @var string
      */
     private $reasonForNoContacts;
-    
+
     /**
      * @JMS\Type("string")
-     * @var string $reasonForNoDecisions
+     *
+     * @var string
      */
     private $reasonForNoDecisions;
-    
+
     /**
      * @JMS\Type("boolean")
-     * @var boolean $noAssetToAdd
+     *
+     * @var bool
      */
     private $noAssetToAdd;
-    
-     /**
+
+    /**
      * @JMS\Type("boolean")
-     * @var boolean
+     *
+     * @var bool
      */
     private $noTransfersToAdd;
-    
+
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"submit"})
      * @Assert\True(message="report.submissionExceptions.submitted", groups={"submitted"})
      * @Assert\False(message="report.submissionExceptions.notSubmitted", groups={"notSubmitted"})
      * 
-     * @var boolean
+     * @var bool
      */
     private $submitted;
-    
+
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"reviewed"})
      * @Assert\True(message="report.submissionExceptions.reviewedAndChecked", groups={"reviewedAndChecked"})
      * 
-     * @var boolean
+     * @var bool
      */
     private $reviewed;
-    
+
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"furtherInformation"})
+     *
      * @var string
      */
     private $furtherInformation;
-    
+
     /**
      * @JMS\Type("boolean")
-     * @var boolean
+     *
+     * @var bool
      */
     private $reportSeen;
-    
-    /** @var boolean
-     *  
+
+    /** @var bool
      * @JMS\Type("boolean")
      * @Assert\True(message="report.agree", groups={"declare"} )
      */
@@ -182,22 +200,22 @@ class Report
 
     /** 
      * @var string
-     *  
+     *              
      * @JMS\Type("string")
      * @JMS\Groups({"basic","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputy.notBlank", groups={"declare"} )
      */
     private $agreedBehalfDeputy;
-    
+
     /** 
      * @var string
-     *  
+     *              
      * @JMS\Type("string")
      * @JMS\Groups({"basic","submit"})
      * @Assert\NotBlank(message="report.agreedBehalfDeputyExplanation.notBlank", groups={"declare-explanation"} )
      */
     private $agreedBehalfDeputyExplanation;
-    
+
     /**
      * @JMS\Type("array<AppBundle\Entity\Transaction>")
      * @JMS\Groups({"transactionsIn"})
@@ -217,80 +235,80 @@ class Report
     /**
      * @JMS\Type("double")
      *
-     * @var double
+     * @var float
      */
     private $moneyInTotal;
 
     /**
      * @JMS\Type("double")
      *
-     * @var double
+     * @var float
      */
     private $moneyOutTotal;
-
 
     /**
      * @JMS\Type("double")
      *
-     * @var double
+     * @var float
      */
     private $accountsOpeningBalanceTotal;
 
     /**
      * @JMS\Type("double")
      *
-     * @var double
+     * @var float
      */
     private $accountsClosingBalanceTotal;
 
     /**
      * @JMS\Type("double")
      *
-     * @var double
+     * @var float
      */
     private $calculatedBalance;
 
     /**
      * @JMS\Type("double")
      *
-     * @var double
+     * @var float
      */
     private $totalsOffset;
-
 
     /**
      * @JMS\Type("boolean")
      *
-     * @var boolean
+     * @var bool
      */
     private $totalsMatch;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"balance_mismatch_explanation"})
+     *
      * @var string
      */
     private $balanceMismatchExplanation;
 
     /**
-     * 
-     * @return integer $id
+     * @return int $id
      */
     public function getId()
     {
         return $this->id;
     }
-    
+
     /**
-     * @param integer $id
+     * @param int $id
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
-    
+
     /**
      * @return \DateTime
      */
@@ -298,7 +316,7 @@ class Report
     {
         return $this->startDate;
     }
-    
+
     /**
      * @param \DateTime $startDate
      * 
@@ -310,10 +328,10 @@ class Report
             $startDate->setTime(0, 0, 0);
         }
         $this->startDate = $startDate;
-        
+
         return $this;
     }
-    
+
     /**
      * @return \DateTime $endDate
      */
@@ -321,41 +339,42 @@ class Report
     {
         return $this->endDate;
     }
-    
+
     /**
-     * Return the date 8 weeks after the end date
+     * Return the date 8 weeks after the end date.
      * 
      * @return string $dueDate
      */
     public function getDueDate()
     {
         if (!$this->endDate instanceof \DateTime) {
-            return null;
+            return;
         }
         $dueDate = clone $this->endDate;
         $dueDate->modify('+8 weeks');
-        
+
         return $dueDate;
     }
 
     /**
-     * Get submitDate
+     * Get submitDate.
      *
      * @return \DateTime
      */
     public function getSubmitDate()
     {
-        if($this->submitted){
+        if ($this->submitted) {
             $submitDate = $this->submitDate;
-        }
-        else{
+        } else {
             $submitDate = null;
         }
+
         return $submitDate;
     }
 
     /**
      * @param \DateTime $submitDate
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setSubmitDate(\DateTime $submitDate = null)
@@ -364,9 +383,10 @@ class Report
 
         return $this;
     }
-    
+
     /**
      * @param \DateTime $endDate
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setEndDate(\DateTime $endDate = null)
@@ -375,74 +395,79 @@ class Report
             $endDate->setTime(23, 59, 59);
         }
         $this->endDate = $endDate;
-        
+
         return $this;
     }
-    
+
     /**
      * Return string representation of the start-end date period
-     * e.g. 2004 to 2005
+     * e.g. 2004 to 2005.
      * 
      * @return string $period
      */
     public function getPeriod()
     {
-        if(!empty($this->period)){
+        if (!empty($this->period)) {
             return $this->period;
         }
-        
-        if(empty($this->startDate)){
+
+        if (empty($this->startDate)) {
             return $this->period;
         }
-        
-        $startDateStr = $this->startDate->format("Y");
-        $endDateStr = $this->endDate->format("Y");
-        
-        if($startDateStr != $endDateStr){
+
+        $startDateStr = $this->startDate->format('Y');
+        $endDateStr = $this->endDate->format('Y');
+
+        if ($startDateStr != $endDateStr) {
             $this->period = $startDateStr.' to '.$endDateStr;
+
             return $this->period;
         }
         $this->period = $startDateStr;
-        
+
         return $this->period;
     }
-    
+
     /**
-     * @return integer $client
+     * @return int $client
      */
     public function getClient()
     {
         return $this->client;
     }
-    
+
     /**
-     * @param integer $client
+     * @param int $client
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setClient(Client $client)
     {
         $this->client = $client;
+
         return $this;
     }
-    
+
     /**
-     * @return integer $courtOrderType
+     * @return int $courtOrderType
      */
     public function getCourtOrderType()
     {
         return $this->courtOrderType;
     }
-    
+
     /**
-     * @param integer $courtOrderType
+     * @param int $courtOrderType
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setCourtOrderType($courtOrderType)
     {
         $this->courtOrderType = $courtOrderType;
+
         return $this;
     }
-    
+
     /**
      * @return Account[]
      */
@@ -450,16 +475,15 @@ class Report
     {
         return $this->accounts;
     }
-    
+
     /**
-     * 
      * @return MoneyTransfer[]
      */
     public function getMoneyTransfers()
     {
         return $this->moneyTransfers;
     }
-    
+
     /**
      * @return MoneyTransfer
      */
@@ -470,19 +494,20 @@ class Report
                 return $t;
             }
         }
-        
-        return null;
+
+        return;
     }
-    
 
     public function setMoneyTransfers(array $transfers)
     {
         $this->moneyTransfers = $transfers;
+
         return $this;
     }
 
     /**
      * @param array $accounts
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setAccounts($accounts)
@@ -490,61 +515,64 @@ class Report
         foreach ($accounts as $account) {
             $account->setReport($this);
         }
-        
+
         $this->accounts = $accounts;
+
         return $this;
     }
-    
+
     /**
-     * 
      * @return array $contacts
      */
     public function getContacts()
     {
         return $this->contacts;
     }
-    
+
     /**
      * @param array $contacts
+     *
      * @return array $contacts
      */
     public function setContacts($contacts)
     {
         $this->contacts = $contacts;
+
         return $this->contacts;
     }
-    
-    
+
     /**
-     * @var array $decisions
+     * @var array
      */
     public function getDecisions()
     {
         return $this->decisions;
     }
-    
+
     /**
-     * 
      * @param type $decisions
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setDecisions($decisions)
     {
         $this->decisions = $decisions;
+
         return $this;
     }
-    
+
     /**
-     * 
      * @param array $assets
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setAssets($assets)
     {
         $this->assets = $assets;
+
         return $this;
     }
-    
+
     /**
      * @return array $assets
      */
@@ -552,39 +580,41 @@ class Report
     {
         return $this->assets;
     }
- 
-    
+
     /**
      * @param ExecutionContextInterface $context
      */
     public function isValidEndDate(ExecutionContextInterface $context)
     {
-        if($this->startDate > $this->endDate){
+        if ($this->startDate > $this->endDate) {
             $context->addViolationAt('endDate', 'report.endDate.beforeStart');
         }
     }
-    
+
     /**
      * @param ExecutionContextInterface $context
+     *
      * @return type
      */
     public function isValidDateRange(ExecutionContextInterface $context)
     {
-        if(!empty($this->endDate) && !empty($this->startDate)){
+        if (!empty($this->endDate) && !empty($this->startDate)) {
             $dateInterval = $this->startDate->diff($this->endDate);
-        }else{
-            $context->addViolationAt('endDate','report.endDate.invalidMessage');
-            return null;
+        } else {
+            $context->addViolationAt('endDate', 'report.endDate.invalidMessage');
+
+            return;
         }
-        
-        if($dateInterval->days > 366){
-            $context->addViolationAt('endDate','report.endDate.greaterThan12Months');
+
+        if ($dateInterval->days > 366) {
+            $context->addViolationAt('endDate', 'report.endDate.greaterThan12Months');
         }
     }
-    
+
     /**
-     * Return true when the report is Due (today's date => report end date)
-     * @return boolean
+     * Return true when the report is Due (today's date => report end date).
+     *
+     * @return bool
      * @Assert\True(message="report.submissionExceptions.due", groups={"due"})
      */
     public function isDue()
@@ -592,27 +622,29 @@ class Report
         if (!$this->getEndDate() instanceof \DateTime) {
             return false;
         }
-        
+
         // reset time on dates
-        $today = new \DateTime;
+        $today = new \DateTime();
         $today->setTime(0, 0, 0);
-        
+
         $reportDueOn = clone $this->getEndDate();
         $reportDueOn->setTime(0, 0, 0);
-        
+
         return $today >= $reportDueOn;
     }
-    
+
     /**
      * @param string $reasonForNoContacts
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setReasonForNoContacts($reasonForNoContacts)
     {
         $this->reasonForNoContacts = $reasonForNoContacts;
+
         return $this;
     }
-    
+
     /**
      * @return string $reasonForNoContacts
      */
@@ -620,17 +652,19 @@ class Report
     {
         return $this->reasonForNoContacts;
     }
-    
+
     /**
      * @param string $reasonForNoDecisions
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
         $this->reasonForNoDecisions = $reasonForNoDecisions;
+
         return $this;
     }
-    
+
     /**
      * @return string $reasonForNoDecisions
      */
@@ -638,7 +672,6 @@ class Report
     {
         return $this->reasonForNoDecisions;
     }
-    
 
     /**
      * @return \AppBundle\Entity\Safeguarding
@@ -655,7 +688,7 @@ class Report
     {
         $this->safeguarding = $safeguarding;
     }
-    
+
     public function getAction()
     {
         return $this->action;
@@ -664,30 +697,32 @@ class Report
     public function setAction(Action $action)
     {
         $this->action = $action;
+
         return $this;
     }
-        
+
     /**
-     * @return boolean $noAssetToAdd
+     * @return bool $noAssetToAdd
      */
     public function getNoAssetToAdd()
     {
         return $this->noAssetToAdd;
     }
-    
+
     /**
-     * 
-     * @param boolean $noAssetToAdd
+     * @param bool $noAssetToAdd
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setNoAssetToAdd($noAssetToAdd)
     {
         $this->noAssetToAdd = $noAssetToAdd;
+
         return $this;
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function getNoTransfersToAdd()
     {
@@ -695,35 +730,37 @@ class Report
     }
 
     /**
-     * @param boolean
+     * @param bool
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
     {
         $this->noTransfersToAdd = $noTransfersToAdd;
+
         return $this;
     }
 
-        
     /**
-     * @return boolean $submitted
+     * @return bool $submitted
      */
     public function getSubmitted()
     {
         return $this->submitted;
     }
-    
+
     /**
      * @param type $submitted
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setSubmitted($submitted)
     {
         $this->submitted = $submitted;
+
         return $this;
     }
-    
+
     /**
-     * @return boolean
+     * @return bool
      */
     public function getReviewed()
     {
@@ -731,13 +768,13 @@ class Report
     }
 
     /**
-     * @param boolean $reviewed
+     * @param bool $reviewed
      */
     public function setReviewed($reviewed)
     {
         $this->reviewed = $reviewed;
     }
-        
+
     /**
      * @return string
      */
@@ -753,9 +790,10 @@ class Report
     {
         $this->furtherInformation = $furtherInformation;
     }
-    
+
     /**
      * @param type $reportSeen
+     *
      * @return \AppBundle\Entity\Report
      */
     public function setReportSeen($reportSeen)
@@ -770,9 +808,9 @@ class Report
     {
         return $this->reportSeen;
     }
-    
-    
-    public function getSectionCount() {
+
+    public function getSectionCount()
+    {
         if ($this->courtOrderType == $this::PROPERTY_AND_AFFAIRS) {
             return 5;
         } else {
@@ -781,7 +819,7 @@ class Report
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isAgree()
     {
@@ -789,7 +827,7 @@ class Report
     }
 
     /**
-     * @param boolean $agree
+     * @param bool $agree
      */
     public function setAgree($agree)
     {
@@ -810,9 +848,10 @@ class Report
     public function setAgreedBehalfDeputy($agreedBehalfDeputy)
     {
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;
+
         return $this;
     }
-    
+
     /**
      * @return string
      */
@@ -827,9 +866,10 @@ class Report
     public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
     {
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
+
         return $this;
     }
-    
+
     /**
      * @return Transaction[]
      */
@@ -862,8 +902,6 @@ class Report
         $this->transactionsOut = $transactionsOut;
     }
 
-
-
     /**
      * @param Transaction[] $transactions
      *
@@ -876,7 +914,7 @@ class Report
         foreach ($transactions as $id => $transaction) {
             $cat = $transaction->getCategory();
             if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries'=>[], 'amountTotal'=>0];
+                $ret[$cat] = ['entries' => [], 'amountTotal' => 0];
             }
             $ret[$cat]['entries'][$id] = $transaction; // needed to find the corresponding transaction in the form
             $ret[$cat]['amountTotal'] += $transaction->getAmountsTotal();
@@ -982,15 +1020,15 @@ class Report
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isTotalsMatch()
     {
         return $this->totalsMatch;
     }
-    
+
     /**
-     * @param boolean $totalsMatch
+     * @param bool $totalsMatch
      */
     public function setTotalsMatch($totalsMatch)
     {
@@ -1012,63 +1050,61 @@ class Report
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
-    
+
     /**
-     ** @return boolean
+     ** @return bool
      */
     public function hasAccounts()
     {
         return count($this->getAccounts()) > 0;
     }
-    
+
     /**
-     ** @return boolean
+     ** @return bool
      */
     public function hasMoneyIn()
     {
-        return count(array_filter($this->getTransactionsIn()?:[], function($t){
+        return count(array_filter($this->getTransactionsIn() ?: [], function ($t) {
             return count(array_filter($t->getAmounts())) > 0;
         })) > 0;
     }
-    
-     /**
-     ** @return boolean
+
+    /**
+     ** @return bool
      */
     public function hasMoneyOut()
     {
-        return count(array_filter($this->getTransactionsOut()?:[], function($t){
+        return count(array_filter($this->getTransactionsOut() ?: [], function ($t) {
              return count(array_filter($t->getAmounts())) > 0;
         })) > 0;
     }
-    
-    
+
     /**
      ** @return Account[]
      */
     public function getAccountsWithNoClosingBalance()
     {
-        return array_filter($this->getAccounts(), function($account){
-            /** @var $account Account */
+        return array_filter($this->getAccounts(), function ($account) {
+            /* @var $account Account */
             return $account->getClosingBalance() === null;
         });
     }
-    
+
     /**
-     ** @return boolean
+     ** @return bool
      */
     public function isMissingMoneyOrAccountsOrClosingBalance()
     {
-        return !$this->hasMoneyIn() 
-            || !$this->hasMoneyOut() 
+        return !$this->hasMoneyIn()
+            || !$this->hasMoneyOut()
             || !$this->hasAccounts()
             || count($this->getAccountsWithNoClosingBalance()) > 0;
     }
-    
-    
+
     /**
-     * @param integer $id
+     * @param int $id
      * 
-     * @return boolean
+     * @return bool
      */
     public function hasAssetWithId($id)
     {
@@ -1077,14 +1113,14 @@ class Report
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     /**
-     * @param integer $id
+     * @param int $id
      * 
-     * @return boolean
+     * @return bool
      */
     public function hasAaccountWithId($id)
     {
@@ -1093,8 +1129,7 @@ class Report
                 return true;
             }
         }
-        
+
         return false;
     }
-    
 }

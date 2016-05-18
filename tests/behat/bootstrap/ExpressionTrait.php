@@ -28,15 +28,17 @@ trait ExpressionTrait
     {
         $this->iShouldSeeInTheRegion(self::expressionToValue($expression), $region);
     }
-    
+
     /**
      * Example of expressions
      * 3 days ago, DD
      * 10 days ahead, month
-     * 1 day ahead, year
+     * 1 day ahead, year.
      * 
      * @param string $expression
+     *
      * @return string
+     *
      * @throws \RuntimeException if the expression is not recognised
      */
     private static function expressionToValue($expression)
@@ -44,12 +46,12 @@ trait ExpressionTrait
         if (preg_match('#^(?P<days>\d+) days? (?P<direction>ahead|ago), (?P<format>DD|MM|YYYY|DD/MM/YYYY)$#', $expression, $matches)) {
             $today = new \DateTime();
             $plusOrMinus = $matches['direction'] === 'ahead' ? '+' : '-';
-            $today->modify($plusOrMinus . $matches['days'] . ' days');
-            $formatToDateFormat = ['DD' => 'd', 'MM' => 'm', 'YYYY' => 'Y', 'DD/MM/YYYY'=>'d/m/Y'];
+            $today->modify($plusOrMinus.$matches['days'].' days');
+            $formatToDateFormat = ['DD' => 'd', 'MM' => 'm', 'YYYY' => 'Y', 'DD/MM/YYYY' => 'd/m/Y'];
+
             return $today->format($formatToDateFormat[$matches['format']]);
         }
 
         throw new \RuntimeException("Expression '$expression' not recognised");
     }
-
 }

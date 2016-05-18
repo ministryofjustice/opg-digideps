@@ -16,7 +16,7 @@ class AbstractController extends Controller
     {
         return $this->get('restClient');
     }
-    
+
     /**
      * @return array $choices
      */
@@ -39,24 +39,21 @@ class AbstractController extends Controller
         if ($sort != null) {
             $sort($choices);
         }
+
         return $choices;
     }
 
-
-
-
     /**
-     * @param integer $reportId
-     * @param integer $userId for secutity checks (if present)
+     * @param int   $reportId
+     * @param int   $userId   for secutity checks (if present)
      * @param array $groups
      * 
      * @return Report
      */
     public function getReport($reportId, array $groups/* = [ 'transactions', 'basic']*/)
     {
-        return $this->getRestClient()->get("report/{$reportId}", 'Report', [ 'query' => [ 'groups' => $groups]]);
+        return $this->getRestClient()->get("report/{$reportId}", 'Report', ['query' => ['groups' => $groups]]);
     }
-
 
     /**
      * @param Client $client
@@ -73,15 +70,15 @@ class AbstractController extends Controller
 
         $ret = [];
         foreach ($reportIds as $id) {
-            $ret[$id] = $this->getReport($id,$groups);
+            $ret[$id] = $this->getReport($id, $groups);
         }
 
         return $ret;
     }
 
     /**
+     * @param int $reportId
      *
-     * @param integer $reportId
      * @return \AppBundle\Entity\Report
      *
      * @throws \RuntimeException if report is submitted
@@ -90,10 +87,9 @@ class AbstractController extends Controller
     {
         $report = $this->getReport($reportId, $groups);
         if ($report->getSubmitted()) {
-            throw new \RuntimeException("Report already submitted and not editable.");
+            throw new \RuntimeException('Report already submitted and not editable.');
         }
 
         return $report;
     }
-
 }

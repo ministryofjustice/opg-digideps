@@ -3,7 +3,6 @@
 namespace AppBundle\Service;
 
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -11,29 +10,28 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class Redirector
 {
-
     /**
      * @var RouterInterface
      */
     protected $router;
 
     /**
-     * @var SecurityContextInterface 
+     * @var SecurityContextInterface
      */
     protected $security;
 
     /**
-     * @var Session 
+     * @var Session
      */
     protected $session;
-    
-     /**
-     * @var string 
+
+    /**
+     * @var string
      */
     protected $env;
 
     /**
-     * Routes the user can be redirected to, if accessed before timeout
+     * Routes the user can be redirected to, if accessed before timeout.
      * 
      * @var array
      */
@@ -52,15 +50,14 @@ class Redirector
         'client',
     ];
 
-
     /**
      * @param \AppBundle\Service\SecurityContext $security
-     * @param type $router
+     * @param type                               $router
      */
     public function __construct(
-        SecurityContextInterface $security, 
-        RouterInterface $router, 
-        Session $session, 
+        SecurityContextInterface $security,
+        RouterInterface $router,
+        Session $session,
         Client\RestClient $restClient,
         $env
     ) {
@@ -71,7 +68,6 @@ class Redirector
         $this->env = $env;
     }
 
-
     /**
      * @return \AppBundle\Entity\User
      */
@@ -79,7 +75,6 @@ class Redirector
     {
         return $this->security->getToken()->getUser();
     }
-
 
     /**
      * @return string
@@ -99,7 +94,6 @@ class Redirector
         }
     }
 
-
     /**
      * @return string URL
      */
@@ -107,7 +101,7 @@ class Redirector
     {
         return $this->router->generate('admin_homepage');
     }
-    
+
     /**
      * @return string URL
      */
@@ -115,9 +109,6 @@ class Redirector
     {
         return $this->router->generate('ad_homepage');
     }
-    
-    
-
 
     /**
      * @return array [route, options]
@@ -133,36 +124,35 @@ class Redirector
         }
 
         $clients = $user->getClients();
-        
+
         $client = $clients[0];
         if (!$client->hasDetails()) {
             return $this->router->generate('client_add');
         }
 
         if (!$user->hasReports()) {
-            return $this->router->generate('report_create', [ 'clientId' => $clients[0]->getId()]);
+            return $this->router->generate('report_create', ['clientId' => $clients[0]->getId()]);
         }
 
         if ($enabledLastAccessedUrl && $lastUsedUri = $this->getLastAccessedUrl()) {
-
             return $lastUsedUri;
         }
 
         $reportIds = $clients[0]->getReports();
 
         foreach ($reportIds as $reportId) {
-            $report = $this->restClient->get("report/{$reportId}", 'Report', [ 'query' => [ 'groups' => [ "basic"]]]);
+            $report = $this->restClient->get("report/{$reportId}", 'Report', ['query' => ['groups' => ['basic']]]);
 
             if (!$report->getSubmitted()) {
                 return $this->router->generate('report_overview', ['reportId' => $reportId]);
             }
         }
+
         return $this->router->generate('client');
     }
 
-
     /**
-     * @return boolean|string
+     * @return bool|string
      */
     private function getLastAccessedUrl()
     {
@@ -189,12 +179,11 @@ class Redirector
         return false;
     }
 
-
     public function removeLastAccessedUrl()
     {
         $this->session->remove('_security.secured_area.target_path');
     }
-    
+
     /**
      * @return string
      */
@@ -203,17 +192,17 @@ class Redirector
         $securityContext = $this->security;
 
         if ($this->env === 'admin') {
-           // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
+            // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
             if ($securityContext->isGranted('ROLE_ADMIN')) {
                 return $this->router->generate('admin_homepage');
             }
             if ($securityContext->isGranted('ROLE_AD')) {
                 return $this->router->generate('ad_homepage');
-            } 
-            
+            }
+
             return $this->router->generate('login');
         }
-        
+
         // deputy: if logged, redirect to overview pages
         if ($securityContext->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->getLayDeputyHomepage($this->getLoggedUser(), false);
@@ -221,5 +210,4 @@ class Redirector
 
         return false;
     }
-
 }

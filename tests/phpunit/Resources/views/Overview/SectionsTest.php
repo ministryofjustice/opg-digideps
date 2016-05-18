@@ -10,7 +10,6 @@ use Mockery as m;
 
 class SectionsTest extends WebTestCase
 {
-
     /**
      * @var \Symfony\Bundle\FrameworkBundle\Client
      */
@@ -22,7 +21,7 @@ class SectionsTest extends WebTestCase
 
     public function setUp()
     {
-        $this->client = static::createClient([ 'environment' => 'test', 'debug' => false]);
+        $this->client = static::createClient(['environment' => 'test', 'debug' => false]);
         $this->client->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
@@ -45,14 +44,13 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
         $descriptionElement = $crawler->filter('#decisions-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
-
 
         $this->assertContains("Add the significant decisions you've made for Fred", $descriptionElement->eq(0)->text());
     }
@@ -64,7 +62,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -72,8 +70,7 @@ class SectionsTest extends WebTestCase
 
         $this->assertEquals(1, $descriptionElement->count());
 
-
-        $this->assertContains("Give us the details of people you consulted about Fred", $descriptionElement->eq(0)->text());
+        $this->assertContains('Give us the details of people you consulted about Fred', $descriptionElement->eq(0)->text());
     }
 
     /** @test */
@@ -83,14 +80,13 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
         $descriptionElement = $crawler->filter('#safeguarding-sub-section .description');
 
         $this->assertEquals(1, $descriptionElement->count());
-
 
         $this->assertContains("We need to know about your involvement with Fred's care", $descriptionElement->eq(0)->text());
     }
@@ -102,7 +98,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -110,8 +106,7 @@ class SectionsTest extends WebTestCase
 
         $this->assertEquals(1, $descriptionElement->count());
 
-
-        $this->assertContains("Add details of all income and spending in the reporting period", $descriptionElement->eq(0)->text());
+        $this->assertContains('Add details of all income and spending in the reporting period', $descriptionElement->eq(0)->text());
     }
 
     /** @test */
@@ -121,7 +116,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -129,14 +124,12 @@ class SectionsTest extends WebTestCase
 
         $this->assertEquals(1, $descriptionElement->count());
 
-
         $this->assertContains("Add Fred's property, investments and other valuables", $descriptionElement->eq(0)->text());
     }
 
     /** @test */
     public function whenAReportIsDueAndAllSectionsCompletedAllowSubmission()
     {
-
         $this->report = m::mock('AppBundle\Entity\Report')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('isDue')->andReturn(true)
@@ -149,7 +142,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -173,7 +166,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -197,7 +190,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -221,7 +214,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -245,7 +238,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -257,12 +250,11 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function showSubmitWarningIsNotDueButReady()
     {
-
-        $tomorrow = new \DateTime;
+        $tomorrow = new \DateTime();
         $tomorrow->setTime(0, 0, 0);
         $tomorrow->modify('1 day');
 
-        $formatted = $tomorrow->format(" d F Y");
+        $formatted = $tomorrow->format(' d F Y');
 
         $this->report = m::mock('AppBundle\Entity\Report')
                 ->shouldIgnoreMissing(true)
@@ -277,7 +269,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -285,7 +277,7 @@ class SectionsTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(1, $submitReportLinkElement->count());
 
-        $this->assertContains("You can't submit your report until " . $formatted, $submitReportLinkElement->eq(0)->text());
+        $this->assertContains("You can't submit your report until ".$formatted, $submitReportLinkElement->eq(0)->text());
     }
 
     /** @test */
@@ -303,7 +295,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -316,12 +308,11 @@ class SectionsTest extends WebTestCase
     /** @test */
     public function showSubmitWarningIsNotDueAndNotReady()
     {
-        $tomorrow = new \DateTime;
+        $tomorrow = new \DateTime();
         $tomorrow->setTime(0, 0, 0);
         $tomorrow->modify('1 day');
 
-        $formatted = $tomorrow->format(" d F Y");
-
+        $formatted = $tomorrow->format(' d F Y');
 
         $this->report = m::mock('AppBundle\Entity\Report')
                 ->shouldIgnoreMissing(true)
@@ -336,7 +327,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -344,7 +335,7 @@ class SectionsTest extends WebTestCase
         $submitReportLinkElement = $crawler->filter('#cannot-submit-warning');
         $this->assertEquals(1, $submitReportLinkElement->count());
 
-        $this->assertContains("You can't submit your report until " . $formatted, $submitReportLinkElement->eq(0)->text());
+        $this->assertContains("You can't submit your report until ".$formatted, $submitReportLinkElement->eq(0)->text());
     }
 
     /** @test */
@@ -362,7 +353,7 @@ class SectionsTest extends WebTestCase
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
-            'reportStatus' => $this->reportStatus
+            'reportStatus' => $this->reportStatus,
         ]);
 
         $crawler = new Crawler($html);
@@ -378,10 +369,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getDecisionsState')->andReturn("not-started")
-                ->shouldReceive('getDecisionsStatus')->andReturn("0 Decisions")
+                ->shouldReceive('getDecisionsState')->andReturn('not-started')
+                ->shouldReceive('getDecisionsStatus')->andReturn('0 Decisions')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -391,7 +381,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#decisions-sub-section .edit-link');
 
-        $this->assertContains("Start decisions", $linkElement->eq(0)->text());
+        $this->assertContains('Start decisions', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -401,10 +391,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getDecisionsState')->andReturn("done")
-                ->shouldReceive('getDecisionsStatus')->andReturn("1 Decision")
+                ->shouldReceive('getDecisionsState')->andReturn('done')
+                ->shouldReceive('getDecisionsStatus')->andReturn('1 Decision')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -414,7 +403,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#decisions-sub-section .edit-link');
 
-        $this->assertContains("Edit decisions", $linkElement->eq(0)->text());
+        $this->assertContains('Edit decisions', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -424,10 +413,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getContactsState')->andReturn("not-started")
-                ->shouldReceive('getContactsStatus')->andReturn("0 Contacts")
+                ->shouldReceive('getContactsState')->andReturn('not-started')
+                ->shouldReceive('getContactsStatus')->andReturn('0 Contacts')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -437,7 +425,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#contacts-sub-section .edit-link');
 
-        $this->assertContains("Start contacts", $linkElement->eq(0)->text());
+        $this->assertContains('Start contacts', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -447,10 +435,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getContactsState')->andReturn("done")
-                ->shouldReceive('getContactsStatus')->andReturn("1 Contact")
+                ->shouldReceive('getContactsState')->andReturn('done')
+                ->shouldReceive('getContactsStatus')->andReturn('1 Contact')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -460,7 +447,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#contacts-sub-section .edit-link');
 
-        $this->assertContains("Edit contacts", $linkElement->eq(0)->text());
+        $this->assertContains('Edit contacts', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -470,9 +457,8 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getSafeguardingStatus')->andReturn("notstarted")
+                ->shouldReceive('getSafeguardingStatus')->andReturn('notstarted')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -482,7 +468,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
 
-        $this->assertContains("Start visits", $linkElement->eq(0)->text());
+        $this->assertContains('Start visits', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -492,9 +478,8 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getSafeguardingState')->andReturn("done")
+                ->shouldReceive('getSafeguardingState')->andReturn('done')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -504,7 +489,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#safeguarding-sub-section .edit-link');
 
-        $this->assertContains("Edit visits", $linkElement->eq(0)->text());
+        $this->assertContains('Edit visits', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -514,10 +499,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getAccountsState')->andReturn("not-started")
-                ->shouldReceive('getAccountsStatus')->andReturn("0 Accounts")
+                ->shouldReceive('getAccountsState')->andReturn('not-started')
+                ->shouldReceive('getAccountsStatus')->andReturn('0 Accounts')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -527,7 +511,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#accounts-sub-section .edit-link');
 
-        $this->assertContains("Start accounts", $linkElement->eq(0)->text());
+        $this->assertContains('Start accounts', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -537,10 +521,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getAccountsState')->andReturn("incomplete")
-                ->shouldReceive('getAccountsStatus')->andReturn("1 Accounts")
+                ->shouldReceive('getAccountsState')->andReturn('incomplete')
+                ->shouldReceive('getAccountsStatus')->andReturn('1 Accounts')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -550,7 +533,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#accounts-sub-section .edit-link');
 
-        $this->assertContains("Edit accounts", $linkElement->eq(0)->text());
+        $this->assertContains('Edit accounts', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -560,10 +543,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getAccountsState')->andReturn("done")
-                ->shouldReceive('getAccountsStatus')->andReturn("1 Accounts")
+                ->shouldReceive('getAccountsState')->andReturn('done')
+                ->shouldReceive('getAccountsStatus')->andReturn('1 Accounts')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -573,7 +555,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#accounts-sub-section .edit-link');
 
-        $this->assertContains("Edit accounts", $linkElement->eq(0)->text());
+        $this->assertContains('Edit accounts', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -583,10 +565,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getAssetsState')->andReturn("not-started")
-                ->shouldReceive('getAssetsStatus')->andReturn("0 Assets")
+                ->shouldReceive('getAssetsState')->andReturn('not-started')
+                ->shouldReceive('getAssetsStatus')->andReturn('0 Assets')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -596,7 +577,7 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#assets-sub-section .edit-link');
 
-        $this->assertContains("Start assets", $linkElement->eq(0)->text());
+        $this->assertContains('Start assets', $linkElement->eq(0)->text());
     }
 
     /** @test */
@@ -606,10 +587,9 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getAssetsState')->andReturn("done")
-                ->shouldReceive('getAssetsStatus')->andReturn("1 Assets")
+                ->shouldReceive('getAssetsState')->andReturn('done')
+                ->shouldReceive('getAssetsStatus')->andReturn('1 Assets')
                 ->getMock();
-
 
         $html = $this->twig->render('AppBundle:Overview:_sections.html.twig', [
             'report' => $this->report,
@@ -619,15 +599,15 @@ class SectionsTest extends WebTestCase
         $crawler = new Crawler($html);
         $linkElement = $crawler->filter('#assets-sub-section .edit-link');
 
-        $this->assertContains("Edit assets", $linkElement->eq(0)->text());
+        $this->assertContains('Edit assets', $linkElement->eq(0)->text());
     }
 
     private function setupReport()
     {
         $this->reportClient = m::mock('AppBundle\Entity\Client')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive("getFullname")->andReturn("Fred Smith")
-                ->shouldReceive("getFirstname")->andReturn("Fred")
+                ->shouldReceive('getFullname')->andReturn('Fred Smith')
+                ->shouldReceive('getFirstname')->andReturn('Fred')
                 ->getMock();
 
         $this->report = m::mock('AppBundle\Entity\Report')
@@ -641,18 +621,17 @@ class SectionsTest extends WebTestCase
 
         $this->reportStatus = m::mock('AppBundle\Service\ReportStatusService')
                 ->shouldIgnoreMissing(true)
-                ->shouldReceive('getDecisionsState')->andReturn("done")
-                ->shouldReceive('getDecisionsStatus')->andReturn("1 Decision")
-                ->shouldReceive('getContactsState')->andReturn("done")
-                ->shouldReceive('getContactsStatus')->andReturn("1 Contact")
-                ->shouldReceive('getSafeguardingState')->andReturn("done")
-                ->shouldReceive('getSafeguardingStatus')->andReturn("Complete")
-                ->shouldReceive('getAccountsState')->andReturn("done")
-                ->shouldReceive('getAccountsStatus')->andReturn("1 Account")
-                ->shouldReceive('getAssetsState')->andReturn("done")
-                ->shouldReceive('getAssetsStatus')->andReturn("1 Asset")
+                ->shouldReceive('getDecisionsState')->andReturn('done')
+                ->shouldReceive('getDecisionsStatus')->andReturn('1 Decision')
+                ->shouldReceive('getContactsState')->andReturn('done')
+                ->shouldReceive('getContactsStatus')->andReturn('1 Contact')
+                ->shouldReceive('getSafeguardingState')->andReturn('done')
+                ->shouldReceive('getSafeguardingStatus')->andReturn('Complete')
+                ->shouldReceive('getAccountsState')->andReturn('done')
+                ->shouldReceive('getAccountsStatus')->andReturn('1 Account')
+                ->shouldReceive('getAssetsState')->andReturn('done')
+                ->shouldReceive('getAssetsStatus')->andReturn('1 Asset')
                 ->shouldReceive('isReadyToSubmit')->andReturn(true)
                 ->getMock();
     }
-
 }

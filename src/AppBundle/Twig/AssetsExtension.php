@@ -1,22 +1,21 @@
-<?php 
+<?php
+
+
 namespace AppBundle\Twig;
+
 // todo remove assetic from config and use it's 
 
-
 /**
- * Class AssetsExtension
- * @package AppBundle\Twig
- *
- * Twig extension to provide helpers to get versioned assets
+ * Class AssetsExtension.
  */
-class AssetsExtension extends \Twig_Extension 
+class AssetsExtension extends \Twig_Extension
 {
-    /** @var  String $tag */
+    /** @var  string $tag */
     private $tag;
-    
-    /** @var String $rootDir */
+
+    /** @var string $rootDir */
     private $rootDir;
-    
+
     /**
      * @param type \String
      * @param type $params
@@ -26,24 +25,24 @@ class AssetsExtension extends \Twig_Extension
         $this->rootDir = $rootDir;
     }
 
-    
     /** Get the version name for assets add it to the url to give a versioned url
-     * Like assetic except The minification and versioning is done with gulp
+     * Like assetic except The minification and versioning is done with gulp.
      *
-     * @return String
+     * @return string
      */
-    public function assetUrlFilter($originalUrl) {
-        return '/assets/' . $this->getTag() . '/' . $originalUrl;
+    public function assetUrlFilter($originalUrl)
+    {
+        return '/assets/'.$this->getTag().'/'.$originalUrl;
     }
 
     /**
-     * @return String
+     * @return string
      */
     public function getTag()
     {
         if (!$this->tag) {
             // List the files in the web/assets folder
-            $assetRoot = $this->rootDir . '/../web/assets';
+            $assetRoot = $this->rootDir.'/../web/assets';
             $assetContents = array_diff(scandir($assetRoot), array('..', '.'));
 
             // set the value to the folder we find.
@@ -51,17 +50,17 @@ class AssetsExtension extends \Twig_Extension
         }
 
         return $this->tag;
-    
     }
 
-    public function getFilters() {
+    public function getFilters()
+    {
         return array(
             new \Twig_SimpleFilter('assetUrl', array($this, 'assetUrlFilter')),
         );
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'assets_extension';
     }
-
 }

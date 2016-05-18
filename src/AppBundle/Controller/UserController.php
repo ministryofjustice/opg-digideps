@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
@@ -14,7 +15,7 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 class UserController extends AbstractController
 {
     /**
-     * Landing page to let the user access the app and selecting a password
+     * Landing page to let the user access the app and selecting a password.
      * 
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
      * 
@@ -27,60 +28,60 @@ class UserController extends AbstractController
     {
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $translator = $this->get('translator');
-        
+
         // check $token is correct
         try {
             $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
         } catch (\Exception $e) {
             throw new \AppBundle\Exception\DisplayableException('This link is not working or has already been used');
         }
-        
+
         if (!$user->isTokenSentInTheLastHours(EntityDir\User::TOKEN_EXPIRE_HOURS)) {
             if ('activate' == $action) {
                 return $this->render('AppBundle:User:activateTokenExpired.html.twig', [
-                    'token'=>$token, 
+                    'token' => $token,
                     'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
                 ]);
             } else { // password-reset
                 return $this->render('AppBundle:User:passwordResetTokenExpired.html.twig', [
-                    'token'=>$token, 
+                    'token' => $token,
                     'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
                 ]);
             }
         }
-        
+
         // define form and template that differs depending on the action (activate or password-reset)
         if ('activate' == $action) {
             $formType = new FormDir\SetPasswordType([
-                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate')
+                'passwordMismatchMessage' => $translator->trans('password.validation.passwordMismatch', [], 'user-activate'),
             ]);
             $template = 'AppBundle:User:activate.html.twig';
         } else { // 'password-reset'
             $formType = new FormDir\ResetPasswordType([
-                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset')
+                'passwordMismatchMessage' => $this->get('translator')->trans('password.validation.passwordMismatch', [], 'password-reset'),
             ]);
             $template = 'AppBundle:User:passwordReset.html.twig';
         }
-        
+
         $form = $this->createForm($formType, $user);
-        
+
         $form->handleRequest($request);
         if ($form->isValid()) {
-            
+
             // login user into API
             //TODO try move at the beginning
-            $this->get('deputyprovider')->login(['token'=>$token]);
-            
+            $this->get('deputyprovider')->login(['token' => $token]);
+
             // set password for user
-            $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+            $restClient->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $user->getPassword(),
                 'set_active' => true,
-                'send_email' => false //not sent on this "landing" pages
+                'send_email' => false, //not sent on this "landing" pages
             ]));
 
             // log in user into CLIENT
-            $clientToken = new UsernamePasswordToken($user, null, "secured_area", $user->getRoles());
-            $this->get("security.context")->setToken($clientToken); //now the user is logged in
+            $clientToken = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+            $this->get('security.context')->setToken($clientToken); //now the user is logged in
 
             $session = $this->get('session');
             $session->set('_security_secured_area', serialize($clientToken));
@@ -95,18 +96,18 @@ class UserController extends AbstractController
             } else { // activate:  o to 2nd step
                 $redirectUrl = $this->generateUrl('user_details');
             }
-            
+
              // the following should not be triggered
             return $this->redirect($redirectUrl);
         }
 
         return $this->render($template, [
-            'token'=>$token, 
+            'token' => $token,
             'form' => $form->createView(),
-            'userRole' => $user->getRole()['role']
+            'userRole' => $user->getRole()['role'],
         ]);
     }
-    
+
     /**
      * @Route("/user/activate/password/send/{token}", name="activation_link_send")
      * @Template()
@@ -114,31 +115,31 @@ class UserController extends AbstractController
     public function activateLinkSendAction(Request $request, $token)
     {
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
-        
+
         // check $token is correct
         $user = $this->get('restClient')->loadUserByToken($token); /* @var $user EntityDir\User*/
-        
+
         // recreate token
         // the endpoint will also send the activation email
         $restClient->userRecreateToken($user, 'activate');
-        
-        return $this->redirect($this->generateUrl('activation_link_sent', ['token'=>$token]));
+
+        return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
-    
-     /**
+
+    /**
      * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
      * @Template()
      */
     public function activateLinkSentAction(Request $request, $token)
     {
         return [
-            'token'=>$token,
+            'token' => $token,
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
         ];
     }
-    
+
     /**
-     * Registration steps
+     * Registration steps.
      *
      * @Route("/user/details", name="user_details")
      * @Template()
@@ -147,22 +148,22 @@ class UserController extends AbstractController
     {
         $restClient = $this->get('restClient'); /* @var $restClient RestClient */
         $userId = $this->get('security.context')->getToken()->getUser()->getId();
-        $user = $restClient->get('user/' . $userId, 'User'); /* @var $user EntityDir\User*/
+        $user = $restClient->get('user/'.$userId, 'User'); /* @var $user EntityDir\User*/
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') ||  $this->get('security.context')->isGranted('ROLE_AD');
-        $notification = $request->query->has('notification')? $request->query->get('notification'): null;
+        $notification = $request->query->has('notification') ? $request->query->get('notification') : null;
 
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-activate'),
         ]);
         $form = $this->createForm($formType, $user);
-        
+
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $restClient->put('user/' . $user->getId(), $form->getData(), [
-                    'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full'
+                $restClient->put('user/'.$user->getId(), $form->getData(), [
+                    'deserialise_group' => $basicFormOnly ? 'user_details_basic' : 'user_details_full',
                 ]);
-                
+
                 if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
                     $route = 'admin_homepage';
                 } elseif ($this->get('security.context')->isGranted('ROLE_AD')) {
@@ -170,7 +171,7 @@ class UserController extends AbstractController
                 } else {
                     $route = 'client_add';
                 }
-                
+
                 // after details are added, admin users to go their homepage, deputies go to next step
                 return $this->redirect($this->generateUrl($route));
             }
@@ -178,63 +179,61 @@ class UserController extends AbstractController
             // fill the form in (edit mode)
             $form->setData($user);
         }
-        
+
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
-        
     }
-    
-     /**
+
+    /**
      * @Route("/user-account/password-edit", name="user_password_edit")
      * @Template()
      */
     public function passwordEditAction(Request $request)
     {
         $user = $this->getUser();
-        
-        $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true ]);
+
+        $form = $this->createForm(new FormDir\ChangePasswordType(), $user, ['mapped' => false, 'error_bubbling' => true]);
         $form->handleRequest($request);
         $restClient = $this->get('restClient');
 
-        if($form->isValid()){
+        if ($form->isValid()) {
             $plainPassword = $request->request->get('change_password')['plain_password']['first'];
-            $restClient->put('user/' . $user->getId() . '/set-password', json_encode([
+            $restClient->put('user/'.$user->getId().'/set-password', json_encode([
                 'password_plain' => $plainPassword,
-                'send_email' => false
+                'send_email' => false,
             ]));
 
             return $this->redirect($this->generateUrl('user_password_edit_done'));
         }
-            
-        $clients = $this->getUser()->getClients(); 
-        $client = !empty($clients)? $clients[0]: null;
+
+        $clients = $this->getUser()->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
 
         return [
             'client' => $client,
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
-        
     }
-    
+
     /**
      * @Route("/user-account/password-edit-done", name="user_password_edit_done")
      * @Template()
      */
     public function passwordEditDoneAction(Request $request)
     {
-        $clients = $this->getUser()->getClients(); 
-        $client = !empty($clients)? $clients[0]: null;
-        
+        $clients = $this->getUser()->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
+
         return [
             'client' => $client,
         ];
     }
-    
+
     /**
      * - change user data
-     * - chang user password
+     * - chang user password.
      * 
      * @Route("/user-account/user-show", name="user_show")
      * @Template()
@@ -242,18 +241,18 @@ class UserController extends AbstractController
     public function showAction()
     {
         $user = $this->getUser();
-        $clients = $this->getUser()->getClients(); 
-        $client = !empty($clients)? $clients[0]: null;
+        $clients = $this->getUser()->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
 
         return [
             'client' => $client,
             'user' => $user,
         ];
     }
-    
+
     /**
      * - change user data
-     * - chang user password
+     * - chang user password.
      * 
      * @Route("/user-account/user-edit", name="user_edit")
      * @Template()
@@ -262,56 +261,55 @@ class UserController extends AbstractController
     {
         $request = $this->getRequest();
         $user = $this->getUser();
-        
+
         $basicFormOnly = $this->get('security.context')->isGranted('ROLE_ADMIN') || $this->get('security.context')->isGranted('ROLE_AD');
         $formType = $basicFormOnly ? new FormDir\UserDetailsBasicType() : new FormDir\UserDetailsFullType([
             'addressCountryEmptyValue' => $this->get('translator')->trans('addressCountry.defaultOption', [], 'user-details'),
         ]);
-        
+
         $form = $this->createForm($formType, $user);
-        
+
         $form->handleRequest($request);
         $restClient = $this->get('restClient');
 
-        if($form->isValid()){
+        if ($form->isValid()) {
             $formData = $form->getData();
-            /**
+            /*
              * if new password has been set then we need to encode this using the encoder and pass it to
              * the api
              */
-            $restClient->put('user/' . $user->getId(), $formData, [
-                'deserialise_group' => 'user_details_full'
+            $restClient->put('user/'.$user->getId(), $formData, [
+                'deserialise_group' => 'user_details_full',
             ]);
 
             return $this->redirect($this->generateUrl('user_show'));
         }
-            
-        $clients = $this->getUser()->getClients(); 
-        $client = !empty($clients)? $clients[0]: null;
+
+        $clients = $this->getUser()->getClients();
+        $client = !empty($clients) ? $clients[0] : null;
 
         return [
             'client' => $client,
             'user' => $user,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
-    
-     /**
+
+    /**
      * @Route("/password-managing/forgotten", name="password_forgotten")
      * @Template()
      **/
     public function passwordForgottenAction(Request $request)
     {
-        $user = new EntityDir\User;
+        $user = new EntityDir\User();
         $form = $this->createForm(new FormDir\PasswordForgottenType(), $user);
-        
+
         $form->handleRequest($request);
         if ($form->isValid()) {
             try {
                 $restClient = $this->get('restClient');
                 /* @var $user EntityDir\User */
                 $restClient->userRecreateToken($user, 'pass-reset');
-
             } catch (\Exception $e) {
                 $this->get('logger')->debug($e->getMessage());
             }
@@ -319,12 +317,12 @@ class UserController extends AbstractController
             // after details are added, admin users to go their homepage, deputies go to next step
             return $this->redirect($this->generateUrl('password_sent'));
         }
-        
+
         return [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
-    
+
     /**
      * @Route("/password-managing/sent", name="password_sent")
      * @Template()
@@ -333,7 +331,4 @@ class UserController extends AbstractController
     {
         return [];
     }
-    
-   
-    
 }

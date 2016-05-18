@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use AppBundle\Entity as EntityDir;
@@ -8,7 +9,6 @@ use AppBundle\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -29,7 +29,7 @@ class IndexController extends AbstractController
         // deputy homepage with links to register and login
         return $this->render('AppBundle:Index:index.html.twig');
     }
-    
+
     /**
      * @Route("login", name="login")
      * @Template()
@@ -44,66 +44,65 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
         $vars = [
             'form' => $form->createView(),
-            'isAdmin' => $this->container->getParameter('env') === 'admin'
+            'isAdmin' => $this->container->getParameter('env') === 'admin',
         ];
-       
-        if ($form->isValid()){
+
+        if ($form->isValid()) {
             $data = $form->getData();
 
             try {
                 $user = $this->get('deputyprovider')->login($data);
-            } catch(\Exception $e){
+            } catch (\Exception $e) {
                 $error = $e->getMessage();
 
                 if ($e->getCode() == 423) {
                     $lockedFor = ceil(($e->getData()['data'] - time()) / 60);
-                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%'=>$lockedFor], 'login');
+                    $error = $this->get('translator')->trans('bruteForceLocked', ['%minutes%' => $lockedFor], 'login');
                 }
-                
+
                 if ($e->getCode() == 499) {
                     // too-many-attempts warning. captcha ?
                 }
-                
+
                 return $this->render('AppBundle:Index:login.html.twig', $vars + ['error' => $error]);
             }
             // manually set session token into security context (manual login)
-            $token = new UsernamePasswordToken($user,null, "secured_area", $user->getRoles());
-            $this->get("security.context")->setToken($token);
-            
+            $token = new UsernamePasswordToken($user, null, 'secured_area', $user->getRoles());
+            $this->get('security.context')->setToken($token);
+
             $session = $request->getSession();
             $session->set('_security_secured_area', serialize($token));
             $session->set('loggedOutFrom', null);
-            
+
             // regenerate cookie, otherwise gc_* timeouts might logout out after successful login
             $session->migrate();
-            
-            $request = $this->get("request");
+
+            $request = $this->get('request');
             $event = new InteractiveLoginEvent($request, $token);
-            $this->get("event_dispatcher")->dispatch("security.interactive_login", $event);
-            
+            $this->get('event_dispatcher')->dispatch('security.interactive_login', $event);
+
             $session->set('lastLoggedIn', $user->getLastLoggedIn());
-            
+
             $this->get('auditLogger')->log(EntityDir\AuditLogEntry::ACTION_LOGIN);
         }
-        
+
         // different page version for timeout and manual logout
         $session = $this->getRequest()->getSession();
-        
+
         if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             return $this->render('AppBundle:Index:login-from-logout.html.twig', $vars);
-        } else if ($session->get('loggedOutFrom') === 'timeout') {
+        } elseif ($session->get('loggedOutFrom') === 'timeout') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
-        } else if ($request->query->get('from') === 'api') {
+        } elseif ($request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); //avoid display the message at next page reload
             $vars['error'] = $this->get('translator')->trans('sessionTimeoutOutWarning', [], 'login');
-            $this->get('logger')->notice("Session timeout from API server.");
+            $this->get('logger')->notice('Session timeout from API server.');
         }
-            
+
         return $this->render('AppBundle:Index:login.html.twig', $vars);
     }
-
 
     /**
      * @Route("login_check", name="login_check")
@@ -123,9 +122,9 @@ class IndexController extends AbstractController
 
         return $this->render('AppBundle:Index:error-503.html.twig', $vars);
     }
-    
+
     /**
-     * keep session alive. Called from session timeout dialog
+     * keep session alive. Called from session timeout dialog.
      * 
      * @Route("session-keep-alive", name="session-keep-alive")
      * @Method({"GET"})
@@ -133,7 +132,7 @@ class IndexController extends AbstractController
     public function sessionKeepAliveAction(Request $request)
     {
         $request->getSession()->set('refreshedAt', time());
-        
+
         return new Response('session refreshed successfully');
     }
 
@@ -144,8 +143,7 @@ class IndexController extends AbstractController
     {
         throw new AccessDeniedException();
     }
-    
-    
+
     private function initProgressIndicator($array, $currentStep)
     {
         $currentStep = $currentStep - 1;
@@ -153,7 +151,7 @@ class IndexController extends AbstractController
         if (is_array($array)) {
             $soa = count($array);
 
-            for ($i = 0; $i < $soa; $i++) {
+            for ($i = 0; $i < $soa; ++$i) {
                 $item = $array[$i];
                 $classes = [];
                 if ($i == $currentStep) {
@@ -169,7 +167,6 @@ class IndexController extends AbstractController
 
                 $progressSteps_arr[] = $item;
             }
-
         }
 
         return $progressSteps_arr;
@@ -182,21 +179,20 @@ class IndexController extends AbstractController
     {
         $form = $this->createForm('feedback', new ModelDir\Feedback());
         $request = $this->getRequest();
-        
+
         $form->handleRequest($request);
 
-        if($form->isValid()){
-
+        if ($form->isValid()) {
             $restClient = $this->get('restClient'); /* @var $restClient RestClient */
 
             $restClient->sendHomepageFeedback($form->getData());
 
             return $this->render('AppBundle:Index:feedback-thankyou.html.twig');
         }
-        
-        return $this->render('AppBundle:Index:feedback.html.twig', [ 'form' => $form->createView() ]);
+
+        return $this->render('AppBundle:Index:feedback.html.twig', ['form' => $form->createView()]);
     }
-    
+
     /**
      * @Route("/terms", name="terms")
      */
@@ -204,7 +200,7 @@ class IndexController extends AbstractController
     {
         return $this->render('AppBundle:Index:terms.html.twig');
     }
-    
+
     /**
      * @Route("/logout", name="logout")
      * @Template
@@ -214,10 +210,9 @@ class IndexController extends AbstractController
         f();
         $this->get('security.context')->setToken(null);
         $request->getSession()->invalidate();
-        
+
         return $this->redirect(
             $this->generateUrl('homepage')
         );
     }
-
 }

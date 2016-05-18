@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Model;
 
 use JMS\Serializer\Annotation as JMS;
@@ -11,16 +12,16 @@ class FeedbackReport
      * @JMS\Type("string")
      */
     private $satisfactionLevel;
-    
 
     public function getSatisfactionLevel()
     {
         return $this->satisfactionLevel;
     }
-    
+
     public function setSatisfactionLevel($satisfactionLevel)
     {
         $this->satisfactionLevel = $satisfactionLevel;
+
         return $this;
     }
 }

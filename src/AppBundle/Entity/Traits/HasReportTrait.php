@@ -1,26 +1,27 @@
 <?php
+
 namespace AppBundle\Entity\Traits;
 
 use JMS\Serializer\Annotation as JMS;
 use AppBundle\Entity\Report;
 
-trait HasReportTrait 
+trait HasReportTrait
 {
     /**
      * @JMS\Type("AppBundle\Entity\Report")
      */
     private $report;
-    
+
     /**
      * @JMS\VirtualProperty
      * 
-     * @return integer
+     * @return int
      */
     public function getReportId()
     {
         return $this->report ? $this->report->getId() : null;
     }
-    
+
     /**
      * @return Report
      */
@@ -28,14 +29,14 @@ trait HasReportTrait
     {
         return $this->report;
     }
-    
+
     /**
      * @param Report $report
      */
     public function setReport($report)
     {
         $this->report = $report;
+
         return $this;
     }
-    
 }

@@ -7,11 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Validator\Constraints\DUserPassword;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 class ChangePasswordType extends AbstractType
 {
-
     const VALIDATION_GROUP = 'change_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -29,11 +27,11 @@ class ChangePasswordType extends AbstractType
                     'invalid_message' => 'Password does not match',
                     'constraints' => [
                         new Assert\NotBlank(['message' => 'Please enter your new password', 'groups' => [self::VALIDATION_GROUP]]),
-                        new Assert\Length(['min' => 8, 'max' => 50, 'minMessage' => "user.password.minLength", 'maxMessage' => "user.password.maxLength", 'groups' => [self::VALIDATION_GROUP]]),
-                        new Assert\Regex(['pattern' => "/[a-z]/", 'message' => 'user.password.noLowerCaseChars', 'groups' => self::VALIDATION_GROUP]),
-                        new Assert\Regex(['pattern' => "/[A-Z]/", 'message' => 'user.password.noUpperCaseChars', 'groups' => self::VALIDATION_GROUP]),
-                        new Assert\Regex(['pattern' => "/[0-9]/", 'message' => 'user.password.noNumber', 'groups' => self::VALIDATION_GROUP]),
-                    ]
+                        new Assert\Length(['min' => 8, 'max' => 50, 'minMessage' => 'user.password.minLength', 'maxMessage' => 'user.password.maxLength', 'groups' => [self::VALIDATION_GROUP]]),
+                        new Assert\Regex(['pattern' => '/[a-z]/', 'message' => 'user.password.noLowerCaseChars', 'groups' => self::VALIDATION_GROUP]),
+                        new Assert\Regex(['pattern' => '/[A-Z]/', 'message' => 'user.password.noUpperCaseChars', 'groups' => self::VALIDATION_GROUP]),
+                        new Assert\Regex(['pattern' => '/[0-9]/', 'message' => 'user.password.noNumber', 'groups' => self::VALIDATION_GROUP]),
+                    ],
                 ])
                 ->add('id', 'hidden')
                 ->add('save', 'submit');
@@ -56,5 +54,4 @@ class ChangePasswordType extends AbstractType
     {
         return 'change_password';
     }
-
 }

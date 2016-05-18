@@ -6,14 +6,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * MoneyTransfer
+ * MoneyTransfer.
  */
 class MoneyTransfer
 {
-
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $id;
 
@@ -51,20 +51,18 @@ class MoneyTransfer
      */
     private $accountToId;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-
     /**
-     * Set amount
+     * Set amount.
      *
      * @param string $amount
      *
@@ -77,9 +75,8 @@ class MoneyTransfer
         return $this;
     }
 
-
     /**
-     * Get amount
+     * Get amount.
      *
      * @return string
      */
@@ -87,7 +84,6 @@ class MoneyTransfer
     {
         return $this->amount;
     }
-
 
     /**
      * @return Account
@@ -97,7 +93,6 @@ class MoneyTransfer
         return $this->accountFrom;
     }
 
-
     /**
      * @return Account
      */
@@ -106,29 +101,29 @@ class MoneyTransfer
         return $this->accountTo;
     }
 
-
     /**
-     * 
      * @param Account $from
+     *
      * @return MoneyTransfer
      */
     public function setAccountFrom($from)
     {
         $this->accountFrom = $from;
+
         return $this;
     }
 
-
     /**
      * @param Account $to
+     *
      * @return MoneyTransfer
      */
     public function setAccountTo($to)
     {
         $this->accountTo = $to;
+
         return $this;
     }
-
 
     public function setAccountFromId($accountFromId)
     {
@@ -140,7 +135,6 @@ class MoneyTransfer
         $this->setAccountFrom($from);
     }
 
-
     public function setAccountToId($accountToId)
     {
         $this->accountToId = $accountToId;
@@ -151,16 +145,13 @@ class MoneyTransfer
         $this->setAccountTo($to);
     }
 
-
     public function getAccountFromId()
     {
         return $this->accountFromId;
     }
 
-
     public function getAccountToId()
     {
         return $this->accountToId;
     }
-
 }

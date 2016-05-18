@@ -6,13 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use AppBundle\Entity\Account;
 use AppBundle\Entity\Report;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Request;
-use Fixtures;
 use Mockery as m;
 
 class ListAccountsTest extends WebTestCase
 {
-
     public function setUp()
     {
         $this->markTestSkipped('deprecated');
@@ -37,9 +34,8 @@ class ListAccountsTest extends WebTestCase
                 ->getMock();
 
         // create WebClient and Crawler
-        $client = static::createClient([ 'environment' => 'test',
-                    'debug' => false]);
-
+        $client = static::createClient(['environment' => 'test',
+                    'debug' => false, ]);
 
         $this->twig = $client->getContainer()->get('templating');
 
@@ -48,7 +44,7 @@ class ListAccountsTest extends WebTestCase
             'accounts' => [
                 $account1,
                 $account2,
-            ]
+            ],
         ]);
 
         $crawler = new Crawler($html);
@@ -74,5 +70,4 @@ class ListAccountsTest extends WebTestCase
     {
         m::close();
     }
-
 }

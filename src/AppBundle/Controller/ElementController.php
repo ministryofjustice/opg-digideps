@@ -1,19 +1,15 @@
 <?php
+
 namespace AppBundle\Controller;
 
-use AppBundle\Entity as EntityDir;
-use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @Route("/elements")
  */
 class ElementController extends AbstractController
 {
-
     /**
      * @Route("", name="elements")
      * @Template("AppBundle:Element:index.html.twig")
@@ -29,17 +25,15 @@ class ElementController extends AbstractController
      */
     public function layoutAction()
     {
-        
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Layout']
-            
+            ['label' => 'Layout'],
+
         ];
-        
+
         return [
-            'breadCrumb' => $breadCrumb
+            'breadCrumb' => $breadCrumb,
         ];
-    
     }
 
     /**
@@ -48,17 +42,15 @@ class ElementController extends AbstractController
      */
     public function colourAction()
     {
-        
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Colours']
+            ['label' => 'Colours'],
 
         ];
 
         return [
-            'breadCrumb' => $breadCrumb
+            'breadCrumb' => $breadCrumb,
         ];
-
     }
 
     /**
@@ -67,96 +59,89 @@ class ElementController extends AbstractController
      */
     public function formComponentsAction()
     {
-
         $client = [
-            'fullname' => 'Zac Tolley'
+            'fullname' => 'Zac Tolley',
         ];
 
         $report = [
             'id' => 1,
             'period' => '2014 to 2015',
-            'client' => $client
+            'client' => $client,
         ];
 
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Form elements']
+            ['label' => 'Form elements'],
 
         ];
 
         return [
             'breadCrumb' => $breadCrumb,
             'report' => $report,
-            'client' => $client
+            'client' => $client,
         ];
-
     }
-    
+
     /**
      * @Route("/hero", name="elements_hero")
      * @Template("AppBundle:Element:hero.html.twig")
      */
     public function heroAction()
     {
-
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Hero elements']
+            ['label' => 'Hero elements'],
 
         ];
 
         return [
-            'breadCrumb' => $breadCrumb
+            'breadCrumb' => $breadCrumb,
         ];
-
     }
-    
+
     /**
      * @Route("/headings", name="elements_headings")
      * @Template("AppBundle:Element:headings.html.twig")
      */
     public function headingsAction()
     {
-
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Headings']
+            ['label' => 'Headings'],
 
         ];
 
         return [
-            'breadCrumb' => $breadCrumb
+            'breadCrumb' => $breadCrumb,
         ];
-
     }
-    
+
     /**
      * @Route("/navigation", name="elements_navigation")
      * @Template("AppBundle:Element:navigation.html.twig")
      */
     public function navigationAction()
     {
-
         $client = [
-            'fullname' => 'Zac Tolley'
+            'fullname' => 'Zac Tolley',
         ];
 
         $report = [
             'id' => 1,
             'period' => '2014 to 2015',
-            'client' => $client
+            'client' => $client,
         ];
 
         $breadCrumb = [
             ['label' => 'Digideps Elements', 'href' => $this->generateUrl('elements')],
-            ['label' => 'Navigation']
+            ['label' => 'Navigation'],
 
         ];
 
         return [
             'breadCrumb' => $breadCrumb,
             'report' => $report,
-            'client' => $client
+            'client' => $client,
         ];
-
-    }}
+    }
+}

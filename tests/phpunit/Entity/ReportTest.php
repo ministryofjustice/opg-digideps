@@ -1,29 +1,29 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Mockery as m;
-use AppBundle\Entity\Report;
 
 class ReportTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  Report $report */
     private $report;
-    
+
     /** @var  Account $account */
     private $account;
-    
+
     protected function setUp()
     {
-        $this->report = new Report;
+        $this->report = new Report();
         $this->account = m::mock('AppBundle\Entity\Account');
         $this->account->shouldIgnoreMissing();
     }
-    
+
     public function tearDown()
     {
         m::close();
     }
-    
+
     /**
      * @dataProvider isDueProvider
      * @test
@@ -33,23 +33,25 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         $endDate = new \DateTime();
         $endDate->modify($endDateModifier);
         $this->report->setEndDate($endDate);
-        
-        $lastMidnight = new \DateTime;
+
+        $lastMidnight = new \DateTime();
         $lastMidnight->setTime(0, 0, 0);
-        
+
         $actual = $this->report->isDue();
-        
+
         $this->assertEquals($expected, $actual);
     }
 
     /** @test */
-    public function sectionCountForProperty() {
+    public function sectionCountForProperty()
+    {
         $this->report->setCourtOrderType(REPORT::PROPERTY_AND_AFFAIRS);
         $this->AssertEquals(5, $this->report->getSectionCount());
     }
 
     /** @test */
-    public function sectionCountForOther() {
+    public function sectionCountForOther()
+    {
         $this->report->setCourtOrderType(1);
         $this->AssertEquals(3, $this->report->getSectionCount());
     }
@@ -73,57 +75,56 @@ class ReportTest extends \PHPUnit_Framework_TestCase
         }
         $this->account->setMoneyOut($mo);
 
-
         $this->assertEquals($expected, $this->account->getCountValidTotals());
     }
 
     /** @test */
     public function hasMoneyInWhenThereIsMoneyIn()
     {
-        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction1 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([100])
+            ->shouldReceive('getAmounts')->andReturn([100])
             ->getMock();
 
-        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction2 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([null])
+            ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
-        
+
         $this->report->setTransactionsIn([$transaction1, $transaction2]);
-        
+
         $this->assertEquals(true, $this->report->hasMoneyIn());
     }
-    
+
     /** @test */
     public function hasMoneyInWhenThereIsNoMoneyIn()
     {
-        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction1 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([null])
+            ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
 
-        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction2 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([null])
+            ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
 
         $this->report->setTransactionsIn([$transaction1, $transaction2]);
 
-        $this->assertEquals(false, $this->report->hasMoneyIn());  
+        $this->assertEquals(false, $this->report->hasMoneyIn());
     }
 
     /** @test */
     public function hasMoneyOutWhenThereIsMoneyOut()
     {
-        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction1 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([100])
+            ->shouldReceive('getAmounts')->andReturn([100])
             ->getMock();
 
-        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction2 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([null])
+            ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
 
         $this->report->setTransactionsOut([$transaction1, $transaction2]);
@@ -134,32 +135,32 @@ class ReportTest extends \PHPUnit_Framework_TestCase
     /** @test */
     public function hasMoneyOutWhenThereIsNoMoneyOut()
     {
-        $transaction1 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction1 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([null])
+            ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
 
-        $transaction2 =  m::mock('AppBundle\Entity\Transaction')
+        $transaction2 = m::mock('AppBundle\Entity\Transaction')
             ->shouldIgnoreMissing(true)
-            ->shouldReceive("getAmounts")->andReturn([null])
+            ->shouldReceive('getAmounts')->andReturn([null])
             ->getMock();
 
         $this->report->setTransactionsOut([$transaction1, $transaction2]);
 
         $this->assertEquals(false, $this->report->hasMoneyOut());
     }
-    
+
     public function getCountValidTotalsProvider()
     {
         return [
-            [[]                         , []                            , 0],
-            [['in1'=>null]              , ['out1'=>null]                , 0],
-            [['in1'=>123]               , []                            , 1],
-            [['in1'=>0]                 , []                            , 1],
-            [[]                         , ['out1'=>123]                 , 1],
-            [[]                         , ['out1'=>0]                   , 1],
-            [['in1'=>123]               , ['out1'=>123]                 , 2],
-            [['in1'=>0, 'in2'=>null]    , ['out1'=>123, 'out2'=>null]   , 2],
+            [[], [], 0],
+            [['in1' => null], ['out1' => null], 0],
+            [['in1' => 123], [], 1],
+            [['in1' => 0], [], 1],
+            [[], ['out1' => 123], 1],
+            [[], ['out1' => 0], 1],
+            [['in1' => 123], ['out1' => 123], 2],
+            [['in1' => 0, 'in2' => null], ['out1' => 123, 'out2' => null], 2],
         ];
     }
 
@@ -177,7 +178,4 @@ class ReportTest extends \PHPUnit_Framework_TestCase
             ['+1 year', false],
         ];
     }
-    
-    
-    
 }

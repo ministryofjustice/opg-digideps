@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -8,10 +9,10 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ReportType extends AbstractType
 {
     /**
-     * @var string 
+     * @var string
      */
     private $name;
-     
+
     /**
      * @param string $name formName report or report_edit
      */
@@ -19,22 +20,22 @@ class ReportType extends AbstractType
     {
         $this->name = $name;
     }
-    
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
                 ->add('id', 'hidden')
-                ->add('startDate', 'date', [ 'widget' => 'text',
+                ->add('startDate', 'date', ['widget' => 'text',
                                               'input' => 'datetime',
                                               'format' => 'yyyy-MM-dd',
-                                              'invalid_message' => 'report.startDate.invalidMessage' ])
-                
-                ->add('endDate', 'date', [ 'widget' => 'text',
+                                              'invalid_message' => 'report.startDate.invalidMessage', ])
+
+                ->add('endDate', 'date', ['widget' => 'text',
                                             'input' => 'datetime',
                                             'format' => 'yyyy-MM-dd',
-                                            'invalid_message' => 'report.endDate.invalidMessage'
+                                            'invalid_message' => 'report.endDate.invalidMessage',
                                           ])
-                
+
                 /*->add('courtOrderType', 'choice',[ 'choices' => $choices, 
                                                  'empty_data' => null ,
                                                  'empty_value' => 'Please select ..'] )*/
@@ -42,14 +43,14 @@ class ReportType extends AbstractType
 //                ->add('client', 'hidden')
                 ->add('save', 'submit');
     }
-    
+
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults( [
+        $resolver->setDefaults([
             'translation_domain' => 'registration',
         ]);
     }
-    
+
     public function getName()
     {
         return  $this->name;

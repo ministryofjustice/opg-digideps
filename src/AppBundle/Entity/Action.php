@@ -1,9 +1,9 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @JMS\ExclusionPolicy("none")
@@ -11,10 +11,11 @@ use Symfony\Component\Validator\ExecutionContextInterface;
 class Action
 {
     use Traits\HasReportTrait;
-    
+
     /**
      * @JMS\Type("integer")
-     * @var integer
+     *
+     * @var int
      */
     private $id;
 
@@ -23,10 +24,10 @@ class Action
      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action"})
      */
     private $doYouExpectFinancialDecisions;
-    
-     /**
+
+    /**
      * @JMS\Type("string")
-      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"expect-decisions-yes"})
+     * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"expect-decisions-yes"})
      */
     private $doYouExpectFinancialDecisionsDetails;
 
@@ -35,14 +36,13 @@ class Action
      * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action"})
      */
     private $doYouHaveConcerns;
-    
-    
+
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"have-actions-yes"})
      */
     private $doYouHaveConcernsDetails;
-    
+
     public function getId()
     {
         return $this->id;
@@ -61,18 +61,21 @@ class Action
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
+
         return $this;
     }
 
     public function setDoYouHaveConcerns($doYouHaveConcerns)
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
+
         return $this;
     }
 
@@ -81,34 +84,29 @@ class Action
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
-
     public function getDoYouHaveConcernsDetails()
     {
         return $this->doYouHaveConcernsDetails;
     }
-
 
     public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
     }
 
-
     public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
     }
-    
+
     public function isComplete()
     {
-        $financialComplete = $this->getDoYouExpectFinancialDecisions() =='no' 
-            || ($this->getDoYouExpectFinancialDecisions() =='yes' && $this->getDoYouExpectFinancialDecisionsDetails());
-        
-        $actionComplete = $this->getDoYouHaveConcerns() =='no' 
-            || ($this->getDoYouHaveConcerns() =='yes' && $this->getDoYouHaveConcernsDetails());
-        
+        $financialComplete = $this->getDoYouExpectFinancialDecisions() == 'no'
+            || ($this->getDoYouExpectFinancialDecisions() == 'yes' && $this->getDoYouExpectFinancialDecisionsDetails());
+
+        $actionComplete = $this->getDoYouHaveConcerns() == 'no'
+            || ($this->getDoYouHaveConcerns() == 'yes' && $this->getDoYouHaveConcernsDetails());
+
         return $financialComplete && $actionComplete;
     }
-
-    
 }

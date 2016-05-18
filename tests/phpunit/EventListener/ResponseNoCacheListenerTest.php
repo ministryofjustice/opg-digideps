@@ -1,13 +1,11 @@
 <?php
+
 namespace AppBundle\EventListener;
 
 use Mockery as m;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 
 /**
- * Act on session on each request
- * 
+ * Act on session on each request.
  */
 class ResponseNoCacheListenerTest extends \PHPUnit_Framework_TestCase
 {
@@ -20,20 +18,16 @@ class ResponseNoCacheListenerTest extends \PHPUnit_Framework_TestCase
         $headers->shouldReceive('set')->once()->with('Cache-Control', 'no-cache, no-store, must-revalidate');
         $headers->shouldReceive('set')->once()->with('Pragma', 'no-cache');
         $headers->shouldReceive('set')->once()->with('Expires', '0');
-        
+
         $response = m::mock('Symfony\Component\HttpFoundation\Response');
         $response->headers = $headers;
-         
+
         $event = m::mock('Symfony\Component\HttpKernel\Event\FilterResponseEvent');
         $event->shouldReceive('getResponse')->andReturn($response);
-        
-        
+
         $object = new ResponseNoCacheListener();
         $object->onKernelResponse($event);
-        
+
         m::close();
     }
-    
-    
-    
 }
