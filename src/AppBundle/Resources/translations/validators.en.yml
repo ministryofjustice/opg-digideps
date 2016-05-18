@@ -171,8 +171,6 @@ account:
         notBlank: You must enter an opening balance
         type: You must enter a valid opening balance
         outOfRange: The opening balance must be less than £10,000,000,000
-    openingDateExplanation:
-        notBlankOnDateMismatch: You must explain why the opening balance date is different to your report start date
     closingBalance:
         notBlank: You must enter a closing balance
         type: Enter a valid closing balance

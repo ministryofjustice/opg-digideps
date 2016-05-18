@@ -6,10 +6,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\ExecutionContextInterface;
 
-/**
- * @Assert\Callback(methods={"isOpeningDateValidOrExplanationIsGiven"}, groups={"opening_balance"})
- * @Assert\Callback(methods={"isClosingDateValidOrExplanationIsGiven"}, groups={"closing_balance"})
- */
 class Account
 {
     use Traits\HasReportTrait;
@@ -104,13 +100,6 @@ class Account
      * @var string OPENING_DATE_SAME_* values
      */
     private $openingDateMatchesReportDate;
-
-    /**
-     * @deprecated since accounts_mk2
-     * @JMS\Type("string")
-     * @JMS\Groups({"transactions", "basic", "edit_details", "add","edit_details_report_due"})
-     */
-    private $openingDateExplanation;
 
     /**
      * @JMS\Type("string")
@@ -270,16 +259,6 @@ class Account
         return $this->openingBalance;
     }
 
-    public function getOpeningDateExplanation()
-    {
-        return $this->openingDateExplanation;
-    }
-
-    public function setOpeningDateExplanation($openingDateExplanation)
-    {
-        $this->openingDateExplanation = $openingDateExplanation;
-    }
-
     /**
      * @param type $closingBalance
      *
@@ -402,29 +381,6 @@ class Account
         $this->createdAt = $createdAt;
     }
 
-    /**
-     * Add violation if Opening date is not the same as the report start date and there is not explanation.
-     */
-    public function isOpeningDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
-    {
-        // trigger error in case of date mismatch (report start date different from account opening date) and explanation is empty
-        if (!$this->isOpeningDateValid() && !$this->getOpeningDateExplanation()) {
-            $context->addViolationAt('openingDate', 'account.openingDate.notSameAsReport');
-            $context->addViolationAt('openingDateExplanation', 'account.openingDateExplanation.notBlankOnDateMismatch');
-        }
-    }
-
-    /**
-     * Add violation if closing date is not the same as the report end date and there is not explanation.
-     */
-    public function isClosingDateValidOrExplanationIsGiven(ExecutionContextInterface $context)
-    {
-        // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
-        if ($this->getClosingDate() !== null && !$this->isClosingDateValid()) {
-            $context->addViolationAt('closingDate', 'account.closingDate.mismatch');
-            $context->addViolationAt('closingDateExplanation', 'account.closingDateExplanation.notBlankOnDateMismatch');
-        }
-    }
 
     /**
      * Add violation if closing balance does not match sum of transactions.
