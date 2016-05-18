@@ -49,7 +49,6 @@ class ReportRepository extends EntityRepository
             $newAccount->setSortCode($account->getSortCode());
             $newAccount->setAccountNumber($account->getAccountNumber());
             $newAccount->setOpeningBalance($account->getClosingBalance());
-            $newAccount->setOpeningDate($account->getClosingDate());
             $newAccount->setCreatedAt(new \DateTime());
             $newAccount->setReport($newReport);
 

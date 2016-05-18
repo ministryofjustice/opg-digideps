@@ -40,7 +40,6 @@ class ReportRepositoryTest extends WebTestCase
         $asset->setValuationDate(new \DateTime('10 June 2013'));
 
         $account = $this->fixtures->createAccount($report, [
-            'setOpeningDate' => new \DateTime('01 January 2014'),
             'setClosingDate' => new \DateTime('31 December 2014'),
             'setBank' => 'NATWEST',
             'setAccountType' => 'Current',
@@ -81,7 +80,6 @@ class ReportRepositoryTest extends WebTestCase
         /** @var $account Account */
         $account = $newReport->getAccounts()[0];
 
-        $this->assertEquals('2014-12-31', $account->getOpeningDate()->format('Y-m-d'));
         $this->assertEquals('NATWEST', $account->getBank());
         $this->assertEquals('Current', $account->getAccountType());
         $this->assertEquals('120044', $account->getSortCode());

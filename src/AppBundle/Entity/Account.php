@@ -118,16 +118,6 @@ class Account
      * @var \Date
      * @JMS\Groups({"transactions", "basic", "transfers"})
      * 
-     * @ORM\Column(name="opening_date", type="date", nullable=true)
-     */
-    private $openingDate;
-
-    /**
-     * @deprecated since accounts_mk2
-     *
-     * @var \Date
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
      * @ORM\Column(name="closing_date", type="date", nullable=true)
      */
     private $closingDate;
@@ -393,29 +383,6 @@ class Account
         return $this;
     }
 
-    /**
-     * Set openingDate.
-     *
-     * @param \DateTime $openingDate
-     *
-     * @return Account
-     */
-    public function setOpeningDate($openingDate)
-    {
-        $this->openingDate = $openingDate;
-
-        return $this;
-    }
-
-    /**
-     * Get openingDate.
-     *
-     * @return \DateTime
-     */
-    public function getOpeningDate()
-    {
-        return $this->openingDate;
-    }
 
     /**
      * Set closingDate.
