@@ -13,8 +13,16 @@
     {% set formId = "account_add_form" %}
     
     {% block maincontent %}
-
+        
         <h3 class="heading-medium-large">{{ ('banks.' ~ type ~ '.pageSectionTitle') | trans }}</h3>
+        
+        {% if showMigrationWarning %}
+         <p class="flash flash-news">
+             This account was created from "{{ account.meta | trim('.') }}". <br/>
+           There’s some missing information, please add it below.  
+         </p>
+        {% endif %}
+        
         <p class="page-section-description">{{ ('banks.' ~ type ~ '.pageSectionDescription') | trans({'%client%': report.client.firstname}, translationDomain) }}</p>
         
         {% include 'AppBundle:BankAccount:_account_form.html.twig' %}

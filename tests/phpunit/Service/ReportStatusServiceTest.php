@@ -39,12 +39,20 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
     }
 
     
+    public function testnotice()
+    {
+        $this->markTestIncomplete('too much duplication in this test. needs more object in setup()');
+    }
+    
+    
+    
     /** @test */
     public function hasOutstandingAccountsIsTrue()
     {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(false)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $accounts = array($account);
@@ -66,6 +74,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $accounts = array($account);
@@ -107,6 +116,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
              $accounts[]= m::mock('AppBundle\Entity\Account')
                 ->shouldIgnoreMissing(true)
                 ->shouldReceive('hasClosingBalance')->andReturn(true)
+                ->shouldReceive('hasMissingInformation')->andReturn(true)
                 ->getMock();
          }
          
@@ -143,6 +153,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(true)
             ->getMock();
         
         $y = [];
@@ -182,6 +193,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(true)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -216,6 +228,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(true)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -251,6 +264,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(true)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -315,6 +329,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(false)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -349,6 +364,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(true)
             ->getMock();
         
         $report = m::mock('AppBundle\Entity\Report')
@@ -383,6 +399,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
         
         $report = m::mock('AppBundle\Entity\Report')
@@ -416,6 +433,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -449,6 +467,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -484,6 +503,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -716,7 +736,9 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $accountsMocks = [];
         foreach ($accounts as $hasClosingBalance) {
             $accountsMocks[] = m::mock('AppBundle\Entity\Account')
-                ->shouldReceive('hasClosingBalance')->andReturn($hasClosingBalance)->getMock();
+                ->shouldReceive('hasClosingBalance')->andReturn($hasClosingBalance)
+                ->shouldReceive('hasMissingInformation')->andReturn(false)
+                ->getMock();
         }
         
         $report = m::mock('AppBundle\Entity\Report')
@@ -760,12 +782,15 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
      * @test 
      * @dataProvider accountsStatusProvider
      */
-    public function getAccountsStatus($accounts, $hasMoneyIn, $hasMoneyOut, $isTotalMatch, $balanceExpl, $expectedStatus)
+    public function getAccountsStatus($accounts, $hasMoneyIn, $hasMoneyOut, 
+            $isTotalMatch, $balanceExpl, $expectedStatus)
     {
         $accountsMocks = [];
         foreach ($accounts as $hasClosingBalance) {
             $accountsMocks[] = m::mock('AppBundle\Entity\Account')
-                ->shouldReceive('hasClosingBalance')->andReturn($hasClosingBalance)->getMock();
+                ->shouldReceive('hasClosingBalance')->andReturn($hasClosingBalance)
+                ->shouldReceive('hasMissingInformation')->andReturn(false)
+                ->getMock();
         }
         
         $report = m::mock('AppBundle\Entity\Report')
@@ -1066,6 +1091,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -1100,6 +1126,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -1134,6 +1161,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -1170,6 +1198,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
 
         $report = m::mock('AppBundle\Entity\Report')
@@ -1206,6 +1235,7 @@ class ReportStatusServiceTest extends \PHPUnit_Framework_TestCase {
         $account = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('hasClosingBalance')->andReturn(true)
+            ->shouldReceive('hasMissingInformation')->andReturn(false)
             ->getMock();
         
         $report = m::mock('AppBundle\Entity\Report')

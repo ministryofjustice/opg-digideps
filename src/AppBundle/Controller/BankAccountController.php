@@ -140,9 +140,11 @@ class BankAccountController extends AbstractController
 
     /**
      * @Route("/report/{reportId}/accounts/banks/upsert/{id}", name="upsert_account", defaults={ "id" = null })
+     * 
+     * @param Request $request
      * @param integer $reportId
      * @param integer $id account Id
-     * @param Request $request
+     * 
      * @Template()
      * @return array
      */
@@ -151,12 +153,15 @@ class BankAccountController extends AbstractController
         $restClient = $this->getRestClient(); /* @var $restClient RestClient */
         $report = $this->getReportIfReportNotSubmitted($reportId, ['transactions', 'basic', 'client', 'accounts']);
         $type = $id ? 'edit' : 'add';
+        $showMigrationWarning = false;
         
         if ($type === 'edit') {
             if (!$report->hasAaccountWithId($id)) {
                 throw new \RuntimeException("Account not found."); 
             }
             $account = $restClient->get('report/account/' . $id, 'Account');
+            // not existingAccount.accountNumber or (existingAccount.requiresBankNameAndSortCode and not existingAccount.sortCode)
+            $showMigrationWarning = $account->hasMissingInformation();
         } else {
             $account = new EntityDir\Account();
             $account->setReport($report);
@@ -200,6 +205,7 @@ class BankAccountController extends AbstractController
             'subsection' => 'banks',
             'form' => $form->createView(),
             'type' => $type,
+            'showMigrationWarning' => $showMigrationWarning,
             'account' => $account,
             'showIsClosed' => $showIsClosed == 'yes'
         ];

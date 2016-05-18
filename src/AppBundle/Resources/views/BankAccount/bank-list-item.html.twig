@@ -41,6 +41,11 @@
                     <span class="status account-closed">ACCOUNT CLOSED</span>
             </div>
         {% endif %}
+        {% if account.hasMissingInformation %}
+            <div class="descriptive-list-item no-border">
+               <span class="status account-closed">ACCOUNT INCOMPLETE</span>
+            </div>
+        {% endif %}
         
         {% if account.closingBalance == null %}
         <div class="warning">

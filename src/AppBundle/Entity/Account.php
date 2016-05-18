@@ -37,7 +37,7 @@ class Account
     /**
      * @JMS\Type("string")
      * @Assert\NotBlank(message="account.bank.notBlank", groups={"basic", "bank_name"})
-     * @Assert\Length(max=100, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "bank_name"})
+     * @Assert\Length(max=500, min=2,  minMessage= "account.bank.minMessage", maxMessage= "account.bank.maxMessage", groups={"basic", "bank_name"})
      * 
      * @JMS\Groups({"edit_details", "edit_details_report_due", "add", "add_edit"})
      * 
@@ -190,6 +190,14 @@ class Account
      */
     private $createdAt;
 
+     /**
+     * @JMS\Type("string")
+     * @JMS\Groups({"basic"})
+     * 
+     * @var string $bank
+     */
+    private $meta;
+    
     public function getId()
     {
         return $this->id;
@@ -549,5 +557,37 @@ class Account
         return $this;
     }
     
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
     
+    /**
+     * Only for partial account created during migrations
+     * e.g. asset -> bank account
+     * 
+     * @return boolean
+     */
+    public function hasMissingInformation()
+    {
+        if (!$this->getAccountNumber() || $this->getIsJointAccount() === null) {
+            return true;
+        }
+
+        if ($this->requiresBankNameAndSortCode()) {
+            if (!$this->getBank() || !$this->getSortCode()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 }

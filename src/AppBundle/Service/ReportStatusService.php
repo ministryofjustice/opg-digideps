@@ -270,7 +270,7 @@ class ReportStatusService
     public function hasOutstandingAccounts()
     {
         foreach ($this->report->getAccounts() as $account) {
-            if (!$account->hasClosingBalance()) {
+            if (!$account->hasClosingBalance() || $account->hasMissingInformation()) {
                 return true;
             }
         }

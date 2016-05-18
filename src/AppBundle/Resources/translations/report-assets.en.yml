@@ -1,7 +1,7 @@
 page:
   htmlTitle: "Deputy report - assets | GOV.UK"
   pageSectionTitle: "%client%'s assets"
-  pageSectionDescription: "Add details of any property, savings or investments %client% owns."
+  pageSectionDescription: "Add details of any property, valuables or investments that %client% owns."
   pageSectionEditInfo: "You can update the details of an asset or delete an asset by using the 'Edit this asset' link below."
   pageSectionWarning: ""
   subSectionTitleAdd: 
@@ -87,9 +87,9 @@ defaultDropDownOption:
 dropdown:
     # values will be automatically ordered alphabetically. other_assets will always be kept last
     property: Property
-    savings_accounts: Savings accounts
+    #savings_accounts: Savings accounts
     investment_bonds: Investment bonds
-    isa: ISAs
+    #isa: ISAs
     unit_trusts: Unit trusts
     national_savings_certificates: National savings certificates
     stocks_shares: Stocks and shares
@@ -99,5 +99,5 @@ dropdown:
     antiques: Antiques
     jewellery: Jewellery
     assets_held_outside_england_and_wales: Assets held outside England and Wales
-    court_funds_office_accounts: Court Funds Office accounts
+    #court_funds_office_accounts: Court Funds Office accounts
     other_assets: Other valuable assets

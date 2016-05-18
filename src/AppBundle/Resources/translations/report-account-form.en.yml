@@ -5,6 +5,8 @@ page:
 accountForm:
   bank:
     label: Bank or building society name
+  meta:
+    label: Additional information (optional)
   accountNumber:
     label: Last 4 digits of the account number
     preInput: "* * * *"
