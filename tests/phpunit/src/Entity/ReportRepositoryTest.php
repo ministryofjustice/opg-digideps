@@ -40,7 +40,6 @@ class ReportRepositoryTest extends WebTestCase
         $asset->setValuationDate(new \DateTime('10 June 2013'));
 
         $account = $this->fixtures->createAccount($report, [
-            'setClosingDate' => new \DateTime('31 December 2014'),
             'setBank' => 'NATWEST',
             'setAccountType' => 'Current',
             'setSortCode' => '120044',

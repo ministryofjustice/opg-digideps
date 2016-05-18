@@ -113,16 +113,6 @@ class Account
     private $isClosed;
 
     /**
-     * @deprecated since accounts_mk2
-     *
-     * @var \Date
-     * @JMS\Groups({"transactions", "basic", "transfers"})
-     * 
-     * @ORM\Column(name="closing_date", type="date", nullable=true)
-     */
-    private $closingDate;
-
-    /**
      * @var Report
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="accounts")
@@ -383,30 +373,6 @@ class Account
         return $this;
     }
 
-
-    /**
-     * Set closingDate.
-     *
-     * @param \DateTime $closingDate
-     *
-     * @return Account
-     */
-    public function setClosingDate($closingDate)
-    {
-        $this->closingDate = $closingDate;
-
-        return $this;
-    }
-
-    /**
-     * Get closingDate.
-     *
-     * @return \DateTime
-     */
-    public function getClosingDate()
-    {
-        return $this->closingDate;
-    }
 
     /**
      * Set report.
