@@ -5,17 +5,35 @@ use AppBundle\Entity as EntityDir;
 use AppBundle\Form as FormDir;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @Route("/client")
- */
 class ClientController extends AbstractController
 {
     /**
-     * @Route("/show/{action}/{reportId}", name="client_home", defaults={ "action" = "show", "reportId" = " "})
+     * @Route("/user-account/client-show", name="client_show")
      * @Template()
      */
-    public function indexAction($action, $reportId)
+    public function showAction(Request $request)
+    {   
+        $clients = $this->getUser()->getClients(); 
+        
+        $client = !empty($clients)? $clients[0]: null;
+        
+        $report = new EntityDir\Report();
+        $report->setClient($client);
+        
+        return [
+            'client' => $client,
+            'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
+        ];
+
+    }
+    
+    /**
+     * @Route("/user-account/client-edit", name="client_edit")
+     * @Template()
+     */
+    public function editAction()
     {   
         $restClient = $this->get('restClient');
         
@@ -24,74 +42,34 @@ class ClientController extends AbstractController
         
         $client = !empty($clients)? $clients[0]: null;
         
-        $reports = $client ? $this->getReportsIndexedById($client, ['basic']) : [];
-        arsort($reports);
-        
         $report = new EntityDir\Report();
         $report->setClient($client);
 
-        $formClientNewReport = $this->createForm(new FormDir\ReportType(), $report);
-        $formClientEditReportPeriod = $this->createForm(new FormDir\ReportType(), $report);
         $allowedCot = $this->getAllowedCourtOrderTypeChoiceOptions([], 'arsort');
-        $clientForm = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_home', [ 'action' => 'edit-client'])]);
-        
-        $clientForm->handleRequest($request);
+        $form = $this->createForm(new FormDir\ClientType($allowedCot), $client, [ 'action' => $this->generateUrl('client_edit', [ 'action' => 'edit'])]);
+        $form->handleRequest($request);
         
         // edit client form
-        if ($clientForm->isValid()) {
-            $clientUpdated = $clientForm->getData();
+        if ($form->isValid()) {
+            $clientUpdated = $form->getData();
             $clientUpdated->setId($client->getId());
-            $restClient->put('client/upsert', $clientUpdated);
-
-            return $this->redirect($this->generateUrl('client_home'));
-        }
-        
-        // edit report dates
-        if ($action == 'edit-report' && $reportId) {
-            $report = $this->getReport($reportId, [ 'transactions', 'basic']);
-            $editReportDatesForm = $this->createForm(new FormDir\ReportType('report_edit'), $report, [
-                'translation_domain' => 'report-edit-dates'
+            $restClient->put('client/upsert', $clientUpdated, [
+                 'deserialise_group' => 'edit'
             ]);
-            $editReportDatesForm->handleRequest($request);
-            if ($editReportDatesForm->isValid()) {
-                $restClient->put('report/' . $reportId, $report, [
-                     'deserialise_group' => 'startEndDates',
-                ]);
-                return $this->redirect($this->generateUrl('client_home'));
-            }
-        }
-        
-        $newReportNotification = null;
-        
-        foreach($reports as $report){
-          if($report->getReportSeen() === false){
-              $newReportNotification = $this->get('translator')->trans('newReportNotification', [], 'client');
-              
-              $reportObj = $this->getReport($report->getId(), [ 'transactions', 'basic']);
-              //update report to say message has been seen
-              $reportObj->setReportSeen(true);
-              
-              $restClient->put('report/' . $report->getId(), $reportObj);
-          }   
+
+            return $this->redirect($this->generateUrl('client_show'));
         }
         
         return [
             'client' => $client,
-            'reports' => $reports,
-            'action' => $action,
-            'reportId' => $reportId,
-            'editReportDatesForm' => ($action == 'edit-report') ? $editReportDatesForm->createView() : null,
-            'formEditClient' => $clientForm->createView(),
-            'formClientNewReport' => $formClientNewReport->createView(),
-            'formClientEditReportPeriod' => $formClientEditReportPeriod->createView(),
+            'form' => $form->createView(),
             'lastSignedIn' => $this->getRequest()->getSession()->get('lastLoggedIn'),
-            'newReportNotification' => $newReportNotification
         ];
 
     }
     
     /**
-     * @Route("/add", name="client_add")
+     * @Route("/client/add", name="client_add")
      * @Template()
      */
     public function addAction()

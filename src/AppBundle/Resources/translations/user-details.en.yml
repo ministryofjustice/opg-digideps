@@ -41,7 +41,6 @@ view:
 page:
   htmlTitle: "Deputy report - your details | GOV.UK"
   pageSectionTitle: "Your details"
-  pageSectionDescription: "You can update your contact details below."
   passwordChangedNotification: "You have changed your password. We have sent you an email to confirm this change."
 yourDetails:
   yourName: "Client Name"

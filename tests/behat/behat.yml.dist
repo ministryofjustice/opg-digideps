@@ -18,7 +18,7 @@ default:
             filters:
                 tags: "~@javascript"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
 
         ad:
             description: End to end journey for Assisted Digital user
@@ -26,31 +26,7 @@ default:
             filters:
                 tags: "~@javascript"
             contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-        feedback:
-            description: Tests related to user feedback
-            paths:    [ %paths.base%/features/deputy ]
-            filters:
-                tags: "@feedback&&~@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-        cookies:
-            description: Tests related to cookies
-            paths:    [ %paths.base%/features/deputy ]
-            filters:
-                tags: "@cookie&&~@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
-
-        terms:
-            description: Tests related to terms
-            paths:    [ %paths.base%/features/deputy ]
-            filters:
-                tags: "@terms&&~@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
+                - DigidepsBehat\FeatureContext: [{ dbName: api, autoDbSnapshot: true }]
 
         textarea:
             description: Tests related to textareas
@@ -59,14 +35,6 @@ default:
             filters:
                 tags: "@textarea"
             contexts: [ DigidepsBehat\FeatureContext ]
-
-        safeguardingentry:
-            description: Tests related to the safeguarding section
-            paths:    [ %paths.base%/features ]
-            filters:
-                tags: "@safeguarding&&@entry&&~@javascript"
-            contexts:
-                - DigidepsBehat\FeatureContext: [{ dbName: api }]
 
         wip:
             description: Tests related to the safeguarding section

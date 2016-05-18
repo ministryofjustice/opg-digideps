@@ -9,8 +9,7 @@ Feature: Browser - manage contacts
         Then I save the page as "contact-reason"
         And I press "reason_for_no_contact_save"
         And I should see "nothing relevant contact added" in the "reason-no-contacts" region
-        When I click on "edit-reason-no-contacts"
-        And I click on "delete-button"
+        When I click on "edit-reason-no-contacts, delete-button"
         And I save the page as "contact-reason-delete-confirm"
         Then I should see a confirmation
         When I click on "delete-confirm"

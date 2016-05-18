@@ -201,7 +201,7 @@ class RedirectorTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('isGranted')->with('ROLE_LAY_DEPUTY')->andReturn(true);
         
         $this->router
-            ->shouldReceive('generate')->with('client_home')->andReturn('url');
+            ->shouldReceive('generate')->with('client')->andReturn('url');
         
         $this->report
             ->shouldReceive('getSubmitted')->andReturn(true);

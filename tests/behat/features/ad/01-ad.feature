@@ -32,55 +32,53 @@ Feature: assisted digital / admin
     Scenario: change Assisted Digital user password on admin area
         Given I am logged in to admin as "behat-ad-user@publicguardian.gsi.gov.uk" with password "Abcd1234"
         And I save the application status into "ad-password-change-init"
-        And I click on "my-details"
-        And I click on "edit-user-details"
+        And I click on "user-account, change-password"
         # wrong old password
-        When I fill in "user_details_password_current_password" with "this.is.the.wrong.password"
-        And I press "user_details_save"
+        When I fill in "change_password_current_password" with "this.is.the.wrong.password"
+        And I press "change_password_save"
         Then the following fields should have an error:
-              | user_details_password_current_password |
-              | user_details_password_plain_password_first |
+              | change_password_current_password |
+              | change_password_plain_password_first |
         # invalid new password
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | 1 |
-          | user_details_password_plain_password_second | 2 |
-        And I press "user_details_save"
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | 1 |
+          | change_password_plain_password_second | 2 |
+        And I press "change_password_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |      
+              | change_password_plain_password_first |      
         # unmatching new passwords
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | Abcd1234 |
-          | user_details_password_plain_password_second | Abcd12345 |
-        And I press "user_details_save"
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | Abcd1234 |
+          | change_password_plain_password_second | Abcd12345 |
+        And I press "change_password_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |
+              | change_password_plain_password_first |
         #empty password
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | |
-          | user_details_password_plain_password_second | |
-        And I press "user_details_save"
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | |
+          | change_password_plain_password_second | |
+        And I press "change_password_save"
         Then the following fields should have an error:
-              | user_details_password_plain_password_first |
+              | change_password_plain_password_first |
         # valid new password
         When I fill in the following:
-          | user_details_password_current_password | Abcd1234 |
-          | user_details_password_plain_password_first | Abcd12345 |
-          | user_details_password_plain_password_second | Abcd12345 |
-        And I press "user_details_save"
+          | change_password_current_password | Abcd1234 |
+          | change_password_plain_password_first | Abcd12345 |
+          | change_password_plain_password_second | Abcd12345 |
+        And I press "change_password_save"
         Then the form should be valid
-        And I should be on "/user"
         # restore old password (and assert the current password can be used as old password)
-        When I click on "edit-user-details"
+        When I click on "change-password"
         And I fill in the following:
-          | user_details_password_current_password | Abcd12345 |
-          | user_details_password_plain_password_first | Abcd1234 |
-          | user_details_password_plain_password_second | Abcd1234 |
-        And I press "user_details_save"
+          | change_password_current_password | Abcd12345 |
+          | change_password_plain_password_first | Abcd1234 |
+          | change_password_plain_password_second | Abcd1234 |
+        And I press "change_password_save"
         Then the form should be valid
-        And I should be on "/user"   
+        And I should be on "/user-account/password-edit-done"   
         And I load the application status from "ad-password-change-init"
 
   Scenario: assisted Digital homepage

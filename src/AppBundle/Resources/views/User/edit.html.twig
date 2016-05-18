@@ -1,0 +1,56 @@
+{% embed 'AppBundle:Layouts:report_left_nav.html.twig' with {
+    'hideReportNav': true
+} %}
+{% set translationDomain = "user-details" %}
+{% trans_default_domain translationDomain %}
+{% block bodyClasses %}{{ parent() }} deputy-page{% endblock %}
+{% block pageTitle %}{{ 'htmlTitle.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+{% block title %}{{ 'h1Title.deputy-edit' | trans({}, 'user-account') }}{% endblock %}
+
+{% block backLinktop %}{% endblock %}
+
+{% block leftcontent %}
+    {% include 'AppBundle:User:left-nav.html.twig'%}
+{% endblock %}
+
+{% block maincontent %}
+    
+    {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
+    
+    {{ form_input(form.firstname,'firstname', { 'labelClass': 'required' }) }}
+
+    {{ form_input(form.lastname,'lastname', { 'labelClass': 'required' }) }}
+
+    {% if not is_granted('ROLE_ADMIN') and not is_granted('ROLE_AD') %}
+        {{ form_input(form.address1,'address1', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.address2,'address2') }}
+
+        {{ form_input(form.address3,'address3') }}
+
+        {{ form_input(form.addressPostcode,'addressPostcode', { 'labelClass': 'required', 'inputClass': 'form-control__postcode' }) }}
+
+        {{ form_select(form.addressCountry,'addressCountry', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.phoneMain,'phoneMain', { 'labelClass': 'required' }) }}
+
+        {{ form_input(form.phoneAlternative,'phoneAlternative', { 'labelClass': 'required' }) }}
+    {% endif %}
+
+    {% include 'AppBundle:Components/ButtonBar:_start.html.twig' %}
+
+    {{ form_submit(form.save,'form.editYourDetails.controls.save', {'buttonClass': 'behat-link-save'}) }}
+    
+    {% include 'AppBundle:Components/Link:_link-button.html.twig' with {
+        transDomain: translationDomain,
+        linkButtonLabel: 'form.editYourDetails.controls.cancel.label',
+        linkClass: 'button-link',
+        linkHref: path('user_show')
+    } %}
+    
+    {% include 'AppBundle:Components/ButtonBar:_end.html.twig' %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+{% endembed %}
