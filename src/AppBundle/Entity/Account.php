@@ -84,6 +84,8 @@ class Account
     private $accountNumber;
 
     /**
+     * @deprecated since accounts_mk2
+     * 
      * @JMS\Type("DateTime")
      * @Assert\NotBlank(message="account.openingDate.notBlank", groups={"opening_balance"})
      * @Assert\Date(message="account.openingDate.date", groups={"opening_balance"})
@@ -92,14 +94,6 @@ class Account
      * @var \DateTime
      */
     private $openingDate;
-
-    /**
-     * @deprecated since accounts_mk2
-     * @Assert\NotBlank(message="account.openingDateSameAsReportDate.notBlank", groups={"checkbox_matches_date"})
-     * 
-     * @var string OPENING_DATE_SAME_* values
-     */
-    private $openingDateMatchesReportDate;
 
     /**
      * @JMS\Type("string")
@@ -384,13 +378,6 @@ class Account
         return $this->report->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
     }
 
-    /**
-     * @param string $openingDateMatchesReportDate
-     */
-    public function setOpeningDateMatchesReportDate($openingDateMatchesReportDate)
-    {
-        $this->openingDateMatchesReportDate = $openingDateMatchesReportDate;
-    }
 
     /**
      * @return string
