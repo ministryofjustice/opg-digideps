@@ -5,6 +5,7 @@ namespace AppBundle\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use AppBundle\Entity\CourtOrderType;
+use AppBundle\Entity\Role;
 
 /**
  * @codeCoverageIgnore
@@ -25,6 +26,7 @@ class FixturesCommand extends AddSingleUserCommand
         $em->clear();
 
         $this->cot($output);
+        $this->roles($output);
         
         $em->beginTransaction();
         
@@ -50,6 +52,28 @@ class FixturesCommand extends AddSingleUserCommand
                     ->setId($id)
                     ->setName($name);
                 $em->persist($cot);
+                $output->writeln("added");
+            }
+        }
+        $em->flush();
+    }
+    
+    protected function roles(OutputInterface $output)
+    {
+        $em = $this->getContainer()->get('em');
+        $roleRepo = $em->getRepository('AppBundle\Entity\Role');
+        foreach(Role::$fixtures as $id => $nr) {
+            list($nameString, $roleString) = $nr;
+            $output->write("Role $id ($nameString, $roleString): ");
+            if ($roleRepo->find($id)) {
+                $output->writeln("skip");
+            } else {
+                $role = new Role();
+                $role
+                    ->setId($id)
+                    ->setRole($roleString)
+                    ->setName($nameString);
+                $em->persist($role);
                 $output->writeln("added");
             }
         }

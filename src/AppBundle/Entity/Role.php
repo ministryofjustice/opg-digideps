@@ -14,11 +14,19 @@ use JMS\Serializer\Annotation as JMS;
  */
 class Role implements RoleInterface
 {
+
     const ROLE_ADMIN = 1;
     const ROLE_LAY_DEPUTY = 2;
-
     const ADMIN = 'ROLE_ADMIN';
     const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+
+    public static $fixtures = [
+        self::ROLE_ADMIN => ['OPG Administrator', self::ADMIN],
+        self::ROLE_LAY_DEPUTY => ['Lay Deputy', self::LAY_DEPUTY],
+        3 => ['Professional Deputy', 'ROLE_PROFESSIONAL_DEPUTY'],
+        4 => ['Local Authority Deputy', 'ROLE_LOCAL_AUTHORITY_DEPUTY'],
+        5 => ['Assisted Digital Support', 'ROLE_AD']
+    ];
 
     /**
      * @var int
@@ -55,6 +63,15 @@ class Role implements RoleInterface
     public function __construct()
     {
         $this->user = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+        return $this;
     }
 
     /**
@@ -143,4 +160,5 @@ class Role implements RoleInterface
     {
         return $this->user;
     }
+
 }

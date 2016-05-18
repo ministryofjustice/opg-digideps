@@ -61,13 +61,19 @@ class AddSingleUserCommand extends ContainerAwareCommand
             return;
         }
 
+        $role = $roleRepo->find($data['roleId']);
+        if (!$role) {
+            $output->writel("Cannot add user $email: role {$data['roleId']} not found");
+            
+            return;
+        }
         $user = (new User())
             ->setFirstname($data['firstname'])
             ->setLastname($data['lastname'])
             ->setEmail($email)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setRole($roleRepo->find($data['roleId']));
+            ->setRole($role);
 
         $user->setPassword($this->encodePassword($user, $data['password']));
 
