@@ -55,15 +55,17 @@ class AddSingleUserCommand extends ContainerAwareCommand
         $roleRepo = $em->getRepository('AppBundle\Entity\Role');
         $email = $data['email'];
 
+        $output->write("User $email: ");
+        
         if ($userRepo->findBy(['email' => $email])) {
-            $output->writeln("User $email already existing.");
+            $output->writeln("skip.");
 
             return;
         }
 
         $role = $roleRepo->find($data['roleId']);
         if (!$role) {
-            $output->writeln("Cannot add user $email: role {$data['roleId']} not found");
+            $output->writeln("role {$data['roleId']} not found");
             
             return;
         }
@@ -80,7 +82,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
         // check params
         $violations = $this->getContainer()->get('validator')->validate($user, 'admin_add_user'); /* @var $violations ConstraintViolationList */
         if ($violations->count()) {
-            $output->writeln("Cannot add user $email: $violations");
+            $output->writeln("error: $violations");
 
             return;
         }
@@ -90,7 +92,7 @@ class AddSingleUserCommand extends ContainerAwareCommand
             $em->flush($user);
         }
 
-        $output->writeln("User $email created.");
+        $output->writeln("created.");
     }
 
     /**
