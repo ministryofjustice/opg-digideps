@@ -125,13 +125,6 @@ class Account
 
     /**
      * @deprecated since accounts_mk2
-     * @JMS\Type("string")
-     * @JMS\Groups({"basic", "balance", "edit_details_report_due"})
-     */
-    private $closingBalanceExplanation;
-
-    /**
-     * @deprecated since accounts_mk2
      * 
      * @JMS\Type("DateTime")
      * @JMS\Groups({"balance", "edit_details_report_due"})
@@ -285,22 +278,6 @@ class Account
     }
 
     /**
-     * @return string
-     */
-    public function getClosingBalanceExplanation()
-    {
-        return $this->closingBalanceExplanation;
-    }
-
-    /**
-     * @param string $closingBalanceExplanation
-     */
-    public function setClosingBalanceExplanation($closingBalanceExplanation)
-    {
-        $this->closingBalanceExplanation = $closingBalanceExplanation;
-    }
-
-    /**
      * @return bool
      */
     public function hasClosingBalance()
@@ -382,19 +359,6 @@ class Account
     }
 
 
-    /**
-     * Add violation if closing balance does not match sum of transactions.
-     */
-    public function isClosingBalanceMatchingTransactionsSum(ExecutionContextInterface $context)
-    {
-        // trigger error in case of date mismatch (report end date different from account closing date) and explanation is empty
-        if ($this->getClosingBalance() !== null && !$this->isClosingBalanceValid()) {
-            $context->addViolationAt('closingBalance', 'account.closingBalance.mismatch', [
-                '%moneyTotal%' => $this->getMoneyTotal(),
-            ]);
-            $context->addViolationAt('closingBalanceExplanation', 'account.closingBalanceExplanation.notBlankOnDateMismatch');
-        }
-    }
 
     /**
      * @return bool
@@ -418,54 +382,6 @@ class Account
         }
 
         return $this->report->getEndDate()->format('Y-m-d') === $this->getClosingDate()->format('Y-m-d');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClosingBalanceMatchingTransactionSum()
-    {
-        return $this->getClosingBalance() == $this->getMoneyTotal();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClosingDateValid()
-    {
-        return $this->isClosingDateEqualToReportEndDate() || $this->getClosingDateExplanation();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClosingBalanceValid()
-    {
-        return $this->isClosingBalanceMatchingTransactionSum() || $this->getClosingBalanceExplanation();
-    }
-
-    /**
-     * @return bool
-     */
-    public function isClosingBalanceAndDateValid()
-    {
-        return $this->isClosingDateValid() && $this->isClosingBalanceValid();
-    }
-
-    /**
-     * @return bool
-     */
-    public function needsClosingBalanceData()
-    {
-        return $this->getClosingDate() == null || !$this->isClosingBalanceAndDateValid();
-    }
-
-    /**
-     * @return string
-     */
-    public function getOpeningDateMatchesReportDate()
-    {
-        return $this->openingDateMatchesReportDate;
     }
 
     /**
