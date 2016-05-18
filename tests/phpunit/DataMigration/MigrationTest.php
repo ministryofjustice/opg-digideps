@@ -2,12 +2,10 @@
 
 namespace AppBundle\Service\DataMigration;
 
-use PDO;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class MigrationTest extends WebTestCase
 {
-
     /**
      * @var Doctrine\ORM\EntityManager
      */
@@ -16,8 +14,8 @@ class MigrationTest extends WebTestCase
     public function setUp()
     {
         // create client
-        $client = self::createClient([ 'environment' => 'test',
-                    'debug' => true]);
+        $client = self::createClient(['environment' => 'test',
+                    'debug' => true, ]);
         $this->em = $client->getContainer()->get('em');
     }
 
@@ -61,8 +59,7 @@ class MigrationTest extends WebTestCase
     private function importDb($file)
     {
         // import database with a subset of production data
-        $export = "export PGHOST=postgres; export PGPASSWORD=api; export PGDATABASE=digideps_unit_test; export PGUSER=api;";
-        exec("$export psql -U api < " . __DIR__ . "/" . $file, $out2);
+        $export = 'export PGHOST=postgres; export PGPASSWORD=api; export PGDATABASE=digideps_unit_test; export PGUSER=api;';
+        exec("$export psql -U api < ".__DIR__.'/'.$file, $out2);
     }
-
 }

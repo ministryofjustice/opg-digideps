@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Client;
@@ -7,12 +8,10 @@ use AppBundle\Entity\User;
 use AppBundle\Service\Mailer\MailFactory;
 use AppBundle\Service\Mailer\MailSender;
 use Doctrine\ORM\EntityManager;
-use AppBundle\Exception;
 use AppBundle\Entity\CasRec;
 
 class UserRegistrationService
 {
-
     /** @var EntityManager */
     private $em;
 
@@ -43,7 +42,6 @@ class UserRegistrationService
 
     public function selfRegisterUser(SelfRegisterData $selfRegisterData)
     {
-
         $user = new User();
         $user->recreateRegistrationToken();
         $client = new Client();
@@ -55,28 +53,27 @@ class UserRegistrationService
         if ($this->userIsUnique($user) == false) {
             throw new \RuntimeException("User with email {$user->getEmail()} already exists.", 422);
         }
-        
+
         // Casrec checks
         $casRec = $this->casRecChecks($user, $client);
         $user->setDeputyNo($casRec->getDeputyNo());
-        
+
         $this->saveUserAndClient($user, $client);
 
         $mail = $this->mailFactory->createActivationEmail($user);
         $this->mailSender->send($mail);
 
         return $user;
-
     }
-    
+
     /**
      * CASREC checks
      * - throw error 425 if case number already used
      * - throw error 421 if user and client not found
      * - throw error 424 if user and client are found but the postcode doesn't match
-     * (see <root>/README.md for more info. Keep the readme file updated with this logic)
+     * (see <root>/README.md for more info. Keep the readme file updated with this logic).
      * 
-     * @param User $user
+     * @param User   $user
      * @param Client $client
      * 
      * @return CasRec
@@ -84,34 +81,33 @@ class UserRegistrationService
     private function casRecChecks(User $user, Client $client)
     {
         $caseNumber = CasRec::normaliseCaseNumber($client->getCaseNumber());
-        
+
         $criteria = [
             'caseNumber' => $caseNumber,
             'clientLastname' => CasRec::normaliseSurname($client->getLastname()),
             'deputySurname' => CasRec::normaliseSurname($user->getLastname()),
         ];
-        
+
         $clientRepo = $this->em->getRepository('AppBundle\Entity\Client');
-        if ($clientRepo->findOneBy(['caseNumber'=>$caseNumber])) {
-            throw new \RuntimeException("User registration: Case number already used", 425);
+        if ($clientRepo->findOneBy(['caseNumber' => $caseNumber])) {
+            throw new \RuntimeException('User registration: Case number already used', 425);
         }
-        
+
         $casRec = $this->casRecRepo->findOneBy($criteria); /** @var $casRec CasRec */
-        
         if (!$casRec) {
-            throw new \RuntimeException("User registration: not found", 421);
+            throw new \RuntimeException('User registration: not found', 421);
         }
-        
+
         // if the postcode is set in CASREC, it has to match to the given one
-        if ($casRec->getDeputyPostCode() && 
+        if ($casRec->getDeputyPostCode() &&
             $casRec->getDeputyPostCode() != CasRec::normalisePostCode($user->getAddressPostcode())) {
-            $message = sprintf("User [%s] and client [%s, case number: %s] found in CasRec, but wrong postcode: [%s] expected, [%s] given",
+            $message = sprintf('User [%s] and client [%s, case number: %s] found in CasRec, but wrong postcode: [%s] expected, [%s] given',
                 $user->getLastname(), $client->getLastname(), $caseNumber,
                 $casRec->getDeputyPostCode(), $user->getAddressPostcode());
 
-            throw new \RuntimeException("User registration: postcode mismatch", 424);
+            throw new \RuntimeException('User registration: postcode mismatch', 424);
         }
-        
+
         return $casRec;
     }
 
@@ -128,14 +124,13 @@ class UserRegistrationService
             $this->em->flush();
 
             // Add the user to the client an save it
-            /** @var Client $client */
+            /* @var Client $client */
             $client->addUser($user);
             $this->em->persist($client);
             $this->em->flush();
 
             // Try and commit the transaction
             $connection->commit();
-
         } catch (\Exception $e) {
             // Rollback the failed transaction attempt
             $connection->rollback();
@@ -145,7 +140,7 @@ class UserRegistrationService
 
     public function populateUser(User $user, SelfRegisterData $selfRegisterData)
     {
-        $role = $this->roleRepository->findOneBy(['role'=>'ROLE_LAY_DEPUTY']);
+        $role = $this->roleRepository->findOneBy(['role' => 'ROLE_LAY_DEPUTY']);
 
         $user->setFirstname($selfRegisterData->getFirstname());
         $user->setLastname($selfRegisterData->getLastname());
@@ -165,7 +160,7 @@ class UserRegistrationService
 
     public function userIsUnique(User $user)
     {
-        if ($user->getEmail() && $this->userRepository->findOneBy(['email'=>$user->getEmail()])) {
+        if ($user->getEmail() && $this->userRepository->findOneBy(['email' => $user->getEmail()])) {
             return false;
         } else {
             return true;

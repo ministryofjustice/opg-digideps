@@ -6,12 +6,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity as EntityDir;
-use AppBundle\Exception as AppExceptions;
 
 class AssetController extends RestController
 {
-
-
     /**
      * @Route("/report/{reportId}/assets", requirements={"reportId":"\d+"})
      * @Method({"GET"})
@@ -32,7 +29,6 @@ class AssetController extends RestController
         return $assets;
     }
 
-
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
      * @Method({"GET"})
@@ -49,7 +45,6 @@ class AssetController extends RestController
 
         return $asset;
     }
-
 
     /**
      * @Route("/report/{reportId}/asset", requirements={"reportId":"\d+"})
@@ -73,9 +68,8 @@ class AssetController extends RestController
 
         $this->persistAndFlush($asset);
 
-        return [ 'id' => $asset->getId()];
+        return ['id' => $asset->getId()];
     }
-
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
@@ -97,9 +91,8 @@ class AssetController extends RestController
 
         $this->getEntityManager()->flush($asset);
 
-        return [ 'id' => $asset->getId()];
+        return ['id' => $asset->getId()];
     }
-
 
     /**
      * @Route("/report/{reportId}/asset/{assetId}", requirements={"reportId":"\d+", "assetId":"\d+"})
@@ -122,7 +115,6 @@ class AssetController extends RestController
 
         return [];
     }
-
 
     private function updateEntityWithData(EntityDir\Asset $asset, array $data)
     {
@@ -158,13 +150,12 @@ class AssetController extends RestController
                 'is_rented_out' => 'setIsRentedOut',
                 'rent_income_month' => 'setRentIncomeMonth',
             ]);
-            
+
             if (isset($data['rent_agreement_end_date'])) {
-                $value = isset($data['rent_agreement_end_date']['date']) 
+                $value = isset($data['rent_agreement_end_date']['date'])
                     ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
                 $asset->setRentAgreementEndDate(new \DateTime($value));
             }
         }
     }
-
 }

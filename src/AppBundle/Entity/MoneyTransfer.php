@@ -6,16 +6,15 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * MoneyTransfer
+ * MoneyTransfer.
  *
  * @ORM\Table(name="money_transfer")
  * @ORM\Entity
  */
 class MoneyTransfer
 {
-
     /**
-     * @var integer
+     * @var int
      * @JMS\Groups({"transfers", "basic"})
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -48,27 +47,25 @@ class MoneyTransfer
      */
     private $to;
 
-
     /**
      * @var Report
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="moneyTransfers")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
-    
+
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-
     /**
-     * Set amount
+     * Set amount.
      *
      * @param string $amount
      *
@@ -81,9 +78,8 @@ class MoneyTransfer
         return $this;
     }
 
-
     /**
-     * Get amount
+     * Get amount.
      *
      * @return string
      */
@@ -91,7 +87,6 @@ class MoneyTransfer
     {
         return $this->amount;
     }
-
 
     /**
      * @return Account
@@ -101,7 +96,6 @@ class MoneyTransfer
         return $this->from;
     }
 
-
     /**
      * @return Account
      */
@@ -110,34 +104,35 @@ class MoneyTransfer
         return $this->to;
     }
 
-
     /**
-     * 
      * @param Account $from
+     *
      * @return MoneyTransfer
      */
     public function setFrom(Account $from)
     {
         $this->from = $from;
+
         return $this;
     }
 
-
     /**
      * @param Account $to
+     *
      * @return MoneyTransfer
      */
     public function setTo(Account $to)
     {
         $this->to = $to;
+
         return $this;
     }
-    
+
     public function getReport()
     {
         return $this->report;
     }
-    
+
     /**
      * @JMS\VirtualProperty
      * @JMS\Groups({"transfers"})
@@ -152,8 +147,7 @@ class MoneyTransfer
     public function setReport(Report $report)
     {
         $this->report = $report;
+
         return $this;
     }
-
-
 }

@@ -1,16 +1,16 @@
 <?php
+
 namespace AppBundle\Resources\views\Report\Formatted;
 
 use AppBundle\Resources\views\Report\AbstractReportTest;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
 
-
 class SafeguardingTest extends AbstractReportTest
 {
     private $templateName = 'AppBundle:Report:Formatted/_safeguarding.html.twig';
 
-    public function testReportContainsSafeguardingSection() 
+    public function testReportContainsSafeguardingSection()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
             ->shouldIgnoreMissing(true)
@@ -24,7 +24,6 @@ class SafeguardingTest extends AbstractReportTest
 
         $this->assertSectionContainsText($crawler, '#safeguarding-section', 'Section 4');
         $this->assertSectionContainsText($crawler, '#safeguarding-section', 'Safeguarding');
-        
     }
 
     public function testShowThatILiveWithClient()
@@ -38,10 +37,9 @@ class SafeguardingTest extends AbstractReportTest
             ->getMock();
 
         $crawler = $this->getCrawler($safeguardingData);
-        
+
         $this->assertSectionContainsText($crawler, '#safeguarding-section', 'Do you live with the client?');
         $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'Do you live with the client?', 'yes');
-        
     }
 
     public function testShowThatIDontLiveWithClient()
@@ -58,9 +56,8 @@ class SafeguardingTest extends AbstractReportTest
 
         $this->assertSectionContainsText($crawler, '#safeguarding-section', 'Do you live with the client?');
         $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'Do you live with the client?', 'no');
-
     }
-    
+
     public function testDontShowIntervalAnswersIfLivingWithClient()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -77,9 +74,8 @@ class SafeguardingTest extends AbstractReportTest
         $this->assertSectionDoesntExist($safeguardSection, '#safeguarding-visits-subsection');
         $this->assertSectionDoesntExist($safeguardSection, '#safeguarding-visitors-subsection');
         $this->assertSectionDoesntExist($safeguardSection, '#safeguarding-furtherinfo-subsection');
-        
     }
-    
+
     public function testShowIntervalAnswersIfLivingWithClient()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -102,9 +98,8 @@ class SafeguardingTest extends AbstractReportTest
         $this->assertSectionDoesExist($safeguardSection, '#safeguarding-visitors-subsection');
         $this->assertSectionDoesExist($safeguardSection, '#safeguarding-furtherinfo-subsection');
         $this->assertSectionContainsText($crawler, '#safeguarding-furtherinfo-subsection', 'nothing else to tell you');
-        
     }
-    
+
     public function testDontLiveWithClientVisitsEveryday()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -127,7 +122,7 @@ class SafeguardingTest extends AbstractReportTest
         $this->assertCheckboxChecked($crawler, '#safeguarding-visits-subsection', 'Letters and emails', 'Every day');
         $this->assertCheckboxChecked($crawler, '#safeguarding-visitors-subsection', 'How often does the client see other people?', 'Every day');
     }
-    
+
     public function testDoneLiveWithClientVisitsEveryWeek()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -243,7 +238,6 @@ class SafeguardingTest extends AbstractReportTest
         $this->assertCheckboxChecked($crawler, '#safeguarding-visitors-subsection', 'How often does the client see other people?', 'Less than once a year');
     }
 
-
     public function testShowThatCareIsNotFunded()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -258,7 +252,6 @@ class SafeguardingTest extends AbstractReportTest
 
         $this->assertSectionContainsText($crawler, '#safeguarding-section', 'Does the client receive care which is paid for?');
         $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'Does the client receive care which is paid for?', 'no');
-
     }
 
     public function testShowThatCareIsFunded()
@@ -277,7 +270,7 @@ class SafeguardingTest extends AbstractReportTest
         $this->assertSectionContainsText($crawler, '#safeguarding-section', 'Does the client receive care which is paid for?');
         $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'Does the client receive care which is paid for?', 'yes');
     }
-    
+
     public function testWhenCareIsFundedByClient()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -293,7 +286,7 @@ class SafeguardingTest extends AbstractReportTest
 
         $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'How is care funded', 'Client pays for all their own care');
     }
-    
+
     public function testWhenCareIsFundedByPartiallyByClient()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -307,9 +300,9 @@ class SafeguardingTest extends AbstractReportTest
 
         $crawler = $this->getCrawler($safeguardingData);
 
-        $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'How is care funded', 'Client gets financial help');       
+        $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'How is care funded', 'Client gets financial help');
     }
-    
+
     public function testWhenCareIsFundedBySomeoneElse()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -323,9 +316,9 @@ class SafeguardingTest extends AbstractReportTest
 
         $crawler = $this->getCrawler($safeguardingData);
 
-        $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'How is care funded', 'All care is paid by someone else');        
+        $this->assertCheckboxChecked($crawler, '#safeguarding-section', 'How is care funded', 'All care is paid by someone else');
     }
-    
+
     public function testNoCarePlan()
     {
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
@@ -344,7 +337,7 @@ class SafeguardingTest extends AbstractReportTest
     public function testCarePlan()
     {
         $reviewDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
-        
+
         $safeguardingData = m::mock('AppBundle\Entity\Safeguarding')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getDoYouLiveWithClient')->andReturn('no')
@@ -357,20 +350,17 @@ class SafeguardingTest extends AbstractReportTest
 
         $crawler = $this->getCrawler($safeguardingData);
         $this->assertCheckboxNotChecked($crawler, '#safeguarding-section', 'There is no care plan');
-        $this->assertSectionContainsText($crawler, '#safeguarding-last-review-date','01 / 2014');
+        $this->assertSectionContainsText($crawler, '#safeguarding-last-review-date', '01 / 2014');
     }
-    
+
     private function getCrawler($safeguarding)
     {
         $html = $this->twig->render($this->templateName, [
-            'safeguarding' => $safeguarding
+            'safeguarding' => $safeguarding,
         ]);
 
         $crawler = new Crawler($html);
-        
+
         return $crawler;
     }
-    
-    
-   
 }

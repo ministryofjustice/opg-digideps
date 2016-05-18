@@ -3,11 +3,10 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\QueryBuilder;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Asset
+ * Asset.
  *
  * @ORM\Table(name="asset")
  * @ORM\Entity(repositoryClass="AppBundle\Entity\AssetRepository")
@@ -21,9 +20,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 abstract class Asset
 {
-
     /**
-     * @var integer
+     * @var int
      * @JMS\Type("integer")
      * @JMS\Groups({"asset"})
      * 
@@ -53,7 +51,7 @@ abstract class Asset
     private $lastedit;
 
     /**
-     * @var integer
+     * @var int
      * @JMS\Exclude
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="assets")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
@@ -61,13 +59,14 @@ abstract class Asset
     private $report;
 
     /**
-     * @var string 
+     * @var string
      * @JMS\Exclude
      */
     private $type;
 
     /**
      * @param string $type
+     *
      * @return Asset instance
      */
     public static function factory($type)
@@ -79,27 +78,27 @@ abstract class Asset
                 return new AssetOther();
         }
     }
-    
+
     public function __clone()
     {
         $this->id = null;
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
+     *
      * @return Asset
      */
     public function setValue($value)
@@ -109,22 +108,21 @@ abstract class Asset
         return $this;
     }
 
-
     /**
-     * Get value
+     * Get value.
      *
-     * @return string 
+     * @return string
      */
     public function getValue()
     {
         return $this->value;
     }
 
-
     /**
-     * Set lastedit
+     * Set lastedit.
      *
      * @param \DateTime $lastedit
+     *
      * @return Asset
      */
     public function setLastedit($lastedit)
@@ -134,22 +132,21 @@ abstract class Asset
         return $this;
     }
 
-
     /**
-     * Get lastedit
+     * Get lastedit.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getLastedit()
     {
         return $this->lastedit;
     }
 
-
     /**
-     * Set report and set to false the report.noAssetToAdd status
+     * Set report and set to false the report.noAssetToAdd status.
      *
      * @param Report $report
+     *
      * @return Asset
      */
     public function setReport(Report $report = null)
@@ -162,11 +159,10 @@ abstract class Asset
         return $this;
     }
 
-
     /**
-     * Get report
+     * Get report.
      *
-     * @return Report 
+     * @return Report
      */
     public function getReport()
     {
@@ -178,13 +174,12 @@ abstract class Asset
         return $this->type;
     }
 
-
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
-
 
     /**
      * @ORM\PrePersist
@@ -194,7 +189,4 @@ abstract class Asset
     {
         $this->setLastedit(new \DateTime());
     }
-
-
-
 }

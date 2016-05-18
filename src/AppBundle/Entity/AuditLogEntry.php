@@ -3,35 +3,32 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * AuditLogEntry
+ * AuditLogEntry.
  *
  * @ORM\Table(name="audit_log_entry")
  * @ORM\Entity
  */
 class AuditLogEntry
 {
-
     const ACTION_LOGIN = 'login';
     const ACTION_LOGOUT = 'logout';
     const ACTION_USER_ADD = 'user_add';
     const ACTION_USER_EDIT = 'user_edit';
     const ACTION_USER_DELETE = 'user_delete';
 
-
     /**
      * @JMS\Exclude
      */
     private static $allowedActions = [
         self::ACTION_LOGIN, self::ACTION_LOGOUT,
-        self::ACTION_USER_ADD, self::ACTION_USER_DELETE, self::ACTION_USER_EDIT
+        self::ACTION_USER_ADD, self::ACTION_USER_DELETE, self::ACTION_USER_EDIT,
     ];
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -51,6 +48,7 @@ class AuditLogEntry
 
     /**
      * @ORM\Column(name="performed_by_user_name", type="string", length=150, nullable=false)
+     *
      * @var string
      * @JMS\Groups({"audit_log"})
      * @JMS\Type("string")
@@ -66,7 +64,7 @@ class AuditLogEntry
     private $performedByUserEmail;
 
     /**
-     * @var integer
+     * @var int
      * @ORM\Column(name="ip_address", type="string", length=15, nullable=false)
      * @JMS\Groups({"audit_log"})
      */
@@ -113,7 +111,6 @@ class AuditLogEntry
      */
     private $userEditedEmail;
 
-
     /**
      * @param User $user
      */
@@ -132,6 +129,7 @@ class AuditLogEntry
     public function setIpAddress($ipAddress)
     {
         $this->ipAddress = $ipAddress;
+
         return $this;
     }
 
@@ -141,6 +139,7 @@ class AuditLogEntry
     public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -162,21 +161,20 @@ class AuditLogEntry
     public function setAction($action)
     {
         if (!in_array($action, self::$allowedActions)) {
-            throw new \InvalidArgumentException("Action '$action' not valid. Allowed actions: " . implode(',', self::$allowedActions));
+            throw new \InvalidArgumentException("Action '$action' not valid. Allowed actions: ".implode(',', self::$allowedActions));
         }
         $this->action = $action;
 
         return $this;
     }
-    
+
     /**
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-
 
     /**
      * @return User
@@ -195,7 +193,6 @@ class AuditLogEntry
     }
 
     /**
-     * 
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -211,7 +208,6 @@ class AuditLogEntry
         return $this->action;
     }
 
-
     /**
      * @return User
      */
@@ -219,5 +215,4 @@ class AuditLogEntry
     {
         return $this->userEdited;
     }
-
 }

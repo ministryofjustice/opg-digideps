@@ -1,7 +1,8 @@
 <?php
+
 namespace AppBundle\Resources\views\Report\Formatted;
 
-use \AppBundle\Resources\views\Report\AbstractReportTest;
+use AppBundle\Resources\views\Report\AbstractReportTest;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
 
@@ -15,25 +16,21 @@ class ClientInformationTest extends AbstractReportTest
         $this->setupDeputy();
         $this->setupReportClient();
 
-
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report,
             'client' => $this->reportClient,
-            'deputy' => $this->deputy
+            'deputy' => $this->deputy,
         ]);
 
         $crawler = new Crawler($html);
 
-
         $caseNumber = $crawler->filter('#case-number')->eq(0)->text();
-        $startDate =  $crawler->filter('#report-start-date')->eq(0)->text();
+        $startDate = $crawler->filter('#report-start-date')->eq(0)->text();
         $endDate = $crawler->filter('#report-end-date')->eq(0)->text();
-
 
         $this->assertContains('12341234', $caseNumber);
         $this->assertContains('01 / 01 / 2014', $startDate);
         $this->assertContains('01 / 01 / 2015', $endDate);
-
     }
 
     public function testShowDeputyInformation()
@@ -42,11 +39,10 @@ class ClientInformationTest extends AbstractReportTest
         $this->setupDeputy();
         $this->setupReportClient();
 
-
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report,
             'client' => $this->reportClient,
-            'deputy' => $this->deputy
+            'deputy' => $this->deputy,
         ]);
 
         $crawler = new Crawler($html);
@@ -63,14 +59,12 @@ class ClientInformationTest extends AbstractReportTest
 
         $email = $crawler->filter('#deputy-email')->eq(0)->text();
         $this->assertContains('zac@thetolleys.com', $email);
-
-
     }
 
-    public function testShowDeputyInformationWithPartialAddress() {
+    public function testShowDeputyInformationWithPartialAddress()
+    {
         $this->setupReport();
         $this->setupReportClient();
-
 
         $this->deputy = m::mock('AppBundle\Entity\User')
             ->shouldIgnoreMissing(true)
@@ -85,7 +79,7 @@ class ClientInformationTest extends AbstractReportTest
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report,
             'client' => $this->reportClient,
-            'deputy' => $this->deputy
+            'deputy' => $this->deputy,
         ]);
 
         $crawler = new Crawler($html);
@@ -108,11 +102,10 @@ class ClientInformationTest extends AbstractReportTest
         $this->setupDeputy();
         $this->setupReportClient();
 
-
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report,
             'client' => $this->reportClient,
-            'deputy' => $this->deputy
+            'deputy' => $this->deputy,
         ]);
 
         $crawler = new Crawler($html);
@@ -126,10 +119,10 @@ class ClientInformationTest extends AbstractReportTest
         $this->assertContains('Berkshire', $client);
         $this->assertContains('SL4 4QR', $client);
         $this->assertContains('07814 013561', $client);
-
     }
 
-    public function testShowClientInformationWithPartialAddress() {
+    public function testShowClientInformationWithPartialAddress()
+    {
         $this->setupReport();
         $this->setupDeputy();
 
@@ -142,11 +135,10 @@ class ClientInformationTest extends AbstractReportTest
             ->shouldReceive('getPostcode')->andReturn('SL4 4QR')
             ->getMock();
 
-
         $html = $this->twig->render($this->templateName, [
             'report' => $this->report,
             'client' => $this->reportClient,
-            'deputy' => $this->deputy
+            'deputy' => $this->deputy,
         ]);
 
         $crawler = new Crawler($html);
@@ -159,5 +151,4 @@ class ClientInformationTest extends AbstractReportTest
         $this->assertContains('Berkshire', $client);
         $this->assertContains('SL4 4QR', $client);
     }
-
 }

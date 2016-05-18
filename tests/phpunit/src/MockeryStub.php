@@ -9,10 +9,9 @@
  */
 class MockeryStub extends \Mockery
 {
-
     /**
-     * @param string $class class name
-     * @param array $expectations array of method->result, where method can be method(arg) or a chain of methods get(1)->get(2)-> ...
+     * @param string $class        class name
+     * @param array  $expectations array of method->result, where method can be method(arg) or a chain of methods get(1)->get(2)-> ...
      * 
      * @return \Mockery\MockInterface
      */
@@ -20,10 +19,10 @@ class MockeryStub extends \Mockery
     {
         if (in_array('Mockery\MockInterface', class_implements($class))) {
             $mock = $class; //already a mock
-        } else if (is_string($class)) {
+        } elseif (is_string($class)) {
             $mock = self::mock($class);
         } else {
-            throw new \InvalidArgumentException(__METHOD__ . ' first arument should be a mock or class fullname');
+            throw new \InvalidArgumentException(__METHOD__.' first arument should be a mock or class fullname');
         }
 
         foreach ($expectations as $shouldReceives => $andReturn) {
@@ -38,12 +37,11 @@ class MockeryStub extends \Mockery
     }
 
     /**
-     * $mock will return $andReturn when the chained methods are called
+     * $mock will return $andReturn when the chained methods are called.
      * 
-     * @param Mockery\MockExpectation  $mock 
-     * @param array $shouldReceivesArray array of methods (with optional params)
-     * 
-     * @param mixed  $andReturn
+     * @param Mockery\MockExpectation $mock
+     * @param array                   $shouldReceivesArray array of methods (with optional params)
+     * @param mixed                   $andReturn
      */
     private static function chainMock($mock, array $shouldReceivesArray, $andReturn)
     {
@@ -61,19 +59,19 @@ class MockeryStub extends \Mockery
     }
 
     /**
-     * Add assertion on $mock, with method $shouldReceive should return $andReturn
+     * Add assertion on $mock, with method $shouldReceive should return $andReturn.
      * 
      * Supports method(arg1, arg2,..., argN)
      * 
-     * @param  Mockery\MockExpectation $mock
-     * @param string $shouldReceive method(arg1, arg2,..., argN) or just the method name
-     * @param mixed $andReturn
+     * @param Mockery\MockExpectation $mock
+     * @param string                  $shouldReceive method(arg1, arg2,..., argN) or just the method name
+     * @param mixed                   $andReturn
      */
     private static function mockShouldReceiveAndReturn($mock, $shouldReceive, $andReturn)
     {
         preg_match('/^(?P<method>\w+)(\((?P<args>[^\(\)]*)\))?$/i', $shouldReceive, $matches);
         if (empty($matches['method'])) {
-            throw new \InvalidArgumentException('Syntax error. Expected "method" or "method()" or "method(arg1,arg2, ..., argN)" in ' . $shouldReceive);
+            throw new \InvalidArgumentException('Syntax error. Expected "method" or "method()" or "method(arg1,arg2, ..., argN)" in '.$shouldReceive);
         }
         if (!empty($matches['args'])) {
             $args = explode(',', $matches['args']);
@@ -82,5 +80,4 @@ class MockeryStub extends \Mockery
             $mock->shouldReceive($matches['method'])->withNoArgs()->andReturn($andReturn);
         }
     }
-
 }

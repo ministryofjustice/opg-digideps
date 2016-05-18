@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -6,21 +7,21 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * Roles
+ * Roles.
  *
  * @ORM\Table(name="role")
  * @ORM\Entity
  */
 class Role implements RoleInterface
-{ 
+{
     const ROLE_ADMIN = 1;
     const ROLE_LAY_DEPUTY = 2;
-    
+
     const ADMIN = 'ROLE_ADMIN';
     const LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    
+
     /**
-     * @var integer
+     * @var int
      *
      * @JMS\Groups({"basic"})
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -29,7 +30,7 @@ class Role implements RoleInterface
      * @ORM\SequenceGenerator(sequenceName="role_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-    
+
     /**
      * @JMS\Groups({"basic", "audit_log"})
      * @ORM\Column(name="name", type="string", length=60 )
@@ -41,7 +42,7 @@ class Role implements RoleInterface
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="role" )
      */
     private $user;
-    
+
     /**
      * @JMS\Groups({"basic"})
      * @ORM\Column( name="role", type="string", length=50, nullable=true)
@@ -49,7 +50,7 @@ class Role implements RoleInterface
     private $role;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -57,9 +58,9 @@ class Role implements RoleInterface
     }
 
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -67,9 +68,10 @@ class Role implements RoleInterface
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return Role
      */
     public function setName($name)
@@ -80,24 +82,25 @@ class Role implements RoleInterface
     }
 
     /**
-     * Get name
+     * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
     public function getRole()
     {
         return $this->role;
     }
- 
+
     /**
-     * Set role
+     * Set role.
      *
      * @param string $role
+     *
      * @return Role
      */
     public function setRole($role)
@@ -108,9 +111,10 @@ class Role implements RoleInterface
     }
 
     /**
-     * Add user
+     * Add user.
      *
      * @param User $user
+     *
      * @return Role
      */
     public function addUser(User $user)
@@ -121,7 +125,7 @@ class Role implements RoleInterface
     }
 
     /**
-     * Remove user
+     * Remove user.
      *
      * @param User $user
      */
@@ -131,9 +135,9 @@ class Role implements RoleInterface
     }
 
     /**
-     * Get user
+     * Get user.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getUser()
     {

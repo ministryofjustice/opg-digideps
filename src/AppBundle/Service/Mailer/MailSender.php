@@ -12,28 +12,27 @@ use Psr\Log\LoggerInterface;
 
 class MailSender
 {
-
     /**
-     * @var ValidatorInterface 
+     * @var ValidatorInterface
      */
     protected $validator;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $addressToMockRegexp;
 
     /**
-     * @var string 
+     * @var string
      */
     protected $mockPath;
 
     /**
-     * @var Swift_Mailer[] 
+     * @var Swift_Mailer[]
      */
     private $mailers = [];
 
-     /**
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -48,16 +47,14 @@ class MailSender
         $this->logger = $logger;
     }
 
-
     /**
-     * @param string $name
+     * @param string       $name
      * @param Swift_Mailer $mailer
      */
     public function addSwiftMailer($name, Swift_Mailer $mailer)
     {
         $this->mailers[$name] = $mailer;
     }
-
 
     /**
      * @param string $addressRegexpr
@@ -69,11 +66,12 @@ class MailSender
         $this->mockPath = $mockPath;
     }
 
-
     /**
      * @param Email $email
      * @param array $groups
+     *
      * @return type
+     *
      * @throws \Exception
      */
     public function send(Email $email, array $groups = ['text'], $transport = 'default')
@@ -93,30 +91,29 @@ class MailSender
         $this->fillSwiftMessageWithEmailData($swiftMessage, $email);
 
         $to = $this->getFirstTo($swiftMessage);
-        
+
         if ($this->addressToMockRegexp && $this->mockPath && preg_match($this->addressToMockRegexp, $to)) {
             $result = $this->prependMessageIntoEmailMockPath($swiftMessage);
         } else {
             $failedRecipients = [];
             $result = $mailerService->send($swiftMessage, $failedRecipients);
-            
+
             // log email result
-            $this->logger->log($result ? 'info' : 'error', "Email sent: ", ['extra' => [
-                'page'=>'mail_sender', 
-                'transport'=>$transport,
-                'to' => '***'.  substr($to, 3),
+            $this->logger->log($result ? 'info' : 'error', 'Email sent: ', ['extra' => [
+                'page' => 'mail_sender',
+                'transport' => $transport,
+                'to' => '***'.substr($to, 3),
                 'result' => $result,
-                'failedRecipients' => $failedRecipients ? implode(',', $failedRecipients) : ''
+                'failedRecipients' => $failedRecipients ? implode(',', $failedRecipients) : '',
              ]]);
-            
         }
 
         return ['result' => $result];
     }
-    
+
     /**
      * @param Swift_Message $swiftMessage
-     * @param Email $email
+     * @param Email         $email
      */
     private function fillSwiftMessageWithEmailData(\Swift_Message $swiftMessage, Email $email)
     {
@@ -133,21 +130,23 @@ class MailSender
     }
 
     /**
-     * Get first address
+     * Get first address.
+     *
      * @param Swift_Message $message
+     *
      * @return string email
      */
     private function getFirstTo(Swift_Message $message)
     {
         $to = $message->getTo();
         reset($to);
-        
+
         return key($to);
     }
 
-
     /**
-     * //TODO move into fileWriter transport
+     * //TODO move into fileWriter transport.
+     *
      * @param Swift_Mime_Message $swiftMessage
      * 
      * @return string with debug info
@@ -157,21 +156,20 @@ class MailSender
         // read existing emails
         $emails = [];
         if (file_exists($this->mockPath)) {
-            $emails = json_decode(file_get_contents($this->mockPath), true) ? : [];
+            $emails = json_decode(file_get_contents($this->mockPath), true) ?: [];
         }
-        
+
         // prepend email into the file
         $messageArray = MessageUtils::messageToArray($swiftMessage);
-        
+
         array_unshift($emails, $messageArray);
-        
+
         $ret = file_put_contents($this->mockPath, json_encode($emails));
-        
+
         if (false === $ret) {
             throw new \RuntimeException("Cannot write email into {$this->mockPath}");
         }
 
         return "Email saved. $ret bytes written.";
     }
-
 }

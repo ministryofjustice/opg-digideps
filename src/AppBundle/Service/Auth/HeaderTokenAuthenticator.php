@@ -4,27 +4,24 @@ namespace AppBundle\Service\Auth;
 
 use Symfony\Component\Security\Core\Authentication\SimplePreAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use AppBundle\Entity\User;
 
 /**
  * Authenticator that reads "AuthToken" token in request
- * and uses UserByTokenProvider to get the user from that value
+ * and uses UserByTokenProvider to get the user from that value.
  */
 class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
 {
     const HEADER_NAME = 'AuthToken';
-    
+
     public static function getTokenFromRequest(Request $request)
     {
         return $request->headers->get(self::HEADER_NAME);
     }
-    
+
     public function createToken(Request $request, $providerKey)
     {
         // look for an apikey query parameter
@@ -44,7 +41,7 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
     }
 
     /**
-     * Called at each request
+     * Called at each request.
      */
     public function authenticateToken(TokenInterface $token, UserProviderInterface $userProvider, $providerKey)
     {
@@ -57,14 +54,12 @@ class HeaderTokenAuthenticator implements SimplePreAuthenticatorInterface
             );
         } else {
             throw new \InvalidArgumentException('The user provider must be an instance '
-            . 'of UserByTokenProvider (' . get_class($userProvider) . ' was given).');
+            .'of UserByTokenProvider ('.get_class($userProvider).' was given).');
         }
     }
-
 
     public function supportsToken(TokenInterface $token, $providerKey)
     {
         return $token instanceof PreAuthenticatedToken && $token->getProviderKey() === $providerKey;
     }
-
 }

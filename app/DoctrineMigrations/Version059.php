@@ -4,7 +4,6 @@ namespace Application\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use AppBundle\Service\DataMigration\AccountMigration;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -13,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Version059 extends AbstractMigration implements ContainerAwareInterface
 {
-
     private $container;
 
     public function setContainer(ContainerInterface $container = null)
@@ -26,16 +24,16 @@ class Version059 extends AbstractMigration implements ContainerAwareInterface
         $pdo = $this->container->get('em')->getConnection();
 
         // add new "total" other-incomes in the right position
-        $pdo->query("INSERT INTO transaction_type(id, has_more_details, display_order, category, type) "
-                . "VALUES('$name', " . ($hasMoreDetails ? 'true' : 'false') . ", $displayOrder, 'income-and-earnings', 'in')");
+        $pdo->query('INSERT INTO transaction_type(id, has_more_details, display_order, category, type) '
+                ."VALUES('$name', ".($hasMoreDetails ? 'true' : 'false').", $displayOrder, 'income-and-earnings', 'in')");
 
         // ADD new transaction to all the report. copy amount from $copValuesFrom transaction (will be deleted)
         $reports = $pdo->query("SELECT r.id as report_id, t.amount as income_from_inv_amount from report r LEFT JOIN transaction t ON t.report_id=r.id WHERE t.transaction_type_id='$copValuesFrom'")->fetchAll();
 
         // for each report, add the new transaction, and copy value from "income-and-earnings"
         $stmt = $pdo->prepare(
-                "INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)"
-                . " VALUES(:report_id, :transaction_type_id, :amount, :md)");
+                'INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)'
+                .' VALUES(:report_id, :transaction_type_id, :amount, :md)');
         foreach ($reports as $report) {
             $params = [
                 ':report_id' => $report['report_id'],
@@ -75,5 +73,4 @@ class Version059 extends AbstractMigration implements ContainerAwareInterface
 
         $this->addSql('SELECT MAX(version) from migrations');
     }
-
 }

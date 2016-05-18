@@ -133,19 +133,18 @@ class Version049 extends AbstractMigration
                 ],
                 'moneyout-other' => [
                     ['anything-else-paid-out', true],
-                ]
+                ],
             ],
         ];
-
 
         $displayOrder = 1;
         foreach ($rows as $type => $categories) {
             foreach ($categories as $category => $transactions) { //in / out
                 foreach ($transactions as $transaction) {
                     if (!is_array($transaction)) {
-                        throw new \Exception("format error for transaction");
+                        throw new \Exception('format error for transaction');
                     }
-                    $displayOrder++;
+                    ++$displayOrder;
                     $id = $transaction[0];
                     $hasMoreDetailsBool = empty($transaction[1]) ? 'false' : 'true';
                     $sql = "INSERT INTO transaction_type (display_order, type, id, has_more_details, category)

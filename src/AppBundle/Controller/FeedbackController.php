@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,13 +22,13 @@ class FeedbackController extends RestController
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new AppException\UnauthorisedException('client secret not accepted.');
         }
-        
+
         $feedbackData = $this->deserializeBodyContent($request);
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
-        
-        return  $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+
+        return  $this->get('mailSender')->send($feedbackEmail, ['html']);
     }
-    
+
     /**
      * @Route("/report")
      * @Method({"POST"})
@@ -35,10 +36,10 @@ class FeedbackController extends RestController
     public function sendReportFeedback(Request $request)
     {
         $this->denyAccessUnlessGranted(EntityDir\Role::LAY_DEPUTY);
-        
+
         $feedbackData = $this->deserializeBodyContent($request);
         $feedbackEmail = $this->getMailFactory()->createFeedbackEmail($feedbackData);
-        
-        return $this->get('mailSender')->send($feedbackEmail,[ 'html']);
+
+        return $this->get('mailSender')->send($feedbackEmail, ['html']);
     }
 }

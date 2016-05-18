@@ -12,7 +12,6 @@ class AccountMigration
      */
     private $pdo;
 
-
     private static $transactionMap = [
         'disability_living_allowance_or_personal_independence_payment' => 'disability-living-allowance',
         'attendance_allowance' => 'attendance-allowance',
@@ -53,9 +52,8 @@ class AccountMigration
         'property_maintenance_or_improvement' => 'property-maintenance-improvement',
         'investments_eg_shares_bonds_savings' => 'investment-bonds-purchased',
         'transfers_out_to_other_client_s_accounts' => 'transfers-out-to-other-accounts',
-        'any_other_money_paid_out_and_not_listed_above' => 'anything-else-paid-out'
+        'any_other_money_paid_out_and_not_listed_above' => 'anything-else-paid-out',
     ];
-
 
     public function __construct(Connection $pdo)
     {
@@ -80,7 +78,6 @@ class AccountMigration
 //        file_put_contents(__DIR__ . '/types.old.csv', $toCsv($oldTypes, true));
 //        file_put_contents(__DIR__ . '/types.new.csv', $toCsv($newTypes, true));
 
-
         // merge transaction into array
         // sum amounts and string-contact more_details stuff
         $transactionsToInsert = [];
@@ -94,28 +91,26 @@ class AccountMigration
                     }
                     $newTypeId = self::$transactionMap[$typeId];
                     if (!isset($transactionsToInsert[$reportId][$newTypeId])) {
-                        $transactionsToInsert[$reportId][$newTypeId] = ['amount'=>0.0, 'more_details'=>null];
+                        $transactionsToInsert[$reportId][$newTypeId] = ['amount' => 0.0, 'more_details' => null];
                     }
                     $transactionsToInsert[$reportId][$newTypeId]['amount'] += $tRow['amount'];
                     $transactionsToInsert[$reportId][$newTypeId]['more_details'][] = $tRow['more_details'];
-
                 }
                 // closing balance explanations
                 if (!empty($account['closing_balance_explanation'])) {
-                    $explanationsToAdd[$reportId][] = [ $account['bank_name'], $account['closing_balance_explanation'] ];
+                    $explanationsToAdd[$reportId][] = [$account['bank_name'], $account['closing_balance_explanation']];
                 }
-                
             }
         }
 
         // add transactions
         $stmt = $this->pdo->prepare(
-            "INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)"
-            . " VALUES(:id, :transaction_type_id, :amount, :md)");
+            'INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)'
+            .' VALUES(:id, :transaction_type_id, :amount, :md)');
 
         $added = 0;
-        foreach($transactionsToInsert as $reportId => $row) {
-            foreach($row as $newTypeId => $t) {
+        foreach ($transactionsToInsert as $reportId => $row) {
+            foreach ($row as $newTypeId => $t) {
                 $params = [
                     ':id' => $reportId,
                     ':transaction_type_id' => $newTypeId,
@@ -123,18 +118,17 @@ class AccountMigration
                     ':md' => implode("\n", array_filter($t['more_details'])),
                 ];
                 $stmt->execute($params);
-                $added++;
+                ++$added;
             }
         }
-        
-        
+
         // update explanations
         $stmt = $this->pdo->prepare(
-            "UPDATE report SET balance_mismatch_explanation = :balance_mismatch_explanation WHERE id=:report_id");
+            'UPDATE report SET balance_mismatch_explanation = :balance_mismatch_explanation WHERE id=:report_id');
         foreach ($explanationsToAdd as $reportId => $explanations) {
             $explanationStrings = [];
             foreach ($explanations as $bankAndExplanation) {
-                $explanationStrings[] = $bankAndExplanation[0] . ': ' . $bankAndExplanation[1];
+                $explanationStrings[] = $bankAndExplanation[0].': '.$bankAndExplanation[1];
             }
             $params = [
                 ':report_id' => $reportId,
@@ -150,8 +144,8 @@ class AccountMigration
 
         // add transactions
         $stmt = $this->pdo->prepare(
-            "INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)"
-            . " VALUES(:id, :transaction_type_id, :amount, :md)");
+            'INSERT INTO transaction(report_id, transaction_type_id, amount, more_details)'
+            .' VALUES(:id, :transaction_type_id, :amount, :md)');
 
         $ret = [];
         $reports = $this->getReports();
@@ -169,7 +163,7 @@ class AccountMigration
                         ':md' => null,
                     ];
                     $stmt->execute($params);
-                    $ret[$reportId]['added']++;
+                    ++$ret[$reportId]['added'];
                 }
             }
             $ret[$reportId]['after'] = $this->getTransactionNumber($reportId);
@@ -177,12 +171,12 @@ class AccountMigration
 
         return $ret;
     }
-    
+
     private function getTransactionNumber($reportId)
     {
-        return $this->pdo->query('SELECT COUNT(*) FROM transaction WHERE report_id = ' . $reportId)->fetch(\PDO::FETCH_COLUMN);
+        return $this->pdo->query('SELECT COUNT(*) FROM transaction WHERE report_id = '.$reportId)->fetch(\PDO::FETCH_COLUMN);
     }
-    
+
     public function getReports()
     {
         $reports = $this->fetchAll('SELECT * from report');
@@ -193,12 +187,12 @@ class AccountMigration
                 $this->fetchAll('SELECT * from transaction  t
                         LEFT JOIN transaction_type at
                         ON t.transaction_type_id = at.id
-                        WHERE report_id = ' . $report['id']);
+                        WHERE report_id = '.$report['id']);
             $reports[$k]['transactions_new_sum'] =
                 $this->calculateAmountsTotal($reports[$k]['transactions_new']);
 
             // add accounts
-            $reports[$k]['accounts'] = $this->fetchAll('SELECT * from account WHERE report_id=' . $report['id']);
+            $reports[$k]['accounts'] = $this->fetchAll('SELECT * from account WHERE report_id='.$report['id']);
 
             // add old transaction to account
             foreach ($reports[$k]['accounts'] as $ka => $account) {
@@ -207,7 +201,7 @@ class AccountMigration
                         LEFT JOIN account_transaction_type att
                         ON at.account_transaction_type_id = att.id
 
-                        WHERE account_id = ' . $account['id'], 'account_transaction_type_id');
+                        WHERE account_id = '.$account['id'], 'account_transaction_type_id');
                 $reports[$k]['accounts'][$ka]['transactions_old_sum'] =
                     $this->calculateAmountsTotal($reports[$k]['accounts'][$ka]['transactions_old']);
             }
@@ -217,8 +211,9 @@ class AccountMigration
     }
 
     /**
-     * @param array $transactions array of [type=>in/out, amount=>integer]
+     * @param array  $transactions array of [type=>in/out, amount=>integer]
      * @param string $key
+     *
      * @return array of [in=>integer sum of the amount with type=in, out=>integer sum of the amount with type=out]
      */
     private function calculateAmountsTotal(array $transactions)
@@ -228,12 +223,13 @@ class AccountMigration
         foreach ($transactions as $t) {
             $ret[$t['type']] += $t['amount'];
         }
+
         return $ret;
     }
 
-
     /**
-     * Return query ASSOC results, using $key as ID
+     * Return query ASSOC results, using $key as ID.
+     *
      * @param string $query
      * @param string $key
      *
@@ -251,5 +247,4 @@ class AccountMigration
 
         return $ret;
     }
-
 }

@@ -27,12 +27,12 @@ class Version068 extends AbstractMigration
         $this->addSql('ALTER TABLE safeguarding DROP IF EXISTS how_often_do_you_write_email_or_letter');
         $this->addSql('ALTER TABLE safeguarding DROP IF EXISTS how_often_does_client_see_other_people');
         $this->addSql('ALTER TABLE safeguarding DROP IF EXISTS anything_else_to_tell');
-        
+
         // clean transaction
         $this->addSql('ALTER TABLE transaction DROP amount');
         $this->addSql('ALTER TABLE transaction ALTER amounts TYPE TEXT');
         $this->addSql('ALTER TABLE transaction ALTER amounts DROP DEFAULT');
-        
+
         // old seqs
         $this->addSql('DROP SEQUENCE IF EXISTS access_token_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE IF EXISTS  auth_code_id_seq CASCADE');

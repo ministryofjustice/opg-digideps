@@ -10,7 +10,6 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version060 extends AbstractMigration
 {
-
     /**
      * @param Schema $schema
      */
@@ -19,7 +18,7 @@ class Version060 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql("ALTER TABLE asset ADD type VARCHAR(255) NULL default 'other'");
         $this->addSql("UPDATE asset SET type='other'");
-        $this->addSql("ALTER TABLE asset ALTER type SET NOT NULL");
+        $this->addSql('ALTER TABLE asset ALTER type SET NOT NULL');
     }
 
     /**
@@ -30,5 +29,4 @@ class Version060 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE asset DROP type');
     }
-
 }

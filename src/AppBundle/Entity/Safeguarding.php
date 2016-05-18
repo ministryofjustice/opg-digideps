@@ -1,22 +1,22 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Reports
+ * Reports.
+ *
  * @JMS\XmlRoot("safeguarding")
  * @JMS\ExclusionPolicy("NONE")
  * @ORM\Table(name="safeguarding")
  * @ORM\Entity
  */
-class Safeguarding 
+class Safeguarding
 {
     /**
-     * @var integer
+     * @var int
      *
      * @JMS\Groups({"transactions","basic"})
      * @JMS\Type("integer")
@@ -28,7 +28,6 @@ class Safeguarding
     private $id;
 
     /**
-     *
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Report", inversedBy="safeguarding")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
@@ -49,7 +48,7 @@ class Safeguarding
      * how_often_do_you_phone_or_video_call
      * how_often_do_you_write_email_or_letter
      * how_often_does_client_see_other_people
-     * anything_else_to_tell
+     * anything_else_to_tell.
      * 
      * @var string
      *
@@ -58,7 +57,7 @@ class Safeguarding
      * @ORM\Column(name="how_often_contact_client", type="text", nullable=true)
      */
     private $howOftenDoYouContactClient;
-    
+
     /**
      * @var string
      *
@@ -104,22 +103,21 @@ class Safeguarding
      */
     private $whenWasCarePlanLastReviewed;
 
-
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
-
     /**
-     * Set report
+     * Set report.
      *
      * @param Report $report
+     *
      * @return Contact
      */
     public function setReport(Report $report = null)
@@ -130,7 +128,7 @@ class Safeguarding
     }
 
     /**
-     * Get report
+     * Get report.
      *
      * @return Report
      */
@@ -139,11 +137,11 @@ class Safeguarding
         return $this->report;
     }
 
-
     /**
-     * Set doYouLiveWithClient
+     * Set doYouLiveWithClient.
      *
      * @param string $doYouLiveWithClient
+     *
      * @return Report
      */
     public function setDoYouLiveWithClient($doYouLiveWithClient)
@@ -154,7 +152,7 @@ class Safeguarding
     }
 
     /**
-     * Get doYouLiveWithClient
+     * Get doYouLiveWithClient.
      *
      * @return string
      */
@@ -163,11 +161,11 @@ class Safeguarding
         return $this->doYouLiveWithClient;
     }
 
-
     /**
-     * Set doesClientReceivePaidCare
+     * Set doesClientReceivePaidCare.
      *
      * @param string $doesClientReceivePaidCare
+     *
      * @return Report
      */
     public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
@@ -178,7 +176,7 @@ class Safeguarding
     }
 
     /**
-     * Get doesClientReceivePaidCare
+     * Get doesClientReceivePaidCare.
      *
      * @return string
      */
@@ -188,9 +186,10 @@ class Safeguarding
     }
 
     /**
-     * Set whoIsDoingTheCaring
+     * Set whoIsDoingTheCaring.
      *
      * @param string $whoIsDoingTheCaring
+     *
      * @return Report
      */
     public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
@@ -201,7 +200,7 @@ class Safeguarding
     }
 
     /**
-     * Get whoIsDoingTheCaring
+     * Get whoIsDoingTheCaring.
      *
      * @return string
      */
@@ -211,9 +210,10 @@ class Safeguarding
     }
 
     /**
-     * Set doesClientHaveACarePlan
+     * Set doesClientHaveACarePlan.
      *
      * @param string $doesClientHaveACarePlan
+     *
      * @return Report
      */
     public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
@@ -224,7 +224,7 @@ class Safeguarding
     }
 
     /**
-     * Get doesClientHaveACarePlan
+     * Get doesClientHaveACarePlan.
      *
      * @return string
      */
@@ -234,9 +234,10 @@ class Safeguarding
     }
 
     /**
-     * Set whenWasCarePlanLastReviewed
+     * Set whenWasCarePlanLastReviewed.
      *
      * @param \DateTime $whenWasCarePlanLastReviewed
+     *
      * @return Report
      */
     public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
@@ -247,7 +248,7 @@ class Safeguarding
     }
 
     /**
-     * Get whenWasCarePlanLastReviewed
+     * Get whenWasCarePlanLastReviewed.
      *
      * @return \DateTime
      */
@@ -257,9 +258,10 @@ class Safeguarding
     }
 
     /**
-     * Set howIsCareFunded
+     * Set howIsCareFunded.
      *
      * @param string $howIsCareFunded
+     *
      * @return Report
      */
     public function setHowIsCareFunded($howIsCareFunded)
@@ -270,7 +272,7 @@ class Safeguarding
     }
 
     /**
-     * Get howIsCareFunded
+     * Get howIsCareFunded.
      *
      * @return string
      */
@@ -284,11 +286,10 @@ class Safeguarding
         return $this->howOftenDoYouContactClient;
     }
 
-
     public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
+
         return $this;
     }
-
 }

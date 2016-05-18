@@ -1,16 +1,15 @@
 <?php
+
 namespace AppBundle\Resources\views\Report\Formatted;
 
 use AppBundle\Resources\views\Report\AbstractReportTest;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
 
-
 class AccountsTest extends AbstractReportTest
 {
-
     private $templateName = 'AppBundle:Report:Formatted/_accounts.html.twig';
-    
+
     public function setup()
     {
         $this->markTestSkipped();
@@ -23,7 +22,7 @@ class AccountsTest extends AbstractReportTest
         $this->setupAccounts();
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -34,7 +33,6 @@ class AccountsTest extends AbstractReportTest
         $this->assertContains('44-44-44', $accountsSection);
         $this->assertContains('7999', $accountsSection);
         $this->assertContains('HSBC', $accountsSection);
-
     }
 
     public function testShowsAllTheMoneyInTransactions()
@@ -43,14 +41,13 @@ class AccountsTest extends AbstractReportTest
         $this->setupAccounts();
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
 
         $transactions = $crawler->filter('#accounts-section .money-in .transaction');
         $this->assertEquals(20, $transactions->count());
-
     }
 
     public function testShowsAllTheMoneyOutTransactions()
@@ -59,7 +56,7 @@ class AccountsTest extends AbstractReportTest
         $this->setupAccounts();
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -74,7 +71,7 @@ class AccountsTest extends AbstractReportTest
         $this->setupAccounts();
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -86,12 +83,10 @@ class AccountsTest extends AbstractReportTest
         $value = $firstTransaction->filter('.transaction-value')->eq(0)->text();
         $more = $firstTransaction->filter('.transaction-detail');
 
-
-        $this->assertContains("Disability Living Allowance or Personal Independence Payment", $title);
-        $this->assertContains("1.00", $value);
-        $this->assertContains("£", $value);
+        $this->assertContains('Disability Living Allowance or Personal Independence Payment', $title);
+        $this->assertContains('1.00', $value);
+        $this->assertContains('£', $value);
         $this->assertEquals(0, $more->count());
-
     }
 
     public function testExpandedTransactionsDisplaysCorrectly()
@@ -100,7 +95,7 @@ class AccountsTest extends AbstractReportTest
         $this->setupAccounts();
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -112,12 +107,11 @@ class AccountsTest extends AbstractReportTest
         $value = $lastTransaction->filter('.transaction-value')->eq(0)->text();
         $more = $lastTransaction->filter('.transaction-detail');
 
-
-        $this->assertContains("Any other money paid in and not listed above", $title);
-        $this->assertContains("10,000.01", $value);
-        $this->assertContains("£", $value);
+        $this->assertContains('Any other money paid in and not listed above', $title);
+        $this->assertContains('10,000.01', $value);
+        $this->assertContains('£', $value);
         $this->assertEquals(1, $more->count());
-        $this->assertContains("more 4", $more->eq(0)->text());
+        $this->assertContains('more 4', $more->eq(0)->text());
     }
 
     public function testReportListsTotalInTotalOutExpectedDiffAndActualDiff()
@@ -126,7 +120,7 @@ class AccountsTest extends AbstractReportTest
         $this->setupAccounts();
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -166,7 +160,7 @@ class AccountsTest extends AbstractReportTest
             ->shouldReceive('getOpeningBalance')->andReturn(100.00)
             ->shouldReceive('getClosingBalance')->andReturn(100.00)
             ->shouldReceive('getClosingDate')->andReturn($endDate)
-            ->shouldReceive('getClosingBalanceExplanation')->andReturn("one two three five")
+            ->shouldReceive('getClosingBalanceExplanation')->andReturn('one two three five')
             ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
             ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
             ->shouldReceive('getMoneyTotal')->andReturn(0.00)
@@ -176,9 +170,8 @@ class AccountsTest extends AbstractReportTest
 
         $this->report->shouldReceive('getAccounts')->andReturn([$account1]);
 
-
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -186,7 +179,6 @@ class AccountsTest extends AbstractReportTest
         // look for the closing explanation and start and end date
         $accountBalanceExplanation = $crawler->filter('#accounts-section .accountBalance_closingBalanceExplanation')->eq(0)->text();
         $this->assertContains('one two three five', $accountBalanceExplanation);
-
     }
 
     public function testExplainWhyOpeningDateDiffers()
@@ -204,7 +196,7 @@ class AccountsTest extends AbstractReportTest
             ->shouldReceive('getAccountNumber')->andReturn('7999')
             ->shouldReceive('getOpeningDate')->andReturn($startDate)
             ->shouldReceive('getOpeningDateMatchesReportDate')->andReturn(true)
-            ->shouldReceive('getOpeningDateExplanation')->andReturn("one two three five")
+            ->shouldReceive('getOpeningDateExplanation')->andReturn('one two three five')
             ->shouldReceive('getOpeningBalance')->andReturn(100.00)
             ->shouldReceive('getClosingBalance')->andReturn(100.00)
             ->shouldReceive('getClosingDate')->andReturn($endDate)
@@ -218,7 +210,7 @@ class AccountsTest extends AbstractReportTest
         $this->report->shouldReceive('getAccounts')->andReturn([$account1]);
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -248,7 +240,7 @@ class AccountsTest extends AbstractReportTest
             ->shouldReceive('getOpeningBalance')->andReturn(100.00)
             ->shouldReceive('getClosingBalance')->andReturn(100.00)
             ->shouldReceive('getClosingDate')->andReturn($endDate)
-            ->shouldReceive('getClosingDateExplanation')->andReturn("one two three five")
+            ->shouldReceive('getClosingDateExplanation')->andReturn('one two three five')
             ->shouldReceive('getMoneyInTotal')->andReturn(10000.00)
             ->shouldReceive('getMoneyOutTotal')->andReturn(10000.00)
             ->shouldReceive('getMoneyTotal')->andReturn(0.00)
@@ -259,7 +251,7 @@ class AccountsTest extends AbstractReportTest
         $this->report->shouldReceive('getAccounts')->andReturn([$account1]);
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -270,16 +262,14 @@ class AccountsTest extends AbstractReportTest
         $this->assertContains('01/01/2014', $accountDateExplanation);
         $this->assertContains('01/01/2015', $accountDateExplanation);
         $this->assertContains('one two three five', $accountDateExplanation);
-
-
     }
 
     public function testDontShowOpeningDateIfNoOpeningOrClosingDateExplanation()
     {
         $this->markTestIncomplete('to update');
-        
+
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -313,7 +303,6 @@ class AccountsTest extends AbstractReportTest
             ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
             ->getMock();
 
-
         $account2 = m::mock('AppBundle\Entity\Account')
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getBank')->andReturn('Smile')
@@ -330,11 +319,10 @@ class AccountsTest extends AbstractReportTest
             ->shouldReceive('getMoneyOut')->andReturn($moneyOut)
             ->getMock();
 
-
         $this->report->shouldReceive('getAccounts')->andReturn([$account1, $account2]);
 
         $html = $this->twig->render($this->templateName, [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -342,8 +330,5 @@ class AccountsTest extends AbstractReportTest
         $accountsSections = $crawler->filter('#accounts-section .account-details');
 
         $this->assertEquals(2, $accountsSections->count());
-
     }
-
-
 }

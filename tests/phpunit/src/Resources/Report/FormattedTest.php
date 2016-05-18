@@ -10,7 +10,6 @@ use Mockery as m;
 
 class FormattedTest extends WebTestCase
 {
-
     /**
      * @var Symfony\Bundle\FrameworkBundle\Client
      */
@@ -24,7 +23,7 @@ class FormattedTest extends WebTestCase
 
     public function setUp()
     {
-        $this->frameworkBundleClient = static::createClient([ 'environment' => 'test', 'debug' => false]);
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
@@ -32,7 +31,7 @@ class FormattedTest extends WebTestCase
         $this->container->set('request', $request, 'request');
         $this->twig = $this->frameworkBundleClient->getContainer()->get('templating');
         $this->container->get('request_stack')->push(Request::createFromGlobals());
-        $this->report = new Report;
+        $this->report = new Report();
     }
 
     private function html($crawler, $expr)
@@ -55,10 +54,10 @@ class FormattedTest extends WebTestCase
         $action->setDoYouHaveConcernsDetails('user-actions-details');
 
         $html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
         $crawler = new Crawler($html);
-        
+
         // decisions
         $this->assertEquals('X', $this->html($crawler, '#action-section-decisions [data-checkbox="do-you-live-with-the-client--no"]'));
         $this->assertCount(0, $crawler->filter('#action-section-decisions [class="value textarea"]'));
@@ -77,7 +76,7 @@ class FormattedTest extends WebTestCase
         $action->setDoYouHaveConcernsDetails('user-actions-details');
 
         $html = $this->twig->render('AppBundle:Report:formatted.html.twig', [
-            'report' => $this->report
+            'report' => $this->report,
         ]);
         $crawler = new Crawler($html);
 
@@ -89,5 +88,4 @@ class FormattedTest extends WebTestCase
         $this->assertEquals('X', $this->html($crawler, '#action-section-concerns [data-checkbox="do-you-live-with-the-client--yes"]'));
         $this->assertContains('user-actions-details', $this->html($crawler, '#action-section-concerns [class="value textarea"]'));
     }
-
 }

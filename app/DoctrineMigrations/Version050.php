@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * add account.account_type
+ * add account.account_type.
  */
 class Version050 extends AbstractMigration
 {

@@ -2,32 +2,30 @@
 
 namespace AppBundle\Service\Auth;
 
-use \MockeryStub as m;
+use MockeryStub as m;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthServiceTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
-     * @var AuthService 
+     * @var AuthService
      */
     private $authService;
-    
+
     private $clientSecrets = [
         '123abc-deputy' => [
-            'permissions' => ['ROLE_LAY_DEPUTY']
+            'permissions' => ['ROLE_LAY_DEPUTY'],
         ],
         '123abc-both' => [
-            'permissions' => ['ROLE_ADMIN', 'ROLE_LAY_DEPUTY']
+            'permissions' => ['ROLE_ADMIN', 'ROLE_LAY_DEPUTY'],
         ],
         '123abc-admin' => [
-            'permissions' => ['ROLE_ADMIN']
+            'permissions' => ['ROLE_ADMIN'],
         ],
         '123abc-deputyNoPermissions' => [
         ],
-        '123abc-deputyWrongFormat' => 'IShouldBeAnArray'
+        '123abc-deputyWrongFormat' => 'IShouldBeAnArray',
     ];
-
 
     public function setUp()
     {
@@ -42,10 +40,8 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
                 'get(security.encoder_factory)' => $this->encoderFactory,
         ]);
 
-
         $this->authService = new AuthService($this->container);
     }
-
 
     /**
      * @expectedException \InvalidArgumentException
@@ -58,7 +54,6 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
 
         $this->authService = new AuthService($container);
     }
-
 
     public function isSecretValidProvider()
     {
@@ -73,7 +68,6 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-
     /**
      * @dataProvider isSecretValidProvider
      */
@@ -85,7 +79,6 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedValidity, $this->authService->isSecretValid($request));
     }
 
-
     public function testgetUserByEmailAndPasswordUserNotFound()
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
@@ -94,17 +87,16 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-
     public function testgetUserByEmailAndPasswordMismatchPassword()
     {
         $user = m::stub('AppBundle\Entity\User', [
                 'getSalt' => 'salt',
-                'getPassword' => 'encodedPassword'
+                'getPassword' => 'encodedPassword',
         ]);
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn($user);
 
         $encoder = m::stub('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface', [
-                'encodePassword(plainPassword,salt)' => 'encodedPassword-WRONG'
+                'encodePassword(plainPassword,salt)' => 'encodedPassword-WRONG',
         ]);
         $this->encoderFactory->shouldReceive('getEncoder')->with($user)->andReturn($encoder);
 
@@ -113,23 +105,21 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-
     public function testgetUserByEmailAndPasswordCorrect()
     {
         $user = m::stub('AppBundle\Entity\User', [
                 'getSalt' => 'salt',
-                'getPassword' => 'encodedPassword'
+                'getPassword' => 'encodedPassword',
         ]);
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn($user);
 
         $encoder = m::stub('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface', [
-                'encodePassword(plainPassword,salt)' => 'encodedPassword'
+                'encodePassword(plainPassword,salt)' => 'encodedPassword',
         ]);
         $this->encoderFactory->shouldReceive('getEncoder')->with($user)->andReturn($encoder);
 
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
-
 
     public function testgetUserByToken()
     {
@@ -138,11 +128,9 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'token'])->andReturn($user);
         $this->assertEquals($user, $this->authService->getUserByToken('token'));
 
-
         $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'wrongtoken'])->andReturn(false);
         $this->assertEquals(null, $this->authService->getUserByToken('wrongtoken'));
     }
-
 
     public function isSecretValidForUserProvider()
     {
@@ -159,14 +147,13 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
             ['123abc-both', 'ROLE_ADMIN', true],
             ['123abc-both', 'OTHER_ROLE', false],
             ['123abc-both', null, false],
-            [ '123abc-deputyNoPermissions', '', false],
-            [ '123abc-deputyNoPermissions', null, false],
-            [ '123abc-deputyNoPermissions', false, false],
-            [ '123abc-deputyWrongFormat', '', false],
-            [ null, null, false],
+            ['123abc-deputyNoPermissions', '', false],
+            ['123abc-deputyNoPermissions', null, false],
+            ['123abc-deputyNoPermissions', false, false],
+            ['123abc-deputyWrongFormat', '', false],
+            [null, null, false],
         ];
     }
-
 
     /**
      * @dataProvider isSecretValidForUserProvider
@@ -174,7 +161,7 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
     public function testisSecretValidForUser($clientSecret, $role, $expectedResult)
     {
         $user = m::stub('AppBundle\Entity\User', [
-                'getRole->getRole' => $role
+                'getRole->getRole' => $role,
         ]);
         $request = new Request();
         $request->headers->set(AuthService::HEADER_CLIENT_SECRET, $clientSecret);
@@ -182,10 +169,8 @@ class AuthServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($expectedResult, $this->authService->isSecretValidForUser($user, $request));
     }
 
-
     public function tearDown()
     {
         m::close();
     }
-
 }

@@ -4,22 +4,20 @@ namespace Application\Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-class Version066 extends AbstractMigration 
+class Version066 extends AbstractMigration
 {
-   /**
+    /**
      * @param Schema $schema
      */
     public function up(Schema $schema)
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        
+
         $twig = new \Twig_Environment(new \Twig_Loader_String());
          // merge value 1 into 2, resulting into 3
          $stmt = $this->connection->prepare(
@@ -30,7 +28,7 @@ class Version066 extends AbstractMigration
                 AND transaction_type_id = 'anything-else'
                 "
          );
-        
+
         // select report with client name, the two transactions (with amount and more_details)
         // skip when there are no transfers in
         $reports = $this->connection->query("SELECT 
@@ -48,10 +46,10 @@ class Version066 extends AbstractMigration
             AND
             t1.amounts IS NOT NULL
             ")->fetchAll();
-        
+
         $this->connection->beginTransaction();
-        
-        foreach($reports as &$row) {
+
+        foreach ($reports as &$row) {
             // calculate values
             $row['amounts3'] = implode(',', array_filter(array_merge(explode(',', $row['amounts2']), explode(',', $row['amounts1']))));
             $row['amounts1sum'] = array_sum(explode(',', $row['amounts1']));
@@ -67,14 +65,13 @@ class Version066 extends AbstractMigration
                 'more_details' => $row['moredet3'],
                 'report_id' => $row['report_id'],
             ]);
-            
         }
 
         $this->connection->query("DELETE FROM transaction WHERE transaction_type_id = 'transfers-in-from-client-s-other-accounts'");
         $this->connection->query("DELETE FROM transaction_type WHERE id = 'transfers-in-from-client-s-other-accounts'");
-        
+
         $this->connection->commit();
-        
+
         $this->addSql('SELECT MAX(version) from migrations');
     }
 
@@ -85,10 +82,9 @@ class Version066 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        
-        echo "migration 066 down does not restore the data";
-        
+
+        echo 'migration 066 down does not restore the data';
+
         $this->addSql('SELECT MAX(version) from migrations');
     }
-
 }

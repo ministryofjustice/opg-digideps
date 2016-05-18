@@ -19,7 +19,6 @@ class Version047 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql("INSERT INTO role (name, role) VALUES ('Assisted Digital Support', 'ROLE_AD')");
-        
     }
 
     /**
@@ -31,6 +30,5 @@ class Version047 extends AbstractMigration
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql("DELETE FROM role WHERE role='ROLE_AD'");
-        
     }
 }

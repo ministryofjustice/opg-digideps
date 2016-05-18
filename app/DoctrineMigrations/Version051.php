@@ -6,7 +6,7 @@ use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
- * report ADD balance_mismatch_explanation
+ * report ADD balance_mismatch_explanation.
  */
 class Version051 extends AbstractMigration
 {

@@ -3,7 +3,6 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,10 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="casrec")
  * @ORM\Entity
  */
-class CasRec 
+class CasRec
 {
     /**
-     * @var integer
+     * @var int
      * 
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -22,7 +21,7 @@ class CasRec
      * @ORM\SequenceGenerator(sequenceName="casrec_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
-    
+
     /**
      * @var string
      * 
@@ -33,7 +32,7 @@ class CasRec
      * @ORM\Column(name="client_case_number", type="string", length=20, nullable=false)
      */
     private $caseNumber;
-    
+
     /**
      * @var string
      * 
@@ -44,7 +43,7 @@ class CasRec
      * @ORM\Column(name="client_lastname", type="string", length=50, nullable=false)
      */
     private $clientLastname;
-    
+
     /**
      * @var string
      * 
@@ -55,7 +54,7 @@ class CasRec
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=false)
      */
     private $deputyNo;
-    
+
     /**
      * @var string
      *
@@ -66,7 +65,7 @@ class CasRec
      * @JMS\Type("string")
      */
     private $deputySurname;
-    
+
     /**
      * @var string
      *
@@ -88,7 +87,7 @@ class CasRec
         'Û' => 'U', 'Ü' => 'U', 'Ý' => 'Y', 'Þ' => 'B', 'ß' => 'Ss', 'à' => 'a', 'á' => 'a', 'â' => 'a', 'ã' => 'a', 'ä' => 'a',
         'å' => 'a', 'æ' => 'a', 'ç' => 'c', 'è' => 'e', 'é' => 'e', 'ê' => 'e', 'ë' => 'e', 'ì' => 'i', 'í' => 'i', 'î' => 'i',
         'ï' => 'i', 'ð' => 'o', 'ñ' => 'n', 'ò' => 'o', 'ó' => 'o', 'ô' => 'o', 'õ' => 'o', 'ö' => 'o', 'ø' => 'o', 'ù' => 'u',
-        'ú' => 'u', 'ü'=>'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
+        'ú' => 'u', 'ü' => 'u', 'û' => 'u', 'ý' => 'y', 'ý' => 'y', 'þ' => 'b', 'ÿ' => 'y', 'ƒ' => 'f',
         'ă' => 'a', 'î' => 'i', 'â' => 'a', 'ș' => 's', 'ț' => 't', 'Ă' => 'A', 'Î' => 'I', 'Â' => 'A', 'Ș' => 'S', 'Ț' => 'T',
     ];
 
@@ -107,8 +106,7 @@ class CasRec
         $this->deputySurname = self::normaliseSurname($deputySurname);
         $this->deputyPostCode = self::normaliseSurname($deputyPostCode);
     }
-    
-    
+
     public static function normaliseSurname($value)
     {
         $value = trim($value);
@@ -118,27 +116,27 @@ class CasRec
         $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
         // remove characters that are not a-z or 0-9 or spaces
         $value = preg_replace('/([^a-z0-9])/i', '', $value);
-        
+
         return $value;
     }
-    
+
     public static function normaliseCaseNumber($value)
     {
         $value = trim($value);
         $value = strtolower($value);
         $value = preg_replace('#^([a-z0-9]+/)#i', '', $value);
-        
+
         return $value;
     }
-    
+
     public static function normaliseDeputyNo($value)
     {
         $value = trim($value);
         $value = strtolower($value);
-        
+
         return $value;
     }
-    
+
     public static function normalisePostCode($value)
     {
         $value = trim($value);
@@ -147,37 +145,32 @@ class CasRec
         $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
         // remove characters that are not a-z or 0-9 or spaces
         $value = preg_replace('/([^a-z0-9])/i', '', $value);
-        
+
         return $value;
     }
-    
+
     public function getCaseNumber()
     {
         return $this->caseNumber;
     }
-
 
     public function getClientLastname()
     {
         return $this->clientLastname;
     }
 
-
     public function getDeputyNo()
     {
         return $this->deputyNo;
     }
-
 
     public function getDeputySurname()
     {
         return $this->deputySurname;
     }
 
-
     public function getDeputyPostCode()
     {
         return $this->deputyPostCode;
     }
-
 }

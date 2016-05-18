@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Service\Mailer;
 
 use AppBundle\Entity as EntityDir;
@@ -6,14 +7,13 @@ use AppBundle\Model as ModelDir;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\DependencyInjection\Container;
 
-
 class MailFactory
 {
     const AREA_FRONTEND = 'frontend';
     const AREA_ADMIN = 'admin';
-    
+
     /**
-     * @var Translator 
+     * @var Translator
      */
     protected $translator;
 
@@ -28,7 +28,7 @@ class MailFactory
     protected $roleToArea;
 
     /**
-     * @var array 
+     * @var array
      */
     private static $allowedAreas = [self::AREA_FRONTEND, self::AREA_ADMIN];
 
@@ -41,68 +41,67 @@ class MailFactory
                 throw new \InvalidArgumentException("Area $area not valid");
             }
         }
-        
+
         $this->container = $container;
         $this->translator = $container->get('translator');
         $this->templating = $container->get('templating');
     }
 
     /**
-     * 
-     * @param string $area frontend|admin
+     * @param string $area      frontend|admin
      * @param string $routeName must be in YML config under email.routes
-     * @param array $params
+     * @param array  $params
      * 
      * @return string calculated route
      */
     private function generateAbsoluteLink($area, $routeName, array $params = [])
     {
         if (!in_array($area, self::$allowedAreas)) {
-            throw new \InvalidArgumentException(__METHOD__ . ": area must be frontend or admin, $area given");
+            throw new \InvalidArgumentException(__METHOD__.": area must be frontend or admin, $area given");
         }
         $baseUrl = trim($this->container->getParameter('email')['base_url'][$area]);
-        
+
         $route = $this->container->getParameter('email')['routes'][$routeName];
-        
+
         // prepare str_replace args to build route
         $search = [];
         $replace = [];
-        foreach ($params as $k=>$v) {
-            $search[] = '{' . $k . '}';
+        foreach ($params as $k => $v) {
+            $search[] = '{'.$k.'}';
             $replace[] = $v;
         }
-        
-        return $baseUrl . str_replace($search, $replace, $route);
+
+        return $baseUrl.str_replace($search, $replace, $route);
     }
-    
+
     private function getAreaFromUserRole(EntityDir\User $user)
     {
         $role = $user->getRole()->getRole();
         if (empty($this->roleToArea[$role])) {
-            throw new \RuntimeException(__METHOD__ . " : area not defined for user $role");
+            throw new \RuntimeException(__METHOD__." : area not defined for user $role");
         }
-        
+
         return $this->roleToArea[$role];
     }
-    
+
     public function createActivationEmail(EntityDir\User $user)
     {
-        /**
+        /*
          * Email is sent from admin site. If this email is sent to a deputy, then
          * host url should for deputy site else for admin site
          **/
         $area = $this->getAreaFromUserRole($user);
-       
+
         $viewParams = [
             'name' => $user->getFullName(),
             'domain' => $this->generateAbsoluteLink($area, 'homepage', []),
-            'link' => $this->generateAbsoluteLink($area, 'user_activate', [ 'token' => $user->getRegistrationToken()]),
+            'link' => $this->generateAbsoluteLink($area, 'user_activate', ['token' => $user->getRegistrationToken()]),
             'tokenExpireHours' => EntityDir\User::TOKEN_EXPIRE_HOURS,
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage')
+            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
 
         $email = new ModelDir\Email();
-        
+
         $email
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('activation.fromName'))
@@ -118,18 +117,18 @@ class MailFactory
     public function createResetPasswordEmail(EntityDir\User $user)
     {
         $area = $this->getAreaFromUserRole($user);
-        
+
         $viewParams = [
             'name' => $user->getFullName(),
             'link' => $this->generateAbsoluteLink($area, 'password_reset', [
-                'token' => $user->getRegistrationToken()
+                'token' => $user->getRegistrationToken(),
             ]),
             'domain' => $this->generateAbsoluteLink($area, 'homepage'),
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage')
+            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
 
         $email = new ModelDir\Email();
-        
+
         $email
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('resetPassword.fromName'))
@@ -150,13 +149,13 @@ class MailFactory
     public function createChangePasswordEmail(EntityDir\User $user)
     {
         $email = new ModelDir\Email();
-        
+
         $area = $this->getAreaFromUserRole($user);
-        
+
         $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage')
+            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
-        
+
         $email
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('changePassword.fromName'))
@@ -170,18 +169,19 @@ class MailFactory
 
     /**
      * @param EntityDir\Client $client
+     *
      * @return ModelDir\Email
      */
-    public function createReportEmail(EntityDir\User $user,EntityDir\Client $client, $reportContent)
+    public function createReportEmail(EntityDir\User $user, EntityDir\Client $client, $reportContent)
     {
         $email = new ModelDir\Email();
-        
+
         $area = $this->getAreaFromUserRole($user);
-        
+
         $viewParams = [
-            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage')
+            'homepageUrl' => $this->generateAbsoluteLink($area, 'homepage'),
         ];
-        
+
         $email
             ->setFromEmail($this->container->getParameter('email_report_submit')['from_email'])
             ->setFromName($this->translate('reportSubmission.fromName'))
@@ -189,7 +189,7 @@ class MailFactory
             ->setToName($this->translate('reportSubmission.toName'))
             ->setSubject($this->translate('reportSubmission.subject'))
             ->setBodyHtml($this->templating->render('AppBundle:Email:report-submission.html.twig', $viewParams))
-            ->setAttachments([new ModelDir\EmailAttachment('report-' . $client->getCaseNumber() . '.pdf', 'application/pdf', $reportContent)]);
+            ->setAttachments([new ModelDir\EmailAttachment('report-'.$client->getCaseNumber().'.pdf', 'application/pdf', $reportContent)]);
 
         return $email;
     }
@@ -201,8 +201,8 @@ class MailFactory
      */
     public function createFeedbackEmail($response)
     {
-        $viewParams = [ 
-            'response' => $response
+        $viewParams = [
+            'response' => $response,
          ];
 
         $email = new ModelDir\Email();
@@ -225,14 +225,14 @@ class MailFactory
     public function createReportSubmissionConfirmationEmail(EntityDir\User $user, EntityDir\Report $submittedReport, EntityDir\Report $newReport)
     {
         $email = new ModelDir\Email();
-        
+
         $viewParams = [
-            'submittedReport'=> $submittedReport,
+            'submittedReport' => $submittedReport,
             'newReport' => $newReport,
             'link' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'client_home'),
-            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'homepage')
+            'homepageUrl' => $this->generateAbsoluteLink(self::AREA_FRONTEND, 'homepage'),
         ];
-        
+
         $email
             ->setFromEmail($this->container->getParameter('email_send')['from_email'])
             ->setFromName($this->translate('reportSubmissionConfirmation.fromName'))
@@ -244,7 +244,7 @@ class MailFactory
 
         return $email;
     }
-    
+
     /**
      * @param string $key
      * 
@@ -254,5 +254,4 @@ class MailFactory
     {
         return $this->translator->trans($key, [], 'email');
     }
-
 }

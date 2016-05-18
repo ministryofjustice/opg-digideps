@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
 abstract class TransactionType
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="string", nullable=false)
      * @ORM\Id
@@ -22,21 +23,21 @@ abstract class TransactionType
     private $id;
 
     /**
-     * Discriminator (in/out)
+     * Discriminator (in/out).
      *
      * @var string
      */
     private $type;
-    
+
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
      */
     private $hasMoreDetails;
-    
+
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="display_order", type="integer", nullable=true)
      */
@@ -50,7 +51,6 @@ abstract class TransactionType
      * @JMS\Type("string")
      */
     private $category;
-
 
     public function getId()
     {
@@ -75,24 +75,28 @@ abstract class TransactionType
     public function setId($id)
     {
         $this->id = $id;
+
         return $this;
     }
 
     public function setType($type)
     {
         $this->type = $type;
+
         return $this;
     }
 
     public function setHasMoreDetails($hasMoreDetails)
     {
         $this->hasMoreDetails = $hasMoreDetails;
+
         return $this;
     }
 
     public function setDisplayOrder($displayOrder)
     {
         $this->displayOrder = $displayOrder;
+
         return $this;
     }
 
@@ -111,5 +115,4 @@ abstract class TransactionType
     {
         $this->category = $category;
     }
-
 }

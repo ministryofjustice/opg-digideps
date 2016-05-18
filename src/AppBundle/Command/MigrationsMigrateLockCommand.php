@@ -9,7 +9,7 @@ use Doctrine\Bundle\MigrationsBundle\Command\MigrationsMigrateDoctrineCommand;
 
 /**
  * command that launches doctrine migration, 
- * using redis to implement locking in order to prevent concurrent execution
+ * using redis to implement locking in order to prevent concurrent execution.
  * 
  * @codeCoverageIgnore
  */
@@ -17,7 +17,7 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
 {
     const LOCK_KEY = 'migration_status';
     const LOCK_VALUE = 'locked';
-    
+
     protected function configure()
     {
         parent::configure();
@@ -35,53 +35,54 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
         // release lock and exit
         if ($input->getOption('release-lock')) {
             $this->releaseLock($output);
+
             return 0;
         }
-        
+
         try {
             if ($this->acquireLock($output)) {
                 $returnCode = parent::execute($input, $output);
                 $this->releaseLock($output);
-                
+
                 return $returnCode;
             } else {
                 $message = 'Migration is locked by another migration, skipped. Launch with --release-lock if needed.';
                 $this->getService('logger')->warning($message);
                 $output->writeln($message);
-                
+
                 return 0;
             }
         } catch (\Exception $e) {
             // in case of exception, delete the lock, then re-throw to keep the parent behaviour
             $this->releaseLock($output);
-            
+
             throw $e;
         }
     }
 
     /**
-     * @return boolean true if lock if acquired, false if not (already acquired)
+     * @return bool true if lock if acquired, false if not (already acquired)
      */
     private function acquireLock($output)
     {
         $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
         $output->writeln($ret ? 'Lock acquired.' : 'Cannot acquire lock, already acquired.');
-        
+
         return $ret;
     }
-    
+
     /**
-     * release lock
+     * release lock.
      * 
      * @param type $output
      */
     private function releaseLock($output)
     {
         $output->writeln('Lock released.');
-        
+
         return $this->getRedis()->del(self::LOCK_KEY);
     }
-    
+
     /**
      * @return \Predis\Client
      */
@@ -89,10 +90,9 @@ class MigrationsMigrateLockCommand extends MigrationsMigrateDoctrineCommand
     {
         return $this->getService('snc_redis.default');
     }
-    
+
     private function getService($id)
     {
         return $this->getApplication()->getKernel()->getContainer()->get($id);
     }
-
 }

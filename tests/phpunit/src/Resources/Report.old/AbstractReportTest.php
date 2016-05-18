@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Resources\views\Report;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -23,7 +24,7 @@ class AbstractReportTest extends WebTestCase
 
     public function setUp()
     {
-        $this->frameworkBundleClient = static::createClient([ 'environment' => 'test','debug' => false ]);
+        $this->frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
         $this->frameworkBundleClient->getContainer()->enterScope('request');
         $request = new Request();
         $request->create('/');
@@ -36,26 +37,25 @@ class AbstractReportTest extends WebTestCase
         m::close();
     }
 
-
     protected function setupDecisions()
     {
         $decision1 = m::mock('AppBundle\Entity\Decision')
             ->shouldReceive('getDescription')->andReturn('3 beds')
             ->shouldReceive('getClientInvolved')->andReturn(true)
-            ->shouldReceive('getClientInvolvedDetails')->andReturn("the client was able to decide at 85%")
+            ->shouldReceive('getClientInvolvedDetails')->andReturn('the client was able to decide at 85%')
             ->getMock();
 
         $decision2 = m::mock('AppBundle\Entity\Decision')
             ->shouldReceive('getDescription')->andReturn('2 televisions')
             ->shouldReceive('getClientInvolved')->andReturn(false)
-            ->shouldReceive('getClientInvolvedDetails')->andReturn("the client said he doesnt want a tv anymore")
+            ->shouldReceive('getClientInvolvedDetails')->andReturn('the client said he doesnt want a tv anymore')
             ->getMock();
 
         $this->decisions = [$decision1, $decision2];
-
     }
 
-    protected function setupContacts() {
+    protected function setupContacts()
+    {
         $contact1 = m::mock('AppBundle\Entity\Contact')
             ->shouldReceive('getContactName')->andReturn('Any White')
             ->shouldReceive('getRelationship')->andReturn('brother')
@@ -79,8 +79,6 @@ class AbstractReportTest extends WebTestCase
             ->getMock();
 
         $this->contacts = [$contact1, $contact2];
-
-
     }
 
     protected function setupReport()
@@ -129,8 +127,9 @@ class AbstractReportTest extends WebTestCase
             ->getMock();
     }
 
-    public function testEmpty() {
-        $this->assertEquals(1,1);
+    public function testEmpty()
+    {
+        $this->assertEquals(1, 1);
         // Dumb test to get rid of warning until I figure why changing the name didn't work.
     }
 
@@ -167,63 +166,60 @@ class AbstractReportTest extends WebTestCase
     protected function getMoneyIn()
     {
         return [
-            ['type'=>'disability_living_allowance_or_personal_independence_payment', 'amount' => 1.00],
-            ['type'=>'attendance_allowance', 'amount' => 10000.01],
-            ['type'=>'employment_support_allowance_or_incapacity_benefit', 'amount' => 10000.01],
-            ['type'=>'severe_disablement_allowance', 'amount' => 10000.01],
-            ['type'=>'income_support_or_pension_credit', 'amount' => 10000.01],
-            ['type'=>'housing_benefit', 'amount' => 10000.01],
-            ['type'=>'state_pension', 'amount' => 10000.01],
-            ['type'=>'universal_credit', 'amount' => 10000.01],
-            ['type'=>'other_benefits_eg_winter_fuel_or_cold_weather_payments', 'amount' => 10000.01],
-            ['type'=>'occupational_pensions', 'amount' => 10000.01],
-            ['type'=>'account_interest', 'amount' => 10000.01],
-            ['type'=>'income_from_investments_property_or_dividends', 'amount' => 10000.01],
-            ['type'=>'salary_or_wages', 'amount' => 10000.01],
-            ['type'=>'refunds', 'amount' => 10000.01],
-            ['type'=>'bequests_eg_inheritance_gifts_received', 'amount' => 10000.01],
-            ['type'=>'sale_of_investments_property_or_assets', 'amount' => 10000.01],
-            ['type'=>'further_guidance', 'amount' => 10000.01, 'moreDetails' => 'more 1'],
-            ['type'=>'compensation_or_damages_awards', 'amount' => 10000.01, 'moreDetails' => 'more 2'],
-            ['type'=>'transfers_in_from_client_s_other_accounts', 'amount' => 10000.01, 'moreDetails' => 'more 3'],
-            ['type'=>'any_other_money_paid_in_and_not_listed_above', 'amount' => 10000.01, 'moreDetails' => 'more 4'],
+            ['type' => 'disability_living_allowance_or_personal_independence_payment', 'amount' => 1.00],
+            ['type' => 'attendance_allowance', 'amount' => 10000.01],
+            ['type' => 'employment_support_allowance_or_incapacity_benefit', 'amount' => 10000.01],
+            ['type' => 'severe_disablement_allowance', 'amount' => 10000.01],
+            ['type' => 'income_support_or_pension_credit', 'amount' => 10000.01],
+            ['type' => 'housing_benefit', 'amount' => 10000.01],
+            ['type' => 'state_pension', 'amount' => 10000.01],
+            ['type' => 'universal_credit', 'amount' => 10000.01],
+            ['type' => 'other_benefits_eg_winter_fuel_or_cold_weather_payments', 'amount' => 10000.01],
+            ['type' => 'occupational_pensions', 'amount' => 10000.01],
+            ['type' => 'account_interest', 'amount' => 10000.01],
+            ['type' => 'income_from_investments_property_or_dividends', 'amount' => 10000.01],
+            ['type' => 'salary_or_wages', 'amount' => 10000.01],
+            ['type' => 'refunds', 'amount' => 10000.01],
+            ['type' => 'bequests_eg_inheritance_gifts_received', 'amount' => 10000.01],
+            ['type' => 'sale_of_investments_property_or_assets', 'amount' => 10000.01],
+            ['type' => 'further_guidance', 'amount' => 10000.01, 'moreDetails' => 'more 1'],
+            ['type' => 'compensation_or_damages_awards', 'amount' => 10000.01, 'moreDetails' => 'more 2'],
+            ['type' => 'transfers_in_from_client_s_other_accounts', 'amount' => 10000.01, 'moreDetails' => 'more 3'],
+            ['type' => 'any_other_money_paid_in_and_not_listed_above', 'amount' => 10000.01, 'moreDetails' => 'more 4'],
         ];
-
     }
 
     protected function getMoneyOut()
     {
         return [
-            ['type'=>'care_fees_or_local_authority_charges_for_care', 'amount' => 10000.01],
-            ['type'=>'accommodation_costs_eg_rent_mortgage_service_charges', 'amount' => 10000.01],
-            ['type'=>'household_bills_eg_water_gas_electricity_phone_council_tax', 'amount' => 10000.01],
-            ['type'=>'day_to_day_living_costs_eg_food_toiletries_clothing_sundries', 'amount' => 10000.01],
-            ['type'=>'debt_payments_eg_loans_cards_care_fee_arrears', 'amount' => 10000.01],
-            ['type'=>'travel_costs_for_client_eg_bus_train_taxi_fares', 'amount' => 10000.01],
-            ['type'=>'holidays_or_day_trips', 'amount' => 10000.01],
-            ['type'=>'tax_payable_to_hmrc', 'amount' => 10000.01],
-            ['type'=>'insurance_eg_life_home_and_contents', 'amount' => 10000.01],
-            ['type'=>'office_of_the_public_guardian_fees', 'amount' => 10000.01],
-            ['type'=>'deputy_s_security_bond', 'amount' => 10000.01],
-            ['type'=>'client_s_personal_allowance_eg_spending_money', 'amount' => 10000.01, 'moreDetails' => 'more 1'],
-            ['type'=>'cash_withdrawals', 'amount' => 10000.01, 'moreDetails' => 'more 2'],
-            ['type'=>'professional_fees_eg_solicitor_or_accountant_fees', 'amount' => 10000.01, 'moreDetails' => 'more 3'],
-            ['type'=>'deputy_s_expenses', 'amount' => 10000.01, 'moreDetails' => 'more 4'],
-            ['type'=>'gifts', 'amount' => 10000.01, 'moreDetails' => 'more 5'],
-            ['type'=>'major_purchases_eg_property_vehicles', 'amount' => 10000.01, 'moreDetails' => 'more 6'],
-            ['type'=>'property_maintenance_or_improvement', 'amount' => 10000.01, 'moreDetails' => 'more 7'],
-            ['type'=>'investments_eg_shares_bonds_savings', 'amount' => 10000.01, 'moreDetails' => 'more 8'],
-            ['type'=>'transfers_out_to_other_client_s_accounts', 'amount' => 10000.01, 'moreDetails' => 'more 9'],
-            ['type'=>'any_other_money_paid_out_and_not_listed_above', 'amount' => 10000.01, 'moreDetails' => 'more 10']
+            ['type' => 'care_fees_or_local_authority_charges_for_care', 'amount' => 10000.01],
+            ['type' => 'accommodation_costs_eg_rent_mortgage_service_charges', 'amount' => 10000.01],
+            ['type' => 'household_bills_eg_water_gas_electricity_phone_council_tax', 'amount' => 10000.01],
+            ['type' => 'day_to_day_living_costs_eg_food_toiletries_clothing_sundries', 'amount' => 10000.01],
+            ['type' => 'debt_payments_eg_loans_cards_care_fee_arrears', 'amount' => 10000.01],
+            ['type' => 'travel_costs_for_client_eg_bus_train_taxi_fares', 'amount' => 10000.01],
+            ['type' => 'holidays_or_day_trips', 'amount' => 10000.01],
+            ['type' => 'tax_payable_to_hmrc', 'amount' => 10000.01],
+            ['type' => 'insurance_eg_life_home_and_contents', 'amount' => 10000.01],
+            ['type' => 'office_of_the_public_guardian_fees', 'amount' => 10000.01],
+            ['type' => 'deputy_s_security_bond', 'amount' => 10000.01],
+            ['type' => 'client_s_personal_allowance_eg_spending_money', 'amount' => 10000.01, 'moreDetails' => 'more 1'],
+            ['type' => 'cash_withdrawals', 'amount' => 10000.01, 'moreDetails' => 'more 2'],
+            ['type' => 'professional_fees_eg_solicitor_or_accountant_fees', 'amount' => 10000.01, 'moreDetails' => 'more 3'],
+            ['type' => 'deputy_s_expenses', 'amount' => 10000.01, 'moreDetails' => 'more 4'],
+            ['type' => 'gifts', 'amount' => 10000.01, 'moreDetails' => 'more 5'],
+            ['type' => 'major_purchases_eg_property_vehicles', 'amount' => 10000.01, 'moreDetails' => 'more 6'],
+            ['type' => 'property_maintenance_or_improvement', 'amount' => 10000.01, 'moreDetails' => 'more 7'],
+            ['type' => 'investments_eg_shares_bonds_savings', 'amount' => 10000.01, 'moreDetails' => 'more 8'],
+            ['type' => 'transfers_out_to_other_client_s_accounts', 'amount' => 10000.01, 'moreDetails' => 'more 9'],
+            ['type' => 'any_other_money_paid_out_and_not_listed_above', 'amount' => 10000.01, 'moreDetails' => 'more 10'],
         ];
-
     }
 
-    protected function setupAccounts() {
-
+    protected function setupAccounts()
+    {
         $account = $this->getAccountMock();
         $this->report->shouldReceive('getAccounts')->andReturn([$account]);
-
     }
 
     // Find a checkbox in the given container (css) in a form with a given name and a 
@@ -233,14 +229,14 @@ class AbstractReportTest extends WebTestCase
     {
         $containerElement = $crawler->filter($container)->eq(0);
         $this->assertEquals(1, $containerElement->count());
-        $checkBoxLegend = preg_replace("/[^A-Za-z0-9 ]/", '', $checkBoxLegend);
-        
-        if($checkedValue == null) {
-            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '"]';
+        $checkBoxLegend = preg_replace('/[^A-Za-z0-9 ]/', '', $checkBoxLegend);
+
+        if ($checkedValue == null) {
+            $css = '[data-checkbox="'.$this->replace_dashes($checkBoxLegend).'"]';
         } else {
-            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '--' . $this->replace_dashes($checkedValue) . '"]';
+            $css = '[data-checkbox="'.$this->replace_dashes($checkBoxLegend).'--'.$this->replace_dashes($checkedValue).'"]';
         }
-        
+
         $element = $containerElement->filter($css);
         $this->assertEquals(1, $element->count());
         $this->assertContains('X', $element->eq(0)->text());
@@ -250,24 +246,26 @@ class AbstractReportTest extends WebTestCase
     {
         $containerElement = $crawler->filter($container)->eq(0);
         $this->assertEquals(1, $containerElement->count());
-        $checkBoxLegend = preg_replace("/[^A-Za-z0-9 ]/", '', $checkBoxLegend);
+        $checkBoxLegend = preg_replace('/[^A-Za-z0-9 ]/', '', $checkBoxLegend);
 
-        if($checkedValue == null) {
-            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '"]';
+        if ($checkedValue == null) {
+            $css = '[data-checkbox="'.$this->replace_dashes($checkBoxLegend).'"]';
         } else {
-            $css = '[data-checkbox="' . $this->replace_dashes($checkBoxLegend) . '--' . $this->replace_dashes($checkedValue) . '"]';
+            $css = '[data-checkbox="'.$this->replace_dashes($checkBoxLegend).'--'.$this->replace_dashes($checkedValue).'"]';
         }
 
         $element = $containerElement->filter($css);
         $this->assertEquals(1, $element->count());
         $this->assertNotContains('X', $element->eq(0)->text());
     }
-    
-    private function replace_dashes($string) {
-        $string = str_replace(" ", "-", $string);
+
+    private function replace_dashes($string)
+    {
+        $string = str_replace(' ', '-', $string);
+
         return strtolower($string);
     }
-    
+
     protected function assertSectionDoesntExist($crawler, $section)
     {
         $elements = $crawler->filter($section);
@@ -279,10 +277,9 @@ class AbstractReportTest extends WebTestCase
         $elements = $crawler->filter($section);
         $this->assertEquals(1, $elements->count());
     }
-    
+
     protected function assertSectionContainsText($crawler, $section, $text)
     {
         $this->assertContains($text, $crawler->filter($section)->eq(0)->text());
     }
-    
 }

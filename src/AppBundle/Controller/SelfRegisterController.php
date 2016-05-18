@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,7 +13,6 @@ use AppBundle\Entity\User;
  */
 class SelfRegisterController extends RestController
 {
-
     /**
      * @Route("")
      * @Method({"POST"})
@@ -22,7 +22,7 @@ class SelfRegisterController extends RestController
         if (!$this->getAuthService()->isSecretValid($request)) {
             throw new \RuntimeException('client secret not accepted.', 403);
         }
-        
+
         $data = $this->deserializeBodyContent($request);
 
         $selfRegisterData = new SelfRegisterData();
@@ -33,18 +33,18 @@ class SelfRegisterController extends RestController
         $errors = $validator->validate($selfRegisterData);
 
         if (count($errors) > 0) {
-            throw new \RuntimeException("Invalid registration data: " . $errors);
+            throw new \RuntimeException('Invalid registration data: '.$errors);
         }
 
         try {
             $user = $this->container->get('user.selfRegistration')->selfRegisterUser($selfRegisterData);
-            $this->get('logger')->warning("CasRec register success: ", ['extra' => ['page'=>'user_registration', 'success'=>true] + $selfRegisterData->toArray()]);
+            $this->get('logger')->warning('CasRec register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
         } catch (\Exception $e) {
-            $this->get('logger')->warning("CasRec register failed:", ['extra'=> ['page'=>'user_registration', 'success'=>false] + $selfRegisterData->toArray()]);
+            $this->get('logger')->warning('CasRec register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
 
-        return ['id'=>$user->getId()];
+        return ['id' => $user->getId()];
     }
 
     /*
@@ -62,5 +62,4 @@ class SelfRegisterController extends RestController
             'case_number' => 'setCaseNumber',
         ]);
     }
-
 }

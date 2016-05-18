@@ -10,7 +10,6 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version061 extends AbstractMigration
 {
-
     /**
      * @param Schema $schema
      */
@@ -27,12 +26,12 @@ class Version061 extends AbstractMigration
         $this->addSql('ALTER TABLE asset ADD is_rented_out VARCHAR(4) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD rent_agreement_end_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD rent_income_month NUMERIC(14, 2) DEFAULT NULL');
-        
+
         $this->addSql('ALTER TABLE asset ADD address VARCHAR(200) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD address2 VARCHAR(200) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD county VARCHAR(75) DEFAULT NULL');
         $this->addSql('ALTER TABLE asset ADD postcode VARCHAR(10) DEFAULT NULL');
-        
+
         // property migration
         //TODO revise
         $this->addSql("UPDATE asset SET type='property', occupants=description WHERE title='Property'");
@@ -54,12 +53,11 @@ class Version061 extends AbstractMigration
         $this->addSql('ALTER TABLE asset DROP is_rented_out');
         $this->addSql('ALTER TABLE asset DROP rent_agreement_end_date');
         $this->addSql('ALTER TABLE asset DROP rent_income_month');
-        
-        $this->addSql('ALTER TABLE asset DROP type'); 
+
+        $this->addSql('ALTER TABLE asset DROP type');
         $this->addSql('ALTER TABLE asset DROP address');
         $this->addSql('ALTER TABLE asset DROP address2');
         $this->addSql('ALTER TABLE asset DROP county');
         $this->addSql('ALTER TABLE asset DROP postcode');
     }
-
 }

@@ -1,21 +1,20 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-use Doctrine\ORM\QueryBuilder;
-
 /**
- * Decisions
+ * Decisions.
  *
  * @ORM\Table(name="decision")
  * @ORM\Entity
  */
-class Decision 
+class Decision
 {
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -35,31 +34,30 @@ class Decision
     private $description;
 
     /**
-     * @var boolean
+     * @var bool
      * @JMS\Groups({"related","basic"})
      * @JMS\Type("boolean")
      * @ORM\Column(name="client_involved_boolean", type="boolean")
      */
     private $clientInvolvedBoolean;
-    
-     /**
+
+    /**
      * @JMS\Groups({"related","basic"})
-      * @JMS\Type("string")
+     * @JMS\Type("string")
      * @ORM\Column(name="client_involved_details", type="text", nullable=true)
      */
     private $clientInvolvedDetails;
-    
+
     /**
-     * @var integer
+     * @var int
      * @JMS\Groups({"related"})
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Report", inversedBy="decisions")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id")
      */
     private $report;
 
-    
     /**
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
@@ -82,15 +80,14 @@ class Decision
         $this->description = $description;
     }
 
-        
     /**
-     * @param boolean
+     * @param bool
      */
     public function setClientInvolvedBoolean($clientInvolvedBoolean)
     {
-        $this->clientInvolvedBoolean = (boolean)$clientInvolvedBoolean;
+        $this->clientInvolvedBoolean = (boolean) $clientInvolvedBoolean;
     }
-    
+
     /*
      * @return boolean
      */
@@ -99,7 +96,6 @@ class Decision
         return $this->clientInvolvedBoolean;
     }
 
-    
     /**
      * @param $clientInvolvedDetails string
      */
@@ -108,7 +104,6 @@ class Decision
         $this->clientInvolvedDetails = $clientInvolvedDetails;
     }
 
-    
     /**
      * @return string
      */
@@ -117,11 +112,11 @@ class Decision
         return $this->clientInvolvedDetails;
     }
 
-        
     /**
-     * Set lastedit
+     * Set lastedit.
      *
      * @param \DateTime $lastedit
+     *
      * @return Decision
      */
     public function setLastedit($lastedit)
@@ -138,11 +133,11 @@ class Decision
     {
         $this->report = $report;
     }
-        
+
     /**
-     * Get report
+     * Get report.
      *
-     * @return Report 
+     * @return Report
      */
     public function getReport()
     {

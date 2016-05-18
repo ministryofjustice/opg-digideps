@@ -78,7 +78,7 @@ class Version039 extends AbstractMigration
         $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F778419EB6921 FOREIGN KEY (client_id) REFERENCES client (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE report ADD CONSTRAINT FK_C42F7784A47AEB9 FOREIGN KEY (court_order_type_id) REFERENCES court_order_type (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE dd_user ADD CONSTRAINT FK_6764AB8BD60322AC FOREIGN KEY (role_id) REFERENCES role (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        
+
         // SEQUENCES (all start from 1)
 //        $this->addSql('CREATE SEQUENCE access_token_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
 //        $this->addSql('CREATE SEQUENCE auth_code_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
@@ -95,12 +95,12 @@ class Version039 extends AbstractMigration
 //        $this->addSql('CREATE SEQUENCE report_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
 //        $this->addSql('CREATE SEQUENCE role_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
 //        $this->addSql('CREATE SEQUENCE dd_user_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
-        
+
          // DATA
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
         $this->addSql("INSERT INTO court_order_type (name) VALUES ('Personal Welfare'), ('Property and Affairs')");
         $this->addSql("INSERT INTO role (name, role) VALUES ('OPG Administrator', 'ROLE_ADMIN'), ('Lay Deputy', 'ROLE_LAY_DEPUTY'),('Professional Deputy', 'ROLE_PROFESSIONAL_DEPUTY'),('Local Authority Deputy', 'ROLE_LOCAL_AUTHORITY_DEPUTY' )");
-        
+
         // TRANSACTIONS
         $rows = [
             [1, 'in', 'disability_living_allowance_or_personal_independence_payment', false],
@@ -114,7 +114,7 @@ class Version039 extends AbstractMigration
             [9, 'in', 'other_benefits_eg_winter_fuel_or_cold_weather_payments', false],
             [10, 'in', 'occupational_pensions', false],
             [11, 'in', 'account_interest', false],
-            [12,'in', 'income_from_investments_property_or_dividends', false],
+            [12, 'in', 'income_from_investments_property_or_dividends', false],
             [13, 'in', 'salary_or_wages', false],
             [14, 'in', 'refunds', false],
             [15, 'in', 'bequests_eg_inheritance_gifts_received', false],
@@ -131,7 +131,7 @@ class Version039 extends AbstractMigration
             [6, 'out', 'travel_costs_for_client_eg_bus_train_taxi_fares', false],
             [7, 'out', 'holidays_or_day_trips', false],
             [8, 'out', 'tax_payable_to_hmrc', false],
-            [9 ,'out', 'insurance_eg_life_home_and_contents', false],
+            [9, 'out', 'insurance_eg_life_home_and_contents', false],
             [10, 'out', 'office_of_the_public_guardian_fees', false],
             [11, 'out', 'deputy_s_security_bond', false],
             [12, 'out', 'client_s_personal_allowance_eg_spending_money', true],
@@ -143,14 +143,14 @@ class Version039 extends AbstractMigration
             [18, 'out', 'property_maintenance_or_improvement', true],
             [19, 'out', 'investments_eg_shares_bonds_savings', true],
             [20, 'out', 'transfers_out_to_other_client_s_accounts', true],
-            [21, 'out', 'any_other_money_paid_out_and_not_listed_above', true]
+            [21, 'out', 'any_other_money_paid_out_and_not_listed_above', true],
         ];
         foreach ($rows as $row) {
             list($displayOrder, $type, $id, $hasMoreDetails) = $row;
-            $hasMoreDetailsBool = $hasMoreDetails ? 'true' :'false';
+            $hasMoreDetailsBool = $hasMoreDetails ? 'true' : 'false';
             $sql = "INSERT INTO account_transaction_type (display_order, type, id, has_more_details) 
                   VALUES('$displayOrder', '$type', '$id', '$hasMoreDetailsBool')";
-             $this->addSql($sql);
+            $this->addSql($sql);
         }
     }
 
@@ -181,7 +181,7 @@ class Version039 extends AbstractMigration
         $this->addSql('ALTER TABLE auth_code DROP CONSTRAINT FK_5933D02CA76ED395');
         $this->addSql('ALTER TABLE deputy_case DROP CONSTRAINT FK_7F527170A76ED395');
         $this->addSql('ALTER TABLE refresh_token DROP CONSTRAINT FK_C74F2195A76ED395');
-        
+
 //        $this->addSql('DROP SEQUENCE access_token_id_seq CASCADE');
 //        $this->addSql('DROP SEQUENCE auth_code_id_seq CASCADE');
 //        $this->addSql('DROP SEQUENCE oauth2_client_id_seq CASCADE');
@@ -201,7 +201,7 @@ class Version039 extends AbstractMigration
 //        $this->addSql('DROP SEQUENCE report_id_seq CASCADE');
 //        $this->addSql('DROP SEQUENCE role_id_seq CASCADE');
 //        $this->addSql('DROP SEQUENCE dd_user_id_seq CASCADE');
-        
+
         $this->addSql('DROP TABLE access_token');
         $this->addSql('DROP TABLE account');
         $this->addSql('DROP TABLE account_transaction');

@@ -3,7 +3,6 @@
 namespace AppBundle\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Doctrine\Bundle\MigrationsBundle\Command\MigrationsStatusDoctrineCommand;
 use Doctrine\Bundle\DoctrineBundle\Command\Proxy\DoctrineCommandHelper;
@@ -11,7 +10,7 @@ use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
 
 /**
  * Throws exception if you have previously executed migrations in the database that are not registered migrations.
- * Otherwise, only prints "Status check: OK. Migration to execute: <migrations to execute>"
+ * Otherwise, only prints "Status check: OK. Migration to execute: <migrations to execute>".
  * 
  * Used to warn if the code is reverted back to an old version with a newer unexpected db version 
  * 
@@ -19,7 +18,6 @@ use Doctrine\Bundle\MigrationsBundle\Command\DoctrineCommand;
  */
 class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
 {
-
     protected function configure()
     {
         parent::configure();
@@ -45,14 +43,13 @@ class MigrationsStatusCheckCommand extends MigrationsStatusDoctrineCommand
 
         if (!empty($executedUnavailableMigrations)) {
             throw new \RuntimeException(
-            '<error>Status check: ERROR. You have ' . count($executedUnavailableMigrations) . ' previously executed migrations'
-            . ' in the database that are not registered migrations.</error>');
+            '<error>Status check: ERROR. You have '.count($executedUnavailableMigrations).' previously executed migrations'
+            .' in the database that are not registered migrations.</error>');
         }
-        
+
         $migrationsToExecute = array_diff($availableMigrations, $executedMigrations);
         $toMigrate = $migrationsToExecute ? implode(',', $migrationsToExecute) : 'none';
 
-        $output->writeln('Status check: OK. Migration to execute:' . $toMigrate );
+        $output->writeln('Status check: OK. Migration to execute:'.$toMigrate);
     }
-
 }

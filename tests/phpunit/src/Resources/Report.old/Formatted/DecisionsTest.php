@@ -1,24 +1,24 @@
 <?php
+
 namespace AppBundle\Resources\views\Report\Formatted;
 
 use AppBundle\Resources\views\Report\AbstractReportTest;
 use Symfony\Component\DomCrawler\Crawler;
 use Mockery as m;
 
-
 class DecisionsTest extends AbstractReportTest
 {
-
     private $templateName = 'AppBundle:Report:Formatted/_decisions.html.twig';
 
-    public function testHeadings() {
+    public function testHeadings()
+    {
         $this->setupDecisions();
 
         $this->setupDecisions();
         $this->setupReport();
 
         $html = $this->twig->render($this->templateName, [
-            'decisions' => $this->decisions
+            'decisions' => $this->decisions,
         ]);
 
         $crawler = new Crawler($html);
@@ -34,13 +34,12 @@ class DecisionsTest extends AbstractReportTest
         $this->setupReport();
 
         $html = $this->twig->render($this->templateName, [
-            'decisions' => $this->decisions
+            'decisions' => $this->decisions,
         ]);
 
         $crawler = new Crawler($html);
         $decisions = $crawler->filter('#decisions-section .decisions-list .decision-item');
         $this->assertEquals(2, $decisions->count());
-
     }
 
     public function testShowsDetailsForEachDecision()
@@ -49,7 +48,7 @@ class DecisionsTest extends AbstractReportTest
         $this->setupReport();
 
         $html = $this->twig->render($this->templateName, [
-            'decisions' => $this->decisions
+            'decisions' => $this->decisions,
         ]);
 
         $crawler = new Crawler($html);
@@ -65,7 +64,6 @@ class DecisionsTest extends AbstractReportTest
 
         $this->assertContains('2 televisions', $secondDecision);
         $this->assertContains('the client said he doesnt want a tv anymore', $secondDecision);
-
     }
 
     public function testShowWhenNoDecisions()
@@ -77,7 +75,7 @@ class DecisionsTest extends AbstractReportTest
 
         $html = $this->twig->render($this->templateName, [
             'decisions' => [],
-            'report' => $this->report
+            'report' => $this->report,
         ]);
 
         $crawler = new Crawler($html);
@@ -88,8 +86,5 @@ class DecisionsTest extends AbstractReportTest
 
         $this->assertContains('No decisions made', $firstDecision);
         $this->assertContains('no one could decide', $firstDecision);
-
-
     }
-
 }

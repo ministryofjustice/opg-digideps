@@ -5,13 +5,12 @@ namespace Application\Migrations;
 use AppBundle\Service\DataMigration\AccountMigration;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
-
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * add transactions to reports already existing before branch accounts_mk2 is merged
- * KEEP THIS ONE LAST
+ * KEEP THIS ONE LAST.
  */
 class Version052 extends AbstractMigration implements ContainerAwareInterface
 {
@@ -38,7 +37,7 @@ class Version052 extends AbstractMigration implements ContainerAwareInterface
         $am->migrateAll();
 
         ini_set('memory_limit', $memLimitInit);
-        
+
         $this->addSql('SELECT MAX(version) from migrations');
     }
 

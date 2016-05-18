@@ -31,7 +31,5 @@ class Version057 extends AbstractMigration
 
         $this->addSql('CREATE TABLE account_transaction (id SERIAL NOT NULL, account_id INT DEFAULT NULL, account_transaction_type_id VARCHAR(255) DEFAULT NULL, amount NUMERIC(14, 2) DEFAULT NULL, more_details TEXT DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE account_transaction_type (id VARCHAR(255) NOT NULL, has_more_details BOOLEAN NOT NULL, display_order INT DEFAULT NULL, type VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
-
-
     }
 }

@@ -1,20 +1,21 @@
 <?php
+
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
- * CourtOrderType
+ * CourtOrderType.
  *
  * @JMS\XmlRoot("court_order_type")
  * @ORM\Table(name="court_order_type")
  * @ORM\Entity
  */
 class CourtOrderType
-{ 
+{
     /**
-     * @var integer
+     * @var int
      * @JMS\Type("integer")
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
@@ -37,30 +38,30 @@ class CourtOrderType
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Report", mappedBy="courtOrderType")
      */
     private $reports;
-    
-   
+
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         $this->reports = new \Doctrine\Common\Collections\ArrayCollection();
     }
-        
+
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
-    
+
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
+     *
      * @return CourtOrderType
      */
     public function setName($name)
@@ -71,9 +72,9 @@ class CourtOrderType
     }
 
     /**
-     * Get name
+     * Get name.
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -81,9 +82,10 @@ class CourtOrderType
     }
 
     /**
-     * Add reports
+     * Add reports.
      *
      * @param Report $reports
+     *
      * @return CourtOrderType
      */
     public function addReport(Report $reports)
@@ -94,7 +96,7 @@ class CourtOrderType
     }
 
     /**
-     * Remove reports
+     * Remove reports.
      *
      * @param Report $reports
      */
@@ -102,23 +104,24 @@ class CourtOrderType
     {
         $this->reports->removeElement($reports);
     }
-    
+
     public function getReportIds()
     {
         $reports = [];
-        
-        if(!empty($this->reports)){
-            foreach($this->reports as $report){
+
+        if (!empty($this->reports)) {
+            foreach ($this->reports as $report) {
                 $reports[] = $report->getId();
             }
         }
+
         return $reports;
     }
 
     /**
-     * Get reports
+     * Get reports.
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getReports()
     {

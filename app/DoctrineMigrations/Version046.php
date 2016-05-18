@@ -20,7 +20,7 @@ class Version046 extends AbstractMigration
 
         $this->addSql('ALTER TABLE report DROP IF EXISTS all_agreed');
         $this->addSql('ALTER TABLE report DROP IF EXISTS reason_not_all_agreed');
-        
+
         $this->addSql('ALTER TABLE report ADD all_agreed BOOLEAN DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD reason_not_all_agreed TEXT DEFAULT NULL');
     }

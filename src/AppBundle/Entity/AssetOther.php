@@ -10,7 +10,6 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AssetOther extends Asset
 {
-
     /**
      * @var string
      * @JMS\Groups({"asset"})
@@ -34,9 +33,10 @@ class AssetOther extends Asset
     private $valuationDate;
 
     /**
-     * Set description
+     * Set description.
      * 
      * @param string $description
+     *
      * @return Asset
      */
     public function setDescription($description)
@@ -47,9 +47,9 @@ class AssetOther extends Asset
     }
 
     /**
-     * Get description
+     * Get description.
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -57,9 +57,10 @@ class AssetOther extends Asset
     }
 
     /**
-     * Set valuationDate
+     * Set valuationDate.
      *
      * @param \DateTime $valuationDate
+     *
      * @return Asset
      */
     public function setValuationDate($valuationDate)
@@ -70,9 +71,9 @@ class AssetOther extends Asset
     }
 
     /**
-     * Get valuationDate
+     * Get valuationDate.
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getValuationDate()
     {
@@ -80,9 +81,10 @@ class AssetOther extends Asset
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
+     *
      * @return Asset
      */
     public function setTitle($title)
@@ -93,16 +95,15 @@ class AssetOther extends Asset
     }
 
     /**
-     * Get title
+     * Get title.
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
         return $this->title;
     }
-    
-    
+
     /**
      * @JMS\VirtualProperty
      * @JMS\SerializedName("type")
@@ -112,10 +113,9 @@ class AssetOther extends Asset
     {
         return 'other';
     }
-    
+
     public function getType()
     {
         return 'other';
     }
-
 }

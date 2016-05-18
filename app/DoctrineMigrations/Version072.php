@@ -10,7 +10,6 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version072 extends AbstractMigration
 {
-
     /**
      * @param Schema $schema
      */
@@ -30,8 +29,7 @@ class Version072 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
-        
+
         $this->addSql('ALTER TABLE account DROP meta');
     }
-
 }
